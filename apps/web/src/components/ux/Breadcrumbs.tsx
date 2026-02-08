@@ -165,7 +165,7 @@ export const DEFAULT_ROUTE_MAPPINGS: RouteMapping[] = [
 
 interface BreadcrumbContextValue {
   items: BreadcrumbItem[];
-  setItems: (items: BreadcrumbItem[]) => void;
+  setItems: React.Dispatch<React.SetStateAction<BreadcrumbItem[]>>;
   config: BreadcrumbConfig;
   routeMappings: RouteMapping[];
 }

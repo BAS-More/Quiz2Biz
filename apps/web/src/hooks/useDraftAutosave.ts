@@ -83,7 +83,7 @@ class DraftStorage {
       return;
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const request = indexedDB.open(this.dbName, 1);
 
       request.onerror = () => {

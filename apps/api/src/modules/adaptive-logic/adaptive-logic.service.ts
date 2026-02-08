@@ -31,6 +31,7 @@ export class AdaptiveLogicService {
   async getVisibleQuestions(
     questionnaireId: string,
     responses: Map<string, unknown>,
+    persona?: string,
   ): Promise<Question[]> {
     // Get all questions with their visibility rules
     const questions = await this.prisma.question.findMany({
@@ -38,6 +39,7 @@ export class AdaptiveLogicService {
         section: {
           questionnaireId,
         },
+        ...(persona && { persona: persona as any }),
       },
       include: {
         visibilityRules: {
@@ -136,6 +138,7 @@ export class AdaptiveLogicService {
   async getNextQuestion(
     currentQuestionId: string,
     responses: Map<string, unknown>,
+    persona?: string,
   ): Promise<Question | null> {
     // Get current question
     const currentQuestion = await this.prisma.question.findUnique({
@@ -160,6 +163,7 @@ export class AdaptiveLogicService {
     const visibleQuestions = await this.getVisibleQuestions(
       currentQuestion.section.questionnaireId,
       responses,
+      persona,
     );
 
     // Find current position and return next

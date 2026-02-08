@@ -4,7 +4,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { axe, toHaveNoViolations } from 'jest-axe';
+import { axe } from 'jest-axe';
 import { BrowserRouter } from 'react-router-dom';
 
 // Mock LoginPage component - adjust import path as needed

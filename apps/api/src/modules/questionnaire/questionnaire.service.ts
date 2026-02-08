@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
-import { Questionnaire, Section, Question, QuestionType } from '@prisma/client';
+import { Questionnaire, Section, Question, QuestionType, Persona } from '@prisma/client';
 import { PaginationDto } from '@libs/shared';
 
 export interface QuestionOption {
@@ -171,12 +171,34 @@ export class QuestionnaireService {
     });
   }
 
-  async getTotalQuestionCount(questionnaireId: string): Promise<number> {
+  async getTotalQuestionCount(questionnaireId: string, persona?: Persona): Promise<number> {
     return this.prisma.question.count({
       where: {
         section: {
           questionnaireId,
         },
+        ...(persona && { persona }),
+      },
+    });
+  }
+
+  /**
+   * Get all questions for a questionnaire filtered by persona.
+   * Returns questions ordered by dimension severity (highest first) for NQS compatibility.
+   */
+  async getQuestionsForPersona(questionnaireId: string, persona?: Persona): Promise<Question[]> {
+    return this.prisma.question.findMany({
+      where: {
+        section: {
+          questionnaireId,
+        },
+        ...(persona && { persona }),
+      },
+      orderBy: [{ severity: 'desc' }, { orderIndex: 'asc' }],
+      include: {
+        dimension: true,
+        visibilityRules: true,
+        section: true,
       },
     });
   }

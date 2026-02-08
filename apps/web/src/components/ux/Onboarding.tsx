@@ -902,7 +902,7 @@ const OnboardingOverlay: React.FC<OnboardingOverlayProps> = ({
 
 interface TourTriggerProps {
   tourId: string;
-  children: React.ReactElement;
+  children: React.ReactElement<{ onClick?: React.MouseEventHandler }>;
 }
 
 export const TourTrigger: React.FC<TourTriggerProps> = ({ tourId, children }) => {

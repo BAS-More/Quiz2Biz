@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 import { DecisionStatus } from '@prisma/client';
+import * as crypto from 'crypto';
 
 /**
  * Approval categories that require two-person rule
@@ -518,7 +519,7 @@ export class ApprovalWorkflowService {
    * Generate unique ID
    */
   private generateId(): string {
-    return `apr_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 9)}`;
+    return `apr_${Date.now().toString(36)}_${crypto.randomBytes(6).toString('hex')}`;
   }
 
   // ========================================

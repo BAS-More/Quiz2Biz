@@ -21,10 +21,9 @@ import React, {
   useReducer,
   useEffect,
   useCallback,
-  useMemo,
-  ReactNode,
   useState,
 } from 'react';
+import type { ReactNode } from 'react';
 
 // =============================================================================
 // TYPES & INTERFACES
@@ -1158,7 +1157,7 @@ export const DashboardToolbar: React.FC = () => {
     resetToDefault,
   } = usePersonalization();
 
-  const [showLayoutPicker, setShowLayoutPicker] = useState(false);
+  const [_showLayoutPicker, _setShowLayoutPicker] = useState(false);
 
   return (
     <div style={styles.toolbar}>

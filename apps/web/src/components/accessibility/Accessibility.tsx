@@ -341,9 +341,53 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
   defaultCommands = [],
 }) => {
   const [state, dispatch] = useReducer(accessibilityReducer, initialState);
-  const recognitionRef = useRef<InstanceType<typeof SpeechRecognition> | null>(null);
+  const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
   const announcerRef = useRef<HTMLDivElement | null>(null);
+
+  // Define speak first so it can be used in other callbacks
+  const speak = useCallback(
+    (text: string, options?: { rate?: number; pitch?: number }) => {
+      if (!synthRef.current) {
+        return;
+      }
+
+      synthRef.current.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = options?.rate ?? state.speechSynthesis.rate;
+      utterance.pitch = options?.pitch ?? state.speechSynthesis.pitch;
+      utterance.volume = state.speechSynthesis.volume;
+
+      if (state.speechSynthesis.voice) {
+        utterance.voice = state.speechSynthesis.voice;
+      }
+
+      synthRef.current.speak(utterance);
+    },
+    [state.speechSynthesis],
+  );
+
+  // Define processVoiceCommand before speech recognition initialization
+  const processVoiceCommand = useCallback(
+    (transcript: string) => {
+      for (const cmd of state.voiceCommands) {
+        const allTriggers = [cmd.command.toLowerCase(), ...cmd.aliases.map((a) => a.toLowerCase())];
+
+        for (const trigger of allTriggers) {
+          if (transcript.includes(trigger)) {
+            cmd.action();
+            dispatch({ type: 'SET_LAST_COMMAND', command: cmd.command });
+            speak(`Executing: ${cmd.command}`);
+            return;
+          }
+        }
+      }
+
+      // No command matched
+      speak("I didn't understand that command. Say 'help' for available commands.");
+    },
+    [state.voiceCommands, speak],
+  );
 
   // Initialize speech recognition
   useEffect(() => {
@@ -360,7 +404,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
       recognition.interimResults = true;
       recognition.lang = 'en-US';
 
-      recognition.onresult = (event: SpeechRecognitionEvent) => {
+      recognition.onresult = (event: any) => {
         const last = event.results[event.results.length - 1];
         const transcript = last[0].transcript.toLowerCase().trim();
         const confidence = last[0].confidence;
@@ -372,7 +416,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
         }
       };
 
-      recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+      recognition.onerror = (event: any) => {
         dispatch({ type: 'SET_VOICE_ERROR', error: event.error });
       };
 
@@ -393,7 +437,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
     return () => {
       recognitionRef.current?.stop();
     };
-  }, [enableVoice]);
+  }, [enableVoice, processVoiceCommand]);
 
   // Register default commands
   useEffect(() => {
@@ -491,28 +535,6 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
     }
   }, [state.cognitive]);
 
-  // Process voice command
-  const processVoiceCommand = useCallback(
-    (transcript: string) => {
-      for (const cmd of state.voiceCommands) {
-        const allTriggers = [cmd.command.toLowerCase(), ...cmd.aliases.map((a) => a.toLowerCase())];
-
-        for (const trigger of allTriggers) {
-          if (transcript.includes(trigger)) {
-            cmd.action();
-            dispatch({ type: 'SET_LAST_COMMAND', command: cmd.command });
-            speak(`Executing: ${cmd.command}`);
-            return;
-          }
-        }
-      }
-
-      // No command matched
-      speak("I didn't understand that command. Say 'help' for available commands.");
-    },
-    [state.voiceCommands],
-  );
-
   // Voice Navigation functions
   const startListening = useCallback(() => {
     if (recognitionRef.current && state.voice.isSupported) {
@@ -534,26 +556,6 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
     }
   }, []);
 
-  const speak = useCallback(
-    (text: string, options?: { rate?: number; pitch?: number }) => {
-      if (!synthRef.current) {
-        return;
-      }
-
-      synthRef.current.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = options?.rate ?? state.speechSynthesis.rate;
-      utterance.pitch = options?.pitch ?? state.speechSynthesis.pitch;
-      utterance.volume = state.speechSynthesis.volume;
-
-      if (state.speechSynthesis.voice) {
-        utterance.voice = state.speechSynthesis.voice;
-      }
-
-      synthRef.current.speak(utterance);
-    },
-    [state.speechSynthesis],
-  );
 
   const cancelSpeech = useCallback(() => {
     synthRef.current?.cancel();

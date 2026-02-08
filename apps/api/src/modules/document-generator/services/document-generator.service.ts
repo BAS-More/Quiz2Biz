@@ -4,6 +4,7 @@ import { Document, DocumentType, DocumentStatus, SessionStatus } from '@prisma/c
 import { TemplateEngineService } from './template-engine.service';
 import { DocumentBuilderService } from './document-builder.service';
 import { StorageService } from './storage.service';
+import { NotificationService } from '../../notifications/notification.service';
 
 export interface GenerateDocumentParams {
   sessionId: string;
@@ -24,6 +25,7 @@ export class DocumentGeneratorService {
     private readonly templateEngine: TemplateEngineService,
     private readonly documentBuilder: DocumentBuilderService,
     private readonly storage: StorageService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   /**
@@ -179,6 +181,11 @@ export class DocumentGeneratorService {
     });
 
     this.logger.log(`Document ${documentId} generated successfully`);
+
+    // Notify user that document is ready (fire-and-forget)
+    this.notifyDocumentOwner(document.sessionId, [uploadResult.fileName], 'ready').catch((err) =>
+      this.logger.warn('Failed to send documents-ready notification', err),
+    );
   }
 
   /**
@@ -290,7 +297,7 @@ export class DocumentGeneratorService {
       );
     }
 
-    return this.prisma.document.update({
+    const approved = await this.prisma.document.update({
       where: { id },
       data: {
         status: DocumentStatus.APPROVED,
@@ -302,6 +309,13 @@ export class DocumentGeneratorService {
         },
       },
     });
+
+    // Notify document owner (fire-and-forget)
+    this.notifyDocumentOwner(document.sessionId, [document.fileName || 'Document'], 'approved').catch(
+      (err) => this.logger.warn('Failed to send approval notification', err),
+    );
+
+    return approved;
   }
 
   /**
@@ -334,5 +348,39 @@ export class DocumentGeneratorService {
         },
       },
     });
+  }
+
+  /**
+   * Helper to notify the session owner about document status changes
+   */
+  private async notifyDocumentOwner(
+    sessionId: string,
+    documentNames: string[],
+    action: 'approved' | 'ready',
+  ): Promise<void> {
+    const session = await this.prisma.session.findUnique({
+      where: { id: sessionId },
+      include: { user: { select: { email: true, name: true } } },
+    });
+
+    if (!session?.user) return;
+
+    const userName = session.user.name || session.user.email.split('@')[0];
+
+    if (action === 'approved') {
+      await this.notificationService.sendDocumentsApprovedEmail(
+        session.user.email,
+        userName,
+        sessionId,
+        documentNames,
+      );
+    } else {
+      await this.notificationService.sendDocumentsReadyEmail(
+        session.user.email,
+        userName,
+        sessionId,
+        documentNames,
+      );
+    }
   }
 }

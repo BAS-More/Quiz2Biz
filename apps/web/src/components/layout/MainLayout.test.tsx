@@ -73,7 +73,7 @@ describe('MainLayout', () => {
   });
 
   it('toggles sidebar on mobile menu button click', async () => {
-    const user = userEvent.setup();
+    userEvent.setup();
     renderMainLayout();
 
     // The Menu button should be present

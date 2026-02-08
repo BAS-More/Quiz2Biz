@@ -7,7 +7,7 @@
  * Nielsen Heuristic: Help users recognize, diagnose, and recover from errors
  */
 
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 // ============================================================================
 // Error Code Taxonomy

@@ -35,7 +35,7 @@ export async function fetchCsrfToken(): Promise<string> {
       withCredentials: true,
     });
     csrfToken = response.data.csrfToken;
-    return csrfToken;
+    return csrfToken!;
   } catch (error) {
     console.error('Failed to fetch CSRF token:', error);
     // Fallback to cookie if direct fetch fails
@@ -94,7 +94,7 @@ apiClient.interceptors.request.use(
       if (!csrfToken) {
         try {
           await fetchCsrfToken();
-        } catch (e) {
+        } catch {
           console.warn('Could not fetch CSRF token, request may fail');
         }
       }
@@ -149,7 +149,7 @@ apiClient.interceptors.response.use(
       if (refreshToken) {
         try {
           // Try to refresh token
-          const { data } = await axios.post(`${API_BASE_URL}/auth/refresh`, {
+          const { data } = await axios.post(`${API_BASE_URL}/api/v1/auth/refresh`, {
             refreshToken,
           });
 

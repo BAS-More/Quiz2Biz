@@ -18,9 +18,8 @@ import React, {
   useReducer,
   useEffect,
   useCallback,
-  useMemo,
-  ReactNode,
 } from 'react';
+import type { ReactNode } from 'react';
 
 // =============================================================================
 // TYPES & INTERFACES

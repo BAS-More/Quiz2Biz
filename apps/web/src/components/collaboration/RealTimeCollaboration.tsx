@@ -102,14 +102,11 @@ class MockWebSocketService {
   private listeners: Map<string, Set<(data: any) => void>> = new Map();
   private isConnected = false;
   private userId = '';
-  private sessionId = '';
-
   connect(sessionId: string, userId: string): Promise<void> {
     return new Promise((resolve) => {
       setTimeout(() => {
         this.isConnected = true;
         this.userId = userId;
-        this.sessionId = sessionId;
         this.emit('connected', { userId, sessionId });
         resolve();
       }, 100);
@@ -174,7 +171,7 @@ interface RealTimeProviderProps {
 
 export const RealTimeProvider: React.FC<RealTimeProviderProps> = ({
   children,
-  serverUrl = 'ws://localhost:3001',
+  serverUrl: _serverUrl = 'ws://localhost:3001',
 }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [collaborators, setCollaborators] = useState<CollaboratorInfo[]>([]);
@@ -184,7 +181,7 @@ export const RealTimeProvider: React.FC<RealTimeProviderProps> = ({
 
   const userIdRef = useRef<string>('');
   const userNameRef = useRef<string>('');
-  const cursorThrottle = useRef<NodeJS.Timeout>();
+  const cursorThrottle = useRef<NodeJS.Timeout | null>(null);
 
   // Connect to WebSocket server
   const connect = useCallback(async (sessionId: string, userId: string, userName: string) => {
@@ -960,7 +957,7 @@ interface UseCollaborativeInputOptions {
 
 export const useCollaborativeInput = (options: UseCollaborativeInputOptions) => {
   const { acquireLock, releaseLock, sendEdit, locks } = useRealTime();
-  const [isLocked, setIsLocked] = useState(false);
+  const [_isLocked, setIsLocked] = useState(false);
 
   const handleFocus = useCallback(() => {
     const acquired = acquireLock(options.fieldId);

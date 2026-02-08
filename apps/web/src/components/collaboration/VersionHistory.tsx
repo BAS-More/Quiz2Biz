@@ -122,7 +122,7 @@ export const VersionHistoryProvider: React.FC<VersionHistoryProviderProps> = ({
   const [versions, setVersions] = useState<Map<string, ResponseVersion[]>>(() =>
     VersionStorage.load(),
   );
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, _setIsLoading] = useState(false);
 
   // Save to storage whenever versions change
   useEffect(() => {
@@ -509,7 +509,6 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
   const [hoveredVersion, setHoveredVersion] = useState<string | null>(null);
 
   const versions = getVersions(responseId);
-  const currentVersion = versions[versions.length - 1];
   const diff =
     compareVersion1 && compareVersion2 ? compareVersions(compareVersion1, compareVersion2) : null;
 
@@ -813,7 +812,7 @@ interface UseVersionedResponseOptions {
 export const useVersionedResponse = (options: UseVersionedResponseOptions) => {
   const { saveVersion } = useVersionHistory();
   const [value, setValue] = useState('');
-  const timeoutRef = React.useRef<NodeJS.Timeout>();
+  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   const updateValue = useCallback(
     (newValue: string) => {

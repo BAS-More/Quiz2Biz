@@ -17,8 +17,8 @@ import React, {
   useCallback,
   useMemo,
   useRef,
-  ReactNode,
 } from 'react';
+import type { ReactNode } from 'react';
 
 // =============================================================================
 // TYPES & INTERFACES
@@ -410,7 +410,7 @@ export const VideoTutorialsProvider: React.FC<VideoTutorialsProviderProps> = ({ 
     setState((prev) => ({ ...prev, currentTime: time }));
   }, []);
 
-  const setPlaybackRate = useCallback((rate: number) => {
+  const setPlaybackRate = useCallback((_rate: number) => {
     // Playback rate would be handled by video element
   }, []);
 
@@ -557,7 +557,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const [activeHotspots, setActiveHotspots] = useState<VideoHotspot[]>([]);
   const [currentChapter, setCurrentChapter] = useState<VideoChapter | null>(null);
 
-  const { markChapterComplete, trackHotspotClick } = useVideoTutorials();
+  const { markChapterComplete: _markChapterComplete, trackHotspotClick } = useVideoTutorials();
 
   // Update current chapter based on time
   useEffect(() => {
@@ -859,7 +859,7 @@ export const TutorialLibrary: React.FC = () => {
     searchTutorials,
     filterByCategory,
     filterByDifficulty,
-    playTutorial,
+    playTutorial: _playTutorial,
     getProgress,
     getRecommendedTutorials,
   } = useVideoTutorials();

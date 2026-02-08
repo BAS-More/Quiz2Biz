@@ -7,7 +7,7 @@
  * - #10 Help and documentation: Contextual fix suggestions
  */
 
-import React, { createContext, useContext, useState, useCallback, useEffect, useMemo } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
 // ============================================================================
 // Types & Interfaces
@@ -441,7 +441,6 @@ export const AIErrorDiagnosisProvider: React.FC<AIErrorDiagnosisProviderProps> =
       confidence: number;
       pattern?: ErrorPattern;
     } => {
-      const errorMessage = error.message.toLowerCase();
       const errorString = `${error.name} ${error.message} ${context?.statusCode || ''}`;
 
       // Find matching pattern

@@ -9,6 +9,14 @@ global.URL.revokeObjectURL = vi.fn();
 
 describe('FileUploadInput', () => {
   const mockOnChange = vi.fn();
+  const mockQuestion = {
+    id: 'q1',
+    sectionId: 's1',
+    text: 'Upload files',
+    type: 'FILE_UPLOAD' as const,
+    orderIndex: 0,
+    isRequired: false,
+  };
 
   beforeEach(() => {
     mockOnChange.mockClear();
@@ -16,14 +24,14 @@ describe('FileUploadInput', () => {
   });
 
   it('renders drag and drop zone', () => {
-    render(<FileUploadInput value={[]} onChange={mockOnChange} />);
+    render(<FileUploadInput question={mockQuestion} value={[]} onChange={mockOnChange} />);
 
     expect(screen.getByText(/drag and drop/i)).toBeInTheDocument();
     expect(screen.getByText(/click to upload/i)).toBeInTheDocument();
   });
 
   it('shows file input element', () => {
-    render(<FileUploadInput value={[]} onChange={mockOnChange} />);
+    render(<FileUploadInput question={mockQuestion} value={[]} onChange={mockOnChange} />);
 
     // File input should exist but be hidden
     const input = document.querySelector('input[type="file"]');
@@ -38,7 +46,7 @@ describe('FileUploadInput', () => {
       preview: 'mock-url',
     };
 
-    render(<FileUploadInput value={[fileWithPreview]} onChange={mockOnChange} />);
+    render(<FileUploadInput question={mockQuestion} value={[fileWithPreview]} onChange={mockOnChange} />);
 
     expect(screen.getByAltText('test.png')).toBeInTheDocument();
     expect(screen.getByText('test.png')).toBeInTheDocument();
@@ -52,7 +60,7 @@ describe('FileUploadInput', () => {
       preview: undefined, // Non-image files don't have preview
     };
 
-    render(<FileUploadInput value={[fileWithPreview]} onChange={mockOnChange} />);
+    render(<FileUploadInput question={mockQuestion} value={[fileWithPreview]} onChange={mockOnChange} />);
 
     expect(screen.getByText('document.pdf')).toBeInTheDocument();
   });
@@ -66,7 +74,7 @@ describe('FileUploadInput', () => {
       preview: undefined,
     };
 
-    render(<FileUploadInput value={[fileWithPreview]} onChange={mockOnChange} />);
+    render(<FileUploadInput question={mockQuestion} value={[fileWithPreview]} onChange={mockOnChange} />);
 
     // Get the remove button (it's the one inside the file preview, not the dropzone)
     const buttons = screen.getAllByRole('button');
@@ -83,34 +91,34 @@ describe('FileUploadInput', () => {
       { id: '2', file: new File(['2'], 'file2.png', { type: 'image/png' }), preview: 'mock-url' },
     ];
 
-    render(<FileUploadInput value={files} onChange={mockOnChange} />);
+    render(<FileUploadInput question={mockQuestion} value={files} onChange={mockOnChange} />);
 
     expect(screen.getByText('file1.txt')).toBeInTheDocument();
     expect(screen.getByText('file2.png')).toBeInTheDocument();
   });
 
   it('disables upload when disabled prop is true', () => {
-    render(<FileUploadInput value={[]} onChange={mockOnChange} disabled={true} />);
+    render(<FileUploadInput question={mockQuestion} value={[]} onChange={mockOnChange} disabled={true} />);
 
     const dropzone = screen.getByRole('button', { name: /upload files/i });
     expect(dropzone).toHaveAttribute('aria-disabled', 'true');
   });
 
   it('shows accepted file types in help text', () => {
-    render(<FileUploadInput value={[]} onChange={mockOnChange} />);
+    render(<FileUploadInput question={mockQuestion} value={[]} onChange={mockOnChange} />);
 
     expect(screen.getByText(/images.*pdfs.*documents/i)).toBeInTheDocument();
   });
 
   it('has accessible label for drop zone', () => {
-    render(<FileUploadInput value={[]} onChange={mockOnChange} />);
+    render(<FileUploadInput question={mockQuestion} value={[]} onChange={mockOnChange} />);
 
     const dropzone = screen.getByRole('button', { name: /upload files/i });
     expect(dropzone).toBeInTheDocument();
   });
 
   it('displays error message when error prop is provided', () => {
-    render(<FileUploadInput value={[]} onChange={mockOnChange} error="File too large" />);
+    render(<FileUploadInput question={mockQuestion} value={[]} onChange={mockOnChange} error="File too large" />);
 
     expect(screen.getByText('File too large')).toBeInTheDocument();
   });

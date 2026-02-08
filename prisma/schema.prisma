@@ -360,6 +360,7 @@ model Session {
   questionnaireId      String        @map("questionnaire_id")
   questionnaireVersion Int           @map("questionnaire_version")
   status               SessionStatus @default(IN_PROGRESS)
+  persona              Persona?                              // Quiz2Biz persona filter for question selection
   industry             String?
   progress             Json          @default("{\"percentage\": 0, \"answered\": 0, \"total\": 0}")
   currentSectionId     String?       @map("current_section_id")
@@ -384,6 +385,7 @@ model Session {
   documents       Document[]
   evidenceItems   EvidenceRegistry[]
   decisions       DecisionLog[]
+  scoreSnapshots  ScoreSnapshot[]
 
   @@index([userId])
   @@index([questionnaireId])
@@ -392,6 +394,23 @@ model Session {
   @@index([userId, status])
   @@index([readinessScore])
   @@map("sessions")
+}
+
+// Score history snapshots for trend analysis
+model ScoreSnapshot {
+  id                    String   @id @default(uuid())
+  sessionId             String   @map("session_id")
+  score                 Decimal  @db.Decimal(5, 2)  // Readiness score 0.00-100.00
+  portfolioResidual     Decimal  @db.Decimal(7, 6)  // R value 0.000000-1.000000
+  completionPercentage  Decimal  @db.Decimal(5, 2)  // 0.00-100.00
+  dimensionBreakdown    Json     @default("[]") @map("dimension_breakdown")  // Per-dimension residuals snapshot
+  createdAt             DateTime @default(now()) @map("created_at")
+
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([sessionId, createdAt])
+  @@map("score_snapshots")
 }
 
 model Response {

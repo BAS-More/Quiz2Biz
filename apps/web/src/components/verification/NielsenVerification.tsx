@@ -10,7 +10,6 @@ import React, {
   createContext,
   useContext,
   useState,
-  useEffect,
   useCallback,
   useMemo,
 } from 'react';
@@ -694,54 +693,6 @@ export const NielsenVerificationProvider: React.FC<{ children: ReactNode }> = ({
     }, 0);
   }, [state.currentEvaluation, state.evaluationHistory]);
 
-  const generateComplianceReport = useCallback(async (): Promise<ComplianceReport> => {
-    const nielsenScore = calculateOverallScore();
-
-    const report: ComplianceReport = {
-      id: `report-${Date.now()}`,
-      generatedAt: new Date(),
-      version: '1.0.0',
-      nielsenScore,
-      wcagCompliance: {
-        level: 'AA',
-        criteriaTotal: 50,
-        criteriaPassed: 48,
-        criteriaFailed: 0,
-        criteriaWarnings: 2,
-      },
-      performanceMetrics: {
-        fcp: 1.2,
-        lcp: 2.1,
-        tti: 3.2,
-        cls: 0.05,
-        apiResponseTime: 150,
-        errorRate: 0.5,
-      },
-      userSatisfaction: {
-        npsScore: 72,
-        susScore: 86,
-        taskCompletionRate: 94,
-        avgTaskTime: 45,
-      },
-      productionReadiness: getProductionReadiness(),
-      signOff: [],
-    };
-
-    setState((prev) => ({ ...prev, complianceReport: report }));
-    return report;
-  }, [calculateOverallScore]);
-
-  const recordUATSession = useCallback((session: Omit<UATSession, 'id'>) => {
-    const newSession: UATSession = {
-      ...session,
-      id: `uat-${Date.now()}`,
-    };
-    setState((prev) => ({
-      ...prev,
-      uatSessions: [...prev.uatSessions, newSession],
-    }));
-  }, []);
-
   const getProductionReadiness = useCallback((): ProductionReadiness => {
     const nielsenScore = calculateOverallScore();
 
@@ -799,6 +750,54 @@ export const NielsenVerificationProvider: React.FC<{ children: ReactNode }> = ({
     };
   }, [calculateOverallScore, state.uatSessions]);
 
+  const generateComplianceReport = useCallback(async (): Promise<ComplianceReport> => {
+    const nielsenScore = calculateOverallScore();
+
+    const report: ComplianceReport = {
+      id: `report-${Date.now()}`,
+      generatedAt: new Date(),
+      version: '1.0.0',
+      nielsenScore,
+      wcagCompliance: {
+        level: 'AA',
+        criteriaTotal: 50,
+        criteriaPassed: 48,
+        criteriaFailed: 0,
+        criteriaWarnings: 2,
+      },
+      performanceMetrics: {
+        fcp: 1.2,
+        lcp: 2.1,
+        tti: 3.2,
+        cls: 0.05,
+        apiResponseTime: 150,
+        errorRate: 0.5,
+      },
+      userSatisfaction: {
+        npsScore: 72,
+        susScore: 86,
+        taskCompletionRate: 94,
+        avgTaskTime: 45,
+      },
+      productionReadiness: getProductionReadiness(),
+      signOff: [],
+    };
+
+    setState((prev) => ({ ...prev, complianceReport: report }));
+    return report;
+  }, [calculateOverallScore, getProductionReadiness]);
+
+  const recordUATSession = useCallback((session: Omit<UATSession, 'id'>) => {
+    const newSession: UATSession = {
+      ...session,
+      id: `uat-${Date.now()}`,
+    };
+    setState((prev) => ({
+      ...prev,
+      uatSessions: [...prev.uatSessions, newSession],
+    }));
+  }, []);
+
   const contextValue = useMemo(
     () => ({
       ...state,
@@ -846,7 +845,6 @@ export const useNielsenVerification = (): NielsenVerificationContextType => {
 export const NielsenDashboard: React.FC = () => {
   const {
     currentEvaluation,
-    evaluationHistory,
     uatSessions,
     calculateOverallScore,
     getProductionReadiness,

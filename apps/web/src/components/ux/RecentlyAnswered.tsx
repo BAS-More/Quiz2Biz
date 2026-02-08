@@ -133,9 +133,9 @@ export const RecentlyAnsweredProvider: React.FC<RecentlyAnsweredProviderProps> =
       const stored = localStorage.getItem(persistKey);
       if (stored) {
         const parsed = JSON.parse(stored);
-        return parsed.map((a: any) => ({
+        return parsed.map((a: Record<string, unknown>) => ({
           ...a,
-          answeredAt: new Date(a.answeredAt),
+          answeredAt: new Date(a.answeredAt as string),
         }));
       }
     } catch {

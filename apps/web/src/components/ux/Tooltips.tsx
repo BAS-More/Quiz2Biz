@@ -90,15 +90,11 @@ export const TooltipProvider: React.FC<{
   defaultTheme?: TooltipTheme;
   initialEnabled?: boolean;
 }> = ({ children, defaultDelay = 200, defaultTheme = 'dark', initialEnabled = true }) => {
-  const [tooltipsEnabled, setTooltipsEnabled] = useState(initialEnabled);
-
-  // Persist setting
-  useEffect(() => {
+  // Initialize from localStorage
+  const [tooltipsEnabled, setTooltipsEnabled] = useState(() => {
     const stored = localStorage.getItem('tooltipsEnabled');
-    if (stored !== null) {
-      setTooltipsEnabled(stored === 'true');
-    }
-  }, []);
+    return stored !== null ? stored === 'true' : initialEnabled;
+  });
 
   const handleSetEnabled = useCallback((enabled: boolean) => {
     setTooltipsEnabled(enabled);

@@ -19,8 +19,8 @@ import React, {
   useEffect,
   useCallback,
   useRef,
-  ReactNode,
 } from 'react';
+import type { ReactNode } from 'react';
 
 // =============================================================================
 // TYPES & INTERFACES
@@ -388,7 +388,7 @@ export interface UserPreferencesProviderProps {
 
 export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = ({
   children,
-  userId,
+  userId: _userId,
   enablePersistence = true,
   enableLearning = true,
 }) => {
@@ -786,7 +786,7 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
     });
 
     // Analyze feature usage for personalization
-    const topFeatures = getTopFeatures(3);
+    getTopFeatures(3);
     const underusedFeatures = state.featureUsage.filter((f) => f.usageCount === 1);
 
     underusedFeatures.forEach((feature) => {

@@ -262,7 +262,7 @@ export function useBlurValidation(options: UseBlurValidationOptions = {}): UseBl
   const [touched, setTouched] = useState(false);
   const [dirty, setDirty] = useState(false);
   const [validating, setValidating] = useState(false);
-  const asyncTimeoutRef = useRef<NodeJS.Timeout>();
+  const asyncTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const errorIdRef = useRef(`error-${Math.random().toString(36).substr(2, 9)}`);
 
   // Build full rules array
@@ -334,7 +334,7 @@ export function useBlurValidation(options: UseBlurValidationOptions = {}): UseBl
 
   // Handle blur
   const handleBlur = useCallback(
-    (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    (_e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       setTouched(true);
 
       if (validateOnBlur) {
@@ -536,7 +536,6 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
   ...inputProps
 }) => {
   const {
-    value,
     error,
     touched,
     valid,

@@ -27,6 +27,7 @@ import {
 export class HeatmapService {
   private readonly logger = new Logger(HeatmapService.name);
   private readonly CACHE_TTL = 300; // 5 minutes
+  private readonly DEFAULT_SEVERITY = 0.7; // §16 risk control
 
   constructor(
     private readonly prisma: PrismaService,
@@ -244,12 +245,12 @@ export class HeatmapService {
     const cellQuestions = questions
       .filter((q: { dimensionKey: string | null }) => q.dimensionKey === dim?.key)
       .filter(
-        (q: { severity: any }) => SeverityBuckets.getBucket(Number(q.severity || 0.5)) === bucket,
+        (q: { severity: any }) => SeverityBuckets.getBucket(Number(q.severity || this.DEFAULT_SEVERITY)) === bucket,
       )
       .map((q: { id: string; text: string; severity: any }) => {
         const response = responseLookup.get(q.id) as { coverage: any; value?: any } | undefined;
         const coverage = response?.coverage ? Number(response.coverage) : 0;
-        const severity = Number(q.severity || 0.5);
+        const severity = Number(q.severity || this.DEFAULT_SEVERITY);
         return {
           questionId: q.id,
           questionText: q.text,
@@ -303,12 +304,14 @@ export class HeatmapService {
       orderBy: { orderIndex: 'asc' },
     });
 
+    // Filter questions by session persona
     const questions = await this.prisma.question.findMany({
       where: {
         section: {
           questionnaireId: session.questionnaireId,
         },
         dimensionKey: { not: null },
+        ...(session.persona && { persona: session.persona }),
       },
     });
 
@@ -332,14 +335,14 @@ export class HeatmapService {
 
       for (const bucket of SeverityBuckets.order) {
         const bucketQuestions = dimQuestions.filter(
-          (q) => SeverityBuckets.getBucket(Number(q.severity || 0.5)) === bucket,
+          (q) => SeverityBuckets.getBucket(Number(q.severity || this.DEFAULT_SEVERITY)) === bucket,
         );
 
         let cellValue = 0;
         for (const q of bucketQuestions) {
           const response = responseLookup.get(q.id);
           const coverage = response?.coverage ? Number(response.coverage) : 0;
-          const severity = Number(q.severity || 0.5);
+          const severity = Number(q.severity || this.DEFAULT_SEVERITY);
           cellValue += severity * (1 - coverage);
         }
 
@@ -540,7 +543,7 @@ export class HeatmapService {
         .filter((q: { dimensionKey: string | null }) => q.dimensionKey === cell.dimensionKey)
         .filter(
           (q: { severity: any }) =>
-            SeverityBuckets.getBucket(Number(q.severity || 0.5)) === cell.severityBucket,
+            SeverityBuckets.getBucket(Number(q.severity || this.DEFAULT_SEVERITY)) === cell.severityBucket,
         )
         .map((q: { id: string; text: string; severity: any }) => {
           const response = responseLookup.get(q.id) as { coverage: any } | undefined;
@@ -549,7 +552,7 @@ export class HeatmapService {
             questionId: q.id,
             text: q.text,
             currentCoverage: coverage,
-            potentialGain: Number(q.severity || 0.5) * (1 - coverage),
+            potentialGain: Number(q.severity || this.DEFAULT_SEVERITY) * (1 - coverage),
           };
         })
         .sort(

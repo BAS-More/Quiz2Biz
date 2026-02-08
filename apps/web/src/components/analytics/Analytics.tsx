@@ -210,21 +210,6 @@ const STORAGE_KEYS = {
   CURRENT_SESSION: 'quiz2biz_current_session',
 };
 
-const DEFAULT_HEATMAP_CONFIG: HeatmapConfig = {
-  page: '',
-  type: 'click',
-  radius: 20,
-  maxIntensity: 100,
-  minOpacity: 0.05,
-  gradient: {
-    0.4: 'blue',
-    0.6: 'cyan',
-    0.7: 'lime',
-    0.8: 'yellow',
-    1.0: 'red',
-  },
-};
-
 // ============================================================================
 // Context
 // ============================================================================
@@ -434,6 +419,20 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({
     [currentSession, onEvent],
   );
 
+  // Get element selector - define before trackClick
+  const getElementSelector = (element: Element): string => {
+    if (element.id) {
+      return `#${element.id}`;
+    }
+
+    const classes = Array.from(element.classList).slice(0, 3).join('.');
+    if (classes) {
+      return `${element.tagName.toLowerCase()}.${classes}`;
+    }
+
+    return element.tagName.toLowerCase();
+  };
+
   // Track click
   const trackClick = useCallback(
     (element: Element, x: number, y: number) => {
@@ -516,20 +515,6 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({
     },
     [trackEvent],
   );
-
-  // Get element selector
-  const getElementSelector = (element: Element): string => {
-    if (element.id) {
-      return `#${element.id}`;
-    }
-
-    const classes = Array.from(element.classList).slice(0, 3).join('.');
-    if (classes) {
-      return `${element.tagName.toLowerCase()}.${classes}`;
-    }
-
-    return element.tagName.toLowerCase();
-  };
 
   // Auto-track setup
   useEffect(() => {

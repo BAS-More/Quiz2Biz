@@ -90,6 +90,9 @@ export class ScoringEngineService {
   /** Small epsilon to avoid division by zero */
   private readonly EPSILON = 1e-10;
 
+  /** Default severity for questions without a severity value (§16 risk control) */
+  private readonly DEFAULT_SEVERITY = 0.7;
+
   /** Cache TTL for score calculations (5 minutes) */
   private readonly SCORE_CACHE_TTL = 300;
 
@@ -127,12 +130,13 @@ export class ScoringEngineService {
       orderBy: { orderIndex: 'asc' },
     });
 
-    // Fetch all questions for this questionnaire with their responses
+    // Fetch questions for this questionnaire filtered by session persona
     const questions = await this.prisma.question.findMany({
       where: {
         section: {
           questionnaireId: session.questionnaireId,
         },
+        ...(session.persona && { persona: session.persona }),
       },
       include: {
         responses: {
@@ -197,6 +201,9 @@ export class ScoringEngineService {
       trend,
     };
 
+    // Save score snapshot for history tracking
+    await this.saveScoreSnapshot(sessionId, result);
+
     // Cache the result
     await this.cacheScore(sessionId, result);
 
@@ -224,7 +231,13 @@ export class ScoringEngineService {
       currentResult = await this.calculateScore({ sessionId });
     }
 
-    // Fetch questions that are not fully covered
+    // Look up session persona for filtering
+    const session = await this.prisma.session.findUnique({
+      where: { id: sessionId },
+      select: { persona: true },
+    });
+
+    // Fetch questions filtered by session persona
     const questions = await this.prisma.question.findMany({
       where: {
         section: {
@@ -235,6 +248,7 @@ export class ScoringEngineService {
           },
         },
         dimensionKey: { not: null },
+        ...(session?.persona && { persona: session.persona }),
       },
       include: {
         responses: {
@@ -256,7 +270,7 @@ export class ScoringEngineService {
     questions.forEach((q) => {
       if (q.dimensionKey) {
         const current = dimensionSeveritySum.get(q.dimensionKey) || 0;
-        dimensionSeveritySum.set(q.dimensionKey, current + (q.severity ? Number(q.severity) : 0.5));
+        dimensionSeveritySum.set(q.dimensionKey, current + (q.severity ? Number(q.severity) : this.DEFAULT_SEVERITY));
       }
     });
 
@@ -272,7 +286,7 @@ export class ScoringEngineService {
         continue;
       }
 
-      const severity: number = question.severity ? Number(question.severity) : 0.5;
+      const severity: number = question.severity ? Number(question.severity) : this.DEFAULT_SEVERITY;
       const dimensionKey: string = question.dimensionKey || 'unknown';
       const dimensionWeight: number = Number(dimensionWeightMap.get(dimensionKey) ?? 0);
       const severitySum: number = Number(dimensionSeveritySum.get(dimensionKey) ?? 1);
@@ -414,7 +428,7 @@ export class ScoringEngineService {
       let answeredCount = 0;
 
       dimQuestions.forEach((q) => {
-        const severity = q.severity ? Number(q.severity) : 0.5;
+        const severity = q.severity ? Number(q.severity) : this.DEFAULT_SEVERITY;
         const coverage = coverageMap.get(q.id) || 0;
 
         numerator += severity * (1 - coverage);
@@ -492,6 +506,31 @@ export class ScoringEngineService {
   }
 
   /**
+   * Save a score snapshot for history tracking
+   */
+  private async saveScoreSnapshot(sessionId: string, result: ReadinessScoreResult): Promise<void> {
+    try {
+      await this.prisma.scoreSnapshot.create({
+        data: {
+          sessionId,
+          score: new Decimal(result.score.toFixed(2)),
+          portfolioResidual: new Decimal(result.portfolioResidual.toFixed(6)),
+          completionPercentage: new Decimal(result.completionPercentage.toFixed(2)),
+          dimensionBreakdown: result.dimensions.map((d) => ({
+            dimensionKey: d.dimensionKey,
+            residualRisk: d.residualRisk,
+            weight: d.weight,
+            answeredCount: d.answeredCount,
+            questionCount: d.questionCount,
+          })),
+        },
+      });
+    } catch (error) {
+      this.logger.warn(`Failed to save score snapshot for session ${sessionId}`, error);
+    }
+  }
+
+  /**
    * Invalidate cached score for a session
    */
   async invalidateScoreCache(sessionId: string): Promise<void> {
@@ -536,7 +575,7 @@ export class ScoringEngineService {
    * Get score history for a session
    * Returns historical score snapshots for trend analysis
    */
-  async getScoreHistory(sessionId: string, _limit: number = 10): Promise<ScoreHistoryResult> {
+  async getScoreHistory(sessionId: string, limit: number = 10): Promise<ScoreHistoryResult> {
     const session = await this.prisma.session.findUnique({
       where: { id: sessionId },
       select: {
@@ -551,18 +590,28 @@ export class ScoringEngineService {
       throw new NotFoundException(`Session not found: ${sessionId}`);
     }
 
-    // Since DecisionLog doesn't have metadata/decisionType fields,
-    // we'll build history from session data
     const currentScore = session.readinessScore ? Number(session.readinessScore) : 0;
 
-    const history: ScoreSnapshot[] = [
-      {
-        timestamp: session.lastScoreCalculation || session.startedAt,
-        score: currentScore,
-        portfolioResidual: 0,
-        completionPercentage: 0,
-      },
-    ];
+    // Load actual score snapshots from ScoreSnapshot table
+    const snapshots = await this.prisma.scoreSnapshot.findMany({
+      where: { sessionId },
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+    });
+
+    const history: ScoreSnapshot[] = snapshots.length > 0
+      ? snapshots.map((s) => ({
+          timestamp: s.createdAt,
+          score: Number(s.score),
+          portfolioResidual: Number(s.portfolioResidual),
+          completionPercentage: Number(s.completionPercentage),
+        }))
+      : [{
+          timestamp: session.lastScoreCalculation || session.startedAt,
+          score: currentScore,
+          portfolioResidual: 0,
+          completionPercentage: 0,
+        }];
 
     // Calculate trend metrics
     const trendAnalysis = this.calculateTrendAnalysis(history);
@@ -762,7 +811,7 @@ export class ScoringEngineService {
     // First calculate current score to get dimension residuals
     const currentResult = await this.calculateScore({ sessionId });
 
-    // Get industry averages per dimension
+    // Get industry averages per dimension from completed sessions' response data
     const dimensionAverages = await this.prisma.$queryRaw<
       Array<{
         dimension_key: string;
@@ -770,19 +819,36 @@ export class ScoringEngineService {
         count: bigint;
       }>
     >`
-            WITH dimension_scores AS (
-                SELECT 
-                    dl.metadata->>'dimensionKey' as dimension_key,
-                    (dl.metadata->>'residualRisk')::float as residual_risk
-                FROM decision_logs dl
-                WHERE dl.decision_type = 'SCORE_CALCULATION'
-                AND dl.metadata->>'dimensionKey' IS NOT NULL
+            WITH completed_responses AS (
+                SELECT
+                    q.dimension_key,
+                    q.severity,
+                    r.coverage,
+                    r.session_id
+                FROM responses r
+                JOIN questions q ON r.question_id = q.id
+                JOIN sessions s ON r.session_id = s.id
+                WHERE s.status = 'COMPLETED'
+                AND s.readiness_score IS NOT NULL
+                AND q.dimension_key IS NOT NULL
+            ),
+            dimension_residuals AS (
+                SELECT
+                    dimension_key,
+                    session_id,
+                    CASE WHEN SUM(COALESCE(severity, ${this.DEFAULT_SEVERITY})) > 0
+                        THEN SUM(COALESCE(severity, ${this.DEFAULT_SEVERITY}) * (1 - COALESCE(coverage, 0)))
+                             / SUM(COALESCE(severity, ${this.DEFAULT_SEVERITY}))
+                        ELSE 0
+                    END as residual_risk
+                FROM completed_responses
+                GROUP BY dimension_key, session_id
             )
-            SELECT 
+            SELECT
                 dimension_key,
                 AVG(residual_risk) as avg_residual,
-                COUNT(*) as count
-            FROM dimension_scores
+                COUNT(DISTINCT session_id) as count
+            FROM dimension_residuals
             GROUP BY dimension_key
         `;
 

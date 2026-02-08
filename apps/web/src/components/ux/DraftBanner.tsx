@@ -5,8 +5,9 @@
  * Nielsen Heuristic: User Control & Freedom - Clear indication of recoverable work.
  */
 
-import React, { useState, useEffect } from 'react';
-import { DraftData, isDraftRecoverable, formatTimeSinceSave } from '../hooks/useDraftAutosave';
+import { useState, useEffect } from 'react';
+import type { DraftData } from '../../hooks/useDraftAutosave';
+import { isDraftRecoverable, formatTimeSinceSave } from '../../hooks/useDraftAutosave';
 
 // ============================================================================
 // Types

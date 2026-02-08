@@ -94,6 +94,16 @@ export class CsrfGuard implements CanActivate {
     }
 
     // Validate tokens match (constant-time comparison to prevent timing attacks)
+    // Check lengths first to avoid timingSafeEqual throwing on different lengths
+    if (headerToken.length !== cookieToken.length) {
+      this.logger.warn(`CSRF validation failed: Token length mismatch for ${request.path}`);
+      throw new ForbiddenException({
+        statusCode: 403,
+        message: 'CSRF token validation failed',
+        error: 'Forbidden',
+        code: 'CSRF_TOKEN_MISMATCH',
+      });
+    }
     const tokensMatch = crypto.timingSafeEqual(Buffer.from(headerToken), Buffer.from(cookieToken));
 
     if (!tokensMatch) {

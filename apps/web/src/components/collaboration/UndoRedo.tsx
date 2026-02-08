@@ -111,7 +111,6 @@ export const UndoRedoProvider: React.FC<UndoRedoProviderProps> = ({
 }) => {
   const [past, setPast] = useState<Command[]>([]);
   const [future, setFuture] = useState<Command[]>([]);
-  const debounceTimer = useRef<NodeJS.Timeout>();
   const lastCommandType = useRef<string>('');
   const lastCommandTime = useRef<number>(0);
 
@@ -471,7 +470,7 @@ interface UndoRedoToolbarProps {
 
 export const UndoRedoToolbar: React.FC<UndoRedoToolbarProps> = ({
   showHistory = true,
-  compact = false,
+  compact: _compact = false,
 }) => {
   const {
     canUndo,

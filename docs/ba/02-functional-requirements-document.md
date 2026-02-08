@@ -3,9 +3,9 @@
 ### Adaptive Client Questionnaire System
 
 **Document Version:** 1.0  
-**Last Updated:** {{GENERATION_DATE}}  
+**Last Updated:** 2026-02-07  
 **Document Owner:** Business Analyst / Technical Lead  
-**Status:** {{STATUS}}
+**Status:** APPROVED
 
 ---
 
@@ -714,9 +714,9 @@ See [Requirements Traceability Matrix](./05-requirements-traceability-matrix.md)
 ### Adaptive Client Questionnaire System
 
 **Document Version:** 1.0  
-**Last Updated:** {{GENERATION_DATE}}  
+**Last Updated:** 2026-02-07  
 **Document Owner:** Business Analyst / Technical Lead  
-**Status:** {{STATUS}}
+**Status:** APPROVED
 
 ---
 

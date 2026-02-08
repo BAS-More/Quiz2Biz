@@ -1,6 +1,7 @@
 import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 import { SessionStatus, DecisionStatus } from '@prisma/client';
+import * as crypto from 'crypto';
 
 /**
  * DeliverablesCompilerService - Quiz2Biz Deliverables Pack Compiler
@@ -1342,7 +1343,7 @@ Evidence items support the coverage claims across all dimensions.
   }
 
   private generateId(): string {
-    return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    return `${Date.now()}-${crypto.randomBytes(6).toString('hex')}`;
   }
 
   private buildPackSummary(documents: CompiledDocument[]): PackSummary {

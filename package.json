@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Adaptive Client Questionnaire System - Backend API",
   "private": true,
+  "packageManager": "npm@10.9.4",
   "workspaces": [
     "apps/*",
     "libs/*"
@@ -43,6 +44,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",
+    "@eslint/js": "^10.0.1",
     "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.58.0",
     "@swc/cli": "^0.5.2",
@@ -51,15 +53,14 @@
     "@types/archiver": "^7.0.0",
     "@types/jest-axe": "^3.5.9",
     "@types/node": "^20.10.0",
-    "@typescript-eslint/eslint-plugin": "^6.18.0",
-    "@typescript-eslint/parser": "^6.18.0",
     "autocannon": "^8.0.0",
     "axe-core": "^4.11.1",
     "clinic": "^13.0.0",
-    "eslint": "^8.56.0",
+    "eslint": "^10.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-prettier": "^5.1.0",
+    "globals": "^17.3.0",
     "husky": "^8.0.3",
     "jest-axe": "^10.0.0",
     "lint-staged": "^15.2.0",
@@ -69,7 +70,8 @@
     "stripe": "^20.2.0",
     "tsc-alias": "^1.8.16",
     "turbo": "^1.11.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "typescript-eslint": "^8.54.0"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
@@ -100,5 +102,8 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "tsconfig-paths": "^4.2.0"
+  },
+  "overrides": {
+    "lodash": "4.17.23"
   }
 }

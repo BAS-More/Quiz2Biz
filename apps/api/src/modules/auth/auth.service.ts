@@ -352,6 +352,12 @@ export class AuthService {
 
     this.logger.log(`Email verified for user: ${userId}`);
 
+    // Send welcome email (fire-and-forget)
+    const userName = user.name || user.email.split('@')[0];
+    this.notificationService.sendWelcomeEmail(user.email, userName).catch((err) => {
+      this.logger.warn(`Failed to send welcome email to ${user.email}`, err);
+    });
+
     return { message: 'Email verified successfully', verified: true };
   }
 

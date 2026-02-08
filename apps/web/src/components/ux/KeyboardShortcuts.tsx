@@ -192,7 +192,7 @@ export const KeyboardShortcutsProvider: React.FC<KeyboardShortcutsProviderProps>
 }) => {
   const [shortcuts, setShortcuts] = useState<KeyboardShortcut[]>(initialShortcuts);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [keySequence, setKeySequence] = useState<string[]>([]);
+  const [_keySequence, setKeySequence] = useState<string[]>([]);
 
   const registerShortcut = useCallback((shortcut: KeyboardShortcut) => {
     setShortcuts((prev) => {

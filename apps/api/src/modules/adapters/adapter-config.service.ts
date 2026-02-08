@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@libs/database';
+import * as crypto from 'crypto';
 
 export type AdapterType = 'github' | 'gitlab' | 'jira' | 'confluence' | 'azure_devops';
 
@@ -320,7 +321,7 @@ export class AdapterConfigService {
   // Private helper methods
 
   private generateId(): string {
-    return `adapter_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+    return `adapter_${Date.now()}_${crypto.randomBytes(6).toString('hex')}`;
   }
 
   private encryptSensitiveFields(config: Record<string, unknown>): Record<string, unknown> {

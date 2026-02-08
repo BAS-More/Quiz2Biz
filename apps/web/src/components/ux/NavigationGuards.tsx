@@ -519,7 +519,7 @@ export const GuardedForm: React.FC<GuardedFormProps> = ({
   onSubmit,
   ...props
 }) => {
-  const { registerDirtyForm, unregisterDirtyForm, markFormClean, markFormDirty } =
+  const { registerDirtyForm, unregisterDirtyForm, markFormClean, markFormDirty: _markFormDirty } =
     useNavigationGuard();
   const [isDirty, setIsDirty] = useState(false);
 
@@ -528,7 +528,7 @@ export const GuardedForm: React.FC<GuardedFormProps> = ({
   }, [formId, unregisterDirtyForm]);
 
   const handleChange = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
+    (e: React.ChangeEvent<HTMLFormElement>) => {
       if (!isDirty) {
         setIsDirty(true);
         registerDirtyForm(formId);
@@ -544,13 +544,14 @@ export const GuardedForm: React.FC<GuardedFormProps> = ({
       markFormClean(formId);
       setIsDirty(false);
       onDirtyChange?.(false);
-      onSubmit?.(e);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onSubmit?.(e as any);
     },
     [formId, markFormClean, onDirtyChange, onSubmit],
   );
 
   return (
-    <form onChange={handleChange} onSubmit={handleSubmit} {...props}>
+    <form onChange={handleChange as any} onSubmit={handleSubmit as any} {...props}>
       {children}
     </form>
   );

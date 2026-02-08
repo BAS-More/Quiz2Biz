@@ -7,12 +7,16 @@ import {
   forwardRef,
 } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
-import { Session, SessionStatus, Question, Prisma } from '@prisma/client';
+import { Session, SessionStatus, Question, Prisma, Persona } from '@prisma/client';
 import { CreateSessionDto } from './dto/create-session.dto';
 import { SubmitResponseDto } from './dto/submit-response.dto';
 import { QuestionnaireService, QuestionResponse } from '../questionnaire/questionnaire.service';
 import { AdaptiveLogicService } from '../adaptive-logic/adaptive-logic.service';
+import { ScoringEngineService } from '../scoring-engine/scoring-engine.service';
 import { PaginationDto } from '@libs/shared';
+
+/** Quiz2Biz readiness score threshold for session completion */
+const READINESS_SCORE_THRESHOLD = 95.0;
 
 export interface ProgressInfo {
   percentage: number;
@@ -31,7 +35,9 @@ export interface SessionResponse {
   questionnaireId: string;
   userId: string;
   status: SessionStatus;
+  persona?: Persona;
   industry?: string;
+  readinessScore?: number;
   progress: ProgressInfo;
   currentSection?: {
     id: string;
@@ -64,6 +70,13 @@ export interface SubmitResponseResult {
     questionsRemoved: string[];
     newEstimatedTotal: number;
   };
+  readinessScore?: number;
+  nextQuestionByNQS?: {
+    questionId: string;
+    text: string;
+    dimensionKey: string;
+    expectedScoreLift: number;
+  };
   progress: ProgressInfo;
   createdAt: Date;
 }
@@ -80,6 +93,7 @@ export interface ContinueSessionResponse {
     answeredInSection: number;
   };
   overallProgress: ProgressInfo;
+  readinessScore?: number;
   adaptiveState: {
     visibleQuestionCount: number;
     skippedQuestionCount: number;
@@ -96,27 +110,37 @@ export class SessionService {
     private readonly questionnaireService: QuestionnaireService,
     @Inject(forwardRef(() => AdaptiveLogicService))
     private readonly adaptiveLogicService: AdaptiveLogicService,
+    private readonly scoringEngineService: ScoringEngineService,
   ) {}
 
   async create(userId: string, dto: CreateSessionDto): Promise<SessionResponse> {
     // Get questionnaire
     const questionnaire = await this.questionnaireService.findById(dto.questionnaireId);
 
-    // Get total question count
-    const totalQuestions = await this.questionnaireService.getTotalQuestionCount(
-      dto.questionnaireId,
-    );
+    // Get persona-filtered questions to determine count and first question
+    const personaQuestions = dto.persona
+      ? await this.questionnaireService.getQuestionsForPersona(dto.questionnaireId, dto.persona)
+      : null;
 
-    // Get first section and question
+    const totalQuestions = personaQuestions
+      ? personaQuestions.length
+      : await this.questionnaireService.getTotalQuestionCount(dto.questionnaireId);
+
+    // Use persona-filtered first question if available, otherwise first from questionnaire
+    const firstPersonaQuestion = personaQuestions?.[0];
     const firstSection = questionnaire.sections[0];
     const firstQuestion = firstSection?.questions?.[0];
 
-    // Create session
+    const initialQuestionId = firstPersonaQuestion?.id ?? firstQuestion?.id;
+    const initialSectionId = firstPersonaQuestion?.sectionId ?? firstSection?.id;
+
+    // Create session with persona
     const session = await this.prisma.session.create({
       data: {
         userId,
         questionnaireId: dto.questionnaireId,
         questionnaireVersion: questionnaire.version,
+        persona: dto.persona,
         industry: dto.industry,
         status: SessionStatus.IN_PROGRESS,
         progress: {
@@ -124,8 +148,8 @@ export class SessionService {
           answered: 0,
           total: totalQuestions,
         },
-        currentSectionId: firstSection?.id,
-        currentQuestionId: firstQuestion?.id,
+        currentSectionId: initialSectionId,
+        currentQuestionId: initialQuestionId,
         adaptiveState: {
           activeQuestionIds: [],
           skippedQuestionIds: [],
@@ -159,6 +183,7 @@ export class SessionService {
 
     const totalQuestions = await this.questionnaireService.getTotalQuestionCount(
       session.questionnaireId,
+      session.persona ?? undefined,
     );
 
     return this.mapToSessionResponse(session, totalQuestions);
@@ -192,6 +217,7 @@ export class SessionService {
       sessions.map(async (session) => {
         const totalQuestions = await this.questionnaireService.getTotalQuestionCount(
           session.questionnaireId,
+          session.persona ?? undefined,
         );
         return this.mapToSessionResponse(session, totalQuestions);
       }),
@@ -219,8 +245,11 @@ export class SessionService {
     const responseMap = new Map(responses.map((r) => [r.questionId, r.value]));
 
     // Get current question and evaluate visibility
+    if (!session.currentQuestionId) {
+      throw new NotFoundException('No current question set for this session');
+    }
     const currentQuestion = await this.questionnaireService.getQuestionById(
-      session.currentQuestionId!,
+      session.currentQuestionId,
     );
 
     if (!currentQuestion) {
@@ -259,7 +288,9 @@ export class SessionService {
       (q) => q.sectionId === currentQuestion.sectionId,
     );
     const sectionAnswered = sectionQuestions.filter((q) => responseMap.has(q.id)).length;
-    const sectionProgress = Math.round((sectionAnswered / sectionQuestions.length) * 100);
+    const sectionProgress = sectionQuestions.length > 0
+      ? Math.round((sectionAnswered / sectionQuestions.length) * 100)
+      : 0;
 
     return {
       questions: nextQuestions,
@@ -329,14 +360,34 @@ export class SessionService {
       responseMap,
     );
 
-    // Find next question
-    const nextQuestion = this.findNextUnansweredQuestion(
+    // --- Quiz2Biz Adaptive Loop: Recalculate score after every response ---
+    await this.scoringEngineService.invalidateScoreCache(sessionId);
+    const scoreResult = await this.scoringEngineService.calculateScore({ sessionId });
+
+    // --- NQS: Use scoring engine to pick the next highest-impact question ---
+    let nqsNext: { questionId: string; text: string; dimensionKey: string; expectedScoreLift: number } | undefined;
+    const nqsResult = await this.scoringEngineService.getNextQuestions({ sessionId, limit: 1 });
+    if (nqsResult.questions.length > 0) {
+      const topQ = nqsResult.questions[0];
+      nqsNext = {
+        questionId: topQ.questionId,
+        text: topQ.text,
+        dimensionKey: topQ.dimensionKey,
+        expectedScoreLift: topQ.expectedScoreLift,
+      };
+    }
+
+    // Determine next question: prefer NQS pick, fallback to sequential
+    const nqsQuestion = nqsNext
+      ? visibleQuestions.find((q) => q.id === nqsNext!.questionId)
+      : null;
+    const nextQuestion = nqsQuestion ?? this.findNextUnansweredQuestion(
       visibleQuestions,
       dto.questionId,
       responseMap,
     );
 
-    // Update session
+    // Update session with score + next question
     const progress = this.calculateProgress(allResponses.length, visibleQuestions.length);
 
     await this.prisma.session.update({
@@ -358,6 +409,8 @@ export class SessionService {
       questionId: dto.questionId,
       value: dto.value,
       validationResult: validation,
+      readinessScore: scoreResult.score,
+      nextQuestionByNQS: nqsNext,
       progress,
       createdAt: response.answeredAt,
     };
@@ -368,6 +421,16 @@ export class SessionService {
 
     if (session.status === SessionStatus.COMPLETED) {
       throw new BadRequestException('Session is already completed');
+    }
+
+    // Quiz2Biz: Enforce readiness score >= 95% before allowing completion
+    const scoreResult = await this.scoringEngineService.calculateScore({ sessionId });
+    if (scoreResult.score < READINESS_SCORE_THRESHOLD) {
+      throw new BadRequestException(
+        `Readiness score is ${scoreResult.score.toFixed(1)}%. ` +
+        `A minimum score of ${READINESS_SCORE_THRESHOLD}% is required to complete the session. ` +
+        `Please continue answering questions to improve coverage.`,
+      );
     }
 
     // Update session status
@@ -385,6 +448,7 @@ export class SessionService {
 
     const totalQuestions = await this.questionnaireService.getTotalQuestionCount(
       session.questionnaireId,
+      session.persona ?? undefined,
     );
 
     return this.mapToSessionResponse(updatedSession, totalQuestions);
@@ -441,9 +505,10 @@ export class SessionService {
       branchHistory?: string[];
     };
 
-    // Calculate total questions and skipped
+    // Calculate total questions and skipped (persona-aware)
     const totalQuestionsInQuestionnaire = await this.questionnaireService.getTotalQuestionCount(
       session.questionnaireId,
+      session.persona ?? undefined,
     );
     const skippedCount = totalQuestionsInQuestionnaire - visibleQuestions.length;
 
@@ -527,11 +592,27 @@ export class SessionService {
       };
     }
 
-    // Determine if session can be completed (all required questions answered)
+    // Quiz2Biz: Calculate readiness score to determine canComplete
+    let readinessScore: number | undefined;
+    if (answeredCount > 0) {
+      try {
+        const scoreResult = await this.scoringEngineService.calculateScore({ sessionId });
+        readinessScore = scoreResult.score;
+      } catch {
+        // Score calculation may fail if no dimensions mapped; fallback gracefully
+      }
+    }
+
+    // Determine if session can be completed:
+    // 1. All required questions answered AND
+    // 2. Readiness score >= 95% (Quiz2Biz threshold)
     const unansweredRequired = visibleQuestions.filter(
       (q) => q.isRequired && !responseMap.has(q.id),
     );
-    const canComplete = unansweredRequired.length === 0 && answeredCount > 0;
+    const canComplete =
+      unansweredRequired.length === 0 &&
+      answeredCount > 0 &&
+      (readinessScore ?? 0) >= READINESS_SCORE_THRESHOLD;
 
     // Build session response
     const sessionResponse: SessionResponse = {
@@ -539,7 +620,9 @@ export class SessionService {
       questionnaireId: session.questionnaireId,
       userId: session.userId,
       status: session.status,
+      persona: session.persona ?? undefined,
       industry: session.industry ?? undefined,
+      readinessScore: readinessScore ?? (session.readinessScore ? Number(session.readinessScore) : undefined),
       progress,
       currentSection: session.currentSection
         ? { id: session.currentSection.id, name: session.currentSection.name }
@@ -561,6 +644,7 @@ export class SessionService {
       nextQuestions,
       currentSection: currentSectionInfo,
       overallProgress: progress,
+      readinessScore,
       adaptiveState: {
         visibleQuestionCount: visibleQuestions.length,
         skippedQuestionCount: skippedCount,
@@ -601,7 +685,9 @@ export class SessionService {
       questionnaireId: session.questionnaireId,
       userId: session.userId,
       status: session.status,
+      persona: session.persona ?? undefined,
       industry: session.industry ?? undefined,
+      readinessScore: session.readinessScore ? Number(session.readinessScore) : undefined,
       progress: {
         percentage: progress.percentage,
         answeredQuestions: progress.answered,
@@ -748,6 +834,7 @@ export class SessionService {
 
     const dto: CreateSessionDto = {
       questionnaireId: sourceSession.questionnaireId,
+      persona: sourceSession.persona ?? undefined,
       industry: options?.industry ?? sourceSession.industry ?? undefined,
     };
 
@@ -769,9 +856,10 @@ export class SessionService {
         })),
       });
 
-      // Recalculate progress
+      // Recalculate progress (persona-aware)
       const totalQuestions = await this.questionnaireService.getTotalQuestionCount(
         sourceSession.questionnaireId,
+        sourceSession.persona ?? undefined,
       );
       const progress = this.calculateProgress(responses.length, totalQuestions);
 
@@ -820,6 +908,7 @@ export class SessionService {
 
     const totalQuestions = await this.questionnaireService.getTotalQuestionCount(
       session.questionnaireId,
+      session.persona ?? undefined,
     );
 
     return this.mapToSessionResponse(updatedSession, totalQuestions);
@@ -829,7 +918,7 @@ export class SessionService {
    * Get session analytics
    */
   async getSessionAnalytics(sessionId: string, userId: string): Promise<SessionAnalytics> {
-    await this.getSessionWithValidation(sessionId, userId);
+    const session = await this.getSessionWithValidation(sessionId, userId);
 
     const responses = await this.prisma.response.findMany({
       where: { sessionId },
@@ -850,6 +939,15 @@ export class SessionService {
     const totalTimeSpent = timesSpent.reduce((sum, t) => sum + t, 0);
     const avgTimePerQuestion = timesSpent.length > 0 ? totalTimeSpent / timesSpent.length : 0;
 
+    // Get total question counts per section
+    const sections = await this.prisma.section.findMany({
+      where: { questionnaireId: session.questionnaireId },
+      include: { _count: { select: { questions: true } } },
+    });
+    const sectionQuestionCounts = new Map(
+      sections.map((s) => [s.name, s._count.questions]),
+    );
+
     // Group by section
     const bySection: Record<string, { answered: number; total: number; avgTime: number }> = {};
     const sectionTimes: Record<string, number[]> = {};
@@ -858,7 +956,7 @@ export class SessionService {
       const sectionName = r.question.section?.name || 'Unknown';
 
       if (!bySection[sectionName]) {
-        bySection[sectionName] = { answered: 0, total: 0, avgTime: 0 };
+        bySection[sectionName] = { answered: 0, total: sectionQuestionCounts.get(sectionName) ?? 0, avgTime: 0 };
         sectionTimes[sectionName] = [];
       }
       bySection[sectionName].answered++;
@@ -867,9 +965,16 @@ export class SessionService {
       }
     });
 
+    // Ensure sections with no responses are still represented
+    for (const s of sections) {
+      if (!bySection[s.name]) {
+        bySection[s.name] = { answered: 0, total: s._count.questions, avgTime: 0 };
+      }
+    }
+
     // Calculate avg time per section
     Object.keys(bySection).forEach((section) => {
-      const times = sectionTimes[section];
+      const times = sectionTimes[section] || [];
       bySection[section].avgTime =
         times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0;
     });
@@ -898,6 +1003,15 @@ export class SessionService {
     const validResponses = responses.filter((r) => r.isValid).length;
     const invalidResponses = responses.length - validResponses;
 
+    // Calculate real completion rate
+    const totalQuestions = await this.questionnaireService.getTotalQuestionCount(
+      session.questionnaireId,
+      session.persona ?? undefined,
+    );
+    const completionRate = totalQuestions > 0
+      ? Math.round((responses.length / totalQuestions) * 100)
+      : 0;
+
     return {
       sessionId,
       totalResponses: responses.length,
@@ -907,7 +1021,7 @@ export class SessionService {
       averageTimePerQuestion: Math.round(avgTimePerQuestion),
       bySection,
       byDimension,
-      completionRate: responses.length > 0 ? 100 : 0,
+      completionRate,
       analyzedAt: new Date(),
     };
   }

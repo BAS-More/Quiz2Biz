@@ -18,11 +18,13 @@ vi.mock('../../api/billing', () => ({
 const mockSubscription = {
   id: 'sub_123',
   tier: 'PROFESSIONAL' as const,
-  status: 'active',
+  status: 'active' as const,
   currentPeriodStart: '2026-01-01T00:00:00Z',
   currentPeriodEnd: '2026-02-01T00:00:00Z',
   cancelAtPeriodEnd: false,
   stripeSubscriptionId: 'sub_stripe_123',
+  organizationId: 'org_123',
+  features: {} as Record<string, string | number>,
 };
 
 const mockUsage = {

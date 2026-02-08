@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import type { Question, Section, QuestionResponse, SessionProgress } from '../../types';
 import { QuestionRenderer } from './QuestionRenderer';
 
@@ -36,8 +36,14 @@ export const QuestionnaireFlow: React.FC<QuestionnaireFlowProps> = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [responses, setResponses] = useState<Map<string, QuestionResponse>>(initialResponses);
   const [errors, setErrors] = useState<Map<string, string>>(new Map());
+  const questionStartTime = useRef<number>(Date.now());
 
   const currentItem = allQuestions[currentIndex];
+
+  // Reset timer when question changes
+  useEffect(() => {
+    questionStartTime.current = Date.now();
+  }, [currentIndex]);
   const totalQuestions = allQuestions.length;
 
   // Calculate progress
@@ -72,10 +78,11 @@ export const QuestionnaireFlow: React.FC<QuestionnaireFlowProps> = ({
         return;
       }
 
+      const timeSpentSeconds = Math.round((Date.now() - questionStartTime.current) / 1000);
       const response: QuestionResponse = {
         questionId: currentItem.question.id,
         value,
-        timeSpentSeconds: 0, // TODO: track time
+        timeSpentSeconds,
       };
 
       setResponses((prev) => {
