@@ -2,6 +2,7 @@ import { Controller, Get, HttpException, HttpStatus, Inject, Optional } from '@n
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SkipThrottle } from '@nestjs/throttler';
 import { PrismaService } from '@libs/database';
+import * as v8 from 'v8';
 
 // =============================================================================
 // Health Response Interfaces
@@ -274,29 +275,30 @@ export class HealthController {
 
   private checkMemory(): DependencyCheck {
     const memUsage = process.memoryUsage();
+    const heapStats = v8.getHeapStatistics();
     const heapUsedMB = Math.round(memUsage.heapUsed / 1024 / 1024);
-    const heapTotalMB = Math.round(memUsage.heapTotal / 1024 / 1024);
-    const usagePercent = (heapUsedMB / heapTotalMB) * 100;
+    const heapLimitMB = Math.round(heapStats.heap_size_limit / 1024 / 1024);
+    const usagePercent = (heapUsedMB / heapLimitMB) * 100;
 
-    // Thresholds
-    const WARNING_THRESHOLD = 80; // 80% heap usage
-    const CRITICAL_THRESHOLD = 95; // 95% heap usage
+    // Thresholds against V8 heap size limit (--max-old-space-size)
+    const WARNING_THRESHOLD = 80; // 80% of max heap
+    const CRITICAL_THRESHOLD = 95; // 95% of max heap
 
     let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
     let message: string | undefined;
 
     if (usagePercent >= CRITICAL_THRESHOLD) {
       status = 'unhealthy';
-      message = `Memory critical: ${heapUsedMB}MB / ${heapTotalMB}MB (${usagePercent.toFixed(1)}%)`;
+      message = `Memory critical: ${heapUsedMB}MB / ${heapLimitMB}MB (${usagePercent.toFixed(1)}%)`;
     } else if (usagePercent >= WARNING_THRESHOLD) {
       status = 'degraded';
-      message = `Memory warning: ${heapUsedMB}MB / ${heapTotalMB}MB (${usagePercent.toFixed(1)}%)`;
+      message = `Memory warning: ${heapUsedMB}MB / ${heapLimitMB}MB (${usagePercent.toFixed(1)}%)`;
     }
 
     return {
       name: 'memory',
       status,
-      message: message || `${heapUsedMB}MB / ${heapTotalMB}MB (${usagePercent.toFixed(1)}%)`,
+      message: message || `${heapUsedMB}MB / ${heapLimitMB}MB (${usagePercent.toFixed(1)}%)`,
     };
   }
 
