@@ -9,6 +9,12 @@ resource "azurerm_container_app_environment" "main" {
   infrastructure_subnet_id   = var.subnet_id
 
   tags = var.tags
+
+  lifecycle {
+    ignore_changes = [
+      infrastructure_resource_group_name
+    ]
+  }
 }
 
 # Container App - API Service
@@ -45,7 +51,7 @@ resource "azurerm_container_app" "api" {
 
       env {
         name  = "API_PREFIX"
-        value = "/api/v1"
+        value = "api/v1"
       }
 
       env {
@@ -106,30 +112,30 @@ resource "azurerm_container_app" "api" {
       # Liveness probe
       liveness_probe {
         transport = "HTTP"
-        path      = "/api/v1/health/live"
+        path      = "/health/live"
         port      = 3000
 
-        initial_delay           = 10
+        initial_delay           = 15
         interval_seconds        = 30
         timeout                 = 5
-        failure_count_threshold = 3
+        failure_count_threshold = 5
       }
 
       # Readiness probe
       readiness_probe {
         transport = "HTTP"
-        path      = "/api/v1/health/ready"
+        path      = "/health/ready"
         port      = 3000
 
         interval_seconds        = 10
         timeout                 = 5
-        failure_count_threshold = 3
+        failure_count_threshold = 5
       }
 
       # Startup probe
       startup_probe {
         transport = "HTTP"
-        path      = "/api/v1/health/live"
+        path      = "/health/live"
         port      = 3000
 
         interval_seconds        = 5
@@ -197,7 +203,8 @@ resource "azurerm_container_app" "api" {
 
   lifecycle {
     ignore_changes = [
-      template[0].container[0].image
+      template[0].container[0].image,
+      template[0].container[0].env
     ]
   }
 }

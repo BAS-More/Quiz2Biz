@@ -1,0 +1,188 @@
+﻿Acquiring state lock. This may take a few moments...
+azurerm_resource_group.main: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod]
+module.monitoring.azurerm_log_analytics_workspace.main: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.OperationalInsights/workspaces/log-questionnaire-prod]
+module.registry.azurerm_container_registry.main: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.ContainerRegistry/registries/acrquestionnaireprod]
+module.networking.azurerm_private_dns_zone.postgres: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.Network/privateDnsZones/questionnaire-prod.private.postgres.database.azure.com]
+module.cache.azurerm_redis_cache.main: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.Cache/redis/redis-questionnaire-prod]
+module.networking.azurerm_virtual_network.main: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.Network/virtualNetworks/vnet-questionnaire-prod]
+module.networking.azurerm_network_security_group.app: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.Network/networkSecurityGroups/nsg-app-questionnaire-prod]
+module.networking.azurerm_subnet.cache: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.Network/virtualNetworks/vnet-questionnaire-prod/subnets/snet-cache-prod]
+module.networking.azurerm_subnet.app: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.Network/virtualNetworks/vnet-questionnaire-prod/subnets/snet-app-prod]
+module.networking.azurerm_subnet.db: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.Network/virtualNetworks/vnet-questionnaire-prod/subnets/snet-db-prod]
+module.networking.azurerm_subnet_network_security_group_association.app: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.Network/virtualNetworks/vnet-questionnaire-prod/subnets/snet-app-prod]
+module.monitoring.azurerm_application_insights.main: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.Insights/components/appi-questionnaire-prod]
+module.networking.azurerm_private_dns_zone_virtual_network_link.postgres: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.Network/privateDnsZones/questionnaire-prod.private.postgres.database.azure.com/virtualNetworkLinks/pdns-link-postgres-prod]
+module.database.random_password.postgres: Refreshing state... [id=none]
+module.database.azurerm_postgresql_flexible_server.main: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.DBforPostgreSQL/flexibleServers/psql-questionnaire-prod]
+module.database.azurerm_postgresql_flexible_server_configuration.log_connections: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.DBforPostgreSQL/flexibleServers/psql-questionnaire-prod/configurations/log_connections]
+module.database.azurerm_postgresql_flexible_server_database.main: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.DBforPostgreSQL/flexibleServers/psql-questionnaire-prod/databases/questionnaire]
+module.database.azurerm_postgresql_flexible_server_configuration.log_disconnections: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.DBforPostgreSQL/flexibleServers/psql-questionnaire-prod/configurations/log_disconnections]
+module.database.azurerm_postgresql_flexible_server_firewall_rule.azure_services: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.DBforPostgreSQL/flexibleServers/psql-questionnaire-prod/firewallRules/AllowAzureServices]
+module.database.azurerm_postgresql_flexible_server_configuration.timezone: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.DBforPostgreSQL/flexibleServers/psql-questionnaire-prod/configurations/timezone]
+module.keyvault.random_string.kv_suffix: Refreshing state... [id=8y98ao]
+module.keyvault.random_password.jwt_refresh_secret: Refreshing state... [id=none]
+module.keyvault.random_password.jwt_secret: Refreshing state... [id=none]
+module.keyvault.azurerm_key_vault.main: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.KeyVault/vaults/kv-quest-prod-8y98ao]
+module.keyvault.azurerm_key_vault_access_policy.deployer: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.KeyVault/vaults/kv-quest-prod-8y98ao/objectId/55483dd8-aee1-4c26-9f2e-f3a67de4c2cd]
+module.keyvault.azurerm_key_vault_secret.jwt_secret: Refreshing state... [id=https://kv-quest-prod-8y98ao.vault.azure.net/secrets/JWT-SECRET/9d5f429257dd47fd9b914eba102ed8ff]
+module.keyvault.azurerm_key_vault_secret.redis_password: Refreshing state... [id=https://kv-quest-prod-8y98ao.vault.azure.net/secrets/REDIS-PASSWORD/11ff95f5773d4dee8c1b4f44fa101e6e]
+module.keyvault.azurerm_key_vault_secret.database_url: Refreshing state... [id=https://kv-quest-prod-8y98ao.vault.azure.net/secrets/DATABASE-URL/84b977e41b3e4306b8ba55e8d48ddcb0]
+module.keyvault.azurerm_key_vault_secret.jwt_refresh_secret: Refreshing state... [id=https://kv-quest-prod-8y98ao.vault.azure.net/secrets/JWT-REFRESH-SECRET/9d536819d25549d4a1bd23bcb65e1394]
+module.container_apps.azurerm_container_app_environment.main: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.App/managedEnvironments/cae-questionnaire-prod]
+module.container_apps.azurerm_container_app.api: Refreshing state... [id=/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.App/containerApps/ca-questionnaire-api-prod]
+
+Note: Objects have changed outside of Terraform
+
+Terraform detected the following changes made outside of Terraform since the
+last "terraform apply" which may have affected this plan:
+
+  # module.container_apps.azurerm_container_app.api has changed
+  ~ resource "azurerm_container_app" "api" {
+        id                            = "/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.App/containerApps/ca-questionnaire-api-prod"
+      ~ latest_revision_name          = "ca-questionnaire-api-prod--i4d6laa" -> "ca-questionnaire-api-prod--0000007"
+        name                          = "ca-questionnaire-api-prod"
+        tags                          = {
+            "Environment" = "prod"
+            "ManagedBy"   = "Terraform"
+            "Project"     = "questionnaire"
+        }
+        # (8 unchanged attributes hidden)
+
+        # (9 unchanged blocks hidden)
+    }
+
+
+Unless you have made equivalent changes to your configuration, or ignored the
+relevant attributes using ignore_changes, the following plan may include
+actions to undo or respond to these changes.
+
+ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  ~ update in-place
+-/+ destroy and then create replacement
+ <= read (data resources)
+
+Terraform will perform the following actions:
+
+  # module.cache.azurerm_redis_cache.main will be updated in-place
+  ~ resource "azurerm_redis_cache" "main" {
+        id                                 = "/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.Cache/redis/redis-questionnaire-prod"
+        name                               = "redis-questionnaire-prod"
+        tags                               = {
+            "Environment" = "prod"
+            "ManagedBy"   = "Terraform"
+            "Project"     = "questionnaire"
+        }
+        # (24 unchanged attributes hidden)
+
+      ~ redis_configuration {
+          ~ maxmemory_delta                         = 30 -> 10
+          ~ maxmemory_reserved                      = 30 -> 10
+            # (15 unchanged attributes hidden)
+        }
+    }
+
+  # module.container_apps.azurerm_container_app.api will be updated in-place
+  ~ resource "azurerm_container_app" "api" {
+        id                            = "/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.App/containerApps/ca-questionnaire-api-prod"
+      - max_inactive_revisions        = 100 -> null
+        name                          = "ca-questionnaire-api-prod"
+        tags                          = {
+            "Environment" = "prod"
+            "ManagedBy"   = "Terraform"
+            "Project"     = "questionnaire"
+        }
+      - workload_profile_name         = "Consumption" -> null
+        # (8 unchanged attributes hidden)
+
+      ~ template {
+            # (3 unchanged attributes hidden)
+
+          ~ container {
+                name              = "api"
+                # (6 unchanged attributes hidden)
+
+              ~ startup_probe {
+                  ~ failure_count_threshold          = 30 -> 10
+                    # (8 unchanged attributes hidden)
+                }
+
+                # (35 unchanged blocks hidden)
+            }
+        }
+
+        # (8 unchanged blocks hidden)
+    }
+
+  # module.keyvault.data.azurerm_client_config.current will be read during apply
+  # (depends on a resource or a module with changes pending)
+ <= data "azurerm_client_config" "current" {
+      + client_id       = (known after apply)
+      + id              = (known after apply)
+      + object_id       = (known after apply)
+      + subscription_id = (known after apply)
+      + tenant_id       = (known after apply)
+    }
+
+  # module.keyvault.azurerm_key_vault.main will be updated in-place
+  ~ resource "azurerm_key_vault" "main" {
+        id                              = "/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.KeyVault/vaults/kv-quest-prod-8y98ao"
+        name                            = "kv-quest-prod-8y98ao"
+        tags                            = {
+            "Environment" = "prod"
+            "ManagedBy"   = "Terraform"
+            "Project"     = "questionnaire"
+        }
+      ~ tenant_id                       = "e792f98f-3b13-4ecc-9ed2-8cb054f76ffb" -> (known after apply)
+        # (12 unchanged attributes hidden)
+
+        # (1 unchanged block hidden)
+    }
+
+  # module.keyvault.azurerm_key_vault_access_policy.deployer must be replaced
+-/+ resource "azurerm_key_vault_access_policy" "deployer" {
+      - certificate_permissions = [] -> null
+      ~ id                      = "/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.KeyVault/vaults/kv-quest-prod-8y98ao/objectId/55483dd8-aee1-4c26-9f2e-f3a67de4c2cd" -> (known after apply)
+      ~ object_id               = "55483dd8-aee1-4c26-9f2e-f3a67de4c2cd" -> (known after apply) # forces replacement
+      - storage_permissions     = [] -> null
+      ~ tenant_id               = "e792f98f-3b13-4ecc-9ed2-8cb054f76ffb" -> (known after apply) # forces replacement
+        # (4 unchanged attributes hidden)
+    }
+
+  # module.networking.azurerm_subnet.app will be updated in-place
+  ~ resource "azurerm_subnet" "app" {
+        id                                            = "/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.Network/virtualNetworks/vnet-questionnaire-prod/subnets/snet-app-prod"
+        name                                          = "snet-app-prod"
+      ~ private_endpoint_network_policies             = "Enabled" -> "Disabled"
+        # (7 unchanged attributes hidden)
+
+        # (1 unchanged block hidden)
+    }
+
+  # module.networking.azurerm_subnet.cache will be updated in-place
+  ~ resource "azurerm_subnet" "cache" {
+        id                                            = "/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.Network/virtualNetworks/vnet-questionnaire-prod/subnets/snet-cache-prod"
+        name                                          = "snet-cache-prod"
+      ~ private_endpoint_network_policies             = "Enabled" -> "Disabled"
+        # (7 unchanged attributes hidden)
+    }
+
+  # module.networking.azurerm_subnet.db will be updated in-place
+  ~ resource "azurerm_subnet" "db" {
+        id                                            = "/subscriptions/de00da2c-7c4c-47d4-b0a8-2f0198a9c459/resourceGroups/rg-questionnaire-prod/providers/Microsoft.Network/virtualNetworks/vnet-questionnaire-prod/subnets/snet-db-prod"
+        name                                          = "snet-db-prod"
+      ~ private_endpoint_network_policies             = "Enabled" -> "Disabled"
+        # (7 unchanged attributes hidden)
+
+        # (1 unchanged block hidden)
+    }
+
+Plan: 1 to add, 6 to change, 1 to destroy.
+
+ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.
+Releasing state lock. This may take a few moments...
