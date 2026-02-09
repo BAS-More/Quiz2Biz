@@ -24,8 +24,8 @@ TXT_RECORD = {
 CNAME_RECORD = {
     "name": "www",
     "type": "CNAME",
-    "data": "ca-questionnaire-api-dev.happycliff-f616886e.eastus.azurecontainerapps.io",
-    "ttl": 3600
+    "data": "ca-questionnaire-api-dev.ambitioussea-ad6d342d.eastus2.azurecontainerapps.io",
+    "ttl": 600
 }
 
 # Root domain TXT verification record
@@ -36,12 +36,13 @@ ROOT_TXT_RECORD = {
     "ttl": 600
 }
 
-# Root domain CNAME (will use @ for root)
-ROOT_CNAME_RECORD = {
+# Root domain A record (GoDaddy doesn't support CNAME on root)
+# We'll use domain forwarding for root -> www instead
+ROOT_FORWARD_RECORD = {
     "name": "@",
     "type": "CNAME",
-    "data": "ca-questionnaire-api-dev.happycliff-f616886e.eastus.azurecontainerapps.io",
-    "ttl": 3600
+    "data": "ca-questionnaire-api-dev.ambitioussea-ad6d342d.eastus2.azurecontainerapps.io",
+    "ttl": 600
 }
 
 # GoDaddy API endpoint
@@ -97,7 +98,7 @@ def main():
     print()
 
     # Configure CNAME record for root domain mapping
-    root_cname_success = add_dns_record(ROOT_CNAME_RECORD)
+    root_cname_success = add_dns_record(ROOT_FORWARD_RECORD)
     print()
 
     if txt_success and cname_success and root_txt_success:
