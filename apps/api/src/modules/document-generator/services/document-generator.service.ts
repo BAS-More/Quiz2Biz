@@ -363,7 +363,7 @@ export class DocumentGeneratorService {
       include: { user: { select: { email: true, name: true } } },
     });
 
-    if (!session?.user) return;
+    if (!session?.user) {return;}
 
     const userName = session.user.name || session.user.email.split('@')[0];
 
