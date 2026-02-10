@@ -9,10 +9,14 @@ COPY apps/web/package*.json ./apps/web/
 COPY libs/shared/package*.json ./libs/shared/
 
 COPY package-lock.json ./
-RUN npm ci --ignore-scripts || npm install --ignore-scripts
+RUN npm ci --ignore-scripts --legacy-peer-deps || npm install --ignore-scripts --legacy-peer-deps
 
 # Copy source files
 COPY . .
+
+# Set API URL for production build (empty = same-origin, nginx proxies /api/*)
+ARG VITE_API_URL=""
+ENV VITE_API_URL=$VITE_API_URL
 
 # Build the web application
 RUN npx turbo run build --filter=web

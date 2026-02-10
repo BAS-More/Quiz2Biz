@@ -1,8 +1,7 @@
-import { Controller, Get, HttpException, HttpStatus, Inject, Optional, Res } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiExcludeEndpoint } from '@nestjs/swagger';
+import { Controller, Get, HttpException, HttpStatus, Inject, Optional } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SkipThrottle } from '@nestjs/throttler';
 import { PrismaService } from '@libs/database';
-import { Response } from 'express';
 import * as v8 from 'v8';
 
 // =============================================================================
@@ -57,16 +56,6 @@ export class HealthController {
 
   constructor(@Optional() @Inject(PrismaService) private readonly prisma?: PrismaService) {
     this.startTime = new Date();
-  }
-
-  // ===========================================================================
-  // Root Route - / (redirect to API docs)
-  // ===========================================================================
-
-  @Get()
-  @ApiExcludeEndpoint()
-  root(@Res() res: Response): void {
-    res.redirect('/api/v1/docs');
   }
 
   // ===========================================================================
