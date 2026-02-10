@@ -5,6 +5,7 @@ node_modules
 # Build outputs
 dist
 **/dist
+!apps/web/dist
 coverage
 **/coverage
 .nyc_output
