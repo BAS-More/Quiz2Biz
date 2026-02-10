@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MainLayout, AuthLayout } from './components/layout';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { ToastProvider } from './components/ui';
 import { useAuthStore } from './stores/auth';
 import type { ReactNode } from 'react';
 
@@ -31,8 +32,14 @@ const HelpPage = lazy(() => import('./pages/help/HelpPage').then(m => ({ default
 // Loading fallback for lazy-loaded routes
 function PageLoader() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+    <div className="min-h-screen flex items-center justify-center bg-surface-50">
+      <div className="flex flex-col items-center gap-3">
+        <div className="relative">
+          <div className="h-10 w-10 rounded-full border-2 border-brand-200" />
+          <div className="absolute inset-0 h-10 w-10 rounded-full border-2 border-brand-600 border-t-transparent animate-spin" />
+        </div>
+        <span className="text-sm text-surface-500 font-medium">Loading...</span>
+      </div>
     </div>
   );
 }
@@ -53,11 +60,7 @@ function ProtectedRoute({ children }: { children: ReactNode }) {
   const { isAuthenticated, isLoading } = useAuthStore();
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-      </div>
-    );
+    return <PageLoader />;
   }
 
   if (!isAuthenticated) {
@@ -72,11 +75,7 @@ function PublicRoute({ children }: { children: ReactNode }) {
   const { isAuthenticated, isLoading } = useAuthStore();
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-      </div>
-    );
+    return <PageLoader />;
   }
 
   if (isAuthenticated) {
@@ -90,6 +89,7 @@ export default function App() {
   return (
     <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
+      <ToastProvider>
       <BrowserRouter>
         <Suspense fallback={<PageLoader />}>
         <Routes>
@@ -140,6 +140,7 @@ export default function App() {
         </Routes>
         </Suspense>
       </BrowserRouter>
+      </ToastProvider>
     </QueryClientProvider>
     </ErrorBoundary>
   );
