@@ -21,10 +21,10 @@ on:
 
 env:
   NODE_VERSION: '20.x'
-  REGISTRY_NAME: acrquestionnairedev
+  REGISTRY_NAME: acrquestionnaireprod
   IMAGE_NAME: quiz-api
-  RESOURCE_GROUP: rg-questionnaire-dev
-  CONTAINER_APP_NAME: ca-questionnaire-api-dev
+  RESOURCE_GROUP: rg-questionnaire-prod
+  CONTAINER_APP_NAME: ca-questionnaire-api-prod
 
 permissions:
   contents: read
