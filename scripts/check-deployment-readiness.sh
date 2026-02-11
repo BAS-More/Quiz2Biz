@@ -172,22 +172,24 @@ else
 fi
 
 # =============================================================================
-# Check 6: Docker
+# Check 6: Cloud Build Readiness (Docker optional)
 # =============================================================================
-echo -e "\n${BLUE}[6/7] Checking Docker...${NC}"
+echo -e "\n${BLUE}[6/7] Checking Cloud Build Readiness...${NC}"
 
-if command -v docker &> /dev/null; then
-    pass "Docker installed"
-    
-    # Check if Docker daemon is running
-    if docker info &> /dev/null; then
-        pass "Docker daemon running"
+if command -v az &> /dev/null; then
+    if az account show &> /dev/null; then
+        pass "Azure CLI authenticated for cloud build/deploy"
     else
-        warn "Docker daemon not running (start Docker Desktop or dockerd)"
+        warn "Azure CLI installed but not logged in (run: az login)"
     fi
 else
-    warn "Docker not installed (required for local builds/testing)"
-    info "  Install from: https://docs.docker.com/get-docker/"
+    fail "Azure CLI missing (required for cloud-only deployment)"
+fi
+
+if command -v docker &> /dev/null; then
+    info "Docker detected (optional). Cloud deployment path does not require Docker Desktop."
+else
+    pass "Docker not installed (cloud-only mode)"
 fi
 
 # =============================================================================
@@ -287,8 +289,8 @@ else
     if ! [ -f ".github/workflows/deploy.yml" ]; then
         echo "  • Create deployment workflow: .github/workflows/deploy.yml"
     fi
-    if ! [ -f "docker/api/Dockerfile" ]; then
-        echo "  • Create Dockerfile: docker/api/Dockerfile"
+    if ! command -v az &> /dev/null; then
+        echo "  • Install Azure CLI: https://docs.microsoft.com/cli/azure/install-azure-cli"
     fi
     if ! [ -f "package.json" ]; then
         echo "  • Initialize Node.js project: npm init"

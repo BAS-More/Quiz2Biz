@@ -18,10 +18,22 @@ TERRAFORM_DIR="$SCRIPT_DIR/../infrastructure/terraform"
 BACKEND_FILE="$TERRAFORM_DIR/backend.tf"
 TFVARS_FILE="$TERRAFORM_DIR/terraform.tfvars"
 
-LOCATION="${AZURE_LOCATION:-eastus}"
+# Reuse terraform.tfvars values when present so backend key tracks the active env.
+TFVARS_PROJECT=""
+TFVARS_ENV=""
+TFVARS_LOCATION=""
+if [ -f "$TFVARS_FILE" ]; then
+  TFVARS_PROJECT=$(sed -n 's/^[[:space:]]*project_name[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "$TFVARS_FILE" | head -n 1)
+  TFVARS_ENV=$(sed -n 's/^[[:space:]]*environment[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "$TFVARS_FILE" | head -n 1)
+  TFVARS_LOCATION=$(sed -n 's/^[[:space:]]*location[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "$TFVARS_FILE" | head -n 1)
+fi
+
+PROJECT_NAME="${PROJECT_NAME:-${TFVARS_PROJECT:-questionnaire}}"
+DEPLOY_ENV="${DEPLOY_ENV:-${TFVARS_ENV:-dev}}"
+LOCATION="${AZURE_LOCATION:-${TFVARS_LOCATION:-eastus}}"
 STATE_RESOURCE_GROUP="${STATE_RESOURCE_GROUP:-rg-terraform-state}"
 STATE_CONTAINER="${STATE_CONTAINER:-tfstate}"
-STATE_KEY="${STATE_KEY:-questionnaire.dev.tfstate}"
+STATE_KEY="${STATE_KEY:-${PROJECT_NAME}.${DEPLOY_ENV}.tfstate}"
 
 echo -e "${GREEN}=============================================${NC}"
 echo -e "${GREEN}  Azure Deployment Setup                      ${NC}"
@@ -69,11 +81,22 @@ if [ -z "${STATE_STORAGE_ACCOUNT:-}" ]; then
 fi
 
 echo -e "\n${YELLOW}Ensuring Terraform state resource group exists...${NC}"
-az group create \
-  --name "$STATE_RESOURCE_GROUP" \
-  --location "$LOCATION" \
-  --tags "Purpose=TerraformState" "Project=Questionnaire" \
-  --output none
+if [ "$(az group exists --name "$STATE_RESOURCE_GROUP" -o tsv)" = "true" ]; then
+  EXISTING_RG_LOCATION=$(az group show --name "$STATE_RESOURCE_GROUP" --query location -o tsv)
+  if [ -n "$EXISTING_RG_LOCATION" ]; then
+    LOCATION="$EXISTING_RG_LOCATION"
+  fi
+  az group update \
+    --name "$STATE_RESOURCE_GROUP" \
+    --set tags.Purpose=TerraformState tags.Project=Questionnaire \
+    --output none
+else
+  az group create \
+    --name "$STATE_RESOURCE_GROUP" \
+    --location "$LOCATION" \
+    --tags "Purpose=TerraformState" "Project=Questionnaire" \
+    --output none
+fi
 
 echo -e "${GREEN}State resource group ready: ${STATE_RESOURCE_GROUP}${NC}"
 
@@ -167,5 +190,6 @@ echo -e "  Location:             ${LOCATION}"
 echo -e "  State Resource Group: ${STATE_RESOURCE_GROUP}"
 echo -e "  State Storage:        ${STATE_STORAGE_ACCOUNT}"
 echo -e "  State Container:      ${STATE_CONTAINER}"
+echo -e "  State Key:            ${STATE_KEY}"
 echo -e "\n${BLUE}Next steps:${NC}"
 echo -e "  1. Run: ${YELLOW}./scripts/deploy.sh${NC}"

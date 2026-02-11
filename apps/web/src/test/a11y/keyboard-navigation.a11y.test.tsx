@@ -245,7 +245,7 @@ function MockAjaxUpdate() {
   const handleLoad = async () => {
     setLoading(true);
     // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 500));
     setData('Loaded content');
     setLoading(false);
     // Focus on result when loaded
@@ -635,12 +635,15 @@ describe('Keyboard Navigation Accessibility', () => {
       const loadBtn = screen.getByTestId('load-btn');
       await user.click(loadBtn);
 
-      // Wait for content to load
-      await vi.waitFor(() => {
-        const result = screen.getByTestId('result');
-        expect(result).toBeInTheDocument();
-        expect(document.activeElement).toBe(result);
-      });
+      // Wait for content to load (mock delay is 500ms)
+      await vi.waitFor(
+        () => {
+          const result = screen.getByTestId('result');
+          expect(result).toBeInTheDocument();
+          expect(document.activeElement).toBe(result);
+        },
+        { timeout: 3000 },
+      );
     });
 
     it('should announce loading state', async () => {
@@ -648,10 +651,11 @@ describe('Keyboard Navigation Accessibility', () => {
       render(<MockAjaxUpdate />);
 
       const loadBtn = screen.getByTestId('load-btn');
-      await user.click(loadBtn);
+      // Don't await click — we want to catch loading state before it resolves
+      void user.click(loadBtn);
 
       // Loading indicator should be present
-      const loadingIndicator = screen.getByTestId('loading-indicator');
+      const loadingIndicator = await screen.findByTestId('loading-indicator');
       expect(loadingIndicator).toHaveAttribute('role', 'status');
       expect(loadingIndicator).toHaveAttribute('aria-live', 'polite');
     });

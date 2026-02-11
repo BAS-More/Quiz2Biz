@@ -55,7 +55,7 @@ class BrevoProvider implements EmailProvider {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as { messageId?: string };
         return { success: true, messageId: data.messageId };
       }
 

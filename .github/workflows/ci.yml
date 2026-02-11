@@ -91,7 +91,7 @@ jobs:
       - name: Run database migrations
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
-        run: npm run db:migrate
+        run: npm run db:migrate:prod
 
       - name: Run API tests
         env:
@@ -194,7 +194,7 @@ jobs:
       - name: Run database migrations
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
-        run: npm run db:migrate
+        run: npm run db:migrate:prod
 
       - name: Build applications
         run: npm run build

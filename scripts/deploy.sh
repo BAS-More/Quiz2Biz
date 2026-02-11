@@ -38,6 +38,17 @@ if ! az account show >/dev/null 2>&1; then
   exit 1
 fi
 
+SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+TENANT_ID=$(az account show --query tenantId -o tsv)
+if [ -z "$SUBSCRIPTION_ID" ] || [ -z "$TENANT_ID" ]; then
+  echo -e "${RED}Error: Could not resolve subscription or tenant from Azure CLI context.${NC}"
+  exit 1
+fi
+
+# azurerm v4 requires explicit subscription context for plan/apply.
+export ARM_SUBSCRIPTION_ID="$SUBSCRIPTION_ID"
+export ARM_TENANT_ID="$TENANT_ID"
+
 if [ ! -f "$TERRAFORM_DIR/terraform.tfvars" ]; then
   echo -e "${RED}Error: terraform.tfvars not found. Run ./scripts/setup-azure.sh first.${NC}"
   exit 1
@@ -51,10 +62,25 @@ fi
 BACKEND_RG=$(sed -n 's/.*resource_group_name[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "$TERRAFORM_DIR/backend.tf" | head -n 1)
 BACKEND_STORAGE=$(sed -n 's/.*storage_account_name[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "$TERRAFORM_DIR/backend.tf" | head -n 1)
 BACKEND_CONTAINER=$(sed -n 's/.*container_name[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "$TERRAFORM_DIR/backend.tf" | head -n 1)
+BACKEND_KEY=$(sed -n 's/.*key[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "$TERRAFORM_DIR/backend.tf" | head -n 1)
 
-if [ -z "$BACKEND_RG" ] || [ -z "$BACKEND_STORAGE" ] || [ -z "$BACKEND_CONTAINER" ]; then
+TF_PROJECT=$(sed -n 's/^[[:space:]]*project_name[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "$TERRAFORM_DIR/terraform.tfvars" | head -n 1)
+TF_ENV=$(sed -n 's/^[[:space:]]*environment[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "$TERRAFORM_DIR/terraform.tfvars" | head -n 1)
+TF_PROJECT=${TF_PROJECT:-questionnaire}
+TF_ENV=${TF_ENV:-dev}
+EXPECTED_STATE_KEY="${TF_PROJECT}.${TF_ENV}.tfstate"
+TARGET_RG="rg-${TF_PROJECT}-${TF_ENV}"
+
+if [ -z "$BACKEND_RG" ] || [ -z "$BACKEND_STORAGE" ] || [ -z "$BACKEND_CONTAINER" ] || [ -z "$BACKEND_KEY" ]; then
   echo -e "${RED}Error: backend.tf is missing required azurerm backend values.${NC}"
   echo -e "${YELLOW}Run ./scripts/setup-azure.sh to regenerate backend.tf.${NC}"
+  exit 1
+fi
+
+if [ "$BACKEND_KEY" != "$EXPECTED_STATE_KEY" ]; then
+  echo -e "${RED}Error: backend state key '${BACKEND_KEY}' does not match active environment '${TF_ENV}'.${NC}"
+  echo -e "${YELLOW}Expected key: ${EXPECTED_STATE_KEY}${NC}"
+  echo -e "${YELLOW}Run ./scripts/setup-azure.sh to align backend state with terraform.tfvars.${NC}"
   exit 1
 fi
 
@@ -74,7 +100,17 @@ echo -e "${GREEN}Prerequisites check passed.${NC}"
 
 echo -e "\n${YELLOW}Step 2: Initializing Terraform...${NC}"
 cd "$TERRAFORM_DIR"
-terraform init -upgrade
+terraform init -upgrade -reconfigure
+
+# Existing resource group outside state is a common first-run migration case.
+echo -e "\n${YELLOW}Preflight: Reconciling existing Azure resources with Terraform state...${NC}"
+if az group show --name "$TARGET_RG" >/dev/null 2>&1; then
+  if ! terraform state show azurerm_resource_group.main >/dev/null 2>&1; then
+    RG_ID="/subscriptions/${ARM_SUBSCRIPTION_ID}/resourceGroups/${TARGET_RG}"
+    echo -e "${YELLOW}Importing existing resource group into Terraform state: ${RG_ID}${NC}"
+    terraform import azurerm_resource_group.main "$RG_ID"
+  fi
+fi
 
 echo -e "\n${YELLOW}Step 3: Validating Terraform configuration...${NC}"
 terraform validate
