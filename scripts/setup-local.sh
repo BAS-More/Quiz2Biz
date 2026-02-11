@@ -40,15 +40,16 @@ check_command() {
 }
 
 PREREQ_FAILED=0
-check_command "docker" || PREREQ_FAILED=1
-check_command "docker" && {
+if check_command "docker"; then
     if ! docker compose version &> /dev/null; then
         echo -e "${RED}Error: docker compose is not available.${NC}"
         PREREQ_FAILED=1
     else
         echo -e "${GREEN}  [OK] docker compose found${NC}"
     fi
-}
+else
+    PREREQ_FAILED=1
+fi
 
 if [ $PREREQ_FAILED -eq 1 ]; then
     echo -e "\n${RED}Prerequisites check failed. Please install missing tools.${NC}"
