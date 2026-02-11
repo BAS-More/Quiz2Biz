@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException, ForbiddenException } from '@nestjs/common';
-import { UsersService, UserProfile } from './users.service';
+import { UsersService } from './users.service';
 import { PrismaService } from '@libs/database';
 import { UserRole } from '@prisma/client';
 import { UpdateUserDto } from './dto/update-user.dto';
