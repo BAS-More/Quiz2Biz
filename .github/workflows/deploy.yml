@@ -124,6 +124,22 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Set Container App secrets
+        run: |
+          echo "Setting Container App secrets..."
+          az containerapp secret set \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --secrets \
+              database-url="${{ secrets.DATABASE_URL }}" \
+              redis-host="${{ secrets.REDIS_HOST }}" \
+              redis-port="${{ secrets.REDIS_PORT }}" \
+              redis-password="${{ secrets.REDIS_PASSWORD }}" \
+              jwt-secret="${{ secrets.JWT_SECRET }}" \
+              jwt-refresh-secret="${{ secrets.JWT_REFRESH_SECRET }}" \
+            --output none
+          echo "✅ Container App secrets have been set"
+
       - name: Get image tag
         id: image-tag
         run: |
@@ -176,6 +192,30 @@ jobs:
               "REDIS_PASSWORD=secretref:redis-password" \
               "JWT_SECRET=secretref:jwt-secret" \
               "JWT_REFRESH_SECRET=secretref:jwt-refresh-secret"
+
+      - name: Verify Container App secrets
+        run: |
+          echo "Verifying required secrets exist..."
+          SECRETS=$(az containerapp secret list \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --query "[].name" -o tsv)
+          
+          REQUIRED_SECRETS=("database-url" "redis-host" "redis-port" "redis-password" "jwt-secret" "jwt-refresh-secret")
+          MISSING_SECRETS=()
+          
+          for secret in "${REQUIRED_SECRETS[@]}"; do
+            if ! echo "$SECRETS" | grep -q "^${secret}$"; then
+              MISSING_SECRETS+=("$secret")
+            fi
+          done
+          
+          if [ ${#MISSING_SECRETS[@]} -gt 0 ]; then
+            echo "❌ Missing required secrets: ${MISSING_SECRETS[*]}"
+            exit 1
+          fi
+          
+          echo "✅ All required secrets are present"
 
       - name: Run database migrations
         run: |
