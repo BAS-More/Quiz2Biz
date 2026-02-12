@@ -1,5 +1,11 @@
 name: Dependabot Updates
 
+# NOTE: Dependabot workflows cannot be manually re-run from the GitHub Actions UI.
+# To retrigger this update, use Dependabot commands on the PR:
+#   - Comment "@dependabot rebase" to rebase the PR
+#   - Comment "@dependabot recreate" to recreate the PR
+#   - Close and reopen the PR to trigger a new workflow run
+
 on:
   pull_request:
     branches:
