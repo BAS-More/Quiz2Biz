@@ -4,125 +4,13 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - '**.md'
-      - 'docs/**'
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Deployment environment'
-        required: true
-        type: choice
-        options:
-          - development
-          - staging
-          - production
-        default: 'development'
-
-env:
-  NODE_VERSION: '20.x'
-  REGISTRY_NAME: acrquestionnaireprod
-  IMAGE_NAME: quiz-api
-  RESOURCE_GROUP: rg-questionnaire-prod
-  CONTAINER_APP_NAME: ca-questionnaire-api-prod
-  HEALTH_PATH: /health/live
-
-permissions:
-  contents: read
 
 jobs:
-  build:
-    name: Build and Test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
-
-      - name: Generate Prisma Client
-        run: npm run db:generate
-
-      - name: Run unit tests
-        run: echo "Skipping tests for deployment"
-        # run: npm run test
-
-      - name: Build application
-        run: npm run build
-
   build-docker:
-    name: Build and Push Docker Image
     runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'push' || github.event.inputs.environment != ''
-    permissions:
-      contents: read
-    
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to Azure Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY_NAME }}.azurecr.io
-          username: ${{ secrets.AZURE_ACR_USERNAME }}
-          password: ${{ secrets.AZURE_ACR_PASSWORD }}
-
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=sha,prefix={{branch}}-,format=long
-            type=raw,value=latest,enable={{is_default_branch}}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./docker/api/Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:buildcache
-          cache-to: type=registry,ref=${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:buildcache,mode=max
-          target: production
-
-  deploy:
-    name: Deploy to Azure Container Apps
-    runs-on: ubuntu-latest
-    needs: build-docker
-    environment: ${{ github.event.inputs.environment || 'development' }}
-    permissions:
-      contents: read
-      id-token: write
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+        uses: actions/checkout@v2
 
       - name: Get image tag
         id: image-tag
@@ -203,27 +91,18 @@ jobs:
             sleep 15
           done
 
-          echo "❌ Deployment failed - health check did not return 200 after retries"
-          exit 1
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-docker
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Create deployment summary
-        if: always()
-        run: |
-          APP_URL=$(az containerapp show \
-            --name ${{ env.CONTAINER_APP_NAME }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --query properties.configuration.ingress.fqdn \
-            -o tsv)
-          
-          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- **Environment**: ${{ github.event.inputs.environment || 'development' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Image**: ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ steps.image-tag.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **URL**: https://${APP_URL}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Resource Group**: ${{ env.RESOURCE_GROUP }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Container App**: ${{ env.CONTAINER_APP_NAME }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Quick Links" >> $GITHUB_STEP_SUMMARY
-          echo "- [Application](https://${APP_URL})" >> $GITHUB_STEP_SUMMARY
-          echo "- [Health Check](https://${APP_URL}${{ env.HEALTH_PATH }})" >> $GITHUB_STEP_SUMMARY
-          echo "- [API Docs](https://${APP_URL}/api/v1/docs)" >> $GITHUB_STEP_SUMMARY
+      - name: Deploy to Azure Container Apps
+        uses: azure/azure-container-apps-deploy-action@v1
+        with:
+          registryUrl: ${{ secrets.REGISTRY_URL }}
+          registryUsername: ${{ secrets.REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
+          imageToDeploy: ${{ needs.build-docker.outputs.imageToDeploy }}
+          summary: "Deploying image: ${{ needs.build-docker.outputs.imageToDeploy }}"
