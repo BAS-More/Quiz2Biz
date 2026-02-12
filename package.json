@@ -62,7 +62,7 @@
     "globals": "^17.3.0",
     "husky": "^8.0.3",
     "jest-axe": "^10.0.0",
-    "lint-staged": "^15.2.0",
+    "lint-staged": "^16.2.7",
     "pa11y": "^9.0.1",
     "prettier": "^3.2.0",
     "prisma": "^5.8.0",
@@ -70,7 +70,7 @@
     "tsc-alias": "^1.8.16",
     "turbo": "^1.11.0",
     "typescript": "^5.3.3",
-    "typescript-eslint": "^8.54.0"
+    "typescript-eslint": "^8.55.0"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
