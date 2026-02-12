@@ -1,0 +1,147 @@
+﻿[0;34m=============================================[0m
+[0;34m  Deployment Readiness Checker              [0m
+[0;34m  Quiz2Biz Platform                         [0m
+[0;34m=============================================[0m
+
+
+[0;34m[1/13] Checking Repository Structure...[0m
+[0;32mÔ£ô[0m Deployment workflow exists
+[0;32mÔ£ô[0m CI workflow exists
+[0;32mÔ£ô[0m API Dockerfile exists
+[0;32mÔ£ô[0m Prisma schema exists
+
+[0;34m[2/13] Checking Documentation...[0m
+[0;32mÔ£ô[0m Documentation: DEPLOYMENT.md
+[0;32mÔ£ô[0m Documentation: FIRST-DEPLOYMENT.md
+[0;32mÔ£ô[0m Documentation: DEPLOYMENT-CHECKLIST.md
+[0;32mÔ£ô[0m Documentation: GITHUB-SECRETS.md
+[0;32mÔ£ô[0m Documentation: README.md
+
+[0;34m[3/13] Checking Dependencies...[0m
+[0;32mÔ£ô[0m package.json exists
+[0;32mÔ£ô[0m Dependencies installed (node_modules exists)
+[0;32mÔ£ô[0m package-lock.json exists
+
+[0;34m[4/13] Checking Environment Configuration...[0m
+[0;32mÔ£ô[0m .env.example exists
+[0;32mÔ£ô[0m .env.production.example exists
+[1;33mÔÜá[0m .env.production contains placeholders (YOUR_*)
+[0;34mÔä╣[0m   Note: Azure Container Apps uses secretrefs, not .env.production
+
+[0;34m[5/13] Checking Azure CLI...[0m
+[0;32mÔ£ô[0m Azure CLI installed
+[0;32mÔ£ô[0m Logged in to Azure (Subscription: Azure subscription 1
+)
+
+[0;34m[6/13] Checking Cloud Build Readiness...[0m
+[0;32mÔ£ô[0m Azure CLI authenticated for cloud build/deploy
+[0;34mÔä╣[0m Docker detected (optional). Cloud deployment path does not require Docker Desktop.
+
+[0;34m[7/13] Checking Code Quality Metrics...[0m
+[0;32mÔ£ô[0m ESLint configuration exists (complexity analysis available)
+[1;33mÔÜá[0m SonarQube not configured (recommended for MI scoring)
+[0;34mÔä╣[0m   Add sonar-project.properties for Maintainability Index tracking
+[0;32mÔ£ô[0m Lint script configured in package.json
+[0;32mÔ£ô[0m Coverage script configured
+[0;32mÔ£ô[0m Code quality tooling: Good (3/4 checks)
+
+[0;34m[8/13] Checking Security Scanning...[0m
+[0;32mÔ£ô[0m Snyk security scanning configured
+[0;32mÔ£ô[0m Secret scanning baseline exists (detect-secrets)
+[0;32mÔ£ô[0m npm audit configured in CI
+[0;32mÔ£ô[0m Helmet security headers configured
+[0;32mÔ£ô[0m Security scanning: Good (4/4 checks)
+
+[0;34m[9/13] Checking Documentation Heuristics...[0m
+[0;32mÔ£ô[0m README has purpose/overview section
+[0;32mÔ£ô[0m README >150 lines includes visual diagrams
+[0;32mÔ£ô[0m Architecture Decision Records exist (8 ADRs)
+[0;32mÔ£ô[0m API documentation (Swagger/OpenAPI) configured
+[0;32mÔ£ô[0m Documentation heuristics: Good (4/4 checks)
+
+[0;34m[10/13] Checking Testing Standards...[0m
+[0;32mÔ£ô[0m Test directories exist
+[0;32mÔ£ô[0m E2E tests exist (7 test files)
+[0;32mÔ£ô[0m Performance test directory exists (k6/NBomber)
+[0;32mÔ£ô[0m Testing standards: Good (3/4 checks)
+
+[0;34m[11/13] Checking DORA Metrics Readiness...[0m
+[0;32mÔ£ô[0m CI/CD pipelines configured (Lead Time optimization)
+[0;32mÔ£ô[0m Automated deployment on push to main configured
+[0;32mÔ£ô[0m PR template exists (standardized reviews)
+[0;32mÔ£ô[0m CODEOWNERS file exists (review requirements)
+[0;32mÔ£ô[0m DORA metrics readiness: Good (4/4 checks)
+[0;34mÔä╣[0m   Lead Time Target: <1 hour | Rework Rate Target: <5%
+[0;34mÔä╣[0m   PR Size Target: 70% under 200 lines
+
+[0;34m[12/13] Checking AI Code Verification...[0m
+[0;32mÔ£ô[0m TypeScript strict mode enabled (AI code validation)
+[0;32mÔ£ô[0m Pre-commit hooks configured (AI code verification)
+[0;32mÔ£ô[0m Code review required via CODEOWNERS
+[0;32mÔ£ô[0m Test coverage configured (AI code must have ÔëÑ80% coverage)
+[0;32mÔ£ô[0m AI verification readiness: Good (4/4 checks)
+[0;34mÔä╣[0m   AI code requires: lint + type-check + ÔëÑ80% coverage + peer review
+
+[0;34m[13/13] Checking Git Status...[0m
+[0;32mÔ£ô[0m Git repository initialized
+[0;34mÔä╣[0m Current branch: main
+[0;32mÔ£ô[0m On main branch (deployment will trigger on push)
+[1;33mÔÜá[0m Uncommitted changes detected
+[0;34mÔä╣[0m   Commit changes before deploying
+
+[0;34m=============================================[0m
+[0;34m  Summary                                    [0m
+[0;34m=============================================[0m
+
+Total Checks: 50
+[0;32mPassed: 47[0m
+[1;33mWarnings: 3[0m
+[0;31mFailed: 0[0m
+
+[0;34m=============================================[0m
+[0;34m  Sprint Validation Score                    [0m
+[0;34m=============================================[0m
+
+  Code Quality (ISO/MI/Complexity):  85%
+  Security Gates (SAST/DAST):        90%
+  Documentation Heuristics:          85%
+  Testing Standards:                 90%
+  DORA Metrics Readiness:            85%
+  AI Code Verification:              90%
+
+  ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+  [0;32mOVERALL SCORE: 87% - GOOD[0m
+  [0;32mPIPELINE HEALTH: HEALTHY[0m
+  [1;33mÔÜá Deployment APPROVED with monitoring[0m
+
+[1;33mÔÜá Warnings detected or score below 90%. Review above.[0m
+[1;33m  You can proceed with deployment, but consider addressing issues.[0m
+
+[0;34m=============================================[0m
+[0;34m  Next Steps                                 [0m
+[0;34m=============================================[0m
+
+To deploy the application:
+
+  Option 1: Automatic (via GitHub Actions)
+    1. Ensure GitHub secrets are configured
+    2. Push or merge to 'main' branch
+    3. Monitor deployment in GitHub Actions
+
+  Option 2: Manual workflow dispatch
+    1. Go to GitHub repository > Actions
+    2. Select 'Deploy to Azure' workflow
+    3. Click 'Run workflow'
+    4. Select environment and run
+
+  Option 3: First-time setup
+    1. Follow: FIRST-DEPLOYMENT.md
+    2. Time required: 30-40 minutes
+
+Documentation:
+  ÔÇó Quick Start: DEPLOY-NOW.md
+  ÔÇó Full Guide: DEPLOYMENT.md
+  ÔÇó First Time: FIRST-DEPLOYMENT.md
+  ÔÇó Checklist: DEPLOYMENT-CHECKLIST.md
+
+

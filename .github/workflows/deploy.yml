@@ -60,7 +60,7 @@ jobs:
         # run: npm run test
 
       - name: Build application
-        run: npm run build
+        run: npx turbo run build --filter=api --filter=database --filter=redis --filter=shared
 
   build-docker:
     name: Build and Push Docker Image
