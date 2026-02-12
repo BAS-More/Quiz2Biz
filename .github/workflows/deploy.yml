@@ -173,10 +173,10 @@ jobs:
 
       - name: Run database migrations
         run: |
-          az containerapp exec \
+          script -q -e -c "az containerapp exec \
             --name ${{ env.CONTAINER_APP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
-            --command "npx prisma migrate deploy"
+            --command 'npx prisma migrate deploy'" /dev/null
 
       - name: Verify deployment
         run: |
