@@ -14,9 +14,13 @@ RUN npm ci --ignore-scripts --legacy-peer-deps || npm install --ignore-scripts -
 # Copy source files
 COPY . .
 
-# Set API URL for production build (empty = same-origin, nginx proxies /api/*)
+# Build-time environment variables for OAuth and API
 ARG VITE_API_URL=""
+ARG VITE_MICROSOFT_CLIENT_ID=""
+ARG VITE_GOOGLE_CLIENT_ID=""
 ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_MICROSOFT_CLIENT_ID=$VITE_MICROSOFT_CLIENT_ID
+ENV VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID
 
 # Build the web application
 RUN npx turbo run build --filter=web
