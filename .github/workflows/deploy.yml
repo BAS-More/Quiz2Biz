@@ -186,13 +186,18 @@ jobs:
             --query properties.configuration.ingress.fqdn \
             -o tsv)
           
+          if [ -z "$APP_URL" ]; then
+            echo "❌ Deployment failed - could not resolve Container App URL"
+            exit 1
+          fi
+
           echo "Application URL: https://${APP_URL}"
-          
+
           # Wait for app to be ready and retry health check
           ATTEMPT=1
           MAX_ATTEMPTS=10
           until [ "$ATTEMPT" -gt "$MAX_ATTEMPTS" ]; do
-            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://${APP_URL}${{ env.HEALTH_PATH }}")
+            HTTP_STATUS=$(curl --connect-timeout 5 --max-time 10 -s -o /dev/null -w "%{http_code}" "https://${APP_URL}${{ env.HEALTH_PATH }}")
             if [ "$HTTP_STATUS" = "200" ]; then
               echo "✅ Deployment successful - Health check passed"
               echo "Application is available at: https://${APP_URL}"
