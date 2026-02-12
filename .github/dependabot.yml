@@ -1,5 +1,4 @@
-updates: []
-versioning-strategy: lockfile-dependent
+version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/apps/api"
@@ -7,6 +6,7 @@ updates:
       interval: "weekly"
       day: "monday"
       time: "09:00"
+    versioning-strategy: "lockfile-only"
     open-pull-requests-limit: 5
   - package-ecosystem: "npm"
     directory: "/apps/web"
@@ -14,6 +14,7 @@ updates:
       interval: "weekly"
       day: "monday"
       time: "09:00"
+    versioning-strategy: "lockfile-only"
     open-pull-requests-limit: 5
   - package-ecosystem: "npm"
     directory: "/apps/cli"
@@ -21,4 +22,5 @@ updates:
       interval: "weekly"
       day: "monday"
       time: "09:00"
+    versioning-strategy: "lockfile-only"
     open-pull-requests-limit: 5
