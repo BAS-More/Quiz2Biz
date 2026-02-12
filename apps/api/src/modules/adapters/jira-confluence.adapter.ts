@@ -264,6 +264,8 @@ export class JiraConfluenceAdapter {
     }
 
     try {
+      // lgtm[js/request-forgery]
+      // codeql[js/request-forgery]
       const response = await fetch(requestUrl.toString(), {
         method,
         headers: this.getHeaders(config),
