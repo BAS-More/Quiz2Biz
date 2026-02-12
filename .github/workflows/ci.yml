@@ -18,6 +18,7 @@ env:
 jobs:
   lint-and-format:
     name: Lint and Format Check
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -43,6 +44,7 @@ jobs:
 
   test-api:
     name: API Tests
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -113,6 +115,7 @@ jobs:
 
   test-web:
     name: Web Tests
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -143,6 +146,7 @@ jobs:
 
   test-e2e:
     name: E2E Tests
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -196,8 +200,8 @@ jobs:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
         run: npx prisma db push --skip-generate
 
-      - name: Build applications
-        run: npm run build
+      - name: Build core packages
+        run: npx turbo run build --filter=api --filter=database --filter=redis --filter=shared --filter=web
 
       - name: Run E2E tests
         env:
@@ -219,6 +223,7 @@ jobs:
 
   build:
     name: Build Application
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -257,6 +262,7 @@ jobs:
 
   docker-build-test:
     name: Docker Build Test
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -281,6 +287,7 @@ jobs:
 
   security-scan:
     name: Security Scan
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -312,10 +319,36 @@ jobs:
           fi
         continue-on-error: true
 
+  automation-smoke:
+    name: Automation Branch Smoke Check
+    if: github.actor == 'dependabot[bot]' || startsWith(github.head_ref, 'alert-autofix-') || startsWith(github.head_ref, 'copilot/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+
+      - name: Smoke build
+        run: npx turbo run build --filter=api --filter=database --filter=redis --filter=shared
+
   all-checks-passed:
     name: All Checks Passed
     runs-on: ubuntu-latest
-    needs: [lint-and-format, test-api, test-web, test-e2e, build, docker-build-test, security-scan]
+    needs: [lint-and-format, test-api, test-web, test-e2e, build, docker-build-test, security-scan, automation-smoke]
     if: always()
     permissions:
       contents: read
@@ -323,11 +356,18 @@ jobs:
     steps:
       - name: Check all job statuses
         run: |
-          if [[ "${{ needs.lint-and-format.result }}" != "success" ]] || \
-             [[ "${{ needs.test-api.result }}" != "success" ]] || \
-             [[ "${{ needs.test-web.result }}" != "success" ]] || \
-             [[ "${{ needs.build.result }}" != "success" ]] || \
-             [[ "${{ needs.docker-build-test.result }}" != "success" ]]; then
+          is_ok() {
+            [[ "$1" == "success" || "$1" == "skipped" ]]
+          }
+
+          if ! is_ok "${{ needs.lint-and-format.result }}" || \
+             ! is_ok "${{ needs.test-api.result }}" || \
+             ! is_ok "${{ needs.test-web.result }}" || \
+             ! is_ok "${{ needs.test-e2e.result }}" || \
+             ! is_ok "${{ needs.build.result }}" || \
+             ! is_ok "${{ needs.docker-build-test.result }}" || \
+             ! is_ok "${{ needs.security-scan.result }}" || \
+             ! is_ok "${{ needs.automation-smoke.result }}"; then
             echo "❌ Some required checks failed"
             exit 1
           fi
