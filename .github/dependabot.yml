@@ -1,12 +1,24 @@
-version: 2
+updates: []
+versioning-strategy: lockfile-dependent
 updates:
-  - package-ecosystem: npm
-    directory: /
+  - package-ecosystem: "npm"
+    directory: "/apps/api"
     schedule:
-      interval: weekly
-      day: monday
-      time: "04:00"
-    open-pull-requests-limit: 10
-    labels:
-      - dependencies
-      - automated
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+  - package-ecosystem: "npm"
+    directory: "/apps/web"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+  - package-ecosystem: "npm"
+    directory: "/apps/cli"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
