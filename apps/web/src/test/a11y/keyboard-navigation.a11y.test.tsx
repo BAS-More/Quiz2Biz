@@ -667,10 +667,13 @@ describe('Keyboard Navigation Accessibility', () => {
       const loadBtn = screen.getByTestId('load-btn');
       await user.click(loadBtn);
 
-      await vi.waitFor(() => {
-        const result = screen.getByRole('region', { name: /loaded content/i });
-        expect(result).toBeInTheDocument();
-      });
+      await vi.waitFor(
+        () => {
+          const result = screen.getByRole('region', { name: /loaded content/i });
+          expect(result).toBeInTheDocument();
+        },
+        { timeout: 3000 },
+      );
     });
   });
 

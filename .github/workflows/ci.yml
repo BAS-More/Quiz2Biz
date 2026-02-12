@@ -199,7 +199,7 @@ jobs:
       - name: Build applications
         run: npm run build
 
-      - name: Start applications
+      - name: Run E2E tests
         env:
           NODE_ENV: test
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
@@ -207,11 +207,6 @@ jobs:
           REDIS_PORT: 6379
           JWT_SECRET: test-jwt-secret
           JWT_REFRESH_SECRET: test-refresh-secret
-        run: |
-          npm run start &
-          sleep 20
-
-      - name: Run E2E tests
         run: npm run test:e2e
 
       - name: Upload E2E test results
