@@ -12,16 +12,84 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Build Docker image
+      - name: Get image tag
+        id: image-tag
         run: |
-          TAG=$(date +%Y%m%d%H%M%S)  # Generating a deterministic tag based on current date and time
-          echo "TAG=${TAG}" >> $GITHUB_ENV
-          IMAGE_NAME="myapp:${TAG}"
-          docker build -t ${IMAGE_NAME} .
-          echo "imageToDeploy=${IMAGE_NAME}" >> $GITHUB_ENV
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=latest" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${{ github.ref_name }}-${{ github.sha }}" >> $GITHUB_OUTPUT
+          fi
 
-    outputs:
-      imageToDeploy: ${{ env.imageToDeploy }}
+      - name: Recover failed Container App state
+        run: |
+          APP_STATE=$(az containerapp show \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --query properties.provisioningState \
+            -o tsv 2>/dev/null || echo "NotFound")
+
+          if [ "$APP_STATE" = "Failed" ]; then
+            echo "Container App is in failed provisioning state. Deleting for clean redeploy..."
+            az containerapp delete \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.RESOURCE_GROUP }} \
+              --yes
+          else
+            echo "Container App provisioning state: $APP_STATE"
+          fi
+
+      - name: Deploy to Azure Container Apps
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          resourceGroup: ${{ env.RESOURCE_GROUP }}
+          containerAppName: ${{ env.CONTAINER_APP_NAME }}
+          imageToDeploy: ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ steps.image-tag.outputs.tag }}
+          registryUrl: ${{ env.REGISTRY_NAME }}.azurecr.io
+          registryUsername: ${{ secrets.AZURE_ACR_USERNAME }}
+          registryPassword: ${{ secrets.AZURE_ACR_PASSWORD }}
+          environmentVariables: |
+            NODE_ENV=production
+            PORT=3000
+            API_PREFIX=api/v1
+            DATABASE_URL=secretref:database-url
+            REDIS_HOST=secretref:redis-host
+            REDIS_PORT=secretref:redis-port
+            REDIS_PASSWORD=secretref:redis-password
+            JWT_SECRET=secretref:jwt-secret
+            JWT_REFRESH_SECRET=secretref:jwt-refresh-secret
+
+      - name: Run database migrations
+        run: |
+          az containerapp exec \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --command "npx prisma migrate deploy"
+
+      - name: Verify deployment
+        run: |
+          APP_URL=$(az containerapp show \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --query properties.configuration.ingress.fqdn \
+            -o tsv)
+          
+          echo "Application URL: https://${APP_URL}"
+          
+          # Wait for app to be ready and retry health check
+          ATTEMPT=1
+          MAX_ATTEMPTS=10
+          until [ "$ATTEMPT" -gt "$MAX_ATTEMPTS" ]; do
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://${APP_URL}${{ env.HEALTH_PATH }}")
+            if [ "$HTTP_STATUS" = "200" ]; then
+              echo "✅ Deployment successful - Health check passed"
+              echo "Application is available at: https://${APP_URL}"
+              exit 0
+            fi
+            echo "Health check attempt ${ATTEMPT}/${MAX_ATTEMPTS} returned ${HTTP_STATUS}, retrying..."
+            ATTEMPT=$((ATTEMPT + 1))
+            sleep 15
+          done
 
   deploy:
     runs-on: ubuntu-latest
