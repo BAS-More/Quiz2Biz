@@ -136,7 +136,8 @@ jobs:
               redis-port="${{ secrets.REDIS_PORT }}" \
               redis-password="${{ secrets.REDIS_PASSWORD }}" \
               jwt-secret="${{ secrets.JWT_SECRET }}" \
-              jwt-refresh-secret="${{ secrets.JWT_REFRESH_SECRET }}"
+              jwt-refresh-secret="${{ secrets.JWT_REFRESH_SECRET }}" \
+            --output none
           echo "✅ Container App secrets have been set"
 
       - name: Get image tag
