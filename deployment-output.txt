@@ -1,0 +1,12 @@
+﻿bash : /bin/bash: line 1: cd: /c/Repos/Quiz-to-Build: 
+No such file or directory
+At line:1 char:1
++ bash -c "cd /c/Repos/Quiz-to-Build && source 
+scripts/check-deployment ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (/bin/bash 
+   : line...le or directory:String) [], RemoteExcepti  
+  on
+    + FullyQualifiedErrorId : NativeCommandError
+ 
