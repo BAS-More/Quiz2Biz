@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Check for Dependabot re-run
-        if: github.actor == 'dependabot[bot]' && github.run_attempt != '1'
+        if: github.actor == 'dependabot[bot]' && github.run_attempt != 1
         run: |
           echo "::error::Dependabot workflows cannot be re-run. Retrigger this update via Dependabot instead."
           echo "To retrigger this workflow:"
