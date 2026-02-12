@@ -1,5 +1,11 @@
 name: Dependabot Updates
 
+# NOTE: Dependabot workflows cannot be manually re-run from the GitHub Actions UI.
+# To retrigger this update, use Dependabot commands on the PR:
+#   - Comment "@dependabot rebase" to rebase the PR
+#   - Comment "@dependabot recreate" to recreate the PR
+#   - Close and reopen the PR to trigger a new workflow run
+
 on:
   pull_request:
     branches:
@@ -19,6 +25,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Show Re-run Instructions
+        run: |
+          echo "⚠️ IMPORTANT: This workflow cannot be manually re-run from the GitHub Actions UI."
+          echo ""
+          echo "To retrigger this Dependabot update, use one of the following methods:"
+          echo "  1. Comment '@dependabot rebase' on the PR to rebase and retrigger"
+          echo "  2. Comment '@dependabot recreate' on the PR to recreate and retrigger"
+          echo "  3. Close and reopen the PR to trigger a new workflow run"
+          echo "  4. Go to Insights > Dependency graph > Dependabot and click 'Check for updates'"
+          echo ""
+          echo "For more information, see:"
+          echo "https://docs.github.com/en/code-security/dependabot/working-with-dependabot/managing-pull-requests-for-dependency-updates"
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
