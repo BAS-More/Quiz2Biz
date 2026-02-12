@@ -202,13 +202,19 @@ export class JiraConfluenceAdapter {
     method: string = 'GET',
     body?: unknown,
     isConfluence: boolean = false,
+    isAgile: boolean = false,
   ): Promise<T> {
     // Validate the domain before constructing the URL to prevent SSRF
     this.validateDomain(config);
 
-    const baseUrl = isConfluence
-      ? `https://${config.domain}/wiki/rest/api`
-      : `https://${config.domain}/rest/api/3`;
+    let baseUrl: string;
+    if (isConfluence) {
+      baseUrl = `https://${config.domain}/wiki/rest/api`;
+    } else if (isAgile) {
+      baseUrl = `https://${config.domain}/rest/agile/1.0`;
+    } else {
+      baseUrl = `https://${config.domain}/rest/api/3`;
+    }
     const url = `${baseUrl}${endpoint}`;
 
     try {
@@ -402,20 +408,19 @@ export class JiraConfluenceAdapter {
     options: { state?: 'active' | 'closed' | 'future'; maxResults?: number } = {},
   ): Promise<JiraEvidenceResult[]> {
     const { state, maxResults = 50 } = options;
-    let endpoint = `https://${config.domain}/rest/agile/1.0/board/${boardId}/sprint?maxResults=${maxResults}`;
+    let endpoint = `/board/${boardId}/sprint?maxResults=${maxResults}`;
     if (state) {
       endpoint += `&state=${state}`;
     }
 
-    const response = await fetch(endpoint, {
-      headers: this.getHeaders(config),
-    });
-
-    if (!response.ok) {
-      throw new HttpException(`Failed to fetch sprints: ${response.status}`, response.status);
-    }
-
-    const data = (await response.json()) as { values: JiraSprint[] };
+    const data = await this.makeRequest<{ values: JiraSprint[] }>(
+      config,
+      endpoint,
+      'GET',
+      undefined,
+      false,
+      true,
+    );
 
     return data.values.map((sprint) => ({
       type: 'jira_sprint' as const,
