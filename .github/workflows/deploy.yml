@@ -123,7 +123,7 @@ jobs:
             # Extract the tag with the full SHA (format: branch-fullsha)
             # Escape the branch name for use in regex and support both SHA-1 (40) and SHA-256 (64)
             BRANCH_ESCAPED=$(printf '%s\n' "${{ github.ref_name }}" | sed 's/[.[\*^$()+?{|\\]/\\&/g')
-            SHA_TAG=$(echo "$TAGS" | grep -E "${BRANCH_ESCAPED}-([a-f0-9]{40}|[a-f0-9]{64})" | head -n1 | awk -F'/' '{print $NF}' | awk -F':' '{print $NF}')
+            SHA_TAG=$(echo "$TAGS" | grep -E "${BRANCH_ESCAPED}-([a-f0-9]{40}|[a-f0-9]{64})" | head -n1 | awk -F'[/:]' '{print $NF}')
             
             # Validate that we found a tag
             if [ -z "$SHA_TAG" ]; then
