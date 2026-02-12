@@ -69,6 +69,8 @@ jobs:
     if: github.event_name == 'push' || github.event.inputs.environment != ''
     permissions:
       contents: read
+    outputs:
+      image-tag: ${{ steps.set-tag.outputs.tag }}
     
     steps:
       - name: Checkout code
@@ -106,6 +108,24 @@ jobs:
           cache-to: type=registry,ref=${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:buildcache,mode=max
           target: production
 
+      - name: Set image tag output
+        id: set-tag
+        run: |
+          # Extract the sha-based tag from metadata-action output
+          # The metadata-action creates tags like: main-<full-sha>, main, latest
+          # We want the sha-based tag for deploy: main-<full-sha>
+          TAGS="${{ steps.meta.outputs.tags }}"
+          
+          # For workflow_dispatch, use latest tag
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=latest" >> $GITHUB_OUTPUT
+          else
+            # Extract the tag with the full SHA (format: branch-fullsha)
+            # Find the line containing the SHA
+            SHA_TAG=$(echo "$TAGS" | grep -E "${{ github.ref_name }}-[a-f0-9]{40}" | head -n1 | sed 's/.*://')
+            echo "tag=${SHA_TAG}" >> $GITHUB_OUTPUT
+          fi
+
   deploy:
     name: Deploy to Azure Container Apps
     runs-on: ubuntu-latest
@@ -133,21 +153,12 @@ jobs:
             --username ${{ secrets.AZURE_ACR_USERNAME }} \
             --password ${{ secrets.AZURE_ACR_PASSWORD }}
 
-      - name: Get image tag
-        id: image-tag
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "tag=latest" >> $GITHUB_OUTPUT
-          else
-            echo "tag=${{ github.ref_name }}-${{ github.sha }}" >> $GITHUB_OUTPUT
-          fi
-
       - name: Deploy to Azure Container Apps
         uses: azure/container-apps-deploy-action@v1
         with:
           resourceGroup: ${{ env.RESOURCE_GROUP }}
           containerAppName: ${{ env.CONTAINER_APP_NAME }}
-          imageToDeploy: ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ steps.image-tag.outputs.tag }}
+          imageToDeploy: ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ needs.build-docker.outputs.image-tag }}
           environmentVariables: |
             NODE_ENV=production
             PORT=3000
@@ -206,7 +217,7 @@ jobs:
           echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Environment**: ${{ github.event.inputs.environment || 'development' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Image**: ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ steps.image-tag.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Image**: ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ needs.build-docker.outputs.image-tag }}" >> $GITHUB_STEP_SUMMARY
           echo "- **URL**: https://${APP_URL}" >> $GITHUB_STEP_SUMMARY
           echo "- **Resource Group**: ${{ env.RESOURCE_GROUP }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Container App**: ${{ env.CONTAINER_APP_NAME }}" >> $GITHUB_STEP_SUMMARY
