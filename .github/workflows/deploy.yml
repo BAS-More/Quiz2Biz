@@ -153,21 +153,24 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Configure Container App registry credentials
+      - name: Get image tag
+        id: image-tag
         run: |
-          az containerapp registry set \
-            --name ${{ env.CONTAINER_APP_NAME }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --server ${{ env.REGISTRY_NAME }}.azurecr.io \
-            --username ${{ secrets.AZURE_ACR_USERNAME }} \
-            --password ${{ secrets.AZURE_ACR_PASSWORD }}
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=latest" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${{ github.ref_name }}-${{ github.sha }}" >> $GITHUB_OUTPUT
+          fi
 
       - name: Deploy to Azure Container Apps
         uses: azure/container-apps-deploy-action@v1
         with:
           resourceGroup: ${{ env.RESOURCE_GROUP }}
           containerAppName: ${{ env.CONTAINER_APP_NAME }}
-          imageToDeploy: ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ needs.build-docker.outputs.image-tag }}
+          imageToDeploy: ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ steps.image-tag.outputs.tag }}
+          registryUrl: ${{ env.REGISTRY_NAME }}.azurecr.io
+          registryUsername: ${{ secrets.AZURE_ACR_USERNAME }}
+          registryPassword: ${{ secrets.AZURE_ACR_PASSWORD }}
           environmentVariables: |
             NODE_ENV=production
             PORT=3000
