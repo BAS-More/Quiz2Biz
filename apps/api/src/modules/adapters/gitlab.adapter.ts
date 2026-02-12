@@ -218,7 +218,17 @@ export class GitLabAdapter {
   }
 
   private async validateAndGetBaseUrl(config: GitLabConfig): Promise<string> {
-    const rawBaseUrl = config.apiUrl || this.defaultApiUrl;
+    const trustedApiUrl = (this.configService.get<string>('GITLAB_API_URL') || this.defaultApiUrl).trim();
+    const providedApiUrl = config.apiUrl?.trim();
+
+    if (providedApiUrl && providedApiUrl !== trustedApiUrl) {
+      throw new HttpException(
+        'Configured GitLab API URL does not match trusted server configuration',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const rawBaseUrl = trustedApiUrl;
 
     let parsed: URL;
     try {

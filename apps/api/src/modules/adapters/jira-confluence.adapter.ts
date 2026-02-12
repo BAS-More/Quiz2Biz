@@ -137,6 +137,16 @@ export class JiraConfluenceAdapter {
     private readonly prisma: PrismaService,
   ) {}
 
+  private getTrustedJiraDomain(): string {
+    const trustedDomain = (this.configService.get<string>('JIRA_DOMAIN') || '').trim().toLowerCase();
+
+    if (!trustedDomain) {
+      throw new HttpException('JIRA_DOMAIN is not configured', HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    return trustedDomain;
+  }
+
   private getHeaders(config: JiraConfig): Record<string, string> {
     const auth = Buffer.from(`${config.email}:${config.apiToken}`).toString('base64');
     return {
@@ -224,8 +234,16 @@ export class JiraConfluenceAdapter {
     isAgile: boolean = false,
   ): Promise<T> {
     // Validate the domain before constructing the URL to prevent SSRF
-    this.validateDomain(config);
-    const normalizedDomain = config.domain.trim().toLowerCase();
+    const normalizedDomain = this.getTrustedJiraDomain();
+
+    if (config.domain.trim().toLowerCase() !== normalizedDomain) {
+      throw new HttpException(
+        'Configured Jira domain does not match trusted server configuration',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    this.validateDomain({ ...config, domain: normalizedDomain });
     const safeEndpoint = this.sanitizeEndpoint(endpoint);
 
     let baseUrl: string;
