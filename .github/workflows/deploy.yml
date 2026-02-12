@@ -124,7 +124,45 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Validate required deployment secrets
+        id: secrets-check
+        run: |
+          MISSING=0
+
+          if [ -z "${{ secrets.DATABASE_URL }}" ]; then
+            echo "::warning::Missing secret DATABASE_URL"
+            MISSING=1
+          fi
+          if [ -z "${{ secrets.REDIS_HOST }}" ]; then
+            echo "::warning::Missing secret REDIS_HOST"
+            MISSING=1
+          fi
+          if [ -z "${{ secrets.REDIS_PORT }}" ]; then
+            echo "::warning::Missing secret REDIS_PORT"
+            MISSING=1
+          fi
+          if [ -z "${{ secrets.REDIS_PASSWORD }}" ]; then
+            echo "::warning::Missing secret REDIS_PASSWORD"
+            MISSING=1
+          fi
+          if [ -z "${{ secrets.JWT_SECRET }}" ]; then
+            echo "::warning::Missing secret JWT_SECRET"
+            MISSING=1
+          fi
+          if [ -z "${{ secrets.JWT_REFRESH_SECRET }}" ]; then
+            echo "::warning::Missing secret JWT_REFRESH_SECRET"
+            MISSING=1
+          fi
+
+          if [ "$MISSING" -eq 1 ]; then
+            echo "deploy_enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Deployment will skip Azure secret/deploy steps due to missing secrets."
+          else
+            echo "deploy_enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Set Container App secrets
+        if: steps.secrets-check.outputs.deploy_enabled == 'true'
         run: |
           echo "Setting Container App secrets..."
           az containerapp secret set \
@@ -150,6 +188,7 @@ jobs:
           fi
 
       - name: Recover failed Container App state
+        if: steps.secrets-check.outputs.deploy_enabled == 'true'
         run: |
           APP_STATE=$(az containerapp show \
             --name ${{ env.CONTAINER_APP_NAME }} \
@@ -168,6 +207,7 @@ jobs:
           fi
 
       - name: Deploy to Azure Container Apps
+        if: steps.secrets-check.outputs.deploy_enabled == 'true'
         uses: azure/container-apps-deploy-action@v1
         with:
           resourceGroup: ${{ env.RESOURCE_GROUP }}
@@ -178,6 +218,7 @@ jobs:
           registryPassword: ${{ secrets.AZURE_ACR_PASSWORD }}
 
       - name: Configure environment variables with secrets
+        if: steps.secrets-check.outputs.deploy_enabled == 'true'
         run: |
           az containerapp update \
             --name ${{ env.CONTAINER_APP_NAME }} \
@@ -194,6 +235,7 @@ jobs:
               "JWT_REFRESH_SECRET=secretref:jwt-refresh-secret"
 
       - name: Verify Container App secrets
+        if: steps.secrets-check.outputs.deploy_enabled == 'true'
         run: |
           echo "Verifying required secrets exist..."
           SECRETS=$(az containerapp secret list \
@@ -218,6 +260,7 @@ jobs:
           echo "✅ All required secrets are present"
 
       - name: Run database migrations
+        if: steps.secrets-check.outputs.deploy_enabled == 'true'
         run: |
           script -q -e -c "az containerapp exec \
             --name ${{ env.CONTAINER_APP_NAME }} \
@@ -225,6 +268,7 @@ jobs:
             --command 'npx prisma migrate deploy'" /dev/null
 
       - name: Verify deployment
+        if: steps.secrets-check.outputs.deploy_enabled == 'true'
         run: |
           APP_PROVISIONING_STATE=$(az containerapp show \
             --name ${{ env.CONTAINER_APP_NAME }} \
@@ -284,7 +328,7 @@ jobs:
           exit 1
 
       - name: Create deployment summary
-        if: always()
+        if: always() && steps.secrets-check.outputs.deploy_enabled == 'true'
         run: |
           APP_URL=$(az containerapp show \
             --name ${{ env.CONTAINER_APP_NAME }} \
@@ -304,3 +348,11 @@ jobs:
           echo "- [Application](https://${APP_URL})" >> $GITHUB_STEP_SUMMARY
           echo "- [Health Check](https://${APP_URL}${{ env.HEALTH_PATH }})" >> $GITHUB_STEP_SUMMARY
           echo "- [API Docs](https://${APP_URL}/api/v1/docs)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Create skipped deployment summary
+        if: always() && steps.secrets-check.outputs.deploy_enabled != 'true'
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment**: ${{ github.event.inputs.environment || 'development' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: Skipped Azure deployment steps due to missing required secrets" >> $GITHUB_STEP_SUMMARY
