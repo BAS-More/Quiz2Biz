@@ -26,6 +26,7 @@ export interface StandardSection {
 @Injectable()
 export class TemplateEngineService {
   private readonly logger = new Logger(TemplateEngineService.name);
+  private static readonly blockedPathSegments = new Set(['__proto__', 'prototype', 'constructor']);
 
   constructor(private readonly prisma: PrismaService) {}
 
@@ -195,18 +196,39 @@ export class TemplateEngineService {
    * Set a value at a nested path using dot notation
    */
   private setNestedValue(obj: Record<string, unknown>, path: string, value: unknown): void {
-    const parts = path.split('.');
+    const parts = path
+      .split('.')
+      .map((part) => part.trim())
+      .filter((part) => part.length > 0);
+
+    if (parts.length === 0) {
+      this.logger.warn('Skipping response mapping with empty path');
+      return;
+    }
+
+    if (parts.some((part) => TemplateEngineService.blockedPathSegments.has(part))) {
+      this.logger.warn(`Blocked unsafe response mapping path: "${path}"`);
+      return;
+    }
+
     let current = obj;
 
     for (let i = 0; i < parts.length - 1; i++) {
       const part = parts[i];
-      if (!(part in current)) {
-        current[part] = {};
+      const nextValue = current[part];
+
+      if (
+        typeof nextValue !== 'object' ||
+        nextValue === null ||
+        Array.isArray(nextValue)
+      ) {
+        current[part] = Object.create(null) as Record<string, unknown>;
       }
       current = current[part] as Record<string, unknown>;
     }
 
-    current[parts[parts.length - 1]] = value;
+    const leafPart = parts[parts.length - 1];
+    current[leafPart] = value;
   }
 
   /**

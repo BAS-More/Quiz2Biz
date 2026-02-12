@@ -268,6 +268,25 @@ export class GitLabAdapter {
     return normalized;
   }
 
+  private sanitizeEndpoint(endpoint: string): string {
+    const candidate = endpoint.trim();
+
+    if (!candidate) {
+      throw new HttpException('Invalid GitLab API endpoint', HttpStatus.BAD_REQUEST);
+    }
+
+    if (
+      candidate.includes('://') ||
+      candidate.startsWith('//') ||
+      candidate.includes('\\') ||
+      candidate.includes('@')
+    ) {
+      throw new HttpException('Invalid GitLab API endpoint format', HttpStatus.BAD_REQUEST);
+    }
+
+    return candidate.startsWith('/') ? candidate.slice(1) : candidate;
+  }
+
   private async makeRequest<T>(
     config: GitLabConfig,
     endpoint: string,
@@ -275,10 +294,20 @@ export class GitLabAdapter {
     body?: unknown,
   ): Promise<T> {
     const baseUrl = await this.validateAndGetBaseUrl(config);
-    const url = new URL(endpoint, baseUrl).toString();
+    const base = new URL(baseUrl);
+    const safeEndpoint = this.sanitizeEndpoint(endpoint);
+    const requestUrl = new URL(safeEndpoint, `${baseUrl}/`);
+
+    if (
+      requestUrl.protocol !== base.protocol ||
+      requestUrl.hostname.toLowerCase() !== base.hostname.toLowerCase() ||
+      requestUrl.port !== base.port
+    ) {
+      throw new HttpException('GitLab API URL validation failed', HttpStatus.BAD_REQUEST);
+    }
 
     try {
-      const response = await fetch(url, {
+      const response = await fetch(requestUrl.toString(), {
         method,
         headers: this.getHeaders(config.token),
         body: body ? JSON.stringify(body) : undefined,

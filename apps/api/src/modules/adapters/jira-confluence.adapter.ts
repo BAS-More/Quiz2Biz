@@ -196,6 +196,25 @@ export class JiraConfluenceAdapter {
     }
   }
 
+  private sanitizeEndpoint(endpoint: string): string {
+    const candidate = endpoint.trim();
+
+    if (!candidate) {
+      throw new HttpException('Invalid Atlassian API endpoint', HttpStatus.BAD_REQUEST);
+    }
+
+    if (
+      candidate.includes('://') ||
+      candidate.startsWith('//') ||
+      candidate.includes('\\') ||
+      candidate.includes('@')
+    ) {
+      throw new HttpException('Invalid Atlassian API endpoint format', HttpStatus.BAD_REQUEST);
+    }
+
+    return candidate.startsWith('/') ? candidate.slice(1) : candidate;
+  }
+
   private async makeRequest<T>(
     config: JiraConfig,
     endpoint: string,
@@ -206,19 +225,28 @@ export class JiraConfluenceAdapter {
   ): Promise<T> {
     // Validate the domain before constructing the URL to prevent SSRF
     this.validateDomain(config);
+    const normalizedDomain = config.domain.trim().toLowerCase();
+    const safeEndpoint = this.sanitizeEndpoint(endpoint);
 
     let baseUrl: string;
     if (isConfluence) {
-      baseUrl = `https://${config.domain}/wiki/rest/api`;
+      baseUrl = `https://${normalizedDomain}/wiki/rest/api`;
     } else if (isAgile) {
-      baseUrl = `https://${config.domain}/rest/agile/1.0`;
+      baseUrl = `https://${normalizedDomain}/rest/agile/1.0`;
     } else {
-      baseUrl = `https://${config.domain}/rest/api/3`;
+      baseUrl = `https://${normalizedDomain}/rest/api/3`;
     }
-    const url = `${baseUrl}${endpoint}`;
+    const requestUrl = new URL(safeEndpoint, `${baseUrl}/`);
+
+    if (
+      requestUrl.protocol !== 'https:' ||
+      requestUrl.hostname.toLowerCase() !== normalizedDomain
+    ) {
+      throw new HttpException('Atlassian API URL validation failed', HttpStatus.BAD_REQUEST);
+    }
 
     try {
-      const response = await fetch(url, {
+      const response = await fetch(requestUrl.toString(), {
         method,
         headers: this.getHeaders(config),
         body: body ? JSON.stringify(body) : undefined,

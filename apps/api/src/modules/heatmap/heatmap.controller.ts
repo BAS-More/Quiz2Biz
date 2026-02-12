@@ -34,6 +34,15 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 export class HeatmapController {
   constructor(private readonly heatmapService: HeatmapService) {}
 
+  private sanitizeMarkdownForResponse(markdown: string): string {
+    return markdown
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   /**
    * Generate gap heatmap for a session.
    */
@@ -106,9 +115,13 @@ export class HeatmapController {
     @Res() res: Response,
   ): Promise<void> {
     const markdown = await this.heatmapService.exportToMarkdown(sessionId);
-    res.setHeader('Content-Type', 'text/markdown');
+    const sanitizedMarkdown = this.sanitizeMarkdownForResponse(markdown);
+
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Content-Security-Policy', "default-src 'none'; sandbox");
     res.setHeader('Content-Disposition', `attachment; filename="heatmap-${sessionId}.md"`);
-    res.status(HttpStatus.OK).send(markdown);
+    res.status(HttpStatus.OK).send(sanitizedMarkdown);
   }
 
   /**

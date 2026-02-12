@@ -22,6 +22,28 @@ import React, {
 } from 'react';
 import type { ReactNode } from 'react';
 
+const SECURE_ID_ALPHABET = 'abcdefghijklmnopqrstuvwxyz0123456789';
+let fallbackIdCounter = 0;
+
+function generateSecureIdSegment(length: number): string {
+  const cryptoApi = globalThis.crypto;
+
+  if (cryptoApi?.getRandomValues) {
+    const bytes = new Uint8Array(length);
+    cryptoApi.getRandomValues(bytes);
+
+    let result = '';
+    for (const byte of bytes) {
+      result += SECURE_ID_ALPHABET[byte % SECURE_ID_ALPHABET.length];
+    }
+    return result;
+  }
+
+  fallbackIdCounter += 1;
+  const fallback = `${Date.now().toString(36)}${fallbackIdCounter.toString(36)}`;
+  return fallback.padEnd(length, '0').slice(0, length);
+}
+
 // =============================================================================
 // TYPES & INTERFACES
 // =============================================================================
@@ -504,11 +526,11 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
 
   // Helper functions
   function generateSessionId(): string {
-    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `session_${Date.now()}_${generateSecureIdSegment(9)}`;
   }
 
   function generateId(): string {
-    return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `${Date.now()}_${generateSecureIdSegment(9)}`;
   }
 
   function getInteractionContext(): InteractionContext {

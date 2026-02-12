@@ -254,7 +254,7 @@ export const ScoreDashboard: React.FC<ScoreDashboardProps> = ({
                 cy="96"
               />
               <circle
-                className={`transition-all duration-1000 ${getScoreColor(scoreData.score).replace('text-', 'text-')}`}
+                className={`transition-all duration-1000 ${getScoreColor(scoreData.score)}`}
                 strokeWidth="12"
                 strokeLinecap="round"
                 stroke="currentColor"

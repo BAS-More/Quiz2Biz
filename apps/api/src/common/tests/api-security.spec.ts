@@ -65,7 +65,23 @@ describe('API Security Tests', () => {
       const allowedOrigins = ['https://quiz2biz.com'];
       const requestOrigin = 'https://malicious.com';
 
-      const isAllowed = allowedOrigins.includes(requestOrigin);
+      const normalizeOrigin = (origin: string): string | null => {
+        try {
+          return new URL(origin).origin;
+        } catch {
+          return null;
+        }
+      };
+
+      const normalizedAllowedOrigins = new Set(
+        allowedOrigins
+          .map(normalizeOrigin)
+          .filter((origin): origin is string => origin !== null),
+      );
+      const normalizedRequestOrigin = normalizeOrigin(requestOrigin);
+      const isAllowed =
+        normalizedRequestOrigin !== null && normalizedAllowedOrigins.has(normalizedRequestOrigin);
+
       expect(isAllowed).toBe(false);
     });
   });
