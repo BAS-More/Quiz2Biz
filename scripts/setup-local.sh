@@ -40,15 +40,16 @@ check_command() {
 }
 
 PREREQ_FAILED=0
-check_command "docker" || PREREQ_FAILED=1
-check_command "docker" && {
+if check_command "docker"; then
     if ! docker compose version &> /dev/null; then
         echo -e "${RED}Error: docker compose is not available.${NC}"
         PREREQ_FAILED=1
     else
         echo -e "${GREEN}  [OK] docker compose found${NC}"
     fi
-}
+else
+    PREREQ_FAILED=1
+fi
 
 if [ $PREREQ_FAILED -eq 1 ]; then
     echo -e "\n${RED}Prerequisites check failed. Please install missing tools.${NC}"
@@ -136,7 +137,15 @@ sleep 5
 
 HEALTH_OK=0
 for i in {1..12}; do
-    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/api/v1/health 2>/dev/null || echo "000")
+    if command -v curl >/dev/null 2>&1; then
+        HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/api/v1/health 2>/dev/null || echo "000")
+    elif command -v wget >/dev/null 2>&1; then
+        HTTP_CODE=$(wget -q --server-response http://localhost:3000/api/v1/health -O /dev/null 2>&1 | awk '/^  HTTP/{print $2}' | tail -n1)
+        HTTP_CODE=${HTTP_CODE:-000}
+    else
+        echo -e "${YELLOW}  [WARN] Neither curl nor wget is installed; skipping health check.${NC}"
+        break
+    fi
     if [ "$HTTP_CODE" = "200" ]; then
         HEALTH_OK=1
         break
