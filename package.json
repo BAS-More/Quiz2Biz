@@ -108,6 +108,7 @@
     "tsconfig-paths": "^4.2.0"
   },
   "overrides": {
+    "jsonpath": "^1.2.1",
     "lodash": "4.17.23",
     "tmp": "^0.2.5"
   }
