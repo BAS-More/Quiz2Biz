@@ -133,6 +133,24 @@ jobs:
             echo "tag=${{ github.ref_name }}-${{ github.sha }}" >> $GITHUB_OUTPUT
           fi
 
+      - name: Recover failed Container App state
+        run: |
+          APP_STATE=$(az containerapp show \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --query properties.provisioningState \
+            -o tsv 2>/dev/null || echo "NotFound")
+
+          if [ "$APP_STATE" = "Failed" ]; then
+            echo "Container App is in failed provisioning state. Deleting for clean redeploy..."
+            az containerapp delete \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.RESOURCE_GROUP }} \
+              --yes
+          else
+            echo "Container App provisioning state: $APP_STATE"
+          fi
+
       - name: Deploy to Azure Container Apps
         uses: azure/container-apps-deploy-action@v1
         with:
