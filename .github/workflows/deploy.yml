@@ -124,6 +124,15 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Configure Container App registry credentials
+        run: |
+          az containerapp registry set \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --server ${{ env.REGISTRY_NAME }}.azurecr.io \
+            --username ${{ secrets.AZURE_ACR_USERNAME }} \
+            --password ${{ secrets.AZURE_ACR_PASSWORD }}
+
       - name: Get image tag
         id: image-tag
         run: |
