@@ -25,7 +25,7 @@ env:
   IMAGE_NAME: quiz-api
   RESOURCE_GROUP: rg-questionnaire-prod
   CONTAINER_APP_NAME: ca-questionnaire-api-prod
-  HEALTH_PATH: /health/live
+  HEALTH_PATH: /health
 
 permissions:
   contents: read
@@ -160,16 +160,22 @@ jobs:
           registryUrl: ${{ env.REGISTRY_NAME }}.azurecr.io
           registryUsername: ${{ secrets.AZURE_ACR_USERNAME }}
           registryPassword: ${{ secrets.AZURE_ACR_PASSWORD }}
-          environmentVariables: |
-            NODE_ENV=production
-            PORT=3000
-            API_PREFIX=api/v1
-            DATABASE_URL=secretref:database-url
-            REDIS_HOST=secretref:redis-host
-            REDIS_PORT=secretref:redis-port
-            REDIS_PASSWORD=secretref:redis-password
-            JWT_SECRET=secretref:jwt-secret
-            JWT_REFRESH_SECRET=secretref:jwt-refresh-secret
+
+      - name: Configure environment variables with secrets
+        run: |
+          az containerapp update \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --set-env-vars \
+              "NODE_ENV=production" \
+              "PORT=3000" \
+              "API_PREFIX=api/v1" \
+              "DATABASE_URL=secretref:database-url" \
+              "REDIS_HOST=secretref:redis-host" \
+              "REDIS_PORT=secretref:redis-port" \
+              "REDIS_PASSWORD=secretref:redis-password" \
+              "JWT_SECRET=secretref:jwt-secret" \
+              "JWT_REFRESH_SECRET=secretref:jwt-refresh-secret"
 
       - name: Run database migrations
         run: |
