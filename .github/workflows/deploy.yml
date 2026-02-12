@@ -121,8 +121,16 @@ jobs:
             echo "tag=latest" >> $GITHUB_OUTPUT
           else
             # Extract the tag with the full SHA (format: branch-fullsha)
-            # Find the line containing the SHA
-            SHA_TAG=$(echo "$TAGS" | grep -E "${{ github.ref_name }}-[a-f0-9]{40}" | head -n1 | sed 's/.*://')
+            # Find the line containing the SHA and extract just the tag portion
+            SHA_TAG=$(echo "$TAGS" | grep -E "${{ github.ref_name }}-[a-f0-9]{40}" | head -n1 | awk -F'/' '{print $NF}' | awk -F':' '{print $NF}')
+            
+            # Validate that we found a tag
+            if [ -z "$SHA_TAG" ]; then
+              echo "Error: Failed to extract SHA-based tag from metadata output"
+              echo "Tags output: $TAGS"
+              exit 1
+            fi
+            
             echo "tag=${SHA_TAG}" >> $GITHUB_OUTPUT
           fi
 
