@@ -1,0 +1,726 @@
+// Prisma Schema for Adaptive Client Questionnaire System
+// Based on: docs/cto/05-data-models-db-architecture.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+enum UserRole {
+  CLIENT
+  DEVELOPER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum QuestionType {
+  TEXT
+  TEXTAREA
+  NUMBER
+  EMAIL
+  URL
+  DATE
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  SCALE
+  FILE_UPLOAD
+  MATRIX
+}
+
+enum SessionStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+  EXPIRED
+}
+
+enum VisibilityAction {
+  SHOW
+  HIDE
+  REQUIRE
+  UNREQUIRE
+}
+
+enum DocumentCategory {
+  CTO
+  CFO
+  BA
+  CEO
+  POLICY
+  SEO
+}
+
+enum DocumentStatus {
+  PENDING
+  GENERATING
+  GENERATED
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  FAILED
+}
+
+enum StandardCategory {
+  MODERN_ARCHITECTURE
+  AI_ASSISTED_DEV
+  CODING_STANDARDS
+  TESTING_QA
+  SECURITY_DEVSECOPS
+  WORKFLOW_OPS
+  DOCS_KNOWLEDGE
+}
+
+// Quiz2Biz Persona Types - who the question is targeted at
+enum Persona {
+  CTO
+  CFO
+  CEO
+  BA
+  POLICY
+}
+
+// Evidence artifact types for Evidence Registry
+enum EvidenceType {
+  FILE
+  IMAGE
+  LINK
+  LOG
+  SBOM
+  REPORT
+  TEST_RESULT
+  SCREENSHOT
+  DOCUMENT
+}
+
+// Decision Log status (append-only workflow)
+enum DecisionStatus {
+  DRAFT
+  LOCKED
+  AMENDED
+  SUPERSEDED
+}
+
+// 5-Level Coverage Scale for Evidence Assessment
+// Maps to discrete values: NONE=0.0, PARTIAL=0.25, HALF=0.5, SUBSTANTIAL=0.75, FULL=1.0
+enum CoverageLevel {
+  NONE        // 0.00 - No evidence, no coverage
+  PARTIAL     // 0.25 - Some evidence exists but incomplete
+  HALF        // 0.50 - Moderate coverage, work in progress
+  SUBSTANTIAL // 0.75 - Most requirements met, minor gaps
+  FULL        // 1.00 - Complete coverage with verified evidence
+}
+
+// =============================================================================
+// ORGANIZATION & USER MODELS
+// =============================================================================
+
+model Organization {
+  id           String    @id @default(uuid())
+  name         String
+  slug         String    @unique
+  settings     Json      @default("{}")
+  subscription Json      @default("{}")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
+
+  users User[]
+
+  @@index([slug])
+  @@index([createdAt])
+  @@map("organizations")
+}
+
+model User {
+  id                  String    @id @default(uuid())
+  organizationId      String?   @map("org_id")
+  email               String    @unique
+  emailVerified       Boolean   @default(false) @map("email_verified")
+  passwordHash        String?   @map("password_hash")
+  name                String?
+  avatar              String?
+  role                UserRole  @default(CLIENT)
+  profile             Json      @default("{}")
+  preferences         Json      @default("{}")
+  mfaEnabled          Boolean   @default(false) @map("mfa_enabled")
+  mfaSecret           String?   @map("mfa_secret")
+  lastLoginAt         DateTime? @map("last_login_at")
+  lastLoginIp         String?   @map("last_login_ip")
+  failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
+  lockedUntil         DateTime? @map("locked_until")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+  deletedAt           DateTime? @map("deleted_at")
+
+  organization   Organization?   @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  sessions       Session[]
+  auditLogs      AuditLog[]
+  apiKeys        ApiKey[]
+  refreshTokens  RefreshToken[]
+  oauthAccounts  OAuthAccount[]
+  createdQuestionnaires Questionnaire[] @relation("QuestionnaireCreator")
+  approvedDocuments     Document[]      @relation("DocumentApprover")
+  
+  // Quiz2Biz Relations
+  evidenceVerifications EvidenceRegistry[] @relation("EvidenceVerifier")
+  ownedDecisions        DecisionLog[]      @relation("DecisionOwner")
+
+  @@index([email])
+  @@index([organizationId])
+  @@index([role])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  revokedAt DateTime? @map("revoked_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
+}
+
+model ApiKey {
+  id         String    @id @default(uuid())
+  userId     String    @map("user_id")
+  name       String
+  keyPrefix  String    @map("key_prefix")
+  keyHash    String    @map("key_hash")
+  scopes     String[]
+  rateLimit  Int       @default(1000) @map("rate_limit")
+  lastUsedAt DateTime? @map("last_used_at")
+  expiresAt  DateTime? @map("expires_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  revokedAt  DateTime? @map("revoked_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([keyPrefix])
+  @@map("api_keys")
+}
+
+model OAuthAccount {
+  id           String    @id @default(uuid())
+  userId       String    @map("user_id")
+  provider     String                          // google, microsoft, github
+  providerId   String    @map("provider_id")   // Provider's unique user ID
+  email        String?
+  name         String?
+  picture      String?
+  accessToken  String?   @map("access_token")  // For API access (encrypted)
+  refreshToken String?   @map("refresh_token") // For token refresh (encrypted)
+  expiresAt    DateTime? @map("expires_at")
+  lastLoginAt  DateTime? @map("last_login_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerId])
+  @@index([userId])
+  @@index([provider])
+  @@map("oauth_accounts")
+}
+
+// =============================================================================
+// QUESTIONNAIRE MODELS
+// =============================================================================
+
+model Questionnaire {
+  id            String    @id @default(uuid())
+  name          String
+  description   String?
+  industry      String?
+  version       Int       @default(1)
+  isActive      Boolean   @default(true) @map("is_active")
+  isDefault     Boolean   @default(false) @map("is_default")
+  estimatedTime Int?      @map("estimated_time")
+  metadata      Json      @default("{}")
+  createdById   String?   @map("created_by")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  publishedAt   DateTime? @map("published_at")
+
+  createdBy User? @relation("QuestionnaireCreator", fields: [createdById], references: [id])
+  sections  Section[]
+  sessions  Session[]
+
+  @@index([industry])
+  @@index([isActive])
+  @@map("questionnaires")
+}
+
+model Section {
+  id              String   @id @default(uuid())
+  questionnaireId String   @map("questionnaire_id")
+  name            String
+  description     String?
+  orderIndex      Int      @map("order_index")
+  icon            String?
+  estimatedTime   Int?     @map("estimated_time")
+  metadata        Json     @default("{}")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  questionnaire Questionnaire @relation(fields: [questionnaireId], references: [id], onDelete: Cascade)
+  questions     Question[]
+  currentSessions Session[] @relation("CurrentSection")
+
+  @@index([questionnaireId])
+  @@index([questionnaireId, orderIndex])
+  @@map("sections")
+}
+
+model Question {
+  id               String       @id @default(uuid())
+  sectionId        String       @map("section_id")
+  text             String
+  type             QuestionType
+  helpText         String?      @map("help_text")
+  explanation      String?
+  placeholder      String?
+  orderIndex       Int          @map("order_index")
+  isRequired       Boolean      @default(false) @map("is_required")
+  options          Json?
+  validationRules  Json?        @map("validation_rules")
+  defaultValue     Json?        @map("default_value")
+  suggestedAnswer  Json?        @map("suggested_answer")
+  industryTags     String[]     @map("industry_tags")
+  documentMappings Json?        @map("document_mappings")
+  metadata         Json         @default("{}")
+  
+  // Quiz2Biz Persona-Driven Fields
+  persona             Persona?     @default(BA)                    // CTO, CFO, CEO, BA, POLICY
+  dimensionKey        String?      @map("dimension_key")           // Reference to DimensionCatalog
+  severity            Decimal?     @default(0.5) @db.Decimal(3, 2) // 0.00 to 1.00 risk severity
+  bestPractice        String?      @map("best_practice") @db.Text  // Standards-anchored recommendation
+  practicalExplainer  String?      @map("practical_explainer") @db.Text // Plain-English guidance
+  standardRefs        String?      @map("standard_refs") @db.Text  // ISO/NIST/OWASP control mappings
+  acceptance          String?      @db.Text                        // Acceptance criteria for coverage
+  
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+
+  section          Section          @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  dimension        DimensionCatalog? @relation(fields: [dimensionKey], references: [key])
+  visibilityRules  VisibilityRule[]
+  responses        Response[]
+  currentSessions  Session[]        @relation("CurrentQuestion")
+  evidenceItems    EvidenceRegistry[]
+
+  @@index([sectionId])
+  @@index([sectionId, orderIndex])
+  @@index([type])
+  @@index([persona])
+  @@index([dimensionKey])
+  @@map("questions")
+}
+
+model VisibilityRule {
+  id                String           @id @default(uuid())
+  questionId        String           @map("question_id")
+  condition         Json
+  action            VisibilityAction
+  targetQuestionIds String[]         @map("target_question_ids")
+  priority          Int              @default(0)
+  isActive          Boolean          @default(true) @map("is_active")
+  createdAt         DateTime         @default(now()) @map("created_at")
+  updatedAt         DateTime         @updatedAt @map("updated_at")
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([questionId])
+  @@map("visibility_rules")
+}
+
+// =============================================================================
+// SESSION MODELS
+// =============================================================================
+
+model Session {
+  id                   String        @id @default(uuid())
+  userId               String        @map("user_id")
+  questionnaireId      String        @map("questionnaire_id")
+  questionnaireVersion Int           @map("questionnaire_version")
+  status               SessionStatus @default(IN_PROGRESS)
+  persona              Persona?                              // Quiz2Biz persona filter for question selection
+  industry             String?
+  progress             Json          @default("{\"percentage\": 0, \"answered\": 0, \"total\": 0}")
+  currentSectionId     String?       @map("current_section_id")
+  currentQuestionId    String?       @map("current_question_id")
+  adaptiveState        Json          @default("{}")
+  metadata             Json          @default("{}")
+  
+  // Quiz2Biz Readiness Score Tracking
+  readinessScore       Decimal?      @map("readiness_score") @db.Decimal(5, 2) // 0.00 to 100.00
+  lastScoreCalculation DateTime?     @map("last_score_calculation")
+  
+  startedAt            DateTime      @default(now()) @map("started_at")
+  lastActivityAt       DateTime      @default(now()) @map("last_activity_at")
+  completedAt          DateTime?     @map("completed_at")
+  expiresAt            DateTime?     @map("expires_at")
+
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionnaire   Questionnaire @relation(fields: [questionnaireId], references: [id])
+  currentSection  Section?      @relation("CurrentSection", fields: [currentSectionId], references: [id])
+  currentQuestion Question?     @relation("CurrentQuestion", fields: [currentQuestionId], references: [id])
+  responses       Response[]
+  documents       Document[]
+  evidenceItems   EvidenceRegistry[]
+  decisions       DecisionLog[]
+  scoreSnapshots  ScoreSnapshot[]
+
+  @@index([userId])
+  @@index([questionnaireId])
+  @@index([status])
+  @@index([startedAt])
+  @@index([userId, status])
+  @@index([readinessScore])
+  @@map("sessions")
+}
+
+// Score history snapshots for trend analysis
+model ScoreSnapshot {
+  id                    String   @id @default(uuid())
+  sessionId             String   @map("session_id")
+  score                 Decimal  @db.Decimal(5, 2)  // Readiness score 0.00-100.00
+  portfolioResidual     Decimal  @db.Decimal(7, 6)  // R value 0.000000-1.000000
+  completionPercentage  Decimal  @db.Decimal(5, 2)  // 0.00-100.00
+  dimensionBreakdown    Json     @default("[]") @map("dimension_breakdown")  // Per-dimension residuals snapshot
+  createdAt             DateTime @default(now()) @map("created_at")
+
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([sessionId, createdAt])
+  @@map("score_snapshots")
+}
+
+model Response {
+  id               String   @id @default(uuid())
+  sessionId        String   @map("session_id")
+  questionId       String   @map("question_id")
+  value            Json
+  isValid          Boolean  @default(true) @map("is_valid")
+  validationErrors Json?    @map("validation_errors")
+  timeSpentSeconds Int?     @map("time_spent_seconds")
+  revision         Int      @default(1)
+  
+  // Quiz2Biz Coverage Tracking Fields
+  coverage         Decimal?      @default(0) @db.Decimal(3, 2) @map("coverage") // 0.00 to 1.00 based on evidence
+  coverageLevel    CoverageLevel @default(NONE) @map("coverage_level")          // Discrete 5-level scale
+  rationale        String?  @db.Text @map("rationale")                     // Explanation of coverage assessment
+  evidenceCount    Int      @default(0) @map("evidence_count")             // Number of attached evidence items
+  
+  answeredAt       DateTime @default(now()) @map("answered_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  session  Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id])
+
+  @@unique([sessionId, questionId])
+  @@index([sessionId])
+  @@index([questionId])
+  @@index([answeredAt])
+  @@index([coverage])
+  @@index([coverageLevel])
+  @@map("responses")
+}
+
+// =============================================================================
+// QUIZ2BIZ READINESS MODELS
+// =============================================================================
+
+// Dimension Catalog - weights for readiness scoring
+model DimensionCatalog {
+  key         String   @id                               // e.g., "arch_sec", "devops_iac"
+  displayName String   @map("display_name")              // "Architecture & Security"
+  description String?  @db.Text
+  weight      Decimal  @db.Decimal(4, 3)                 // 0.000 to 1.000, sum should = 1.0
+  orderIndex  Int      @map("order_index")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  questions Question[]
+
+  @@index([orderIndex])
+  @@index([isActive])
+  @@map("dimension_catalog")
+}
+
+// Evidence Registry - file uploads and verification
+model EvidenceRegistry {
+  id            String       @id @default(uuid())
+  sessionId     String       @map("session_id")
+  questionId    String       @map("question_id")
+  
+  // Artifact details
+  artifactUrl   String       @map("artifact_url")          // Storage URL (Azure Blob, SharePoint)
+  artifactType  EvidenceType @map("artifact_type")
+  fileName      String?      @map("file_name")
+  fileSize      BigInt?      @map("file_size")
+  mimeType      String?      @map("mime_type")
+  
+  // SharePoint/Graph IDs for hybrid storage
+  driveId       String?      @map("drive_id")              // SharePoint DriveId
+  itemId        String?      @map("item_id")               // SharePoint ItemId
+  eTag          String?      @map("e_tag")                 // Concurrency check
+  
+  // Verification workflow
+  verified      Boolean      @default(false)
+  verifierId    String?      @map("verifier_id")
+  verifiedAt    DateTime?    @map("verified_at")
+  hashSignature String?      @map("hash_signature")        // SHA-256 or signature/provenance
+  coverageValue CoverageLevel @default(NONE) @map("coverage_value") // Coverage contribution when verified
+  metadata      Json?        @map("metadata")              // Additional metadata (CI info, etc.)
+  
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+
+  session  Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id])
+  verifier User?    @relation("EvidenceVerifier", fields: [verifierId], references: [id])
+  ciArtifacts CIArtifact[]
+
+  @@index([sessionId])
+  @@index([questionId])
+  @@index([verified])
+  @@index([artifactType])
+  @@map("evidence_registry")
+}
+
+// Decision Log - append-only forensic record
+model DecisionLog {
+  id                   String         @id @default(uuid())
+  sessionId            String         @map("session_id")
+  
+  // Decision content
+  statement            String         @db.Text              // The decision statement
+  assumptions          String?        @db.Text              // Underlying assumptions
+  references           String?        @db.Text              // Supporting references/evidence
+  
+  // Ownership and status
+  ownerId              String         @map("owner_id")
+  status               DecisionStatus @default(DRAFT)
+  
+  // Supersession tracking (for append-only)
+  supersedesDecisionId String?        @map("supersedes_decision_id")
+  
+  createdAt            DateTime       @default(now()) @map("created_at")
+  // Note: No updatedAt - append-only, decisions are never modified
+
+  session    Session      @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  owner      User         @relation("DecisionOwner", fields: [ownerId], references: [id])
+  supersedes DecisionLog? @relation("DecisionSupersession", fields: [supersedesDecisionId], references: [id])
+  supersededBy DecisionLog[] @relation("DecisionSupersession")
+
+  @@index([sessionId])
+  @@index([ownerId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("decision_log")
+}
+
+// =============================================================================
+// DOCUMENT MODELS
+// =============================================================================
+
+model DocumentType {
+  id               String           @id @default(uuid())
+  name             String
+  slug             String           @unique
+  description      String?
+  category         DocumentCategory
+  templatePath     String?          @map("template_path")
+  requiredQuestions String[]        @map("required_questions")
+  outputFormats    String[]         @default(["PDF", "DOCX"]) @map("output_formats")
+  estimatedPages   Int?             @map("estimated_pages")
+  isActive         Boolean          @default(true) @map("is_active")
+  metadata         Json             @default("{}")
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
+
+  documents         Document[]
+  standardMappings  DocumentTypeStandard[]
+
+  @@index([category])
+  @@index([isActive])
+  @@map("document_types")
+}
+
+model Document {
+  id                 String         @id @default(uuid())
+  sessionId          String         @map("session_id")
+  documentTypeId     String         @map("document_type_id")
+  status             DocumentStatus @default(PENDING)
+  format             String         @default("PDF")
+  storageUrl         String?        @map("storage_url")
+  fileName           String?        @map("file_name")
+  fileSize           BigInt?        @map("file_size")
+  pageCount          Int?           @map("page_count")
+  version            Int            @default(1)
+  generationMetadata Json?          @map("generation_metadata")
+  reviewStatus       Json           @default("{}")  @map("review_status")
+  approvedById       String?        @map("approved_by")
+  approvedAt         DateTime?      @map("approved_at")
+  rejectionReason    String?        @map("rejection_reason")
+  generatedAt        DateTime?      @map("generated_at")
+  expiresAt          DateTime?      @map("expires_at")
+  createdAt          DateTime       @default(now()) @map("created_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
+
+  session      Session      @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  documentType DocumentType @relation(fields: [documentTypeId], references: [id])
+  approvedBy   User?        @relation("DocumentApprover", fields: [approvedById], references: [id])
+
+  @@index([sessionId])
+  @@index([documentTypeId])
+  @@index([status])
+  @@index([generatedAt])
+  @@map("documents")
+}
+
+// =============================================================================
+// AUDIT & SECURITY MODELS
+// =============================================================================
+
+model AuditLog {
+  id           String   @id @default(uuid())
+  userId       String?  @map("user_id")
+  action       String
+  resourceType String   @map("resource_type")
+  resourceId   String?  @map("resource_id")
+  changes      Json?
+  ipAddress    String?  @map("ip_address")
+  userAgent    String?  @map("user_agent")
+  requestId    String?  @map("request_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([action])
+  @@index([resourceType, resourceId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// =============================================================================
+// ENGINEERING STANDARDS MODELS
+// =============================================================================
+
+model EngineeringStandard {
+  id          String           @id @default(uuid())
+  category    StandardCategory @unique
+  title       String
+  description String           @db.Text
+  principles  Json             // Array of { title, description, examples? }
+  version     String           @default("2026")
+  isActive    Boolean          @default(true) @map("is_active")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+
+  documentMappings DocumentTypeStandard[]
+
+  @@index([category])
+  @@index([isActive])
+  @@map("engineering_standards")
+}
+
+model DocumentTypeStandard {
+  id             String   @id @default(uuid())
+  documentTypeId String   @map("document_type_id")
+  standardId     String   @map("standard_id")
+  priority       Int      @default(0)
+  sectionTitle   String?  @map("section_title")
+  isRequired     Boolean  @default(true) @map("is_required")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  documentType DocumentType        @relation(fields: [documentTypeId], references: [id], onDelete: Cascade)
+  standard     EngineeringStandard @relation(fields: [standardId], references: [id], onDelete: Cascade)
+
+  @@unique([documentTypeId, standardId])
+  @@index([documentTypeId])
+  @@index([standardId])
+  @@map("document_type_standards")
+}
+
+// =============================================================================
+// EVIDENCE INTEGRITY MODELS (Sprint 14)
+// =============================================================================
+
+// Evidence Chain - Blockchain-style hash linking for evidence integrity
+model EvidenceChain {
+  id             String   @id @default(uuid())
+  evidenceId     String   @map("evidence_id")
+  sessionId      String   @map("session_id")
+  sequenceNumber Int      @map("sequence_number")
+  
+  // Hash chain fields
+  previousHash   String   @map("previous_hash")       // Hash of previous entry (genesis = 0x00...)
+  chainHash      String   @map("chain_hash")          // SHA-256 of canonical entry data
+  evidenceHash   String   @map("evidence_hash")       // Original evidence hash at time of chaining
+  
+  // RFC 3161 Timestamp
+  timestampToken String?  @map("timestamp_token") @db.Text  // Base64-encoded TSA response
+  tsaUrl         String?  @map("tsa_url")             // Timestamp Authority URL used
+  
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@unique([sessionId, sequenceNumber])
+  @@index([evidenceId])
+  @@index([sessionId])
+  @@index([chainHash])
+  @@map("evidence_chain")
+}
+
+// CI Artifact - Tracking CI/CD pipeline artifacts ingested as evidence
+model CIArtifact {
+  id           String   @id @default(uuid())
+  evidenceId   String   @map("evidence_id")
+  sessionId    String   @map("session_id")
+  
+  // CI Provider details
+  ciProvider   String   @map("ci_provider")           // azure-devops, github-actions, gitlab-ci
+  buildId      String   @map("build_id")
+  buildNumber  String?  @map("build_number")
+  pipelineName String?  @map("pipeline_name")
+  
+  // Artifact details
+  artifactType String   @map("artifact_type")         // junit, jest, lcov, cyclonedx, trivy, etc.
+  branch       String?
+  commitSha    String?  @map("commit_sha")
+  
+  // Processing status
+  status       String   @default("PENDING")           // PENDING, INGESTED, VERIFIED, ERROR
+  parsedMetrics Json?   @map("parsed_metrics")        // Extracted metrics from artifact
+  
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  evidence     EvidenceRegistry @relation(fields: [evidenceId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([ciProvider])
+  @@index([buildId])
+  @@index([artifactType])
+  @@map("ci_artifacts")
+}

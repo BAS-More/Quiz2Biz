@@ -1,0 +1,109 @@
+{
+  "name": "adaptive-questionnaire-system",
+  "version": "1.0.0",
+  "description": "Adaptive Client Questionnaire System - Backend API",
+  "private": true,
+  "packageManager": "npm@10.9.4",
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "start": "turbo run start",
+    "start:dev": "turbo run start:dev --filter=api",
+    "start:prod": "turbo run start:prod --filter=api",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
+    "test:cov": "turbo run test:cov",
+    "test:regression": "jest --config=test/regression/jest.config.js",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:report": "playwright show-report e2e/reports",
+    "test:e2e:install": "playwright install",
+    "test:load": "node test/performance/autocannon-load.js",
+    "test:load:light": "DURATION=10 CONNECTIONS=50 node test/performance/autocannon-load.js",
+    "test:lighthouse": "lhci autorun",
+    "test:perf": "npm run test:load && npm run test:lighthouse",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:prod": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio",
+    "db:reset": "prisma migrate reset",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "prepare": "echo husky disabled for OneDrive path compatibility"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.0",
+    "@eslint/js": "^10.0.1",
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.58.0",
+    "@swc/cli": "^0.5.2",
+    "@swc/core": "^1.15.10",
+    "@testing-library/dom": "^10.4.1",
+    "@types/archiver": "^7.0.0",
+    "@types/jest-axe": "^3.5.9",
+    "@types/node": "^20.10.0",
+    "autocannon": "^8.0.0",
+    "axe-core": "^4.11.1",
+    "clinic": "^13.0.0",
+    "eslint": "^10.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prettier": "^5.1.0",
+    "globals": "^17.3.0",
+    "husky": "^8.0.3",
+    "jest-axe": "^10.0.0",
+    "lint-staged": "^15.2.0",
+    "pa11y": "^9.0.1",
+    "prettier": "^3.2.0",
+    "prisma": "^5.8.0",
+    "stripe": "^20.2.0",
+    "tsc-alias": "^1.8.16",
+    "turbo": "^1.11.0",
+    "typescript": "^5.3.3",
+    "typescript-eslint": "^8.54.0"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "dependencies": {
+    "@azure/storage-blob": "^12.30.0",
+    "@nestjs/jwt": "^11.0.2",
+    "@nestjs/passport": "^11.0.5",
+    "@nestjs/platform-express": "^10.3.0",
+    "@nestjs/throttler": "^6.5.0",
+    "archiver": "^7.0.1",
+    "docx": "^9.5.1",
+    "google-auth-library": "^10.5.0",
+    "helmet": "^8.1.0",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "tsconfig-paths": "^4.2.0"
+  },
+  "overrides": {
+    "lodash": "4.17.23"
+  }
+}

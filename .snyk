@@ -1,0 +1,16 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.0
+
+# Ignore vulnerabilities that cannot be fixed without breaking changes
+ignore:
+  "SNYK-JS-LODASH-1018905":
+    - "*":
+        reason: "Prototype pollution - requires major version upgrade to fix"
+        expires: "2026-04-28T00:00:00.000Z"
+  "SNYK-JS-LODASH-1040724":
+    - "*":
+        reason: "Prototype pollution - requires major version upgrade to fix"
+        expires: "2026-04-28T00:00:00.000Z"
+
+# Severity thresholds
+patch: {}

@@ -1,0 +1,54 @@
+{
+    "users": [
+        {
+            "id": "usr_seed_001",
+            "email": "seed-user-1@quiz2biz.test",
+            "name": "Seed User One",
+            "role": "USER",
+            "subscription": "FREE"
+        },
+        {
+            "id": "usr_seed_002",
+            "email": "seed-user-2@quiz2biz.test",
+            "name": "Seed User Two",
+            "role": "USER",
+            "subscription": "PROFESSIONAL"
+        }
+    ],
+    "sessions": [
+        {
+            "id": "ses_seed_001",
+            "userId": "usr_seed_001",
+            "questionnaireId": "q_security_001",
+            "status": "IN_PROGRESS",
+            "progress": 30,
+            "questionsAnswered": 5,
+            "totalQuestions": 15
+        }
+    ],
+    "responses": [
+        {
+            "id": "res_seed_001",
+            "sessionId": "ses_seed_001",
+            "questionId": "q1",
+            "type": "BOOLEAN",
+            "value": true
+        },
+        {
+            "id": "res_seed_002",
+            "sessionId": "ses_seed_001",
+            "questionId": "q2",
+            "type": "SCALE",
+            "value": 4
+        }
+    ],
+    "evidence": [
+        {
+            "id": "ev_seed_001",
+            "responseId": "res_seed_001",
+            "type": "DOCUMENT",
+            "name": "security-policy.pdf",
+            "description": "Security policy document"
+        }
+    ]
+}

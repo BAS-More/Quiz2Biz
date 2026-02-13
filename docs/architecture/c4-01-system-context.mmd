@@ -1,0 +1,54 @@
+```mermaid
+graph LR
+  %% C4 Level 1 - System Context for Quiz2Biz / Adaptive Questionnaire Platform
+
+  user["End User\n(Entrepreneur / Business Owner)"]
+  admin["Admin User\n(Questionnaire Admin / Operator)"]
+
+  subgraph Internet["Public Internet"]
+    user
+    admin
+  end
+
+  subgraph AzureSubscription["Azure Subscription - Quiz2Biz Environment (Trust Boundary)"]
+    subgraph AzureApps["Application Layer"]
+      api["Questionnaire API\nNestJS / Node.js container\nAzure Container Apps"]
+    end
+
+    subgraph AzureData["Data Layer"]
+      db[("PostgreSQL Database\nAzure Database for PostgreSQL")]
+      cache[("Redis Cache\nAzure Cache for Redis")]
+      kv["Azure Key Vault\n(Secrets, connection strings, JWT keys)"]
+    end
+
+    subgraph AzurePlatform["Platform & Observability"]
+      aca_env["Azure Container Apps Environment"]
+      acr["Azure Container Registry (ACR)"]
+      monitor["Azure Monitor / App Insights"]
+      net["Virtual Network & Subnets\n(App, DB, Cache)"]
+    end
+  end
+
+  cicd["CI/CD Pipeline\nAzure Pipelines or GitHub Actions"]
+  dns["DNS & TLS Termination\nquiz2biz.com over HTTPS"]
+
+  %% Relationships
+  user -->|"Use questionnaire, view documents"| dns
+  admin -->|"Manage questionnaires, sessions"| dns
+
+  dns -->|"HTTPS"| api
+
+  api -->|"Prisma (TLS)"| db
+  api -->|"TLS"| cache
+  api -->|"Fetch secrets (DATABASE_URL, JWT_*)"| kv
+
+  cicd -->|"Build & push container image"| acr
+  acr -->|"Pull image"| aca_env
+  aca_env --> api
+
+  api -->|"Metrics, logs, traces"| monitor
+
+  %% Trust boundaries (implicit via subgraphs)
+  %% - Internet vs Azure subscription
+  %% - App vs Data vs Platform layers inside Azure
+```

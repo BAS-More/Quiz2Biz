@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-01-31T17:12:23.602Z",
+  "test": "memory-load",
+  "duration": "5m",
+  "vus": 100,
+  "metrics": {
+    "http_req_duration_avg": 432.92922277201984,
+    "http_req_duration_p95": 948.8007799999983,
+    "errors_rate": 0,
+    "memory_usage_percent": 0
+  },
+  "thresholds": []
+}

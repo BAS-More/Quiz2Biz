@@ -1,0 +1,1256 @@
+# Wireframes and Mockups
+## Adaptive Client Questionnaire System
+
+**Document Version:** 1.0  
+**Last Updated:** {{GENERATION_DATE}}  
+**Document Owner:** UX Designer / Business Analyst  
+**Status:** {{STATUS}}
+
+---
+
+## 1. Introduction
+
+This document provides visual representations and specifications for the user interface of the Adaptive Client Questionnaire System. These wireframes serve as blueprints for development and establish the visual hierarchy, layout, and interaction patterns.
+
+---
+
+## 2. Design System Overview
+
+### 2.1 Design Principles
+
+| Principle | Description | Implementation |
+|-----------|-------------|----------------|
+| **Clarity** | Simple, uncluttered interfaces | One question at a time, progressive disclosure |
+| **Guidance** | Help users make decisions | Suggestions, explanations, examples |
+| **Progress** | Show advancement clearly | Visual progress bar, section indicators |
+| **Accessibility** | Usable by everyone | WCAG 2.1 AA compliance |
+| **Consistency** | Predictable patterns | Design system, component library |
+
+### 2.2 Color Palette
+
+| Color | Hex | Usage |
+|-------|-----|-------|
+| Primary | #2563EB | CTA buttons, links, active states |
+| Primary Dark | #1D4ED8 | Hover states |
+| Secondary | #64748B | Secondary text, icons |
+| Success | #10B981 | Success messages, completion |
+| Warning | #F59E0B | Warnings, pending states |
+| Error | #EF4444 | Errors, required indicators |
+| Background | #F8FAFC | Page background |
+| Surface | #FFFFFF | Cards, inputs |
+| Text Primary | #1E293B | Main text |
+| Text Secondary | #64748B | Supporting text |
+
+### 2.3 Typography
+
+| Element | Font | Size | Weight | Line Height |
+|---------|------|------|--------|-------------|
+| H1 | Inter | 32px | 700 | 1.2 |
+| H2 | Inter | 24px | 600 | 1.3 |
+| H3 | Inter | 20px | 600 | 1.4 |
+| Body | Inter | 16px | 400 | 1.5 |
+| Small | Inter | 14px | 400 | 1.5 |
+| Caption | Inter | 12px | 400 | 1.4 |
+
+### 2.4 Spacing System
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| xs | 4px | Tight spacing |
+| sm | 8px | Related elements |
+| md | 16px | Standard spacing |
+| lg | 24px | Section spacing |
+| xl | 32px | Major sections |
+| 2xl | 48px | Page sections |
+
+### 2.5 Breakpoints
+
+| Breakpoint | Width | Target |
+|------------|-------|--------|
+| Mobile | 320px | Small phones |
+| Mobile Large | 375px | Standard phones |
+| Tablet | 768px | Tablets |
+| Desktop | 1024px | Small desktops |
+| Desktop Large | 1440px | Large desktops |
+
+---
+
+## 3. Page Wireframes
+
+### 3.1 Landing Page
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  LANDING PAGE                                                   [Desktop]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  HEADER                                                                │ │
+│  │  [Logo]                          [Features] [Pricing] [Login] [Sign Up]│ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  HERO SECTION                                                          │ │
+│  │                                                                        │ │
+│  │           Create Your Complete Business                               │ │
+│  │           Documentation in Hours, Not Weeks                           │ │
+│  │                                                                        │ │
+│  │           Transform your business idea into professional              │ │
+│  │           technical, financial, and operational documents             │ │
+│  │           through our intelligent questionnaire system.               │ │
+│  │                                                                        │ │
+│  │                    [ Get Started Free ]                               │ │
+│  │                                                                        │ │
+│  │                    No credit card required                            │ │
+│  │                                                                        │ │
+│  │  ┌────────────────────────────────────────────────────────────────┐  │ │
+│  │  │                                                                  │  │ │
+│  │  │              [Product Screenshot/Illustration]                  │  │ │
+│  │  │                                                                  │  │ │
+│  │  └────────────────────────────────────────────────────────────────┘  │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  FEATURES SECTION                                                      │ │
+│  │                                                                        │ │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                │ │
+│  │  │   [Icon]     │  │   [Icon]     │  │   [Icon]     │                │ │
+│  │  │              │  │              │  │              │                │ │
+│  │  │  Adaptive    │  │  25+ Docs    │  │  Multi-      │                │ │
+│  │  │  Questions   │  │  Generated   │  │  Platform    │                │ │
+│  │  │              │  │              │  │              │                │ │
+│  │  │  Questions   │  │  Complete    │  │  Web, iOS,   │                │ │
+│  │  │  adapt to    │  │  CTO, CFO,   │  │  Android,    │                │ │
+│  │  │  your needs  │  │  BA docs     │  │  Power Apps  │                │ │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘                │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  HOW IT WORKS                                                          │ │
+│  │                                                                        │ │
+│  │    1. Answer      2. We Generate     3. Review &      4. Download     │ │
+│  │    Questions      Documents          Approve          Your Docs       │ │
+│  │       │                │                 │                │           │ │
+│  │       ▼                ▼                 ▼                ▼           │ │
+│  │    [Icon]           [Icon]           [Icon]           [Icon]          │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  CTA SECTION                                                           │ │
+│  │                                                                        │ │
+│  │           Ready to build your business documentation?                 │ │
+│  │                                                                        │ │
+│  │                    [ Start Free Trial ]                               │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  FOOTER                                                                │ │
+│  │  [Logo]    Product | Company | Resources | Legal      © 2025 Company  │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 3.2 Registration Page
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  REGISTRATION PAGE                                              [Desktop]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  [Logo]                                                                │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌─────────────────────────────────┐ ┌──────────────────────────────────┐  │
+│  │                                 │ │                                  │  │
+│  │    Create your account         │ │                                  │  │
+│  │                                 │ │      [Illustration showing       │  │
+│  │    ┌─────────────────────────┐ │ │       benefits of the product]   │  │
+│  │    │ Continue with Google  G │ │ │                                  │  │
+│  │    └─────────────────────────┘ │ │      • Generate 25+ documents    │  │
+│  │                                 │ │      • Save 60+ hours            │  │
+│  │    ┌─────────────────────────┐ │ │      • Professional quality      │  │
+│  │    │ Continue with Microsoft │ │ │                                  │  │
+│  │    └─────────────────────────┘ │ │                                  │  │
+│  │                                 │ │                                  │  │
+│  │    ──────── or ────────        │ │                                  │  │
+│  │                                 │ │                                  │  │
+│  │    Full Name                   │ │                                  │  │
+│  │    ┌─────────────────────────┐ │ │                                  │  │
+│  │    │ John Smith              │ │ │                                  │  │
+│  │    └─────────────────────────┘ │ │                                  │  │
+│  │                                 │ │                                  │  │
+│  │    Email                       │ │                                  │  │
+│  │    ┌─────────────────────────┐ │ │                                  │  │
+│  │    │ john@example.com        │ │ │                                  │  │
+│  │    └─────────────────────────┘ │ │                                  │  │
+│  │                                 │ │                                  │  │
+│  │    Password                    │ │                                  │  │
+│  │    ┌─────────────────────────┐ │ │                                  │  │
+│  │    │ ••••••••••••           👁│ │ │                                  │  │
+│  │    └─────────────────────────┘ │ │                                  │  │
+│  │    Min 12 characters          │ │                                  │  │
+│  │                                 │ │                                  │  │
+│  │    ☑ I agree to Terms & Privacy│ │                                  │  │
+│  │                                 │ │                                  │  │
+│  │    ┌─────────────────────────┐ │ │                                  │  │
+│  │    │     Create Account      │ │ │                                  │  │
+│  │    └─────────────────────────┘ │ │                                  │  │
+│  │                                 │ │                                  │  │
+│  │    Already have an account?   │ │                                  │  │
+│  │    Sign in                    │ │                                  │  │
+│  │                                 │ │                                  │  │
+│  └─────────────────────────────────┘ └──────────────────────────────────┘  │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 3.3 Dashboard
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  DASHBOARD                                                      [Desktop]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  HEADER                                                                │ │
+│  │  [Logo]           [Dashboard] [Documents] [Help]      [🔔] [Avatar ▼] │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                                                                        │ │
+│  │  Welcome back, John! 👋                                               │ │
+│  │                                                                        │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌─────────────────────────────────────┐  ┌───────────────────────────────┐ │
+│  │  START NEW QUESTIONNAIRE            │  │  CONTINUE WHERE YOU LEFT OFF  │ │
+│  │  ┌───────────────────────────────┐  │  │                               │ │
+│  │  │                               │  │  │  ┌─────────────────────────┐  │ │
+│  │  │      [ + Start New ]          │  │  │  │  SaaS Business Plan     │  │ │
+│  │  │                               │  │  │  │                         │  │ │
+│  │  │  Create comprehensive         │  │  │  │  Progress: 65%          │  │ │
+│  │  │  business documentation       │  │  │  │  ████████████░░░░░░░░  │  │ │
+│  │  │                               │  │  │  │                         │  │ │
+│  │  └───────────────────────────────┘  │  │  │  Last activity: 2d ago  │  │ │
+│  │                                      │  │  │                         │  │ │
+│  └──────────────────────────────────────┘  │  │  [ Resume →]            │  │ │
+│                                            │  │                         │  │ │
+│                                            │  └─────────────────────────┘  │ │
+│                                            │                               │ │
+│                                            └───────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  YOUR DOCUMENTS                                                        │ │
+│  │                                                                        │ │
+│  │  ┌──────────────────────────────────────────────────────────────────┐ │ │
+│  │  │  📄 Business Plan          ✅ Approved        [ Download ]       │ │ │
+│  │  │     Generated: Jan 15, 2025                                      │ │ │
+│  │  └──────────────────────────────────────────────────────────────────┘ │ │
+│  │  ┌──────────────────────────────────────────────────────────────────┐ │ │
+│  │  │  📄 Technology Roadmap     ⏳ Pending Review                     │ │ │
+│  │  │     Generated: Jan 15, 2025                                      │ │ │
+│  │  └──────────────────────────────────────────────────────────────────┘ │ │
+│  │  ┌──────────────────────────────────────────────────────────────────┐ │ │
+│  │  │  📄 Product Architecture   ⏳ Pending Review                     │ │ │
+│  │  │     Generated: Jan 15, 2025                                      │ │ │
+│  │  └──────────────────────────────────────────────────────────────────┘ │ │
+│  │                                                                        │ │
+│  │                         [ View All Documents ]                        │ │
+│  │                                                                        │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 3.4 Questionnaire - Question View
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  QUESTIONNAIRE - QUESTION VIEW                                  [Desktop]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  [Logo]                                            [Save & Exit]      │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  PROGRESS                                                              │ │
+│  │  ████████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  35%      │ │
+│  │                                                                        │ │
+│  │  Section 2 of 8: Market Analysis     Est. 28 min remaining           │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                                                                        │ │
+│  │                                                                        │ │
+│  │         What is your primary revenue model?                           │ │
+│  │                                                                        │ │
+│  │         ┌────────────────────────────────────────────────────────┐   │ │
+│  │         │ ⓘ This determines how we structure your financial      │   │ │
+│  │         │   projections and pricing strategy sections.           │   │ │
+│  │         └────────────────────────────────────────────────────────┘   │ │
+│  │                                                                        │ │
+│  │         ┌────────────────────────────────────────────────────────┐   │ │
+│  │         │ ○  Subscription (SaaS)                         💡 Suggested│   │ │
+│  │         │    Recurring monthly or annual payments from customers │   │ │
+│  │         └────────────────────────────────────────────────────────┘   │ │
+│  │                                                                        │ │
+│  │         ┌────────────────────────────────────────────────────────┐   │ │
+│  │         │ ○  One-time Purchase                                   │   │ │
+│  │         │    Single payment for product or service               │   │ │
+│  │         └────────────────────────────────────────────────────────┘   │ │
+│  │                                                                        │ │
+│  │         ┌────────────────────────────────────────────────────────┐   │ │
+│  │         │ ○  Freemium                                            │   │ │
+│  │         │    Free basic tier with paid premium features          │   │ │
+│  │         └────────────────────────────────────────────────────────┘   │ │
+│  │                                                                        │ │
+│  │         ┌────────────────────────────────────────────────────────┐   │ │
+│  │         │ ○  Transaction Fee                                     │   │ │
+│  │         │    Percentage or flat fee per transaction              │   │ │
+│  │         └────────────────────────────────────────────────────────┘   │ │
+│  │                                                                        │ │
+│  │                                                                        │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                                                                        │ │
+│  │     [← Previous]                                         [Next →]     │ │
+│  │                                                                        │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 3.5 Questionnaire - Text Input
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  QUESTIONNAIRE - TEXT INPUT                                     [Desktop]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  [Logo]                                            [Save & Exit]      │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  PROGRESS                                                              │ │
+│  │  ██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  12%      │ │
+│  │                                                                        │ │
+│  │  Section 1 of 8: Business Foundation     Est. 40 min remaining        │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                                                                        │ │
+│  │                                                                        │ │
+│  │         Describe your unique value proposition *                      │ │
+│  │                                                                        │ │
+│  │         ┌────────────────────────────────────────────────────────┐   │ │
+│  │         │ ⓘ What makes your product/service unique? Why will     │   │ │
+│  │         │   customers choose you over competitors?                │   │ │
+│  │         └────────────────────────────────────────────────────────┘   │ │
+│  │                                                                        │ │
+│  │         ┌────────────────────────────────────────────────────────┐   │ │
+│  │         │                                                         │   │ │
+│  │         │  We provide the only AI-powered platform that          │   │ │
+│  │         │  generates comprehensive business documentation        │   │ │
+│  │         │  across technical, financial, and operational          │   │ │
+│  │         │  domains through a single questionnaire experience.    │   │ │
+│  │         │                                                         │   │ │
+│  │         │                                                         │   │ │
+│  │         │                                                         │   │ │
+│  │         └────────────────────────────────────────────────────────┘   │ │
+│  │         156/500 characters                                           │ │
+│  │                                                                        │ │
+│  │         💡 Example: "We're the only platform that combines           │ │
+│  │            X, Y, and Z to deliver [specific benefit]."               │ │
+│  │                                                                        │ │
+│  │                                                                        │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                                                                        │ │
+│  │     [← Previous]                                         [Next →]     │ │
+│  │                                                                        │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 3.6 Mobile - Question View
+
+```
+┌───────────────────────────┐
+│  MOBILE - QUESTION VIEW   │
+├───────────────────────────┤
+│                           │
+│  ┌─────────────────────┐  │
+│  │ [≡]    [Logo]   [X] │  │
+│  └─────────────────────┘  │
+│                           │
+│  ┌─────────────────────┐  │
+│  │ ████████░░░░░  35%  │  │
+│  │ Market Analysis 4/12│  │
+│  └─────────────────────┘  │
+│                           │
+│  ┌─────────────────────┐  │
+│  │                     │  │
+│  │  What is your       │  │
+│  │  primary revenue    │  │
+│  │  model?             │  │
+│  │                     │  │
+│  │  [ⓘ Why this       │  │
+│  │     matters]        │  │
+│  │                     │  │
+│  └─────────────────────┘  │
+│                           │
+│  ┌─────────────────────┐  │
+│  │ ○ Subscription      │  │
+│  │   (SaaS)       💡   │  │
+│  │   Recurring monthly │  │
+│  │   payments          │  │
+│  └─────────────────────┘  │
+│                           │
+│  ┌─────────────────────┐  │
+│  │ ○ One-time Purchase │  │
+│  │   Single payment    │  │
+│  └─────────────────────┘  │
+│                           │
+│  ┌─────────────────────┐  │
+│  │ ○ Freemium          │  │
+│  │   Free + premium    │  │
+│  └─────────────────────┘  │
+│                           │
+│  ┌─────────────────────┐  │
+│  │ ○ Transaction Fee   │  │
+│  │   Fee per trans.    │  │
+│  └─────────────────────┘  │
+│                           │
+│  ┌─────────────────────┐  │
+│  │                     │  │
+│  │    [ Continue → ]   │  │
+│  │                     │  │
+│  └─────────────────────┘  │
+│                           │
+│  ← Swipe to go back       │
+│                           │
+└───────────────────────────┘
+```
+
+### 3.7 Admin - Review Queue
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  ADMIN - REVIEW QUEUE                                           [Desktop]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  SIDEBAR          │  MAIN CONTENT                                      │ │
+│  │  ┌──────────────┐ │                                                    │ │
+│  │  │ [Logo]       │ │  Review Queue                        [🔔 5 new]   │ │
+│  │  │              │ │                                                    │ │
+│  │  │ Dashboard    │ │  ┌────────────────────────────────────────────────┐│ │
+│  │  │ Reviews (5)  │ │  │ Filter: [All ▼]  [This Week ▼]  🔍 Search    ││ │
+│  │  │ Questions    │ │  └────────────────────────────────────────────────┘│ │
+│  │  │ Users        │ │                                                    │ │
+│  │  │ Analytics    │ │  ┌────────────────────────────────────────────────┐│ │
+│  │  │ Settings     │ │  │                                                ││ │
+│  │  │              │ │  │  ┌──────────────────────────────────────────┐ ││ │
+│  │  │              │ │  │  │ John Smith - SaaS Business      NEW     │ ││ │
+│  │  │              │ │  │  │ Submitted: 2 hours ago                  │ ││ │
+│  │  │              │ │  │  │ Documents: 25  Industry: Technology     │ ││ │
+│  │  │              │ │  │  │                        [ Review → ]     │ ││ │
+│  │  │              │ │  │  └──────────────────────────────────────────┘ ││ │
+│  │  │              │ │  │                                                ││ │
+│  │  │              │ │  │  ┌──────────────────────────────────────────┐ ││ │
+│  │  │              │ │  │  │ Sarah Johnson - Retail Store            │ ││ │
+│  │  │              │ │  │  │ Submitted: 5 hours ago                  │ ││ │
+│  │  │              │ │  │  │ Documents: 25  Industry: Retail         │ ││ │
+│  │  │              │ │  │  │                        [ Review → ]     │ ││ │
+│  │  │              │ │  │  └──────────────────────────────────────────┘ ││ │
+│  │  │              │ │  │                                                ││ │
+│  │  │              │ │  │  ┌──────────────────────────────────────────┐ ││ │
+│  │  │              │ │  │  │ Mike Chen - Consulting Firm             │ ││ │
+│  │  │              │ │  │  │ Submitted: 1 day ago                    │ ││ │
+│  │  │              │ │  │  │ Documents: 25  Industry: Services       │ ││ │
+│  │  │              │ │  │  │                        [ Review → ]     │ ││ │
+│  │  │              │ │  │  └──────────────────────────────────────────┘ ││ │
+│  │  │              │ │  │                                                ││ │
+│  │  └──────────────┘ │  └────────────────────────────────────────────────┘│ │
+│  │                   │                                                    │ │
+│  └───────────────────┴────────────────────────────────────────────────────┘ │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 4. Component Specifications
+
+### 4.1 Button Component
+
+| State | Background | Border | Text | Shadow |
+|-------|------------|--------|------|--------|
+| Primary Default | #2563EB | none | white | sm |
+| Primary Hover | #1D4ED8 | none | white | md |
+| Primary Active | #1E40AF | none | white | none |
+| Primary Disabled | #93C5FD | none | white | none |
+| Secondary Default | white | #E2E8F0 | #1E293B | sm |
+| Secondary Hover | #F8FAFC | #CBD5E1 | #1E293B | md |
+
+**Specifications:**
+- Minimum width: 120px
+- Height: 44px (touch target compliance)
+- Border radius: 8px
+- Font: Inter 16px 500
+
+### 4.2 Input Component
+
+| State | Border | Background | Shadow |
+|-------|--------|------------|--------|
+| Default | #E2E8F0 | white | none |
+| Focus | #2563EB | white | ring-2 |
+| Error | #EF4444 | #FEF2F2 | none |
+| Disabled | #E2E8F0 | #F1F5F9 | none |
+
+**Specifications:**
+- Height: 48px
+- Border radius: 8px
+- Padding: 12px 16px
+- Font: Inter 16px 400
+
+### 4.3 Progress Bar Component
+
+```
+┌────────────────────────────────────────────────────────────┐
+│  ████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░  35%    │
+└────────────────────────────────────────────────────────────┘
+```
+
+**Specifications:**
+- Height: 8px
+- Border radius: 4px
+- Background (track): #E2E8F0
+- Background (fill): #2563EB
+- Animation: 300ms ease transition
+
+### 4.4 Option Card Component
+
+```
+┌────────────────────────────────────────────────────────────┐
+│ ○  Option Label                                    💡      │
+│    Description text explaining what this option means      │
+└────────────────────────────────────────────────────────────┘
+```
+
+**States:**
+- Default: Border #E2E8F0, Background white
+- Hover: Border #CBD5E1, Background #F8FAFC
+- Selected: Border #2563EB, Background #EFF6FF
+
+**Specifications:**
+- Padding: 16px
+- Border radius: 12px
+- Min-height: 72px
+
+---
+
+## 5. Interaction Patterns
+
+### 5.1 Question Navigation
+
+| Action | Trigger | Animation |
+|--------|---------|-----------|
+| Next question | Click Next / Enter | Slide left 300ms |
+| Previous question | Click Previous / Swipe right | Slide right 300ms |
+| Skip question | Click Skip | Slide left 300ms |
+
+### 5.2 Form Validation
+
+| Validation | Trigger | Feedback |
+|------------|---------|----------|
+| Required field | On blur / On submit | Red border, error message |
+| Invalid format | On blur | Red border, format hint |
+| Character limit | On input | Counter updates, warning at 90% |
+
+### 5.3 Loading States
+
+| State | Duration | Feedback |
+|-------|----------|----------|
+| Quick (<300ms) | Instant | No indicator |
+| Standard (300ms-2s) | On start | Spinner |
+| Long (>2s) | On start | Skeleton + message |
+
+---
+
+## 6. Accessibility Specifications
+
+### 6.1 ARIA Labels
+
+| Element | ARIA Attribute | Value |
+|---------|----------------|-------|
+| Progress bar | aria-valuenow, aria-valuemax | Current %, 100 |
+| Question | role="heading", aria-level | 2 |
+| Options | role="radiogroup" | - |
+| Each option | role="radio", aria-checked | true/false |
+| Help text | aria-describedby | Links to help content |
+
+### 6.2 Keyboard Navigation
+
+| Key | Action |
+|-----|--------|
+| Tab | Move to next interactive element |
+| Shift+Tab | Move to previous element |
+| Enter | Submit / Select |
+| Space | Select option |
+| Arrow keys | Navigate within option group |
+| Escape | Close modal / Exit |
+
+---
+
+## 7. Related Documents
+
+- [User Stories](./04-user-stories-use-cases.md)
+- [Functional Requirements](./02-functional-requirements-document.md)
+- [User Flow/Journey Maps](../cto/06-user-flow-journey-maps.md)
+- [Design System]({{DESIGN_SYSTEM_LINK}})
+
+---
+
+**Document Approval:**
+
+| Role | Name | Signature | Date |
+|------|------|-----------|------|
+| UX Designer | {{UX_NAME}} | | |
+| Business Analyst | {{BA_NAME}} | | |
+| Product Owner | {{PO_NAME}} | | |
+# Wireframes and Mockups
+## Adaptive Client Questionnaire System
+
+**Document Version:** 1.0  
+**Last Updated:** {{GENERATION_DATE}}  
+**Document Owner:** UX Designer / Business Analyst  
+**Status:** {{STATUS}}
+
+---
+
+## 1. Introduction
+
+This document provides visual representations and specifications for the user interface of the Adaptive Client Questionnaire System. These wireframes serve as blueprints for development and establish the visual hierarchy, layout, and interaction patterns.
+
+---
+
+## 2. Design System Overview
+
+### 2.1 Design Principles
+
+| Principle | Description | Implementation |
+|-----------|-------------|----------------|
+| **Clarity** | Simple, uncluttered interfaces | One question at a time, progressive disclosure |
+| **Guidance** | Help users make decisions | Suggestions, explanations, examples |
+| **Progress** | Show advancement clearly | Visual progress bar, section indicators |
+| **Accessibility** | Usable by everyone | WCAG 2.1 AA compliance |
+| **Consistency** | Predictable patterns | Design system, component library |
+
+### 2.2 Color Palette
+
+| Color | Hex | Usage |
+|-------|-----|-------|
+| Primary | #2563EB | CTA buttons, links, active states |
+| Primary Dark | #1D4ED8 | Hover states |
+| Secondary | #64748B | Secondary text, icons |
+| Success | #10B981 | Success messages, completion |
+| Warning | #F59E0B | Warnings, pending states |
+| Error | #EF4444 | Errors, required indicators |
+| Background | #F8FAFC | Page background |
+| Surface | #FFFFFF | Cards, inputs |
+| Text Primary | #1E293B | Main text |
+| Text Secondary | #64748B | Supporting text |
+
+### 2.3 Typography
+
+| Element | Font | Size | Weight | Line Height |
+|---------|------|------|--------|-------------|
+| H1 | Inter | 32px | 700 | 1.2 |
+| H2 | Inter | 24px | 600 | 1.3 |
+| H3 | Inter | 20px | 600 | 1.4 |
+| Body | Inter | 16px | 400 | 1.5 |
+| Small | Inter | 14px | 400 | 1.5 |
+| Caption | Inter | 12px | 400 | 1.4 |
+
+### 2.4 Spacing System
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| xs | 4px | Tight spacing |
+| sm | 8px | Related elements |
+| md | 16px | Standard spacing |
+| lg | 24px | Section spacing |
+| xl | 32px | Major sections |
+| 2xl | 48px | Page sections |
+
+### 2.5 Breakpoints
+
+| Breakpoint | Width | Target |
+|------------|-------|--------|
+| Mobile | 320px | Small phones |
+| Mobile Large | 375px | Standard phones |
+| Tablet | 768px | Tablets |
+| Desktop | 1024px | Small desktops |
+| Desktop Large | 1440px | Large desktops |
+
+---
+
+## 3. Page Wireframes
+
+### 3.1 Landing Page
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  LANDING PAGE                                                   [Desktop]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  HEADER                                                                │ │
+│  │  [Logo]                          [Features] [Pricing] [Login] [Sign Up]│ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  HERO SECTION                                                          │ │
+│  │                                                                        │ │
+│  │           Create Your Complete Business                               │ │
+│  │           Documentation in Hours, Not Weeks                           │ │
+│  │                                                                        │ │
+│  │           Transform your business idea into professional              │ │
+│  │           technical, financial, and operational documents             │ │
+│  │           through our intelligent questionnaire system.               │ │
+│  │                                                                        │ │
+│  │                    [ Get Started Free ]                               │ │
+│  │                                                                        │ │
+│  │                    No credit card required                            │ │
+│  │                                                                        │ │
+│  │  ┌────────────────────────────────────────────────────────────────┐  │ │
+│  │  │                                                                  │  │ │
+│  │  │              [Product Screenshot/Illustration]                  │  │ │
+│  │  │                                                                  │  │ │
+│  │  └────────────────────────────────────────────────────────────────┘  │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  FEATURES SECTION                                                      │ │
+│  │                                                                        │ │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                │ │
+│  │  │   [Icon]     │  │   [Icon]     │  │   [Icon]     │                │ │
+│  │  │              │  │              │  │              │                │ │
+│  │  │  Adaptive    │  │  25+ Docs    │  │  Multi-      │                │ │
+│  │  │  Questions   │  │  Generated   │  │  Platform    │                │ │
+│  │  │              │  │              │  │              │                │ │
+│  │  │  Questions   │  │  Complete    │  │  Web, iOS,   │                │ │
+│  │  │  adapt to    │  │  CTO, CFO,   │  │  Android,    │                │ │
+│  │  │  your needs  │  │  BA docs     │  │  Power Apps  │                │ │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘                │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  HOW IT WORKS                                                          │ │
+│  │                                                                        │ │
+│  │    1. Answer      2. We Generate     3. Review &      4. Download     │ │
+│  │    Questions      Documents          Approve          Your Docs       │ │
+│  │       │                │                 │                │           │ │
+│  │       ▼                ▼                 ▼                ▼           │ │
+│  │    [Icon]           [Icon]           [Icon]           [Icon]          │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  CTA SECTION                                                           │ │
+│  │                                                                        │ │
+│  │           Ready to build your business documentation?                 │ │
+│  │                                                                        │ │
+│  │                    [ Start Free Trial ]                               │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  FOOTER                                                                │ │
+│  │  [Logo]    Product | Company | Resources | Legal      © 2025 Company  │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 3.2 Registration Page
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  REGISTRATION PAGE                                              [Desktop]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  [Logo]                                                                │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌─────────────────────────────────┐ ┌──────────────────────────────────┐  │
+│  │                                 │ │                                  │  │
+│  │    Create your account         │ │                                  │  │
+│  │                                 │ │      [Illustration showing       │  │
+│  │    ┌─────────────────────────┐ │ │       benefits of the product]   │  │
+│  │    │ Continue with Google  G │ │ │                                  │  │
+│  │    └─────────────────────────┘ │ │      • Generate 25+ documents    │  │
+│  │                                 │ │      • Save 60+ hours            │  │
+│  │    ┌─────────────────────────┐ │ │      • Professional quality      │  │
+│  │    │ Continue with Microsoft │ │ │                                  │  │
+│  │    └─────────────────────────┘ │ │                                  │  │
+│  │                                 │ │                                  │  │
+│  │    ──────── or ────────        │ │                                  │  │
+│  │                                 │ │                                  │  │
+│  │    Full Name                   │ │                                  │  │
+│  │    ┌─────────────────────────┐ │ │                                  │  │
+│  │    │ John Smith              │ │ │                                  │  │
+│  │    └─────────────────────────┘ │ │                                  │  │
+│  │                                 │ │                                  │  │
+│  │    Email                       │ │                                  │  │
+│  │    ┌─────────────────────────┐ │ │                                  │  │
+│  │    │ john@example.com        │ │ │                                  │  │
+│  │    └─────────────────────────┘ │ │                                  │  │
+│  │                                 │ │                                  │  │
+│  │    Password                    │ │                                  │  │
+│  │    ┌─────────────────────────┐ │ │                                  │  │
+│  │    │ ••••••••••••           👁│ │ │                                  │  │
+│  │    └─────────────────────────┘ │ │                                  │  │
+│  │    Min 12 characters          │ │                                  │  │
+│  │                                 │ │                                  │  │
+│  │    ☑ I agree to Terms & Privacy│ │                                  │  │
+│  │                                 │ │                                  │  │
+│  │    ┌─────────────────────────┐ │ │                                  │  │
+│  │    │     Create Account      │ │ │                                  │  │
+│  │    └─────────────────────────┘ │ │                                  │  │
+│  │                                 │ │                                  │  │
+│  │    Already have an account?   │ │                                  │  │
+│  │    Sign in                    │ │                                  │  │
+│  │                                 │ │                                  │  │
+│  └─────────────────────────────────┘ └──────────────────────────────────┘  │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 3.3 Dashboard
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  DASHBOARD                                                      [Desktop]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  HEADER                                                                │ │
+│  │  [Logo]           [Dashboard] [Documents] [Help]      [🔔] [Avatar ▼] │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                                                                        │ │
+│  │  Welcome back, John! 👋                                               │ │
+│  │                                                                        │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌─────────────────────────────────────┐  ┌───────────────────────────────┐ │
+│  │  START NEW QUESTIONNAIRE            │  │  CONTINUE WHERE YOU LEFT OFF  │ │
+│  │  ┌───────────────────────────────┐  │  │                               │ │
+│  │  │                               │  │  │  ┌─────────────────────────┐  │ │
+│  │  │      [ + Start New ]          │  │  │  │  SaaS Business Plan     │  │ │
+│  │  │                               │  │  │  │                         │  │ │
+│  │  │  Create comprehensive         │  │  │  │  Progress: 65%          │  │ │
+│  │  │  business documentation       │  │  │  │  ████████████░░░░░░░░  │  │ │
+│  │  │                               │  │  │  │                         │  │ │
+│  │  └───────────────────────────────┘  │  │  │  Last activity: 2d ago  │  │ │
+│  │                                      │  │  │                         │  │ │
+│  └──────────────────────────────────────┘  │  │  [ Resume →]            │  │ │
+│                                            │  │                         │  │ │
+│                                            │  └─────────────────────────┘  │ │
+│                                            │                               │ │
+│                                            └───────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  YOUR DOCUMENTS                                                        │ │
+│  │                                                                        │ │
+│  │  ┌──────────────────────────────────────────────────────────────────┐ │ │
+│  │  │  📄 Business Plan          ✅ Approved        [ Download ]       │ │ │
+│  │  │     Generated: Jan 15, 2025                                      │ │ │
+│  │  └──────────────────────────────────────────────────────────────────┘ │ │
+│  │  ┌──────────────────────────────────────────────────────────────────┐ │ │
+│  │  │  📄 Technology Roadmap     ⏳ Pending Review                     │ │ │
+│  │  │     Generated: Jan 15, 2025                                      │ │ │
+│  │  └──────────────────────────────────────────────────────────────────┘ │ │
+│  │  ┌──────────────────────────────────────────────────────────────────┐ │ │
+│  │  │  📄 Product Architecture   ⏳ Pending Review                     │ │ │
+│  │  │     Generated: Jan 15, 2025                                      │ │ │
+│  │  └──────────────────────────────────────────────────────────────────┘ │ │
+│  │                                                                        │ │
+│  │                         [ View All Documents ]                        │ │
+│  │                                                                        │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 3.4 Questionnaire - Question View
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  QUESTIONNAIRE - QUESTION VIEW                                  [Desktop]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  [Logo]                                            [Save & Exit]      │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  PROGRESS                                                              │ │
+│  │  ████████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  35%      │ │
+│  │                                                                        │ │
+│  │  Section 2 of 8: Market Analysis     Est. 28 min remaining           │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                                                                        │ │
+│  │                                                                        │ │
+│  │         What is your primary revenue model?                           │ │
+│  │                                                                        │ │
+│  │         ┌────────────────────────────────────────────────────────┐   │ │
+│  │         │ ⓘ This determines how we structure your financial      │   │ │
+│  │         │   projections and pricing strategy sections.           │   │ │
+│  │         └────────────────────────────────────────────────────────┘   │ │
+│  │                                                                        │ │
+│  │         ┌────────────────────────────────────────────────────────┐   │ │
+│  │         │ ○  Subscription (SaaS)                         💡 Suggested│   │ │
+│  │         │    Recurring monthly or annual payments from customers │   │ │
+│  │         └────────────────────────────────────────────────────────┘   │ │
+│  │                                                                        │ │
+│  │         ┌────────────────────────────────────────────────────────┐   │ │
+│  │         │ ○  One-time Purchase                                   │   │ │
+│  │         │    Single payment for product or service               │   │ │
+│  │         └────────────────────────────────────────────────────────┘   │ │
+│  │                                                                        │ │
+│  │         ┌────────────────────────────────────────────────────────┐   │ │
+│  │         │ ○  Freemium                                            │   │ │
+│  │         │    Free basic tier with paid premium features          │   │ │
+│  │         └────────────────────────────────────────────────────────┘   │ │
+│  │                                                                        │ │
+│  │         ┌────────────────────────────────────────────────────────┐   │ │
+│  │         │ ○  Transaction Fee                                     │   │ │
+│  │         │    Percentage or flat fee per transaction              │   │ │
+│  │         └────────────────────────────────────────────────────────┘   │ │
+│  │                                                                        │ │
+│  │                                                                        │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                                                                        │ │
+│  │     [← Previous]                                         [Next →]     │ │
+│  │                                                                        │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 3.5 Questionnaire - Text Input
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  QUESTIONNAIRE - TEXT INPUT                                     [Desktop]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  [Logo]                                            [Save & Exit]      │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  PROGRESS                                                              │ │
+│  │  ██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  12%      │ │
+│  │                                                                        │ │
+│  │  Section 1 of 8: Business Foundation     Est. 40 min remaining        │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                                                                        │ │
+│  │                                                                        │ │
+│  │         Describe your unique value proposition *                      │ │
+│  │                                                                        │ │
+│  │         ┌────────────────────────────────────────────────────────┐   │ │
+│  │         │ ⓘ What makes your product/service unique? Why will     │   │ │
+│  │         │   customers choose you over competitors?                │   │ │
+│  │         └────────────────────────────────────────────────────────┘   │ │
+│  │                                                                        │ │
+│  │         ┌────────────────────────────────────────────────────────┐   │ │
+│  │         │                                                         │   │ │
+│  │         │  We provide the only AI-powered platform that          │   │ │
+│  │         │  generates comprehensive business documentation        │   │ │
+│  │         │  across technical, financial, and operational          │   │ │
+│  │         │  domains through a single questionnaire experience.    │   │ │
+│  │         │                                                         │   │ │
+│  │         │                                                         │   │ │
+│  │         │                                                         │   │ │
+│  │         └────────────────────────────────────────────────────────┘   │ │
+│  │         156/500 characters                                           │ │
+│  │                                                                        │ │
+│  │         💡 Example: "We're the only platform that combines           │ │
+│  │            X, Y, and Z to deliver [specific benefit]."               │ │
+│  │                                                                        │ │
+│  │                                                                        │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                                                                        │ │
+│  │     [← Previous]                                         [Next →]     │ │
+│  │                                                                        │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 3.6 Mobile - Question View
+
+```
+┌───────────────────────────┐
+│  MOBILE - QUESTION VIEW   │
+├───────────────────────────┤
+│                           │
+│  ┌─────────────────────┐  │
+│  │ [≡]    [Logo]   [X] │  │
+│  └─────────────────────┘  │
+│                           │
+│  ┌─────────────────────┐  │
+│  │ ████████░░░░░  35%  │  │
+│  │ Market Analysis 4/12│  │
+│  └─────────────────────┘  │
+│                           │
+│  ┌─────────────────────┐  │
+│  │                     │  │
+│  │  What is your       │  │
+│  │  primary revenue    │  │
+│  │  model?             │  │
+│  │                     │  │
+│  │  [ⓘ Why this       │  │
+│  │     matters]        │  │
+│  │                     │  │
+│  └─────────────────────┘  │
+│                           │
+│  ┌─────────────────────┐  │
+│  │ ○ Subscription      │  │
+│  │   (SaaS)       💡   │  │
+│  │   Recurring monthly │  │
+│  │   payments          │  │
+│  └─────────────────────┘  │
+│                           │
+│  ┌─────────────────────┐  │
+│  │ ○ One-time Purchase │  │
+│  │   Single payment    │  │
+│  └─────────────────────┘  │
+│                           │
+│  ┌─────────────────────┐  │
+│  │ ○ Freemium          │  │
+│  │   Free + premium    │  │
+│  └─────────────────────┘  │
+│                           │
+│  ┌─────────────────────┐  │
+│  │ ○ Transaction Fee   │  │
+│  │   Fee per trans.    │  │
+│  └─────────────────────┘  │
+│                           │
+│  ┌─────────────────────┐  │
+│  │                     │  │
+│  │    [ Continue → ]   │  │
+│  │                     │  │
+│  └─────────────────────┘  │
+│                           │
+│  ← Swipe to go back       │
+│                           │
+└───────────────────────────┘
+```
+
+### 3.7 Admin - Review Queue
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  ADMIN - REVIEW QUEUE                                           [Desktop]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │  SIDEBAR          │  MAIN CONTENT                                      │ │
+│  │  ┌──────────────┐ │                                                    │ │
+│  │  │ [Logo]       │ │  Review Queue                        [🔔 5 new]   │ │
+│  │  │              │ │                                                    │ │
+│  │  │ Dashboard    │ │  ┌────────────────────────────────────────────────┐│ │
+│  │  │ Reviews (5)  │ │  │ Filter: [All ▼]  [This Week ▼]  🔍 Search    ││ │
+│  │  │ Questions    │ │  └────────────────────────────────────────────────┘│ │
+│  │  │ Users        │ │                                                    │ │
+│  │  │ Analytics    │ │  ┌────────────────────────────────────────────────┐│ │
+│  │  │ Settings     │ │  │                                                ││ │
+│  │  │              │ │  │  ┌──────────────────────────────────────────┐ ││ │
+│  │  │              │ │  │  │ John Smith - SaaS Business      NEW     │ ││ │
+│  │  │              │ │  │  │ Submitted: 2 hours ago                  │ ││ │
+│  │  │              │ │  │  │ Documents: 25  Industry: Technology     │ ││ │
+│  │  │              │ │  │  │                        [ Review → ]     │ ││ │
+│  │  │              │ │  │  └──────────────────────────────────────────┘ ││ │
+│  │  │              │ │  │                                                ││ │
+│  │  │              │ │  │  ┌──────────────────────────────────────────┐ ││ │
+│  │  │              │ │  │  │ Sarah Johnson - Retail Store            │ ││ │
+│  │  │              │ │  │  │ Submitted: 5 hours ago                  │ ││ │
+│  │  │              │ │  │  │ Documents: 25  Industry: Retail         │ ││ │
+│  │  │              │ │  │  │                        [ Review → ]     │ ││ │
+│  │  │              │ │  │  └──────────────────────────────────────────┘ ││ │
+│  │  │              │ │  │                                                ││ │
+│  │  │              │ │  │  ┌──────────────────────────────────────────┐ ││ │
+│  │  │              │ │  │  │ Mike Chen - Consulting Firm             │ ││ │
+│  │  │              │ │  │  │ Submitted: 1 day ago                    │ ││ │
+│  │  │              │ │  │  │ Documents: 25  Industry: Services       │ ││ │
+│  │  │              │ │  │  │                        [ Review → ]     │ ││ │
+│  │  │              │ │  │  └──────────────────────────────────────────┘ ││ │
+│  │  │              │ │  │                                                ││ │
+│  │  └──────────────┘ │  └────────────────────────────────────────────────┘│ │
+│  │                   │                                                    │ │
+│  └───────────────────┴────────────────────────────────────────────────────┘ │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 4. Component Specifications
+
+### 4.1 Button Component
+
+| State | Background | Border | Text | Shadow |
+|-------|------------|--------|------|--------|
+| Primary Default | #2563EB | none | white | sm |
+| Primary Hover | #1D4ED8 | none | white | md |
+| Primary Active | #1E40AF | none | white | none |
+| Primary Disabled | #93C5FD | none | white | none |
+| Secondary Default | white | #E2E8F0 | #1E293B | sm |
+| Secondary Hover | #F8FAFC | #CBD5E1 | #1E293B | md |
+
+**Specifications:**
+- Minimum width: 120px
+- Height: 44px (touch target compliance)
+- Border radius: 8px
+- Font: Inter 16px 500
+
+### 4.2 Input Component
+
+| State | Border | Background | Shadow |
+|-------|--------|------------|--------|
+| Default | #E2E8F0 | white | none |
+| Focus | #2563EB | white | ring-2 |
+| Error | #EF4444 | #FEF2F2 | none |
+| Disabled | #E2E8F0 | #F1F5F9 | none |
+
+**Specifications:**
+- Height: 48px
+- Border radius: 8px
+- Padding: 12px 16px
+- Font: Inter 16px 400
+
+### 4.3 Progress Bar Component
+
+```
+┌────────────────────────────────────────────────────────────┐
+│  ████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░  35%    │
+└────────────────────────────────────────────────────────────┘
+```
+
+**Specifications:**
+- Height: 8px
+- Border radius: 4px
+- Background (track): #E2E8F0
+- Background (fill): #2563EB
+- Animation: 300ms ease transition
+
+### 4.4 Option Card Component
+
+```
+┌────────────────────────────────────────────────────────────┐
+│ ○  Option Label                                    💡      │
+│    Description text explaining what this option means      │
+└────────────────────────────────────────────────────────────┘
+```
+
+**States:**
+- Default: Border #E2E8F0, Background white
+- Hover: Border #CBD5E1, Background #F8FAFC
+- Selected: Border #2563EB, Background #EFF6FF
+
+**Specifications:**
+- Padding: 16px
+- Border radius: 12px
+- Min-height: 72px
+
+---
+
+## 5. Interaction Patterns
+
+### 5.1 Question Navigation
+
+| Action | Trigger | Animation |
+|--------|---------|-----------|
+| Next question | Click Next / Enter | Slide left 300ms |
+| Previous question | Click Previous / Swipe right | Slide right 300ms |
+| Skip question | Click Skip | Slide left 300ms |
+
+### 5.2 Form Validation
+
+| Validation | Trigger | Feedback |
+|------------|---------|----------|
+| Required field | On blur / On submit | Red border, error message |
+| Invalid format | On blur | Red border, format hint |
+| Character limit | On input | Counter updates, warning at 90% |
+
+### 5.3 Loading States
+
+| State | Duration | Feedback |
+|-------|----------|----------|
+| Quick (<300ms) | Instant | No indicator |
+| Standard (300ms-2s) | On start | Spinner |
+| Long (>2s) | On start | Skeleton + message |
+
+---
+
+## 6. Accessibility Specifications
+
+### 6.1 ARIA Labels
+
+| Element | ARIA Attribute | Value |
+|---------|----------------|-------|
+| Progress bar | aria-valuenow, aria-valuemax | Current %, 100 |
+| Question | role="heading", aria-level | 2 |
+| Options | role="radiogroup" | - |
+| Each option | role="radio", aria-checked | true/false |
+| Help text | aria-describedby | Links to help content |
+
+### 6.2 Keyboard Navigation
+
+| Key | Action |
+|-----|--------|
+| Tab | Move to next interactive element |
+| Shift+Tab | Move to previous element |
+| Enter | Submit / Select |
+| Space | Select option |
+| Arrow keys | Navigate within option group |
+| Escape | Close modal / Exit |
+
+---
+
+## 7. Related Documents
+
+- [User Stories](./04-user-stories-use-cases.md)
+- [Functional Requirements](./02-functional-requirements-document.md)
+- [User Flow/Journey Maps](../cto/06-user-flow-journey-maps.md)
+- [Design System]({{DESIGN_SYSTEM_LINK}})
+
+---
+
+**Document Approval:**
+
+| Role | Name | Signature | Date |
+|------|------|-----------|------|
+| UX Designer | {{UX_NAME}} | | |
+| Business Analyst | {{BA_NAME}} | | |
+| Product Owner | {{PO_NAME}} | | |

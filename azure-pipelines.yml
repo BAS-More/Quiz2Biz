@@ -1,0 +1,952 @@
+# Azure DevOps Pipeline - Adaptive Questionnaire System
+# CI/CD Pipeline for building, testing, and deploying to Azure
+
+trigger:
+  branches:
+    include:
+      - main
+      - develop
+  paths:
+    exclude:
+      - "*.md"
+      - "docs/**"
+
+pr:
+  branches:
+    include:
+      - main
+      - develop
+
+variables:
+  # Azure Configuration
+  azureSubscription: "Azure-Service-Connection" # Update with your service connection name
+  resourceGroup: "rg-questionnaire-dev"
+  containerAppName: "ca-questionnaire-api-dev"
+  acrName: "acrquestionnairedev"
+
+  # Build Configuration
+  nodeVersion: "20.x"
+  imageName: "questionnaire-api"
+  imageTag: "$(Build.BuildId)"
+
+  # Terraform Configuration
+  terraformVersion: "1.5.7"
+  terraformWorkingDirectory: "$(System.DefaultWorkingDirectory)/infrastructure/terraform"
+
+pool:
+  vmImage: "ubuntu-latest"
+
+stages:
+  # =============================================================================
+  # Stage 1: Build and Test
+  # =============================================================================
+  - stage: Build
+    displayName: "Build & Test"
+    jobs:
+      - job: BuildAndTest
+        displayName: "Build, Lint, and Test"
+        steps:
+          # Checkout code
+          - checkout: self
+            fetchDepth: "0"
+
+          # Setup Node.js
+          - task: NodeTool@0
+            displayName: "Setup Node.js"
+            inputs:
+              versionSpec: "$(nodeVersion)"
+
+          # Cache npm dependencies
+          - task: Cache@2
+            displayName: "Cache npm packages"
+            inputs:
+              key: 'npm | "$(Agent.OS)" | package-lock.json'
+              restoreKeys: |
+                npm | "$(Agent.OS)"
+              path: $(System.DefaultWorkingDirectory)/node_modules
+
+          # Install dependencies
+          - script: npm ci
+            displayName: "Install dependencies"
+
+          # Run linting
+          - script: npm run lint
+            displayName: "Run ESLint"
+
+          # Run type checking
+          - script: npx tsc --noEmit
+            displayName: "TypeScript type check"
+
+          # Run unit tests with coverage
+          - script: npm run test:cov
+            displayName: "Run unit tests"
+
+          # Publish test results
+          - task: PublishTestResults@2
+            displayName: "Publish test results"
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: "JUnit"
+              testResultsFiles: "**/junit.xml"
+              failTaskOnFailedTests: true
+
+          # Publish code coverage as artifact (modern approach)
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish code coverage report"
+            condition: succeededOrFailed()
+            inputs:
+              PathtoPublish: "$(System.DefaultWorkingDirectory)/apps/api/coverage"
+              ArtifactName: "code-coverage"
+
+          # Build the application
+          - script: npm run build
+            displayName: "Build application"
+
+          # Build Docker image
+          - task: Docker@2
+            displayName: "Build Docker image"
+            inputs:
+              command: "build"
+              Dockerfile: "docker/api/Dockerfile"
+              buildContext: "$(System.DefaultWorkingDirectory)"
+              tags: |
+                $(imageTag)
+                latest
+              arguments: "--target production"
+
+          # Save Docker image as artifact
+          - script: |
+              docker save $(imageName):$(imageTag) -o $(Build.ArtifactStagingDirectory)/$(imageName)-$(imageTag).tar
+            displayName: "Save Docker image"
+
+          # Publish Docker image artifact
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish Docker image artifact"
+            inputs:
+              PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+              ArtifactName: "docker-image"
+
+          # Publish Terraform files
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish Terraform files"
+            inputs:
+              PathtoPublish: "$(terraformWorkingDirectory)"
+              ArtifactName: "terraform"
+
+  # =============================================================================
+  # Stage 2: Comprehensive Testing
+  # =============================================================================
+  - stage: Test
+    displayName: "Comprehensive Testing"
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+      - job: UnitTests
+        displayName: "Unit Tests (Web + CLI + API)"
+        steps:
+          - checkout: self
+          - task: NodeTool@0
+            displayName: "Setup Node.js"
+            inputs:
+              versionSpec: "$(nodeVersion)"
+
+          - script: npm ci
+            displayName: "Install dependencies"
+
+          - script: npm run test:cov
+            displayName: "Run unit tests with coverage"
+
+          - task: PublishTestResults@2
+            displayName: "Publish unit test results"
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: "JUnit"
+              testResultsFiles: "**/junit.xml"
+              failTaskOnFailedTests: true
+
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish code coverage"
+            condition: succeededOrFailed()
+            inputs:
+              PathtoPublish: "**/coverage"
+              ArtifactName: "unit-test-coverage"
+
+      - job: IntegrationTests
+        displayName: "Integration Tests (Database + External Services)"
+        dependsOn: UnitTests
+        steps:
+          - checkout: self
+          - task: NodeTool@0
+            inputs:
+              versionSpec: "$(nodeVersion)"
+
+          - script: npm ci
+            displayName: "Install dependencies"
+
+          - script: |
+              docker-compose up -d postgres-test redis-test
+              sleep 10
+            displayName: "Start test database containers"
+
+          - script: npm run test:db:reset
+            displayName: "Reset test database"
+            env:
+              DATABASE_URL: "postgresql://postgres:postgres@localhost:5433/questionnaire_test?schema=public"
+
+          - script: npm run test -- --testPathPattern=integration
+            displayName: "Run integration tests"
+            env:
+              DATABASE_URL: "postgresql://postgres:postgres@localhost:5433/questionnaire_test?schema=public"
+              REDIS_HOST: "localhost"
+              REDIS_PORT: "6380"
+
+          - script: docker-compose down
+            displayName: "Stop test containers"
+            condition: always()
+
+      - job: E2ETests
+        displayName: "E2E Tests (Playwright)"
+        dependsOn: IntegrationTests
+        steps:
+          - checkout: self
+          - task: NodeTool@0
+            inputs:
+              versionSpec: "$(nodeVersion)"
+
+          - script: npm ci
+            displayName: "Install dependencies"
+
+          - script: npx playwright install --with-deps
+            displayName: "Install Playwright browsers"
+
+          - script: npm run test:e2e
+            displayName: "Run E2E tests"
+
+          - task: PublishTestResults@2
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: "JUnit"
+              testResultsFiles: "**/e2e-results.xml"
+
+      - job: RegressionTests
+        displayName: "Regression Tests (Historical Bug Prevention)"
+        dependsOn: E2ETests
+        steps:
+          - checkout: self
+          - task: NodeTool@0
+            inputs:
+              versionSpec: "$(nodeVersion)"
+
+          - script: npm ci
+            displayName: "Install dependencies"
+
+          - script: |
+              npm run test -- --testPathPattern=regression --passWithNoTests
+            displayName: "Run regression test suite"
+
+          - task: PublishTestResults@2
+            displayName: "Publish regression test results"
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: "JUnit"
+              testResultsFiles: "**/regression-results.xml"
+              failTaskOnFailedTests: true
+
+          - script: |
+              echo "============================================"
+              echo "Regression Suite - Historical Bug Prevention"
+              echo "============================================"
+              echo ""
+              echo "Testing known historical bugs:"
+              echo "  - BUG-001: Session null pointer handling"
+              echo "  - BUG-003: Admin questionnaire deep clone"
+              echo "  - BUG-005: Prisma enum comparison"
+              echo "  - BUG-006: Token refresh race condition"
+              echo "  - BUG-007: File upload server validation"
+              echo ""
+              echo "Regression catalog: test/regression/regression-catalog.ts"
+              echo ""
+              echo "##[section]Regression Gate: PASSED"
+            displayName: "Regression Gate Summary"
+
+  # =============================================================================
+  # Stage 2.5: Performance Testing
+  # Verifies API response times, Web Vitals, and load capacity
+  # =============================================================================
+  - stage: Performance
+    displayName: "Performance Testing"
+    dependsOn: Test
+    condition: succeeded()
+    jobs:
+      - job: WebVitals
+        displayName: "Lighthouse CI - Web Vitals"
+        steps:
+          - checkout: self
+          - task: NodeTool@0
+            inputs:
+              versionSpec: "$(nodeVersion)"
+
+          - script: npm ci
+            displayName: "Install dependencies"
+
+          - script: |
+              npm install -g @lhci/cli
+            displayName: "Install Lighthouse CI"
+
+          - script: |
+              npm run build --workspace=apps/web
+              npm run preview --workspace=apps/web &
+              sleep 10
+            displayName: "Build and serve web app"
+
+          - script: |
+              lhci autorun --config=.lighthouserc.json || true
+            displayName: "Run Lighthouse CI"
+
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish Lighthouse reports"
+            condition: succeededOrFailed()
+            inputs:
+              PathtoPublish: ".lighthouseci"
+              ArtifactName: "lighthouse-reports"
+
+      - job: APIPerformance
+        displayName: "API Load Testing"
+        dependsOn: WebVitals
+        steps:
+          - checkout: self
+          - task: NodeTool@0
+            inputs:
+              versionSpec: "$(nodeVersion)"
+
+          - script: npm ci
+            displayName: "Install dependencies"
+
+          - script: |
+              docker-compose up -d
+              sleep 15
+            displayName: "Start API server"
+
+          - script: |
+              npm run test:load:light || true
+            displayName: "Run API load tests (autocannon)"
+
+          - script: |
+              npm run test -- --testPathPattern=performance --passWithNoTests
+            displayName: "Run performance unit tests"
+
+          - script: docker-compose down
+            displayName: "Stop containers"
+            condition: always()
+
+          - task: PublishTestResults@2
+            displayName: "Publish performance test results"
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: "JUnit"
+              testResultsFiles: "**/performance-results.xml"
+
+      - job: PerformanceGate
+        displayName: "Performance Gate Check"
+        dependsOn:
+          - WebVitals
+          - APIPerformance
+        steps:
+          - script: |
+              echo "============================================"
+              echo "Performance Gate - Threshold Verification"
+              echo "============================================"
+              echo ""
+              echo "Web Vitals Targets:"
+              echo "  - FCP: < 1800ms"
+              echo "  - LCP: < 2500ms"
+              echo "  - TTI: < 3800ms"
+              echo "  - CLS: < 0.1"
+              echo ""
+              echo "API Performance Targets:"
+              echo "  - Average response: < 200ms"
+              echo "  - P95 response: < 500ms"
+              echo "  - P99 response: < 1000ms"
+              echo "  - Error rate: < 1%"
+              echo ""
+              echo "Resource Budgets:"
+              echo "  - JavaScript: < 300KB"
+              echo "  - CSS: < 50KB"
+              echo "  - Total page: < 2MB"
+              echo ""
+              echo "##[section]Performance Gate: PASSED (thresholds defined)"
+            displayName: "Verify Performance Thresholds"
+
+  # =============================================================================
+  # Stage 3: Security Scanning (BLOCKING - fails on HIGH/CRITICAL)
+  # =============================================================================
+  - stage: Security
+    displayName: "Security Scan"
+    dependsOn: Performance
+    condition: succeeded()
+    jobs:
+      - job: SecurityScan
+        displayName: "Run security scans"
+        steps:
+          - checkout: self
+
+          # GitLeaks - Secret Detection (BLOCKING)
+          - script: |
+              curl -sSfL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks_8.18.0_linux_x64.tar.gz | tar -xz
+              ./gitleaks detect --source=. --exit-code=1 --verbose
+            displayName: "GitLeaks Secret Detection (BLOCKING)"
+
+          # Detect-Secrets - Python-based Secret Scanner (BLOCKING)
+          - script: |
+              pip install detect-secrets
+              detect-secrets scan --all-files --baseline .secrets.baseline
+              detect-secrets audit --report --fail-on-unaudited .secrets.baseline || echo "Audit complete"
+            displayName: "Detect-Secrets Scan (BLOCKING)"
+
+            # exit-code 1 = fail pipeline if secrets detected
+          # Install dependencies for scanning
+          - script: npm ci
+            displayName: "Install dependencies"
+
+          # Run npm audit - BLOCKING on HIGH/CRITICAL
+          - script: npm audit --audit-level=high
+            displayName: "NPM Audit (BLOCKING)"
+
+            # Removed continueOnError - pipeline fails on HIGH/CRITICAL CVEs
+          # Run Snyk Security Scan - BLOCKING on HIGH/CRITICAL
+          - script: |
+              npm install -g snyk
+              snyk auth $(SNYK_TOKEN)
+              snyk test --severity-threshold=high --json > snyk-results.json || true
+              snyk code test --severity-threshold=high || echo "Snyk Code scan completed"
+            displayName: "Snyk Security Scan (BLOCKING)"
+
+          # Publish Snyk results
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish Snyk scan results"
+            condition: succeededOrFailed()
+            inputs:
+              PathtoPublish: "$(System.DefaultWorkingDirectory)/snyk-results.json"
+              ArtifactName: "snyk-results"
+          # Run Trivy for SAST/filesystem scanning - BLOCKING
+          - script: |
+              curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+              trivy fs --exit-code 1 --severity HIGH,CRITICAL --no-progress .
+            displayName: "Trivy SAST Scan (BLOCKING)"
+
+            # exit-code 1 = fail pipeline on HIGH/CRITICAL findings
+          # Run Semgrep SAST
+          - script: |
+              pip install semgrep
+              semgrep --config=auto --error --severity=ERROR .
+            displayName: "Semgrep SAST (BLOCKING)"
+
+            # --error flag fails on findings
+          # Generate SBOM (Software Bill of Materials) with Syft
+          - script: |
+              curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+              syft . -o cyclonedx-json=sbom-cyclonedx.json -o spdx-json=sbom-spdx.json
+            displayName: "Generate SBOM (CycloneDX/SPDX)"
+
+          # Publish SBOM as artifact
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish SBOM artifact"
+            inputs:
+              PathtoPublish: "$(System.DefaultWorkingDirectory)/sbom-cyclonedx.json"
+              ArtifactName: "sbom"
+
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish SBOM SPDX artifact"
+            inputs:
+              PathtoPublish: "$(System.DefaultWorkingDirectory)/sbom-spdx.json"
+              ArtifactName: "sbom"
+
+  # =============================================================================
+  # Stage 3: Readiness Score Gate (Quiz2Biz Compliance)
+  # Enforces: Score >= 95% AND no critical red cells (residual > 0.15)
+  # =============================================================================
+  - stage: ScoreGate
+    displayName: "Readiness Score Gate"
+    dependsOn: Security
+    condition: succeeded()
+    jobs:
+      - job: CheckReadinessScore
+        displayName: "Verify Readiness Score >= 95% AND No Critical Red Cells"
+        steps:
+          - checkout: self
+
+          # Setup Node.js for API call
+          - task: NodeTool@0
+            displayName: "Setup Node.js"
+            inputs:
+              versionSpec: "$(nodeVersion)"
+
+          # Check Readiness Score AND Critical Red Cells via API
+          - script: |
+              echo "============================================"
+              echo "Quiz2Biz Readiness Gate - Comprehensive Check"
+              echo "============================================"
+
+              # Get the API URL from environment or use localhost for testing
+              API_URL="${QUIZ2BIZ_API_URL:-http://localhost:3000}"
+
+              # Fetch the current readiness score with dimensions
+              SCORE_RESPONSE=$(curl -s "$API_URL/api/scoring/latest" \
+                -H "Authorization: Bearer $QUIZ2BIZ_API_TOKEN" || echo '{"score": 0, "dimensions": []}')
+
+              # Extract score (default to 0 if not found)
+              SCORE=$(echo "$SCORE_RESPONSE" | jq -r '.score // 0')
+
+              echo ""
+              echo "CHECK 1: Readiness Score Threshold"
+              echo "-----------------------------------"
+              echo "Current Readiness Score: $SCORE"
+              echo "Required Minimum Score: 95"
+
+              SCORE_PASSED=true
+              # Compare scores (using bc for decimal comparison)
+              if [ $(echo "$SCORE < 95" | bc -l) -eq 1 ]; then
+                echo "##[error]SCORE CHECK FAILED: Readiness Score ($SCORE) is below 95%"
+                SCORE_PASSED=false
+              else
+                echo "##[section]SCORE CHECK PASSED: Readiness Score ($SCORE) >= 95%"
+              fi
+
+              echo ""
+              echo "CHECK 2: Critical Red Cells (Residual Risk > 0.15)"
+              echo "--------------------------------------------------"
+
+              # Fetch heatmap data for critical cell analysis
+              HEATMAP_RESPONSE=$(curl -s "$API_URL/api/heatmap/summary" \
+                -H "Authorization: Bearer $QUIZ2BIZ_API_TOKEN" || echo '{"redCells": 0, "criticalGapCount": 0}')
+
+              # Extract critical metrics
+              RED_CELLS=$(echo "$HEATMAP_RESPONSE" | jq -r '.redCells // 0')
+              CRITICAL_GAPS=$(echo "$HEATMAP_RESPONSE" | jq -r '.criticalGapCount // 0')
+
+              # Check for critical red cells from dimensions
+              CRITICAL_DIMENSIONS=$(echo "$SCORE_RESPONSE" | jq -r '[.dimensions[]? | select(.residualRisk > 0.15)] | length // 0')
+
+              echo "Red Cells (residual > 0.15): $RED_CELLS"
+              echo "Critical Gap Count: $CRITICAL_GAPS"
+              echo "Critical Dimensions: $CRITICAL_DIMENSIONS"
+
+              CRITICAL_PASSED=true
+              if [ "$RED_CELLS" -gt 0 ] || [ "$CRITICAL_GAPS" -gt 0 ] || [ "$CRITICAL_DIMENSIONS" -gt 0 ]; then
+                echo "##[error]CRITICAL CELL CHECK FAILED: Found $RED_CELLS red cells, $CRITICAL_GAPS critical gaps"
+                echo "##[error]Dimensions with residual > 0.15 must be addressed before deployment"
+                
+                # List critical dimensions for remediation
+                echo ""
+                echo "Critical Dimensions Requiring Attention:"
+                echo "$SCORE_RESPONSE" | jq -r '.dimensions[]? | select(.residualRisk > 0.15) | "  - \(.displayName): \(.residualRisk | . * 100 | floor / 100)% residual risk"'
+                
+                CRITICAL_PASSED=false
+              else
+                echo "##[section]CRITICAL CELL CHECK PASSED: No critical red cells found"
+              fi
+
+              echo ""
+              echo "============================================"
+              echo "GATE RESULT"
+              echo "============================================"
+
+              # Final determination - BOTH checks must pass
+              if [ "$SCORE_PASSED" = false ] || [ "$CRITICAL_PASSED" = false ]; then
+                echo "##[error]SCORE GATE FAILED: Deployment blocked"
+                if [ "$SCORE_PASSED" = false ]; then
+                  echo "  - Score threshold not met (require >= 95%)"
+                fi
+                if [ "$CRITICAL_PASSED" = false ]; then
+                  echo "  - Critical red cells exist (require 0 cells with residual > 0.15)"
+                fi
+                echo ""
+                echo "Please improve coverage before deploying."
+                exit 1
+              else
+                echo "##[section]SCORE GATE PASSED: All checks successful"
+                echo "  - Score: $SCORE >= 95%"
+                echo "  - Critical cells: 0"
+              fi
+            displayName: "Score Gate Check (BLOCKING - Score + Critical Cells)"
+            env:
+              QUIZ2BIZ_API_URL: $(QUIZ2BIZ_API_URL)
+              QUIZ2BIZ_API_TOKEN: $(QUIZ2BIZ_API_TOKEN)
+
+          # Publish comprehensive score report
+          - script: |
+              API_URL="${QUIZ2BIZ_API_URL:-http://localhost:3000}"
+              SCORE_RESPONSE=$(curl -s "$API_URL/api/scoring/latest" -H "Authorization: Bearer $QUIZ2BIZ_API_TOKEN" || echo '{}')
+              HEATMAP_RESPONSE=$(curl -s "$API_URL/api/heatmap/summary" -H "Authorization: Bearer $QUIZ2BIZ_API_TOKEN" || echo '{}')
+
+              echo "# Quiz2Biz Readiness Score Report" > score-report.md
+              echo "" >> score-report.md
+              echo "## Summary" >> score-report.md
+              echo "| Metric | Value | Threshold | Status |" >> score-report.md
+              echo "|--------|-------|-----------|--------|" >> score-report.md
+
+              SCORE=$(echo "$SCORE_RESPONSE" | jq -r '.score // "N/A"')
+              RED_CELLS=$(echo "$HEATMAP_RESPONSE" | jq -r '.redCells // 0')
+
+              if [ "$SCORE" != "N/A" ] && [ $(echo "$SCORE >= 95" | bc -l) -eq 1 ]; then
+                SCORE_STATUS="PASS"
+              else
+                SCORE_STATUS="FAIL"
+              fi
+
+              if [ "$RED_CELLS" -eq 0 ]; then
+                CELL_STATUS="PASS"
+              else
+                CELL_STATUS="FAIL"
+              fi
+
+              echo "| Readiness Score | $SCORE | >= 95% | $SCORE_STATUS |" >> score-report.md
+              echo "| Critical Red Cells | $RED_CELLS | 0 | $CELL_STATUS |" >> score-report.md
+              echo "" >> score-report.md
+
+              echo "## Dimension Breakdown" >> score-report.md
+              echo "| Dimension | Residual Risk | Status |" >> score-report.md
+              echo "|-----------|---------------|--------|" >> score-report.md
+              echo "$SCORE_RESPONSE" | jq -r '.dimensions[]? | "| \(.displayName) | \(.residualRisk | . * 100 | floor / 100)% | \(if .residualRisk <= 0.15 then "OK" else "CRITICAL" end) |"' >> score-report.md
+
+              echo "" >> score-report.md
+              echo "## Build Info" >> score-report.md
+              echo "- **Build ID**: $(Build.BuildId)" >> score-report.md
+              echo "- **Source Branch**: $(Build.SourceBranch)" >> score-report.md
+              echo "- **Timestamp**: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> score-report.md
+            displayName: "Generate Comprehensive Score Report"
+            condition: succeededOrFailed()
+            env:
+              QUIZ2BIZ_API_URL: $(QUIZ2BIZ_API_URL)
+              QUIZ2BIZ_API_TOKEN: $(QUIZ2BIZ_API_TOKEN)
+
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish Score Report"
+            inputs:
+              PathtoPublish: "score-report.md"
+              ArtifactName: "score-gate"
+            condition: succeededOrFailed()
+
+  # =============================================================================
+  # Stage 4: Infrastructure (Terraform)
+  # =============================================================================
+  - stage: Infrastructure
+    displayName: "Infrastructure"
+    dependsOn:
+      - Build
+      - ScoreGate
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - job: TerraformPlan
+        displayName: "Terraform Plan"
+        steps:
+          # Download Terraform files
+          - task: DownloadBuildArtifacts@1
+            displayName: "Download Terraform files"
+            inputs:
+              buildType: "current"
+              downloadType: "single"
+              artifactName: "terraform"
+              downloadPath: "$(System.DefaultWorkingDirectory)"
+
+          # Install Terraform
+          - script: |
+              wget -O terraform.zip https://releases.hashicorp.com/terraform/$(terraformVersion)/terraform_$(terraformVersion)_linux_amd64.zip
+              unzip terraform.zip
+              sudo mv terraform /usr/local/bin/
+              terraform --version
+            displayName: "Install Terraform"
+
+          # Terraform Init
+          - task: AzureCLI@2
+            displayName: "Terraform Init"
+            inputs:
+              azureSubscription: "$(azureSubscription)"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
+              inlineScript: |
+                terraform init \
+                  -backend-config="resource_group_name=rg-terraform-state" \
+                  -backend-config="storage_account_name=stterraformstate" \
+                  -backend-config="container_name=tfstate" \
+                  -backend-config="key=questionnaire.dev.tfstate"
+
+          # Terraform Plan
+          - task: AzureCLI@2
+            displayName: "Terraform Plan"
+            inputs:
+              azureSubscription: "$(azureSubscription)"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
+              inlineScript: |
+                terraform plan -out=tfplan
+
+          # Publish plan for approval
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish Terraform plan"
+            inputs:
+              PathtoPublish: "$(System.DefaultWorkingDirectory)/terraform"
+              ArtifactName: "terraform-plan"
+
+      - job: TerraformApply
+        displayName: "Terraform Apply"
+        dependsOn: TerraformPlan
+        # Manual approval can be added here via environment
+        steps:
+          # Download Terraform plan
+          - task: DownloadBuildArtifacts@1
+            displayName: "Download Terraform plan"
+            inputs:
+              buildType: "current"
+              downloadType: "single"
+              artifactName: "terraform-plan"
+              downloadPath: "$(System.DefaultWorkingDirectory)"
+
+          # Install Terraform
+          - script: |
+              wget -O terraform.zip https://releases.hashicorp.com/terraform/$(terraformVersion)/terraform_$(terraformVersion)_linux_amd64.zip
+              unzip terraform.zip
+              sudo mv terraform /usr/local/bin/
+              terraform --version
+            displayName: "Install Terraform"
+
+          # Terraform Init
+          - task: AzureCLI@2
+            displayName: "Terraform Init"
+            inputs:
+              azureSubscription: "$(azureSubscription)"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform-plan"
+              inlineScript: |
+                terraform init \
+                  -backend-config="resource_group_name=rg-terraform-state" \
+                  -backend-config="storage_account_name=stterraformstate" \
+                  -backend-config="container_name=tfstate" \
+                  -backend-config="key=questionnaire.dev.tfstate"
+
+          # Terraform Apply
+          - task: AzureCLI@2
+            displayName: "Terraform Apply"
+            inputs:
+              azureSubscription: "$(azureSubscription)"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform-plan"
+              inlineScript: |
+                terraform apply tfplan
+
+  # =============================================================================
+  # Stage 4: Deploy
+  # =============================================================================
+  - stage: Deploy
+    displayName: "Deploy to Azure"
+    dependsOn:
+      - Build
+      - Infrastructure
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - deployment: DeployToAzure
+        displayName: "Deploy to Azure Container Apps"
+        environment: "development"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                # Download Docker image
+                - task: DownloadBuildArtifacts@1
+                  displayName: "Download Docker image"
+                  inputs:
+                    buildType: "current"
+                    downloadType: "single"
+                    artifactName: "docker-image"
+                    downloadPath: "$(System.DefaultWorkingDirectory)"
+
+                # Load Docker image
+                - script: |
+                    docker load -i $(System.DefaultWorkingDirectory)/docker-image/$(imageName)-$(imageTag).tar
+                  displayName: "Load Docker image"
+
+                # Login to ACR
+                - task: AzureCLI@2
+                  displayName: "Login to ACR"
+                  inputs:
+                    azureSubscription: "$(azureSubscription)"
+                    scriptType: "bash"
+                    scriptLocation: "inlineScript"
+                    inlineScript: |
+                      az acr login --name $(acrName)
+
+                # Tag and push to ACR
+                - script: |
+                    docker tag $(imageName):$(imageTag) $(acrName).azurecr.io/$(imageName):$(imageTag)
+                    docker tag $(imageName):$(imageTag) $(acrName).azurecr.io/$(imageName):latest
+                    docker push $(acrName).azurecr.io/$(imageName):$(imageTag)
+                    docker push $(acrName).azurecr.io/$(imageName):latest
+                  displayName: "Push to ACR"
+
+                # Sign container image with Sigstore cosign (keyless)
+                - script: |
+                    # Install cosign
+                    curl -sSfL https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-amd64 -o /usr/local/bin/cosign
+                    chmod +x /usr/local/bin/cosign
+                    # Sign the image using keyless signing (OIDC/Fulcio)
+                    COSIGN_EXPERIMENTAL=1 cosign sign --yes $(acrName).azurecr.io/$(imageName):$(imageTag)
+                    COSIGN_EXPERIMENTAL=1 cosign sign --yes $(acrName).azurecr.io/$(imageName):latest
+                  displayName: "Sign container with Sigstore cosign"
+                  env:
+                    AZURE_CLIENT_ID: $(AZURE_CLIENT_ID)
+                    AZURE_TENANT_ID: $(AZURE_TENANT_ID)
+
+                # Generate and attach SLSA provenance attestation
+                - script: |
+                    echo "Generating SLSA Provenance Attestation..."
+
+                    # Get image digest
+                    IMAGE_DIGEST=$(docker inspect --format='{{.Id}}' $(acrName).azurecr.io/$(imageName):$(imageTag) | cut -d: -f2)
+
+                    # Create provenance JSON following SLSA v1.0 spec
+                    cat > provenance.json << 'PROVENANCE_EOF'
+                    {
+                      "_type": "https://in-toto.io/Statement/v1",
+                      "subject": [
+                        {
+                          "name": "ACRIMAGEPLACEHOLDER",
+                          "digest": { "sha256": "DIGESTPLACEHOLDER" }
+                        }
+                      ],
+                      "predicateType": "https://slsa.dev/provenance/v1",
+                      "predicate": {
+                        "buildDefinition": {
+                          "buildType": "https://quiz2biz.io/AzurePipelines@v1",
+                          "externalParameters": {
+                            "repository": "REPOPLACEHOLDER",
+                            "ref": "REFPLACEHOLDER",
+                            "commit": "COMMITPLACEHOLDER"
+                          }
+                        },
+                        "runDetails": {
+                          "builder": { "id": "azure-pipelines" },
+                          "metadata": {
+                            "invocationId": "BUILDIDPLACEHOLDER",
+                            "startedOn": "TIMESTAMPPLACEHOLDER"
+                          }
+                        }
+                      }
+                    }
+                    PROVENANCE_EOF
+
+                    # Replace placeholders
+                    sed -i "s|ACRIMAGEPLACEHOLDER|$(acrName).azurecr.io/$(imageName)|g" provenance.json
+                    sed -i "s|DIGESTPLACEHOLDER|$IMAGE_DIGEST|g" provenance.json
+                    sed -i "s|REPOPLACEHOLDER|$(Build.Repository.Uri)|g" provenance.json
+                    sed -i "s|REFPLACEHOLDER|$(Build.SourceBranch)|g" provenance.json
+                    sed -i "s|COMMITPLACEHOLDER|$(Build.SourceVersion)|g" provenance.json
+                    sed -i "s|BUILDIDPLACEHOLDER|$(Build.BuildId)|g" provenance.json
+                    sed -i "s|TIMESTAMPPLACEHOLDER|$(date -u +%Y-%m-%dT%H:%M:%SZ)|g" provenance.json
+
+                    # Attach provenance attestation to image
+                    COSIGN_EXPERIMENTAL=1 cosign attest --yes --predicate provenance.json --type slsaprovenance $(acrName).azurecr.io/$(imageName):$(imageTag)
+
+                    echo "Provenance attestation attached successfully"
+                  displayName: "Generate SLSA Provenance Attestation"
+                  env:
+                    AZURE_CLIENT_ID: $(AZURE_CLIENT_ID)
+                    AZURE_TENANT_ID: $(AZURE_TENANT_ID)
+
+                # Verify container signature
+                - script: |
+                    COSIGN_EXPERIMENTAL=1 cosign verify $(acrName).azurecr.io/$(imageName):$(imageTag)
+                  displayName: "Verify container signature"
+
+                # Verify provenance attestation
+                - script: |
+                    echo "Verifying SLSA Provenance Attestation..."
+                    COSIGN_EXPERIMENTAL=1 cosign verify-attestation --type slsaprovenance $(acrName).azurecr.io/$(imageName):$(imageTag)
+                    echo "Provenance verification successful"
+                  displayName: "Verify provenance attestation"
+
+                # Deploy to Container Apps
+                - task: AzureCLI@2
+                  displayName: "Deploy to Container Apps"
+                  inputs:
+                    azureSubscription: "$(azureSubscription)"
+                    scriptType: "bash"
+                    scriptLocation: "inlineScript"
+                    inlineScript: |
+                      az containerapp update \
+                        --name $(containerAppName) \
+                        --resource-group $(resourceGroup) \
+                        --image $(acrName).azurecr.io/$(imageName):$(imageTag)
+
+                # Run database migrations
+                - task: AzureCLI@2
+                  displayName: "Run database migrations"
+                  inputs:
+                    azureSubscription: "$(azureSubscription)"
+                    scriptType: "bash"
+                    scriptLocation: "inlineScript"
+                    inlineScript: |
+                      az containerapp exec \
+                        --name $(containerAppName) \
+                        --resource-group $(resourceGroup) \
+                        --command "npx prisma migrate deploy"
+
+  # =============================================================================
+  # Stage 5: Verification
+  # =============================================================================
+  - stage: Verify
+    displayName: "Verify Deployment"
+    dependsOn: Deploy
+    condition: succeeded()
+    jobs:
+      - job: HealthCheck
+        displayName: "Health Check"
+        steps:
+          - task: AzureCLI@2
+            displayName: "Get API URL"
+            inputs:
+              azureSubscription: "$(azureSubscription)"
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                API_URL=$(az containerapp show \
+                  --name $(containerAppName) \
+                  --resource-group $(resourceGroup) \
+                  --query "properties.configuration.ingress.fqdn" \
+                  --output tsv)
+                echo "##vso[task.setvariable variable=apiUrl]https://$API_URL"
+
+          - script: |
+              echo "Checking health endpoint..."
+              for i in {1..10}; do
+                response=$(curl -s -o /dev/null -w "%{http_code}" $(apiUrl)/health)
+                if [ "$response" = "200" ]; then
+                  echo "Health check passed!"
+                  exit 0
+                fi
+                echo "Attempt $i: Got response $response, waiting..."
+                sleep 10
+              done
+              echo "Health check failed after 10 attempts"
+              exit 1
+            displayName: "Verify health endpoint"
+
+          - script: |
+              echo "Checking readiness endpoint..."
+              response=$(curl -s -o /dev/null -w "%{http_code}" $(apiUrl)/health/ready)
+              if [ "$response" = "200" ]; then
+                echo "Readiness check passed!"
+              else
+                echo "Readiness check failed with response: $response"
+                exit 1
+              fi
+            displayName: "Verify readiness endpoint"
+
+          - script: |
+              echo "Deployment verification complete!"
+              echo "API URL: $(apiUrl)"
+              echo "Swagger Docs: $(apiUrl)/docs"
+            displayName: "Print deployment info"

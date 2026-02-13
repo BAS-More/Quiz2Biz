@@ -1,0 +1,42 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/apps/api",
+    "rootDir": "../../",
+    "baseUrl": ".",
+    "types": [
+      "jest",
+      "node"
+    ],
+    "paths": {
+      "@libs/database": [
+        "../../libs/database"
+      ],
+      "@libs/database/*": [
+        "../../libs/database/*"
+      ],
+      "@libs/redis": [
+        "../../libs/redis"
+      ],
+      "@libs/redis/*": [
+        "../../libs/redis/*"
+      ],
+      "@libs/shared": [
+        "../../libs/shared"
+      ],
+      "@libs/shared/*": [
+        "../../libs/shared/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "../../libs/database/src/**/*",
+    "../../libs/redis/src/**/*",
+    "../../libs/shared/src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

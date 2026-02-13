@@ -1,0 +1,1074 @@
+# User Flow / Customer Journey Maps
+## Adaptive Client Questionnaire System
+
+**Document Version:** 1.0  
+**Last Updated:** {{GENERATION_DATE}}  
+**Document Owner:** CTO / UX Lead  
+**Classification:** Internal
+
+---
+
+## 1. Overview
+
+This document illustrates the user flows and customer journey maps for the Adaptive Client Questionnaire System, covering both the Client (entrepreneur) and Developer (admin) experiences across all platforms.
+
+---
+
+## 2. User Personas
+
+### 2.1 Client Persona: Sarah the Entrepreneur
+- **Role:** First-time business owner
+- **Technical Level:** Non-technical
+- **Goal:** Generate professional business documentation
+- **Pain Points:** Overwhelmed by business planning complexity
+- **Devices:** Primarily mobile (iPhone), occasionally laptop
+
+### 2.2 Developer Persona: Marcus the Consultant
+- **Role:** Business consultant/Developer admin
+- **Technical Level:** Business-savvy, some technical knowledge
+- **Goal:** Review and approve client documents, manage questionnaires
+- **Pain Points:** Volume of reviews, inconsistent client responses
+- **Devices:** Primarily desktop, tablet for reviews
+
+---
+
+## 3. Client User Flows
+
+### 3.1 Registration and Onboarding Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     CLIENT REGISTRATION FLOW                                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐  │
+│  │   Landing   │───▶│   Sign Up   │───▶│   Verify    │───▶│  Onboarding │  │
+│  │    Page     │    │    Form     │    │   Email     │    │    Quiz     │  │
+│  └─────────────┘    └─────────────┘    └─────────────┘    └──────┬──────┘  │
+│                                                                   │         │
+│         ┌─────────────────────────────────────────────────────────┘         │
+│         ▼                                                                    │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                      │
+│  │  Industry   │───▶│  Dashboard  │───▶│   Start     │                      │
+│  │  Selection  │    │   (Home)    │    │Questionnaire│                      │
+│  └─────────────┘    └─────────────┘    └─────────────┘                      │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Detailed Steps:**
+
+| Step | Screen | User Action | System Response |
+|------|--------|-------------|-----------------|
+| 1 | Landing Page | Click "Get Started" | Navigate to sign up |
+| 2 | Sign Up Form | Enter email, password | Validate inputs, create account |
+| 3 | Verify Email | Click verification link | Confirm email, redirect to app |
+| 4 | Onboarding Quiz | Answer 3-5 quick questions | Determine user needs |
+| 5 | Industry Selection | Select business industry | Configure questionnaire |
+| 6 | Dashboard | View personalized dashboard | Display progress, next steps |
+
+### 3.2 Questionnaire Completion Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    QUESTIONNAIRE COMPLETION FLOW                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌─────────────┐                                                            │
+│  │   Start     │                                                            │
+│  │Questionnaire│                                                            │
+│  └──────┬──────┘                                                            │
+│         │                                                                    │
+│         ▼                                                                    │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                    QUESTION LOOP                                     │   │
+│  │  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐              │   │
+│  │  │   Display   │───▶│    User     │───▶│  Validate   │              │   │
+│  │  │  Question   │    │   Answer    │    │  Response   │              │   │
+│  │  └─────────────┘    └─────────────┘    └──────┬──────┘              │   │
+│  │         ▲                                      │                     │   │
+│  │         │         ┌────────────────────────────┘                     │   │
+│  │         │         │                                                  │   │
+│  │         │         ▼                                                  │   │
+│  │         │  ┌─────────────┐    ┌─────────────┐                       │   │
+│  │         │  │   Update    │───▶│  Adaptive   │                       │   │
+│  │         │  │  Progress   │    │   Logic     │──┐                    │   │
+│  │         │  └─────────────┘    └─────────────┘  │                    │   │
+│  │         │                                      │                     │   │
+│  │         │         ┌────────────────────────────┘                     │   │
+│  │         │         │                                                  │   │
+│  │         │         ▼                                                  │   │
+│  │         │  ┌─────────────┐         ┌─────────────┐                  │   │
+│  │         └──│   More      │◀── No ──│  Complete?  │                  │   │
+│  │            │ Questions?  │         └──────┬──────┘                  │   │
+│  │            └─────────────┘                │ Yes                     │   │
+│  │                                           │                          │   │
+│  └───────────────────────────────────────────┼──────────────────────────┘   │
+│                                              │                              │
+│                                              ▼                              │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                     │
+│  │   Review    │───▶│  Generate   │───▶│   Await     │                     │
+│  │  Summary    │    │  Documents  │    │  Approval   │                     │
+│  └─────────────┘    └─────────────┘    └─────────────┘                     │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Question Display States:**
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    QUESTION SCREEN                               │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Progress: ████████████░░░░░░░░░░░░░░░░░░░░  35%                │
+│  Section: Business Foundation (4/12)                            │
+│  Estimated time remaining: 28 minutes                           │
+│                                                                  │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │                                                           │  │
+│  │  What is your primary revenue model?                      │  │
+│  │                                                           │  │
+│  │  ℹ️ This determines how we structure your financial       │  │
+│  │     projections and pricing strategy sections.            │  │
+│  │                                                           │  │
+│  │  ○ Subscription (SaaS)                                    │  │
+│  │    Recurring monthly or annual payments                   │  │
+│  │                                                           │  │
+│  │  ○ One-time Purchase                                      │  │
+│  │    Single payment for product or service                  │  │
+│  │                                                           │  │
+│  │  ○ Freemium                                               │  │
+│  │    Free basic tier with paid upgrades                     │  │
+│  │                                                           │  │
+│  │  ○ Transaction Fee                                        │  │
+│  │    Percentage or flat fee per transaction                 │  │
+│  │                                                           │  │
+│  │  💡 Suggested: Subscription (SaaS)                        │  │
+│  │     Based on your industry selection                      │  │
+│  │                                                           │  │
+│  └───────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  [← Previous]                              [Save & Exit] [Next →]│
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 3.3 Document Download Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      DOCUMENT DOWNLOAD FLOW                                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐  │
+│  │  Documents  │───▶│   Select    │───▶│   Check     │───▶│  Download   │  │
+│  │    List     │    │  Document   │    │   Status    │    │    File     │  │
+│  └─────────────┘    └─────────────┘    └──────┬──────┘    └─────────────┘  │
+│                                               │                             │
+│                                               │                             │
+│                            ┌──────────────────┼──────────────────┐          │
+│                            │                  │                  │          │
+│                            ▼                  ▼                  ▼          │
+│                     ┌───────────┐      ┌───────────┐      ┌───────────┐    │
+│                     │ PENDING   │      │ APPROVED  │      │ GENERATING│    │
+│                     │           │      │           │      │           │    │
+│                     │ "Awaiting │      │ Download  │      │ Progress  │    │
+│                     │  review"  │      │  button   │      │   bar     │    │
+│                     └───────────┘      └───────────┘      └───────────┘    │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 4. Developer User Flows
+
+### 4.1 Document Review Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      DEVELOPER REVIEW FLOW                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                      │
+│  │   Review    │───▶│   Select    │───▶│   Preview   │                      │
+│  │   Queue     │    │  Document   │    │  Document   │                      │
+│  └─────────────┘    └─────────────┘    └──────┬──────┘                      │
+│                                               │                              │
+│                                               ▼                              │
+│                                        ┌─────────────┐                       │
+│                                        │   Review    │                       │
+│                                        │  Checklist  │                       │
+│                                        └──────┬──────┘                       │
+│                                               │                              │
+│                          ┌────────────────────┼────────────────────┐        │
+│                          │                    │                    │        │
+│                          ▼                    ▼                    ▼        │
+│                   ┌───────────┐        ┌───────────┐        ┌───────────┐  │
+│                   │  Approve  │        │  Request  │        │  Reject   │  │
+│                   │           │        │  Changes  │        │           │  │
+│                   └─────┬─────┘        └─────┬─────┘        └─────┬─────┘  │
+│                         │                    │                    │        │
+│                         ▼                    ▼                    ▼        │
+│                   ┌───────────┐        ┌───────────┐        ┌───────────┐  │
+│                   │  Notify   │        │  Add      │        │  Notify   │  │
+│                   │  Client   │        │  Comments │        │  Client   │  │
+│                   │ (Download │        │           │        │ (w/reason)│  │
+│                   │ Available)│        └───────────┘        └───────────┘  │
+│                   └───────────┘                                            │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 4.2 Question Management Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    QUESTION MANAGEMENT FLOW                                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                      │
+│  │  Question   │───▶│   Filter/   │───▶│   Select    │                      │
+│  │    List     │    │   Search    │    │  Question   │                      │
+│  └─────────────┘    └─────────────┘    └──────┬──────┘                      │
+│                                               │                              │
+│                     ┌─────────────────────────┼─────────────────────────┐   │
+│                     │                         │                         │   │
+│                     ▼                         ▼                         ▼   │
+│              ┌───────────┐            ┌───────────┐            ┌──────────┐ │
+│              │   View    │            │   Edit    │            │  Delete  │ │
+│              │  Details  │            │ Question  │            │          │ │
+│              └───────────┘            └─────┬─────┘            └──────────┘ │
+│                                             │                               │
+│                                             ▼                               │
+│                                      ┌───────────┐                          │
+│                                      │   Edit    │                          │
+│                                      │   Form    │                          │
+│                                      └─────┬─────┘                          │
+│                                             │                               │
+│                          ┌──────────────────┼──────────────────┐           │
+│                          │                  │                  │           │
+│                          ▼                  ▼                  ▼           │
+│                   ┌───────────┐      ┌───────────┐      ┌───────────┐     │
+│                   │   Text    │      │  Options  │      │ Visibility│     │
+│                   │  & Help   │      │           │      │   Rules   │     │
+│                   └───────────┘      └───────────┘      └───────────┘     │
+│                                             │                               │
+│                                             ▼                               │
+│                                      ┌───────────┐                          │
+│                                      │   Save    │                          │
+│                                      │  Version  │                          │
+│                                      └───────────┘                          │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 5. Mobile App Flows
+
+### 5.1 Client Mobile App (iOS/Android)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    MOBILE CLIENT APP FLOW                                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                         BOTTOM NAVIGATION                              │ │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐              │ │
+│  │  │   Home   │  │Questions │  │Documents │  │ Profile  │              │ │
+│  │  │    🏠    │  │    📝    │  │    📄    │  │    👤    │              │ │
+│  │  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘              │ │
+│  │       │             │             │             │                     │ │
+│  └───────┼─────────────┼─────────────┼─────────────┼─────────────────────┘ │
+│          │             │             │             │                       │
+│          ▼             ▼             ▼             ▼                       │
+│  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐              │
+│  │ Dashboard │  │ Question  │  │ Document  │  │  Profile  │              │
+│  │ • Progress│  │   Card    │  │   List    │  │ • Settings│              │
+│  │ • Resume  │  │ • Swipe   │  │ • Status  │  │ • Support │              │
+│  │ • Stats   │  │   nav     │  │ • Download│  │ • Logout  │              │
+│  └───────────┘  └───────────┘  └───────────┘  └───────────┘              │
+│                                                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Mobile Question Card UI:**
+
+```
+┌─────────────────────────────────────────┐
+│  ◀  Section 2: Market Analysis  3/8    │
+├─────────────────────────────────────────┤
+│                                         │
+│  ████████████░░░░░░░░░░░░░░░░  42%     │
+│                                         │
+│  ┌─────────────────────────────────┐   │
+│  │                                 │   │
+│  │  Who is your target customer?   │   │
+│  │                                 │   │
+│  │  Describe your ideal customer   │   │
+│  │  profile including demographics │   │
+│  │  and pain points.               │   │
+│  │                                 │   │
+│  │  [                            ] │   │
+│  │  [                            ] │   │
+│  │  [                            ] │   │
+│  │                                 │   │
+│  │  💡 Tip: Be specific about age, │   │
+│  │     income, and location        │   │
+│  │                                 │   │
+│  └─────────────────────────────────┘   │
+│                                         │
+│          ← Swipe to navigate →          │
+│                                         │
+│  ┌───────────────────────────────────┐ │
+│  │         [Continue →]              │ │
+│  └───────────────────────────────────┘ │
+│                                         │
+└─────────────────────────────────────────┘
+```
+
+### 5.2 Developer Mobile App
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    DEVELOPER MOBILE APP FLOW                                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                         BOTTOM NAVIGATION                              │ │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐              │ │
+│  │  │  Review  │  │  Clients │  │ Analytics│  │ Settings │              │ │
+│  │  │Queue (5) │  │    👥    │  │    📊    │  │    ⚙️    │              │ │
+│  │  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘              │ │
+│  └───────┼─────────────┼─────────────┼─────────────┼─────────────────────┘ │
+│          │             │             │             │                       │
+│          ▼             ▼             ▼             ▼                       │
+│  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐              │
+│  │ Pending   │  │  Client   │  │ Dashboard │  │   App     │              │
+│  │ Documents │  │   List    │  │ • Sessions│  │ Settings  │              │
+│  │ • Preview │  │ • Search  │  │ • Revenue │  │ • Notif   │              │
+│  │ • Approve │  │ • Details │  │ • Trends  │  │ • Profile │              │
+│  └───────────┘  └───────────┘  └───────────┘  └───────────┘              │
+│                                                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 6. Customer Journey Maps
+
+### 6.1 Client Journey: First-Time User to Document Download
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│               CLIENT CUSTOMER JOURNEY MAP                                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  PHASE      │ Awareness │ Onboard │ Engage │ Complete │ Deliver │ Retain   │
+│  ───────────┼───────────┼─────────┼────────┼──────────┼─────────┼───────── │
+│             │           │         │        │          │         │          │
+│  TOUCHPOINT │ • Website │ • Email │ • App  │ • App    │ • Email │ • App    │
+│             │ • Ads     │ • App   │ • Push │ • Push   │ • App   │ • Email  │
+│             │           │         │        │          │         │          │
+│  ───────────┼───────────┼─────────┼────────┼──────────┼─────────┼───────── │
+│             │           │         │        │          │         │          │
+│  USER       │"I need    │"Let me  │"This   │"Almost   │"Great,  │"I should │
+│  THINKING   │ a business│ try     │ is     │ done!"   │ I got   │ do my    │
+│             │ plan"     │ this"   │ easy"  │          │ my docs"│ annual   │
+│             │           │         │        │          │         │ review"  │
+│             │           │         │        │          │         │          │
+│  ───────────┼───────────┼─────────┼────────┼──────────┼─────────┼───────── │
+│             │           │         │        │          │         │          │
+│  EMOTION    │ 😰 Anxious│ 🤔 Curious│😊 Happy│ 😄 Excited│🎉 Thrilled│😌 Satisfied│
+│             │           │         │        │          │         │          │
+│  ───────────┼───────────┼─────────┼────────┼──────────┼─────────┼───────── │
+│             │           │         │        │          │         │          │
+│  ACTIONS    │ Research  │ Sign up │ Answer │ Review   │ Download│ Update   │
+│             │ Compare   │ Industry│ daily  │ Summary  │ Share   │ Refer    │
+│             │           │ Select  │        │          │         │          │
+│             │           │         │        │          │         │          │
+│  ───────────┼───────────┼─────────┼────────┼──────────┼─────────┼───────── │
+│             │           │         │        │          │         │          │
+│  PAIN       │ Overwhelm │ Too many│ Time   │ Waiting  │ Format  │ Outdated │
+│  POINTS     │ by options│ fields  │ constr-│ for      │ issues  │ info     │
+│             │           │         │ aints  │ review   │         │          │
+│             │           │         │        │          │         │          │
+│  ───────────┼───────────┼─────────┼────────┼──────────┼─────────┼───────── │
+│             │           │         │        │          │         │          │
+│  SOLUTIONS  │ Clear     │ Minimal │ Save & │ Priority │ Multi-  │ Annual   │
+│             │ value     │ required│ Resume │ queue    │ format  │ reminder │
+│             │ prop      │ fields  │ Mobile │ Status   │ export  │ campaign │
+│             │           │         │ app    │ updates  │         │          │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 6.2 Key Moments of Truth
+
+| Moment | User Need | System Response | Success Metric |
+|--------|-----------|-----------------|----------------|
+| First Question | "Is this worth my time?" | Show estimated time, allow skip | <5% early abandonment |
+| Mid-questionnaire | "Am I making progress?" | Clear progress bar, encouragement | Completion rate >70% |
+| Complex Question | "I don't understand" | Help text, examples, suggestions | Help click rate <10% |
+| Session Resume | "Where was I?" | Seamless resume, context reminder | Resume rate >80% |
+| Document Ready | "Did it work?" | Clear notification, easy download | Download within 24h >90% |
+
+---
+
+## 7. Error States and Recovery Flows
+
+### 7.1 Connection Error Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    OFFLINE/ERROR RECOVERY FLOW                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌─────────────┐                                                            │
+│  │  User       │                                                            │
+│  │  Action     │                                                            │
+│  └──────┬──────┘                                                            │
+│         │                                                                    │
+│         ▼                                                                    │
+│  ┌─────────────┐     ┌─────────────┐                                        │
+│  │   Check     │ No  │  Queue      │                                        │
+│  │ Connection  │────▶│  Action     │                                        │
+│  └──────┬──────┘     │  Locally    │                                        │
+│         │ Yes        └──────┬──────┘                                        │
+│         │                   │                                                │
+│         ▼                   ▼                                                │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐                   │
+│  │   Submit    │     │   Show      │     │   Auto      │                   │
+│  │  to Server  │     │  Offline    │────▶│   Sync      │                   │
+│  └─────────────┘     │  Banner     │     │  on Reconn  │                   │
+│                      └─────────────┘     └─────────────┘                   │
+│                                                                              │
+│  OFFLINE UI STATE:                                                          │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │  ⚠️ You're offline. Your answers are saved and will sync when      │   │
+│  │     connected.                                                [×]   │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 7.2 Validation Error Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    VALIDATION ERROR FLOW                                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  INPUT STATE PROGRESSION:                                                    │
+│                                                                              │
+│  ┌───────────┐    ┌───────────┐    ┌───────────┐    ┌───────────┐          │
+│  │  Empty    │───▶│  Typing   │───▶│  On Blur  │───▶│ Validated │          │
+│  │           │    │           │    │  Validate │    │           │          │
+│  └───────────┘    └───────────┘    └─────┬─────┘    └───────────┘          │
+│                                          │                                   │
+│                           ┌──────────────┴──────────────┐                   │
+│                           │                             │                   │
+│                           ▼                             ▼                   │
+│                    ┌───────────┐                 ┌───────────┐              │
+│                    │  Error    │                 │  Success  │              │
+│                    │  State    │                 │  State    │              │
+│                    └─────┬─────┘                 └───────────┘              │
+│                          │                                                   │
+│                          ▼                                                   │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │  Email address                                                       │   │
+│  │  ┌─────────────────────────────────────────────────────────────┐    │   │
+│  │  │ invalid-email                                                │    │   │
+│  │  └─────────────────────────────────────────────────────────────┘    │   │
+│  │  ⚠️ Please enter a valid email address (e.g., name@example.com)    │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 8. Accessibility User Flows
+
+### 8.1 Screen Reader Navigation
+
+```
+Tab Order:
+1. Skip to content link
+2. Progress indicator (announced as "35% complete, section 2 of 8")
+3. Question text (announced as heading level 2)
+4. Help text (announced as additional description)
+5. Input field or options
+6. Error message (if present, announced immediately)
+7. Previous button
+8. Next/Continue button
+```
+
+### 8.2 Keyboard Navigation
+
+| Key | Action |
+|-----|--------|
+| Tab | Move to next interactive element |
+| Shift+Tab | Move to previous element |
+| Enter/Space | Select option, submit |
+| Arrow keys | Navigate within option groups |
+| Escape | Close modal/dialog |
+
+---
+
+## 9. Related Documents
+
+- [Product Architecture Document](./03-product-architecture.md)
+- [Functional Requirements Document](../ba/02-functional-requirements-document.md)
+- [Wireframes/Mockups](../ba/08-wireframes-mockups.md)
+- [Business Requirements Document](../ba/01-business-requirements-document.md)
+
+---
+
+**Document Approval:**
+
+| Role | Name | Signature | Date |
+|------|------|-----------|------|
+| CTO | {{CTO_NAME}} | | |
+| UX Lead | {{UX_NAME}} | | |
+| Product Manager | {{PM_NAME}} | | |
+# User Flow / Customer Journey Maps
+## Adaptive Client Questionnaire System
+
+**Document Version:** 1.0  
+**Last Updated:** {{GENERATION_DATE}}  
+**Document Owner:** CTO / UX Lead  
+**Classification:** Internal
+
+---
+
+## 1. Overview
+
+This document illustrates the user flows and customer journey maps for the Adaptive Client Questionnaire System, covering both the Client (entrepreneur) and Developer (admin) experiences across all platforms.
+
+---
+
+## 2. User Personas
+
+### 2.1 Client Persona: Sarah the Entrepreneur
+- **Role:** First-time business owner
+- **Technical Level:** Non-technical
+- **Goal:** Generate professional business documentation
+- **Pain Points:** Overwhelmed by business planning complexity
+- **Devices:** Primarily mobile (iPhone), occasionally laptop
+
+### 2.2 Developer Persona: Marcus the Consultant
+- **Role:** Business consultant/Developer admin
+- **Technical Level:** Business-savvy, some technical knowledge
+- **Goal:** Review and approve client documents, manage questionnaires
+- **Pain Points:** Volume of reviews, inconsistent client responses
+- **Devices:** Primarily desktop, tablet for reviews
+
+---
+
+## 3. Client User Flows
+
+### 3.1 Registration and Onboarding Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     CLIENT REGISTRATION FLOW                                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐  │
+│  │   Landing   │───▶│   Sign Up   │───▶│   Verify    │───▶│  Onboarding │  │
+│  │    Page     │    │    Form     │    │   Email     │    │    Quiz     │  │
+│  └─────────────┘    └─────────────┘    └─────────────┘    └──────┬──────┘  │
+│                                                                   │         │
+│         ┌─────────────────────────────────────────────────────────┘         │
+│         ▼                                                                    │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                      │
+│  │  Industry   │───▶│  Dashboard  │───▶│   Start     │                      │
+│  │  Selection  │    │   (Home)    │    │Questionnaire│                      │
+│  └─────────────┘    └─────────────┘    └─────────────┘                      │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Detailed Steps:**
+
+| Step | Screen | User Action | System Response |
+|------|--------|-------------|-----------------|
+| 1 | Landing Page | Click "Get Started" | Navigate to sign up |
+| 2 | Sign Up Form | Enter email, password | Validate inputs, create account |
+| 3 | Verify Email | Click verification link | Confirm email, redirect to app |
+| 4 | Onboarding Quiz | Answer 3-5 quick questions | Determine user needs |
+| 5 | Industry Selection | Select business industry | Configure questionnaire |
+| 6 | Dashboard | View personalized dashboard | Display progress, next steps |
+
+### 3.2 Questionnaire Completion Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    QUESTIONNAIRE COMPLETION FLOW                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌─────────────┐                                                            │
+│  │   Start     │                                                            │
+│  │Questionnaire│                                                            │
+│  └──────┬──────┘                                                            │
+│         │                                                                    │
+│         ▼                                                                    │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                    QUESTION LOOP                                     │   │
+│  │  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐              │   │
+│  │  │   Display   │───▶│    User     │───▶│  Validate   │              │   │
+│  │  │  Question   │    │   Answer    │    │  Response   │              │   │
+│  │  └─────────────┘    └─────────────┘    └──────┬──────┘              │   │
+│  │         ▲                                      │                     │   │
+│  │         │         ┌────────────────────────────┘                     │   │
+│  │         │         │                                                  │   │
+│  │         │         ▼                                                  │   │
+│  │         │  ┌─────────────┐    ┌─────────────┐                       │   │
+│  │         │  │   Update    │───▶│  Adaptive   │                       │   │
+│  │         │  │  Progress   │    │   Logic     │──┐                    │   │
+│  │         │  └─────────────┘    └─────────────┘  │                    │   │
+│  │         │                                      │                     │   │
+│  │         │         ┌────────────────────────────┘                     │   │
+│  │         │         │                                                  │   │
+│  │         │         ▼                                                  │   │
+│  │         │  ┌─────────────┐         ┌─────────────┐                  │   │
+│  │         └──│   More      │◀── No ──│  Complete?  │                  │   │
+│  │            │ Questions?  │         └──────┬──────┘                  │   │
+│  │            └─────────────┘                │ Yes                     │   │
+│  │                                           │                          │   │
+│  └───────────────────────────────────────────┼──────────────────────────┘   │
+│                                              │                              │
+│                                              ▼                              │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                     │
+│  │   Review    │───▶│  Generate   │───▶│   Await     │                     │
+│  │  Summary    │    │  Documents  │    │  Approval   │                     │
+│  └─────────────┘    └─────────────┘    └─────────────┘                     │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Question Display States:**
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    QUESTION SCREEN                               │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Progress: ████████████░░░░░░░░░░░░░░░░░░░░  35%                │
+│  Section: Business Foundation (4/12)                            │
+│  Estimated time remaining: 28 minutes                           │
+│                                                                  │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │                                                           │  │
+│  │  What is your primary revenue model?                      │  │
+│  │                                                           │  │
+│  │  ℹ️ This determines how we structure your financial       │  │
+│  │     projections and pricing strategy sections.            │  │
+│  │                                                           │  │
+│  │  ○ Subscription (SaaS)                                    │  │
+│  │    Recurring monthly or annual payments                   │  │
+│  │                                                           │  │
+│  │  ○ One-time Purchase                                      │  │
+│  │    Single payment for product or service                  │  │
+│  │                                                           │  │
+│  │  ○ Freemium                                               │  │
+│  │    Free basic tier with paid upgrades                     │  │
+│  │                                                           │  │
+│  │  ○ Transaction Fee                                        │  │
+│  │    Percentage or flat fee per transaction                 │  │
+│  │                                                           │  │
+│  │  💡 Suggested: Subscription (SaaS)                        │  │
+│  │     Based on your industry selection                      │  │
+│  │                                                           │  │
+│  └───────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  [← Previous]                              [Save & Exit] [Next →]│
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 3.3 Document Download Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      DOCUMENT DOWNLOAD FLOW                                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐  │
+│  │  Documents  │───▶│   Select    │───▶│   Check     │───▶│  Download   │  │
+│  │    List     │    │  Document   │    │   Status    │    │    File     │  │
+│  └─────────────┘    └─────────────┘    └──────┬──────┘    └─────────────┘  │
+│                                               │                             │
+│                                               │                             │
+│                            ┌──────────────────┼──────────────────┐          │
+│                            │                  │                  │          │
+│                            ▼                  ▼                  ▼          │
+│                     ┌───────────┐      ┌───────────┐      ┌───────────┐    │
+│                     │ PENDING   │      │ APPROVED  │      │ GENERATING│    │
+│                     │           │      │           │      │           │    │
+│                     │ "Awaiting │      │ Download  │      │ Progress  │    │
+│                     │  review"  │      │  button   │      │   bar     │    │
+│                     └───────────┘      └───────────┘      └───────────┘    │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 4. Developer User Flows
+
+### 4.1 Document Review Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      DEVELOPER REVIEW FLOW                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                      │
+│  │   Review    │───▶│   Select    │───▶│   Preview   │                      │
+│  │   Queue     │    │  Document   │    │  Document   │                      │
+│  └─────────────┘    └─────────────┘    └──────┬──────┘                      │
+│                                               │                              │
+│                                               ▼                              │
+│                                        ┌─────────────┐                       │
+│                                        │   Review    │                       │
+│                                        │  Checklist  │                       │
+│                                        └──────┬──────┘                       │
+│                                               │                              │
+│                          ┌────────────────────┼────────────────────┐        │
+│                          │                    │                    │        │
+│                          ▼                    ▼                    ▼        │
+│                   ┌───────────┐        ┌───────────┐        ┌───────────┐  │
+│                   │  Approve  │        │  Request  │        │  Reject   │  │
+│                   │           │        │  Changes  │        │           │  │
+│                   └─────┬─────┘        └─────┬─────┘        └─────┬─────┘  │
+│                         │                    │                    │        │
+│                         ▼                    ▼                    ▼        │
+│                   ┌───────────┐        ┌───────────┐        ┌───────────┐  │
+│                   │  Notify   │        │  Add      │        │  Notify   │  │
+│                   │  Client   │        │  Comments │        │  Client   │  │
+│                   │ (Download │        │           │        │ (w/reason)│  │
+│                   │ Available)│        └───────────┘        └───────────┘  │
+│                   └───────────┘                                            │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 4.2 Question Management Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    QUESTION MANAGEMENT FLOW                                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                      │
+│  │  Question   │───▶│   Filter/   │───▶│   Select    │                      │
+│  │    List     │    │   Search    │    │  Question   │                      │
+│  └─────────────┘    └─────────────┘    └──────┬──────┘                      │
+│                                               │                              │
+│                     ┌─────────────────────────┼─────────────────────────┐   │
+│                     │                         │                         │   │
+│                     ▼                         ▼                         ▼   │
+│              ┌───────────┐            ┌───────────┐            ┌──────────┐ │
+│              │   View    │            │   Edit    │            │  Delete  │ │
+│              │  Details  │            │ Question  │            │          │ │
+│              └───────────┘            └─────┬─────┘            └──────────┘ │
+│                                             │                               │
+│                                             ▼                               │
+│                                      ┌───────────┐                          │
+│                                      │   Edit    │                          │
+│                                      │   Form    │                          │
+│                                      └─────┬─────┘                          │
+│                                             │                               │
+│                          ┌──────────────────┼──────────────────┐           │
+│                          │                  │                  │           │
+│                          ▼                  ▼                  ▼           │
+│                   ┌───────────┐      ┌───────────┐      ┌───────────┐     │
+│                   │   Text    │      │  Options  │      │ Visibility│     │
+│                   │  & Help   │      │           │      │   Rules   │     │
+│                   └───────────┘      └───────────┘      └───────────┘     │
+│                                             │                               │
+│                                             ▼                               │
+│                                      ┌───────────┐                          │
+│                                      │   Save    │                          │
+│                                      │  Version  │                          │
+│                                      └───────────┘                          │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 5. Mobile App Flows
+
+### 5.1 Client Mobile App (iOS/Android)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    MOBILE CLIENT APP FLOW                                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                         BOTTOM NAVIGATION                              │ │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐              │ │
+│  │  │   Home   │  │Questions │  │Documents │  │ Profile  │              │ │
+│  │  │    🏠    │  │    📝    │  │    📄    │  │    👤    │              │ │
+│  │  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘              │ │
+│  │       │             │             │             │                     │ │
+│  └───────┼─────────────┼─────────────┼─────────────┼─────────────────────┘ │
+│          │             │             │             │                       │
+│          ▼             ▼             ▼             ▼                       │
+│  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐              │
+│  │ Dashboard │  │ Question  │  │ Document  │  │  Profile  │              │
+│  │ • Progress│  │   Card    │  │   List    │  │ • Settings│              │
+│  │ • Resume  │  │ • Swipe   │  │ • Status  │  │ • Support │              │
+│  │ • Stats   │  │   nav     │  │ • Download│  │ • Logout  │              │
+│  └───────────┘  └───────────┘  └───────────┘  └───────────┘              │
+│                                                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Mobile Question Card UI:**
+
+```
+┌─────────────────────────────────────────┐
+│  ◀  Section 2: Market Analysis  3/8    │
+├─────────────────────────────────────────┤
+│                                         │
+│  ████████████░░░░░░░░░░░░░░░░  42%     │
+│                                         │
+│  ┌─────────────────────────────────┐   │
+│  │                                 │   │
+│  │  Who is your target customer?   │   │
+│  │                                 │   │
+│  │  Describe your ideal customer   │   │
+│  │  profile including demographics │   │
+│  │  and pain points.               │   │
+│  │                                 │   │
+│  │  [                            ] │   │
+│  │  [                            ] │   │
+│  │  [                            ] │   │
+│  │                                 │   │
+│  │  💡 Tip: Be specific about age, │   │
+│  │     income, and location        │   │
+│  │                                 │   │
+│  └─────────────────────────────────┘   │
+│                                         │
+│          ← Swipe to navigate →          │
+│                                         │
+│  ┌───────────────────────────────────┐ │
+│  │         [Continue →]              │ │
+│  └───────────────────────────────────┘ │
+│                                         │
+└─────────────────────────────────────────┘
+```
+
+### 5.2 Developer Mobile App
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    DEVELOPER MOBILE APP FLOW                                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                         BOTTOM NAVIGATION                              │ │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐              │ │
+│  │  │  Review  │  │  Clients │  │ Analytics│  │ Settings │              │ │
+│  │  │Queue (5) │  │    👥    │  │    📊    │  │    ⚙️    │              │ │
+│  │  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘              │ │
+│  └───────┼─────────────┼─────────────┼─────────────┼─────────────────────┘ │
+│          │             │             │             │                       │
+│          ▼             ▼             ▼             ▼                       │
+│  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐              │
+│  │ Pending   │  │  Client   │  │ Dashboard │  │   App     │              │
+│  │ Documents │  │   List    │  │ • Sessions│  │ Settings  │              │
+│  │ • Preview │  │ • Search  │  │ • Revenue │  │ • Notif   │              │
+│  │ • Approve │  │ • Details │  │ • Trends  │  │ • Profile │              │
+│  └───────────┘  └───────────┘  └───────────┘  └───────────┘              │
+│                                                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 6. Customer Journey Maps
+
+### 6.1 Client Journey: First-Time User to Document Download
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│               CLIENT CUSTOMER JOURNEY MAP                                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  PHASE      │ Awareness │ Onboard │ Engage │ Complete │ Deliver │ Retain   │
+│  ───────────┼───────────┼─────────┼────────┼──────────┼─────────┼───────── │
+│             │           │         │        │          │         │          │
+│  TOUCHPOINT │ • Website │ • Email │ • App  │ • App    │ • Email │ • App    │
+│             │ • Ads     │ • App   │ • Push │ • Push   │ • App   │ • Email  │
+│             │           │         │        │          │         │          │
+│  ───────────┼───────────┼─────────┼────────┼──────────┼─────────┼───────── │
+│             │           │         │        │          │         │          │
+│  USER       │"I need    │"Let me  │"This   │"Almost   │"Great,  │"I should │
+│  THINKING   │ a business│ try     │ is     │ done!"   │ I got   │ do my    │
+│             │ plan"     │ this"   │ easy"  │          │ my docs"│ annual   │
+│             │           │         │        │          │         │ review"  │
+│             │           │         │        │          │         │          │
+│  ───────────┼───────────┼─────────┼────────┼──────────┼─────────┼───────── │
+│             │           │         │        │          │         │          │
+│  EMOTION    │ 😰 Anxious│ 🤔 Curious│😊 Happy│ 😄 Excited│🎉 Thrilled│😌 Satisfied│
+│             │           │         │        │          │         │          │
+│  ───────────┼───────────┼─────────┼────────┼──────────┼─────────┼───────── │
+│             │           │         │        │          │         │          │
+│  ACTIONS    │ Research  │ Sign up │ Answer │ Review   │ Download│ Update   │
+│             │ Compare   │ Industry│ daily  │ Summary  │ Share   │ Refer    │
+│             │           │ Select  │        │          │         │          │
+│             │           │         │        │          │         │          │
+│  ───────────┼───────────┼─────────┼────────┼──────────┼─────────┼───────── │
+│             │           │         │        │          │         │          │
+│  PAIN       │ Overwhelm │ Too many│ Time   │ Waiting  │ Format  │ Outdated │
+│  POINTS     │ by options│ fields  │ constr-│ for      │ issues  │ info     │
+│             │           │         │ aints  │ review   │         │          │
+│             │           │         │        │          │         │          │
+│  ───────────┼───────────┼─────────┼────────┼──────────┼─────────┼───────── │
+│             │           │         │        │          │         │          │
+│  SOLUTIONS  │ Clear     │ Minimal │ Save & │ Priority │ Multi-  │ Annual   │
+│             │ value     │ required│ Resume │ queue    │ format  │ reminder │
+│             │ prop      │ fields  │ Mobile │ Status   │ export  │ campaign │
+│             │           │         │ app    │ updates  │         │          │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 6.2 Key Moments of Truth
+
+| Moment | User Need | System Response | Success Metric |
+|--------|-----------|-----------------|----------------|
+| First Question | "Is this worth my time?" | Show estimated time, allow skip | <5% early abandonment |
+| Mid-questionnaire | "Am I making progress?" | Clear progress bar, encouragement | Completion rate >70% |
+| Complex Question | "I don't understand" | Help text, examples, suggestions | Help click rate <10% |
+| Session Resume | "Where was I?" | Seamless resume, context reminder | Resume rate >80% |
+| Document Ready | "Did it work?" | Clear notification, easy download | Download within 24h >90% |
+
+---
+
+## 7. Error States and Recovery Flows
+
+### 7.1 Connection Error Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    OFFLINE/ERROR RECOVERY FLOW                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌─────────────┐                                                            │
+│  │  User       │                                                            │
+│  │  Action     │                                                            │
+│  └──────┬──────┘                                                            │
+│         │                                                                    │
+│         ▼                                                                    │
+│  ┌─────────────┐     ┌─────────────┐                                        │
+│  │   Check     │ No  │  Queue      │                                        │
+│  │ Connection  │────▶│  Action     │                                        │
+│  └──────┬──────┘     │  Locally    │                                        │
+│         │ Yes        └──────┬──────┘                                        │
+│         │                   │                                                │
+│         ▼                   ▼                                                │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐                   │
+│  │   Submit    │     │   Show      │     │   Auto      │                   │
+│  │  to Server  │     │  Offline    │────▶│   Sync      │                   │
+│  └─────────────┘     │  Banner     │     │  on Reconn  │                   │
+│                      └─────────────┘     └─────────────┘                   │
+│                                                                              │
+│  OFFLINE UI STATE:                                                          │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │  ⚠️ You're offline. Your answers are saved and will sync when      │   │
+│  │     connected.                                                [×]   │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 7.2 Validation Error Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    VALIDATION ERROR FLOW                                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  INPUT STATE PROGRESSION:                                                    │
+│                                                                              │
+│  ┌───────────┐    ┌───────────┐    ┌───────────┐    ┌───────────┐          │
+│  │  Empty    │───▶│  Typing   │───▶│  On Blur  │───▶│ Validated │          │
+│  │           │    │           │    │  Validate │    │           │          │
+│  └───────────┘    └───────────┘    └─────┬─────┘    └───────────┘          │
+│                                          │                                   │
+│                           ┌──────────────┴──────────────┐                   │
+│                           │                             │                   │
+│                           ▼                             ▼                   │
+│                    ┌───────────┐                 ┌───────────┐              │
+│                    │  Error    │                 │  Success  │              │
+│                    │  State    │                 │  State    │              │
+│                    └─────┬─────┘                 └───────────┘              │
+│                          │                                                   │
+│                          ▼                                                   │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │  Email address                                                       │   │
+│  │  ┌─────────────────────────────────────────────────────────────┐    │   │
+│  │  │ invalid-email                                                │    │   │
+│  │  └─────────────────────────────────────────────────────────────┘    │   │
+│  │  ⚠️ Please enter a valid email address (e.g., name@example.com)    │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 8. Accessibility User Flows
+
+### 8.1 Screen Reader Navigation
+
+```
+Tab Order:
+1. Skip to content link
+2. Progress indicator (announced as "35% complete, section 2 of 8")
+3. Question text (announced as heading level 2)
+4. Help text (announced as additional description)
+5. Input field or options
+6. Error message (if present, announced immediately)
+7. Previous button
+8. Next/Continue button
+```
+
+### 8.2 Keyboard Navigation
+
+| Key | Action |
+|-----|--------|
+| Tab | Move to next interactive element |
+| Shift+Tab | Move to previous element |
+| Enter/Space | Select option, submit |
+| Arrow keys | Navigate within option groups |
+| Escape | Close modal/dialog |
+
+---
+
+## 9. Related Documents
+
+- [Product Architecture Document](./03-product-architecture.md)
+- [Functional Requirements Document](../ba/02-functional-requirements-document.md)
+- [Wireframes/Mockups](../ba/08-wireframes-mockups.md)
+- [Business Requirements Document](../ba/01-business-requirements-document.md)
+
+---
+
+**Document Approval:**
+
+| Role | Name | Signature | Date |
+|------|------|-----------|------|
+| CTO | {{CTO_NAME}} | | |
+| UX Lead | {{UX_NAME}} | | |
+| Product Manager | {{PM_NAME}} | | |

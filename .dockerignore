@@ -1,0 +1,53 @@
+# Dependencies - recursive
+node_modules
+**/node_modules
+
+# Build outputs
+dist
+**/dist
+coverage
+**/coverage
+.nyc_output
+
+# Logs
+npm-debug.log
+*.log
+
+# Git
+.git
+.gitignore
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea
+.vscode
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Documentation (except README)
+*.md
+!README.md
+
+# Docker files
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# Test files
+**/*.test.ts
+**/*.spec.ts
+**/test
+**/tests
+**/__tests__
+**/e2e
+**/*.e2e-spec.ts
+
+# Large/unnecessary files
+*.tsbuildinfo
+.turbo

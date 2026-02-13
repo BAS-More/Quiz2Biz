@@ -1,0 +1,45 @@
+﻿{"TimeStamp": "2026-01-27T02:41:44.69133", "Log": "Connecting to the container 'api'..."}
+{"TimeStamp": "2026-01-27T02:41:44.81", "Log": "Successfully Connected to container: 'api' [Revision: 'ca-questionnaire-api-dev--resilient-2601271328', Replica: 'ca-questionnaire-api-dev--resilient-2601271328-84d48f77c9-mt2fj']"}
+{"TimeStamp": "2026-01-27T02:38:17.0973261+00:00", "Log": "F"}
+{"TimeStamp": "2026-01-27T02:38:17.0973705+00:00", "Log": "F > adaptive-questionnaire-system@1.0.0 start:dev"}
+{"TimeStamp": "2026-01-27T02:38:17.097396+00:00", "Log": "F > turbo run start:dev --filter=api"}
+{"TimeStamp": "2026-01-27T02:38:17.0973982+00:00", "Log": "F"}
+{"TimeStamp": "2026-01-27T02:38:17.1353988+00:00", "Log": "F"}
+{"TimeStamp": "2026-01-27T02:38:17.1356443+00:00", "Log": "F Attention:"}
+{"TimeStamp": "2026-01-27T02:38:17.1356615+00:00", "Log": "F Turborepo now collects completely anonymous telemetry regarding usage."}
+{"TimeStamp": "2026-01-27T02:38:17.1356693+00:00", "Log": "F This information is used to shape the Turborepo roadmap and prioritize features."}
+{"TimeStamp": "2026-01-27T02:38:17.1356724+00:00", "Log": "F You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:"}
+{"TimeStamp": "2026-01-27T02:38:17.1356747+00:00", "Log": "F https://turbo.build/repo/docs/telemetry"}
+{"TimeStamp": "2026-01-27T02:38:17.1356768+00:00", "Log": "F"}
+{"TimeStamp": "2026-01-27T02:38:17.1664143+00:00", "Log": "F \u2022 Packages in scope: api"}
+{"TimeStamp": "2026-01-27T02:38:17.1664569+00:00", "Log": "F \u2022 Running start:dev in 1 packages"}
+{"TimeStamp": "2026-01-27T02:38:17.1664752+00:00", "Log": "F \u2022 Remote caching disabled"}
+{"TimeStamp": "2026-01-27T02:38:17.1881994+00:00", "Log": "F api:start:dev: cache bypass, force executing 1ebbf812519c2912"}
+{"TimeStamp": "2026-01-27T02:38:17.3297302+00:00", "Log": "F api:start:dev:"}
+{"TimeStamp": "2026-01-27T02:38:17.3297677+00:00", "Log": "F api:start:dev: > api@1.0.0 start:dev"}
+{"TimeStamp": "2026-01-27T02:38:17.3297839+00:00", "Log": "F api:start:dev: > nest start --watch"}
+{"TimeStamp": "2026-01-27T02:38:17.3297871+00:00", "Log": "F api:start:dev:"}
+{"TimeStamp": "2026-01-27T02:38:17.8378516+00:00", "Log": "F api:start:dev: \u001b[2J\u001b[3J\u001b[H[\u001b[90m2:38:17 AM\u001b[0m] Starting compilation in watch mode..."}
+{"TimeStamp": "2026-01-27T02:38:17.8379159+00:00", "Log": "F api:start:dev:"}
+{"TimeStamp": "2026-01-27T02:38:22.6486045+00:00", "Log": "F api:start:dev: [\u001b[90m2:38:22 AM\u001b[0m] Found 0 errors. Watching for file changes."}
+{"TimeStamp": "2026-01-27T02:38:22.6486631+00:00", "Log": "F api:start:dev:"}
+{"TimeStamp": "2026-01-27T02:38:22.6972369+00:00", "Log": "F api:start:dev: node:internal/modules/cjs/loader:1228"}
+{"TimeStamp": "2026-01-27T02:38:22.6972813+00:00", "Log": "F api:start:dev:   throw err;"}
+{"TimeStamp": "2026-01-27T02:38:22.6972984+00:00", "Log": "F api:start:dev:   ^"}
+{"TimeStamp": "2026-01-27T02:38:22.6973016+00:00", "Log": "F api:start:dev:"}
+{"TimeStamp": "2026-01-27T02:38:22.6973038+00:00", "Log": "F api:start:dev: Error: Cannot find module '/app/apps/api/dist/main'"}
+{"TimeStamp": "2026-01-27T02:38:22.6973062+00:00", "Log": "F api:start:dev:     at Module._resolveFilename (node:internal/modules/cjs/loader:1225:15)"}
+{"TimeStamp": "2026-01-27T02:38:22.6973084+00:00", "Log": "F api:start:dev:     at Module._load (node:internal/modules/cjs/loader:1051:27)"}
+{"TimeStamp": "2026-01-27T02:38:22.6973109+00:00", "Log": "F api:start:dev:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:173:12)"}
+{"TimeStamp": "2026-01-27T02:38:22.6973131+00:00", "Log": "F api:start:dev:     at node:internal/main/run_main_module:28:49 {"}
+{"TimeStamp": "2026-01-27T02:38:22.697316+00:00", "Log": "F api:start:dev:   code: 'MODULE_NOT_FOUND',"}
+{"TimeStamp": "2026-01-27T02:38:22.6973183+00:00", "Log": "F api:start:dev:   requireStack: []"}
+{"TimeStamp": "2026-01-27T02:38:22.6973274+00:00", "Log": "F api:start:dev: }"}
+{"TimeStamp": "2026-01-27T02:38:22.6973293+00:00", "Log": "F api:start:dev:"}
+{"TimeStamp": "2026-01-27T02:38:22.6973343+00:00", "Log": "F api:start:dev: Node.js v20.18.1"}
+{"TimeStamp": "2026-01-27T02:39:02.014373+00:00", "Log": "F  ERROR  run failed: command  exited (1)"}
+{"TimeStamp": "2026-01-27T02:39:02.5208164+00:00", "Log": "F npm error path /app"}
+{"TimeStamp": "2026-01-27T02:39:02.5208414+00:00", "Log": "F npm error command failed"}
+{"TimeStamp": "2026-01-27T02:39:02.5208538+00:00", "Log": "F npm error signal SIGTERM"}
+{"TimeStamp": "2026-01-27T02:39:02.520856+00:00", "Log": "F npm error command sh -c turbo run start:dev --filter=api"}
+{"TimeStamp": "2026-01-27T02:39:02.5208584+00:00", "Log": "F npm error A complete log of this run can be found in: /root/.npm/_logs/2026-01-27T02_38_17_041Z-debug-0.log"}

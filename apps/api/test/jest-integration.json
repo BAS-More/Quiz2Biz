@@ -1,0 +1,20 @@
+{
+    "moduleFileExtensions": [
+        "js",
+        "json",
+        "ts"
+    ],
+    "rootDir": "./integration",
+    "testEnvironment": "node",
+    "testRegex": ".test.ts$",
+    "transform": {
+        "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "moduleNameMapper": {
+        "^@libs/database(.*)$": "<rootDir>/../../libs/database/src$1",
+        "^@libs/redis(.*)$": "<rootDir>/../../libs/redis/src$1",
+        "^@libs/shared(.*)$": "<rootDir>/../../libs/shared/src$1"
+    },
+    "testTimeout": 30000,
+    "verbose": true
+}
