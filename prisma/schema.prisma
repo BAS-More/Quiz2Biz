@@ -172,6 +172,7 @@ model User {
   // Quiz2Biz Relations
   evidenceVerifications EvidenceRegistry[] @relation("EvidenceVerifier")
   ownedDecisions        DecisionLog[]      @relation("DecisionOwner")
+  ideaCaptures          IdeaCapture[]
 
   @@index([email])
   @@index([organizationId])
@@ -245,6 +246,7 @@ model OAuthAccount {
 
 model Questionnaire {
   id            String    @id @default(uuid())
+  projectTypeId String?   @map("project_type_id")
   name          String
   description   String?
   industry      String?
@@ -258,13 +260,60 @@ model Questionnaire {
   updatedAt     DateTime  @updatedAt @map("updated_at")
   publishedAt   DateTime? @map("published_at")
 
-  createdBy User? @relation("QuestionnaireCreator", fields: [createdById], references: [id])
-  sections  Section[]
-  sessions  Session[]
+  projectType ProjectType? @relation(fields: [projectTypeId], references: [id], onDelete: SetNull)
+  createdBy   User?        @relation("QuestionnaireCreator", fields: [createdById], references: [id])
+  sections    Section[]
+  sessions    Session[]
 
+  @@index([projectTypeId])
   @@index([industry])
   @@index([isActive])
   @@map("questionnaires")
+}
+
+model ProjectType {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  name        String
+  description String?  @db.Text
+  icon        String?
+  isActive    Boolean  @default(true) @map("is_active")
+  isDefault   Boolean  @default(false) @map("is_default")
+  metadata    Json     @default("{}")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  questionnaires   Questionnaire[]
+  sessions         Session[]
+  dimensionCatalog DimensionCatalog[]
+  documentTypes    DocumentType[]
+  ideaCaptures     IdeaCapture[]
+
+  @@index([isActive])
+  @@index([isDefault])
+  @@map("project_types")
+}
+
+model IdeaCapture {
+  id                 String   @id @default(uuid())
+  userId             String?  @map("user_id")
+  projectTypeId      String?  @map("project_type_id")
+  title              String?
+  rawInput           String   @map("raw_input") @db.Text
+  analysis           Json     @default("{}")
+  suggestedQuestions Json?    @map("suggested_questions")
+  status             String   @default("CAPTURED")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  user        User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  projectType ProjectType? @relation(fields: [projectTypeId], references: [id], onDelete: SetNull)
+  sessions    Session[]
+
+  @@index([userId])
+  @@index([projectTypeId])
+  @@index([createdAt])
+  @@map("idea_captures")
 }
 
 model Section {
@@ -357,6 +406,8 @@ model VisibilityRule {
 model Session {
   id                   String        @id @default(uuid())
   userId               String        @map("user_id")
+  projectTypeId        String?       @map("project_type_id")
+  ideaCaptureId        String?       @map("idea_capture_id")
   questionnaireId      String        @map("questionnaire_id")
   questionnaireVersion Int           @map("questionnaire_version")
   status               SessionStatus @default(IN_PROGRESS)
@@ -378,6 +429,8 @@ model Session {
   expiresAt            DateTime?     @map("expires_at")
 
   user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectType     ProjectType?  @relation(fields: [projectTypeId], references: [id], onDelete: SetNull)
+  ideaCapture     IdeaCapture?  @relation(fields: [ideaCaptureId], references: [id], onDelete: SetNull)
   questionnaire   Questionnaire @relation(fields: [questionnaireId], references: [id])
   currentSection  Section?      @relation("CurrentSection", fields: [currentSectionId], references: [id])
   currentQuestion Question?     @relation("CurrentQuestion", fields: [currentQuestionId], references: [id])
@@ -388,6 +441,8 @@ model Session {
   scoreSnapshots  ScoreSnapshot[]
 
   @@index([userId])
+  @@index([projectTypeId])
+  @@index([ideaCaptureId])
   @@index([questionnaireId])
   @@index([status])
   @@index([startedAt])
@@ -451,6 +506,7 @@ model Response {
 // Dimension Catalog - weights for readiness scoring
 model DimensionCatalog {
   key         String   @id                               // e.g., "arch_sec", "devops_iac"
+  projectTypeId String? @map("project_type_id")
   displayName String   @map("display_name")              // "Architecture & Security"
   description String?  @db.Text
   weight      Decimal  @db.Decimal(4, 3)                 // 0.000 to 1.000, sum should = 1.0
@@ -459,8 +515,10 @@ model DimensionCatalog {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  questions Question[]
+  projectType ProjectType? @relation(fields: [projectTypeId], references: [id], onDelete: SetNull)
+  questions   Question[]
 
+  @@index([projectTypeId])
   @@index([orderIndex])
   @@index([isActive])
   @@map("dimension_catalog")
@@ -545,6 +603,7 @@ model DecisionLog {
 
 model DocumentType {
   id               String           @id @default(uuid())
+  projectTypeId    String?          @map("project_type_id")
   name             String
   slug             String           @unique
   description      String?
@@ -558,9 +617,11 @@ model DocumentType {
   createdAt        DateTime         @default(now()) @map("created_at")
   updatedAt        DateTime         @updatedAt @map("updated_at")
 
-  documents         Document[]
-  standardMappings  DocumentTypeStandard[]
+  projectType      ProjectType?       @relation(fields: [projectTypeId], references: [id], onDelete: SetNull)
+  documents        Document[]
+  standardMappings DocumentTypeStandard[]
 
+  @@index([projectTypeId])
   @@index([category])
   @@index([isActive])
   @@map("document_types")
