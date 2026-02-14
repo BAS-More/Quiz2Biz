@@ -137,6 +137,16 @@ export class JiraConfluenceAdapter {
     private readonly prisma: PrismaService,
   ) {}
 
+  private getTrustedJiraDomain(): string {
+    const trustedDomain = (this.configService.get<string>('JIRA_DOMAIN') || '').trim().toLowerCase();
+
+    if (!trustedDomain) {
+      throw new HttpException('JIRA_DOMAIN is not configured', HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    return trustedDomain;
+  }
+
   private getHeaders(config: JiraConfig): Record<string, string> {
     const auth = Buffer.from(`${config.email}:${config.apiToken}`).toString('base64');
     return {
@@ -196,23 +206,72 @@ export class JiraConfluenceAdapter {
     }
   }
 
+  private sanitizeEndpoint(endpoint: string): string {
+    const candidate = endpoint.trim();
+
+    if (!candidate) {
+      throw new HttpException('Invalid Atlassian API endpoint', HttpStatus.BAD_REQUEST);
+    }
+
+    if (
+      candidate.includes('://') ||
+      candidate.startsWith('//') ||
+      candidate.includes('\\') ||
+      candidate.includes('@') ||
+      /(^|\/)\.\.(\/|$)/.test(candidate)
+    ) {
+      throw new HttpException('Invalid Atlassian API endpoint format', HttpStatus.BAD_REQUEST);
+    }
+
+    return candidate.startsWith('/') ? candidate.slice(1) : candidate;
+  }
+
   private async makeRequest<T>(
     config: JiraConfig,
     endpoint: string,
     method: string = 'GET',
     body?: unknown,
     isConfluence: boolean = false,
+    isAgile: boolean = false,
   ): Promise<T> {
-    // Validate the domain before constructing the URL to prevent SSRF
-    this.validateDomain(config);
+    const normalizedDomain = this.getTrustedJiraDomain();
+    if (config.domain.trim().toLowerCase() !== normalizedDomain) {
+      throw new HttpException(
+        'Configured Jira domain does not match trusted server configuration',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    this.validateDomain({ ...config, domain: normalizedDomain });
+    const safeEndpoint = this.sanitizeEndpoint(endpoint);
 
-    const baseUrl = isConfluence
-      ? `https://${config.domain}/wiki/rest/api`
-      : `https://${config.domain}/rest/api/3`;
-    const url = `${baseUrl}${endpoint}`;
+    let baseUrl: string;
+    if (isConfluence) {
+      baseUrl = `https://${normalizedDomain}/wiki/rest/api`;
+    } else if (isAgile) {
+      baseUrl = `https://${normalizedDomain}/rest/agile/1.0`;
+    } else {
+      baseUrl = `https://${normalizedDomain}/rest/api/3`;
+    }
+
+    const requestUrl = new URL(safeEndpoint, `${baseUrl}/`);
+    const trustedBaseUrl = new URL(`${baseUrl}/`);
+    const trustedBasePath = trustedBaseUrl.pathname.endsWith('/')
+      ? trustedBaseUrl.pathname
+      : `${trustedBaseUrl.pathname}/`;
+
+    if (
+      requestUrl.protocol !== 'https:' ||
+      requestUrl.hostname.toLowerCase() !== normalizedDomain ||
+      requestUrl.port !== trustedBaseUrl.port ||
+      !requestUrl.pathname.startsWith(trustedBasePath)
+    ) {
+      throw new HttpException('Atlassian API URL validation failed', HttpStatus.BAD_REQUEST);
+    }
 
     try {
-      const response = await fetch(url, {
+      // lgtm[js/request-forgery]
+      // codeql[js/request-forgery]
+      const response = await fetch(requestUrl.toString(), {
         method,
         headers: this.getHeaders(config),
         body: body ? JSON.stringify(body) : undefined,
@@ -402,20 +461,19 @@ export class JiraConfluenceAdapter {
     options: { state?: 'active' | 'closed' | 'future'; maxResults?: number } = {},
   ): Promise<JiraEvidenceResult[]> {
     const { state, maxResults = 50 } = options;
-    let endpoint = `https://${config.domain}/rest/agile/1.0/board/${boardId}/sprint?maxResults=${maxResults}`;
+    let endpoint = `/board/${boardId}/sprint?maxResults=${maxResults}`;
     if (state) {
       endpoint += `&state=${state}`;
     }
 
-    const response = await fetch(endpoint, {
-      headers: this.getHeaders(config),
-    });
-
-    if (!response.ok) {
-      throw new HttpException(`Failed to fetch sprints: ${response.status}`, response.status);
-    }
-
-    const data = (await response.json()) as { values: JiraSprint[] };
+    const data = await this.makeRequest<{ values: JiraSprint[] }>(
+      config,
+      endpoint,
+      'GET',
+      undefined,
+      false,
+      true,
+    );
 
     return data.values.map((sprint) => ({
       type: 'jira_sprint' as const,
