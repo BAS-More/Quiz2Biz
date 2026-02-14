@@ -238,8 +238,8 @@ export class GitLabAdapter {
     }
 
     const protocol = parsed.protocol.toLowerCase();
-    if (protocol !== 'https:' && protocol !== 'http:') {
-      throw new HttpException('Unsupported GitLab API URL scheme', HttpStatus.BAD_REQUEST);
+    if (protocol !== 'https:') {
+      throw new HttpException('GitLab API URL must use HTTPS', HttpStatus.BAD_REQUEST);
     }
 
     // Disallow credentials in URL
@@ -289,7 +289,8 @@ export class GitLabAdapter {
       candidate.includes('://') ||
       candidate.startsWith('//') ||
       candidate.includes('\\') ||
-      candidate.includes('@')
+      candidate.includes('@') ||
+      /(^|\/)\.\.(\/|$)/.test(candidate)
     ) {
       throw new HttpException('Invalid GitLab API endpoint format', HttpStatus.BAD_REQUEST);
     }
@@ -307,11 +308,13 @@ export class GitLabAdapter {
     const base = new URL(baseUrl);
     const safeEndpoint = this.sanitizeEndpoint(endpoint);
     const requestUrl = new URL(safeEndpoint, `${baseUrl}/`);
+    const basePath = base.pathname.endsWith('/') ? base.pathname : `${base.pathname}/`;
 
     if (
       requestUrl.protocol !== base.protocol ||
       requestUrl.hostname.toLowerCase() !== base.hostname.toLowerCase() ||
-      requestUrl.port !== base.port
+      requestUrl.port !== base.port ||
+      !requestUrl.pathname.startsWith(basePath)
     ) {
       throw new HttpException('GitLab API URL validation failed', HttpStatus.BAD_REQUEST);
     }

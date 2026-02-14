@@ -34,6 +34,11 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 export class HeatmapController {
   constructor(private readonly heatmapService: HeatmapService) {}
 
+  private sanitizeFilenameSegment(value: string): string {
+    const sanitized = value.replace(/[^a-zA-Z0-9_-]/g, '');
+    return sanitized.length > 0 ? sanitized : 'heatmap';
+  }
+
   private sanitizeMarkdownForResponse(markdown: string): string {
     return markdown
       .replace(/&/g, '&amp;')
@@ -94,8 +99,9 @@ export class HeatmapController {
   @ApiResponse({ status: 404, description: 'Session not found' })
   async exportToCsv(@Param('sessionId') sessionId: string, @Res() res: Response): Promise<void> {
     const csv = await this.heatmapService.exportToCsv(sessionId);
+    const safeSessionId = this.sanitizeFilenameSegment(sessionId);
     res.setHeader('Content-Type', 'text/csv');
-    res.setHeader('Content-Disposition', `attachment; filename="heatmap-${sessionId}.csv"`);
+    res.setHeader('Content-Disposition', `attachment; filename="heatmap-${safeSessionId}.csv"`);
     res.status(HttpStatus.OK).send(csv);
   }
 
@@ -115,12 +121,13 @@ export class HeatmapController {
     @Res() res: Response,
   ): Promise<void> {
     const markdown = await this.heatmapService.exportToMarkdown(sessionId);
+    const safeSessionId = this.sanitizeFilenameSegment(sessionId);
     const sanitizedMarkdown = this.sanitizeMarkdownForResponse(markdown);
 
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Content-Security-Policy', "default-src 'none'; sandbox");
-    res.setHeader('Content-Disposition', `attachment; filename="heatmap-${sessionId}.md"`);
+    res.setHeader('Content-Disposition', `attachment; filename="heatmap-${safeSessionId}.md"`);
     res.status(HttpStatus.OK).send(sanitizedMarkdown);
   }
 

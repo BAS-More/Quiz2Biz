@@ -217,7 +217,8 @@ export class JiraConfluenceAdapter {
       candidate.includes('://') ||
       candidate.startsWith('//') ||
       candidate.includes('\\') ||
-      candidate.includes('@')
+      candidate.includes('@') ||
+      /(^|\/)\.\.(\/|$)/.test(candidate)
     ) {
       throw new HttpException('Invalid Atlassian API endpoint format', HttpStatus.BAD_REQUEST);
     }
@@ -255,10 +256,16 @@ export class JiraConfluenceAdapter {
       baseUrl = `https://${normalizedDomain}/rest/api/3`;
     }
     const requestUrl = new URL(safeEndpoint, `${baseUrl}/`);
+    const trustedBaseUrl = new URL(`${baseUrl}/`);
+    const trustedBasePath = trustedBaseUrl.pathname.endsWith('/')
+      ? trustedBaseUrl.pathname
+      : `${trustedBaseUrl.pathname}/`;
 
     if (
       requestUrl.protocol !== 'https:' ||
-      requestUrl.hostname.toLowerCase() !== normalizedDomain
+      requestUrl.hostname.toLowerCase() !== normalizedDomain ||
+      requestUrl.port !== trustedBaseUrl.port ||
+      !requestUrl.pathname.startsWith(trustedBasePath)
     ) {
       throw new HttpException('Atlassian API URL validation failed', HttpStatus.BAD_REQUEST);
     }

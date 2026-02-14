@@ -26,9 +26,17 @@ export interface StandardSection {
 @Injectable()
 export class TemplateEngineService {
   private readonly logger = new Logger(TemplateEngineService.name);
-  private static readonly blockedPathSegments = new Set(['__proto__', 'prototype', 'constructor']);
 
   constructor(private readonly prisma: PrismaService) {}
+
+  private isUnsafePathSegment(segment: string): boolean {
+    const normalizedSegment = segment.trim().toLowerCase();
+    return (
+      normalizedSegment === '__proto__' ||
+      normalizedSegment === 'prototype' ||
+      normalizedSegment === 'constructor'
+    );
+  }
 
   /**
    * Assemble template data from session responses
@@ -206,7 +214,7 @@ export class TemplateEngineService {
       return;
     }
 
-    if (parts.some((part) => TemplateEngineService.blockedPathSegments.has(part))) {
+    if (parts.some((part) => this.isUnsafePathSegment(part))) {
       this.logger.warn(`Blocked unsafe response mapping path: "${path}"`);
       return;
     }
@@ -215,9 +223,16 @@ export class TemplateEngineService {
 
     for (let i = 0; i < parts.length - 1; i++) {
       const part = parts[i];
-      const nextValue = current[part];
+      if (this.isUnsafePathSegment(part)) {
+        this.logger.warn(`Blocked unsafe response mapping path: "${path}"`);
+        return;
+      }
+
+      const hasOwnProperty = Object.prototype.hasOwnProperty.call(current, part);
+      const nextValue = hasOwnProperty ? current[part] : undefined;
 
       if (
+        !hasOwnProperty ||
         typeof nextValue !== 'object' ||
         nextValue === null ||
         Array.isArray(nextValue)
@@ -228,6 +243,11 @@ export class TemplateEngineService {
     }
 
     const leafPart = parts[parts.length - 1];
+    if (this.isUnsafePathSegment(leafPart)) {
+      this.logger.warn(`Blocked unsafe response mapping path: "${path}"`);
+      return;
+    }
+
     current[leafPart] = value;
   }
 

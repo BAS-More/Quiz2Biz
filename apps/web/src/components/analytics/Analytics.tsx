@@ -209,6 +209,7 @@ const STORAGE_KEYS = {
   SESSIONS: 'quiz2biz_analytics_sessions',
   CURRENT_SESSION: 'quiz2biz_current_session',
 };
+let fallbackIdCounter = 0;
 
 // ============================================================================
 // Context
@@ -269,7 +270,12 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({
     }
 
     // Last-resort fallback if crypto is unavailable
-    return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    fallbackIdCounter += 1;
+    const monotonicPart =
+      typeof performance !== 'undefined'
+        ? Math.floor(performance.now()).toString(36)
+        : Date.now().toString(36);
+    return `${Date.now()}_${monotonicPart}_${fallbackIdCounter.toString(36)}`;
   };
 
   // Get device info
