@@ -72,6 +72,7 @@ export interface OnboardingState {
 // Default Tours
 // ============================================================================
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const ONBOARDING_TOURS: OnboardingTour[] = [
   {
     id: 'welcome-tour',
@@ -252,6 +253,7 @@ interface OnboardingContextValue {
 
 const OnboardingContext = createContext<OnboardingContextValue | null>(null);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useOnboarding = () => {
   const context = useContext(OnboardingContext);
   if (!context) {
@@ -315,6 +317,23 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({
     };
   });
 
+  const startTour = useCallback(
+    (tourId: string) => {
+      const tour = tours.find((t) => t.id === tourId);
+      if (!tour) {
+        return;
+      }
+
+      setState((prev) => ({
+        ...prev,
+        activeTour: tour,
+        currentStep: 0,
+        isActive: true,
+      }));
+    },
+    [tours],
+  );
+
   // Auto-start welcome tour for new users
   useEffect(() => {
     if (!autoStart) {
@@ -335,24 +354,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({
       }, 1000);
       return () => clearTimeout(timeout);
     }
-  }, [autoStart, tours, state.completedTours, state.dismissedTours, state.isActive]);
-
-  const startTour = useCallback(
-    (tourId: string) => {
-      const tour = tours.find((t) => t.id === tourId);
-      if (!tour) {
-        return;
-      }
-
-      setState((prev) => ({
-        ...prev,
-        activeTour: tour,
-        currentStep: 0,
-        isActive: true,
-      }));
-    },
-    [tours],
-  );
+  }, [autoStart, tours, state.completedTours, state.dismissedTours, state.isActive, startTour]);
 
   const nextStep = useCallback(() => {
     setState((prev) => {

@@ -45,7 +45,7 @@ export function QuestionnairePage() {
   const [questionnaireLoadError, setQuestionnaireLoadError] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState<Persona>('CTO');
   const [currentValue, setCurrentValue] = useState<unknown>(null);
-  const [startTime, setStartTime] = useState<number>(() => Date.now());
+  const startTimeRef = useRef<number>(0);
 
   // Load questionnaires on mount for "new" view
   useEffect(() => {
@@ -61,10 +61,10 @@ export function QuestionnairePage() {
     }
   }, [sessionIdParam, session?.id, continueSession]);
 
-  // Reset timer when question changes (use question ID, not array reference)
+  // Reset timer and value when question changes
   const currentQuestionId = currentQuestions[0]?.id;
   useEffect(() => {
-    setStartTime(Date.now());
+    startTimeRef.current = Date.now();
     setCurrentValue(null);
   }, [currentQuestionId]);
 
@@ -83,9 +83,9 @@ export function QuestionnairePage() {
 
   const handleSubmit = useCallback(async () => {
     if (!session || !currentQuestions[0] || isValueEmpty) return;
-    const timeSpent = Math.round((Date.now() - startTime) / 1000);
+    const timeSpent = Math.round((Date.now() - startTimeRef.current) / 1000);
     await submitResponse(session.id, currentQuestions[0].id, currentValue, timeSpent);
-  }, [session, currentQuestions, currentValue, isValueEmpty, startTime, submitResponse]);
+  }, [session, currentQuestions, currentValue, isValueEmpty, submitResponse]);
 
   const handleComplete = useCallback(async () => {
     if (!session) return;

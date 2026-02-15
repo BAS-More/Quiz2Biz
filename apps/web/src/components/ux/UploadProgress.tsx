@@ -51,6 +51,7 @@ export interface UploadProgressOptions {
 // Utility Functions
 // ============================================================================
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function formatFileSize(bytes: number): string {
   if (bytes === 0) {
     return '0 B';
@@ -61,6 +62,7 @@ export function formatFileSize(bytes: number): string {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function formatSpeed(bytesPerSecond: number): string {
   if (bytesPerSecond === 0) {
     return '0 B/s';
@@ -71,6 +73,7 @@ export function formatSpeed(bytesPerSecond: number): string {
   return `${parseFloat((bytesPerSecond / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function formatETA(seconds: number): string {
   if (!isFinite(seconds) || seconds <= 0) {
     return '--';
@@ -84,6 +87,7 @@ export function formatETA(seconds: number): string {
   return `${Math.floor(seconds / 3600)}h ${Math.ceil((seconds % 3600) / 60)}m`;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function getFileTypeIcon(type: string): string {
   if (type.startsWith('image/')) {
     return '🖼️';
@@ -131,6 +135,7 @@ export interface UseUploadProgressReturn {
   totalETA: number;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useUploadProgress(
   uploadFn: (file: File, onProgress: (progress: number) => void) => Promise<void>,
   options: UploadProgressOptions = {},
