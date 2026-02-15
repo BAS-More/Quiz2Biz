@@ -304,7 +304,7 @@ export const NetworkBanner: React.FC<NetworkBannerProps> = ({
   const { networkInfo, pendingCount, retryFailedRequests } = useNetworkStatus();
   const [dismissed, setDismissed] = useState(false);
   const [isHiding, setIsHiding] = useState(false);
-  const prevStatusRef = useRef(networkInfo.status);
+  const [trackedStatus, setTrackedStatus] = useState(networkInfo.status);
 
   // Derive shouldShow from network status
   const hasProblems =
@@ -314,23 +314,29 @@ export const NetworkBanner: React.FC<NetworkBannerProps> = ({
 
   const shouldShow = !dismissed && hasProblems;
 
-  // Reset dismissed when status changes to problem state  
-  useEffect(() => {
-    const statusChanged = prevStatusRef.current !== networkInfo.status;
-    prevStatusRef.current = networkInfo.status;
+  // Handle status changes during render to avoid setState in effect
+  if (networkInfo.status !== trackedStatus) {
+    setTrackedStatus(networkInfo.status);
+    const newHasProblems =
+      networkInfo.status === 'offline' ||
+      networkInfo.status === 'slow' ||
+      networkInfo.status === 'reconnecting';
     
-    if (statusChanged) {
-      if (hasProblems) {
-        setDismissed(false);
-        setIsHiding(false);
-      } else {
-        // Delay hiding for animation
-        setIsHiding(true);
-        const timer = setTimeout(() => setIsHiding(false), 300);
-        return () => clearTimeout(timer);
-      }
+    if (newHasProblems) {
+      if (dismissed) setDismissed(false);
+      if (isHiding) setIsHiding(false);
+    } else if (!isHiding) {
+      setIsHiding(true);
     }
-  }, [networkInfo.status, hasProblems]);
+  }
+
+  // Clear hiding state after animation delay
+  useEffect(() => {
+    if (isHiding && !hasProblems) {
+      const timer = setTimeout(() => setIsHiding(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isHiding, hasProblems]);
 
   const visible = shouldShow || isHiding;
 

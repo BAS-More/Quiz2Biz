@@ -44,8 +44,20 @@ export function QuestionnairePage() {
   const [questionnaires, setQuestionnaires] = useState<QuestionnaireListItem[]>([]);
   const [questionnaireLoadError, setQuestionnaireLoadError] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState<Persona>('CTO');
-  const [currentValue, setCurrentValue] = useState<unknown>(null);
   const startTimeRef = useRef<number>(0);
+  
+  // Current question changes reset - using question ID as dependency for value state
+  const currentQuestionId = currentQuestions[0]?.id;
+  const [currentValue, setCurrentValue] = useState<unknown>(null);
+  const [valueQuestionId, setValueQuestionId] = useState(currentQuestionId);
+  
+  // Reset value when question changes (separate state update to avoid effect)
+  if (currentQuestionId !== valueQuestionId) {
+    setValueQuestionId(currentQuestionId);
+    if (currentValue !== null) {
+      setCurrentValue(null);
+    }
+  }
 
   // Load questionnaires on mount for "new" view
   useEffect(() => {
@@ -61,11 +73,9 @@ export function QuestionnairePage() {
     }
   }, [sessionIdParam, session?.id, continueSession]);
 
-  // Reset timer and value when question changes
-  const currentQuestionId = currentQuestions[0]?.id;
+  // Reset timer when question changes
   useEffect(() => {
     startTimeRef.current = Date.now();
-    setCurrentValue(null);
   }, [currentQuestionId]);
 
   const handleStartSession = useCallback(
