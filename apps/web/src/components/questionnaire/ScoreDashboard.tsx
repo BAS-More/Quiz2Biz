@@ -254,7 +254,7 @@ export const ScoreDashboard: React.FC<ScoreDashboardProps> = ({
                 cy="96"
               />
               <circle
-                className={`transition-all duration-1000 ${getScoreColor(scoreData.score).replace('text-', 'text-')}`}
+                className={`transition-all duration-1000 ${getScoreColor(scoreData.score)}`}
                 strokeWidth="12"
                 strokeLinecap="round"
                 stroke="currentColor"
@@ -277,11 +277,7 @@ export const ScoreDashboard: React.FC<ScoreDashboardProps> = ({
             </svg>
             {/* Score text in center */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span
-                className={`text-5xl font-bold ${getScoreColor(scoreData.score).replace('text-', 'text-white/')}`}
-              >
-                {Math.round(scoreData.score)}
-              </span>
+              <span className="text-5xl font-bold text-white">{Math.round(scoreData.score)}</span>
               <span className="text-gray-400 text-sm">out of 100</span>
             </div>
           </div>

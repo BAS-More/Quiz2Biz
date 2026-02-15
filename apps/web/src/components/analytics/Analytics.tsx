@@ -209,6 +209,7 @@ const STORAGE_KEYS = {
   SESSIONS: 'quiz2biz_analytics_sessions',
   CURRENT_SESSION: 'quiz2biz_current_session',
 };
+let fallbackIdCounter = 0;
 
 // ============================================================================
 // Context
@@ -250,7 +251,27 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({
 
   // Generate unique ID
   const generateId = (): string => {
-    return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const cryptoObj = (typeof window !== 'undefined' && window.crypto) || undefined;
+
+    if (cryptoObj && typeof cryptoObj.randomUUID === 'function') {
+      return cryptoObj.randomUUID();
+    }
+
+    if (cryptoObj && typeof cryptoObj.getRandomValues === 'function') {
+      const bytes = new Uint8Array(16);
+      cryptoObj.getRandomValues(bytes);
+      const hex = Array.from(bytes)
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('');
+      return `${Date.now()}_${hex}`;
+    }
+
+    fallbackIdCounter += 1;
+    const monotonicPart =
+      typeof performance !== 'undefined'
+        ? Math.floor(performance.now()).toString(36)
+        : Date.now().toString(36);
+    return `${Date.now()}_${monotonicPart}_${fallbackIdCounter.toString(36)}`;
   };
 
   // Get device info

@@ -31,8 +31,8 @@ export const useDecisionsStore = create<DecisionsState>()((set, get) => ({
     try {
       const decisions = await questionnaireApi.listDecisions(sessionId);
       set({ decisions, isLoading: false });
-    } catch (err: any) {
-      set({ isLoading: false, error: err?.response?.data?.message ?? err.message });
+    } catch (err: unknown) {
+      set({ isLoading: false, error: (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error' });
     }
   },
 
@@ -41,8 +41,8 @@ export const useDecisionsStore = create<DecisionsState>()((set, get) => ({
     try {
       const decision = await questionnaireApi.createDecision(sessionId, statement, assumptions);
       set({ decisions: [decision as Decision, ...get().decisions], isLoading: false });
-    } catch (err: any) {
-      set({ isLoading: false, error: err?.response?.data?.message ?? err.message });
+    } catch (err: unknown) {
+      set({ isLoading: false, error: (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error' });
     }
   },
 
