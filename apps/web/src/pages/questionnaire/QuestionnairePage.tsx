@@ -45,7 +45,7 @@ export function QuestionnairePage() {
   const [questionnaireLoadError, setQuestionnaireLoadError] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState<Persona>('CTO');
   const [currentValue, setCurrentValue] = useState<unknown>(null);
-  const [startTime, setStartTime] = useState<number>(Date.now());
+  const [startTime, setStartTime] = useState<number>(() => Date.now());
 
   // Load questionnaires on mount for "new" view
   useEffect(() => {
