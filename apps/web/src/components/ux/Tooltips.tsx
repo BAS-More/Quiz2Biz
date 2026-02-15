@@ -115,6 +115,7 @@ export const TooltipProvider: React.FC<{
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useTooltipSettings = () => useContext(TooltipContext);
 
 // ============================================================================
@@ -425,6 +426,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
 // Predefined Tooltip Content
 // ============================================================================
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const TOOLTIP_CONTENT = {
   // Dimensions
   dimensions: {
@@ -671,6 +673,7 @@ export const MetricTooltip: React.FC<MetricTooltipProps> = ({
 // Hook for tooltip accessibility
 // ============================================================================
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useTooltipAccessibility() {
   useEffect(() => {
     // Ensure tooltips work with keyboard navigation

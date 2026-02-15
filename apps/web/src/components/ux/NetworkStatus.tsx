@@ -52,6 +52,7 @@ interface NetworkContextValue {
 
 const NetworkContext = createContext<NetworkContextValue | null>(null);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useNetworkStatus = () => {
   const context = useContext(NetworkContext);
   if (!context) {
@@ -69,10 +70,23 @@ function getNetworkInfo(): Partial<NetworkInfo> {
     return {};
   }
 
+  interface NavigatorConnection {
+    effectiveType?: '4g' | '3g' | '2g' | 'slow-2g';
+    downlink?: number;
+    rtt?: number;
+    saveData?: boolean;
+  }
+
+  interface ExtendedNavigator extends Navigator {
+    connection?: NavigatorConnection;
+    mozConnection?: NavigatorConnection;
+    webkitConnection?: NavigatorConnection;
+  }
+
   const connection =
-    (navigator as any).connection ||
-    (navigator as any).mozConnection ||
-    (navigator as any).webkitConnection;
+    (navigator as ExtendedNavigator).connection ||
+    (navigator as ExtendedNavigator).mozConnection ||
+    (navigator as ExtendedNavigator).webkitConnection;
 
   if (connection) {
     return {
@@ -158,7 +172,7 @@ export const NetworkStatusProvider: React.FC<NetworkStatusProviderProps> = ({
     window.addEventListener('offline', handleOffline);
 
     // Monitor connection changes
-    const connection = (navigator as any).connection;
+    const connection = (navigator as ExtendedNavigator).connection;
     if (connection) {
       const handleConnectionChange = () => {
         const info = getNetworkInfo();
@@ -289,28 +303,44 @@ export const NetworkBanner: React.FC<NetworkBannerProps> = ({
 }) => {
   const { networkInfo, pendingCount, retryFailedRequests } = useNetworkStatus();
   const [dismissed, setDismissed] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [isHiding, setIsHiding] = useState(false);
+  const [trackedStatus, setTrackedStatus] = useState(networkInfo.status);
 
-  // Show banner when offline or slow
-  useEffect(() => {
-    const shouldShow =
+  // Derive shouldShow from network status
+  const hasProblems =
+    networkInfo.status === 'offline' ||
+    networkInfo.status === 'slow' ||
+    networkInfo.status === 'reconnecting';
+
+  const shouldShow = !dismissed && hasProblems;
+
+  // Handle status changes during render to avoid setState in effect
+  if (networkInfo.status !== trackedStatus) {
+    setTrackedStatus(networkInfo.status);
+    const newHasProblems =
       networkInfo.status === 'offline' ||
       networkInfo.status === 'slow' ||
       networkInfo.status === 'reconnecting';
-
-    if (shouldShow) {
-      setDismissed(false);
-      setVisible(true);
-    } else {
-      // Delay hiding for animation
-      setTimeout(() => setVisible(false), 300);
+    
+    if (newHasProblems) {
+      if (dismissed) setDismissed(false);
+      if (isHiding) setIsHiding(false);
+    } else if (!isHiding) {
+      setIsHiding(true);
     }
-  }, [networkInfo.status]);
-
-  if (!visible && networkInfo.status === 'online') {
-    return null;
   }
-  if (dismissed) {
+
+  // Clear hiding state after animation delay
+  useEffect(() => {
+    if (isHiding && !hasProblems) {
+      const timer = setTimeout(() => setIsHiding(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isHiding, hasProblems]);
+
+  const visible = shouldShow || isHiding;
+
+  if (!visible || dismissed) {
     return null;
   }
 
@@ -653,6 +683,7 @@ export const PendingRequestsDropdown: React.FC<PendingRequestsDropdownProps> = (
 // Hook for wrapping fetch with network tracking
 // ============================================================================
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useTrackedFetch() {
   const { addPendingRequest, removePendingRequest, isOffline } = useNetworkStatus();
 

@@ -72,8 +72,8 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
       set({ session });
       // Auto-continue to get first question (keeps isLoading: true until done)
       await get().continueSession(session.id);
-    } catch (err: any) {
-      set({ isLoading: false, error: err?.response?.data?.message ?? err.message });
+    } catch (err: unknown) {
+      set({ isLoading: false, error: (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error' });
     }
   },
 
@@ -82,8 +82,8 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
     try {
       const session = await questionnaireApi.getSession(sessionId);
       set({ session, isLoading: false });
-    } catch (err: any) {
-      set({ isLoading: false, error: err?.response?.data?.message ?? err.message });
+    } catch (err: unknown) {
+      set({ isLoading: false, error: (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error' });
     }
   },
 
@@ -92,8 +92,8 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
     try {
       const result = await questionnaireApi.listSessions();
       set({ sessions: result.items, isLoading: false });
-    } catch (err: any) {
-      set({ isLoading: false, error: err?.response?.data?.message ?? err.message });
+    } catch (err: unknown) {
+      set({ isLoading: false, error: (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error' });
     }
   },
 
@@ -110,8 +110,8 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
         isComplete: result.isComplete,
         isLoading: false,
       });
-    } catch (err: any) {
-      set({ isLoading: false, error: err?.response?.data?.message ?? err.message });
+    } catch (err: unknown) {
+      set({ isLoading: false, error: (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error' });
     }
   },
 
@@ -131,8 +131,8 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
       // Refresh session state to get next question
       await get().continueSession(sessionId);
       return result;
-    } catch (err: any) {
-      set({ isLoading: false, error: err?.response?.data?.message ?? err.message });
+    } catch (err: unknown) {
+      set({ isLoading: false, error: (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error' });
       throw err;
     }
   },
@@ -142,8 +142,8 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
     try {
       const session = await questionnaireApi.completeSession(sessionId);
       set({ session, isComplete: true, isLoading: false });
-    } catch (err: any) {
-      set({ isLoading: false, error: err?.response?.data?.message ?? err.message });
+    } catch (err: unknown) {
+      set({ isLoading: false, error: (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error' });
     }
   },
 
@@ -155,7 +155,7 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
         dimensions: scoreResult.dimensions,
         scoreTrend: scoreResult.trend,
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Non-critical, don't block the UI
       console.warn('Failed to load score:', err);
     }

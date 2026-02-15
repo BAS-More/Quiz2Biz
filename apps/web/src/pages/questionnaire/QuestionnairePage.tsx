@@ -44,8 +44,20 @@ export function QuestionnairePage() {
   const [questionnaires, setQuestionnaires] = useState<QuestionnaireListItem[]>([]);
   const [questionnaireLoadError, setQuestionnaireLoadError] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState<Persona>('CTO');
+  const startTimeRef = useRef<number>(0);
+  
+  // Current question changes reset - using question ID as dependency for value state
+  const currentQuestionId = currentQuestions[0]?.id;
   const [currentValue, setCurrentValue] = useState<unknown>(null);
-  const [startTime, setStartTime] = useState<number>(Date.now());
+  const [valueQuestionId, setValueQuestionId] = useState(currentQuestionId);
+  
+  // Reset value when question changes (separate state update to avoid effect)
+  if (currentQuestionId !== valueQuestionId) {
+    setValueQuestionId(currentQuestionId);
+    if (currentValue !== null) {
+      setCurrentValue(null);
+    }
+  }
 
   // Load questionnaires on mount for "new" view
   useEffect(() => {
@@ -61,11 +73,9 @@ export function QuestionnairePage() {
     }
   }, [sessionIdParam, session?.id, continueSession]);
 
-  // Reset timer when question changes (use question ID, not array reference)
-  const currentQuestionId = currentQuestions[0]?.id;
+  // Reset timer when question changes
   useEffect(() => {
-    setStartTime(Date.now());
-    setCurrentValue(null);
+    startTimeRef.current = Date.now();
   }, [currentQuestionId]);
 
   const handleStartSession = useCallback(
@@ -83,9 +93,9 @@ export function QuestionnairePage() {
 
   const handleSubmit = useCallback(async () => {
     if (!session || !currentQuestions[0] || isValueEmpty) return;
-    const timeSpent = Math.round((Date.now() - startTime) / 1000);
+    const timeSpent = Math.round((Date.now() - startTimeRef.current) / 1000);
     await submitResponse(session.id, currentQuestions[0].id, currentValue, timeSpent);
-  }, [session, currentQuestions, currentValue, isValueEmpty, startTime, submitResponse]);
+  }, [session, currentQuestions, currentValue, isValueEmpty, submitResponse]);
 
   const handleComplete = useCallback(async () => {
     if (!session) return;

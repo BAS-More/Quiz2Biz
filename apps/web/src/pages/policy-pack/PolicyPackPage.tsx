@@ -2,9 +2,16 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { questionnaireApi } from '../../api/questionnaire';
 
+interface PolicyPackBundle {
+  policies?: Array<{ title?: string; description?: string; content?: string }>;
+  opaPolicies?: unknown[];
+  dimensionsCovered?: unknown[];
+  terraformRules?: string;
+}
+
 export function PolicyPackPage() {
   const { sessionId } = useParams<{ sessionId: string }>();
-  const [bundle, setBundle] = useState<any | null>(null);
+  const [bundle, setBundle] = useState<PolicyPackBundle | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -15,8 +22,8 @@ export function PolicyPackPage() {
     try {
       const result = await questionnaireApi.generatePolicyPack(sessionId);
       setBundle(result);
-    } catch (err: any) {
-      setError(err?.response?.data?.message ?? err.message);
+    } catch (err: unknown) {
+      setError((err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error');
     } finally {
       setIsLoading(false);
     }
@@ -73,7 +80,7 @@ export function PolicyPackPage() {
             </div>
           </div>
 
-          {bundle.policies?.map((p: any, idx: number) => (
+          {bundle.policies?.map((p, idx: number) => (
             <div key={idx} style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '16px', marginBottom: '12px' }}>
               <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '4px' }}>{p.title || `Policy ${idx + 1}`}</h3>
               <p style={{ fontSize: '13px', color: '#6b7280', margin: 0 }}>{p.description || p.content?.substring(0, 200)}</p>

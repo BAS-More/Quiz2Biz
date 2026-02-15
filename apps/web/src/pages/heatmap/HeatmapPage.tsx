@@ -2,20 +2,44 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { questionnaireApi, type HeatmapResult } from '../../api/questionnaire';
 
+interface HeatmapDrilldown {
+  dimensionKey: string;
+  dimensionName: string;
+  severityBucket: string;
+  cellValue: number;
+  colorCode: string;
+  questionCount: number;
+  questions: { questionId: string; questionText: string; severity: number; coverage: number; residualRisk: number }[];
+  potentialImprovement: number;
+}
+
 export function HeatmapPage() {
   const { sessionId } = useParams<{ sessionId: string }>();
   const [heatmap, setHeatmap] = useState<HeatmapResult | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [drilldown, setDrilldown] = useState<any | null>(null);
+  const [drilldown, setDrilldown] = useState<HeatmapDrilldown | null>(null);
 
   useEffect(() => {
     if (!sessionId) return;
-    setIsLoading(true);
+    
+    let cancelled = false;
+    
     questionnaireApi.getHeatmap(sessionId)
-      .then(setHeatmap)
-      .catch((err) => setError(err?.response?.data?.message ?? err.message))
-      .finally(() => setIsLoading(false));
+      .then((data) => {
+        if (!cancelled) {
+          setHeatmap(data);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError((err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error');
+          setIsLoading(false);
+        }
+      });
+    
+    return () => { cancelled = true; };
   }, [sessionId]);
 
   const handleCellClick = async (dimensionKey: string, severityBucket: string) => {
@@ -23,7 +47,7 @@ export function HeatmapPage() {
     try {
       const data = await questionnaireApi.getHeatmapDrilldown(sessionId, dimensionKey, severityBucket);
       setDrilldown(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Drilldown failed:', err);
     }
   };
@@ -154,7 +178,7 @@ export function HeatmapPage() {
             {drilldown.questionCount} questions | Cell value: {drilldown.cellValue?.toFixed(4)} | Potential improvement: {drilldown.potentialImprovement?.toFixed(4)}
           </p>
           <div>
-            {drilldown.questions?.map((q: any) => (
+            {drilldown.questions?.map((q) => (
               <div key={q.questionId} style={{ padding: '8px 0', borderBottom: '1px solid #e5e7eb' }}>
                 <div style={{ fontWeight: 500, fontSize: '13px' }}>{q.questionText}</div>
                 <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '4px' }}>
