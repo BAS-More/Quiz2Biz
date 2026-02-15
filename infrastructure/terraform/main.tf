@@ -17,20 +17,21 @@ resource "azurerm_resource_group" "main" {
   tags = local.common_tags
 }
 
-# Networking Module
-module "networking" {
-  source = "./modules/networking"
-
-  project_name        = var.project_name
-  environment         = var.environment
-  location            = var.location
-  resource_group_name = azurerm_resource_group.main.name
-  address_space       = var.vnet_address_space
-  subnet_app_prefix   = var.subnet_app_prefix
-  subnet_db_prefix    = var.subnet_db_prefix
-  subnet_cache_prefix = var.subnet_cache_prefix
-  tags                = local.common_tags
-}
+# Networking Module — DISABLED for MVP (Azure AD token size blocks VNet/NSG API calls)
+# Re-enable when Azure AD token issue is resolved.
+# module "networking" {
+#   source = "./modules/networking"
+#
+#   project_name        = var.project_name
+#   environment         = var.environment
+#   location            = var.location
+#   resource_group_name = azurerm_resource_group.main.name
+#   address_space       = var.vnet_address_space
+#   subnet_app_prefix   = var.subnet_app_prefix
+#   subnet_db_prefix    = var.subnet_db_prefix
+#   subnet_cache_prefix = var.subnet_cache_prefix
+#   tags                = local.common_tags
+# }
 
 # Monitoring Module
 module "monitoring" {
@@ -63,15 +64,13 @@ module "database" {
   environment         = var.environment
   location            = var.location
   resource_group_name = azurerm_resource_group.main.name
-  subnet_id           = module.networking.subnet_db_id
-  private_dns_zone_id = module.networking.private_dns_zone_postgres_id
+  # subnet_id and private_dns_zone_id removed — VNet disabled for MVP
   sku_name            = var.postgresql_sku_name
   storage_mb          = var.postgresql_storage_mb
   postgresql_version  = var.postgresql_version
   db_name             = var.db_name
   tags                = local.common_tags
 
-  depends_on = [module.networking]
 }
 
 # Cache Module
@@ -111,7 +110,7 @@ module "container_apps" {
   environment                = var.environment
   location                   = var.location
   resource_group_name        = azurerm_resource_group.main.name
-  subnet_id                  = module.networking.subnet_app_id
+  # subnet_id removed — VNet disabled for MVP
   log_analytics_workspace_id = module.monitoring.log_analytics_workspace_id
 
   # Container configuration
@@ -140,7 +139,6 @@ module "container_apps" {
   tags = local.common_tags
 
   depends_on = [
-    module.networking,
     module.registry,
     module.database,
     module.cache,

@@ -21,6 +21,7 @@ variable "resource_group_name" {
 variable "subnet_id" {
   description = "ID of the subnet for Container Apps"
   type        = string
+  default     = ""
 }
 
 variable "log_analytics_workspace_id" {
