@@ -2,6 +2,7 @@ import { Controller, Get, HttpException, HttpStatus, Inject, Optional } from '@n
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SkipThrottle } from '@nestjs/throttler';
 import { PrismaService } from '@libs/database';
+import { RedisService } from '@libs/redis';
 
 // =============================================================================
 // Health Response Interfaces
@@ -53,7 +54,10 @@ interface ReadinessResponse {
 export class HealthController {
   private readonly startTime: Date;
 
-  constructor(@Optional() @Inject(PrismaService) private readonly prisma?: PrismaService) {
+  constructor(
+    @Optional() @Inject(PrismaService) private readonly prisma?: PrismaService,
+    @Optional() @Inject(RedisService) private readonly redis?: RedisService,
+  ) {
     this.startTime = new Date();
   }
 
@@ -266,10 +270,37 @@ export class HealthController {
   }
 
   private async checkRedis(): Promise<DependencyCheck | null> {
-    // Redis check would go here if RedisService is injected
-    // For now, return null to indicate Redis is not configured
-    // This can be enhanced when Redis is properly integrated
-    return null;
+    if (!this.redis) {
+      return null;
+    }
+
+    const startTime = Date.now();
+    try {
+      await this.redis.getClient().ping();
+      const responseTime = Date.now() - startTime;
+
+      if (responseTime > 1000) {
+        return {
+          name: 'redis',
+          status: 'degraded',
+          responseTime,
+          message: 'Redis responding slowly',
+        };
+      }
+
+      return {
+        name: 'redis',
+        status: 'healthy',
+        responseTime,
+      };
+    } catch (error) {
+      return {
+        name: 'redis',
+        status: 'unhealthy',
+        responseTime: Date.now() - startTime,
+        message: error instanceof Error ? error.message : 'Unknown error',
+      };
+    }
   }
 
   private checkMemory(): DependencyCheck {

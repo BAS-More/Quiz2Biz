@@ -3,7 +3,7 @@
  * Wires to real session API, scoring engine, and NQS algorithm
  */
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, CheckCircle, AlertTriangle, Loader2, Target, Users } from 'lucide-react';
 import { useQuestionnaireStore } from '../../stores/questionnaire';

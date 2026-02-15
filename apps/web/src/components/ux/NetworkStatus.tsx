@@ -65,22 +65,22 @@ export const useNetworkStatus = () => {
 // Network Detection Utilities
 // ============================================================================
 
+interface NavigatorConnection extends EventTarget {
+  effectiveType?: '4g' | '3g' | '2g' | 'slow-2g';
+  downlink?: number;
+  rtt?: number;
+  saveData?: boolean;
+}
+
+interface ExtendedNavigator extends Navigator {
+  connection?: NavigatorConnection;
+  mozConnection?: NavigatorConnection;
+  webkitConnection?: NavigatorConnection;
+}
+
 function getNetworkInfo(): Partial<NetworkInfo> {
   if (typeof navigator === 'undefined') {
     return {};
-  }
-
-  interface NavigatorConnection {
-    effectiveType?: '4g' | '3g' | '2g' | 'slow-2g';
-    downlink?: number;
-    rtt?: number;
-    saveData?: boolean;
-  }
-
-  interface ExtendedNavigator extends Navigator {
-    connection?: NavigatorConnection;
-    mozConnection?: NavigatorConnection;
-    webkitConnection?: NavigatorConnection;
   }
 
   const connection =
