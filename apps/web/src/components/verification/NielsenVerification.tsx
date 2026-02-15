@@ -81,6 +81,7 @@ export interface EvaluationRecommendation {
 // NIELSEN 10 HEURISTICS CATALOG
 // =============================================================================
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const NIELSEN_HEURISTICS: NielsenHeuristic[] = [
   {
     id: 1,
@@ -830,6 +831,7 @@ export const NielsenVerificationProvider: React.FC<{ children: ReactNode }> = ({
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useNielsenVerification = (): NielsenVerificationContextType => {
   const context = useContext(NielsenVerificationContext);
   if (!context) {

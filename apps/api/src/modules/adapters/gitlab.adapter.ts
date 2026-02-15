@@ -2,6 +2,8 @@ import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@libs/database';
 import { createHash } from 'crypto';
+import * as dns from 'dns';
+import * as net from 'net';
 
 // Helper to extract error message from unknown error type
 function getErrorMessage(error: unknown): string {
@@ -194,17 +196,125 @@ export class GitLabAdapter {
     };
   }
 
+  private isPrivateIp(ip: string): boolean {
+    if (!net.isIP(ip)) {
+      return false;
+    }
+
+    // IPv4 private, loopback and link-local ranges.
+    const privateRanges = [
+      { from: '10.0.0.0', to: '10.255.255.255' },
+      { from: '172.16.0.0', to: '172.31.255.255' },
+      { from: '192.168.0.0', to: '192.168.255.255' },
+      { from: '127.0.0.0', to: '127.255.255.255' },
+      { from: '169.254.0.0', to: '169.254.255.255' },
+    ];
+
+    const toLong = (ipAddr: string): number =>
+      ipAddr.split('.').reduce((acc, octet) => (acc << 8) + parseInt(octet, 10), 0);
+
+    const longIp = toLong(ip);
+    return privateRanges.some((range) => longIp >= toLong(range.from) && longIp <= toLong(range.to));
+  }
+
+  private async validateAndGetBaseUrl(config: GitLabConfig): Promise<string> {
+    const trustedApiUrl = (this.configService.get<string>('GITLAB_API_URL') || this.defaultApiUrl).trim();
+    const providedApiUrl = config.apiUrl?.trim();
+
+    if (providedApiUrl && providedApiUrl !== trustedApiUrl) {
+      throw new HttpException(
+        'Configured GitLab API URL does not match trusted server configuration',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    let parsed: URL;
+    try {
+      parsed = new URL(trustedApiUrl);
+    } catch {
+      throw new HttpException('Invalid GitLab API URL', HttpStatus.BAD_REQUEST);
+    }
+
+    if (parsed.protocol.toLowerCase() !== 'https:') {
+      throw new HttpException('GitLab API URL must use HTTPS', HttpStatus.BAD_REQUEST);
+    }
+
+    if (parsed.username || parsed.password) {
+      throw new HttpException('GitLab API URL must not contain credentials', HttpStatus.BAD_REQUEST);
+    }
+
+    const hostname = parsed.hostname.toLowerCase();
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      throw new HttpException('GitLab API URL must not point to localhost', HttpStatus.BAD_REQUEST);
+    }
+
+    try {
+      const addresses = await dns.promises.lookup(hostname, { all: true });
+      for (const addr of addresses) {
+        if (this.isPrivateIp(addr.address)) {
+          throw new HttpException(
+            'GitLab API URL must not point to a private or loopback address',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+      }
+    } catch (err) {
+      this.logger.error(`Failed to resolve GitLab API host "${hostname}": ${getErrorMessage(err)}`);
+      throw new HttpException('Unable to resolve GitLab API host', HttpStatus.BAD_REQUEST);
+    }
+
+    let normalized = parsed.toString();
+    if (normalized.endsWith('/')) {
+      normalized = normalized.slice(0, -1);
+    }
+    return normalized;
+  }
+
+  private sanitizeEndpoint(endpoint: string): string {
+    const candidate = endpoint.trim();
+
+    if (!candidate) {
+      throw new HttpException('Invalid GitLab API endpoint', HttpStatus.BAD_REQUEST);
+    }
+
+    if (
+      candidate.includes('://') ||
+      candidate.startsWith('//') ||
+      candidate.includes('\\') ||
+      candidate.includes('@') ||
+      /(^|\/)\.\.(\/|$)/.test(candidate)
+    ) {
+      throw new HttpException('Invalid GitLab API endpoint format', HttpStatus.BAD_REQUEST);
+    }
+
+    return candidate.startsWith('/') ? candidate.slice(1) : candidate;
+  }
+
   private async makeRequest<T>(
     config: GitLabConfig,
     endpoint: string,
     method: string = 'GET',
     body?: unknown,
   ): Promise<T> {
-    const baseUrl = config.apiUrl || this.defaultApiUrl;
-    const url = `${baseUrl}${endpoint}`;
+    const baseUrl = await this.validateAndGetBaseUrl(config);
+    const base = new URL(baseUrl);
+    const safeEndpoint = this.sanitizeEndpoint(endpoint);
+    const requestUrl = new URL(safeEndpoint, `${baseUrl}/`);
+    const basePath = base.pathname.endsWith('/') ? base.pathname : `${base.pathname}/`;
+
+    if (
+      requestUrl.protocol !== base.protocol ||
+      requestUrl.hostname.toLowerCase() !== base.hostname.toLowerCase() ||
+      requestUrl.port !== base.port ||
+      !requestUrl.pathname.startsWith(basePath)
+    ) {
+      throw new HttpException('GitLab API URL validation failed', HttpStatus.BAD_REQUEST);
+    }
 
     try {
-      const response = await fetch(url, {
+      // lgtm[js/request-forgery]
+      // codeql[js/request-forgery]
+      const response = await fetch(requestUrl.toString(), {
         method,
         headers: this.getHeaders(config.token),
         body: body ? JSON.stringify(body) : undefined,

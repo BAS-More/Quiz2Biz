@@ -29,6 +29,15 @@ export class TemplateEngineService {
 
   constructor(private readonly prisma: PrismaService) {}
 
+  private isUnsafePathSegment(segment: string): boolean {
+    const normalizedSegment = segment.trim().toLowerCase();
+    return (
+      normalizedSegment === '__proto__' ||
+      normalizedSegment === 'prototype' ||
+      normalizedSegment === 'constructor'
+    );
+  }
+
   /**
    * Assemble template data from session responses
    */
@@ -195,18 +204,51 @@ export class TemplateEngineService {
    * Set a value at a nested path using dot notation
    */
   private setNestedValue(obj: Record<string, unknown>, path: string, value: unknown): void {
-    const parts = path.split('.');
+    const parts = path
+      .split('.')
+      .map((part) => part.trim())
+      .filter((part) => part.length > 0);
+
+    if (parts.length === 0) {
+      this.logger.warn('Skipping response mapping with empty path');
+      return;
+    }
+
+    if (parts.some((part) => this.isUnsafePathSegment(part))) {
+      this.logger.warn(`Blocked unsafe response mapping path: "${path}"`);
+      return;
+    }
+
     let current = obj;
 
     for (let i = 0; i < parts.length - 1; i++) {
       const part = parts[i];
-      if (!(part in current)) {
-        current[part] = {};
+      if (this.isUnsafePathSegment(part)) {
+        this.logger.warn(`Blocked unsafe response mapping path: "${path}"`);
+        return;
+      }
+
+      const hasOwnProperty = Object.prototype.hasOwnProperty.call(current, part);
+      const nextValue = hasOwnProperty ? current[part] : undefined;
+
+      if (
+        !hasOwnProperty ||
+        typeof nextValue !== 'object' ||
+        nextValue === null ||
+        Array.isArray(nextValue)
+      ) {
+        current[part] = Object.create(null) as Record<string, unknown>;
       }
       current = current[part] as Record<string, unknown>;
     }
 
-    current[parts[parts.length - 1]] = value;
+    const leafPart = parts[parts.length - 1];
+    if (this.isUnsafePathSegment(leafPart)) {
+      this.logger.warn(`Blocked unsafe response mapping path: "${path}"`);
+      return;
+    }
+
+    current[leafPart] = value;
   }
 
   /**
