@@ -1,4 +1,8 @@
----# AVI-OS Coding Standards — Mandatory Rules
+---
+trigger: always_on
+---
+
+# AVI-OS Coding Standards — Mandatory Rules
 
 ## Pre-Flight Validation (EVERY TASK)
 
@@ -97,5 +101,3 @@ Before accepting: SOLID followed? No injection/hardcoded secrets? All error path
 ## Enforcement
 
 If generated code does not meet these standards, flag the gap and fix before delivering. No shortcuts.
-trigger: always_on
----
