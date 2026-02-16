@@ -1,0 +1,5 @@
+# Build output
+dist/
+
+# Stale compiled JS in src/ (from builds without outDir)
+src/**/*.js
