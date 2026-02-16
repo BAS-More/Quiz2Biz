@@ -1,8 +1,0 @@
-drop 27c53fe Commit e5yt4y5ws4657
-pick 60b7bbc commit 7658696g45ws
-pick bbc599c commit w467ws465ryusw
-pick 5fe0a26 commit w465w437y
-pick 2e7cc97 commit 465y73w4w
-pick 4917878 commi
-pick a6dd25d commit w356w3
-pick 78ba53c chore: add azure credentials to gitignore and prevent future secret commits
