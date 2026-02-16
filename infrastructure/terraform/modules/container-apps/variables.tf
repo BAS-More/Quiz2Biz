@@ -145,3 +145,4 @@ variable "canary_traffic_percentage" {
     error_message = "Canary traffic percentage must be 0, 5, 25, 50, or 100."
   }
 }
+

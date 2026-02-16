@@ -1,4 +1,4 @@
-# Terraform Outputs - Adaptive Questionnaire System
+﻿# Terraform Outputs - Adaptive Questionnaire System
 
 # Resource Group
 output "resource_group_name" {
@@ -13,13 +13,13 @@ output "resource_group_location" {
 
 # Networking
 output "vnet_id" {
-  description = "ID of the Virtual Network"
-  value       = module.networking.vnet_id
+  description = "ID of the virtual network"
+  value       = ""
 }
 
 output "vnet_name" {
-  description = "Name of the Virtual Network"
-  value       = module.networking.vnet_name
+  description = "Name of the virtual network"
+  value       = ""
 }
 
 # Container Registry
@@ -113,3 +113,4 @@ output "connection_info" {
     acr_repository = "${module.registry.acr_login_server}/questionnaire-api"
   }
 }
+
