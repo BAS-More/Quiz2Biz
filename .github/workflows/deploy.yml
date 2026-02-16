@@ -20,7 +20,7 @@ on:
         default: 'development'
 
 env:
-  NODE_VERSION: '20.x'
+  NODE_VERSION: '22.x'
   REGISTRY_NAME: acrquestionnairedev
   IMAGE_NAME: questionnaire-api
   RESOURCE_GROUP: rg-questionnaire-dev
