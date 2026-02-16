@@ -17,7 +17,6 @@
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
     "test:cov": "turbo run test:cov",
-    "coverage": "turbo run test:cov",
     "test:regression": "jest --config=test/regression/jest.config.js",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
@@ -38,16 +37,17 @@
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset",
-    "cloud:setup": "bash ./scripts/setup-azure.sh",
-    "cloud:deploy": "bash ./scripts/deploy.sh",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
     "prepare": "echo husky disabled for OneDrive path compatibility"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",
-    "@eslint/js": "^10.0.1",
+    "@eslint/js": "^9.39.1",
     "@lhci/cli": "^0.15.1",
-    "@playwright/test": "^1.58.2",
-    "@swc/cli": "^0.8.0",
+    "@playwright/test": "^1.58.0",
+    "@swc/cli": "^0.5.2",
     "@swc/core": "^1.15.10",
     "@testing-library/dom": "^10.4.1",
     "@types/archiver": "^7.0.0",
@@ -55,14 +55,14 @@
     "@types/node": "^20.10.0",
     "autocannon": "^8.0.0",
     "axe-core": "^4.11.1",
-    "eslint": "^10.0.0",
+    "eslint": "^9.39.2",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-prettier": "^5.1.0",
     "globals": "^17.3.0",
     "husky": "^8.0.3",
     "jest-axe": "^10.0.0",
-    "lint-staged": "^16.2.7",
+    "lint-staged": "^15.2.0",
     "pa11y": "^9.0.1",
     "prettier": "^3.2.0",
     "prisma": "^5.8.0",
@@ -70,7 +70,7 @@
     "tsc-alias": "^1.8.16",
     "turbo": "^1.11.0",
     "typescript": "^5.3.3",
-    "typescript-eslint": "^8.55.0"
+    "typescript-eslint": "^8.54.0"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
@@ -90,9 +90,6 @@
   },
   "dependencies": {
     "@azure/storage-blob": "^12.30.0",
-    "@nestjs/common": "^10.3.0",
-    "@nestjs/config": "^4.0.3",
-    "@nestjs/core": "^10.3.0",
     "@nestjs/jwt": "^11.0.2",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^10.3.0",
@@ -103,14 +100,11 @@
     "helmet": "^8.1.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
-    "reflect-metadata": "^0.2.1",
-    "rxjs": "^7.8.1",
     "tsconfig-paths": "^4.2.0"
   },
   "overrides": {
-    "jsonpath": "^1.2.1",
     "lodash": "4.17.23",
-    "qs": "^6.14.2",
-    "tmp": "^0.2.5"
+    "qs": "6.14.2",
+    "tmp": "0.2.4"
   }
 }

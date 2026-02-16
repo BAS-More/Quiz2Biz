@@ -251,16 +251,13 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({
 
   // Generate unique ID
   const generateId = (): string => {
-    // Prefer cryptographically secure randomness for IDs
     const cryptoObj = (typeof window !== 'undefined' && window.crypto) || undefined;
 
     if (cryptoObj && typeof cryptoObj.randomUUID === 'function') {
-      // Modern browsers: use built-in UUID generator
       return cryptoObj.randomUUID();
     }
 
     if (cryptoObj && typeof cryptoObj.getRandomValues === 'function') {
-      // Fallback: generate a 16-byte random hex string
       const bytes = new Uint8Array(16);
       cryptoObj.getRandomValues(bytes);
       const hex = Array.from(bytes)
@@ -269,7 +266,6 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({
       return `${Date.now()}_${hex}`;
     }
 
-    // Last-resort fallback if crypto is unavailable
     fallbackIdCounter += 1;
     const monotonicPart =
       typeof performance !== 'undefined'

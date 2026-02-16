@@ -2,7 +2,7 @@ import { Controller, Get, HttpException, HttpStatus, Inject, Optional } from '@n
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SkipThrottle } from '@nestjs/throttler';
 import { PrismaService } from '@libs/database';
-import * as v8 from 'v8';
+import { RedisService } from '@libs/redis';
 
 // =============================================================================
 // Health Response Interfaces
@@ -54,7 +54,10 @@ interface ReadinessResponse {
 export class HealthController {
   private readonly startTime: Date;
 
-  constructor(@Optional() @Inject(PrismaService) private readonly prisma?: PrismaService) {
+  constructor(
+    @Optional() @Inject(PrismaService) private readonly prisma?: PrismaService,
+    @Optional() @Inject(RedisService) private readonly redis?: RedisService,
+  ) {
     this.startTime = new Date();
   }
 
@@ -267,38 +270,64 @@ export class HealthController {
   }
 
   private async checkRedis(): Promise<DependencyCheck | null> {
-    // Redis check would go here if RedisService is injected
-    // For now, return null to indicate Redis is not configured
-    // This can be enhanced when Redis is properly integrated
-    return null;
+    if (!this.redis) {
+      return null;
+    }
+
+    const startTime = Date.now();
+    try {
+      await this.redis.getClient().ping();
+      const responseTime = Date.now() - startTime;
+
+      if (responseTime > 1000) {
+        return {
+          name: 'redis',
+          status: 'degraded',
+          responseTime,
+          message: 'Redis responding slowly',
+        };
+      }
+
+      return {
+        name: 'redis',
+        status: 'healthy',
+        responseTime,
+      };
+    } catch (error) {
+      return {
+        name: 'redis',
+        status: 'unhealthy',
+        responseTime: Date.now() - startTime,
+        message: error instanceof Error ? error.message : 'Unknown error',
+      };
+    }
   }
 
   private checkMemory(): DependencyCheck {
     const memUsage = process.memoryUsage();
-    const heapStats = v8.getHeapStatistics();
     const heapUsedMB = Math.round(memUsage.heapUsed / 1024 / 1024);
-    const heapLimitMB = Math.round(heapStats.heap_size_limit / 1024 / 1024);
-    const usagePercent = (heapUsedMB / heapLimitMB) * 100;
+    const heapTotalMB = Math.round(memUsage.heapTotal / 1024 / 1024);
+    const usagePercent = (heapUsedMB / heapTotalMB) * 100;
 
-    // Thresholds against V8 heap size limit (--max-old-space-size)
-    const WARNING_THRESHOLD = 80; // 80% of max heap
-    const CRITICAL_THRESHOLD = 95; // 95% of max heap
+    // Thresholds
+    const WARNING_THRESHOLD = 80; // 80% heap usage
+    const CRITICAL_THRESHOLD = 95; // 95% heap usage
 
     let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
     let message: string | undefined;
 
     if (usagePercent >= CRITICAL_THRESHOLD) {
       status = 'unhealthy';
-      message = `Memory critical: ${heapUsedMB}MB / ${heapLimitMB}MB (${usagePercent.toFixed(1)}%)`;
+      message = `Memory critical: ${heapUsedMB}MB / ${heapTotalMB}MB (${usagePercent.toFixed(1)}%)`;
     } else if (usagePercent >= WARNING_THRESHOLD) {
       status = 'degraded';
-      message = `Memory warning: ${heapUsedMB}MB / ${heapLimitMB}MB (${usagePercent.toFixed(1)}%)`;
+      message = `Memory warning: ${heapUsedMB}MB / ${heapTotalMB}MB (${usagePercent.toFixed(1)}%)`;
     }
 
     return {
       name: 'memory',
       status,
-      message: message || `${heapUsedMB}MB / ${heapLimitMB}MB (${usagePercent.toFixed(1)}%)`,
+      message: message || `${heapUsedMB}MB / ${heapTotalMB}MB (${usagePercent.toFixed(1)}%)`,
     };
   }
 

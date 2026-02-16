@@ -1,8 +1,15 @@
 {
   "permissions": {
     "allow": [
+<<<<<<< HEAD
       "Bash(npm test:*)",
       "Bash(npx vitest run:*)"
+=======
+      "Bash(xargs ls:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
     ]
   }
 }

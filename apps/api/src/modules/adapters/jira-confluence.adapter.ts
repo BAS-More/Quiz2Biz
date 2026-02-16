@@ -234,16 +234,13 @@ export class JiraConfluenceAdapter {
     isConfluence: boolean = false,
     isAgile: boolean = false,
   ): Promise<T> {
-    // Validate the domain before constructing the URL to prevent SSRF
     const normalizedDomain = this.getTrustedJiraDomain();
-
     if (config.domain.trim().toLowerCase() !== normalizedDomain) {
       throw new HttpException(
         'Configured Jira domain does not match trusted server configuration',
         HttpStatus.BAD_REQUEST,
       );
     }
-
     this.validateDomain({ ...config, domain: normalizedDomain });
     const safeEndpoint = this.sanitizeEndpoint(endpoint);
 
@@ -255,6 +252,7 @@ export class JiraConfluenceAdapter {
     } else {
       baseUrl = `https://${normalizedDomain}/rest/api/3`;
     }
+
     const requestUrl = new URL(safeEndpoint, `${baseUrl}/`);
     const trustedBaseUrl = new URL(`${baseUrl}/`);
     const trustedBasePath = trustedBaseUrl.pathname.endsWith('/')

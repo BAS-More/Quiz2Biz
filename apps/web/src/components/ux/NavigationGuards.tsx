@@ -7,7 +7,7 @@
  * Nielsen Heuristic #5: Error Prevention
  */
 
-import React, { useState, useEffect, useCallback, createContext, useContext, useRef } from 'react';
+import React, { useState, useEffect, useCallback, createContext, useContext, useRef, useMemo } from 'react';
 
 // ============================================================================
 // Types & Interfaces
@@ -373,7 +373,7 @@ export const UnsavedChangesDialog: React.FC<UnsavedChangesDialogProps> = ({
 interface UseDirtyFormOptions {
   formId: string;
   message?: string;
-  watchFields?: any[];
+  watchFields?: unknown[];
   initialDirty?: boolean;
 }
 
@@ -453,17 +453,17 @@ export const NavigationPrompt: React.FC<NavigationPromptProps> = ({
   message = 'You have unsaved changes. Are you sure you want to leave?',
 }) => {
   const { registerDirtyForm, unregisterDirtyForm } = useNavigationGuard();
-  const formId = useRef(`prompt-${Math.random().toString(36).substr(2, 9)}`);
+  const formId = useMemo(() => `prompt-${Math.random().toString(36).substr(2, 9)}`, []);
 
   useEffect(() => {
     if (when) {
-      registerDirtyForm(formId.current, message);
+      registerDirtyForm(formId, message);
     } else {
-      unregisterDirtyForm(formId.current);
+      unregisterDirtyForm(formId);
     }
 
-    return () => unregisterDirtyForm(formId.current);
-  }, [when, message, registerDirtyForm, unregisterDirtyForm]);
+    return () => unregisterDirtyForm(formId);
+  }, [when, message, registerDirtyForm, unregisterDirtyForm, formId]);
 
   return null;
 };
@@ -519,7 +519,7 @@ export const GuardedForm: React.FC<GuardedFormProps> = ({
   onSubmit,
   ...props
 }) => {
-  const { registerDirtyForm, unregisterDirtyForm, markFormClean, markFormDirty: _markFormDirty } =
+  const { registerDirtyForm, unregisterDirtyForm, markFormClean } =
     useNavigationGuard();
   const [isDirty, setIsDirty] = useState(false);
 
@@ -551,7 +551,11 @@ export const GuardedForm: React.FC<GuardedFormProps> = ({
   );
 
   return (
-    <form onChange={handleChange as any} onSubmit={handleSubmit as any} {...props}>
+    <form 
+      onChange={handleChange as React.FormEventHandler<HTMLFormElement>} 
+      onSubmit={handleSubmit as React.FormEventHandler<HTMLFormElement>} 
+      {...props}
+    >
       {children}
     </form>
   );

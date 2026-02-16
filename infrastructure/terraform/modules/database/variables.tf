@@ -21,11 +21,13 @@ variable "resource_group_name" {
 variable "subnet_id" {
   description = "ID of the database subnet"
   type        = string
+  default     = ""
 }
 
 variable "private_dns_zone_id" {
   description = "ID of the private DNS zone for PostgreSQL"
   type        = string
+  default     = ""
 }
 
 variable "sku_name" {
@@ -56,3 +58,4 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+

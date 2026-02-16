@@ -201,7 +201,7 @@ export class GitLabAdapter {
       return false;
     }
 
-    // IPv4 private, loopback and link-local ranges
+    // IPv4 private, loopback and link-local ranges.
     const privateRanges = [
       { from: '10.0.0.0', to: '10.255.255.255' },
       { from: '172.16.0.0', to: '172.31.255.255' },
@@ -228,21 +228,17 @@ export class GitLabAdapter {
       );
     }
 
-    const rawBaseUrl = trustedApiUrl;
-
     let parsed: URL;
     try {
-      parsed = new URL(rawBaseUrl);
+      parsed = new URL(trustedApiUrl);
     } catch {
       throw new HttpException('Invalid GitLab API URL', HttpStatus.BAD_REQUEST);
     }
 
-    const protocol = parsed.protocol.toLowerCase();
-    if (protocol !== 'https:') {
+    if (parsed.protocol.toLowerCase() !== 'https:') {
       throw new HttpException('GitLab API URL must use HTTPS', HttpStatus.BAD_REQUEST);
     }
 
-    // Disallow credentials in URL
     if (parsed.username || parsed.password) {
       throw new HttpException('GitLab API URL must not contain credentials', HttpStatus.BAD_REQUEST);
     }
@@ -252,7 +248,6 @@ export class GitLabAdapter {
       throw new HttpException('GitLab API URL must not point to localhost', HttpStatus.BAD_REQUEST);
     }
 
-    // Resolve hostname to IP and block private/loopback ranges
     try {
       const addresses = await dns.promises.lookup(hostname, { all: true });
       for (const addr of addresses) {
@@ -264,17 +259,14 @@ export class GitLabAdapter {
         }
       }
     } catch (err) {
-      // If DNS resolution fails for a custom host, treat as configuration error
       this.logger.error(`Failed to resolve GitLab API host "${hostname}": ${getErrorMessage(err)}`);
       throw new HttpException('Unable to resolve GitLab API host', HttpStatus.BAD_REQUEST);
     }
 
-    // Normalize: strip trailing slash to avoid '//' when concatenating
     let normalized = parsed.toString();
     if (normalized.endsWith('/')) {
       normalized = normalized.slice(0, -1);
     }
-
     return normalized;
   }
 

@@ -6,7 +6,7 @@ resource "azurerm_container_app_environment" "main" {
   location                   = var.location
   resource_group_name        = var.resource_group_name
   log_analytics_workspace_id = var.log_analytics_workspace_id
-  infrastructure_subnet_id   = var.subnet_id
+  infrastructure_subnet_id   = var.subnet_id != "" ? var.subnet_id : null
 
   tags = var.tags
 
@@ -208,3 +208,4 @@ resource "azurerm_container_app" "api" {
     ]
   }
 }
+

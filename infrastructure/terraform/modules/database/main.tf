@@ -1,4 +1,4 @@
-# Database Module - Azure Database for PostgreSQL Flexible Server
+﻿# Database Module - Azure Database for PostgreSQL Flexible Server
 
 resource "random_password" "postgres" {
   length           = 32
@@ -16,7 +16,6 @@ resource "azurerm_postgresql_flexible_server" "main" {
   # private_dns_zone_id    = var.private_dns_zone_id
   administrator_login    = "psqladmin"
   administrator_password = random_password.postgres.result
-  zone                   = "1"
   storage_mb             = var.storage_mb
   sku_name               = var.sku_name
   backup_retention_days  = 7
@@ -66,3 +65,5 @@ resource "azurerm_postgresql_flexible_server_configuration" "log_disconnections"
   server_id = azurerm_postgresql_flexible_server.main.id
   value     = "on"
 }
+
+

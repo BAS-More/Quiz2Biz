@@ -41,8 +41,8 @@ export const useEvidenceStore = create<EvidenceState>()((set) => ({
     try {
       const items = await questionnaireApi.listEvidence(sessionId);
       set({ items, isLoading: false });
-    } catch (err: any) {
-      set({ isLoading: false, error: err?.response?.data?.message ?? err.message });
+    } catch (err: unknown) {
+      set({ isLoading: false, error: (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error' });
     }
   },
 
@@ -50,7 +50,7 @@ export const useEvidenceStore = create<EvidenceState>()((set) => ({
     try {
       const stats = await questionnaireApi.getEvidenceStats(sessionId);
       set({ stats });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.warn('Failed to load evidence stats:', err);
     }
   },
