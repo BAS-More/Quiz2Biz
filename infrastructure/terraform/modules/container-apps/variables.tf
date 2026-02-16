@@ -21,6 +21,7 @@ variable "resource_group_name" {
 variable "subnet_id" {
   description = "ID of the subnet for Container Apps"
   type        = string
+  default     = ""
 }
 
 variable "log_analytics_workspace_id" {
@@ -144,3 +145,4 @@ variable "canary_traffic_percentage" {
     error_message = "Canary traffic percentage must be 0, 5, 25, 50, or 100."
   }
 }
+
