@@ -5,6 +5,7 @@
 import { Pool, type PoolClient, type QueryResult } from 'pg';
 import { config } from '../config';
 import { createLogger } from '../utils/logger';
+import { validateMessage } from '../schemas/message';
 import type {
   AuditOperation,
   TaskTier,
@@ -382,9 +383,6 @@ export async function updateTask(taskId: number, updates: Partial<ITask>): Promi
  * Validates the message before persistence to ensure required fields are present.
  */
 export async function createMessage(data: Partial<IMessage>): Promise<IMessage> {
-  // Import validateMessage dynamically to avoid circular dependency
-  const { validateMessage } = await import('../schemas/message');
-  
   // Validate message before persistence
   const validation = validateMessage(data);
   if (!validation.valid) {

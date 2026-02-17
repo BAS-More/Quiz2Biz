@@ -80,7 +80,7 @@ LABEL org.opencontainers.image.title="questionnaire-api" \
       org.opencontainers.image.source="https://github.com/Avi-Bendetsky/Quiz-to-build" \
       org.opencontainers.image.licenses="UNLICENSED" \
       org.opencontainers.image.base.name="docker.io/library/node:22-alpine" \
-      org.opencontainers.image.version="${IMAGE_VERSION}"
+      org.opencontainers.image.version=$IMAGE_VERSION
 
 WORKDIR /app
 

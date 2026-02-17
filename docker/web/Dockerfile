@@ -33,7 +33,7 @@ LABEL org.opencontainers.image.title="questionnaire-web" \
       org.opencontainers.image.source="https://github.com/Avi-Bendetsky/Quiz-to-build" \
       org.opencontainers.image.licenses="UNLICENSED" \
       org.opencontainers.image.base.name="docker.io/library/nginx:1.27-alpine" \
-      org.opencontainers.image.version="${IMAGE_VERSION}"
+      org.opencontainers.image.version=$IMAGE_VERSION
 
 # Install security patches
 RUN apk upgrade --no-cache
