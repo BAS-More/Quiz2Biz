@@ -69,9 +69,6 @@ export function createLogger(module: string, minLevel: LogLevel = 'info'): ILogg
 
     const output = `${prefix} ${message}${metaStr}`;
 
-    // Note: Using synchronous writes for simplicity and immediate output.
-    // In high-throughput scenarios, consider using a structured logging library
-    // (Winston, Pino) with async/batching support to avoid blocking the event loop.
     if (level === 'error') {
       process.stderr.write(output + '\n');
     } else {

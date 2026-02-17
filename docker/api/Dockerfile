@@ -15,7 +15,7 @@ COPY libs/redis/package*.json ./libs/redis/
 COPY libs/shared/package*.json ./libs/shared/
 
 COPY package-lock.json ./
-RUN npm ci || npm install
+RUN npm ci --legacy-peer-deps || npm install --legacy-peer-deps
 
 # Copy source files
 COPY . .
@@ -27,9 +27,6 @@ RUN npx prisma generate
 RUN npx turbo run build --filter=api --filter=database --filter=redis --filter=shared
 
 # Prune dev dependencies for production
-# NOTE: This is done after build (not before) because build requires devDependencies
-# (TypeScript, build tools, etc.). The pruned node_modules is then copied to the
-# production stage, which avoids shipping dev dependencies to production.
 RUN npm prune --production
 
 # Development stage
@@ -49,7 +46,7 @@ COPY libs/redis/package*.json ./libs/redis/
 COPY libs/shared/package*.json ./libs/shared/
 
 COPY package-lock.json ./
-RUN npm ci || npm install
+RUN npm ci --legacy-peer-deps || npm install --legacy-peer-deps
 
 # Copy source files
 COPY . .
@@ -66,17 +63,13 @@ CMD ["npm", "run", "start:dev"]
 # Production stage (must be last for default ACR build)
 FROM node:22-alpine AS production
 
-# Build argument for version
-ARG IMAGE_VERSION=unknown
-
 # OCI labels for supply chain tracking
 LABEL org.opencontainers.image.title="questionnaire-api" \
       org.opencontainers.image.description="Quiz2Biz API — NestJS backend" \
       org.opencontainers.image.vendor="Quiz2Biz" \
       org.opencontainers.image.source="https://github.com/Avi-Bendetsky/Quiz-to-build" \
       org.opencontainers.image.licenses="UNLICENSED" \
-      org.opencontainers.image.base.name="docker.io/library/node:22-alpine" \
-      org.opencontainers.image.version="${IMAGE_VERSION}"
+      org.opencontainers.image.base.name="docker.io/library/node:22-alpine"
 
 WORKDIR /app
 

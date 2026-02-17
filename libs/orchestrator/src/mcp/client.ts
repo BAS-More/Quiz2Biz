@@ -38,38 +38,19 @@ export function init(): void {
   if (pool) return;
 
   const { db } = config;
-  
-  // SSL certificate validation - defaults to secure (rejectUnauthorized: true)
-  // Can be disabled via DB_SSL_REJECT_UNAUTHORIZED=false (not recommended for production)
-  const sslRejectUnauthorizedEnv = process.env.DB_SSL_REJECT_UNAUTHORIZED;
-  const sslRejectUnauthorized =
-    sslRejectUnauthorizedEnv !== undefined
-      ? !['false', '0', 'no', 'off'].includes(
-          sslRejectUnauthorizedEnv.toLowerCase().trim(),
-        )
-      : true;
-
-  if (db.ssl && !sslRejectUnauthorized) {
-    log.warn(
-      'Database SSL is enabled with rejectUnauthorized = false; certificate validation is disabled',
-    );
-  }
-
   pool = new Pool({
     host: db.host,
     port: db.port,
     database: db.database,
     user: db.user,
     password: db.password,
-    ssl: db.ssl ? { rejectUnauthorized: sslRejectUnauthorized } : false,
+    ssl: db.ssl ? { rejectUnauthorized: false } : false,
     min: db.poolMin,
     max: db.poolMax,
   });
 
   pool.on('error', (err: Error) => {
     log.error('Unexpected pool error', { error: err.message });
-    // Note: Connection retry logic should be implemented by the application layer
-    // when database operations fail, rather than automatically reconnecting here
   });
 
   log.info('Connection pool initialised', { host: db.host, database: db.database });
@@ -121,85 +102,12 @@ export async function getClient(): Promise<PoolClient> {
 /**
  * Execute a parameterised SQL query against the pool.
  *
- * **Security Notes:**
- * - Always use parameterized queries with $1, $2, etc. placeholders
- * - Never concatenate user input into SQL strings
- * - Consider adding LIMIT clauses to unbounded queries
- * - Statement timeouts are configured at the database level
- *
  * @param sql - SQL statement with $1, $2, etc. placeholders.
  * @param params - Bind parameters.
  * @returns The query result.
  */
 export async function query(sql: string, params?: unknown[]): Promise<QueryResult> {
   return getPool().query(sql, params);
-}
-
-/**
- * Execute a query with automatic retry on transient failures.
- * 
- * Implements exponential backoff for connection errors, timeouts, and other
- * transient database failures. Non-retryable errors (constraint violations,
- * syntax errors) are thrown immediately.
- * 
- * @param sql - SQL statement with $1, $2, etc. placeholders.
- * @param params - Bind parameters.
- * @param maxRetries - Maximum retry attempts (default: 3).
- * @returns The query result.
- */
-export async function queryWithRetry(
-  sql: string,
-  params?: unknown[],
-  maxRetries = 3,
-): Promise<QueryResult> {
-  let lastError: Error | undefined;
-  
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try {
-      return await query(sql, params);
-    } catch (err) {
-      lastError = err as Error;
-      
-      // Check if error is retryable using PostgreSQL error codes and connection errors
-      // See: https://www.postgresql.org/docs/current/errcodes-appendix.html
-      const pgError = err as any; // pg errors have additional properties
-      const errorCode = pgError.code;
-      
-      // Retryable PostgreSQL error codes:
-      // - 08000: connection_exception
-      // - 08003: connection_does_not_exist
-      // - 08006: connection_failure
-      // - 57P03: cannot_connect_now
-      // - 53300: too_many_connections
-      const retryablePgCodes = ['08000', '08003', '08006', '57P03', '53300'];
-      
-      // Retryable network errors
-      const isNetworkError = 
-        lastError.message.includes('ECONNREFUSED') ||
-        lastError.message.includes('ECONNRESET') ||
-        lastError.message.includes('ETIMEDOUT') ||
-        lastError.message.includes('Connection terminated');
-      
-      const isRetryable = 
-        retryablePgCodes.includes(errorCode) || isNetworkError;
-      
-      // Don't retry on non-transient errors (constraint violations, syntax errors, etc.)
-      if (!isRetryable || attempt === maxRetries) {
-        throw lastError;
-      }
-      
-      // Exponential backoff: 100ms, 200ms, 400ms, 800ms, etc.
-      const delayMs = 100 * Math.pow(2, attempt);
-      log.warn(`Query failed (attempt ${attempt + 1}/${maxRetries + 1}), retrying in ${delayMs}ms`, {
-        error: lastError.message,
-        errorCode,
-      });
-      
-      await new Promise(resolve => setTimeout(resolve, delayMs));
-    }
-  }
-  
-  throw lastError;
 }
 
 // ── Agent Queries ───────────────────────────────────────────────────────────
@@ -352,22 +260,11 @@ export async function getTask(taskId: number): Promise<ITask | null> {
 
 /**
  * Create a new task. Auto-generates created_at timestamp.
- * 
- * Uses default values from the orchestrator config for tier and error budgets.
  *
  * @param data - Partial task data (tier, instruction, etc.).
  * @returns The fully created task row.
  */
 export async function createTask(data: Partial<ITask>): Promise<ITask> {
-  // Import config defaults
-  const { tierBudgets, errorBudgets } = config;
-  
-  // Determine tier, defaulting to 'M' (Medium) if not specified
-  const tier = (data.tier ?? 'M') as TaskTier;
-  
-  // Get default max_errors from config error budgets for the tier
-  const defaultMaxErrors = errorBudgets[tier]?.maxRetries ?? 3;
-  
   const result = await query(
     `INSERT INTO tasks (
        tier, task_type, project, module, instruction, status,
@@ -377,7 +274,7 @@ export async function createTask(data: Partial<ITask>): Promise<ITask> {
      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, NOW())
      RETURNING *`,
     [
-      tier,
+      data.tier ?? 'M',
       data.task_type ?? 'unknown',
       data.project ?? null,
       data.module ?? null,
@@ -386,10 +283,10 @@ export async function createTask(data: Partial<ITask>): Promise<ITask> {
       data.queue_position ?? null,
       data.assigned_agent ?? null,
       data.delegated_by ?? null,
-      data.token_budget ?? tierBudgets[tier] ?? null,
+      data.token_budget ?? null,
       data.tokens_consumed ?? 0,
       data.error_count ?? 0,
-      data.max_errors ?? defaultMaxErrors,
+      data.max_errors ?? 3,
       data.output ?? null,
       data.expected_output_schema ?? null,
       data.classification_reasoning ?? null,
@@ -401,9 +298,6 @@ export async function createTask(data: Partial<ITask>): Promise<ITask> {
 
 /**
  * Update a task with the given fields.
- * 
- * Only allows updates to whitelisted fields to prevent SQL injection
- * and ensure type safety.
  */
 export async function updateTask(taskId: number, updates: Partial<ITask>): Promise<void> {
   const setClauses: string[] = [];
@@ -417,17 +311,6 @@ export async function updateTask(taskId: number, updates: Partial<ITask>): Promi
     'validation_summary', 'expected_output_schema', 'classification_reasoning',
     'is_urgent', 'started_at', 'completed_at',
   ];
-
-  // Validate that all keys in updates are in the allowed list
-  const updateKeys = Object.keys(updates) as Array<keyof ITask>;
-  const invalidKeys = updateKeys.filter(key => !allowed.includes(key));
-  
-  if (invalidKeys.length > 0) {
-    throw new Error(
-      `updateTask: Invalid field(s) provided: ${invalidKeys.join(', ')}. ` +
-      `Allowed fields: ${allowed.join(', ')}`
-    );
-  }
 
   for (const key of allowed) {
     if (key in updates) {

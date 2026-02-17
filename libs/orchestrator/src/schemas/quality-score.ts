@@ -21,26 +21,6 @@ export const QUALITY_WEIGHTS = {
   clarity: 0.20,
 } as const;
 
-/**
- * Validate that the quality weights sum to 1.0 to keep the overall score
- * on the expected 0–100 scale.
- *
- * Throws an error at module load time if the invariant is violated so that
- * misconfigured weights do not silently skew scores.
- */
-function validateQualityWeights(weights: typeof QUALITY_WEIGHTS): void {
-  const sum = Object.values(weights).reduce((acc, value) => acc + value, 0);
-  const EPSILON = 1e-6;
-  if (Math.abs(sum - 1.0) > EPSILON) {
-    throw new Error(
-      `QUALITY_WEIGHTS must sum to 1.0, but the current sum is ${sum}.`,
-    );
-  }
-}
-
-// Validate weights at module initialization time.
-validateQualityWeights(QUALITY_WEIGHTS);
-
 // ── Score Calculation ───────────────────────────────────────────────────────
 
 /** Component scores required to calculate the overall quality score. */

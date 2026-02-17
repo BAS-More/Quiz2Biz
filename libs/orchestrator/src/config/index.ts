@@ -162,15 +162,6 @@ export function validateConfig(cfg: IOrchestratorConfig): void {
     missing.push('Anthropic API key (Q2B_ANTHROPIC_API_KEY or ANTHROPIC_API_KEY)');
   }
 
-  // OpenAI API key is required for Tier 2 cross-model validation
-  // If you don't need Tier 2 validation, this can be made optional
-  if (!cfg.openai.apiKey) {
-    log.warn(
-      'OpenAI API key not configured. Tier 2 cross-model validation will be disabled. ' +
-      'Set Q2B_OPENAI_API_KEY or OPENAI_API_KEY to enable.'
-    );
-  }
-
   if (!cfg.db.host) {
     missing.push('Database host (Q2B_DATABASE_HOST)');
   }

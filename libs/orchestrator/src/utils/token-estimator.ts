@@ -6,17 +6,6 @@
  * Average characters per token for English text.
  * Claude and GPT tokenizers average ~3.5–4 chars/token for English prose.
  * We use 3.8 as a conservative middle ground.
- * 
- * **Limitations:**
- * - This is a heuristic and not exact tokenization
- * - Different models have different tokenizers (Claude vs GPT)
- * - Code, JSON, and structured data have different ratios
- * - Non-English text (especially CJK) may have very different ratios
- * 
- * **For production use**, consider:
- * - Using actual tokenizer libraries (tiktoken for OpenAI, Anthropic's tokenizer)
- * - Making the ratio configurable per model
- * - Adding a safety margin to prevent prompt truncation
  */
 const CHARS_PER_TOKEN = 3.8;
 

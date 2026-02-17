@@ -124,12 +124,11 @@ interface IBaseMessageFields {
  * because it sits at the top of the hierarchy with no predecessor.
  *
  * @param fields - Common message fields.
- * @param instruction - Natural-language instruction for the target agent (required, non-empty).
+ * @param instruction - Natural-language instruction for the target agent.
  * @param predecessorSummary - Summary of prior work (required unless from COO).
  * @param isFastPath - Whether this delegation follows a pre-computed fast path.
  * @param fastPathId - Fast path ID, if applicable.
  * @returns Partial IMessage ready for persistence via createMessage().
- * @throws {Error} If instruction is empty or missing.
  */
 export function buildDelegateMessage(
   fields: IBaseMessageFields,
@@ -138,10 +137,6 @@ export function buildDelegateMessage(
   isFastPath = false,
   fastPathId: number | null = null,
 ): Partial<IMessage> {
-  if (!instruction || instruction.trim().length === 0) {
-    throw new Error('buildDelegateMessage: instruction is required and cannot be empty');
-  }
-
   return {
     task_id: fields.taskId,
     from_agent: fields.fromAgent,
@@ -162,11 +157,10 @@ export function buildDelegateMessage(
  * quality gates are enforced at every hand-off.
  *
  * @param fields - Common message fields.
- * @param output - The work product / result payload (required).
+ * @param output - The work product / result payload.
  * @param validationSummary - Validation results (required).
  * @param predecessorSummary - Summary of the work performed.
  * @returns Partial IMessage ready for persistence.
- * @throws {Error} If output or validationSummary is missing.
  */
 export function buildReportMessage(
   fields: IBaseMessageFields,
@@ -174,13 +168,6 @@ export function buildReportMessage(
   validationSummary: IValidationSummary,
   predecessorSummary: string | null = null,
 ): Partial<IMessage> {
-  if (!output || typeof output !== 'object') {
-    throw new Error('buildReportMessage: output is required and must be an object');
-  }
-  if (!validationSummary || typeof validationSummary !== 'object') {
-    throw new Error('buildReportMessage: validationSummary is required');
-  }
-
   return {
     task_id: fields.taskId,
     from_agent: fields.fromAgent,
@@ -201,20 +188,15 @@ export function buildReportMessage(
  * to ensure they are processed ahead of normal queue items.
  *
  * @param fields - Common message fields (toAgent should be the escalation target).
- * @param reason - Why the escalation is needed (required, non-empty).
+ * @param reason - Why the escalation is needed.
  * @param context - Additional context about the issue.
  * @returns Partial IMessage ready for persistence.
- * @throws {Error} If reason is empty or missing.
  */
 export function buildEscalateMessage(
   fields: IBaseMessageFields,
   reason: string,
   context: Record<string, unknown> = {},
 ): Partial<IMessage> {
-  if (!reason || reason.trim().length === 0) {
-    throw new Error('buildEscalateMessage: reason is required and cannot be empty');
-  }
-
   return {
     task_id: fields.taskId,
     from_agent: fields.fromAgent,

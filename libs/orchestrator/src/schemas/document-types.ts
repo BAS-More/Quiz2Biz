@@ -398,14 +398,6 @@ export function validateDocumentStructure(
  * Count words in a text string.
  *
  * Splits on whitespace, filters empty tokens.
- * 
- * **Limitations:**
- * - Does not handle CJK (Chinese, Japanese, Korean) text where words aren't space-separated
- * - Counts hyphenated words as one word
- * - Does not account for contractions or possessives separately
- * 
- * For production document validation against ISO standards, consider using
- * a more sophisticated word counting library or clearly document these limitations.
  *
  * @param text - Input text.
  * @returns Word count.
