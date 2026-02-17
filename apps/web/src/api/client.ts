@@ -5,7 +5,7 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '../stores/auth';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
 const CSRF_TOKEN_HEADER = 'X-CSRF-Token';
 const CSRF_TOKEN_COOKIE = 'csrf-token';
 
@@ -151,7 +151,7 @@ apiClient.interceptors.response.use(
           // Try to refresh token
           const { data } = await axios.post(`${API_BASE_URL}/api/v1/auth/refresh`, {
             refreshToken,
-          });
+          }, { withCredentials: true });
 
           // Update tokens in store
           useAuthStore.getState().setAccessToken(data.accessToken);

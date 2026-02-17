@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 import { Question, VisibilityRule, VisibilityAction } from '@prisma/client';
 import { ConditionEvaluator } from './evaluators/condition.evaluator';
@@ -18,8 +18,6 @@ export interface EvaluationResult {
 
 @Injectable()
 export class AdaptiveLogicService {
-  private readonly logger = new Logger(AdaptiveLogicService.name);
-
   constructor(
     private readonly prisma: PrismaService,
     private readonly conditionEvaluator: ConditionEvaluator,

@@ -3,7 +3,7 @@
 .SYNOPSIS
     Sets up custom domain with SSL for Container App
 .DESCRIPTION
-    Configures www.quiz2biz.com with managed SSL certificate for Azure Container App
+    Configures custom domain with managed SSL certificate for Azure Container App
 .PARAMETER Domain
     Custom domain to configure (default: www.quiz2biz.com)
 .PARAMETER ResourceGroup

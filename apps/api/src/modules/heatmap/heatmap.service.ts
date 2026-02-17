@@ -533,7 +533,7 @@ export class HeatmapService {
       } // Skip low-risk cells
 
       const dimensionWeight = dimensionWeights.get(cell.dimensionKey) || 0.1;
-      const severityMultiplier = this.getSeverityMultiplier(cell.severityBucket as SeverityBucket);
+      const severityMultiplier = this.getSeverityMultiplier(cell.severityBucket);
 
       // Priority score = cell value × dimension weight × severity multiplier
       const priorityScore = cell.cellValue * dimensionWeight * severityMultiplier;

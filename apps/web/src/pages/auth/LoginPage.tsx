@@ -1,5 +1,6 @@
 /**
  * Login page component
+ * Design: Modern SaaS - refined inputs, branded buttons, social auth
  */
 
 import { useState } from 'react';
@@ -9,11 +10,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { authApi } from '../../api';
 import { useAuthStore } from '../../stores/auth';
-import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Mail } from 'lucide-react';
 import { OAuthButtons } from '../../components/auth/OAuthButtons';
+import { Button } from '../../components/ui';
 
 const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
+  email: z.string().email('Please enter a valid email address'),
   password: z.string().min(1, 'Password is required'),
 });
 
@@ -41,13 +43,14 @@ export function LoginPage() {
       void navigate('/dashboard');
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
-      setError(error.response?.data?.message || 'Failed to login. Please try again.');
+      setError(error.response?.data?.message || 'Invalid email or password. Please try again.');
     }
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">Sign in to your account</h2>
+    <div className="animate-fade-in">
+      <h2 className="text-xl font-semibold text-surface-900 text-center mb-1">Welcome back</h2>
+      <p className="text-sm text-surface-500 text-center mb-6">Sign in to continue to your dashboard</p>
 
       {/* Status announcements for screen readers */}
       <div aria-live="polite" aria-atomic="true" className="sr-only">
@@ -56,43 +59,59 @@ export function LoginPage() {
 
       {error && (
         <div
-          className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm"
+          className="mb-5 p-3 bg-danger-50 border border-danger-200 text-danger-700 rounded-xl text-sm flex items-center gap-2"
           role="alert"
           aria-live="assertive"
         >
+          <svg className="h-4 w-4 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
+          </svg>
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+        <div className="space-y-1.5">
+          <label htmlFor="email" className="block text-sm font-medium text-surface-700">
             Email address
           </label>
-          <input
-            {...register('email')}
-            type="email"
-            id="email"
-            autoComplete="email"
-            required
-            aria-required="true"
-            aria-invalid={errors.email ? 'true' : 'false'}
-            aria-describedby={errors.email ? 'email-error' : undefined}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            placeholder="you@example.com"
-          />
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-surface-400">
+              <Mail className="h-4 w-4" />
+            </div>
+            <input
+              {...register('email')}
+              type="email"
+              id="email"
+              autoComplete="email"
+              required
+              aria-required="true"
+              aria-invalid={errors.email ? 'true' : 'false'}
+              aria-describedby={errors.email ? 'email-error' : undefined}
+              className="block w-full rounded-lg border border-surface-200 bg-white pl-10 pr-3.5 py-2.5 text-sm text-surface-900 placeholder:text-surface-400 hover:border-surface-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-colors"
+              placeholder="you@example.com"
+            />
+          </div>
           {errors.email && (
-            <p id="email-error" className="mt-1 text-sm text-red-600" role="alert">
+            <p id="email-error" className="text-sm text-danger-600" role="alert">
               {errors.email.message}
             </p>
           )}
         </div>
 
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-            Password
-          </label>
-          <div className="relative mt-1">
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <label htmlFor="password" className="block text-sm font-medium text-surface-700">
+              Password
+            </label>
+            <Link
+              to="/auth/forgot-password"
+              className="text-xs font-medium text-brand-600 hover:text-brand-700 transition-colors"
+            >
+              Forgot password?
+            </Link>
+          </div>
+          <div className="relative">
             <input
               {...register('password')}
               type={showPassword ? 'text' : 'password'}
@@ -102,79 +121,67 @@ export function LoginPage() {
               aria-required="true"
               aria-invalid={errors.password ? 'true' : 'false'}
               aria-describedby={errors.password ? 'password-error' : undefined}
-              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm pr-10"
+              className="block w-full rounded-lg border border-surface-200 bg-white px-3.5 py-2.5 text-sm text-surface-900 placeholder:text-surface-400 hover:border-surface-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 pr-10 transition-colors"
               placeholder="Enter your password"
             />
             <button
               type="button"
-              className="absolute inset-y-0 right-0 flex items-center pr-3"
+              className="absolute inset-y-0 right-0 flex items-center pr-3 text-surface-400 hover:text-surface-600 transition-colors"
               onClick={() => setShowPassword(!showPassword)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? (
-                <EyeOff className="h-4 w-4 text-gray-400" />
+                <EyeOff className="h-4 w-4" />
               ) : (
-                <Eye className="h-4 w-4 text-gray-400" />
+                <Eye className="h-4 w-4" />
               )}
             </button>
           </div>
           {errors.password && (
-            <p id="password-error" className="mt-1 text-sm text-red-600" role="alert">
+            <p id="password-error" className="text-sm text-danger-600" role="alert">
               {errors.password.message}
             </p>
           )}
         </div>
 
-        <div className="flex items-center justify-between">
-          <div className="text-sm">
-            <Link
-              to="/auth/forgot-password"
-              className="font-medium text-blue-600 hover:text-blue-500"
-            >
-              Forgot your password?
-            </Link>
-          </div>
-        </div>
-
-        <button
+        <Button
           type="submit"
-          disabled={isSubmitting}
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          loading={isSubmitting}
+          fullWidth
+          size="lg"
+          className="mt-2"
         >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Signing in...
-            </>
-          ) : (
-            'Sign in'
-          )}
-        </button>
+          {isSubmitting ? 'Signing in...' : 'Sign in'}
+        </Button>
       </form>
 
-      <div className="mt-6">
-        <OAuthButtons mode="login" onError={(err) => setError(err)} />
-      </div>
-
+      {/* Divider */}
       <div className="mt-6">
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300" />
+            <div className="w-full border-t border-surface-200" />
           </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">New to Quiz2Biz?</span>
+          <div className="relative flex justify-center text-xs">
+            <span className="px-3 bg-white text-surface-400 uppercase tracking-wide">or continue with</span>
           </div>
-        </div>
-
-        <div className="mt-4">
-          <Link
-            to="/auth/register"
-            className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Create an account
-          </Link>
         </div>
       </div>
+
+      {/* OAuth */}
+      <div className="mt-5">
+        <OAuthButtons mode="login" onError={(err) => setError(err)} />
+      </div>
+
+      {/* Sign up link */}
+      <p className="mt-6 text-center text-sm text-surface-500">
+        Don't have an account?{' '}
+        <Link
+          to="/auth/register"
+          className="font-medium text-brand-600 hover:text-brand-700 transition-colors"
+        >
+          Create one for free
+        </Link>
+      </p>
     </div>
   );
 }
