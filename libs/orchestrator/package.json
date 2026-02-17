@@ -4,6 +4,8 @@
   "private": true,
   "main": "src/index.ts",
   "dependencies": {
-    "pg": "^8.13.0"
+    "@anthropic-ai/tokenizer": "^0.0.4",
+    "pg": "^8.13.0",
+    "tiktoken": "^1.0.22"
   }
 }
