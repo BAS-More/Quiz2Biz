@@ -19,6 +19,7 @@ import type {
   IPrecedenceRule,
   ITask,
 } from '../schemas/interfaces';
+import { validateMessage } from '../schemas/message';
 
 const log = createLogger('mcp-client', config.logLevel);
 
@@ -333,8 +334,26 @@ export async function updateTask(taskId: number, updates: Partial<ITask>): Promi
 
 /**
  * Create an inter-agent message record.
+ *
+ * Validates the message before persistence to ensure all required fields
+ * are present and type-specific requirements are met (e.g., DELEGATE messages
+ * must include an instruction in the payload).
+ *
+ * @param data - Partial message data to persist.
+ * @returns The fully created message row.
+ * @throws Error if message validation fails. The error message will include
+ *         detailed information about which fields are missing or invalid.
  */
 export async function createMessage(data: Partial<IMessage>): Promise<IMessage> {
+  // Validate the message before persisting
+  const validationResult = validateMessage(data);
+  if (!validationResult.valid) {
+    const errorDetails = validationResult.errors
+      .map(e => `${e.field}: ${e.message}`)
+      .join('; ');
+    throw new Error(`Message validation failed: ${errorDetails}`);
+  }
+
   const result = await query(
     `INSERT INTO messages (
        task_id, from_agent, to_agent, message_type, payload,
