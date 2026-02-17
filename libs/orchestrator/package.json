@@ -4,6 +4,8 @@
   "private": true,
   "main": "src/index.ts",
   "dependencies": {
-    "pg": "^8.13.0"
+    "pg": "^8.13.0",
+    "pino": "^10.3.1",
+    "pino-pretty": "^13.1.3"
   }
 }
