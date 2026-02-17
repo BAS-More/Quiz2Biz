@@ -159,10 +159,52 @@ export async function getClient(): Promise<PoolClient> {
  *
  * @param sql - SQL statement with $1, $2, etc. placeholders.
  * @param params - Bind parameters.
+ * @param options - Optional query execution options.
  * @returns The query result.
+ * 
+ * @remarks
+ * This function provides basic protection against resource-exhausting queries:
+ * - A default statement timeout is applied (configurable via options)
+ * - DDL statements (CREATE, DROP, ALTER, TRUNCATE) are blocked by default
+ * - For production use, consider implementing additional safeguards:
+ *   - Query complexity analysis
+ *   - Whitelist of allowed SQL patterns
+ *   - Per-query execution time limits
  */
-export async function query(sql: string, params?: unknown[]): Promise<QueryResult> {
-  return getPool().query(sql, params);
+export async function query(
+  sql: string, 
+  params?: unknown[],
+  options?: { 
+    allowDDL?: boolean;
+    statementTimeout?: number; // milliseconds
+  }
+): Promise<QueryResult> {
+  const { allowDDL = false, statementTimeout = 30000 } = options ?? {};
+
+  // Block DDL statements unless explicitly allowed
+  if (!allowDDL) {
+    const upperSQL = sql.trim().toUpperCase();
+    const ddlKeywords = ['CREATE', 'DROP', 'ALTER', 'TRUNCATE', 'GRANT', 'REVOKE'];
+    const isDDL = ddlKeywords.some(keyword => upperSQL.startsWith(keyword));
+    
+    if (isDDL) {
+      throw new Error(
+        'DDL statements are not allowed. Set allowDDL: true to override this protection.'
+      );
+    }
+  }
+
+  const pool = getPool();
+  
+  // Set statement timeout for this query
+  const client = await pool.connect();
+  try {
+    await client.query(`SET statement_timeout = ${statementTimeout}`);
+    const result = await client.query(sql, params);
+    return result;
+  } finally {
+    client.release();
+  }
 }
 
 // ── Agent Queries ───────────────────────────────────────────────────────────
