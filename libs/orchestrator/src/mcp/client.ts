@@ -20,6 +20,7 @@ import type {
   IPrecedenceRule,
   ITask,
 } from '../schemas/interfaces';
+import { validateMessage } from '../schemas/message';
 
 const log = createLogger('mcp-client', config.logLevel);
 

@@ -129,6 +129,8 @@ interface IBaseMessageFields {
  * @param isFastPath - Whether this delegation follows a pre-computed fast path.
  * @param fastPathId - Fast path ID, if applicable.
  * @returns Partial IMessage ready for persistence via createMessage().
+ * @throws Error when passed to createMessage() if validation fails (e.g., missing instruction,
+ *         missing predecessorSummary for non-COO agents).
  */
 export function buildDelegateMessage(
   fields: IBaseMessageFields,
@@ -161,6 +163,7 @@ export function buildDelegateMessage(
  * @param validationSummary - Validation results (required).
  * @param predecessorSummary - Summary of the work performed.
  * @returns Partial IMessage ready for persistence.
+ * @throws Error when passed to createMessage() if validation fails (e.g., missing validationSummary).
  */
 export function buildReportMessage(
   fields: IBaseMessageFields,
@@ -191,6 +194,7 @@ export function buildReportMessage(
  * @param reason - Why the escalation is needed.
  * @param context - Additional context about the issue.
  * @returns Partial IMessage ready for persistence.
+ * @throws Error when passed to createMessage() if validation fails (e.g., missing reason).
  */
 export function buildEscalateMessage(
   fields: IBaseMessageFields,
@@ -222,6 +226,7 @@ export function buildEscalateMessage(
  * @param fields - Common message fields.
  * @param statusPayload - Arbitrary status data (e.g. progress %, tokens consumed).
  * @returns Partial IMessage ready for persistence.
+ * @throws Error when passed to createMessage() if validation fails (e.g., missing required fields).
  */
 export function buildStatusMessage(
   fields: IBaseMessageFields,
@@ -250,6 +255,7 @@ export function buildStatusMessage(
  * @param reason - Why the task is being redirected.
  * @param suggestedAgent - The recommended agent to handle the task.
  * @returns Partial IMessage ready for persistence.
+ * @throws Error when passed to createMessage() if validation fails (e.g., missing required fields).
  */
 export function buildRedirectMessage(
   fields: IBaseMessageFields,
