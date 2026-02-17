@@ -5,36 +5,39 @@
  */
 
 import {
-  DOCUMENT_TYPES,
+  DOCUMENT_SCHEMAS,
   validateDocumentStructure,
   calculateDocumentPrice,
+  listDocumentSchemas,
   type DocumentSlug,
 } from '../document-types';
 
 describe('Document Types', () => {
-  describe('DOCUMENT_TYPES schemas', () => {
+  describe('DOCUMENT_SCHEMAS', () => {
     it('should have all 8 document types defined', () => {
-      expect(DOCUMENT_TYPES).toHaveLength(8);
+      const schemas = listDocumentSchemas();
+      expect(schemas).toHaveLength(8);
     });
 
     it('should have unique slugs', () => {
-      const slugs = DOCUMENT_TYPES.map(dt => dt.slug);
+      const schemas = listDocumentSchemas();
+      const slugs = schemas.map(dt => dt.slug);
       const uniqueSlugs = new Set(slugs);
       expect(uniqueSlugs.size).toBe(slugs.length);
     });
 
     it('should have valid price constraints', () => {
-      DOCUMENT_TYPES.forEach(docType => {
+      const schemas = listDocumentSchemas();
+      schemas.forEach(docType => {
         expect(docType.basePrice).toBeGreaterThan(0);
-        expect(docType.qualitySliderEnabled).toBeDefined();
+        expect(docType.formats).toBeDefined();
       });
     });
   });
 
   describe('validateDocumentStructure - Word Counting', () => {
-    // Get a simple document type for testing
-    const businessPlan = DOCUMENT_TYPES.find(dt => dt.slug === 'business-plan');
-    if (!businessPlan) throw new Error('business-plan schema not found');
+    // Use business-plan slug for testing
+    const businessPlanSlug = 'business-plan';
 
     describe('English text', () => {
       it('should count simple English words correctly', () => {
@@ -43,7 +46,7 @@ describe('Document Types', () => {
           market_analysis: 'The market is growing rapidly',
         };
 
-        const result = validateDocumentStructure(businessPlan, sections, 1.0);
+        const result = validateDocumentStructure(businessPlanSlug, sections, 1.0);
         // "Hello world this is a test" = 6 words
         // "The market is growing rapidly" = 5 words
         // Total = 11 words
@@ -56,7 +59,7 @@ describe('Document Types', () => {
           market_analysis: "It's a wonderful world",
         };
 
-        const result = validateDocumentStructure(businessPlan, sections, 1.0);
+        const result = validateDocumentStructure(businessPlanSlug, sections, 1.0);
         // "Don't stop believing" = 3 words
         // "It's a wonderful world" = 4 words
         // Total = 7 words
@@ -69,7 +72,7 @@ describe('Document Types', () => {
           market_analysis: "Our company's vision",
         };
 
-        const result = validateDocumentStructure(businessPlan, sections, 1.0);
+        const result = validateDocumentStructure(businessPlanSlug, sections, 1.0);
         // "The user's choice" = 3 words
         // "Our company's vision" = 3 words
         // Total = 6 words
@@ -82,7 +85,7 @@ describe('Document Types', () => {
           market_analysis: 'State-of-the-art technology platform',
         };
 
-        const result = validateDocumentStructure(businessPlan, sections, 1.0);
+        const result = validateDocumentStructure(businessPlanSlug, sections, 1.0);
         // "User-friendly interface design" = 3 words
         // "State-of-the-art technology platform" = 3 words
         // Total = 6 words
@@ -95,7 +98,7 @@ describe('Document Types', () => {
           market_analysis: 'Normal spacing here',
         };
 
-        const result = validateDocumentStructure(businessPlan, sections, 1.0);
+        const result = validateDocumentStructure(businessPlanSlug, sections, 1.0);
         // "Multiple spaces between words" = 4 words
         // "Normal spacing here" = 3 words
         // Total = 7 words
@@ -110,7 +113,7 @@ describe('Document Types', () => {
           market_analysis: '韓国語',
         };
 
-        const result = validateDocumentStructure(businessPlan, sections, 1.0);
+        const result = validateDocumentStructure(businessPlanSlug, sections, 1.0);
         // "你好世界" = 4 CJK characters (each counts as a word)
         // "韓国語" = 3 CJK characters (each counts as a word)
         // Total = 7 words
@@ -123,7 +126,7 @@ describe('Document Types', () => {
           market_analysis: 'Welcome to Japan 日本へようこそ',
         };
 
-        const result = validateDocumentStructure(businessPlan, sections, 1.0);
+        const result = validateDocumentStructure(businessPlanSlug, sections, 1.0);
         // "Hello means 你好" = 2 English + 2 CJK = 4 words
         // "Welcome to Japan 日本へようこそ" = 3 English + 7 CJK = 10 words
         // Total = 14 words
@@ -136,7 +139,7 @@ describe('Document Types', () => {
           market_analysis: '대한민국',
         };
 
-        const result = validateDocumentStructure(businessPlan, sections, 1.0);
+        const result = validateDocumentStructure(businessPlanSlug, sections, 1.0);
         // "안녕하세요" = 5 Korean characters
         // "대한민국" = 4 Korean characters
         // Total = 9 words
@@ -151,7 +154,7 @@ describe('Document Types', () => {
           market_analysis: 'Some content',
         };
 
-        const result = validateDocumentStructure(businessPlan, sections, 1.0);
+        const result = validateDocumentStructure(businessPlanSlug, sections, 1.0);
         // Empty string = 0 words
         // "Some content" = 2 words
         // Total = 2 words
@@ -164,7 +167,7 @@ describe('Document Types', () => {
           // market_analysis is missing
         };
 
-        const result = validateDocumentStructure(businessPlan, sections, 1.0);
+        const result = validateDocumentStructure(businessPlanSlug, sections, 1.0);
         // Only counts words from present sections
         expect(result.totalWords).toBe(2);
       });
@@ -175,7 +178,7 @@ describe('Document Types', () => {
           market_analysis: 'Growth rate: 25% annually',
         };
 
-        const result = validateDocumentStructure(businessPlan, sections, 1.0);
+        const result = validateDocumentStructure(businessPlanSlug, sections, 1.0);
         // Numbers and special chars with letters are counted as words
         expect(result.totalWords).toBeGreaterThan(0);
       });
@@ -188,7 +191,7 @@ describe('Document Types', () => {
           market_analysis: 'Russian text here',
         };
 
-        const result = validateDocumentStructure(businessPlan, sections, 1.0);
+        const result = validateDocumentStructure(businessPlanSlug, sections, 1.0);
         // "Привет мир" = 2 words (Cyrillic)
         // "Russian text here" = 3 words (English)
         // Total = 5 words
@@ -201,7 +204,7 @@ describe('Document Types', () => {
           market_analysis: 'Greek text example',
         };
 
-        const result = validateDocumentStructure(businessPlan, sections, 1.0);
+        const result = validateDocumentStructure(businessPlanSlug, sections, 1.0);
         // "Γεια σου κόσμε" = 4 words (Greek - includes diacritic marks)
         // "Greek text example" = 3 words (English)
         // Total = 7 words
@@ -214,7 +217,7 @@ describe('Document Types', () => {
           market_analysis: 'Arabic text example',
         };
 
-        const result = validateDocumentStructure(businessPlan, sections, 1.0);
+        const result = validateDocumentStructure(businessPlanSlug, sections, 1.0);
         // Arabic words + English words
         expect(result.totalWords).toBeGreaterThan(0);
       });
