@@ -1,0 +1,39 @@
+# CODEOWNERS - Define code ownership for automated review requests
+# Learn more: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything in the repo
+* @quiz2biz/core-team
+
+# API and backend changes
+/apps/api/ @quiz2biz/backend-team
+/libs/ @quiz2biz/backend-team
+/prisma/ @quiz2biz/backend-team
+
+# Frontend changes
+/apps/web/ @quiz2biz/frontend-team
+
+# CLI tool
+/apps/cli/ @quiz2biz/core-team
+
+# Infrastructure and deployment
+/infrastructure/ @quiz2biz/devops-team
+/docker/ @quiz2biz/devops-team
+/.github/workflows/ @quiz2biz/devops-team
+
+# Security-sensitive files require security team review
+/security/ @quiz2biz/security-team
+/.secrets.baseline @quiz2biz/security-team
+/.snyk @quiz2biz/security-team
+
+# Documentation
+/docs/ @quiz2biz/docs-team
+*.md @quiz2biz/docs-team
+
+# Test files
+/e2e/ @quiz2biz/qa-team
+/test/ @quiz2biz/qa-team
+
+# Configuration files require core team approval
+/package.json @quiz2biz/core-team
+/turbo.json @quiz2biz/core-team
+/tsconfig.json @quiz2biz/core-team

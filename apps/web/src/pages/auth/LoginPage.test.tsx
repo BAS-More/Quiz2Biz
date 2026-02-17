@@ -33,7 +33,7 @@ describe('LoginPage', () => {
   it('renders login form', () => {
     renderLoginPage();
 
-    expect(screen.getByRole('heading', { name: /sign in/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /welcome back/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/enter your password/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
@@ -41,8 +41,8 @@ describe('LoginPage', () => {
 
   it('has link to register page', () => {
     renderLoginPage();
-    expect(screen.getByText(/new to quiz2biz/i)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /create an account/i })).toBeInTheDocument();
+    expect(screen.getByText(/don't have an account/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /create one for free/i })).toBeInTheDocument();
   });
 
   it('has link to forgot password', () => {

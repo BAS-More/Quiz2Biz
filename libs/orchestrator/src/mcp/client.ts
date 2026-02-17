@@ -23,6 +23,22 @@ import type {
 
 const log = createLogger('mcp-client', config.logLevel);
 
+// ── Default Task Configuration ──────────────────────────────────────────────
+
+/** Default tier for tasks when none is specified. */
+const DEFAULT_TASK_TIER: TaskTier = 'M';
+
+/**
+ * Get the default maximum errors for a given task tier.
+ * Uses the tier's configured maxRetries from the error budget.
+ *
+ * @param tier - The task tier (S, M, L, XL).
+ * @returns The maximum number of errors allowed before task failure.
+ */
+function getDefaultMaxErrors(tier: TaskTier): number {
+  return config.errorBudgets[tier].maxRetries;
+}
+
 // ── Tier ordering for fast path max_tier comparison ─────────────────────────
 
 const TIER_ORDER: Record<TaskTier, number> = { S: 1, M: 2, L: 3, XL: 4 };
@@ -36,7 +52,7 @@ let pool: Pool | null = null;
  * Safe to call multiple times — subsequent calls are no-ops.
  */
 export function init(): void {
-  if (pool) return;
+  if (pool) {return;}
 
   const { db } = config;
 
@@ -86,7 +102,7 @@ export function init(): void {
  * Gracefully shut down the connection pool, draining all active connections.
  */
 export async function shutdown(): Promise<void> {
-  if (!pool) return;
+  if (!pool) {return;}
   await pool.end();
   pool = null;
   log.info('Connection pool shut down');
@@ -94,7 +110,7 @@ export async function shutdown(): Promise<void> {
 
 /** Get the pool instance, throwing if not initialised. */
 function getPool(): Pool {
-  if (!pool) throw new Error('MCP client not initialised — call init() first');
+  if (!pool) {throw new Error('MCP client not initialised — call init() first');}
   return pool;
 }
 
@@ -298,11 +314,16 @@ export async function getTask(taskId: number): Promise<ITask | null> {
 
 /**
  * Create a new task. Auto-generates created_at timestamp.
+ * Uses config-based defaults for tier and max_errors.
  *
  * @param data - Partial task data (tier, instruction, etc.).
  * @returns The fully created task row.
  */
 export async function createTask(data: Partial<ITask>): Promise<ITask> {
+  // Use default tier if not specified, then derive max_errors from tier's error budget
+  const tier = data.tier ?? DEFAULT_TASK_TIER;
+  const maxErrors = data.max_errors ?? getDefaultMaxErrors(tier);
+
   const result = await query(
     `INSERT INTO tasks (
        tier, task_type, project, module, instruction, status,
@@ -312,7 +333,7 @@ export async function createTask(data: Partial<ITask>): Promise<ITask> {
      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, NOW())
      RETURNING *`,
     [
-      data.tier ?? 'M',
+      tier,
       data.task_type ?? 'unknown',
       data.project ?? null,
       data.module ?? null,
@@ -324,7 +345,7 @@ export async function createTask(data: Partial<ITask>): Promise<ITask> {
       data.token_budget ?? null,
       data.tokens_consumed ?? 0,
       data.error_count ?? 0,
-      data.max_errors ?? 3,
+      maxErrors,
       data.output ?? null,
       data.expected_output_schema ?? null,
       data.classification_reasoning ?? null,
@@ -336,8 +357,17 @@ export async function createTask(data: Partial<ITask>): Promise<ITask> {
 
 /**
  * Update a task with the given fields.
+ * If tier is updated without max_errors, automatically sets max_errors based on new tier's error budget.
+ *
+ * @param taskId - The task ID to update.
+ * @param updates - Partial task data to update.
  */
 export async function updateTask(taskId: number, updates: Partial<ITask>): Promise<void> {
+  // If tier is being updated but max_errors is not, derive max_errors from the new tier
+  if (updates.tier && !('max_errors' in updates)) {
+    updates = { ...updates, max_errors: getDefaultMaxErrors(updates.tier) };
+  }
+
   const setClauses: string[] = [];
   const values: unknown[] = [];
   let paramIndex = 1;
@@ -367,7 +397,7 @@ export async function updateTask(taskId: number, updates: Partial<ITask>): Promi
     }
   }
 
-  if (setClauses.length === 0) return;
+  if (setClauses.length === 0) {return;}
 
   values.push(taskId);
   await query(

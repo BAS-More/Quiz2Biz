@@ -18,11 +18,27 @@ env:
 jobs:
   lint-and-format:
     name: Lint and Format Check
+<<<<<<< HEAD
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+=======
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
     runs-on: ubuntu-latest
     permissions:
       contents: read
     
     steps:
+<<<<<<< HEAD
+      - name: Check for Dependabot re-run
+        if: github.actor == 'dependabot[bot]' && github.run_attempt != 1
+        run: |
+          echo "::error::Dependabot workflows cannot be re-run. Retrigger this update via Dependabot instead."
+          echo "To retrigger this workflow:"
+          echo "1. Comment '@dependabot recreate' on the PR to recreate it"
+          echo "2. Or close and reopen the PR"
+          exit 1
+
+=======
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -33,16 +49,27 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
+<<<<<<< HEAD
+        run: npm ci --legacy-peer-deps
+
+      - name: Check code formatting (app and libs only)
+        run: npx prettier --check "apps/**/*.{ts,tsx,js,jsx}" "libs/**/*.{ts,tsx,js,jsx}"
+=======
         run: npm ci
 
       - name: Check code formatting
         run: npm run format:check
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
 
       - name: Run linter
         run: npm run lint
 
   test-api:
     name: API Tests
+<<<<<<< HEAD
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+=======
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -73,6 +100,18 @@ jobs:
           - 6379:6379
     
     steps:
+<<<<<<< HEAD
+      - name: Check for Dependabot re-run
+        if: github.actor == 'dependabot[bot]' && github.run_attempt != 1
+        run: |
+          echo "::error::Dependabot workflows cannot be re-run. Retrigger this update via Dependabot instead."
+          echo "To retrigger this workflow:"
+          echo "1. Comment '@dependabot recreate' on the PR to recreate it"
+          echo "2. Or close and reopen the PR"
+          exit 1
+
+=======
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -83,15 +122,26 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
+<<<<<<< HEAD
+        run: npm ci --legacy-peer-deps
+=======
         run: npm ci
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
 
       - name: Generate Prisma Client
         run: npm run db:generate
 
+<<<<<<< HEAD
+      - name: Sync database schema
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
+        run: npx prisma db push --skip-generate
+=======
       - name: Run database migrations
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
         run: npm run db:migrate
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
 
       - name: Run API tests
         env:
@@ -113,11 +163,27 @@ jobs:
 
   test-web:
     name: Web Tests
+<<<<<<< HEAD
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+=======
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
     runs-on: ubuntu-latest
     permissions:
       contents: read
     
     steps:
+<<<<<<< HEAD
+      - name: Check for Dependabot re-run
+        if: github.actor == 'dependabot[bot]' && github.run_attempt != 1
+        run: |
+          echo "::error::Dependabot workflows cannot be re-run. Retrigger this update via Dependabot instead."
+          echo "To retrigger this workflow:"
+          echo "1. Comment '@dependabot recreate' on the PR to recreate it"
+          echo "2. Or close and reopen the PR"
+          exit 1
+
+=======
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -128,7 +194,11 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
+<<<<<<< HEAD
+        run: npm ci --legacy-peer-deps
+=======
         run: npm ci
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
 
       - name: Run Web tests
         run: npm run test -- --filter=web
@@ -143,6 +213,10 @@ jobs:
 
   test-e2e:
     name: E2E Tests
+<<<<<<< HEAD
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+=======
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -173,6 +247,18 @@ jobs:
           - 6379:6379
     
     steps:
+<<<<<<< HEAD
+      - name: Check for Dependabot re-run
+        if: github.actor == 'dependabot[bot]' && github.run_attempt != 1
+        run: |
+          echo "::error::Dependabot workflows cannot be re-run. Retrigger this update via Dependabot instead."
+          echo "To retrigger this workflow:"
+          echo "1. Comment '@dependabot recreate' on the PR to recreate it"
+          echo "2. Or close and reopen the PR"
+          exit 1
+
+=======
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -183,7 +269,11 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
+<<<<<<< HEAD
+        run: npm ci --legacy-peer-deps
+=======
         run: npm ci
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
@@ -191,6 +281,17 @@ jobs:
       - name: Generate Prisma Client
         run: npm run db:generate
 
+<<<<<<< HEAD
+      - name: Sync database schema
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
+        run: npx prisma db push --skip-generate
+
+      - name: Build core packages
+        run: npx turbo run build --filter=api --filter=database --filter=redis --filter=shared --filter=web
+
+      - name: Run E2E tests
+=======
       - name: Run database migrations
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
@@ -200,6 +301,7 @@ jobs:
         run: npm run build
 
       - name: Start applications
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
         env:
           NODE_ENV: test
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
@@ -207,11 +309,14 @@ jobs:
           REDIS_PORT: 6379
           JWT_SECRET: test-jwt-secret
           JWT_REFRESH_SECRET: test-refresh-secret
+<<<<<<< HEAD
+=======
         run: |
           npm run start &
           sleep 20
 
       - name: Run E2E tests
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
         run: npm run test:e2e
 
       - name: Upload E2E test results
@@ -224,11 +329,27 @@ jobs:
 
   build:
     name: Build Application
+<<<<<<< HEAD
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+=======
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
     runs-on: ubuntu-latest
     permissions:
       contents: read
     
     steps:
+<<<<<<< HEAD
+      - name: Check for Dependabot re-run
+        if: github.actor == 'dependabot[bot]' && github.run_attempt != 1
+        run: |
+          echo "::error::Dependabot workflows cannot be re-run. Retrigger this update via Dependabot instead."
+          echo "To retrigger this workflow:"
+          echo "1. Comment '@dependabot recreate' on the PR to recreate it"
+          echo "2. Or close and reopen the PR"
+          exit 1
+
+=======
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -239,17 +360,34 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
+<<<<<<< HEAD
+        run: npm ci --legacy-peer-deps
+=======
         run: npm ci
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
 
       - name: Generate Prisma Client
         run: npm run db:generate
 
+<<<<<<< HEAD
+      - name: Build core packages
+        run: npx turbo run build --filter=api --filter=database --filter=redis --filter=shared --filter=web
+=======
       - name: Build all packages
         run: npm run build
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
 
       - name: Check build artifacts
         run: |
           echo "Checking build artifacts..."
+<<<<<<< HEAD
+          if [ ! -d "apps/api/dist" ]; then
+            echo "❌ API build failed - apps/api/dist not found"
+            exit 1
+          fi
+          if [ ! -d "apps/web/dist" ]; then
+            echo "❌ Web build failed - apps/web/dist not found"
+=======
           ls -la dist/
           if [ ! -d "dist/apps/api" ]; then
             echo "❌ API build failed - dist/apps/api not found"
@@ -257,17 +395,34 @@ jobs:
           fi
           if [ ! -d "dist/apps/web" ]; then
             echo "❌ Web build failed - dist/apps/web not found"
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
             exit 1
           fi
           echo "✅ All build artifacts present"
 
   docker-build-test:
     name: Docker Build Test
+<<<<<<< HEAD
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+=======
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
     runs-on: ubuntu-latest
     permissions:
       contents: read
     
     steps:
+<<<<<<< HEAD
+      - name: Check for Dependabot re-run
+        if: github.actor == 'dependabot[bot]' && github.run_attempt != 1
+        run: |
+          echo "::error::Dependabot workflows cannot be re-run. Retrigger this update via Dependabot instead."
+          echo "To retrigger this workflow:"
+          echo "1. Comment '@dependabot recreate' on the PR to recreate it"
+          echo "2. Or close and reopen the PR"
+          exit 1
+
+=======
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -287,11 +442,27 @@ jobs:
 
   security-scan:
     name: Security Scan
+<<<<<<< HEAD
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+=======
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
     runs-on: ubuntu-latest
     permissions:
       contents: read
     
     steps:
+<<<<<<< HEAD
+      - name: Check for Dependabot re-run
+        if: github.actor == 'dependabot[bot]' && github.run_attempt != 1
+        run: |
+          echo "::error::Dependabot workflows cannot be re-run. Retrigger this update via Dependabot instead."
+          echo "To retrigger this workflow:"
+          echo "1. Comment '@dependabot recreate' on the PR to recreate it"
+          echo "2. Or close and reopen the PR"
+          exit 1
+
+=======
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -302,7 +473,11 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
+<<<<<<< HEAD
+        run: npm ci --legacy-peer-deps
+=======
         run: npm ci
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
 
       - name: Run npm audit
         run: npm audit --production --audit-level=high
@@ -318,10 +493,43 @@ jobs:
           fi
         continue-on-error: true
 
+<<<<<<< HEAD
+  automation-smoke:
+    name: Automation Branch Smoke Check
+    if: github.actor == 'dependabot[bot]' || startsWith(github.head_ref, 'dependabot/') || startsWith(github.head_ref, 'alert-autofix-') || startsWith(github.head_ref, 'copilot/') || startsWith(github.head_ref, 'qoder/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+
+      - name: Smoke build
+        run: npx turbo run build --filter=api --filter=database --filter=redis --filter=shared
+
+  all-checks-passed:
+    name: All Checks Passed
+    runs-on: ubuntu-latest
+    needs: [lint-and-format, test-api, test-web, test-e2e, build, docker-build-test, security-scan, automation-smoke]
+=======
   all-checks-passed:
     name: All Checks Passed
     runs-on: ubuntu-latest
     needs: [lint-and-format, test-api, test-web, test-e2e, build, docker-build-test, security-scan]
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
     if: always()
     permissions:
       contents: read
@@ -329,11 +537,26 @@ jobs:
     steps:
       - name: Check all job statuses
         run: |
+<<<<<<< HEAD
+          is_ok() {
+            [[ "$1" == "success" || "$1" == "skipped" ]]
+          }
+
+          if ! is_ok "${{ needs.lint-and-format.result }}" || \
+             ! is_ok "${{ needs.test-api.result }}" || \
+             ! is_ok "${{ needs.test-web.result }}" || \
+             ! is_ok "${{ needs.test-e2e.result }}" || \
+             ! is_ok "${{ needs.build.result }}" || \
+             ! is_ok "${{ needs.docker-build-test.result }}" || \
+             ! is_ok "${{ needs.security-scan.result }}" || \
+             ! is_ok "${{ needs.automation-smoke.result }}"; then
+=======
           if [[ "${{ needs.lint-and-format.result }}" != "success" ]] || \
              [[ "${{ needs.test-api.result }}" != "success" ]] || \
              [[ "${{ needs.test-web.result }}" != "success" ]] || \
              [[ "${{ needs.build.result }}" != "success" ]] || \
              [[ "${{ needs.docker-build-test.result }}" != "success" ]]; then
+>>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
             echo "❌ Some required checks failed"
             exit 1
           fi

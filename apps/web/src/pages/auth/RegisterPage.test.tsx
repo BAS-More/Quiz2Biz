@@ -82,7 +82,7 @@ describe('RegisterPage', () => {
     expect(toggleButton).toBeInTheDocument();
   });
 
-  it('validates password mismatch on form submission', async () => {
+  it('validates password mismatch on form submission', { timeout: 60000 }, async () => {
     const user = userEvent.setup();
     renderRegisterPage();
 

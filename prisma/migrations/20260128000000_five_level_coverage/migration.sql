@@ -15,11 +15,11 @@ ALTER TABLE "evidence_registry" ADD COLUMN "coverage_value" "CoverageLevel" NOT 
 -- Uses nearest-neighbor rounding to closest 0.25 increment
 UPDATE "responses" 
 SET "coverage_level" = CASE
-    WHEN "coverage" IS NULL OR "coverage" < 0.125 THEN 'NONE'::\"CoverageLevel\"
-    WHEN "coverage" >= 0.125 AND "coverage" < 0.375 THEN 'PARTIAL'::\"CoverageLevel\"
-    WHEN "coverage" >= 0.375 AND "coverage" < 0.625 THEN 'HALF'::\"CoverageLevel\"
-    WHEN "coverage" >= 0.625 AND "coverage" < 0.875 THEN 'SUBSTANTIAL'::\"CoverageLevel\"
-    ELSE 'FULL'::\"CoverageLevel\"
+    WHEN "coverage" IS NULL OR "coverage" < 0.125 THEN 'NONE'::"CoverageLevel"
+    WHEN "coverage" >= 0.125 AND "coverage" < 0.375 THEN 'PARTIAL'::"CoverageLevel"
+    WHEN "coverage" >= 0.375 AND "coverage" < 0.625 THEN 'HALF'::"CoverageLevel"
+    WHEN "coverage" >= 0.625 AND "coverage" < 0.875 THEN 'SUBSTANTIAL'::"CoverageLevel"
+    ELSE 'FULL'::"CoverageLevel"
 END;
 
 -- Create index on coverage_level for filtering
