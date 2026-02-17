@@ -44,6 +44,12 @@
       ],
       "@libs/shared/*": [
         "libs/shared/*"
+      ],
+      "@libs/orchestrator": [
+        "libs/orchestrator/src/index.ts"
+      ],
+      "@libs/orchestrator/*": [
+        "libs/orchestrator/src/*"
       ]
     },
     "emitDecoratorMetadata": true,

@@ -53,6 +53,7 @@
     "@types/archiver": "^7.0.0",
     "@types/jest-axe": "^3.5.9",
     "@types/node": "^20.10.0",
+    "@types/pg": "^8.16.0",
     "autocannon": "^8.0.0",
     "axe-core": "^4.11.1",
     "eslint": "^9.39.2",

@@ -1,0 +1,1 @@
+-- Agent configuration seed data — 21 agents, 8 Phase 1 configs for document generation

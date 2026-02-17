@@ -1,0 +1,9 @@
+{
+  "name": "@libs/orchestrator",
+  "version": "0.0.1",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "pg": "^8.13.0"
+  }
+}
