@@ -23,14 +23,25 @@ export interface TokenEstimationOptions {
 // ── Constants ───────────────────────────────────────────────────────────────
 
 /**
- * Fallback character-per-token ratios for heuristic estimation.
- * 
- * **ACCURACY LIMITATIONS:**
- * - English prose: ~3.5-4 chars/token (relatively accurate)
- * - Code/JSON/structured data: ~2.5-3 chars/token (overestimated by heuristic)
- * - Non-English text: varies widely by language (may be inaccurate)
- * 
- * For production use, prefer actual tokenizer libraries via the `provider` option.
+ * Average characters per token for English text.
+ * Claude and GPT tokenizers average ~3.5–4 chars/token for English prose.
+ * We use 3.8 as a conservative middle ground.
+ *
+ * LIMITATIONS:
+ * - This is a rough approximation and may differ significantly for:
+ *   • Code (typically 2.5–3 chars/token due to symbols and operators)
+ *   • JSON/structured data (variable ratio depending on key/value density)
+ *   • Non-English text (CJK languages may have different tokenization)
+ * - Different models have different tokenizers:
+ *   • Claude (Anthropic): custom tokenizer
+ *   • GPT-4/GPT-3.5 (OpenAI): tiktoken (cl100k_base)
+ * - For production use cases requiring precise token counting, consider:
+ *   • Using model-specific tokenizer libraries (tiktoken for OpenAI, @anthropic-ai/tokenizer)
+ *   • Adding a configurable chars-per-token ratio per model
+ *   • Implementing a safety margin (e.g., 10% buffer) to prevent prompt truncation
+ *
+ * @see https://github.com/openai/tiktoken for OpenAI tokenization
+ * @see https://docs.anthropic.com/claude/reference/models for Claude tokenization
  */
 const CHARS_PER_TOKEN = {
   /** Conservative fallback for mixed content. */
