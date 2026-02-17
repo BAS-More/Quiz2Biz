@@ -43,11 +43,11 @@ export function init(): void {
   // Can be disabled via DB_SSL_REJECT_UNAUTHORIZED=false (not recommended for production)
   const sslRejectUnauthorizedEnv = process.env.DB_SSL_REJECT_UNAUTHORIZED;
   const sslRejectUnauthorized =
-    sslRejectUnauthorizedEnv == null
-      ? true
-      : !['false', '0', 'no', 'off'].includes(
+    sslRejectUnauthorizedEnv !== undefined
+      ? !['false', '0', 'no', 'off'].includes(
           sslRejectUnauthorizedEnv.toLowerCase().trim(),
-        );
+        )
+      : true;
 
   if (db.ssl && !sslRejectUnauthorized) {
     log.warn(
@@ -160,13 +160,28 @@ export async function queryWithRetry(
     } catch (err) {
       lastError = err as Error;
       
-      // Check if error is retryable (connection issues, timeouts)
-      const isRetryable = 
+      // Check if error is retryable using PostgreSQL error codes and connection errors
+      // See: https://www.postgresql.org/docs/current/errcodes-appendix.html
+      const pgError = err as any; // pg errors have additional properties
+      const errorCode = pgError.code;
+      
+      // Retryable PostgreSQL error codes:
+      // - 08000: connection_exception
+      // - 08003: connection_does_not_exist
+      // - 08006: connection_failure
+      // - 57P03: cannot_connect_now
+      // - 53300: too_many_connections
+      const retryablePgCodes = ['08000', '08003', '08006', '57P03', '53300'];
+      
+      // Retryable network errors
+      const isNetworkError = 
         lastError.message.includes('ECONNREFUSED') ||
         lastError.message.includes('ECONNRESET') ||
         lastError.message.includes('ETIMEDOUT') ||
-        lastError.message.includes('Connection terminated') ||
-        lastError.message.includes('connection timeout');
+        lastError.message.includes('Connection terminated');
+      
+      const isRetryable = 
+        retryablePgCodes.includes(errorCode) || isNetworkError;
       
       // Don't retry on non-transient errors (constraint violations, syntax errors, etc.)
       if (!isRetryable || attempt === maxRetries) {
@@ -177,6 +192,7 @@ export async function queryWithRetry(
       const delayMs = 100 * Math.pow(2, attempt);
       log.warn(`Query failed (attempt ${attempt + 1}/${maxRetries + 1}), retrying in ${delayMs}ms`, {
         error: lastError.message,
+        errorCode,
       });
       
       await new Promise(resolve => setTimeout(resolve, delayMs));
