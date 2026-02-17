@@ -2,7 +2,9 @@
 
 ## Overview
 
-This project has been upgraded to **Node.js 22** (LTS) from Node.js 20. This document outlines the compatibility verification process and any relevant changes.
+This project has been upgraded to **Node.js 22** from Node.js 20. This document outlines the compatibility verification process and any relevant changes.
+
+> **Note:** Node.js 22 was released in April 2024 as a Current release and entered LTS (Long Term Support) in October 2024.
 
 ## Version Requirements
 
@@ -54,7 +56,7 @@ The following files have been updated to use Node.js 22:
 
 ### Key Features Available in Node.js 22
 
-Node.js 22 was released in April 2024 as the current LTS version. Key features include:
+Node.js 22 was released in April 2024 and entered LTS in October 2024. Key features include:
 
 1. **V8 Engine 12.4**: Latest JavaScript engine with improved performance
 2. **require() for ESM**: Experimental support for requiring ES modules
