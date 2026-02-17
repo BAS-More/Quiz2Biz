@@ -20,9 +20,9 @@ echo -e "${GREEN}=============================================${NC}"
 
 # Configuration
 CUSTOM_DOMAIN="quiz2biz.com"
-RESOURCE_GROUP="${RESOURCE_GROUP:-rg-questionnaire-prod}"
-CONTAINER_APP_NAME="${CONTAINER_APP_NAME:-ca-questionnaire-api-prod}"
-ENVIRONMENT="${ENVIRONMENT:-prod}"
+RESOURCE_GROUP="${RESOURCE_GROUP:-rg-questionnaire-dev}"
+CONTAINER_APP_NAME="${CONTAINER_APP_NAME:-ca-questionnaire-api-dev}"
+ENVIRONMENT="${ENVIRONMENT:-cae-questionnaire-dev}"
 
 # Check prerequisites
 echo -e "\n${YELLOW}Step 1: Checking prerequisites...${NC}"

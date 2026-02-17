@@ -1,8 +1,9 @@
 /**
  * Main application layout with sidebar and header
+ * Design: Modern SaaS - sleek sidebar, active indicators, collapsible, user dropdown
  */
 
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../stores/auth';
 import {
   LayoutDashboard,
@@ -10,35 +11,54 @@ import {
   ClipboardList,
   Settings,
   LogOut,
-  User,
   Menu,
   X,
+  ChevronLeft,
+  CreditCard,
+  HelpCircle,
 } from 'lucide-react';
 import { useState } from 'react';
+import { clsx } from 'clsx';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Questionnaires', href: '/questionnaires', icon: ClipboardList },
+  { name: 'Assessments', href: '/questionnaires', icon: ClipboardList },
   { name: 'Documents', href: '/documents', icon: FileText },
+  { name: 'Billing', href: '/billing', icon: CreditCard },
   { name: 'Settings', href: '/settings', icon: Settings },
+];
+
+const bottomNav = [
+  { name: 'Help Center', href: '/help', icon: HelpCircle },
 ];
 
 export function MainLayout() {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   const handleLogout = () => {
     logout();
     void navigate('/auth/login');
   };
 
+  const isActive = (href: string) => {
+    if (href === '/dashboard') return location.pathname === '/dashboard' || location.pathname === '/';
+    return location.pathname.startsWith(href);
+  };
+
+  const userInitials = user?.name
+    ? user.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
+    : user?.email?.[0]?.toUpperCase() || 'U';
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface-50">
       {/* Skip link for keyboard accessibility (WCAG 2.4.1) */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:top-1 focus:left-1 focus:px-6 focus:py-3 focus:bg-blue-700 focus:text-white focus:rounded-md focus:font-semibold focus:shadow-lg focus:outline-none"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:top-1 focus:left-1 focus:px-6 focus:py-3 focus:bg-brand-700 focus:text-white focus:rounded-md focus:font-semibold focus:shadow-lg focus:outline-none"
       >
         Skip to main content
       </a>
@@ -49,91 +69,174 @@ export function MainLayout() {
           role="button"
           tabIndex={0}
           aria-label="Close sidebar"
-          className="fixed inset-0 z-40 bg-gray-900/50 lg:hidden"
+          className="fixed inset-0 z-40 bg-surface-900/40 backdrop-blur-sm lg:hidden transition-opacity"
           onClick={() => setSidebarOpen(false)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') {
-              setSidebarOpen(false);
-            }
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') setSidebarOpen(false);
           }}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={clsx(
+          'fixed inset-y-0 left-0 z-50 bg-white border-r border-surface-200/80 flex flex-col transform transition-all duration-200 ease-in-out lg:translate-x-0',
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+          collapsed ? 'w-[68px]' : 'w-64',
+        )}
       >
-        <div className="flex h-16 items-center justify-between px-4 border-b">
-          <Link to="/dashboard" className="text-xl font-bold text-blue-600">
-            Quiz2Biz
-          </Link>
+        {/* Logo */}
+        <div className={clsx('flex h-16 items-center border-b border-surface-100 px-4', collapsed ? 'justify-center' : 'justify-between')}>
+          {!collapsed && (
+            <Link to="/dashboard" className="flex items-center gap-2 group">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-600 shadow-xs group-hover:shadow-elevated transition-shadow">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-white">
+                  <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <span className="text-lg font-bold tracking-tight text-surface-900">
+                Quiz<span className="text-brand-600">2</span>Biz
+              </span>
+            </Link>
+          )}
+          {collapsed && (
+            <Link to="/dashboard" className="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-600">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-white">
+                <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </Link>
+          )}
           <button
-            className="lg:hidden p-2 rounded-md hover:bg-gray-100"
+            className="hidden lg:flex p-1.5 rounded-md text-surface-400 hover:bg-surface-100 hover:text-surface-600 transition-colors"
+            onClick={() => setCollapsed(!collapsed)}
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            <ChevronLeft className={clsx('h-4 w-4 transition-transform', collapsed && 'rotate-180')} />
+          </button>
+          <button
+            className="lg:hidden p-1.5 rounded-md hover:bg-surface-100 text-surface-500"
             onClick={() => setSidebarOpen(false)}
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        <nav className="flex flex-col p-4" aria-label="Main navigation">
+        {/* Main nav */}
+        <nav className="flex-1 flex flex-col px-3 py-4 overflow-y-auto" aria-label="Main navigation">
           <ul className="space-y-1" role="list">
-            {navigation.map((item) => (
+            {navigation.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <li key={item.name}>
+                  <Link
+                    to={item.href}
+                    onClick={() => setSidebarOpen(false)}
+                    className={clsx(
+                      'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150',
+                      active
+                        ? 'bg-brand-50 text-brand-700 shadow-xs'
+                        : 'text-surface-600 hover:bg-surface-50 hover:text-surface-900',
+                      collapsed && 'justify-center px-2',
+                    )}
+                    title={collapsed ? item.name : undefined}
+                  >
+                    <item.icon className={clsx('h-[18px] w-[18px] shrink-0', active ? 'text-brand-600' : 'text-surface-400')} aria-hidden="true" />
+                    {!collapsed && <span>{item.name}</span>}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+
+          {/* Bottom nav items */}
+          <ul className="mt-auto space-y-1 pt-4 border-t border-surface-100" role="list">
+            {bottomNav.map((item) => (
               <li key={item.name}>
                 <Link
                   to={item.href}
-                  className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-100 hover:text-blue-600 transition-colors"
+                  onClick={() => setSidebarOpen(false)}
+                  className={clsx(
+                    'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-surface-500 hover:bg-surface-50 hover:text-surface-700 transition-colors',
+                    collapsed && 'justify-center px-2',
+                  )}
+                  title={collapsed ? item.name : undefined}
                 >
-                  <item.icon className="h-5 w-5 mr-3" aria-hidden="true" />
-                  {item.name}
+                  <item.icon className="h-[18px] w-[18px] shrink-0 text-surface-400" aria-hidden="true" />
+                  {!collapsed && <span>{item.name}</span>}
                 </Link>
               </li>
             ))}
           </ul>
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t">
-          <div className="flex items-center space-x-3 mb-3">
-            <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-              <User className="h-5 w-5 text-blue-600" />
+        {/* User section */}
+        <div className={clsx('border-t border-surface-100 p-3', collapsed && 'flex justify-center')}>
+          {!collapsed ? (
+            <div className="space-y-2">
+              <div className="flex items-center gap-3 px-2 py-1.5">
+                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center text-white text-xs font-semibold shrink-0">
+                  {userInitials}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-surface-900 truncate">{user?.name || 'User'}</p>
+                  <p className="text-xs text-surface-400 truncate">{user?.email}</p>
+                </div>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="flex items-center w-full gap-2 px-3 py-2 text-sm text-surface-500 rounded-lg hover:bg-danger-50 hover:text-danger-600 transition-colors"
+              >
+                <LogOut className="h-4 w-4" />
+                Sign out
+              </button>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">{user?.name || 'User'}</p>
-              <p className="text-xs text-gray-500 truncate">{user?.email}</p>
-            </div>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="flex items-center w-full px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-red-50 hover:text-red-600 transition-colors"
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            Sign out
-          </button>
+          ) : (
+            <button
+              onClick={handleLogout}
+              className="p-2 rounded-lg text-surface-400 hover:bg-danger-50 hover:text-danger-600 transition-colors"
+              title="Sign out"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
+          )}
         </div>
       </aside>
 
       {/* Main content */}
-      <div className="lg:pl-64">
+      <div className={clsx('transition-all duration-200', collapsed ? 'lg:pl-[68px]' : 'lg:pl-64')}>
         {/* Top header */}
-        <header className="sticky top-0 z-30 h-16 bg-white border-b flex items-center px-4 lg:px-6">
+        <header className="sticky top-0 z-30 h-14 bg-white/80 backdrop-blur-md border-b border-surface-200/60 flex items-center px-4 lg:px-6">
           <button
-            className="lg:hidden p-2 rounded-md hover:bg-gray-100 mr-4"
+            className="lg:hidden p-2 rounded-lg hover:bg-surface-100 text-surface-500 mr-3 transition-colors"
             onClick={() => setSidebarOpen(true)}
+            aria-label="Open navigation menu"
           >
             <Menu className="h-5 w-5" />
           </button>
+
+          {/* Breadcrumb area - can be enhanced later */}
           <div className="flex-1" />
+
+          {/* User avatar in header (mobile/quick access) */}
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center text-white text-xs font-semibold lg:hidden">
+              {userInitials}
+            </div>
+          </div>
         </header>
 
         {/* Page content */}
-        <main id="main-content" className="p-4 lg:p-6" tabIndex={-1}>
-          <Outlet />
+        <main id="main-content" className="p-4 lg:p-6 max-w-7xl mx-auto" tabIndex={-1}>
+          <div className="animate-fade-in">
+            <Outlet />
+          </div>
         </main>
 
         {/* Footer */}
-        <footer className="border-t bg-white px-4 lg:px-6 py-4 mt-auto" role="contentinfo">
-          <p className="text-center text-xs text-gray-500">
+        <footer className="border-t border-surface-100 bg-white/50 px-4 lg:px-6 py-4 mt-auto" role="contentinfo">
+          <p className="text-center text-xs text-surface-400">
             &copy; {new Date().getFullYear()} Quiz2Biz. All rights reserved.
           </p>
         </footer>

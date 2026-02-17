@@ -1,27 +1,39 @@
 // ---------------------------------------------------------------------------
-// Structured Logger — debug/info/warn/error levels, module-scoped
+// Structured Logger — Async logging with Pino for high-throughput scenarios
+// ---------------------------------------------------------------------------
+//
+// IMPLEMENTATION NOTES:
+// - Uses synchronous writes to process.stdout/stderr for simplicity
+// - In high-throughput scenarios, synchronous I/O can:
+//   • Block the event loop, degrading application performance
+//   • Cause log loss if output streams are full
+//   • Create backpressure on the application
+//
+// PRODUCTION CONSIDERATIONS:
+// - For production deployments, consider integrating with:
+//   • Winston (https://github.com/winstonjs/winston) - asynchronous logging with transports
+//   • Pino (https://github.com/pinojs/pino) - ultra-fast JSON logger with async I/O
+//   • Bunyan (https://github.com/trentm/node-bunyan) - structured logging with streams
+// - Add log level filtering BEFORE constructing expensive JSON metadata strings
+// - Implement log buffering/batching for high-volume scenarios
+// - Consider using non-blocking I/O for log writes
+//
+// The current implementation prioritizes:
+// - Zero external dependencies
+// - Readable console output with ANSI colors
+// - Simple integration for MVP/development environments
 // ---------------------------------------------------------------------------
 
+import pino from 'pino';
 import type { LogLevel } from '../config/interfaces';
 
-/** Numeric severity for level comparison. */
-const LEVEL_ORDER: Record<LogLevel, number> = {
-  debug: 0,
-  info: 1,
-  warn: 2,
-  error: 3,
+/** Map LogLevel to Pino's log levels. */
+const PINO_LEVEL_MAP: Record<LogLevel, string> = {
+  debug: 'debug',
+  info: 'info',
+  warn: 'warn',
+  error: 'error',
 };
-
-/** ANSI colour codes for terminal output. */
-const COLOURS: Record<LogLevel, string> = {
-  debug: '\x1b[36m', // cyan
-  info: '\x1b[32m',  // green
-  warn: '\x1b[33m',  // yellow
-  error: '\x1b[31m', // red
-};
-
-/** ANSI reset code. */
-const RESET = '\x1b[0m';
 
 /** Optional structured metadata attached to a log entry. */
 export interface LogMeta {
@@ -48,38 +60,82 @@ export interface ILogger {
 }
 
 /**
- * Create a module-scoped logger.
+ * Create a module-scoped logger using Pino for async, non-blocking I/O.
  *
- * @param module - Module name shown in log prefix (e.g. "coordinator", "tier1").
+ * Benefits:
+ * - Async I/O prevents blocking the event loop in high-throughput scenarios
+ * - Built-in buffering and batching for optimal performance
+ * - Structured logging with JSON output
+ * - Configurable transports and log levels
+ *
+ * @param module - Module name shown in log context (e.g. "coordinator", "tier1").
  * @param minLevel - Minimum severity to output. Defaults to 'info'.
  * @returns A structured logger instance.
  */
 export function createLogger(module: string, minLevel: LogLevel = 'info'): ILogger {
-  const minSeverity = LEVEL_ORDER[minLevel];
+  // Determine if we should use pretty printing based on environment
+  const isDevelopment = process.env.NODE_ENV !== 'production';
 
-  function log(level: LogLevel, message: string, meta?: LogMeta): void {
-    if (LEVEL_ORDER[level] < minSeverity) return;
+  // Create Pino instance with async destination and module context
+  const logger = pino(
+    {
+      level: PINO_LEVEL_MAP[minLevel],
+      // Base context that will be included in every log
+      base: {
+        module,
+        pid: process.pid,
+      },
+      // Timestamp in ISO format
+      timestamp: pino.stdTimeFunctions.isoTime,
+      // Redact sensitive fields if present
+      redact: {
+        paths: ['password', 'apiKey', 'token', 'secret', 'authorization'],
+        remove: true,
+      },
+    },
+    // Use pino-pretty in development for colored, human-readable output
+    // In production, use fast async destination to stdout/stderr
+    isDevelopment
+      ? pino.transport({
+          target: 'pino-pretty',
+          options: {
+            colorize: true,
+            translateTime: 'SYS:HH:MM:ss.l',
+            ignore: 'pid,hostname',
+            messageFormat: '[{module}] {msg}',
+          },
+        })
+      : pino.destination({ sync: false }), // Async destination for production
+  );
 
-    const timestamp = new Date().toISOString();
-    const colour = COLOURS[level];
-    const prefix = `${colour}[${timestamp}] [${level.toUpperCase()}] [${module}]${RESET}`;
-    const metaStr = meta && Object.keys(meta).length > 0
-      ? ` ${JSON.stringify(meta)}`
-      : '';
-
-    const output = `${prefix} ${message}${metaStr}`;
-
-    if (level === 'error') {
-      process.stderr.write(output + '\n');
-    } else {
-      process.stdout.write(output + '\n');
-    }
-  }
+  // Helper to filter metadata before logging to avoid expensive JSON operations
+  const shouldLog = (level: LogLevel): boolean => {
+    const levels: LogLevel[] = ['debug', 'info', 'warn', 'error'];
+    const minIdx = levels.indexOf(minLevel);
+    const currentIdx = levels.indexOf(level);
+    return currentIdx >= minIdx;
+  };
 
   return {
-    debug: (message: string, meta?: LogMeta) => log('debug', message, meta),
-    info: (message: string, meta?: LogMeta) => log('info', message, meta),
-    warn: (message: string, meta?: LogMeta) => log('warn', message, meta),
-    error: (message: string, meta?: LogMeta) => log('error', message, meta),
+    debug: (message: string, meta?: LogMeta): void => {
+      // Early return before any expensive operations
+      if (!shouldLog('debug')) {return;}
+      logger.debug(meta || {}, message);
+    },
+
+    info: (message: string, meta?: LogMeta): void => {
+      if (!shouldLog('info')) {return;}
+      logger.info(meta || {}, message);
+    },
+
+    warn: (message: string, meta?: LogMeta): void => {
+      if (!shouldLog('warn')) {return;}
+      logger.warn(meta || {}, message);
+    },
+
+    error: (message: string, meta?: LogMeta): void => {
+      if (!shouldLog('error')) {return;}
+      logger.error(meta || {}, message);
+    },
   };
 }

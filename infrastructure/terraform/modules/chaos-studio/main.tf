@@ -434,7 +434,6 @@ resource "azurerm_monitor_activity_log_alert" "chaos_experiment_started" {
   count               = var.enable_chaos_experiments ? 1 : 0
   name                = "${local.name_prefix}-chaos-started-alert"
   resource_group_name = var.resource_group_name
-  location            = var.location
   scopes              = ["/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}"]
   description         = "Alert when a chaos experiment starts"
 
@@ -456,7 +455,6 @@ resource "azurerm_monitor_activity_log_alert" "chaos_experiment_completed" {
   count               = var.enable_chaos_experiments ? 1 : 0
   name                = "${local.name_prefix}-chaos-completed-alert"
   resource_group_name = var.resource_group_name
-  location            = var.location
   scopes              = ["/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}"]
   description         = "Alert when a chaos experiment completes"
 

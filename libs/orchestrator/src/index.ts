@@ -113,4 +113,11 @@ export type { CreateValidationData } from './mcp/client';
 export { createLogger } from './utils/logger';
 export type { ILogger, LogMeta } from './utils/logger';
 
-export { estimateTokens, truncateToTokens, fitsWithinBudget } from './utils/token-estimator';
+export {
+  estimateTokens,
+  truncateToTokens,
+  fitsWithinBudget,
+  cleanupTokenizer,
+  CHARS_PER_TOKEN,
+} from './utils/token-estimator';
+export type { TokenProvider, TokenEstimationOptions } from './utils/token-estimator';

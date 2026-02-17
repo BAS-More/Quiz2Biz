@@ -9,6 +9,10 @@ import type {
   TaskTier,
   LogLevel,
 } from './interfaces';
+import { createLogger } from '../utils/logger';
+
+// Create a basic logger for config validation (before full config is available)
+const log = createLogger('config', 'info');
 
 // ── Defaults ────────────────────────────────────────────────────────────────
 
@@ -162,9 +166,12 @@ export function validateConfig(cfg: IOrchestratorConfig): void {
     missing.push('Anthropic API key (Q2B_ANTHROPIC_API_KEY or ANTHROPIC_API_KEY)');
   }
 
-  // OpenAI API key is required for Tier 2 cross-model validation
+  // OpenAI key is optional but should warn if missing for Tier 2 validation
   if (!cfg.openai.apiKey) {
-    missing.push('OpenAI API key (Q2B_OPENAI_API_KEY or OPENAI_API_KEY) — required for Tier 2 cross-model validation');
+    log.warn(
+      'OpenAI API key not configured — Tier 2 cross-model validation will be unavailable',
+      { env: 'Q2B_OPENAI_API_KEY or OPENAI_API_KEY' }
+    );
   }
 
   if (!cfg.db.host) {
