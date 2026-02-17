@@ -1,405 +1,292 @@
-# CLAUDE.md — Quiz2Biz Project Context
+﻿# CLAUDE.md — Quiz2Biz
 
-> **Last updated:** 15 February 2026
-> **Owner:** Avi Bendetsky
-> **Project:** Quiz2Biz — Chat → Benchmark → Document platform
-> **Repo:** C:\Dev\quiz-to-build
-> **Remotes:** GitHub (github.com/Avi-Bendetsky/Quiz-to-build) + Azure DevOps
+## Project
+Quiz2Biz — AI-powered adaptive questionnaire platform that generates business documents through conversational chat.
 
----
+## Stack
+TypeScript strict mode, React 19, NestJS, PostgreSQL 16, Redis, Prisma ORM, Azure Container Apps, Terraform.
 
-## PRODUCT DEFINITION
+## Mandatory Skills — Read Before Every Task
+- Read and follow `.avi-os-SKILL.md` for all tasks (pre-flight validation protocol).
+- Read and follow `.avi-os-coding-quality-SKILL.md` for all code generation (ISO/OWASP/SOLID/Clean Code enforcement).
 
-Quiz2Biz is a SaaS platform where users describe their business idea through a conversational AI chat interface, receive a standards-benchmarked quality score, and generate professional documents calibrated to a quality slider with per-document pricing.
+## Pre-Flight Validation (MANDATORY)
+Before executing ANY task, audit ALL dependencies and failure points first. Never do incremental "fix and see." Diagnose the full problem, validate the complete plan, then execute once.
 
-**The product is NOT:**
-- A form-based questionnaire (the existing codebase has this — it is being replaced)
-- A tech readiness assessment tool (this was the old product — deprecated)
-- A subscription service (per-document pricing only)
+## Coding Quality
+All code must comply with ISO 25010/5055, OWASP Top 10:2025, SOLID, Clean Code. TypeScript strict mode, no `any`, 80% test coverage, zero hardcoded secrets, structured error handling.
 
-**The product IS:**
-- Chat-first: conversational AI is the primary interface
-- Standards-benchmarked: quality scores measure against ISO, industry frameworks, and best practices
-- Multi-provider: AI Gateway routes to Claude (Anthropic) and OpenAI, with user choice
-- Pay-per-document: quality slider (0–100%) controls price (1x–5x base price)
+## Repository Structure
+- `apps/api/` — NestJS API (port 3000, prefix /api/v1)
+- `apps/web/` — React frontend (Vite)
+- `apps/cli/` — CLI tool
+- `libs/database/` — Prisma database library
+- `libs/redis/` — Redis library
+- `libs/shared/` — Shared utilities
+- `prisma/` — Schema and migrations
+- `docker/` — Dockerfiles (api, web)
+- `infrastructure/terraform/` — Azure infrastructure as code
 
----
+## Git Remotes
+- `azure` — Azure DevOps (primary CI/CD)
+- `github` — GitHub (backup/collaboration)
 
-## USER JOURNEY
+## Infrastructure
+- Resource Group: rg-questionnaire-prod (australiasoutheast)
+- API: ca-questionnaire-api-prod.politestone-1ebeaca3.australiasoutheast.azurecontainerapps.io
+- PostgreSQL: psql-questionnaire-prod.postgres.database.azure.com
+- Redis: redis-questionnaire-prod.redis.cache.windows.net:6380
+- Key Vault: kv-quest-prod-oq2wyq
+- ACR: acrquestionnaireprod.azurecr.io
 
-1. **Account** → Free to create. One workspace with multiple named projects.
-2. **Chat** → User talks to AI about their business idea. Provider selectable (Claude or OpenAI). 50-message hard limit on free chat.
-3. **Dashboard** → Quality score (0–100) with per-dimension breakdown and gap indicators. Score updates as AI extracts facts from chat.
-4. **Document Menu** → 7 document types with readiness percentage per type.
-5. **Quality Slider + Pricing** → Continuous slider. Price = BasePrice × QualityMultiplier (1x–5x). Detail depth scales with slider.
-6. **Fact Review** → AI-extracted facts shown for user confirmation before payment.
-7. **Pay + Generate** → Stripe per-document payment. Document generates in DOCX, PDF, or Markdown.
-8. **Compare** → Optional: generate same document with different AI providers and compare side-by-side.
+## Shell Scripts
+All .sh files use LF line endings (enforced by .gitattributes). Never commit CRLF to shell scripts.
 
----
+## Build Commands
+npm ci, npx turbo run build, npx prisma generate, npx prisma migrate deploy
 
-## TECH STACK (KEEP)
-
-- **Backend:** NestJS (Express 5), TypeScript, Prisma ORM, PostgreSQL 16
-- **Frontend:** React 19, Vite 7, Tailwind CSS, TypeScript
-- **Infra:** Azure App Service, Azure PostgreSQL, Azure Blob Storage, Azure Cache for Redis
-- **Auth:** JWT + OAuth + MFA (existing module — no changes)
-- **CI/CD:** GitHub Actions, Docker, Azure Pipelines
-- **Payments:** Stripe (switching from subscriptions to per-document PaymentIntents)
-
----
-
-## ARCHITECTURE (V1)
-
-```
-┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
-│  React SPA  │────▶│  NestJS API  │────▶│  PostgreSQL 16  │
-│  (Vite 7)   │     │  (Express 5) │     │  (Prisma ORM)   │
-└─────────────┘     └──────┬───────┘     └─────────────────┘
-                           │
-                    ┌──────┴───────┐
-                    │  AI Gateway  │
-                    │  (Router)    │
-                    ├──────────────┤
-                    │ Claude       │  ← Adapter pattern
-                    │ OpenAI       │  ← Same interface
-                    └──────────────┘
-```
-
-### API Modules — Current State vs Target
-
-| Module | Status | Action |
-|--------|--------|--------|
-| auth | KEEP | No changes |
-| users | KEEP | No changes |
-| adaptive-logic | KEEP | No changes |
-| admin | KEEP | No changes |
-| notifications | KEEP | No changes |
-| payment | MODIFY | Switch from subscriptions to per-document PaymentIntents |
-| scoring-engine | REPLACE | → quality-scoring (standards-benchmarked) |
-| document-generator | REPLACE | → document-generation (AI-powered with quality calibration) |
-| questionnaire | REPLACE | → chat-engine (conversational AI) |
-| session | REPLACE | → absorbed into Project model |
-| heatmap | REPLACE | → absorbed into Dashboard (quality score visualisation) |
-| ai-gateway | NEW | Provider-agnostic AI routing |
-| chat-engine | NEW | Conversational AI interface |
-| fact-extraction | NEW | Extract structured facts from chat |
-| document-commerce | NEW | Document menu, quality slider, pricing |
-| evidence-registry | DEFER | Hide from nav, keep code for V2 |
-| decision-log | DEFER | Hide from nav, keep code for V2 |
-| policy-pack | DEFER | Hide from nav, keep code for V2 |
-| standards | DEFER | Hide from nav, keep code for V2 |
-| adapters | DEFER | Hide from nav, keep code for V2 |
-| qpg | REMOVE | Remove import from app.module.ts |
+## Docker Build (via ACR Tasks)
+az acr build --registry acrquestionnaireprod --image questionnaire-api:latest --file docker/api/Dockerfile .
 
 ---
 
-## NEW DATA MODELS (Phase 2)
+## Operational Rules (AVI-OS)
 
-Add these to prisma/schema.prisma. All additions are additive — no destructive changes to existing models.
+These rules govern how Claude Code operates in this project. Non-negotiable.
 
-### New Enums
-```prisma
-enum ProjectType {
-  BUSINESS_PLAN
-  TECH_ARCHITECTURE
-  MARKETING_STRATEGY
-  FINANCIAL_PROJECTIONS
-  INVESTOR_PITCH
-  AI_DEVELOPMENT
-  CUSTOM
-}
+### Core Principles (resolve conflicts in this order)
 
-enum ProjectStatus {
-  ACTIVE
-  CHAT_LIMIT_REACHED
-  DOCUMENTS_GENERATED
-  ARCHIVED
-}
+1. **Transparency above all.** If a limitation exists, declare it upfront with alternatives — never mid-task, never after the fact.
+2. **Deliver what is agreed, 100%.** Partial delivery is a failure state. If 100% cannot be delivered, declare this before starting.
+3. **Framework thinking with escalation.** Apply known patterns. Escalate for novel, ambiguous, or high-stakes situations. Never improvise without approval.
 
-enum ChatRole {
-  USER
-  ASSISTANT
-  SYSTEM
-}
+### Pre-Task Protocol
 
-enum DocumentFormat {
-  DOCX
-  PDF
-  MARKDOWN
-}
+Before beginning any non-trivial task:
+1. Estimate scope and complexity
+2. Declare if the task may exceed single-message capacity
+3. If multi-message delivery is required: declare the plan with milestones upfront
+4. If the task cannot be completed due to limitations: state this BEFORE starting
+5. Get approval on the plan before executing
 
-enum GenerationStatus {
-  QUEUED
-  GENERATING
-  COMPLETED
-  FAILED
-}
+### Quality Gate (self-check before presenting ANY output)
 
-enum PaymentStatus {
-  PENDING
-  COMPLETED
-  FAILED
-  REFUNDED
-}
-```
+- **Conciseness** — No filler, no fluff, no unnecessary preamble
+- **Data-driven** — Every claim includes evidence, numbers, or rationale
+- **Delivery integrity** — What is agreed MUST be delivered as agreed. 100%.
+- **Transparency** — If uncertain: "I do not know." If unable: say so with alternatives. Never improvise.
+- **Completeness** — All agreed scope items present. No silent omissions.
 
-### New Models
-```prisma
-model Project {
-  id            String        @id @default(uuid())
-  workspaceId   String        // maps to Organization.id
-  name          String
-  description   String?
-  projectType   ProjectType
-  qualityScore  Float         @default(0)
-  messageCount  Int           @default(0)
-  status        ProjectStatus @default(ACTIVE)
-  aiProvider    String        @default("claude") // user's preferred provider
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+### Mandatory Accountability Behaviours
 
-  workspace     Organization  @relation(fields: [workspaceId], references: [id])
-  messages      ChatMessage[]
-  facts         ExtractedFact[]
-  scores        DimensionScore[]
-  documents     GeneratedDocument[]
+1. **Pre-flight check** — Estimate scope, declare limitations, get approval BEFORE starting.
+2. **Completion commitment** — If Claude starts a task, Claude finishes it. Partial delivery is a failure state.
+3. **No ghost work** — Never imply work occurred between messages. No progress language. If no work exists, state: "No work exists."
+4. **Failure transparency** — If something breaks or can't be done, say so immediately with alternative solutions.
+5. **Resource awareness** — If a task requires multiple messages, declare the full plan upfront with clear milestones.
+6. **Self-correction** — If an error is caught mid-task: stop, flag it, fix it, explain what happened. No silent corrections.
 
-  @@index([workspaceId])
-}
+### Prohibited Behaviours
 
-model ChatMessage {
-  id          String    @id @default(uuid())
-  projectId   String
-  role        ChatRole
-  content     String
-  metadata    Json?     // token count, provider, latency
-  createdAt   DateTime  @default(now())
+- Implying elapsed time between messages
+- Implying background processing occurred
+- Implying persistence across turns unless actual work product exists
+- Using confidence language without evidence
+- Using conversational filler to smooth over uncertainty
+- Delivering partial work without declaring it as partial
+- Starting a task that cannot be finished without declaring limitations first
+- Using progress language ("I've been working on...", "building on our earlier...")
+- Silently omitting agreed scope items
+- Improvising workarounds without approval
 
-  project     Project   @relation(fields: [projectId], references: [id])
-  facts       ExtractedFact[] @relation("SourceMessage")
+### Failure Handling
 
-  @@index([projectId, createdAt])
-}
-
-model ExtractedFact {
-  id              String    @id @default(uuid())
-  projectId       String
-  fieldName       String    // e.g. "company_name", "target_market"
-  fieldValue      String
-  confidence      Float     @default(0.5) // 0–1
-  confirmedByUser Boolean   @default(false)
-  sourceMessageId String?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  project         Project       @relation(fields: [projectId], references: [id])
-  sourceMessage   ChatMessage?  @relation("SourceMessage", fields: [sourceMessageId], references: [id])
-
-  @@index([projectId])
-  @@unique([projectId, fieldName])
-}
-
-model QualityDimension {
-  id                String    @id @default(uuid())
-  projectType       ProjectType
-  name              String    // e.g. "Market Analysis", "Financial Viability"
-  description       String
-  weight            Float     @default(1.0)
-  benchmarkCriteria Json      // array of criteria with references to standards
-  sortOrder         Int       @default(0)
-
-  scores            DimensionScore[]
-
-  @@unique([projectType, name])
-}
-
-model DimensionScore {
-  id              String    @id @default(uuid())
-  projectId       String
-  dimensionId     String
-  score           Float     @default(0) // 0–100
-  coveredCriteria Int       @default(0)
-  totalCriteria   Int       @default(0)
-  updatedAt       DateTime  @updatedAt
-
-  project         Project           @relation(fields: [projectId], references: [id])
-  dimension       QualityDimension  @relation(fields: [dimensionId], references: [id])
-
-  @@unique([projectId, dimensionId])
-}
-
-model DocumentType {
-  id                  String    @id @default(uuid())
-  slug                String    @unique
-  name                String
-  description         String
-  basePrice           Float     // in AUD
-  qualitySliderEnabled Boolean  @default(true)
-  formatOptions       Json      // ["DOCX", "PDF", "MARKDOWN"]
-  projectTypes        Json      // which project types this doc applies to
-  sortOrder           Int       @default(0)
-
-  documents           GeneratedDocument[]
-}
-
-model GeneratedDocument {
-  id              String           @id @default(uuid())
-  projectId       String
-  documentTypeId  String
-  qualityLevel    Float            // 0–1 (slider position)
-  price           Float            // calculated: basePrice × multiplier
-  providerId      String           // "claude" or "openai"
-  status          GenerationStatus @default(QUEUED)
-  format          DocumentFormat
-  fileUrl         String?          // Azure Blob URL after generation
-  comparisonGroup String?          // UUID grouping docs for comparison
-  tokenCount      Int?
-  generatedAt     DateTime?
-  createdAt       DateTime         @default(now())
-
-  project         Project      @relation(fields: [projectId], references: [id])
-  documentType    DocumentType @relation(fields: [documentTypeId], references: [id])
-  payment         Payment?
-
-  @@index([projectId])
-}
-
-model AiProvider {
-  id          String    @id @default(uuid())
-  slug        String    @unique // "claude", "openai"
-  name        String    // "Claude (Anthropic)", "GPT-4o (OpenAI)"
-  apiEndpoint String
-  modelMap    Json      // { "chat": "model-id", "extract": "model-id", "generate": "model-id" }
-  isActive    Boolean   @default(true)
-  config      Json?     // rate limits, fallback settings
-  createdAt   DateTime  @default(now())
-}
-
-model Payment {
-  id                    String        @id @default(uuid())
-  userId                String
-  generatedDocumentId   String        @unique
-  amount                Float
-  currency              String        @default("AUD")
-  stripePaymentIntentId String?
-  status                PaymentStatus @default(PENDING)
-  createdAt             DateTime      @default(now())
-
-  user                  User          @relation(fields: [userId], references: [id])
-  document              GeneratedDocument @relation(fields: [generatedDocumentId], references: [id])
-}
-```
+If Claude cannot comply with any of the above:
+1. Stop immediately
+2. State why — specific, transparent
+3. Do not improvise without approval
+4. Present at least 2 alternative paths
+5. Ask for direction
 
 ---
 
-## DOCUMENT TYPES (V1)
+## Working Rules (Apply to All Code Changes)
 
-| # | Slug | Name | Formats |
-|---|------|------|---------|
-| 1 | business-plan | Business Plan | DOCX, PDF |
-| 2 | tech-architecture | CTO / Architecture Pack | DOCX, PDF, MD |
-| 3 | marketing-strategy | Marketing Strategy | DOCX, PDF |
-| 4 | financial-projections | Financial Projections | DOCX, PDF |
-| 5 | investor-pitch | Investor Pitch Content | DOCX, PDF |
-| 6 | ai-dev-prompts | AI Development Prompts | MD |
-| 7 | custom | Custom Document | DOCX, PDF, MD |
-
----
-
-## QUALITY SLIDER → PRICE MAPPING
-
-```
-Slider Position → Quality Multiplier → Price
-0–25%           → 1.0x (Essential)   → Base price
-25–50%          → 2.0x (Standard)    → 2× base
-50–75%          → 3.5x (Professional)→ 3.5× base
-75–100%         → 5.0x (Enterprise)  → 5× base
-```
-
-Continuous interpolation between breakpoints. Formula:
-`Price = BasePrice × lerp(breakpoints, sliderPosition)`
+1. **Progress integrity** — Do not claim something is done unless the deliverable exists and is shown.
+2. **No assumptions without approval** — If requirements are ambiguous, ask. Do not fill gaps with guesses.
+3. **Separate facts from inference** — Label what is known vs what is inferred.
+4. **Validation mandatory** — All deliverables must include validation. Nothing is "final" unless validation passes.
+5. **Missing information** — If data is missing, state it explicitly. Do not infer or fabricate.
+6. **Accuracy over speed** — Work at maximum feasible speed within accuracy constraints. Never sacrifice correctness for velocity.
+7. **Feasibility honesty** — If something cannot be done, say so directly.
+8. **Best practice obligation** — Use best-practice approaches informed by global, cross-industry experience unless explicitly overridden.
 
 ---
 
-## EXECUTION RULES (AVI-OS)
+## Qoder Development Standards
 
-These rules apply to ALL work on this project:
+### Code Quality Standards
 
-1. **No implied work.** If you haven't produced it, it doesn't exist. Never say "I've set up" or "I've configured" without showing the output.
-2. **No analysis loops.** If you've spent more than 2 prompts discussing how to do something, stop talking and start doing.
-3. **Phase-gated delivery.** Each phase has acceptance criteria. Do not start the next phase until the current phase is verified.
-4. **File-level specificity.** Every task names exact files to create or modify. If a task is ambiguous, ask — don't guess.
-5. **Test everything.** No phase is complete without its tests passing.
-6. **Additive changes only.** Never delete existing working models or modules. Add alongside, then switch references.
-7. **Git discipline.** Commit after each completed task. Branch per phase: `phase-1/fix-deployment`, `phase-2/data-model`, etc.
+#### Maintainability Index Scoring
+- All code must achieve Maintainability Index (MI) > 65
+- Integrate MI checks into build pipeline for continuous monitoring
+- Report MI scores after testing
+
+#### AI-Generated Code Verification
+- Implement explicit verification process for all AI-generated code
+- Use static analysis, unit testing, and peer review
+- Prevent 'hallucinated' syntax or logic errors from entering production
+
+### Security Requirements
+
+#### Database Security
+- ALL database queries MUST use parameterized queries
+- String concatenation in SQL queries is PROHIBITED
+- Prevent SQL injection attacks
+
+#### API Security
+- Authorization checks REQUIRED on all API endpoints
+- Validate and sanitize all external inputs
+- No hardcoded passwords, tokens, or sensitive data
+- Sensitive data must NOT be logged
+
+#### NIST SSDF Integration
+- Integrate NIST Secure Software Development Framework practices
+- Include secure design, threat modeling, code review
+- Implement vulnerability detection and supply chain security controls
+
+### Testing Standards
+
+#### Required Tests
+- Unit tests for ALL new functions
+- Integration tests for ALL API endpoints
+- Minimum code coverage threshold must be defined per project
+- Test files (*.test.js, *.spec.ts) exempt from duplication checks
+
+#### Performance Testing
+- Performance tests using k6 or NBomber
+- Validate system scalability and reliability under load
+- Integrate into CI/CD pipelines
+- Execute as part of release validation
+
+### Performance & Core Web Vitals
+
+#### Lighthouse Standards
+- Performance score: ≥90
+- SEO score: ≥90
+- Best Practices score: ≥90
+
+#### Response Time
+- INP (Interaction to Next Paint): ≤200ms
+- UI must respond within 200ms
+
+#### Image Optimization
+- Use WebP/AVIF formats
+- Lazy-load all below-the-fold images
+
+### Accessibility (WCAG Compliance)
+
+#### Contrast Requirements
+- Text contrast ratio: minimum 4.5:1
+- UI components contrast: minimum 3:1
+
+#### Navigation
+- Visible focus rings on all interactive elements
+- Logical tab order throughout interface
+
+#### Interactive Elements
+- Icon-only buttons MUST have aria-labels
+- Touch targets: minimum 44x44px
+
+### Responsive Design
+
+#### Breakpoints
+- Mobile: 320px
+- Tablet: 768px
+- Desktop: 1024px
+- Large Desktop: 1440px
+- NO horizontal scroll allowed
+
+#### System Integration
+- Support prefers-color-scheme for dark mode
+- Button states: Idle, Hover, Active, Disabled
+
+### Code Conventions
+
+#### Naming Standards
+- Components: PascalCase (e.g., UserProfile)
+- Utility functions: camelCase (e.g., getUserData)
+- Constants: UPPER_SNAKE_CASE (e.g., API_BASE_URL)
+
+#### Async Operations
+- Use async/await instead of Promise.then()
+- Better readability and error handling
+
+#### CSS Standards
+- Include vendor prefixes for cross-browser compatibility
+- Order: -webkit-, -moz-, -o-, -ms-, then unprefixed
+
+### Error Handling & Validation
+
+#### Form Validation
+- Validation MUST occur on blur (not only on submit)
+- Provide immediate feedback to users
+
+#### UI States
+- All lists/dashboards MUST have designed empty states
+- Actions taking >300ms MUST show loading skeletons or spinners
+
+### UI/UX Design - Nielsen's 10 Heuristics
+
+1. **Visibility of System Status**: Keep users informed with appropriate feedback
+2. **Match Between System and Real World**: Use familiar words, phrases, and concepts
+3. **User Control and Freedom**: Provide clear undo/redo for mistakes
+4. **Consistency and Standards**: Use consistent terminology and platform conventions
+5. **Error Prevention**: Design to prevent problems, not just handle them
+6. **Recognition Rather than Recall**: Make objects, actions, options visible
+7. **Flexibility and Efficiency**: Cater to both novice and expert users with shortcuts
+8. **Aesthetic and Minimalist Design**: Focus on essential elements only
+9. **Help Users Recover from Errors**: Provide clear, constructive error messages
+10. **Help and Documentation**: Offer easily searchable, understandable help
+
+### Documentation Requirements
+
+#### Code Documentation
+- JSDoc or equivalent docstrings for ALL public APIs
+- Include parameters, return types, and usage examples
+
+#### Project Documentation
+- README files MUST be updated when new features are added
+- Maintain accurate and current documentation
+
+### Communication & Project Management
+
+#### Progress Tracking
+- Maintain awareness of current project phase/stage
+- Track completed milestones vs remaining work
+- Provide status updates every 5 minutes during long operations
+- Respond instantly to 'update?' queries
+
+#### Communication Style
+- Deliver brief, action-focused responses
+- Report blockages immediately with exact issue details
+- Mirror user's labeled list format for clarity
+
+#### Task Execution
+- ALL tasks require pre-approval: confirm plan before execution
+- After approval, execute autonomously with continuous testing
+- Target: ALL GREEN status
+- If stuck, provide 2-3 concrete options for resolution
+
+### GitHub Repository Management
+
+#### New Repository Detection
+- Monitor GitHub for new repository creation
+- When detected, ask: "New repository detected: [repo-name]. Should I link it to Qoder?"
+- If YES: Link repository and set up automatic sync
+- If NO: Skip linking and continue normal operations
+- For linked repositories: Sync per existing git-auto-sync workflow
 
 ---
 
-## PHASE EXECUTION
-
-Phase kits are in `/docs/phase-kits/`. Each kit contains:
-- Exact tasks with file paths
-- Code specifications where needed
-- Acceptance criteria
-- Dependencies on prior phases
-
-Execute phases in order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10
-
-**Current phase:** Phase 1 (Fix Deployment)
-
----
-
-## KEY REFERENCE DOCUMENTS
-
-| Document | Location | Purpose |
-|----------|----------|---------|
-| PRD v1.0 | docs/Quiz2Biz-PRD-v1.docx | What to build (approved) |
-| SOW v2.0 | docs/Quiz2Biz-Revised-SOW-v2.docx | How to build it (approved) |
-| Phase Kits | docs/phase-kits/*.md | Execution instructions per phase |
-| This file | CLAUDE.md | Persistent context for Claude Code |
-
----
-
-## V2 DEFERRED FEATURES (DO NOT BUILD)
-
-- Public API for coding agents
-- Microsoft Teams / Marketplace integration
-- Mobile app
-- Evidence Registry (keep code, hide nav)
-- Decision Log (keep code, hide nav)
-- Team collaboration features
-- Adapters (GitHub/GitLab/Jira)
-
----
-
-## ENVIRONMENT VARIABLES REQUIRED
-
-```env
-# Database
-DATABASE_URL=postgresql://...
-
-# Redis
-REDIS_URL=redis://...
-
-# Auth
-JWT_SECRET=...
-JWT_REFRESH_SECRET=...
-
-# AI Providers (NEW)
-ANTHROPIC_API_KEY=...
-OPENAI_API_KEY=...
-
-# Stripe (modify from subscription to per-document)
-STRIPE_SECRET_KEY=...
-STRIPE_WEBHOOK_SECRET=...
-
-# Azure Blob Storage
-AZURE_STORAGE_CONNECTION_STRING=...
-AZURE_STORAGE_CONTAINER=...
-
-# App
-NODE_ENV=production
-PORT=3000
-FRONTEND_URL=https://quiz2biz.com
-```
+**Execute all development tasks with these standards applied consistently.**

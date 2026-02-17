@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { CsrfGuard } from './common/guards/csrf.guard';
 import { PrismaModule } from '@libs/database';
 import { RedisModule } from '@libs/redis';
 import { AuthModule } from './modules/auth/auth.module';
@@ -82,6 +83,10 @@ import configuration from './config/configuration';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: CsrfGuard,
     },
   ],
 })

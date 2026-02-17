@@ -48,11 +48,17 @@ describe('PaymentService', () => {
         {
           provide: ConfigService,
           useValue: {
-            get: jest.fn((key: string) => {
+            get: jest.fn((key: string, defaultValue?: string) => {
               if (key === 'STRIPE_SECRET_KEY') {
                 return 'sk_test_123';
               }
-              return undefined;
+              if (key === 'STRIPE_PRICE_PROFESSIONAL') {
+                return defaultValue || 'price_professional';
+              }
+              if (key === 'STRIPE_PRICE_ENTERPRISE') {
+                return defaultValue || 'price_enterprise';
+              }
+              return defaultValue ?? undefined;
             }),
           },
         },

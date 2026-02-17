@@ -4,6 +4,7 @@ import { SessionService } from './session.service';
 import { PrismaService } from '@libs/database';
 import { QuestionnaireService } from '../questionnaire/questionnaire.service';
 import { AdaptiveLogicService } from '../adaptive-logic/adaptive-logic.service';
+import { ScoringEngineService } from '../scoring-engine/scoring-engine.service';
 import { SessionStatus, QuestionType } from '@prisma/client';
 
 describe('SessionService', () => {
@@ -95,12 +96,19 @@ describe('SessionService', () => {
       getVisibleQuestions: jest.fn(),
     };
 
+    const mockScoringEngineService = {
+      calculateScore: jest.fn().mockResolvedValue({ score: 96, portfolioResidual: 0.04 }),
+      invalidateScoreCache: jest.fn().mockResolvedValue(undefined),
+      getNextQuestions: jest.fn().mockResolvedValue({ questions: [] }),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SessionService,
         { provide: PrismaService, useValue: mockPrismaService },
         { provide: QuestionnaireService, useValue: mockQuestionnaireService },
         { provide: AdaptiveLogicService, useValue: mockAdaptiveLogicService },
+        { provide: ScoringEngineService, useValue: mockScoringEngineService },
       ],
     }).compile();
 
