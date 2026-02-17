@@ -387,7 +387,8 @@ export async function createMessage(data: Partial<IMessage>): Promise<IMessage> 
   const validation = validateMessage(data);
   if (!validation.valid) {
     const errorDetails = validation.errors.map(e => `${e.field}: ${e.message}`).join('; ');
-    throw new Error(`Message validation failed: ${errorDetails}`);
+    const taskId = data.task_id || 'unknown';
+    throw new Error(`Message validation failed for task ${taskId}: ${errorDetails}`);
   }
 
   const result = await query(
