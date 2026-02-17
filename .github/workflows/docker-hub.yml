@@ -63,9 +63,11 @@ jobs:
 
       - name: Run Docker Scout scan
         uses: docker/scout-action@v1
+        continue-on-error: true
         if: github.event_name != 'workflow_dispatch'
         with:
           command: cves
           image: ${{ env.DOCKERHUB_REPO }}:latest
           only-severities: critical,high
-          exit-code: false
+          exit-code: true
+          only-fixed: true

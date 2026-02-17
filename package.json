@@ -4,6 +4,10 @@
   "description": "Adaptive Client Questionnaire System - Backend API",
   "private": true,
   "packageManager": "npm@10.9.4",
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
   "workspaces": [
     "apps/*",
     "libs/*"
