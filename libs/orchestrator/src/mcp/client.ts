@@ -5,6 +5,7 @@
 import { Pool, type PoolClient, type QueryResult } from 'pg';
 import { config } from '../config';
 import { createLogger } from '../utils/logger';
+import { validateMessage } from '../schemas/message';
 import type {
   AuditOperation,
   TaskTier,
@@ -19,8 +20,25 @@ import type {
   IPrecedenceRule,
   ITask,
 } from '../schemas/interfaces';
+import { validateMessage } from '../schemas/message';
 
 const log = createLogger('mcp-client', config.logLevel);
+
+// ── Default Task Configuration ──────────────────────────────────────────────
+
+/** Default tier for tasks when none is specified. */
+const DEFAULT_TASK_TIER: TaskTier = 'M';
+
+/**
+ * Get the default maximum errors for a given task tier.
+ * Uses the tier's configured maxRetries from the error budget.
+ *
+ * @param tier - The task tier (S, M, L, XL).
+ * @returns The maximum number of errors allowed before task failure.
+ */
+function getDefaultMaxErrors(tier: TaskTier): number {
+  return config.errorBudgets[tier].maxRetries;
+}
 
 // ── Tier ordering for fast path max_tier comparison ─────────────────────────
 
@@ -35,22 +53,47 @@ let pool: Pool | null = null;
  * Safe to call multiple times — subsequent calls are no-ops.
  */
 export function init(): void {
-  if (pool) return;
+  if (pool) {return;}
 
   const { db } = config;
+
+  // Determine SSL reject unauthorized setting with secure default
+  const sslRejectUnauthorizedEnv = process.env.DB_SSL_REJECT_UNAUTHORIZED;
+  const sslRejectUnauthorized =
+    sslRejectUnauthorizedEnv == null
+      ? true // Secure default: validate certificates
+      : !['false', '0', 'no', 'off'].includes(
+          sslRejectUnauthorizedEnv.toLowerCase().trim(),
+        );
+
+  if (db.ssl && !sslRejectUnauthorized) {
+    log.warn(
+      'Database SSL is enabled with rejectUnauthorized = false; certificate validation is disabled',
+    );
+  }
+
   pool = new Pool({
     host: db.host,
     port: db.port,
     database: db.database,
     user: db.user,
     password: db.password,
-    ssl: db.ssl ? { rejectUnauthorized: false } : false,
+    ssl: db.ssl ? { rejectUnauthorized: sslRejectUnauthorized } : false,
     min: db.poolMin,
     max: db.poolMax,
   });
 
   pool.on('error', (err: Error) => {
     log.error('Unexpected pool error', { error: err.message });
+    // NOTE: Pool error handler only logs errors but does not implement recovery.
+    // PRODUCTION CONSIDERATION: For production deployments, consider:
+    // - Connection retry logic with exponential backoff
+    // - Circuit breaker pattern to prevent cascading failures
+    // - Health check integration to report degraded state
+    // - Graceful degradation or failover to read replica
+    // - Integration with monitoring/alerting systems
+    // The current implementation relies on the pg pool's built-in reconnection
+    // for idle client errors. Application-level retry should be handled by the caller.
   });
 
   log.info('Connection pool initialised', { host: db.host, database: db.database });
@@ -60,7 +103,7 @@ export function init(): void {
  * Gracefully shut down the connection pool, draining all active connections.
  */
 export async function shutdown(): Promise<void> {
-  if (!pool) return;
+  if (!pool) {return;}
   await pool.end();
   pool = null;
   log.info('Connection pool shut down');
@@ -68,7 +111,7 @@ export async function shutdown(): Promise<void> {
 
 /** Get the pool instance, throwing if not initialised. */
 function getPool(): Pool {
-  if (!pool) throw new Error('MCP client not initialised — call init() first');
+  if (!pool) {throw new Error('MCP client not initialised — call init() first');}
   return pool;
 }
 
@@ -101,6 +144,18 @@ export async function getClient(): Promise<PoolClient> {
 
 /**
  * Execute a parameterised SQL query against the pool.
+ *
+ * Uses parameterized queries to prevent SQL injection. However, there is no
+ * built-in protection against:
+ * - Resource-exhausting queries (missing LIMIT clauses, unbounded JOINs)
+ * - Queries that could lock tables indefinitely
+ * - DDL statements that could alter the schema
+ *
+ * PRODUCTION CONSIDERATION:
+ * - Add query complexity analysis or execution time limits
+ * - Implement statement timeout configuration (SET statement_timeout)
+ * - Use a whitelist of allowed SQL patterns for sensitive operations
+ * - Consider using a query builder/ORM with built-in query validation
  *
  * @param sql - SQL statement with $1, $2, etc. placeholders.
  * @param params - Bind parameters.
@@ -260,11 +315,16 @@ export async function getTask(taskId: number): Promise<ITask | null> {
 
 /**
  * Create a new task. Auto-generates created_at timestamp.
+ * Uses config-based defaults for tier and max_errors.
  *
  * @param data - Partial task data (tier, instruction, etc.).
  * @returns The fully created task row.
  */
 export async function createTask(data: Partial<ITask>): Promise<ITask> {
+  // Use default tier if not specified, then derive max_errors from tier's error budget
+  const tier = data.tier ?? DEFAULT_TASK_TIER;
+  const maxErrors = data.max_errors ?? getDefaultMaxErrors(tier);
+
   const result = await query(
     `INSERT INTO tasks (
        tier, task_type, project, module, instruction, status,
@@ -274,7 +334,7 @@ export async function createTask(data: Partial<ITask>): Promise<ITask> {
      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, NOW())
      RETURNING *`,
     [
-      data.tier ?? 'M',
+      tier,
       data.task_type ?? 'unknown',
       data.project ?? null,
       data.module ?? null,
@@ -286,7 +346,7 @@ export async function createTask(data: Partial<ITask>): Promise<ITask> {
       data.token_budget ?? null,
       data.tokens_consumed ?? 0,
       data.error_count ?? 0,
-      data.max_errors ?? 3,
+      maxErrors,
       data.output ?? null,
       data.expected_output_schema ?? null,
       data.classification_reasoning ?? null,
@@ -298,8 +358,17 @@ export async function createTask(data: Partial<ITask>): Promise<ITask> {
 
 /**
  * Update a task with the given fields.
+ * If tier is updated without max_errors, automatically sets max_errors based on new tier's error budget.
+ *
+ * @param taskId - The task ID to update.
+ * @param updates - Partial task data to update.
  */
 export async function updateTask(taskId: number, updates: Partial<ITask>): Promise<void> {
+  // If tier is being updated but max_errors is not, derive max_errors from the new tier
+  if (updates.tier && !('max_errors' in updates)) {
+    updates = { ...updates, max_errors: getDefaultMaxErrors(updates.tier) };
+  }
+
   const setClauses: string[] = [];
   const values: unknown[] = [];
   let paramIndex = 1;
@@ -312,14 +381,12 @@ export async function updateTask(taskId: number, updates: Partial<ITask>): Promi
     'is_urgent', 'started_at', 'completed_at',
   ];
 
-  // Validate that all keys in updates are allowed
+  // Runtime validation: ensure all keys in updates are in the allowed list
   const updateKeys = Object.keys(updates) as Array<keyof ITask>;
   const invalidKeys = updateKeys.filter(key => !allowed.includes(key));
-  
   if (invalidKeys.length > 0) {
     throw new Error(
-      `Invalid field(s) in task update: ${invalidKeys.join(', ')}. ` +
-      `Allowed fields: ${allowed.join(', ')}`
+      `Invalid update fields: ${invalidKeys.join(', ')}. Allowed fields: ${allowed.join(', ')}`
     );
   }
 
@@ -331,7 +398,7 @@ export async function updateTask(taskId: number, updates: Partial<ITask>): Promi
     }
   }
 
-  if (setClauses.length === 0) return;
+  if (setClauses.length === 0) {return;}
 
   values.push(taskId);
   await query(
@@ -344,8 +411,17 @@ export async function updateTask(taskId: number, updates: Partial<ITask>): Promi
 
 /**
  * Create an inter-agent message record.
+ * Validates the message before persistence to ensure required fields are present.
  */
 export async function createMessage(data: Partial<IMessage>): Promise<IMessage> {
+  // Validate message before persistence
+  const validation = validateMessage(data);
+  if (!validation.valid) {
+    const errorDetails = validation.errors.map(e => `${e.field}: ${e.message}`).join('; ');
+    const taskId = data.task_id || 'unknown';
+    throw new Error(`Message validation failed for task ${taskId}: ${errorDetails}`);
+  }
+
   const result = await query(
     `INSERT INTO messages (
        task_id, from_agent, to_agent, message_type, payload,

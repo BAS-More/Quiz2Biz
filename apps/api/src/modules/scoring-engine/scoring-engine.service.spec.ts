@@ -148,6 +148,9 @@ describe('ScoringEngineService', () => {
       question: {
         findMany: jest.fn(),
       },
+      scoreSnapshot: {
+        findMany: jest.fn().mockResolvedValue([]),
+      },
     };
 
     const mockRedisService = {

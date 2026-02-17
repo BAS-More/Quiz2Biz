@@ -17,7 +17,60 @@ interface EmailProvider {
 }
 
 /**
- * SendGrid Email Provider Implementation
+ * Brevo (formerly Sendinblue) Email Provider Implementation
+ */
+class BrevoProvider implements EmailProvider {
+  private readonly apiKey: string;
+  private readonly fromEmail: string;
+  private readonly fromName: string;
+  private readonly logger = new Logger('BrevoProvider');
+
+  constructor(apiKey: string, fromEmail: string, fromName: string) {
+    this.apiKey = apiKey;
+    this.fromEmail = fromEmail;
+    this.fromName = fromName;
+  }
+
+  async send(
+    to: string,
+    subject: string,
+    html: string,
+    text?: string,
+  ): Promise<{ messageId?: string; success: boolean; error?: string }> {
+    try {
+      const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'api-key': this.apiKey,
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          sender: { email: this.fromEmail, name: this.fromName },
+          to: [{ email: to }],
+          subject,
+          htmlContent: html,
+          ...(text && { textContent: text }),
+        }),
+      });
+
+      if (response.ok) {
+        const data = (await response.json()) as { messageId?: string };
+        return { success: true, messageId: data.messageId };
+      }
+
+      const errorBody = await response.text();
+      this.logger.error(`Brevo error: ${response.status} - ${errorBody}`);
+      return { success: false, error: `Brevo error: ${response.status}` };
+    } catch (error) {
+      this.logger.error('Brevo request failed', error);
+      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    }
+  }
+}
+
+/**
+ * SendGrid Email Provider Implementation (legacy fallback)
  */
 class SendGridProvider implements EmailProvider {
   private readonly apiKey: string;
@@ -113,17 +166,21 @@ export class NotificationService {
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
   ) {
+    const brevoApiKey = this.configService.get<string>('BREVO_API_KEY');
     const sendgridApiKey = this.configService.get<string>('SENDGRID_API_KEY');
     const fromEmail = this.configService.get<string>('EMAIL_FROM', 'noreply@quiz2biz.com');
     const fromName = this.configService.get<string>('EMAIL_FROM_NAME', 'Quiz2Biz');
     this.frontendUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3001');
 
-    if (sendgridApiKey) {
+    if (brevoApiKey) {
+      this.provider = new BrevoProvider(brevoApiKey, fromEmail, fromName);
+      this.logger.log('Email provider initialized: Brevo');
+    } else if (sendgridApiKey) {
       this.provider = new SendGridProvider(sendgridApiKey, fromEmail, fromName);
-      this.logger.log('Email provider initialized: SendGrid');
+      this.logger.log('Email provider initialized: SendGrid (legacy fallback)');
     } else {
       this.provider = new ConsoleProvider();
-      this.logger.warn('No SENDGRID_API_KEY configured - using console email provider');
+      this.logger.warn('No BREVO_API_KEY or SENDGRID_API_KEY configured - using console email provider');
     }
   }
 
