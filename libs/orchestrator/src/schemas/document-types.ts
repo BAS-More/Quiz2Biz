@@ -412,13 +412,20 @@ export function validateDocumentStructure(
  * @param text - Input text in any supported language.
  * @returns Word count respecting language-specific word boundaries.
  *
- * @example
- * ```typescript
- * countWords('Hello world')              // 2
- * countWords('user-friendly interface')  // 2 (hyphenated word counted as one)
- * countWords("don't stop")               // 2 (contraction counted as one)
- * countWords('hello means 你好')         // 4 (2 English + 2 CJK characters)
- * ```
+ * LIMITATIONS:
+ * - Designed for English and space-separated languages
+ * - Does NOT handle CJK (Chinese, Japanese, Korean) text where words aren't space-separated
+ * - Counts hyphenated words as single words (e.g., "state-of-the-art" = 1 word)
+ * - Counts contractions and possessives as single words (e.g., "don't" = 1 word)
+ * - Does not match ISO 24617-2 word counting standards for technical documents
+ *
+ * For production document generation against ISO standards, consider:
+ * - Using a specialized word counting library (e.g., wink-nlp, word-counting)
+ * - Implementing language-specific word segmentation for CJK text
+ * - Adding configuration for different word counting standards
+ *
+ * @param text - Input text.
+ * @returns Word count.
  */
 function countWords(text: string): number {
   return wordCount(text);

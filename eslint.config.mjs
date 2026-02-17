@@ -125,6 +125,8 @@ export default tseslint.config(
       'no-console': 'off',
       'no-duplicate-imports': 'off',
       'no-constant-condition': 'off',
+      'no-useless-assignment': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
     },
   },
 

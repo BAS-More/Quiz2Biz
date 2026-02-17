@@ -46,9 +46,10 @@ export default (): Record<string, unknown> => ({
     level: process.env.LOG_LEVEL || 'debug',
   },
 
-  // Email (SendGrid)
+  // Email (Brevo)
   email: {
-    sendgridApiKey: process.env.SENDGRID_API_KEY,
+    brevoApiKey: process.env.BREVO_API_KEY,
+    sendgridApiKey: process.env.SENDGRID_API_KEY, // legacy fallback
     from: process.env.EMAIL_FROM || 'noreply@quiz2biz.com',
     fromName: process.env.EMAIL_FROM_NAME || 'Quiz2Biz',
   },
