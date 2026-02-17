@@ -312,6 +312,17 @@ export async function updateTask(taskId: number, updates: Partial<ITask>): Promi
     'is_urgent', 'started_at', 'completed_at',
   ];
 
+  // Validate that all keys in updates are allowed
+  const updateKeys = Object.keys(updates) as Array<keyof ITask>;
+  const invalidKeys = updateKeys.filter(key => !allowed.includes(key));
+  
+  if (invalidKeys.length > 0) {
+    throw new Error(
+      `Invalid field(s) in task update: ${invalidKeys.join(', ')}. ` +
+      `Allowed fields: ${allowed.join(', ')}`
+    );
+  }
+
   for (const key of allowed) {
     if (key in updates) {
       setClauses.push(`${key} = $${paramIndex}`);
