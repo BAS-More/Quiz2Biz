@@ -486,7 +486,7 @@ export class EvidenceRegistryService {
     const currentLevel = existingResponse?.coverageLevel ?? 'NONE';
 
     // Validate transition (coverage can only increase)
-    if (!isValidCoverageTransition(currentLevel as CoverageLevel, targetLevel)) {
+    if (!isValidCoverageTransition(currentLevel, targetLevel)) {
       throw new BadRequestException(
         `Invalid coverage transition from ${currentLevel} to ${targetLevel}. ` +
           `Coverage can only increase.`,

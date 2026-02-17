@@ -112,34 +112,22 @@ if (-not $acrExists) {
     Write-Success "Container Registry already exists"
 }
 
-# Step 5: Build and Push Docker Image
-Write-Info "`nStep 5: Building and pushing Docker image..."
-Write-Info "Logging into ACR..."
-az acr login --name $ACR_NAME
+# Step 5: Build image in ACR (cloud build, no local Docker dependency)
+Write-Info "`nStep 5: Building container image in ACR..."
+$IMAGE_REPOSITORY = "$PROJECT_NAME-api"
+$IMAGE_TAG = "$ACR_NAME.azurecr.io/$IMAGE_REPOSITORY:latest"
 
-Write-Info "Building Docker image (this may take 5 minutes)..."
-$IMAGE_TAG = "$ACR_NAME.azurecr.io/$PROJECT_NAME-api:latest"
-
-docker build `
-    -t $IMAGE_TAG `
-    -f docker/api/Dockerfile `
+az acr build `
+    --registry $ACR_NAME `
+    --file docker/api/Dockerfile `
     --target production `
+    --image "$IMAGE_REPOSITORY:latest" `
     .
 
 if ($LASTEXITCODE -eq 0) {
-    Write-Success "Docker image built successfully"
-    
-    Write-Info "Pushing image to ACR..."
-    docker push $IMAGE_TAG
-    
-    if ($LASTEXITCODE -eq 0) {
-        Write-Success "Image pushed to ACR"
-    } else {
-        Write-Error "Failed to push image"
-        exit 1
-    }
+    Write-Success "Image built and pushed via ACR Tasks"
 } else {
-    Write-Error "Failed to build Docker image"
+    Write-Error "Failed to build image in ACR"
     exit 1
 }
 

@@ -24,8 +24,8 @@ TXT_RECORD = {
 CNAME_RECORD = {
     "name": "www",
     "type": "CNAME",
-    "data": "ca-questionnaire-api-dev.happycliff-f616886e.eastus.azurecontainerapps.io",
-    "ttl": 3600
+    "data": "ca-questionnaire-api-dev.ambitioussea-ad6d342d.eastus2.azurecontainerapps.io",
+    "ttl": 600
 }
 
 # Root domain TXT verification record
@@ -36,12 +36,13 @@ ROOT_TXT_RECORD = {
     "ttl": 600
 }
 
-# Root domain CNAME (will use @ for root)
-ROOT_CNAME_RECORD = {
+# Root domain A record (GoDaddy doesn't support CNAME on root)
+# Points to the Container App Environment's static IP
+ROOT_A_RECORD = {
     "name": "@",
-    "type": "CNAME",
-    "data": "ca-questionnaire-api-dev.happycliff-f616886e.eastus.azurecontainerapps.io",
-    "ttl": 3600
+    "type": "A",
+    "data": "4.153.144.109",
+    "ttl": 600
 }
 
 # GoDaddy API endpoint
@@ -96,8 +97,8 @@ def main():
     cname_success = add_dns_record(CNAME_RECORD)
     print()
 
-    # Configure CNAME record for root domain mapping
-    root_cname_success = add_dns_record(ROOT_CNAME_RECORD)
+    # Configure A record for root domain mapping
+    root_a_success = add_dns_record(ROOT_A_RECORD)
     print()
 
     if txt_success and cname_success and root_txt_success:
@@ -108,7 +109,7 @@ def main():
         print(f"  1. TXT: asuid.www.{DOMAIN}")
         print(f"  2. TXT: asuid.{DOMAIN}")
         print(f"  3. CNAME: www.{DOMAIN} -> Container App")
-        print(f"  4. CNAME: {DOMAIN} -> Container App (if supported)")
+        print(f"  4. A: {DOMAIN} -> Container App IP (root domain)")
         print("\nDNS propagation typically takes 5-15 minutes.")
         print("You can now continue with the HTTPS setup.")
         return 0
