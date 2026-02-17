@@ -379,7 +379,7 @@ export class SessionService {
 
     // Determine next question: prefer NQS pick, fallback to sequential
     const nqsQuestion = nqsNext
-      ? visibleQuestions.find((q) => q.id === nqsNext!.questionId)
+      ? visibleQuestions.find((q) => q.id === nqsNext.questionId)
       : null;
     const nextQuestion = nqsQuestion ?? this.findNextUnansweredQuestion(
       visibleQuestions,

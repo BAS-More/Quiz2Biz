@@ -37,7 +37,7 @@ describe('MainLayout', () => {
     renderMainLayout();
 
     expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /questionnaires/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /assessments/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /documents/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /settings/i })).toBeInTheDocument();
   });
@@ -57,7 +57,7 @@ describe('MainLayout', () => {
   it('renders logo link', () => {
     renderMainLayout();
 
-    expect(screen.getByText('Quiz2Biz')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /quiz2biz/i })).toBeInTheDocument();
   });
 
   it('renders outlet content', () => {
@@ -92,7 +92,7 @@ describe('MainLayout', () => {
     renderMainLayout();
 
     expect(screen.getByRole('link', { name: /dashboard/i })).toHaveAttribute('href', '/dashboard');
-    expect(screen.getByRole('link', { name: /questionnaires/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /assessments/i })).toHaveAttribute(
       'href',
       '/questionnaires',
     );

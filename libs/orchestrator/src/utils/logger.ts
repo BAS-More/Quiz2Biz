@@ -1,6 +1,28 @@
 // ---------------------------------------------------------------------------
 // Structured Logger — Async logging with Pino for high-throughput scenarios
 // ---------------------------------------------------------------------------
+//
+// IMPLEMENTATION NOTES:
+// - Uses synchronous writes to process.stdout/stderr for simplicity
+// - In high-throughput scenarios, synchronous I/O can:
+//   • Block the event loop, degrading application performance
+//   • Cause log loss if output streams are full
+//   • Create backpressure on the application
+//
+// PRODUCTION CONSIDERATIONS:
+// - For production deployments, consider integrating with:
+//   • Winston (https://github.com/winstonjs/winston) - asynchronous logging with transports
+//   • Pino (https://github.com/pinojs/pino) - ultra-fast JSON logger with async I/O
+//   • Bunyan (https://github.com/trentm/node-bunyan) - structured logging with streams
+// - Add log level filtering BEFORE constructing expensive JSON metadata strings
+// - Implement log buffering/batching for high-volume scenarios
+// - Consider using non-blocking I/O for log writes
+//
+// The current implementation prioritizes:
+// - Zero external dependencies
+// - Readable console output with ANSI colors
+// - Simple integration for MVP/development environments
+// ---------------------------------------------------------------------------
 
 import pino from 'pino';
 import type { LogLevel } from '../config/interfaces';
