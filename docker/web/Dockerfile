@@ -23,13 +23,16 @@ RUN npx turbo run build --filter=web
 # Production stage - serve with nginx
 FROM nginx:1.27-alpine AS production
 
+ARG IMAGE_VERSION=unknown
+
 # OCI labels for supply chain tracking
 LABEL org.opencontainers.image.title="questionnaire-web" \
       org.opencontainers.image.description="Quiz2Biz Web — React SPA frontend" \
       org.opencontainers.image.vendor="Quiz2Biz" \
       org.opencontainers.image.source="https://github.com/Avi-Bendetsky/Quiz-to-build" \
       org.opencontainers.image.licenses="UNLICENSED" \
-      org.opencontainers.image.base.name="docker.io/library/nginx:1.27-alpine"
+      org.opencontainers.image.base.name="docker.io/library/nginx:1.27-alpine" \
+      org.opencontainers.image.version="${IMAGE_VERSION}"
 
 # Install security patches
 RUN apk upgrade --no-cache
