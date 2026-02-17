@@ -146,10 +146,8 @@ async function bootstrap(): Promise<void> {
     credentials: true,
   });
 
-  // Global prefix (exclude health endpoints for container probes)
-  app.setGlobalPrefix(apiPrefix, {
-    exclude: ['health', 'health/live', 'health/ready'],
-  });
+  // Global prefix
+  app.setGlobalPrefix(apiPrefix);
 
   // Global pipes
   app.useGlobalPipes(

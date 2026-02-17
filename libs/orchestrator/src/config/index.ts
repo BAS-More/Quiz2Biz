@@ -89,7 +89,7 @@ function buildConfig(): IOrchestratorConfig {
     },
 
     db: {
-      host: env('DATABASE_HOST', 'REDIS_HOST', 'localhost'),
+      host: env('DATABASE_HOST', undefined, 'localhost'),
       port: envInt('DATABASE_PORT', undefined, 5432),
       database: env('DATABASE_NAME', undefined, 'orchestrator'),
       user: env('DATABASE_USER', undefined, 'postgres'),

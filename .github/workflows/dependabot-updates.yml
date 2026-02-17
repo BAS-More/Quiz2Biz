@@ -1,0 +1,47 @@
+name: Dependabot Updates
+
+# NOTE: Dependabot workflows cannot be manually re-run from the GitHub Actions UI.
+# To retrigger this update, use Dependabot commands on the PR:
+#   - Comment "@dependabot rebase" to rebase the PR
+#   - Comment "@dependabot recreate" to recreate the PR
+#   - Close and reopen the PR to trigger a new workflow run
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '20.x'
+
+jobs:
+  validate-dependabot-update:
+    name: Validate Dependabot Update
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check for Dependabot re-run
+        if: github.actor == 'dependabot[bot]' && github.run_attempt != 1
+        run: |
+          echo "::error::Dependabot workflows cannot be re-run. Retrigger this update via Dependabot instead."
+          echo "To retrigger this workflow:"
+          echo "1. Comment '@dependabot recreate' on the PR to recreate it"
+          echo "2. Or close and reopen the PR"
+          exit 1
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
