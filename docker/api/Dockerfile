@@ -27,6 +27,10 @@ RUN npx prisma generate
 RUN npx turbo run build --filter=api --filter=database --filter=redis --filter=shared
 
 # Prune dev dependencies for production
+# Note: This approach installs dev dependencies in the builder stage and then removes them.
+# For optimization, consider using a dedicated dependencies stage that only installs
+# production dependencies, which can be copied directly to the production stage without
+# the overhead of pruning. Current approach is acceptable for MVP.
 RUN npm prune --production
 
 # Development stage
