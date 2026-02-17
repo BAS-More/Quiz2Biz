@@ -1,4 +1,12 @@
 services:
+  # PostgreSQL 16 — upgraded from PG 15
+  # MIGRATION NOTES:
+  # - PostgreSQL 16 includes breaking changes and new features
+  # - Ensure Prisma schema and migrations are compatible with PG 16
+  # - Verify all raw SQL queries work correctly with PG 16
+  # - Production Azure PostgreSQL must support version 16 (check terraform postgresql_version)
+  # - For existing PG 15 databases, follow the official upgrade guide:
+  #   https://www.postgresql.org/docs/16/upgrading.html
   postgres:
     image: postgres:16-alpine
     container_name: questionnaire-postgres

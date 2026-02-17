@@ -399,6 +399,18 @@ export function validateDocumentStructure(
  *
  * Splits on whitespace, filters empty tokens.
  *
+ * LIMITATIONS:
+ * - Designed for English and space-separated languages
+ * - Does NOT handle CJK (Chinese, Japanese, Korean) text where words aren't space-separated
+ * - Counts hyphenated words as single words (e.g., "state-of-the-art" = 1 word)
+ * - Counts contractions and possessives as single words (e.g., "don't" = 1 word)
+ * - Does not match ISO 24617-2 word counting standards for technical documents
+ *
+ * For production document generation against ISO standards, consider:
+ * - Using a specialized word counting library (e.g., wink-nlp, word-counting)
+ * - Implementing language-specific word segmentation for CJK text
+ * - Adding configuration for different word counting standards
+ *
  * @param text - Input text.
  * @returns Word count.
  */

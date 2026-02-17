@@ -5,6 +5,7 @@
 import { Pool, type PoolClient, type QueryResult } from 'pg';
 import { config } from '../config';
 import { createLogger } from '../utils/logger';
+import { validateMessage } from '../schemas/message';
 import type {
   AuditOperation,
   TaskTier,
@@ -54,19 +55,44 @@ export function init(): void {
   if (pool) {return;}
 
   const { db } = config;
+
+  // Determine SSL reject unauthorized setting with secure default
+  const sslRejectUnauthorizedEnv = process.env.DB_SSL_REJECT_UNAUTHORIZED;
+  const sslRejectUnauthorized =
+    sslRejectUnauthorizedEnv == null
+      ? true // Secure default: validate certificates
+      : !['false', '0', 'no', 'off'].includes(
+          sslRejectUnauthorizedEnv.toLowerCase().trim(),
+        );
+
+  if (db.ssl && !sslRejectUnauthorized) {
+    log.warn(
+      'Database SSL is enabled with rejectUnauthorized = false; certificate validation is disabled',
+    );
+  }
+
   pool = new Pool({
     host: db.host,
     port: db.port,
     database: db.database,
     user: db.user,
     password: db.password,
-    ssl: db.ssl ? { rejectUnauthorized: false } : false,
+    ssl: db.ssl ? { rejectUnauthorized: sslRejectUnauthorized } : false,
     min: db.poolMin,
     max: db.poolMax,
   });
 
   pool.on('error', (err: Error) => {
     log.error('Unexpected pool error', { error: err.message });
+    // NOTE: Pool error handler only logs errors but does not implement recovery.
+    // PRODUCTION CONSIDERATION: For production deployments, consider:
+    // - Connection retry logic with exponential backoff
+    // - Circuit breaker pattern to prevent cascading failures
+    // - Health check integration to report degraded state
+    // - Graceful degradation or failover to read replica
+    // - Integration with monitoring/alerting systems
+    // The current implementation relies on the pg pool's built-in reconnection
+    // for idle client errors. Application-level retry should be handled by the caller.
   });
 
   log.info('Connection pool initialised', { host: db.host, database: db.database });
@@ -117,6 +143,18 @@ export async function getClient(): Promise<PoolClient> {
 
 /**
  * Execute a parameterised SQL query against the pool.
+ *
+ * Uses parameterized queries to prevent SQL injection. However, there is no
+ * built-in protection against:
+ * - Resource-exhausting queries (missing LIMIT clauses, unbounded JOINs)
+ * - Queries that could lock tables indefinitely
+ * - DDL statements that could alter the schema
+ *
+ * PRODUCTION CONSIDERATION:
+ * - Add query complexity analysis or execution time limits
+ * - Implement statement timeout configuration (SET statement_timeout)
+ * - Use a whitelist of allowed SQL patterns for sensitive operations
+ * - Consider using a query builder/ORM with built-in query validation
  *
  * @param sql - SQL statement with $1, $2, etc. placeholders.
  * @param params - Bind parameters.
@@ -342,6 +380,15 @@ export async function updateTask(taskId: number, updates: Partial<ITask>): Promi
     'is_urgent', 'started_at', 'completed_at',
   ];
 
+  // Runtime validation: ensure all keys in updates are in the allowed list
+  const updateKeys = Object.keys(updates) as Array<keyof ITask>;
+  const invalidKeys = updateKeys.filter(key => !allowed.includes(key));
+  if (invalidKeys.length > 0) {
+    throw new Error(
+      `Invalid update fields: ${invalidKeys.join(', ')}. Allowed fields: ${allowed.join(', ')}`
+    );
+  }
+
   for (const key of allowed) {
     if (key in updates) {
       setClauses.push(`${key} = $${paramIndex}`);
@@ -363,8 +410,17 @@ export async function updateTask(taskId: number, updates: Partial<ITask>): Promi
 
 /**
  * Create an inter-agent message record.
+ * Validates the message before persistence to ensure required fields are present.
  */
 export async function createMessage(data: Partial<IMessage>): Promise<IMessage> {
+  // Validate message before persistence
+  const validation = validateMessage(data);
+  if (!validation.valid) {
+    const errorDetails = validation.errors.map(e => `${e.field}: ${e.message}`).join('; ');
+    const taskId = data.task_id || 'unknown';
+    throw new Error(`Message validation failed for task ${taskId}: ${errorDetails}`);
+  }
+
   const result = await query(
     `INSERT INTO messages (
        task_id, from_agent, to_agent, message_type, payload,
