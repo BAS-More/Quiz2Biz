@@ -135,6 +135,57 @@ export async function query(sql: string, params?: unknown[]): Promise<QueryResul
   return getPool().query(sql, params);
 }
 
+/**
+ * Execute a query with automatic retry on transient failures.
+ * 
+ * Implements exponential backoff for connection errors, timeouts, and other
+ * transient database failures. Non-retryable errors (constraint violations,
+ * syntax errors) are thrown immediately.
+ * 
+ * @param sql - SQL statement with $1, $2, etc. placeholders.
+ * @param params - Bind parameters.
+ * @param maxRetries - Maximum retry attempts (default: 3).
+ * @returns The query result.
+ */
+export async function queryWithRetry(
+  sql: string,
+  params?: unknown[],
+  maxRetries = 3,
+): Promise<QueryResult> {
+  let lastError: Error | undefined;
+  
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await query(sql, params);
+    } catch (err) {
+      lastError = err as Error;
+      
+      // Check if error is retryable (connection issues, timeouts)
+      const isRetryable = 
+        lastError.message.includes('ECONNREFUSED') ||
+        lastError.message.includes('ECONNRESET') ||
+        lastError.message.includes('ETIMEDOUT') ||
+        lastError.message.includes('Connection terminated') ||
+        lastError.message.includes('connection timeout');
+      
+      // Don't retry on non-transient errors (constraint violations, syntax errors, etc.)
+      if (!isRetryable || attempt === maxRetries) {
+        throw lastError;
+      }
+      
+      // Exponential backoff: 100ms, 200ms, 400ms, 800ms, etc.
+      const delayMs = 100 * Math.pow(2, attempt);
+      log.warn(`Query failed (attempt ${attempt + 1}/${maxRetries + 1}), retrying in ${delayMs}ms`, {
+        error: lastError.message,
+      });
+      
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+  }
+  
+  throw lastError;
+}
+
 // ── Agent Queries ───────────────────────────────────────────────────────────
 
 /**

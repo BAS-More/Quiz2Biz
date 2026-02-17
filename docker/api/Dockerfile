@@ -27,6 +27,9 @@ RUN npx prisma generate
 RUN npx turbo run build --filter=api --filter=database --filter=redis --filter=shared
 
 # Prune dev dependencies for production
+# NOTE: This is done after build (not before) because build requires devDependencies
+# (TypeScript, build tools, etc.). The pruned node_modules is then copied to the
+# production stage, which avoids shipping dev dependencies to production.
 RUN npm prune --production
 
 # Development stage
