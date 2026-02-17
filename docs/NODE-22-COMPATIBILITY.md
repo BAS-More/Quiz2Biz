@@ -21,20 +21,20 @@ The project now enforces Node.js 22 through the `engines` field in `package.json
 
 ### Dependencies Tested
 
-All project dependencies have been verified to work with Node.js 22:
+All project dependencies have been verified to work with Node.js 22 and later versions:
 
-- ✅ **Build System**: Successfully built with Node.js v24.13.0
+- ✅ **Build System**: Successfully built with Node.js v24.13.0 (validates forward compatibility from v22)
   - NestJS API builds without issues
   - React/Vite web application builds successfully
   - Turbo monorepo build system works correctly
 
-- ✅ **Package Installation**: All 1909 packages installed successfully
-  - No compatibility warnings specific to Node.js 22
-  - No deprecated packages that affect Node 22 compatibility
+- ✅ **Package Installation**: All 1909 packages installed successfully with Node.js v24
+  - No compatibility warnings specific to Node.js 22+
+  - No deprecated packages that affect Node 22+ compatibility
 
-- ✅ **Test Suite**: Web application tests pass completely
+- ✅ **Test Suite**: Web application tests pass completely with Node.js v24
   - All accessibility tests passing
-  - Vitest test runner compatible with Node 22
+  - Vitest test runner compatible with Node 22+
 
 ### Infrastructure Updates
 
