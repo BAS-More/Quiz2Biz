@@ -126,3 +126,40 @@ variable "acr_sku" {
   type        = string
   default     = "Basic"
 }
+
+# Web Container Configuration
+variable "deploy_web" {
+  description = "Whether to deploy the web frontend container"
+  type        = bool
+  default     = true
+}
+
+variable "web_container_cpu" {
+  description = "CPU allocation for web container (in cores)"
+  type        = number
+  default     = 0.25
+}
+
+variable "web_container_memory" {
+  description = "Memory allocation for web container"
+  type        = string
+  default     = "0.5Gi"
+}
+
+variable "web_container_min_replicas" {
+  description = "Minimum number of web container replicas"
+  type        = number
+  default     = 1
+}
+
+variable "web_container_max_replicas" {
+  description = "Maximum number of web container replicas"
+  type        = number
+  default     = 3
+}
+
+variable "api_url" {
+  description = "URL of the API for the web frontend"
+  type        = string
+  default     = ""
+}

@@ -122,6 +122,49 @@ variable "tags" {
   default     = {}
 }
 
+# Web Container Variables
+variable "web_container_image" {
+  description = "Container image for web frontend"
+  type        = string
+  default     = ""
+}
+
+variable "web_cpu" {
+  description = "CPU allocation for web container"
+  type        = number
+  default     = 0.25
+}
+
+variable "web_memory" {
+  description = "Memory allocation for web container"
+  type        = string
+  default     = "0.5Gi"
+}
+
+variable "web_min_replicas" {
+  description = "Minimum number of web replicas"
+  type        = number
+  default     = 1
+}
+
+variable "web_max_replicas" {
+  description = "Maximum number of web replicas"
+  type        = number
+  default     = 3
+}
+
+variable "deploy_web" {
+  description = "Whether to deploy the web frontend container"
+  type        = bool
+  default     = true
+}
+
+variable "api_url" {
+  description = "URL of the API for the web frontend to connect to"
+  type        = string
+  default     = ""
+}
+
 # Canary Deployment Variables
 variable "enable_canary_deployment" {
   description = "Enable canary deployment with multiple revisions"

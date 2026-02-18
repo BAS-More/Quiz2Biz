@@ -53,3 +53,29 @@ output "canary_traffic_percentage" {
   description = "Current percentage of traffic routed to canary"
   value       = var.canary_traffic_percentage
 }
+
+# Web Container App Outputs
+output "web_id" {
+  description = "ID of the Web Container App"
+  value       = var.deploy_web && var.web_container_image != "" ? azurerm_container_app.web[0].id : null
+}
+
+output "web_name" {
+  description = "Name of the Web Container App"
+  value       = var.deploy_web && var.web_container_image != "" ? azurerm_container_app.web[0].name : null
+}
+
+output "web_fqdn" {
+  description = "FQDN of the Web Container App"
+  value       = var.deploy_web && var.web_container_image != "" ? azurerm_container_app.web[0].ingress[0].fqdn : null
+}
+
+output "web_url" {
+  description = "URL of the Web Container App"
+  value       = var.deploy_web && var.web_container_image != "" ? "https://${azurerm_container_app.web[0].ingress[0].fqdn}" : null
+}
+
+output "web_deployed" {
+  description = "Whether the web frontend is deployed"
+  value       = var.deploy_web && var.web_container_image != ""
+}

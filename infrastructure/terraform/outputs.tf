@@ -114,3 +114,24 @@ output "connection_info" {
   }
 }
 
+# Web Container App
+output "web_container_app_name" {
+  description = "Name of the Web Container App"
+  value       = module.container_apps.web_name
+}
+
+output "web_url" {
+  description = "URL of the Web Frontend"
+  value       = module.container_apps.web_url
+}
+
+output "web_fqdn" {
+  description = "FQDN of the Web Frontend"
+  value       = module.container_apps.web_fqdn
+}
+
+output "web_deployed" {
+  description = "Whether the web frontend is deployed"
+  value       = module.container_apps.web_deployed
+}
+

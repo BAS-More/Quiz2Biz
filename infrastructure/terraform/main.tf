@@ -53,11 +53,11 @@ module "database" {
   location            = var.location
   resource_group_name = azurerm_resource_group.main.name
 
-  sku_name            = var.postgresql_sku_name
-  storage_mb          = var.postgresql_storage_mb
-  postgresql_version  = var.postgresql_version
-  db_name             = var.db_name
-  tags                = local.common_tags
+  sku_name           = var.postgresql_sku_name
+  storage_mb         = var.postgresql_storage_mb
+  postgresql_version = var.postgresql_version
+  db_name            = var.db_name
+  tags               = local.common_tags
 
   depends_on = []
 }
@@ -95,10 +95,10 @@ module "keyvault" {
 module "container_apps" {
   source = "./modules/container-apps"
 
-  project_name               = var.project_name
-  environment                = var.environment
-  location                   = var.location
-  resource_group_name        = azurerm_resource_group.main.name
+  project_name        = var.project_name
+  environment         = var.environment
+  location            = var.location
+  resource_group_name = azurerm_resource_group.main.name
 
   log_analytics_workspace_id = module.monitoring.log_analytics_workspace_id
 
@@ -108,6 +108,15 @@ module "container_apps" {
   memory          = var.container_memory
   min_replicas    = var.container_min_replicas
   max_replicas    = var.container_max_replicas
+
+  # Web container configuration
+  deploy_web          = var.deploy_web
+  web_container_image = var.deploy_web ? "${module.registry.acr_login_server}/questionnaire-web:latest" : ""
+  web_cpu             = var.web_container_cpu
+  web_memory          = var.web_container_memory
+  web_min_replicas    = var.web_container_min_replicas
+  web_max_replicas    = var.web_container_max_replicas
+  api_url             = var.api_url
 
   # Registry credentials
   acr_login_server   = module.registry.acr_login_server

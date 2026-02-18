@@ -209,3 +209,89 @@ resource "azurerm_container_app" "api" {
   }
 }
 
+# Container App - Web Frontend
+resource "azurerm_container_app" "web" {
+  count                        = var.deploy_web && var.web_container_image != "" ? 1 : 0
+  name                         = "ca-${var.project_name}-web-${var.environment}"
+  container_app_environment_id = azurerm_container_app_environment.main.id
+  resource_group_name          = var.resource_group_name
+  revision_mode                = "Single"
+
+  template {
+    min_replicas = var.web_min_replicas
+    max_replicas = var.web_max_replicas
+
+    container {
+      name   = "web"
+      image  = var.web_container_image
+      cpu    = var.web_cpu
+      memory = var.web_memory
+
+      # Environment variables for the React frontend
+      env {
+        name  = "NODE_ENV"
+        value = "production"
+      }
+
+      env {
+        name  = "VITE_API_URL"
+        value = var.api_url != "" ? var.api_url : "https://ca-${var.project_name}-api-${var.environment}.${azurerm_container_app_environment.main.default_domain}"
+      }
+
+      # Liveness probe
+      liveness_probe {
+        transport = "HTTP"
+        path      = "/"
+        port      = 80
+
+        initial_delay           = 10
+        interval_seconds        = 30
+        timeout                 = 5
+        failure_count_threshold = 3
+      }
+
+      # Readiness probe
+      readiness_probe {
+        transport = "HTTP"
+        path      = "/"
+        port      = 80
+
+        interval_seconds        = 10
+        timeout                 = 5
+        failure_count_threshold = 3
+      }
+    }
+  }
+
+  ingress {
+    external_enabled = true
+    target_port      = 80
+    transport        = "auto"
+
+    traffic_weight {
+      percentage      = 100
+      latest_revision = true
+    }
+  }
+
+  registry {
+    server               = var.acr_login_server
+    username             = var.acr_admin_username
+    password_secret_name = "acr-password"
+  }
+
+  secret {
+    name  = "acr-password"
+    value = var.acr_admin_password
+  }
+
+  tags = var.tags
+
+  lifecycle {
+    ignore_changes = [
+      template[0].container[0].image,
+      template[0].container[0].env
+    ]
+  }
+}
+
