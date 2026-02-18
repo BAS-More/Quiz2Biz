@@ -1,16 +1,11 @@
 name: Build and Push to Docker Hub
 
+# DISABLED: Docker Hub credentials not configured
+# Re-enable by uncommenting push trigger and adding secrets:
+# - DOCKERHUB_USERNAME
+# - DOCKERHUB_TOKEN
+
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'docker/**'
-      - 'apps/api/**'
-      - 'libs/**'
-      - 'prisma/**'
-      - 'package*.json'
-      - 'turbo.json'
   workflow_dispatch:
 
 env:
