@@ -57,6 +57,7 @@ export class AuthController {
   }
 
   @Post('refresh')
+  @SkipCsrf()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Refresh access token' })
   @ApiResponse({
@@ -70,6 +71,7 @@ export class AuthController {
   }
 
   @Post('logout')
+  @SkipCsrf()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Logout and invalidate refresh token' })
   @ApiResponse({ status: 200, description: 'Logged out successfully' })
@@ -91,6 +93,7 @@ export class AuthController {
   // ============ EMAIL VERIFICATION ENDPOINTS ============
 
   @Post('verify-email')
+  @SkipCsrf()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Verify email address with token' })
   @ApiResponse({ status: 200, description: 'Email verified successfully' })
@@ -100,6 +103,7 @@ export class AuthController {
   }
 
   @Post('resend-verification')
+  @SkipCsrf()
   @HttpCode(HttpStatus.OK)
   @Throttle({ short: { limit: 3, ttl: 60000 } }) // Limit to 3 requests per minute
   @ApiOperation({ summary: 'Resend verification email' })
@@ -111,6 +115,7 @@ export class AuthController {
   // ============ PASSWORD RESET ENDPOINTS ============
 
   @Post('forgot-password')
+  @SkipCsrf()
   @HttpCode(HttpStatus.OK)
   @Throttle({ short: { limit: 3, ttl: 60000 } }) // Limit to 3 requests per minute
   @ApiOperation({ summary: 'Request password reset email' })
@@ -120,6 +125,7 @@ export class AuthController {
   }
 
   @Post('reset-password')
+  @SkipCsrf()
   @HttpCode(HttpStatus.OK)
   @Throttle({ short: { limit: 5, ttl: 60000 } }) // Limit to 5 attempts per minute
   @ApiOperation({ summary: 'Reset password with token' })
