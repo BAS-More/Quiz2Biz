@@ -1,10 +1,11 @@
 # Build stage
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Install OpenSSL for Prisma
-RUN apk add --no-cache openssl
+# Install security patches and OpenSSL for Prisma
+RUN apk upgrade --no-cache && \
+    apk add --no-cache openssl
 
 # Install dependencies
 COPY package*.json ./
@@ -25,13 +26,24 @@ RUN npx prisma generate
 # Build the application (API and dependencies only, exclude CLI and web)
 RUN npx turbo run build --filter=api --filter=database --filter=redis --filter=shared
 
+# Prune dev dependencies for production
+# NOTE: npm prune runs AFTER build to remove dev dependencies.
+# This is intentional: dev dependencies are needed during build but not in production.
+# The pruned node_modules are then copied to the production stage.
+# OPTIMIZATION CONSIDERATION: For smaller images, consider:
+# - Using npm ci --production in a separate stage to avoid copying dev deps
+# - Multi-stage builds with only production dependencies in final stage
+# - Using .dockerignore to exclude unnecessary files from context
+RUN npm prune --production
+
 # Development stage
-FROM node:20-alpine AS development
+FROM node:22-alpine AS development
 
 WORKDIR /app
 
-# Install OpenSSL for Prisma
-RUN apk add --no-cache openssl
+# Install security patches and OpenSSL for Prisma
+RUN apk upgrade --no-cache && \
+    apk add --no-cache openssl
 
 # Install dependencies
 COPY package*.json ./
@@ -56,19 +68,31 @@ EXPOSE 3000
 CMD ["npm", "run", "start:dev"]
 
 # Production stage (must be last for default ACR build)
-FROM node:20-alpine AS production
+FROM node:22-alpine AS production
+
+# Accept build argument for image version
+ARG IMAGE_VERSION=unknown
+
+# OCI labels for supply chain tracking
+LABEL org.opencontainers.image.title="questionnaire-api" \
+      org.opencontainers.image.description="Quiz2Biz API — NestJS backend" \
+      org.opencontainers.image.vendor="Quiz2Biz" \
+      org.opencontainers.image.source="https://github.com/Avi-Bendetsky/Quiz-to-build" \
+      org.opencontainers.image.licenses="UNLICENSED" \
+      org.opencontainers.image.base.name="docker.io/library/node:22-alpine" \
+      org.opencontainers.image.version=$IMAGE_VERSION
 
 WORKDIR /app
 
-# Install OpenSSL for Prisma
-RUN apk add --no-cache openssl
+# Install security patches and OpenSSL for Prisma
+RUN apk upgrade --no-cache && \
+    apk add --no-cache openssl
 
 # Create non-root user for security
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nestjs -u 1001
 
-# Copy built application - maintain directory structure for path resolution
-# The compiled code uses relative paths that depend on the original structure
+# Copy built application with pruned production dependencies
 COPY --from=builder --chown=nestjs:nodejs /app/dist ./dist
 COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nestjs:nodejs /app/package*.json ./

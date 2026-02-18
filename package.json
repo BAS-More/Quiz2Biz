@@ -4,6 +4,10 @@
   "description": "Adaptive Client Questionnaire System - Backend API",
   "private": true,
   "packageManager": "npm@10.9.4",
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
   "workspaces": [
     "apps/*",
     "libs/*"
@@ -53,6 +57,7 @@
     "@types/archiver": "^7.0.0",
     "@types/jest-axe": "^3.5.9",
     "@types/node": "^20.10.0",
+    "@types/pg": "^8.16.0",
     "autocannon": "^8.0.0",
     "axe-core": "^4.11.1",
     "eslint": "^9.39.2",
@@ -85,7 +90,7 @@
     ]
   },
   "engines": {
-    "node": ">=20.0.0",
+    "node": ">=22.0.0",
     "npm": ">=10.0.0"
   },
   "dependencies": {
