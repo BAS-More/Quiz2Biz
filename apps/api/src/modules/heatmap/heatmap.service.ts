@@ -245,7 +245,8 @@ export class HeatmapService {
     const cellQuestions = questions
       .filter((q: { dimensionKey: string | null }) => q.dimensionKey === dim?.key)
       .filter(
-        (q: { severity: any }) => SeverityBuckets.getBucket(Number(q.severity || this.DEFAULT_SEVERITY)) === bucket,
+        (q: { severity: any }) =>
+          SeverityBuckets.getBucket(Number(q.severity || this.DEFAULT_SEVERITY)) === bucket,
       )
       .map((q: { id: string; text: string; severity: any }) => {
         const response = responseLookup.get(q.id) as { coverage: any; value?: any } | undefined;
@@ -533,7 +534,7 @@ export class HeatmapService {
       } // Skip low-risk cells
 
       const dimensionWeight = dimensionWeights.get(cell.dimensionKey) || 0.1;
-      const severityMultiplier = this.getSeverityMultiplier(cell.severityBucket as SeverityBucket);
+      const severityMultiplier = this.getSeverityMultiplier(cell.severityBucket);
 
       // Priority score = cell value × dimension weight × severity multiplier
       const priorityScore = cell.cellValue * dimensionWeight * severityMultiplier;
@@ -543,7 +544,8 @@ export class HeatmapService {
         .filter((q: { dimensionKey: string | null }) => q.dimensionKey === cell.dimensionKey)
         .filter(
           (q: { severity: any }) =>
-            SeverityBuckets.getBucket(Number(q.severity || this.DEFAULT_SEVERITY)) === cell.severityBucket,
+            SeverityBuckets.getBucket(Number(q.severity || this.DEFAULT_SEVERITY)) ===
+            cell.severityBucket,
         )
         .map((q: { id: string; text: string; severity: any }) => {
           const response = responseLookup.get(q.id) as { coverage: any } | undefined;

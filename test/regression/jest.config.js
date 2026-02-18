@@ -1,6 +1,6 @@
 /**
  * Jest Configuration for Regression Test Suite
- * 
+ *
  * This configuration ensures regression tests:
  * 1. Run in isolation from other test suites
  * 2. Generate JUnit reports for CI/CD integration
@@ -18,32 +18,32 @@ module.exports = {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
   setupFilesAfterEnv: ['<rootDir>/test/regression/setup.ts'],
-  
+
   // Fail fast - stop on first regression
   bail: 1,
-  
+
   // Verbose output for regression debugging
   verbose: true,
-  
+
   // Reporters for CI/CD integration
   reporters: ['default'],
-  
+
   // Module resolution
   moduleNameMapper: {
     '^@libs/(.*)$': '<rootDir>/libs/$1/src',
     '^@/(.*)$': '<rootDir>/apps/api/src/$1',
   },
-  
+
   // Coverage settings for regression tests
   collectCoverageFrom: [
     '<rootDir>/apps/api/src/**/*.ts',
     '!<rootDir>/apps/api/src/**/*.spec.ts',
     '!<rootDir>/apps/api/src/**/*.test.ts',
   ],
-  
+
   // Timeouts for regression tests (allow longer for complex scenarios)
   testTimeout: 30000,
-  
+
   // Global test settings
   globals: {
     'ts-jest': {

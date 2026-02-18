@@ -270,7 +270,10 @@ export class ScoringEngineService {
     questions.forEach((q) => {
       if (q.dimensionKey) {
         const current = dimensionSeveritySum.get(q.dimensionKey) || 0;
-        dimensionSeveritySum.set(q.dimensionKey, current + (q.severity ? Number(q.severity) : this.DEFAULT_SEVERITY));
+        dimensionSeveritySum.set(
+          q.dimensionKey,
+          current + (q.severity ? Number(q.severity) : this.DEFAULT_SEVERITY),
+        );
       }
     });
 
@@ -286,7 +289,9 @@ export class ScoringEngineService {
         continue;
       }
 
-      const severity: number = question.severity ? Number(question.severity) : this.DEFAULT_SEVERITY;
+      const severity: number = question.severity
+        ? Number(question.severity)
+        : this.DEFAULT_SEVERITY;
       const dimensionKey: string = question.dimensionKey || 'unknown';
       const dimensionWeight: number = Number(dimensionWeightMap.get(dimensionKey) ?? 0);
       const severitySum: number = Number(dimensionSeveritySum.get(dimensionKey) ?? 1);
@@ -599,19 +604,22 @@ export class ScoringEngineService {
       take: limit,
     });
 
-    const history: ScoreSnapshot[] = snapshots.length > 0
-      ? snapshots.map((s) => ({
-          timestamp: s.createdAt,
-          score: Number(s.score),
-          portfolioResidual: Number(s.portfolioResidual),
-          completionPercentage: Number(s.completionPercentage),
-        }))
-      : [{
-          timestamp: session.lastScoreCalculation || session.startedAt,
-          score: currentScore,
-          portfolioResidual: 0,
-          completionPercentage: 0,
-        }];
+    const history: ScoreSnapshot[] =
+      snapshots.length > 0
+        ? snapshots.map((s) => ({
+            timestamp: s.createdAt,
+            score: Number(s.score),
+            portfolioResidual: Number(s.portfolioResidual),
+            completionPercentage: Number(s.completionPercentage),
+          }))
+        : [
+            {
+              timestamp: session.lastScoreCalculation || session.startedAt,
+              score: currentScore,
+              portfolioResidual: 0,
+              completionPercentage: 0,
+            },
+          ];
 
     // Calculate trend metrics
     const trendAnalysis = this.calculateTrendAnalysis(history);

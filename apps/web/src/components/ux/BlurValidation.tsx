@@ -298,7 +298,7 @@ export function useBlurValidation(options: UseBlurValidationOptions = {}): UseBl
           const asyncError = await asyncValidator(val);
           setError(asyncError);
           onValidationChange?.(!asyncError, asyncError);
-        } catch (err) {
+        } catch (_err) {
           setError('Validation failed');
         } finally {
           setValidating(false);

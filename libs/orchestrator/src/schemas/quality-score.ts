@@ -12,13 +12,13 @@ import type { IQualityScore } from './interfaces';
 /** Weights for each quality dimension in the overall score calculation. */
 export const QUALITY_WEIGHTS = {
   /** Weight for schema conformance. */
-  schema: 0.20,
+  schema: 0.2,
   /** Weight for ISO compliance. */
   isoCompliance: 0.35,
   /** Weight for content completeness. */
   completeness: 0.25,
   /** Weight for writing clarity. */
-  clarity: 0.20,
+  clarity: 0.2,
 } as const;
 
 // ── Score Calculation ───────────────────────────────────────────────────────

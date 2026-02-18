@@ -7,14 +7,22 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, CheckCircle, AlertTriangle, Loader2, Target, Users } from 'lucide-react';
 import { useQuestionnaireStore } from '../../stores/questionnaire';
-import { questionnaireApi, type Persona, type QuestionnaireListItem } from '../../api/questionnaire';
+import {
+  questionnaireApi,
+  type Persona,
+  type QuestionnaireListItem,
+} from '../../api/questionnaire';
 
 const PERSONA_OPTIONS: { value: Persona; label: string; description: string }[] = [
   { value: 'CTO', label: 'CTO', description: 'Architecture, security, DevOps, quality' },
   { value: 'CFO', label: 'CFO', description: 'Finance, cost management, ROI analysis' },
   { value: 'CEO', label: 'CEO', description: 'Strategy, vision, stakeholder alignment' },
   { value: 'BA', label: 'Business Analyst', description: 'Requirements, specs, data, service ops' },
-  { value: 'POLICY', label: 'Policy Writer', description: 'Privacy, legal, compliance, people & change' },
+  {
+    value: 'POLICY',
+    label: 'Policy Writer',
+    description: 'Privacy, legal, compliance, people & change',
+  },
 ];
 
 export function QuestionnairePage() {
@@ -45,12 +53,12 @@ export function QuestionnairePage() {
   const [questionnaireLoadError, setQuestionnaireLoadError] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState<Persona>('CTO');
   const startTimeRef = useRef<number>(0);
-  
+
   // Current question changes reset - using question ID as dependency for value state
   const currentQuestionId = currentQuestions[0]?.id;
   const [currentValue, setCurrentValue] = useState<unknown>(null);
   const [valueQuestionId, setValueQuestionId] = useState(currentQuestionId);
-  
+
   // Reset value when question changes (separate state update to avoid effect)
   if (currentQuestionId !== valueQuestionId) {
     setValueQuestionId(currentQuestionId);
@@ -62,7 +70,10 @@ export function QuestionnairePage() {
   // Load questionnaires on mount for "new" view
   useEffect(() => {
     if (isNew) {
-      questionnaireApi.listQuestionnaires().then(setQuestionnaires).catch(() => setQuestionnaireLoadError(true));
+      questionnaireApi
+        .listQuestionnaires()
+        .then(setQuestionnaires)
+        .catch(() => setQuestionnaireLoadError(true));
     }
   }, [isNew]);
 
@@ -117,7 +128,9 @@ export function QuestionnairePage() {
 
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Start New Assessment</h1>
-          <p className="text-gray-600 mt-1">Select your persona and begin the readiness assessment.</p>
+          <p className="text-gray-600 mt-1">
+            Select your persona and begin the readiness assessment.
+          </p>
         </div>
 
         {/* Persona selector */}
@@ -207,7 +220,10 @@ export function QuestionnairePage() {
           <CheckCircle className="h-16 w-16 mx-auto text-green-500 mb-4" aria-hidden="true" />
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Assessment Complete!</h1>
           <p className="text-gray-600 mb-4">
-            Your readiness score: <span className="text-2xl font-bold text-green-600">{readinessScore?.toFixed(1) ?? 'N/A'}%</span>
+            Your readiness score:{' '}
+            <span className="text-2xl font-bold text-green-600">
+              {readinessScore?.toFixed(1) ?? 'N/A'}%
+            </span>
           </p>
           <div className="flex justify-center gap-4">
             <button
@@ -250,7 +266,11 @@ export function QuestionnairePage() {
             <span className="text-sm text-gray-600">Readiness:</span>
             <span
               className={`text-lg font-bold ${
-                readinessScore >= 95 ? 'text-green-600' : readinessScore >= 70 ? 'text-yellow-600' : 'text-red-600'
+                readinessScore >= 95
+                  ? 'text-green-600'
+                  : readinessScore >= 70
+                    ? 'text-yellow-600'
+                    : 'text-red-600'
               }`}
             >
               {readinessScore.toFixed(1)}%
@@ -267,11 +287,7 @@ export function QuestionnairePage() {
             <span>
               {currentQuestion ? (
                 <>
-                  Question{' '}
-                  {Math.min(
-                    progress.answeredQuestions + 1,
-                    progress.totalQuestions || 1
-                  )}{' '}
+                  Question {Math.min(progress.answeredQuestions + 1, progress.totalQuestions || 1)}{' '}
                   of {progress.totalQuestions}
                 </>
               ) : (
@@ -288,7 +304,8 @@ export function QuestionnairePage() {
           </div>
           {currentSection && (
             <p className="text-xs text-gray-500 mt-1">
-              Section: {currentSection.name} ({currentSection.answeredInSection}/{currentSection.questionsInSection})
+              Section: {currentSection.name} ({currentSection.answeredInSection}/
+              {currentSection.questionsInSection})
             </p>
           )}
         </div>
@@ -299,7 +316,10 @@ export function QuestionnairePage() {
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm">
           <span className="font-medium text-blue-800">Next priority question</span>
           <span className="text-blue-600"> in {nqsHint.dimensionKey}:</span>
-          <span className="text-blue-700"> +{nqsHint.expectedScoreLift.toFixed(1)} pts potential</span>
+          <span className="text-blue-700">
+            {' '}
+            +{nqsHint.expectedScoreLift.toFixed(1)} pts potential
+          </span>
         </div>
       )}
 
@@ -319,7 +339,9 @@ export function QuestionnairePage() {
                   <label
                     key={opt.id}
                     className={`flex items-center p-3 rounded-lg border cursor-pointer transition-colors ${
-                      currentValue === opt.id ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+                      currentValue === opt.id
+                        ? 'border-blue-600 bg-blue-50'
+                        : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
                     <input
@@ -332,7 +354,9 @@ export function QuestionnairePage() {
                     />
                     <div>
                       <span className="text-gray-900">{opt.label}</span>
-                      {opt.description && <p className="text-xs text-gray-500">{opt.description}</p>}
+                      {opt.description && (
+                        <p className="text-xs text-gray-500">{opt.description}</p>
+                      )}
                     </div>
                   </label>
                 ))}
@@ -344,7 +368,9 @@ export function QuestionnairePage() {
                     key={n}
                     onClick={() => setCurrentValue(n)}
                     className={`w-12 h-12 rounded-lg border-2 font-bold transition-colors ${
-                      currentValue === n ? 'border-blue-600 bg-blue-600 text-white' : 'border-gray-300 hover:border-gray-400'
+                      currentValue === n
+                        ? 'border-blue-600 bg-blue-600 text-white'
+                        : 'border-gray-300 hover:border-gray-400'
                     }`}
                   >
                     {n}
@@ -354,19 +380,24 @@ export function QuestionnairePage() {
             ) : currentQuestion.type === 'MULTIPLE_CHOICE' && currentQuestion.options ? (
               <div className="space-y-2">
                 {currentQuestion.options.map((opt) => {
-                  const selected = Array.isArray(currentValue) && (currentValue as string[]).includes(opt.id);
+                  const selected =
+                    Array.isArray(currentValue) && (currentValue as string[]).includes(opt.id);
                   return (
                     <label
                       key={opt.id}
                       className={`flex items-center p-3 rounded-lg border cursor-pointer transition-colors ${
-                        selected ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+                        selected
+                          ? 'border-blue-600 bg-blue-50'
+                          : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
                       <input
                         type="checkbox"
                         checked={selected}
                         onChange={() => {
-                          const arr = Array.isArray(currentValue) ? [...(currentValue as string[])] : [];
+                          const arr = Array.isArray(currentValue)
+                            ? [...(currentValue as string[])]
+                            : [];
                           if (selected) {
                             setCurrentValue(arr.filter((v) => v !== opt.id));
                           } else {
@@ -431,13 +462,17 @@ export function QuestionnairePage() {
             </>
           ) : (
             <>
-              <AlertTriangle className="h-12 w-12 mx-auto text-yellow-500 mb-3" aria-hidden="true" />
+              <AlertTriangle
+                className="h-12 w-12 mx-auto text-yellow-500 mb-3"
+                aria-hidden="true"
+              />
               <h2 className="text-xl font-semibold text-gray-900 mb-2">Score Below Threshold</h2>
               <p className="text-gray-600 mb-2">
                 Current score: {readinessScore?.toFixed(1) ?? '0'}% (95% required)
               </p>
               <p className="text-sm text-gray-500">
-                All questions answered, but coverage needs improvement. Review and update your responses.
+                All questions answered, but coverage needs improvement. Review and update your
+                responses.
               </p>
             </>
           )}

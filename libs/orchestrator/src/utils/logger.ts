@@ -15,8 +15,8 @@ const LEVEL_ORDER: Record<LogLevel, number> = {
 /** ANSI colour codes for terminal output. */
 const COLOURS: Record<LogLevel, string> = {
   debug: '\x1b[36m', // cyan
-  info: '\x1b[32m',  // green
-  warn: '\x1b[33m',  // yellow
+  info: '\x1b[32m', // green
+  warn: '\x1b[33m', // yellow
   error: '\x1b[31m', // red
 };
 
@@ -63,9 +63,7 @@ export function createLogger(module: string, minLevel: LogLevel = 'info'): ILogg
     const timestamp = new Date().toISOString();
     const colour = COLOURS[level];
     const prefix = `${colour}[${timestamp}] [${level.toUpperCase()}] [${module}]${RESET}`;
-    const metaStr = meta && Object.keys(meta).length > 0
-      ? ` ${JSON.stringify(meta)}`
-      : '';
+    const metaStr = meta && Object.keys(meta).length > 0 ? ` ${JSON.stringify(meta)}` : '';
 
     const output = `${prefix} ${message}${metaStr}`;
 

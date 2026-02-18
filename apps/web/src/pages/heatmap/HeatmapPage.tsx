@@ -9,7 +9,13 @@ interface HeatmapDrilldown {
   cellValue: number;
   colorCode: string;
   questionCount: number;
-  questions: { questionId: string; questionText: string; severity: number; coverage: number; residualRisk: number }[];
+  questions: {
+    questionId: string;
+    questionText: string;
+    severity: number;
+    coverage: number;
+    residualRisk: number;
+  }[];
   potentialImprovement: number;
 }
 
@@ -22,10 +28,11 @@ export function HeatmapPage() {
 
   useEffect(() => {
     if (!sessionId) return;
-    
+
     let cancelled = false;
-    
-    questionnaireApi.getHeatmap(sessionId)
+
+    questionnaireApi
+      .getHeatmap(sessionId)
       .then((data) => {
         if (!cancelled) {
           setHeatmap(data);
@@ -34,18 +41,29 @@ export function HeatmapPage() {
       })
       .catch((err: unknown) => {
         if (!cancelled) {
-          setError((err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error');
+          setError(
+            (err as { response?: { data?: { message?: string } }; message?: string })?.response
+              ?.data?.message ??
+              (err as { message?: string })?.message ??
+              'Unknown error',
+          );
           setIsLoading(false);
         }
       });
-    
-    return () => { cancelled = true; };
+
+    return () => {
+      cancelled = true;
+    };
   }, [sessionId]);
 
   const handleCellClick = async (dimensionKey: string, severityBucket: string) => {
     if (!sessionId) return;
     try {
-      const data = await questionnaireApi.getHeatmapDrilldown(sessionId, dimensionKey, severityBucket);
+      const data = await questionnaireApi.getHeatmapDrilldown(
+        sessionId,
+        dimensionKey,
+        severityBucket,
+      );
       setDrilldown(data);
     } catch (err: unknown) {
       console.error('Drilldown failed:', err);
@@ -69,7 +87,15 @@ export function HeatmapPage() {
   if (error) {
     return (
       <div style={{ padding: '24px' }}>
-        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '8px', padding: '16px', color: '#dc2626' }}>
+        <div
+          style={{
+            background: '#fef2f2',
+            border: '1px solid #fecaca',
+            borderRadius: '8px',
+            padding: '16px',
+            color: '#dc2626',
+          }}
+        >
           Error: {error}
         </div>
       </div>
@@ -81,17 +107,28 @@ export function HeatmapPage() {
   return (
     <div style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}>
       <div style={{ marginBottom: '24px' }}>
-        <Link to="/dashboard" style={{ color: '#3b82f6', textDecoration: 'none', fontSize: '14px' }}>
+        <Link
+          to="/dashboard"
+          style={{ color: '#3b82f6', textDecoration: 'none', fontSize: '14px' }}
+        >
           &larr; Back to Dashboard
         </Link>
         <h1 style={{ fontSize: '24px', fontWeight: 700, marginTop: '8px' }}>Gap Heatmap</h1>
         <p style={{ color: '#6b7280', fontSize: '14px' }}>
-          Dimension x Severity matrix. Cell value = Sum(Severity x (1 - Coverage)). Click a cell for details.
+          Dimension x Severity matrix. Cell value = Sum(Severity x (1 - Coverage)). Click a cell for
+          details.
         </p>
       </div>
 
       {/* Summary Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '12px', marginBottom: '24px' }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(5, 1fr)',
+          gap: '12px',
+          marginBottom: '24px',
+        }}
+      >
         {[
           { label: 'Total Cells', value: heatmap.summary.totalCells, bg: '#f3f4f6' },
           { label: 'Green', value: heatmap.summary.greenCells, bg: '#dcfce7' },
@@ -99,7 +136,15 @@ export function HeatmapPage() {
           { label: 'Red', value: heatmap.summary.redCells, bg: '#fee2e2' },
           { label: 'Critical Gaps', value: heatmap.summary.criticalGapCount, bg: '#fecaca' },
         ].map((card) => (
-          <div key={card.label} style={{ background: card.bg, borderRadius: '8px', padding: '16px', textAlign: 'center' }}>
+          <div
+            key={card.label}
+            style={{
+              background: card.bg,
+              borderRadius: '8px',
+              padding: '16px',
+              textAlign: 'center',
+            }}
+          >
             <div style={{ fontSize: '24px', fontWeight: 700 }}>{card.value}</div>
             <div style={{ fontSize: '12px', color: '#6b7280' }}>{card.label}</div>
           </div>
@@ -111,18 +156,47 @@ export function HeatmapPage() {
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
           <thead>
             <tr>
-              <th style={{ textAlign: 'left', padding: '8px 12px', borderBottom: '2px solid #e5e7eb', fontWeight: 600 }}>Dimension</th>
+              <th
+                style={{
+                  textAlign: 'left',
+                  padding: '8px 12px',
+                  borderBottom: '2px solid #e5e7eb',
+                  fontWeight: 600,
+                }}
+              >
+                Dimension
+              </th>
               {heatmap.severityBuckets.map((bucket) => (
-                <th key={bucket} style={{ textAlign: 'center', padding: '8px 12px', borderBottom: '2px solid #e5e7eb', fontWeight: 600 }}>{bucket}</th>
+                <th
+                  key={bucket}
+                  style={{
+                    textAlign: 'center',
+                    padding: '8px 12px',
+                    borderBottom: '2px solid #e5e7eb',
+                    fontWeight: 600,
+                  }}
+                >
+                  {bucket}
+                </th>
               ))}
             </tr>
           </thead>
           <tbody>
             {heatmap.dimensions.map((dimName, dimIdx) => {
-              const dimCells = heatmap.cells.filter((_, i) => Math.floor(i / heatmap.severityBuckets.length) === dimIdx);
+              const dimCells = heatmap.cells.filter(
+                (_, i) => Math.floor(i / heatmap.severityBuckets.length) === dimIdx,
+              );
               return (
                 <tr key={dimName}>
-                  <td style={{ padding: '8px 12px', borderBottom: '1px solid #f3f4f6', fontWeight: 500 }}>{dimName}</td>
+                  <td
+                    style={{
+                      padding: '8px 12px',
+                      borderBottom: '1px solid #f3f4f6',
+                      fontWeight: 500,
+                    }}
+                  >
+                    {dimName}
+                  </td>
                   {heatmap.severityBuckets.map((bucket, bucketIdx) => {
                     const cell = dimCells[bucketIdx];
                     if (!cell) return <td key={bucket} />;
@@ -165,24 +239,53 @@ export function HeatmapPage() {
 
       {/* Drilldown Panel */}
       {drilldown && (
-        <div style={{ marginTop: '24px', background: '#f9fafb', borderRadius: '8px', padding: '20px', border: '1px solid #e5e7eb' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <div
+          style={{
+            marginTop: '24px',
+            background: '#f9fafb',
+            borderRadius: '8px',
+            padding: '20px',
+            border: '1px solid #e5e7eb',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '16px',
+            }}
+          >
             <h3 style={{ fontSize: '16px', fontWeight: 600 }}>
               {drilldown.dimensionName} - {drilldown.severityBucket}
             </h3>
-            <button onClick={() => setDrilldown(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', color: '#6b7280' }}>
+            <button
+              onClick={() => setDrilldown(null)}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '18px',
+                color: '#6b7280',
+              }}
+            >
               &times;
             </button>
           </div>
           <p style={{ fontSize: '13px', color: '#6b7280', marginBottom: '12px' }}>
-            {drilldown.questionCount} questions | Cell value: {drilldown.cellValue?.toFixed(4)} | Potential improvement: {drilldown.potentialImprovement?.toFixed(4)}
+            {drilldown.questionCount} questions | Cell value: {drilldown.cellValue?.toFixed(4)} |
+            Potential improvement: {drilldown.potentialImprovement?.toFixed(4)}
           </p>
           <div>
             {drilldown.questions?.map((q) => (
-              <div key={q.questionId} style={{ padding: '8px 0', borderBottom: '1px solid #e5e7eb' }}>
+              <div
+                key={q.questionId}
+                style={{ padding: '8px 0', borderBottom: '1px solid #e5e7eb' }}
+              >
                 <div style={{ fontWeight: 500, fontSize: '13px' }}>{q.questionText}</div>
                 <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '4px' }}>
-                  Severity: {q.severity?.toFixed(2)} | Coverage: {(q.coverage * 100).toFixed(0)}% | Residual: {q.residualRisk?.toFixed(4)}
+                  Severity: {q.severity?.toFixed(2)} | Coverage: {(q.coverage * 100).toFixed(0)}% |
+                  Residual: {q.residualRisk?.toFixed(4)}
                 </div>
               </div>
             ))}
@@ -192,7 +295,8 @@ export function HeatmapPage() {
 
       {/* Overall Risk */}
       <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '14px', color: '#6b7280' }}>
-        Overall Risk Score: <strong style={{ color: heatmap.summary.overallRiskScore > 5 ? '#ef4444' : '#22c55e' }}>
+        Overall Risk Score:{' '}
+        <strong style={{ color: heatmap.summary.overallRiskScore > 5 ? '#ef4444' : '#22c55e' }}>
           {heatmap.summary.overallRiskScore.toFixed(2)}
         </strong>
       </div>

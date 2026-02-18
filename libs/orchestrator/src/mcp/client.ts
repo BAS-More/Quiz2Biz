@@ -5,11 +5,7 @@
 import { Pool, type PoolClient, type QueryResult } from 'pg';
 import { config } from '../config';
 import { createLogger } from '../utils/logger';
-import type {
-  AuditOperation,
-  TaskTier,
-  ValidationTier,
-} from '../config/interfaces';
+import type { AuditOperation, TaskTier, ValidationTier } from '../config/interfaces';
 import type {
   IAgent,
   IAgentConfig,
@@ -305,11 +301,26 @@ export async function updateTask(taskId: number, updates: Partial<ITask>): Promi
   let paramIndex = 1;
 
   const allowed: Array<keyof ITask> = [
-    'tier', 'task_type', 'project', 'module', 'instruction', 'status',
-    'queue_position', 'assigned_agent', 'delegated_by', 'token_budget',
-    'tokens_consumed', 'error_count', 'max_errors', 'output',
-    'validation_summary', 'expected_output_schema', 'classification_reasoning',
-    'is_urgent', 'started_at', 'completed_at',
+    'tier',
+    'task_type',
+    'project',
+    'module',
+    'instruction',
+    'status',
+    'queue_position',
+    'assigned_agent',
+    'delegated_by',
+    'token_budget',
+    'tokens_consumed',
+    'error_count',
+    'max_errors',
+    'output',
+    'validation_summary',
+    'expected_output_schema',
+    'classification_reasoning',
+    'is_urgent',
+    'started_at',
+    'completed_at',
   ];
 
   for (const key of allowed) {
@@ -323,10 +334,7 @@ export async function updateTask(taskId: number, updates: Partial<ITask>): Promi
   if (setClauses.length === 0) return;
 
   values.push(taskId);
-  await query(
-    `UPDATE tasks SET ${setClauses.join(', ')} WHERE task_id = $${paramIndex}`,
-    values,
-  );
+  await query(`UPDATE tasks SET ${setClauses.join(', ')} WHERE task_id = $${paramIndex}`, values);
 }
 
 // ── Messages ────────────────────────────────────────────────────────────────

@@ -42,7 +42,14 @@ export const useEvidenceStore = create<EvidenceState>()((set) => ({
       const items = await questionnaireApi.listEvidence(sessionId);
       set({ items, isLoading: false });
     } catch (err: unknown) {
-      set({ isLoading: false, error: (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error' });
+      set({
+        isLoading: false,
+        error:
+          (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data
+            ?.message ??
+          (err as { message?: string })?.message ??
+          'Unknown error',
+      });
     }
   },
 

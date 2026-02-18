@@ -56,7 +56,9 @@ export class SessionExpirationService {
     });
 
     for (const session of expiringSessions) {
-      if (!session.user?.email) continue;
+      if (!session.user?.email) {
+        continue;
+      }
 
       const userName = session.user.name || session.user.email.split('@')[0];
       const progress = typeof session.progress === 'number' ? session.progress : 0;

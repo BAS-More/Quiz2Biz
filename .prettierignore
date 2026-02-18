@@ -1,0 +1,25 @@
+# Build outputs
+dist/
+coverage/
+.turbo/
+
+# Dependencies
+node_modules/
+
+# Generated / auto-docs
+.qoder/
+.snapshots/
+
+# Documentation (not source code)
+docs/
+*.md
+CLAUDE.md
+
+# Test reports and artifacts
+snyk-report.json
+container-logs.json
+e2e/reports/
+
+# IDE / editor configs
+.claude/
+.lighthouserc.json

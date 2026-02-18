@@ -250,13 +250,12 @@ jobs:
       - name: Check build artifacts
         run: |
           echo "Checking build artifacts..."
-          ls -la dist/
           if [ ! -d "dist/apps/api" ]; then
             echo "❌ API build failed - dist/apps/api not found"
             exit 1
           fi
-          if [ ! -d "dist/apps/web" ]; then
-            echo "❌ Web build failed - dist/apps/web not found"
+          if [ ! -d "apps/web/dist" ]; then
+            echo "❌ Web build failed - apps/web/dist not found"
             exit 1
           fi
           echo "✅ All build artifacts present"

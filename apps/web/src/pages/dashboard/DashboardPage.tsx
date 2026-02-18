@@ -26,10 +26,30 @@ export function DashboardPage() {
   const avgScore = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
 
   const stats = [
-    { name: 'Active Sessions', value: String(activeSessions.length), icon: ClipboardList, color: 'bg-blue-500' },
-    { name: 'Completed', value: String(completedSessions.length), icon: CheckCircle, color: 'bg-green-500' },
-    { name: 'Highest Score', value: highestScore > 0 ? `${highestScore.toFixed(0)}%` : '-', icon: Target, color: 'bg-purple-500' },
-    { name: 'Avg Score', value: avgScore > 0 ? `${avgScore.toFixed(0)}%` : '-', icon: TrendingUp, color: 'bg-yellow-500' },
+    {
+      name: 'Active Sessions',
+      value: String(activeSessions.length),
+      icon: ClipboardList,
+      color: 'bg-blue-500',
+    },
+    {
+      name: 'Completed',
+      value: String(completedSessions.length),
+      icon: CheckCircle,
+      color: 'bg-green-500',
+    },
+    {
+      name: 'Highest Score',
+      value: highestScore > 0 ? `${highestScore.toFixed(0)}%` : '-',
+      icon: Target,
+      color: 'bg-purple-500',
+    },
+    {
+      name: 'Avg Score',
+      value: avgScore > 0 ? `${avgScore.toFixed(0)}%` : '-',
+      icon: TrendingUp,
+      color: 'bg-yellow-500',
+    },
   ];
 
   return (
@@ -46,7 +66,9 @@ export function DashboardPage() {
       {error && (
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 flex items-center justify-between">
           <span>{error}</span>
-          <button onClick={clearError} className="ml-2 underline text-sm">Dismiss</button>
+          <button onClick={clearError} className="ml-2 underline text-sm">
+            Dismiss
+          </button>
         </div>
       )}
 
@@ -142,10 +164,7 @@ export function DashboardPage() {
           </div>
           <div className="p-6 space-y-3">
             {completedSessions.slice(0, 5).map((s) => (
-              <div
-                key={s.id}
-                className="flex items-center justify-between p-3 border rounded-lg"
-              >
+              <div key={s.id} className="flex items-center justify-between p-3 border rounded-lg">
                 <div>
                   <span className="font-medium text-gray-900">
                     {s.persona ?? 'General'} Assessment

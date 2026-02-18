@@ -49,9 +49,8 @@ const LOG_LEVELS: readonly LogLevel[] = ['debug', 'info', 'warn', 'error'] as co
  * then to a default value.
  */
 function env(primary: string, fallback?: string, defaultValue?: string): string {
-  const value = process.env[`Q2B_${primary}`]
-    ?? (fallback ? process.env[fallback] : undefined)
-    ?? defaultValue;
+  const value =
+    process.env[`Q2B_${primary}`] ?? (fallback ? process.env[fallback] : undefined) ?? defaultValue;
   return value ?? '';
 }
 
@@ -118,19 +117,35 @@ function buildConfig(): IOrchestratorConfig {
     errorBudgets: {
       S: {
         maxRetries: envInt('ERROR_RETRIES_S', undefined, DEFAULT_ERROR_BUDGETS.S.maxRetries),
-        maxCorrectionCycles: envInt('ERROR_CYCLES_S', undefined, DEFAULT_ERROR_BUDGETS.S.maxCorrectionCycles),
+        maxCorrectionCycles: envInt(
+          'ERROR_CYCLES_S',
+          undefined,
+          DEFAULT_ERROR_BUDGETS.S.maxCorrectionCycles,
+        ),
       },
       M: {
         maxRetries: envInt('ERROR_RETRIES_M', undefined, DEFAULT_ERROR_BUDGETS.M.maxRetries),
-        maxCorrectionCycles: envInt('ERROR_CYCLES_M', undefined, DEFAULT_ERROR_BUDGETS.M.maxCorrectionCycles),
+        maxCorrectionCycles: envInt(
+          'ERROR_CYCLES_M',
+          undefined,
+          DEFAULT_ERROR_BUDGETS.M.maxCorrectionCycles,
+        ),
       },
       L: {
         maxRetries: envInt('ERROR_RETRIES_L', undefined, DEFAULT_ERROR_BUDGETS.L.maxRetries),
-        maxCorrectionCycles: envInt('ERROR_CYCLES_L', undefined, DEFAULT_ERROR_BUDGETS.L.maxCorrectionCycles),
+        maxCorrectionCycles: envInt(
+          'ERROR_CYCLES_L',
+          undefined,
+          DEFAULT_ERROR_BUDGETS.L.maxCorrectionCycles,
+        ),
       },
       XL: {
         maxRetries: envInt('ERROR_RETRIES_XL', undefined, DEFAULT_ERROR_BUDGETS.XL.maxRetries),
-        maxCorrectionCycles: envInt('ERROR_CYCLES_XL', undefined, DEFAULT_ERROR_BUDGETS.XL.maxCorrectionCycles),
+        maxCorrectionCycles: envInt(
+          'ERROR_CYCLES_XL',
+          undefined,
+          DEFAULT_ERROR_BUDGETS.XL.maxCorrectionCycles,
+        ),
       },
     },
 
@@ -147,8 +162,16 @@ function buildConfig(): IOrchestratorConfig {
 // ── Validation ──────────────────────────────────────────────────────────────
 
 /** Required environment variables — config key, description. */
-const REQUIRED_VARS: ReadonlyArray<{ key: keyof IOrchestratorConfig; path: string; description: string }> = [
-  { key: 'anthropic', path: 'anthropic.apiKey', description: 'Anthropic API key (Q2B_ANTHROPIC_API_KEY or ANTHROPIC_API_KEY)' },
+const REQUIRED_VARS: ReadonlyArray<{
+  key: keyof IOrchestratorConfig;
+  path: string;
+  description: string;
+}> = [
+  {
+    key: 'anthropic',
+    path: 'anthropic.apiKey',
+    description: 'Anthropic API key (Q2B_ANTHROPIC_API_KEY or ANTHROPIC_API_KEY)',
+  },
 ];
 
 /**
@@ -172,7 +195,7 @@ export function validateConfig(cfg: IOrchestratorConfig): void {
 
   if (missing.length > 0) {
     throw new Error(
-      `Orchestrator configuration validation failed.\n\nMissing required values:\n${missing.map((m) => `  - ${m}`).join('\n')}`
+      `Orchestrator configuration validation failed.\n\nMissing required values:\n${missing.map((m) => `  - ${m}`).join('\n')}`,
     );
   }
 }
@@ -182,8 +205,4 @@ export function validateConfig(cfg: IOrchestratorConfig): void {
 /** Singleton orchestrator configuration, built from environment variables. */
 export const config: IOrchestratorConfig = buildConfig();
 
-export {
-  DEFAULT_TIER_BUDGETS,
-  DEFAULT_PROMPT_BUDGET,
-  DEFAULT_ERROR_BUDGETS,
-};
+export { DEFAULT_TIER_BUDGETS, DEFAULT_PROMPT_BUDGET, DEFAULT_ERROR_BUDGETS };

@@ -87,7 +87,7 @@ export class QuestionCoverageInput {
   @Transform(({ value, obj }: { value: number; obj: QuestionCoverageInput }) => {
     // If coverageLevel is provided, use its value instead
     if (obj.coverageLevel) {
-      return COVERAGE_LEVEL_VALUES[obj.coverageLevel as CoverageLevelDto];
+      return COVERAGE_LEVEL_VALUES[obj.coverageLevel];
     }
     // Otherwise normalize the decimal to nearest level
     return COVERAGE_LEVEL_VALUES[decimalToCoverageLevel(value)];

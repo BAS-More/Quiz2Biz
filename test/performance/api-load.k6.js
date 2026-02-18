@@ -1,9 +1,9 @@
 /**
  * k6 API Load Tests - Quiz2Biz
- * 
+ *
  * Installation: Download k6 from https://k6.io/docs/getting-started/installation/
  * Run: k6 run test/performance/api-load.k6.js
- * 
+ *
  * Scenarios:
  * - 100 concurrent users (smoke test)
  * - 500 concurrent users (load test)
@@ -41,10 +41,10 @@ export const options = {
       executor: 'ramping-vus',
       startVUs: 0,
       stages: [
-        { duration: '2m', target: 50 },   // Ramp up to 50
-        { duration: '3m', target: 100 },  // Ramp up to 100
-        { duration: '5m', target: 100 },  // Stay at 100
-        { duration: '2m', target: 0 },    // Ramp down
+        { duration: '2m', target: 50 }, // Ramp up to 50
+        { duration: '3m', target: 100 }, // Ramp up to 100
+        { duration: '5m', target: 100 }, // Stay at 100
+        { duration: '2m', target: 0 }, // Ramp down
       ],
       tags: { scenario: 'load' },
       env: { SCENARIO: 'load' },
@@ -71,7 +71,7 @@ export const options = {
       stages: [
         { duration: '10s', target: 100 },
         { duration: '1m', target: 100 },
-        { duration: '10s', target: 1000 },  // Spike!
+        { duration: '10s', target: 1000 }, // Spike!
         { duration: '3m', target: 1000 },
         { duration: '10s', target: 100 },
         { duration: '1m', target: 100 },
@@ -85,9 +85,9 @@ export const options = {
   thresholds: {
     // Response time thresholds
     http_req_duration: [
-      'p(95)<500',    // 95% of requests under 500ms
-      'p(99)<1000',   // 99% of requests under 1000ms
-      'avg<200',      // Average under 200ms
+      'p(95)<500', // 95% of requests under 500ms
+      'p(99)<1000', // 99% of requests under 1000ms
+      'avg<200', // Average under 200ms
     ],
     // Error rate threshold
     errors: ['rate<0.01'], // Less than 1% errors
@@ -99,24 +99,24 @@ export const options = {
 // Request headers
 const headers = {
   'Content-Type': 'application/json',
-  'Authorization': `Bearer ${AUTH_TOKEN}`,
+  Authorization: `Bearer ${AUTH_TOKEN}`,
 };
 
 // Setup - runs once at the start
 export function setup() {
   console.log(`Starting load test against ${BASE_URL}`);
-  
+
   // Verify API is reachable
   const healthCheck = http.get(`${BASE_URL.replace('/api', '')}/health`);
   check(healthCheck, {
     'API is healthy': (r) => r.status === 200,
   });
-  
+
   return { baseUrl: BASE_URL };
 }
 
 // Main test function
-export default function(data) {
+export default function (data) {
   const baseUrl = data.baseUrl;
 
   group('Health Check', () => {
@@ -131,13 +131,13 @@ export default function(data) {
       email: `testuser${__VU}@example.com`,
       password: 'TestPassword123!',
     });
-    
+
     const loginResponse = http.post(`${baseUrl}/auth/login`, loginPayload, { headers });
     const loginSuccess = check(loginResponse, {
       'login status 200 or 401': (r) => r.status === 200 || r.status === 401,
       'login response time < 500ms': (r) => r.timings.duration < 500,
     });
-    
+
     if (loginSuccess) {
       successfulRequests.add(1);
     } else {
@@ -162,7 +162,9 @@ export default function(data) {
         const questionnaires = JSON.parse(listResponse.body);
         if (questionnaires && questionnaires.length > 0) {
           const questionnaireId = questionnaires[0].id;
-          const detailResponse = http.get(`${baseUrl}/questionnaires/${questionnaireId}`, { headers });
+          const detailResponse = http.get(`${baseUrl}/questionnaires/${questionnaireId}`, {
+            headers,
+          });
           check(detailResponse, {
             'questionnaire detail status 2xx': (r) => r.status >= 200 && r.status < 300,
             'questionnaire detail < 500ms': (r) => r.timings.duration < 500,
@@ -180,7 +182,7 @@ export default function(data) {
     const sessionPayload = JSON.stringify({
       questionnaireId: 'test-questionnaire',
     });
-    
+
     const createResponse = http.post(`${baseUrl}/sessions`, sessionPayload, { headers });
     check(createResponse, {
       'create session status': (r) => r.status >= 200 && r.status < 400,
@@ -221,8 +223,8 @@ export default function(data) {
       templateId: 'technology-roadmap',
       sessionId: 'test-session',
     });
-    
-    const genResponse = http.post(`${baseUrl}/documents/generate`, docPayload, { 
+
+    const genResponse = http.post(`${baseUrl}/documents/generate`, docPayload, {
       headers,
       timeout: '30s', // Longer timeout for document generation
     });
@@ -248,24 +250,26 @@ export function teardown(data) {
 export function handleSummary(data) {
   return {
     'test/performance/results/summary.json': JSON.stringify(data, null, 2),
-    'stdout': textSummary(data, { indent: '  ', enableColors: true }),
+    stdout: textSummary(data, { indent: '  ', enableColors: true }),
   };
 }
 
 // Text summary formatter
 function textSummary(data, options = {}) {
   const { indent = '', enableColors = false } = options;
-  const c = enableColors ? {
-    green: '\x1b[32m',
-    red: '\x1b[31m',
-    yellow: '\x1b[33m',
-    reset: '\x1b[0m'
-  } : { green: '', red: '', yellow: '', reset: '' };
+  const c = enableColors
+    ? {
+        green: '\x1b[32m',
+        red: '\x1b[31m',
+        yellow: '\x1b[33m',
+        reset: '\x1b[0m',
+      }
+    : { green: '', red: '', yellow: '', reset: '' };
 
   let summary = '\n=== LOAD TEST SUMMARY ===\n\n';
-  
+
   const metrics = data.metrics;
-  
+
   // HTTP request duration
   if (metrics.http_req_duration) {
     const duration = metrics.http_req_duration;
@@ -275,20 +279,20 @@ function textSummary(data, options = {}) {
     summary += `${indent}  p(99): ${duration.values['p(99)'].toFixed(2)}ms\n`;
     summary += `${indent}  Max: ${duration.values.max.toFixed(2)}ms\n\n`;
   }
-  
+
   // Error rate
   if (metrics.errors) {
     const errorRate = metrics.errors.values.rate * 100;
     const color = errorRate < 1 ? c.green : errorRate < 5 ? c.yellow : c.red;
     summary += `${indent}Error Rate: ${color}${errorRate.toFixed(2)}%${c.reset}\n\n`;
   }
-  
+
   // Request counts
   if (metrics.http_reqs) {
     summary += `${indent}Total Requests: ${metrics.http_reqs.values.count}\n`;
     summary += `${indent}Requests/sec: ${metrics.http_reqs.values.rate.toFixed(2)}\n\n`;
   }
-  
+
   // Threshold results
   summary += `${indent}Thresholds:\n`;
   for (const [name, threshold] of Object.entries(data.thresholds || {})) {
@@ -297,6 +301,6 @@ function textSummary(data, options = {}) {
     const status = passed ? 'PASS' : 'FAIL';
     summary += `${indent}  ${color}${status}${c.reset} ${name}\n`;
   }
-  
+
   return summary;
 }

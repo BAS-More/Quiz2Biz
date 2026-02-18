@@ -866,13 +866,13 @@ export const PersonalizationProvider: React.FC<PersonalizationProviderProps> = (
   const predictCompletionTime = useCallback(
     (questionIds: string[]): number => {
       let totalTime = 0;
-      let predictedCount = 0;
+      let _predictedCount = 0;
 
       for (const questionId of questionIds) {
         const prediction = state.predictions.get(questionId);
         if (prediction) {
           totalTime += prediction.predictedTime;
-          predictedCount++;
+          _predictedCount++;
         } else {
           // Default estimate: 2 minutes per question
           totalTime += 120000;

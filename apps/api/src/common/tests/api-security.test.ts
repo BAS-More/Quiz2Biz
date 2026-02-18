@@ -74,9 +74,7 @@ describe('API Security Tests', () => {
       };
 
       const normalizedAllowedOrigins = new Set(
-        allowedOrigins
-          .map(normalizeOrigin)
-          .filter((origin): origin is string => origin !== null),
+        allowedOrigins.map(normalizeOrigin).filter((origin): origin is string => origin !== null),
       );
       const normalizedRequestOrigin = normalizeOrigin(requestOrigin);
       const isAllowed =

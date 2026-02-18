@@ -8,7 +8,13 @@ interface HeatmapDrilldown {
   cellValue: number;
   colorCode: string;
   questionCount: number;
-  questions: { questionId: string; questionText: string; severity: number; coverage: number; residualRisk: number }[];
+  questions: {
+    questionId: string;
+    questionText: string;
+    severity: number;
+    coverage: number;
+    residualRisk: number;
+  }[];
   potentialImprovement: number;
 }
 
@@ -36,13 +42,24 @@ export const useHeatmapStore = create<HeatmapState>()((set) => ({
       const heatmap = await questionnaireApi.getHeatmap(sessionId);
       set({ heatmap, isLoading: false });
     } catch (err: unknown) {
-      set({ isLoading: false, error: (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error' });
+      set({
+        isLoading: false,
+        error:
+          (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data
+            ?.message ??
+          (err as { message?: string })?.message ??
+          'Unknown error',
+      });
     }
   },
 
   loadDrilldown: async (sessionId, dimensionKey, severityBucket) => {
     try {
-      const drilldown = await questionnaireApi.getHeatmapDrilldown(sessionId, dimensionKey, severityBucket);
+      const drilldown = await questionnaireApi.getHeatmapDrilldown(
+        sessionId,
+        dimensionKey,
+        severityBucket,
+      );
       set({ drilldown });
     } catch (err: unknown) {
       console.warn('Drilldown failed:', err);

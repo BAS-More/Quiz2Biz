@@ -1,8 +1,8 @@
 /**
  * Autocannon API Load Tests - Quiz2Biz
- * 
+ *
  * Run: npm run test:load
- * 
+ *
  * This provides simpler Node.js-based load testing using autocannon.
  */
 
@@ -40,8 +40,8 @@ const scenarios = [
     name: 'Questionnaire List',
     url: '/api/questionnaires',
     method: 'GET',
-    headers: { 
-      'Authorization': 'Bearer test-token',
+    headers: {
+      Authorization: 'Bearer test-token',
       'Content-Type': 'application/json',
     },
     expectedStatus: [200, 401],
@@ -52,8 +52,8 @@ const scenarios = [
     name: 'Session List',
     url: '/api/sessions',
     method: 'GET',
-    headers: { 
-      'Authorization': 'Bearer test-token',
+    headers: {
+      Authorization: 'Bearer test-token',
       'Content-Type': 'application/json',
     },
     expectedStatus: [200, 401],
@@ -64,8 +64,8 @@ const scenarios = [
     name: 'Heatmap Data',
     url: '/api/heatmap',
     method: 'GET',
-    headers: { 
-      'Authorization': 'Bearer test-token',
+    headers: {
+      Authorization: 'Bearer test-token',
       'Content-Type': 'application/json',
     },
     expectedStatus: [200, 401],
@@ -76,8 +76,8 @@ const scenarios = [
     name: 'Readiness Score',
     url: '/api/scoring/readiness',
     method: 'GET',
-    headers: { 
-      'Authorization': 'Bearer test-token',
+    headers: {
+      Authorization: 'Bearer test-token',
       'Content-Type': 'application/json',
     },
     expectedStatus: [200, 401],
@@ -114,7 +114,7 @@ async function runScenario(scenario) {
 
     instance.on('done', (result) => {
       const passed = checkThresholds(result, scenario);
-      
+
       const testResult = {
         scenario: scenario.name,
         url: scenario.url,
@@ -174,7 +174,7 @@ async function runScenario(scenario) {
  */
 function checkThresholds(result, scenario) {
   const checks = [];
-  
+
   // Check error rate
   const errorRate = (result.errors + result.timeouts) / result.requests.total;
   checks.push({
@@ -208,7 +208,7 @@ function checkThresholds(result, scenario) {
     actual: `${result.latency.average.toFixed(2)}ms`,
   });
 
-  return checks.every(c => c.passed);
+  return checks.every((c) => c.passed);
 }
 
 /**
@@ -216,7 +216,9 @@ function checkThresholds(result, scenario) {
  */
 function printResult(result) {
   console.log('\n--- Results ---');
-  console.log(`Requests/sec: ${result.requests.average.toFixed(2)} (target: ${result.thresholds.targetRps})`);
+  console.log(
+    `Requests/sec: ${result.requests.average.toFixed(2)} (target: ${result.thresholds.targetRps})`,
+  );
   console.log(`Latency avg: ${result.latency.average.toFixed(2)}ms`);
   console.log(`Latency P95: ${result.latency.p95}ms (max: ${result.thresholds.maxLatencyP95}ms)`);
   console.log(`Latency P99: ${result.latency.p99}ms`);
@@ -225,7 +227,7 @@ function printResult(result) {
   console.log(`5xx responses: ${result.status5xx}`);
   console.log(`Errors: ${result.errors}`);
   console.log(`Timeouts: ${result.timeouts}`);
-  
+
   const status = result.passed ? '\x1b[32mPASSED\x1b[0m' : '\x1b[31mFAILED\x1b[0m';
   console.log(`Status: ${status}`);
 }
@@ -237,21 +239,23 @@ function printSummary() {
   console.log('\n' + '='.repeat(60));
   console.log('LOAD TEST SUMMARY');
   console.log('='.repeat(60));
-  
-  const passed = results.filter(r => r.passed).length;
+
+  const passed = results.filter((r) => r.passed).length;
   const failed = results.length - passed;
-  
+
   console.log(`Total scenarios: ${results.length}`);
   console.log(`Passed: \x1b[32m${passed}\x1b[0m`);
   console.log(`Failed: \x1b[31m${failed}\x1b[0m`);
   console.log('');
-  
-  results.forEach(r => {
+
+  results.forEach((r) => {
     const status = r.passed ? '\x1b[32m✓\x1b[0m' : '\x1b[31m✗\x1b[0m';
     console.log(`${status} ${r.scenario}`);
-    console.log(`    RPS: ${r.requests.average.toFixed(0)} | P95: ${r.latency.p95}ms | Errors: ${r.errors}`);
+    console.log(
+      `    RPS: ${r.requests.average.toFixed(0)} | P95: ${r.latency.p95}ms | Errors: ${r.errors}`,
+    );
   });
-  
+
   return failed === 0;
 }
 
@@ -263,26 +267,33 @@ function saveResults() {
   if (!fs.existsSync(resultsDir)) {
     fs.mkdirSync(resultsDir, { recursive: true });
   }
-  
+
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const filename = path.join(resultsDir, `autocannon-${timestamp}.json`);
-  
-  fs.writeFileSync(filename, JSON.stringify({
-    timestamp: new Date().toISOString(),
-    config: {
-      apiUrl: API_URL,
-      duration: DURATION,
-      connections: CONNECTIONS,
-      pipelining: PIPELINING,
-    },
-    results,
-    summary: {
-      total: results.length,
-      passed: results.filter(r => r.passed).length,
-      failed: results.filter(r => !r.passed).length,
-    },
-  }, null, 2));
-  
+
+  fs.writeFileSync(
+    filename,
+    JSON.stringify(
+      {
+        timestamp: new Date().toISOString(),
+        config: {
+          apiUrl: API_URL,
+          duration: DURATION,
+          connections: CONNECTIONS,
+          pipelining: PIPELINING,
+        },
+        results,
+        summary: {
+          total: results.length,
+          passed: results.filter((r) => r.passed).length,
+          failed: results.filter((r) => !r.passed).length,
+        },
+      },
+      null,
+      2,
+    ),
+  );
+
   console.log(`\nResults saved to: ${filename}`);
 }
 
@@ -296,7 +307,7 @@ async function main() {
   console.log(`Duration per scenario: ${DURATION}s`);
   console.log(`Concurrent connections: ${CONNECTIONS}`);
   console.log(`Pipelining: ${PIPELINING}`);
-  
+
   try {
     // Run each scenario sequentially
     for (const scenario of scenarios) {
@@ -310,18 +321,17 @@ async function main() {
           error: err.message,
         });
       }
-      
+
       // Short pause between scenarios
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
     }
-    
+
     // Print and save summary
     const allPassed = printSummary();
     saveResults();
-    
+
     // Exit with appropriate code
     process.exit(allPassed ? 0 : 1);
-    
   } catch (err) {
     console.error('Load test failed:', err);
     process.exit(1);

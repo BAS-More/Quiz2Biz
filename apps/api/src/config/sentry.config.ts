@@ -8,10 +8,10 @@
 import * as Sentry from '@sentry/nestjs';
 
 // Profiling is optional - only load if available
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 let nodeProfilingIntegration: (() => any) | null = null;
 try {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   nodeProfilingIntegration = require('@sentry/profiling-node').nodeProfilingIntegration;
 } catch {
   // Profiling not available

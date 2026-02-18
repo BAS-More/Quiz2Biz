@@ -10,7 +10,8 @@ export class CreateSessionDto {
   @ApiPropertyOptional({
     enum: Persona,
     example: 'CTO',
-    description: 'Persona filter: CTO, CFO, CEO, BA, or POLICY. Determines which questions are presented.',
+    description:
+      'Persona filter: CTO, CFO, CEO, BA, or POLICY. Determines which questions are presented.',
   })
   @IsOptional()
   @IsEnum(Persona)

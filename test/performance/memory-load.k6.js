@@ -1,9 +1,9 @@
 /**
  * k6 Memory Load Test - Quiz2Biz
- * 
+ *
  * Tests memory stability under sustained load
  * Run: k6 run test/performance/memory-load.k6.js
- * 
+ *
  * Target: Memory usage stays <70% over 5 minute sustained load
  */
 
@@ -32,8 +32,8 @@ export const options = {
   },
   thresholds: {
     http_req_duration: ['p(95)<500', 'avg<200'],
-    errors: ['rate<0.05'],  // Less than 5% errors
-    memory_usage_percent: ['value<70'],  // Memory under 70%
+    errors: ['rate<0.05'], // Less than 5% errors
+    memory_usage_percent: ['value<70'], // Memory under 70%
   },
 };
 
@@ -62,7 +62,7 @@ function checkMemory() {
 }
 
 // Main test function - simulates realistic user behavior
-export default function() {
+export default function () {
   // 1. Health check (always works, validates server up)
   const healthRes = http.get(`${BASE_URL}/health`);
   check(healthRes, {
@@ -140,7 +140,7 @@ function generateTextSummary(data) {
   out += '═══════════════════════════════════════════════════════════\n\n';
 
   const m = data.metrics;
-  
+
   if (m.http_req_duration) {
     out += `  HTTP Request Duration:\n`;
     out += `    Average: ${m.http_req_duration.values.avg.toFixed(2)}ms\n`;

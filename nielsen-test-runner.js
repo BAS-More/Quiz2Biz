@@ -204,7 +204,7 @@ result.heuristicScores.forEach((h, index) => {
   const bar = '█'.repeat(Math.round(h.percentage / 5));
   const status = h.percentage >= 90 ? '✓' : h.percentage >= 80 ? '⚠' : '✗';
   console.log(
-    `${status} H${h.id}: ${h.name.padEnd(55)} ${h.percentage.toFixed(1).padStart(5)}% ${bar}`
+    `${status} H${h.id}: ${h.name.padEnd(55)} ${h.percentage.toFixed(1).padStart(5)}% ${bar}`,
   );
 });
 console.log('');

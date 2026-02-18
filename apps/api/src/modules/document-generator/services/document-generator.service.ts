@@ -311,9 +311,11 @@ export class DocumentGeneratorService {
     });
 
     // Notify document owner (fire-and-forget)
-    this.notifyDocumentOwner(document.sessionId, [document.fileName || 'Document'], 'approved').catch(
-      (err) => this.logger.warn('Failed to send approval notification', err),
-    );
+    this.notifyDocumentOwner(
+      document.sessionId,
+      [document.fileName || 'Document'],
+      'approved',
+    ).catch((err) => this.logger.warn('Failed to send approval notification', err));
 
     return approved;
   }
@@ -363,7 +365,9 @@ export class DocumentGeneratorService {
       include: { user: { select: { email: true, name: true } } },
     });
 
-    if (!session?.user) return;
+    if (!session?.user) {
+      return;
+    }
 
     const userName = session.user.name || session.user.email.split('@')[0];
 

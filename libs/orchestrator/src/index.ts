@@ -8,7 +8,13 @@
 
 // ── Config ──────────────────────────────────────────────────────────────────
 
-export { config, validateConfig, DEFAULT_TIER_BUDGETS, DEFAULT_PROMPT_BUDGET, DEFAULT_ERROR_BUDGETS } from './config';
+export {
+  config,
+  validateConfig,
+  DEFAULT_TIER_BUDGETS,
+  DEFAULT_PROMPT_BUDGET,
+  DEFAULT_ERROR_BUDGETS,
+} from './config';
 export type { IOrchestratorConfig, IPromptBudget, IErrorBudget } from './config/interfaces';
 export type {
   TaskTier,

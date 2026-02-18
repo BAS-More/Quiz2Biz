@@ -2,9 +2,7 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "commonjs",
-    "lib": [
-      "ES2022"
-    ],
+    "lib": ["ES2022"],
     "moduleResolution": "node",
     "strict": true,
     "strictNullChecks": true,
@@ -24,41 +22,19 @@
     "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
-      "@app/*": [
-        "apps/api/src/*"
-      ],
-      "@libs/database": [
-        "libs/database"
-      ],
-      "@libs/database/*": [
-        "libs/database/*"
-      ],
-      "@libs/redis": [
-        "libs/redis"
-      ],
-      "@libs/redis/*": [
-        "libs/redis/*"
-      ],
-      "@libs/shared": [
-        "libs/shared"
-      ],
-      "@libs/shared/*": [
-        "libs/shared/*"
-      ],
-      "@libs/orchestrator": [
-        "libs/orchestrator/src/index.ts"
-      ],
-      "@libs/orchestrator/*": [
-        "libs/orchestrator/src/*"
-      ]
+      "@app/*": ["apps/api/src/*"],
+      "@libs/database": ["libs/database"],
+      "@libs/database/*": ["libs/database/*"],
+      "@libs/redis": ["libs/redis"],
+      "@libs/redis/*": ["libs/redis/*"],
+      "@libs/shared": ["libs/shared"],
+      "@libs/shared/*": ["libs/shared/*"],
+      "@libs/orchestrator": ["libs/orchestrator/src/index.ts"],
+      "@libs/orchestrator/*": ["libs/orchestrator/src/*"]
     },
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true
   },
-  "exclude": [
-    "node_modules",
-    "dist",
-    "coverage"
-  ]
+  "exclude": ["node_modules", "dist", "coverage"]
 }

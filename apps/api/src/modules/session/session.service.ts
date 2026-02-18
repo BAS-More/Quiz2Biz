@@ -288,9 +288,10 @@ export class SessionService {
       (q) => q.sectionId === currentQuestion.sectionId,
     );
     const sectionAnswered = sectionQuestions.filter((q) => responseMap.has(q.id)).length;
-    const sectionProgress = sectionQuestions.length > 0
-      ? Math.round((sectionAnswered / sectionQuestions.length) * 100)
-      : 0;
+    const sectionProgress =
+      sectionQuestions.length > 0
+        ? Math.round((sectionAnswered / sectionQuestions.length) * 100)
+        : 0;
 
     return {
       questions: nextQuestions,
@@ -365,7 +366,9 @@ export class SessionService {
     const scoreResult = await this.scoringEngineService.calculateScore({ sessionId });
 
     // --- NQS: Use scoring engine to pick the next highest-impact question ---
-    let nqsNext: { questionId: string; text: string; dimensionKey: string; expectedScoreLift: number } | undefined;
+    let nqsNext:
+      | { questionId: string; text: string; dimensionKey: string; expectedScoreLift: number }
+      | undefined;
     const nqsResult = await this.scoringEngineService.getNextQuestions({ sessionId, limit: 1 });
     if (nqsResult.questions.length > 0) {
       const topQ = nqsResult.questions[0];
@@ -378,14 +381,9 @@ export class SessionService {
     }
 
     // Determine next question: prefer NQS pick, fallback to sequential
-    const nqsQuestion = nqsNext
-      ? visibleQuestions.find((q) => q.id === nqsNext!.questionId)
-      : null;
-    const nextQuestion = nqsQuestion ?? this.findNextUnansweredQuestion(
-      visibleQuestions,
-      dto.questionId,
-      responseMap,
-    );
+    const nqsQuestion = nqsNext ? visibleQuestions.find((q) => q.id === nqsNext.questionId) : null;
+    const nextQuestion =
+      nqsQuestion ?? this.findNextUnansweredQuestion(visibleQuestions, dto.questionId, responseMap);
 
     // Update session with score + next question
     const progress = this.calculateProgress(allResponses.length, visibleQuestions.length);
@@ -428,8 +426,8 @@ export class SessionService {
     if (scoreResult.score < READINESS_SCORE_THRESHOLD) {
       throw new BadRequestException(
         `Readiness score is ${scoreResult.score.toFixed(1)}%. ` +
-        `A minimum score of ${READINESS_SCORE_THRESHOLD}% is required to complete the session. ` +
-        `Please continue answering questions to improve coverage.`,
+          `A minimum score of ${READINESS_SCORE_THRESHOLD}% is required to complete the session. ` +
+          `Please continue answering questions to improve coverage.`,
       );
     }
 
@@ -622,7 +620,8 @@ export class SessionService {
       status: session.status,
       persona: session.persona ?? undefined,
       industry: session.industry ?? undefined,
-      readinessScore: readinessScore ?? (session.readinessScore ? Number(session.readinessScore) : undefined),
+      readinessScore:
+        readinessScore ?? (session.readinessScore ? Number(session.readinessScore) : undefined),
       progress,
       currentSection: session.currentSection
         ? { id: session.currentSection.id, name: session.currentSection.name }
@@ -944,9 +943,7 @@ export class SessionService {
       where: { questionnaireId: session.questionnaireId },
       include: { _count: { select: { questions: true } } },
     });
-    const sectionQuestionCounts = new Map(
-      sections.map((s) => [s.name, s._count.questions]),
-    );
+    const sectionQuestionCounts = new Map(sections.map((s) => [s.name, s._count.questions]));
 
     // Group by section
     const bySection: Record<string, { answered: number; total: number; avgTime: number }> = {};
@@ -956,7 +953,11 @@ export class SessionService {
       const sectionName = r.question.section?.name || 'Unknown';
 
       if (!bySection[sectionName]) {
-        bySection[sectionName] = { answered: 0, total: sectionQuestionCounts.get(sectionName) ?? 0, avgTime: 0 };
+        bySection[sectionName] = {
+          answered: 0,
+          total: sectionQuestionCounts.get(sectionName) ?? 0,
+          avgTime: 0,
+        };
         sectionTimes[sectionName] = [];
       }
       bySection[sectionName].answered++;
@@ -1008,9 +1009,8 @@ export class SessionService {
       session.questionnaireId,
       session.persona ?? undefined,
     );
-    const completionRate = totalQuestions > 0
-      ? Math.round((responses.length / totalQuestions) * 100)
-      : 0;
+    const completionRate =
+      totalQuestions > 0 ? Math.round((responses.length / totalQuestions) * 100) : 0;
 
     return {
       sessionId,
