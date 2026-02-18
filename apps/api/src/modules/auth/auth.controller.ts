@@ -36,6 +36,7 @@ export class AuthController {
   ) {}
 
   @Post('register')
+  @SkipCsrf()
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({ status: 201, description: 'User registered successfully', type: TokenResponseDto })
   @ApiResponse({ status: 409, description: 'User with this email already exists' })
@@ -44,6 +45,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @SkipCsrf()
   @HttpCode(HttpStatus.OK)
   @Throttle({ short: { limit: 5, ttl: 60000 } })
   @ApiOperation({ summary: 'Login with email and password' })
