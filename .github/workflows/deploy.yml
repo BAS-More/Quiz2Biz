@@ -152,7 +152,6 @@ jobs:
             --name ${{ env.CONTAINER_APP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --secrets \
-              database-url="${{ secrets.DATABASE_URL }}" \
               redis-host="${{ secrets.REDIS_HOST }}" \
               redis-port="${{ secrets.REDIS_PORT }}" \
               redis-password="${{ secrets.REDIS_PASSWORD }}" \
