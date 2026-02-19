@@ -18,6 +18,9 @@ import { PaginationDto } from '@libs/shared';
 /** Quiz2Biz readiness score threshold for session completion */
 const READINESS_SCORE_THRESHOLD = 95.0;
 
+/** Project type slug that enforces the strict readiness gate */
+const READINESS_GATED_PROJECT_TYPE = 'technical-readiness';
+
 export interface ProgressInfo {
   percentage: number;
   answeredQuestions: number;
@@ -134,12 +137,14 @@ export class SessionService {
     const initialQuestionId = firstPersonaQuestion?.id ?? firstQuestion?.id;
     const initialSectionId = firstPersonaQuestion?.sectionId ?? firstSection?.id;
 
-    // Create session with persona
+    // Create session with persona, project type, and idea capture
     const session = await this.prisma.session.create({
       data: {
         userId,
         questionnaireId: dto.questionnaireId,
         questionnaireVersion: questionnaire.version,
+        projectTypeId: dto.projectTypeId,
+        ideaCaptureId: dto.ideaCaptureId,
         persona: dto.persona,
         industry: dto.industry,
         status: SessionStatus.IN_PROGRESS,
@@ -423,12 +428,13 @@ export class SessionService {
       throw new BadRequestException('Session is already completed');
     }
 
-    // Quiz2Biz: Enforce readiness score >= 95% before allowing completion
+    // Enforce readiness gate only for technical-readiness project type
     const scoreResult = await this.scoringEngineService.calculateScore({ sessionId });
-    if (scoreResult.score < READINESS_SCORE_THRESHOLD) {
+    const requiresReadinessGate = await this.isReadinessGatedSession(session);
+    if (requiresReadinessGate && scoreResult.score < READINESS_SCORE_THRESHOLD) {
       throw new BadRequestException(
         `Readiness score is ${scoreResult.score.toFixed(1)}%. ` +
-        `A minimum score of ${READINESS_SCORE_THRESHOLD}% is required to complete the session. ` +
+        `A minimum score of ${READINESS_SCORE_THRESHOLD}% is required to complete this assessment. ` +
         `Please continue answering questions to improve coverage.`,
       );
     }
@@ -669,6 +675,21 @@ export class SessionService {
     }
 
     return session;
+  }
+
+  /**
+   * Check if a session requires the strict 95% readiness gate.
+   * Only enforced for the technical-readiness project type.
+   */
+  private async isReadinessGatedSession(session: { projectTypeId: string | null }): Promise<boolean> {
+    if (!session.projectTypeId) {
+      return false;
+    }
+    const projectType = await this.prisma.projectType.findUnique({
+      where: { id: session.projectTypeId },
+      select: { slug: true },
+    });
+    return projectType?.slug === READINESS_GATED_PROJECT_TYPE;
   }
 
   private mapToSessionResponse(

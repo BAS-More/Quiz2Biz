@@ -12,9 +12,9 @@
         "start": "node dist/index.js",
         "dev": "ts-node src/index.ts",
         "lint": "eslint src --ext .ts",
-        "test": "jest",
-        "test:watch": "jest --watch",
-        "test:cov": "jest --coverage",
+        "test": "npx jest",
+        "test:watch": "npx jest --watch",
+        "test:cov": "npx jest --coverage",
         "prepublishOnly": "npm run build"
     },
     "keywords": [

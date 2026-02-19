@@ -8,6 +8,20 @@ export class CreateSessionDto {
   questionnaireId: string;
 
   @ApiPropertyOptional({
+    description: 'Project type ID — determines which dimensions and thresholds apply',
+  })
+  @IsOptional()
+  @IsUUID()
+  projectTypeId?: string;
+
+  @ApiPropertyOptional({
+    description: 'Idea capture ID — links session to the user\'s initial idea input',
+  })
+  @IsOptional()
+  @IsUUID()
+  ideaCaptureId?: string;
+
+  @ApiPropertyOptional({
     enum: Persona,
     example: 'CTO',
     description: 'Persona filter: CTO, CFO, CEO, BA, or POLICY. Determines which questions are presented.',

@@ -10,6 +10,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { ToastProvider } from './components/ui';
 import { useAuthStore } from './stores/auth';
 import type { ReactNode } from 'react';
+import { featureFlags } from './config/feature-flags.config';
 
 // Lazy-loaded page components for code-splitting
 const LoginPage = lazy(() => import('./pages/auth/LoginPage').then(m => ({ default: m.LoginPage })));
@@ -130,9 +131,13 @@ export default function App() {
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="questionnaire/:action?" element={<QuestionnairePage />} />
             <Route path="heatmap/:sessionId" element={<HeatmapPage />} />
-            <Route path="evidence/:sessionId" element={<EvidencePage />} />
-            <Route path="decisions/:sessionId" element={<DecisionsPage />} />
-            <Route path="policy-pack/:sessionId" element={<PolicyPackPage />} />
+            {featureFlags.legacyModules && (
+              <>
+                <Route path="evidence/:sessionId" element={<EvidencePage />} />
+                <Route path="decisions/:sessionId" element={<DecisionsPage />} />
+                <Route path="policy-pack/:sessionId" element={<PolicyPackPage />} />
+              </>
+            )}
             <Route path="documents" element={<DocumentsPage />} />
             <Route path="billing" element={<BillingPage />} />
             <Route path="billing/invoices" element={<InvoicesPage />} />

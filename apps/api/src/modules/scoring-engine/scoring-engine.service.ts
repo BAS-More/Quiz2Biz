@@ -124,9 +124,13 @@ export class ScoringEngineService {
     // Get previous score for trend calculation
     const previousScore = session.readinessScore ? Number(session.readinessScore) : null;
 
-    // Fetch all dimensions with their weights
+    // Fetch dimensions filtered by session's project type when available
+    const dimensionWhere: { isActive: boolean; projectTypeId?: string | null } = { isActive: true };
+    if (session.projectTypeId) {
+      dimensionWhere.projectTypeId = session.projectTypeId;
+    }
     const dimensions = await this.prisma.dimensionCatalog.findMany({
-      where: { isActive: true },
+      where: dimensionWhere,
       orderBy: { orderIndex: 'asc' },
     });
 
