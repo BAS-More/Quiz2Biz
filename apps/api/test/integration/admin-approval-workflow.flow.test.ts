@@ -1,11 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '@libs/database';
 import { AdminAuditService } from '../../src/modules/admin/services/admin-audit.service';
-import { NotificationService } from '../../src/modules/notification/notification.service';
+// import { NotificationService } from '../../src/modules/notification/notification.service';
 import { ConfigModule } from '@nestjs/config';
 import configuration from '../../src/config/configuration';
 
-// TODO: Update tests to match current Prisma schema
+/**
+ * Integration tests for Admin Approval Workflow
+ * 
+ * SKIP REASON: NotificationService module doesn't exist in current codebase structure.
+ * TODO: Create NotificationService or update tests to remove this dependency.
+ * 
+ * Schema updates completed: USER -> CLIENT role, Session.questionnaireVersion added
+ */
 describe.skip('Admin → Approval Workflow Flow Integration', () => {
   let module: TestingModule;
   let prisma: PrismaService;
@@ -49,7 +56,7 @@ describe.skip('Admin → Approval Workflow Flow Integration', () => {
       data: {
         email: `user-${Date.now()}@test.com`,
         hashedPassword: 'hashed_password',
-        role: 'USER',
+        role: 'CLIENT',
       },
     });
     testRegularUserId = user.id;
@@ -407,7 +414,7 @@ describe.skip('Admin → Approval Workflow Flow Integration', () => {
       expect(auditTrail[1].createdAt.getTime()).toBeLessThan(auditTrail[2].createdAt.getTime());
 
       // Verify user roles
-      expect(auditTrail[0].user.role).toBe('USER');
+      expect(auditTrail[0].user.role).toBe('CLIENT');
       expect(auditTrail[2].user.role).toBe('ADMIN');
 
       // Clean up

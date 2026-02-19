@@ -2,20 +2,64 @@
 // MCP Client Tests — validation and security tests for updateTask
 // ---------------------------------------------------------------------------
 
-import { updateTask } from '../mcp/client';
-import type { ITask } from '../schemas/interfaces';
+import { ITask } from '../schemas/interfaces';
 
-// Mock the query function to avoid actual database calls
-jest.mock('../mcp/client', () => {
-  const actual = jest.requireActual('../mcp/client');
+// Create mock pool and query results
+const mockQuery = jest.fn().mockResolvedValue({ rows: [], rowCount: 1 });
+const mockPool = {
+  query: mockQuery,
+  connect: jest.fn().mockResolvedValue({
+    query: mockQuery,
+    release: jest.fn(),
+  }),
+  end: jest.fn().mockResolvedValue(undefined),
+  on: jest.fn(), // Mock event listener method
+};
+
+// Mock pg Pool constructor
+jest.mock('pg', () => {
   return {
-    ...actual,
-    query: jest.fn().mockResolvedValue({ rows: [] }),
+    Pool: jest.fn(() => mockPool),
   };
 });
 
+// Mock the config to provide database settings
+jest.mock('../config', () => ({
+  config: {
+    logLevel: 'error',
+    db: {
+      host: 'localhost',
+      port: 5432,
+      database: 'test',
+      user: 'test',
+      password: 'test',
+      ssl: false,
+      poolMin: 1,
+      poolMax: 5,
+    },
+    errorBudgets: {
+      S: { maxRetries: 1 },
+      M: { maxRetries: 2 },
+      L: { maxRetries: 3 },
+      XL: { maxRetries: 5 },
+    },
+  },
+}));
+
+// Import after mocks are set up
+import { init, updateTask, shutdown } from '../mcp/client';
+
 describe('updateTask', () => {
   const validTaskId = 123;
+
+  beforeAll(async () => {
+    // Initialize the client with mock pool
+    init();
+  });
+
+  afterAll(async () => {
+    await shutdown();
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -39,7 +83,7 @@ describe('updateTask', () => {
       } as any;
 
       await expect(updateTask(validTaskId, invalidUpdate)).rejects.toThrow(
-        /Invalid field\(s\) in task update: invalid_field/
+        /Invalid update fields: invalid_field/
       );
     });
 
@@ -51,7 +95,7 @@ describe('updateTask', () => {
       } as any;
 
       await expect(updateTask(validTaskId, invalidUpdate)).rejects.toThrow(
-        /Invalid field\(s\) in task update: bad_field_1, bad_field_2/
+        /Invalid update fields: bad_field_1, bad_field_2/
       );
     });
 
@@ -79,7 +123,7 @@ describe('updateTask', () => {
       } as any;
 
       await expect(updateTask(validTaskId, updateWithId)).rejects.toThrow(
-        /Invalid field\(s\) in task update: task_id/
+        /Invalid update fields: task_id/
       );
     });
 
@@ -91,7 +135,7 @@ describe('updateTask', () => {
       } as any;
 
       await expect(updateTask(validTaskId, updateWithCreatedAt)).rejects.toThrow(
-        /Invalid field\(s\) in task update: created_at/
+        /Invalid update fields: created_at/
       );
     });
 
@@ -123,7 +167,7 @@ describe('updateTask', () => {
       } as any;
 
       await expect(updateTask(validTaskId, sqlInjectionAttempt)).rejects.toThrow(
-        /Invalid field\(s\) in task update/
+        /Invalid update fields/
       );
     });
 
@@ -133,7 +177,7 @@ describe('updateTask', () => {
       } as any;
 
       await expect(updateTask(validTaskId, obfuscationAttempt)).rejects.toThrow(
-        /Invalid field\(s\) in task update/
+        /Invalid update fields/
       );
     });
   });

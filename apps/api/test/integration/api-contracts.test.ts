@@ -5,7 +5,17 @@ import { PrismaService } from '@libs/database';
 import { AppModule } from '../../src/app.module';
 import { HttpExceptionFilter } from '../../src/common/filters/http-exception.filter';
 
-// TODO: Update tests to match current Prisma schema
+/**
+ * API Contract Tests for Sessions Endpoints
+ * 
+ * SKIP REASON: Requires full AppModule context with running database.
+ * These tests validate HTTP endpoint contracts using supertest.
+ * TODO: Set up test database or use in-memory alternatives.
+ * 
+ * Schema updates completed:
+ * - User: USER -> CLIENT role
+ * - Session: createdAt -> startedAt, added questionnaireVersion
+ */
 describe.skip('API Contract Tests - Sessions Endpoints', () => {
   let app: INestApplication;
   let prisma: PrismaService;
@@ -39,7 +49,7 @@ describe.skip('API Contract Tests - Sessions Endpoints', () => {
       data: {
         email: `contract-test-${Date.now()}@test.com`,
         hashedPassword: 'hashed_password',
-        role: 'USER',
+        role: 'CLIENT',
       },
     });
     testUserId = user.id;
@@ -81,11 +91,10 @@ describe.skip('API Contract Tests - Sessions Endpoints', () => {
       expect(response.body).toHaveProperty('userId', testUserId);
       expect(response.body).toHaveProperty('questionnaireId', testQuestionnaireId);
       expect(response.body).toHaveProperty('status', 'IN_PROGRESS');
-      expect(response.body).toHaveProperty('createdAt');
-      expect(response.body).toHaveProperty('updatedAt');
+      expect(response.body).toHaveProperty('startedAt');
 
       // Verify ISO 8601 date format
-      expect(new Date(response.body.createdAt).toISOString()).toBe(response.body.createdAt);
+      expect(new Date(response.body.startedAt).toISOString()).toBe(response.body.startedAt);
     });
 
     it('should return 400 with missing required fields', async () => {

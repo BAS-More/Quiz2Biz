@@ -5,7 +5,20 @@ import { ScoringEngineService } from '../../src/modules/scoring-engine/scoring-e
 import { PrismaService } from '@libs/database';
 import { SessionStatus, CoverageLevel } from '@prisma/client';
 
-// TODO: Update tests to match current Prisma schema
+/**
+ * Integration tests for Questionnaire -> Scoring -> Session Flow
+ * 
+ * SKIP REASON: Services require full NestJS module context with all dependencies.
+ * SessionService depends on AdaptiveLogicService which isn't provided in test module.
+ * TODO: Either import full AppModule or create mock providers for all dependencies.
+ * 
+ * Schema updates completed:
+ * - User: passwordHash -> hashedPassword, USER -> CLIENT
+ * - Questionnaire: version as Int
+ * - Question: sectionId, type enum, orderIndex, metadata
+ * - Response: value as Json object
+ * - Dimension: DimensionCatalog with key, displayName, weight, orderIndex
+ */
 describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
   let sessionService: SessionService;
   let questionnaireService: QuestionnaireService;
@@ -15,6 +28,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
   let testUserId: string;
   let testQuestionnaireId: string;
   let testSessionId: string;
+  let testSectionId: string;
   let testDimensionKey: string;
 
   beforeAll(async () => {
@@ -31,8 +45,8 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
     const user = await prisma.user.create({
       data: {
         email: `flow-test-${Date.now()}@example.com`,
-        passwordHash: 'hash',
-        role: 'USER',
+        hashedPassword: 'hash',
+        role: 'CLIENT',
       },
     });
     testUserId = user.id;
@@ -41,18 +55,29 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
       data: {
         name: 'Flow Test Questionnaire',
         description: 'End-to-end flow testing',
-        version: '1.0',
+        version: 1,
         isActive: true,
       },
     });
     testQuestionnaireId = questionnaire.id;
 
+    // Create a section for the questionnaire
+    const section = await prisma.section.create({
+      data: {
+        questionnaireId: testQuestionnaireId,
+        title: 'Test Section',
+        orderIndex: 1,
+      },
+    });
+    testSectionId = section.id;
+
     testDimensionKey = `flow-test-${Date.now()}`;
-    await prisma.dimension.create({
+    await prisma.dimensionCatalog.create({
       data: {
         key: testDimensionKey,
         displayName: 'Flow Test Dimension',
         weight: 1.0,
+        orderIndex: 1,
       },
     });
   });
@@ -62,9 +87,10 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
       await prisma.response.deleteMany({ where: { sessionId: testSessionId } });
       await prisma.session.delete({ where: { id: testSessionId } });
     }
-    await prisma.dimension.delete({ where: { key: testDimensionKey } });
-    await prisma.questionnaire.delete({ where: { id: testQuestionnaireId } });
-    await prisma.user.delete({ where: { id: testUserId } });
+    await prisma.dimensionCatalog.delete({ where: { key: testDimensionKey } }).catch(() => {});
+    await prisma.section.deleteMany({ where: { id: testSectionId } }).catch(() => {});
+    await prisma.questionnaire.delete({ where: { id: testQuestionnaireId } }).catch(() => {});
+    await prisma.user.delete({ where: { id: testUserId } }).catch(() => {});
     await prisma.$disconnect();
   });
 
@@ -84,35 +110,38 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
       const questions = await Promise.all([
         prisma.question.create({
           data: {
-            questionnaireId: testQuestionnaireId,
+            sectionId: testSectionId,
             dimensionKey: testDimensionKey,
             text: 'Security Question 1',
-            questionType: 'YES_NO',
+            type: 'YES_NO',
             isRequired: true,
             severity: 0.8,
-            order: 1,
+            orderIndex: 1,
+            metadata: {},
           },
         }),
         prisma.question.create({
           data: {
-            questionnaireId: testQuestionnaireId,
+            sectionId: testSectionId,
             dimensionKey: testDimensionKey,
             text: 'Security Question 2',
-            questionType: 'TEXT',
+            type: 'TEXT',
             isRequired: true,
             severity: 0.7,
-            order: 2,
+            orderIndex: 2,
+            metadata: {},
           },
         }),
         prisma.question.create({
           data: {
-            questionnaireId: testQuestionnaireId,
+            sectionId: testSectionId,
             dimensionKey: testDimensionKey,
             text: 'Security Question 3',
-            questionType: 'MULTIPLE_CHOICE',
+            type: 'MULTIPLE_CHOICE',
             isRequired: true,
             severity: 0.6,
-            order: 3,
+            orderIndex: 3,
+            metadata: {},
           },
         }),
       ]);
@@ -123,7 +152,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
           data: {
             sessionId: testSessionId,
             questionId: questions[0].id,
-            value: 'Yes',
+            value: { answer: 'Yes' },
             isValid: true,
             coverage: 1.0,
             coverageLevel: CoverageLevel.FULL,
@@ -133,7 +162,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
           data: {
             sessionId: testSessionId,
             questionId: questions[1].id,
-            value: 'Partially implemented',
+            value: { answer: 'Partially implemented' },
             isValid: true,
             coverage: 0.5,
             coverageLevel: CoverageLevel.HALF,
@@ -143,7 +172,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
           data: {
             sessionId: testSessionId,
             questionId: questions[2].id,
-            value: 'Option B',
+            value: { answer: 'Option B' },
             isValid: true,
             coverage: 0.75,
             coverageLevel: CoverageLevel.SUBSTANTIAL,
@@ -188,13 +217,14 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
       // Create questions but don't answer all
       const question = await prisma.question.create({
         data: {
-          questionnaireId: testQuestionnaireId,
+          sectionId: testSectionId,
           dimensionKey: testDimensionKey,
           text: 'Incomplete question',
-          questionType: 'TEXT',
+          type: 'TEXT',
           isRequired: true,
           severity: 0.5,
-          order: 1,
+          orderIndex: 1,
+          metadata: {},
         },
       });
 
@@ -229,24 +259,26 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
       const questions = await Promise.all([
         prisma.question.create({
           data: {
-            questionnaireId: testQuestionnaireId,
+            sectionId: testSectionId,
             dimensionKey: testDimensionKey,
             text: 'High severity question',
-            questionType: 'YES_NO',
+            type: 'YES_NO',
             isRequired: true,
             severity: 0.9, // High severity
-            order: 1,
+            orderIndex: 1,
+            metadata: {},
           },
         }),
         prisma.question.create({
           data: {
-            questionnaireId: testQuestionnaireId,
+            sectionId: testSectionId,
             dimensionKey: testDimensionKey,
             text: 'Low severity question',
-            questionType: 'TEXT',
+            type: 'TEXT',
             isRequired: true,
             severity: 0.3, // Low severity
-            order: 2,
+            orderIndex: 2,
+            metadata: {},
           },
         }),
       ]);
@@ -257,7 +289,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
           data: {
             sessionId: session.id,
             questionId: questions[0].id,
-            value: 'Yes',
+            value: { answer: 'Yes' },
             isValid: true,
             coverage: 0.5,
             coverageLevel: CoverageLevel.HALF,
@@ -267,7 +299,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
           data: {
             sessionId: session.id,
             questionId: questions[1].id,
-            value: 'Answer',
+            value: { answer: 'Answer' },
             isValid: true,
             coverage: 0.5,
             coverageLevel: CoverageLevel.HALF,
@@ -297,13 +329,14 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
 
       const question = await prisma.question.create({
         data: {
-          questionnaireId: testQuestionnaireId,
+          sectionId: testSectionId,
           dimensionKey: testDimensionKey,
           text: 'Changing response question',
-          questionType: 'YES_NO',
+          type: 'YES_NO',
           isRequired: true,
           severity: 0.8,
-          order: 1,
+          orderIndex: 1,
+          metadata: {},
         },
       });
 
@@ -312,7 +345,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
         data: {
           sessionId: session.id,
           questionId: question.id,
-          value: 'No',
+          value: { answer: 'No' },
           isValid: true,
           coverage: 0.0,
           coverageLevel: CoverageLevel.NONE,
@@ -325,7 +358,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
       await prisma.response.update({
         where: { id: response.id },
         data: {
-          value: 'Yes',
+          value: { answer: 'Yes' },
           coverage: 1.0,
           coverageLevel: CoverageLevel.FULL,
         },
@@ -354,13 +387,14 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
         Array.from({ length: 5 }, (_, i) =>
           prisma.question.create({
             data: {
-              questionnaireId: testQuestionnaireId,
+              sectionId: testSectionId,
               dimensionKey: testDimensionKey,
               text: `Progress question ${i + 1}`,
-              questionType: 'TEXT',
+              type: 'TEXT',
               isRequired: true,
               severity: 0.5,
-              order: i + 1,
+              orderIndex: i + 1,
+              metadata: {},
             },
           }),
         ),
@@ -373,7 +407,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
             data: {
               sessionId: session.id,
               questionId: q.id,
-              value: 'Answer',
+              value: { answer: 'Answer' },
               isValid: true,
               coverage: 0.5,
               coverageLevel: CoverageLevel.HALF,

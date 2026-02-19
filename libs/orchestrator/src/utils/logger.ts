@@ -73,8 +73,9 @@ export interface ILogger {
  * @returns A structured logger instance.
  */
 export function createLogger(module: string, minLevel: LogLevel = 'info'): ILogger {
-  // Determine if we should use pretty printing based on environment
+  // Determine environment
   const isDevelopment = process.env.NODE_ENV !== 'production';
+  const isTestEnv = process.env.NODE_ENV === 'test' || typeof jest !== 'undefined';
 
   // Create Pino instance with async destination and module context
   const logger = pino(
@@ -94,18 +95,21 @@ export function createLogger(module: string, minLevel: LogLevel = 'info'): ILogg
       },
     },
     // Use pino-pretty in development for colored, human-readable output
+    // In test environment, use sync destination to avoid worker thread issues
     // In production, use fast async destination to stdout/stderr
-    isDevelopment
-      ? pino.transport({
-          target: 'pino-pretty',
-          options: {
-            colorize: true,
-            translateTime: 'SYS:HH:MM:ss.l',
-            ignore: 'pid,hostname',
-            messageFormat: '[{module}] {msg}',
-          },
-        })
-      : pino.destination({ sync: false }), // Async destination for production
+    isTestEnv
+      ? pino.destination({ sync: true }) // Sync for tests to avoid worker threads
+      : isDevelopment
+        ? pino.transport({
+            target: 'pino-pretty',
+            options: {
+              colorize: true,
+              translateTime: 'SYS:HH:MM:ss.l',
+              ignore: 'pid,hostname',
+              messageFormat: '[{module}] {msg}',
+            },
+          })
+        : pino.destination({ sync: false }), // Async destination for production
   );
 
   // Helper to filter metadata before logging to avoid expensive JSON operations

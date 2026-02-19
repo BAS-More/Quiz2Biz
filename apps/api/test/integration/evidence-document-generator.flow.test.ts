@@ -6,7 +6,18 @@ import { EvidenceIntegrityService } from '../../src/modules/evidence-registry/ev
 import { ConfigModule } from '@nestjs/config';
 import configuration from '../../src/config/configuration';
 
-// TODO: Update tests to match current Prisma schema
+/**
+ * Integration tests for Evidence -> Document Generator Flow
+ * 
+ * SKIP REASON: Services require full NestJS module context with all dependencies.
+ * DocumentGeneratorService depends on TemplateEngineService, NotificationService, etc.
+ * TODO: Either import full AppModule or create mock providers for all dependencies.
+ * 
+ * Schema updates completed:
+ * - User: USER -> CLIENT role  
+ * - Evidence -> EvidenceRegistry with sessionId, questionId, artifactUrl, artifactType, verified, hashSignature
+ * - Response: value as Json object
+ */
 describe.skip('Evidence → Document Generator Flow Integration', () => {
   let module: TestingModule;
   let prisma: PrismaService;
@@ -48,7 +59,7 @@ describe.skip('Evidence → Document Generator Flow Integration', () => {
       data: {
         email: `evidence-test-${Date.now()}@test.com`,
         hashedPassword: 'hashed_password',
-        role: 'USER',
+        role: 'CLIENT',
       },
     });
     testUserId = user.id;
@@ -93,6 +104,7 @@ describe.skip('Evidence → Document Generator Flow Integration', () => {
       data: {
         sessionId: testSessionId,
         questionId: testQuestionId,
+        value: { answer: 'We have comprehensive security policies documented' },
         coverage: 0.75,
         coverageLevel: 'SUBSTANTIAL',
       },
@@ -103,7 +115,7 @@ describe.skip('Evidence → Document Generator Flow Integration', () => {
   afterAll(async () => {
     // Clean up in reverse dependency order
     if (testEvidenceId) {
-      await prisma.evidence.deleteMany({ where: { id: testEvidenceId } });
+      await prisma.evidenceRegistry.deleteMany({ where: { id: testEvidenceId } });
     }
     await prisma.response.deleteMany({ where: { sessionId: testSessionId } });
     await prisma.question.deleteMany({
@@ -119,16 +131,17 @@ describe.skip('Evidence → Document Generator Flow Integration', () => {
 
   describe('Complete Evidence → Document Flow', () => {
     it('should upload evidence → verify integrity → reference in document generation', async () => {
-      // Step 1: Upload evidence
-      const evidence = await prisma.evidence.create({
+      // Step 1: Upload evidence using EvidenceRegistry
+      const evidence = await prisma.evidenceRegistry.create({
         data: {
-          userId: testUserId,
-          responseId: testResponseId,
+          sessionId: testSessionId,
+          questionId: testQuestionId,
           fileName: 'security-policy.pdf',
-          fileUrl: 'https://storage.example.com/evidence/security-policy.pdf',
+          artifactUrl: 'https://storage.example.com/evidence/security-policy.pdf',
           fileSize: 1024000, // 1MB
           mimeType: 'application/pdf',
-          status: 'IN_PROGRESS',
+          artifactType: 'DOCUMENT',
+          verified: false,
           metadata: {
             uploadedAt: new Date().toISOString(),
             originalName: 'Security Policy v2.pdf',
@@ -137,30 +150,30 @@ describe.skip('Evidence → Document Generator Flow Integration', () => {
       });
       testEvidenceId = evidence.id;
 
-      expect(evidence.status).toBe('IN_PROGRESS');
+      expect(evidence.verified).toBe(false);
       expect(evidence.fileName).toBe('security-policy.pdf');
-      expect(evidence.responseId).toBe(testResponseId);
+      expect(evidence.sessionId).toBe(testSessionId);
 
       // Step 2: Verify evidence integrity (hash chain)
       const integrityHash = integrityService.calculateHash({
         id: evidence.id,
         fileName: evidence.fileName,
-        fileUrl: evidence.fileUrl,
+        fileUrl: evidence.artifactUrl,
         fileSize: evidence.fileSize,
         uploadedAt: evidence.createdAt.toISOString(),
       });
 
-      const updatedEvidence = await prisma.evidence.update({
+      const updatedEvidence = await prisma.evidenceRegistry.update({
         where: { id: evidence.id },
         data: {
-          status: 'VERIFIED',
-          integrityHash,
+          verified: true,
+          hashSignature: integrityHash,
           verifiedAt: new Date(),
         },
       });
 
-      expect(updatedEvidence.status).toBe('VERIFIED');
-      expect(updatedEvidence.integrityHash).toBe(integrityHash);
+      expect(updatedEvidence.verified).toBe(true);
+      expect(updatedEvidence.hashSignature).toBe(integrityHash);
       expect(updatedEvidence.verifiedAt).toBeDefined();
 
       // Step 3: Fetch session data with evidence for document generation
@@ -174,18 +187,18 @@ describe.skip('Evidence → Document Generator Flow Integration', () => {
                   dimension: true,
                 },
               },
-              evidence: true,
             },
           },
           questionnaire: true,
           user: true,
+          evidenceRegistry: true,
         },
       });
 
       expect(sessionWithEvidence).toBeDefined();
       expect(sessionWithEvidence!.responses).toHaveLength(1);
-      expect(sessionWithEvidence!.responses[0].evidence).toHaveLength(1);
-      expect(sessionWithEvidence!.responses[0].evidence[0].status).toBe('VERIFIED');
+      expect(sessionWithEvidence!.evidenceRegistry).toHaveLength(1);
+      expect(sessionWithEvidence!.evidenceRegistry[0].verified).toBe(true);
 
       // Step 4: Generate document with evidence references
       const documentMetadata = {
@@ -195,7 +208,7 @@ describe.skip('Evidence → Document Generator Flow Integration', () => {
           {
             evidenceId: evidence.id,
             fileName: evidence.fileName,
-            fileUrl: evidence.fileUrl,
+            fileUrl: evidence.artifactUrl,
             questionText: 'Do you have documented security policies?',
             responseLevel: 'SUBSTANTIAL',
           },
@@ -213,7 +226,7 @@ describe.skip('Evidence → Document Generator Flow Integration', () => {
 **Coverage Level:** SUBSTANTIAL (75%)
 
 **Evidence:**
-- [security-policy.pdf](${evidence.fileUrl})
+- [security-policy.pdf](${evidence.artifactUrl})
   - File Size: ${(evidence.fileSize / 1024).toFixed(2)} KB
   - Verified: ${updatedEvidence.verifiedAt!.toISOString()}
   - Integrity Hash: ${integrityHash.substring(0, 16)}...
@@ -222,41 +235,43 @@ This evidence demonstrates substantial coverage of security policy requirements.
 `;
 
       expect(documentContent).toContain('security-policy.pdf');
-      expect(documentContent).toContain(evidence.fileUrl);
+      expect(documentContent).toContain(evidence.artifactUrl);
       expect(documentContent).toContain('SUBSTANTIAL');
       expect(documentMetadata.evidenceReferences).toHaveLength(1);
       expect(documentMetadata.evidenceReferences[0].evidenceId).toBe(evidence.id);
     });
 
-    it('should handle multiple evidence items for single response', async () => {
+    it('should handle multiple evidence items for single question', async () => {
       // Create additional evidence
-      const evidence2 = await prisma.evidence.create({
+      const evidence2 = await prisma.evidenceRegistry.create({
         data: {
-          userId: testUserId,
-          responseId: testResponseId,
+          sessionId: testSessionId,
+          questionId: testQuestionId,
           fileName: 'security-controls.xlsx',
-          fileUrl: 'https://storage.example.com/evidence/security-controls.xlsx',
+          artifactUrl: 'https://storage.example.com/evidence/security-controls.xlsx',
           fileSize: 512000,
           mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          status: 'VERIFIED',
+          artifactType: 'SPREADSHEET',
+          verified: true,
         },
       });
 
-      const evidence3 = await prisma.evidence.create({
+      const evidence3 = await prisma.evidenceRegistry.create({
         data: {
-          userId: testUserId,
-          responseId: testResponseId,
+          sessionId: testSessionId,
+          questionId: testQuestionId,
           fileName: 'audit-report.pdf',
-          fileUrl: 'https://storage.example.com/evidence/audit-report.pdf',
+          artifactUrl: 'https://storage.example.com/evidence/audit-report.pdf',
           fileSize: 2048000, // 2MB
           mimeType: 'application/pdf',
-          status: 'VERIFIED',
+          artifactType: 'DOCUMENT',
+          verified: true,
         },
       });
 
-      // Fetch all evidence for response
-      const allEvidence = await prisma.evidence.findMany({
-        where: { responseId: testResponseId },
+      // Fetch all evidence for question
+      const allEvidence = await prisma.evidenceRegistry.findMany({
+        where: { questionId: testQuestionId },
         orderBy: { createdAt: 'asc' },
       });
 
@@ -266,21 +281,22 @@ This evidence demonstrates substantial coverage of security policy requirements.
       expect(allEvidence.map((e) => e.fileName)).toContain('audit-report.pdf');
 
       // Clean up
-      await prisma.evidence.deleteMany({
+      await prisma.evidenceRegistry.deleteMany({
         where: { id: { in: [evidence2.id, evidence3.id] } },
       });
     });
 
     it('should reject evidence with invalid integrity hash', async () => {
-      const evidence = await prisma.evidence.create({
+      const evidence = await prisma.evidenceRegistry.create({
         data: {
-          userId: testUserId,
-          responseId: testResponseId,
+          sessionId: testSessionId,
+          questionId: testQuestionId,
           fileName: 'tampered-file.pdf',
-          fileUrl: 'https://storage.example.com/evidence/tampered-file.pdf',
+          artifactUrl: 'https://storage.example.com/evidence/tampered-file.pdf',
           fileSize: 1024,
           mimeType: 'application/pdf',
-          status: 'IN_PROGRESS',
+          artifactType: 'DOCUMENT',
+          verified: false,
         },
       });
 
@@ -288,7 +304,7 @@ This evidence demonstrates substantial coverage of security policy requirements.
       const correctHash = integrityService.calculateHash({
         id: evidence.id,
         fileName: evidence.fileName,
-        fileUrl: evidence.fileUrl,
+        fileUrl: evidence.artifactUrl,
         fileSize: evidence.fileSize,
         uploadedAt: evidence.createdAt.toISOString(),
       });
@@ -300,36 +316,39 @@ This evidence demonstrates substantial coverage of security policy requirements.
       const isValid = tamperedHash === correctHash;
       expect(isValid).toBe(false);
 
-      // Mark as rejected
-      await prisma.evidence.update({
+      // Mark as rejected (set verified to false with rejection in metadata)
+      await prisma.evidenceRegistry.update({
         where: { id: evidence.id },
         data: {
-          status: 'REJECTED',
-          integrityHash: tamperedHash,
+          verified: false,
+          hashSignature: tamperedHash,
+          metadata: { rejected: true, reason: 'Integrity check failed' },
         },
       });
 
-      const rejectedEvidence = await prisma.evidence.findUnique({
+      const rejectedEvidence = await prisma.evidenceRegistry.findUnique({
         where: { id: evidence.id },
       });
 
-      expect(rejectedEvidence!.status).toBe('REJECTED');
+      expect(rejectedEvidence!.verified).toBe(false);
+      expect((rejectedEvidence!.metadata as any).rejected).toBe(true);
 
       // Clean up
-      await prisma.evidence.delete({ where: { id: evidence.id } });
+      await prisma.evidenceRegistry.delete({ where: { id: evidence.id } });
     });
 
     it('should track evidence version history', async () => {
       // Upload initial version
-      const v1 = await prisma.evidence.create({
+      const v1 = await prisma.evidenceRegistry.create({
         data: {
-          userId: testUserId,
-          responseId: testResponseId,
+          sessionId: testSessionId,
+          questionId: testQuestionId,
           fileName: 'policy-v1.pdf',
-          fileUrl: 'https://storage.example.com/evidence/policy-v1.pdf',
+          artifactUrl: 'https://storage.example.com/evidence/policy-v1.pdf',
           fileSize: 1024,
           mimeType: 'application/pdf',
-          status: 'VERIFIED',
+          artifactType: 'DOCUMENT',
+          verified: true,
           metadata: {
             version: 1,
           },
@@ -337,15 +356,16 @@ This evidence demonstrates substantial coverage of security policy requirements.
       });
 
       // Upload updated version (supersedes v1)
-      const v2 = await prisma.evidence.create({
+      const v2 = await prisma.evidenceRegistry.create({
         data: {
-          userId: testUserId,
-          responseId: testResponseId,
+          sessionId: testSessionId,
+          questionId: testQuestionId,
           fileName: 'policy-v2.pdf',
-          fileUrl: 'https://storage.example.com/evidence/policy-v2.pdf',
+          artifactUrl: 'https://storage.example.com/evidence/policy-v2.pdf',
           fileSize: 2048,
           mimeType: 'application/pdf',
-          status: 'VERIFIED',
+          artifactType: 'DOCUMENT',
+          verified: true,
           metadata: {
             version: 2,
             supersedes: v1.id,
@@ -354,7 +374,7 @@ This evidence demonstrates substantial coverage of security policy requirements.
       });
 
       // Mark v1 as superseded
-      await prisma.evidence.update({
+      await prisma.evidenceRegistry.update({
         where: { id: v1.id },
         data: {
           metadata: {
@@ -365,9 +385,9 @@ This evidence demonstrates substantial coverage of security policy requirements.
       });
 
       // Fetch version history
-      const allVersions = await prisma.evidence.findMany({
+      const allVersions = await prisma.evidenceRegistry.findMany({
         where: {
-          responseId: testResponseId,
+          sessionId: testSessionId,
           fileName: { startsWith: 'policy-v' },
         },
         orderBy: { createdAt: 'asc' },
@@ -380,7 +400,7 @@ This evidence demonstrates substantial coverage of security policy requirements.
       expect((allVersions[1].metadata as any).supersedes).toBe(v1.id);
 
       // Clean up
-      await prisma.evidence.deleteMany({
+      await prisma.evidenceRegistry.deleteMany({
         where: { id: { in: [v1.id, v2.id] } },
       });
     });
@@ -396,30 +416,31 @@ This evidence demonstrates substantial coverage of security policy requirements.
 
       // Attempt to create oversized evidence
       try {
-        await prisma.evidence.create({
+        await prisma.evidenceRegistry.create({
           data: {
-            userId: testUserId,
-            responseId: testResponseId,
+            sessionId: testSessionId,
+            questionId: testQuestionId,
             fileName: 'oversized-file.pdf',
-            fileUrl: 'https://storage.example.com/evidence/oversized-file.pdf',
+            artifactUrl: 'https://storage.example.com/evidence/oversized-file.pdf',
             fileSize: oversizedFile,
             mimeType: 'application/pdf',
-            status: 'REJECTED',
+            artifactType: 'DOCUMENT',
+            verified: false,
             metadata: {
               rejectionReason: 'File size exceeds 50MB limit',
             },
           },
         });
 
-        const rejected = await prisma.evidence.findFirst({
+        const rejected = await prisma.evidenceRegistry.findFirst({
           where: { fileName: 'oversized-file.pdf' },
         });
 
-        expect(rejected!.status).toBe('REJECTED');
+        expect(rejected!.verified).toBe(false);
         expect((rejected!.metadata as any).rejectionReason).toContain('50MB');
 
         // Clean up
-        await prisma.evidence.delete({ where: { id: rejected!.id } });
+        await prisma.evidenceRegistry.delete({ where: { id: rejected!.id } });
       } catch (error) {
         // Expected to fail if DB constraints are in place
         expect(error).toBeDefined();
@@ -443,41 +464,38 @@ This evidence demonstrates substantial coverage of security policy requirements.
       expect(allowedTypes).not.toContain(invalidType);
 
       // Attempt to upload invalid MIME type
-      const invalidEvidence = await prisma.evidence.create({
+      const invalidEvidence = await prisma.evidenceRegistry.create({
         data: {
-          userId: testUserId,
-          responseId: testResponseId,
+          sessionId: testSessionId,
+          questionId: testQuestionId,
           fileName: 'malicious.exe',
-          fileUrl: 'https://storage.example.com/evidence/malicious.exe',
+          artifactUrl: 'https://storage.example.com/evidence/malicious.exe',
           fileSize: 1024,
           mimeType: invalidType,
-          status: 'REJECTED',
+          artifactType: 'DOCUMENT',
+          verified: false,
           metadata: {
             rejectionReason: 'Invalid file type',
           },
         },
       });
 
-      expect(invalidEvidence.status).toBe('REJECTED');
+      expect(invalidEvidence.verified).toBe(false);
 
       // Clean up
-      await prisma.evidence.delete({ where: { id: invalidEvidence.id } });
+      await prisma.evidenceRegistry.delete({ where: { id: invalidEvidence.id } });
     });
   });
 
   describe('Document Generation with Evidence', () => {
     it('should generate evidence summary section', async () => {
-      const evidenceList = await prisma.evidence.findMany({
+      const evidenceList = await prisma.evidenceRegistry.findMany({
         where: {
-          responseId: testResponseId,
-          status: 'VERIFIED',
+          sessionId: testSessionId,
+          verified: true,
         },
         include: {
-          response: {
-            include: {
-              question: true,
-            },
-          },
+          question: true,
         },
       });
 
@@ -485,7 +503,7 @@ This evidence demonstrates substantial coverage of security policy requirements.
         fileName: e.fileName,
         fileSize: e.fileSize,
         mimeType: e.mimeType,
-        questionText: e.response.question.text,
+        questionText: e.question.text,
         verifiedAt: e.verifiedAt,
       }));
 
@@ -498,10 +516,10 @@ This evidence demonstrates substantial coverage of security policy requirements.
     });
 
     it('should generate evidence index with links', async () => {
-      const evidence = await prisma.evidence.findMany({
+      const evidence = await prisma.evidenceRegistry.findMany({
         where: {
-          responseId: testResponseId,
-          status: 'VERIFIED',
+          sessionId: testSessionId,
+          verified: true,
         },
         orderBy: { createdAt: 'asc' },
       });
@@ -509,8 +527,8 @@ This evidence demonstrates substantial coverage of security policy requirements.
       const evidenceIndex = evidence.map((e, idx) => ({
         index: idx + 1,
         fileName: e.fileName,
-        fileUrl: e.fileUrl,
-        integrityHash: e.integrityHash?.substring(0, 16),
+        fileUrl: e.artifactUrl,
+        integrityHash: e.hashSignature?.substring(0, 16),
       }));
 
       expect(evidenceIndex.length).toBeGreaterThan(0);
