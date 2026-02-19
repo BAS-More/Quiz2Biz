@@ -21,6 +21,9 @@ export interface QuestionResponse {
   placeholder?: string;
   options?: QuestionOption[];
   validation?: Record<string, unknown>;
+  bestPractice?: string;
+  practicalExplainer?: string;
+  dimensionKey?: string;
 }
 
 export interface SectionResponse {
@@ -67,10 +70,12 @@ export class QuestionnaireService {
   async findAll(
     pagination: PaginationDto,
     industry?: string,
+    projectTypeId?: string,
   ): Promise<{ items: QuestionnaireListItem[]; total: number }> {
     const where = {
       isActive: true,
       ...(industry && { industry }),
+      ...(projectTypeId && { projectTypeId }),
     };
 
     const [questionnaires, total] = await Promise.all([
@@ -180,6 +185,35 @@ export class QuestionnaireService {
         ...(persona && { persona }),
       },
     });
+  }
+
+  /**
+   * Find questionnaire by project type slug.
+   * Returns the first active questionnaire associated with the given project type.
+   */
+  async findByProjectTypeSlug(projectTypeSlug: string): Promise<QuestionnaireDetail | null> {
+    const projectType = await this.prisma.projectType.findUnique({
+      where: { slug: projectTypeSlug },
+    });
+
+    if (!projectType) return null;
+
+    const questionnaire = await this.prisma.questionnaire.findFirst({
+      where: { projectTypeId: projectType.id, isActive: true },
+      include: {
+        sections: {
+          orderBy: { orderIndex: 'asc' },
+          include: {
+            questions: {
+              orderBy: { orderIndex: 'asc' },
+              include: { visibilityRules: true },
+            },
+          },
+        },
+      },
+    });
+
+    return questionnaire ? this.mapToDetail(questionnaire) : null;
   }
 
   /**

@@ -7,3 +7,13 @@ export {
 export { CreateDocumentTypeDto } from './create-document-type.dto';
 export { UpdateDocumentTypeDto } from './update-document-type.dto';
 export { RejectDocumentDto, ApproveDocumentDto } from './review-document.dto';
+export {
+  CompileDeliverablesDto,
+  DeliverablePackResponseDto,
+  CompiledDocumentDto,
+  DocumentSectionDto,
+  PackSummaryDto,
+  PackMetadataDto,
+  ExportFormatDto,
+  ExportUrlResponseDto,
+} from './deliverables-pack.dto';

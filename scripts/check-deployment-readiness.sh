@@ -4,11 +4,7 @@
 # Validates that all prerequisites are met before deploying
 # =============================================================================
 
-<<<<<<< HEAD
 set +e  # Don't exit on error, handle status at end
-=======
-set -e
->>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
 
 # Colors for output
 RED='\033[0;31m'
@@ -55,11 +51,7 @@ info() {
 # =============================================================================
 # Check 1: Repository Structure
 # =============================================================================
-<<<<<<< HEAD
 echo -e "\n${BLUE}[1/13] Checking Repository Structure...${NC}"
-=======
-echo -e "\n${BLUE}[1/7] Checking Repository Structure...${NC}"
->>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
 
 if [ -f ".github/workflows/deploy.yml" ]; then
     pass "Deployment workflow exists"
@@ -88,11 +80,7 @@ fi
 # =============================================================================
 # Check 2: Documentation
 # =============================================================================
-<<<<<<< HEAD
 echo -e "\n${BLUE}[2/13] Checking Documentation...${NC}"
-=======
-echo -e "\n${BLUE}[2/7] Checking Documentation...${NC}"
->>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
 
 REQUIRED_DOCS=(
     "DEPLOYMENT.md"
@@ -113,15 +101,11 @@ done
 # =============================================================================
 # Check 3: Dependencies
 # =============================================================================
-<<<<<<< HEAD
 echo -e "\n${BLUE}[3/13] Checking Dependencies...${NC}"
-=======
-echo -e "\n${BLUE}[3/7] Checking Dependencies...${NC}"
->>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
 
 if [ -f "package.json" ]; then
     pass "package.json exists"
-    
+
     # Check if node_modules exists
     if [ -d "node_modules" ]; then
         pass "Dependencies installed (node_modules exists)"
@@ -141,11 +125,7 @@ fi
 # =============================================================================
 # Check 4: Environment Configuration
 # =============================================================================
-<<<<<<< HEAD
 echo -e "\n${BLUE}[4/13] Checking Environment Configuration...${NC}"
-=======
-echo -e "\n${BLUE}[4/7] Checking Environment Configuration...${NC}"
->>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
 
 if [ -f ".env.example" ]; then
     pass ".env.example exists"
@@ -174,15 +154,11 @@ fi
 # =============================================================================
 # Check 5: Azure CLI and Authentication
 # =============================================================================
-<<<<<<< HEAD
 echo -e "\n${BLUE}[5/13] Checking Azure CLI...${NC}"
-=======
-echo -e "\n${BLUE}[5/7] Checking Azure CLI...${NC}"
->>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
 
 if command -v az &> /dev/null; then
     pass "Azure CLI installed"
-    
+
     # Check if logged in
     if az account show &> /dev/null; then
         SUBSCRIPTION_NAME=$(az account show --query name -o tsv 2>/dev/null)
@@ -196,7 +172,6 @@ else
 fi
 
 # =============================================================================
-<<<<<<< HEAD
 # Check 6: Cloud Build Readiness (Docker optional)
 # =============================================================================
 echo -e "\n${BLUE}[6/13] Checking Cloud Build Readiness...${NC}"
@@ -251,7 +226,7 @@ if [ -f "package.json" ]; then
     else
         warn "No lint script in package.json"
     fi
-    
+
     if grep -q '"test:coverage"' package.json || grep -q '"coverage"' package.json; then
         pass "Coverage script configured"
         ((CODE_QUALITY_PASSED++))
@@ -342,7 +317,7 @@ if [ -f "README.md" ]; then
     else
         warn "README missing clear purpose statement (15-second rule)"
     fi
-    
+
     # Check README length and diagram presence
     README_LINES=$(wc -l < README.md)
     if [ "$README_LINES" -gt 150 ]; then
@@ -528,7 +503,7 @@ fi
 
 # Check for test coverage enforcement
 if grep -q "coverage" package.json 2>/dev/null; then
-    pass "Test coverage configured (AI code must have ≥80% coverage)"
+    pass "Test coverage configured (AI code must have >=80% coverage)"
     ((AI_PASSED++))
 else
     warn "No coverage enforcement for AI-generated code"
@@ -546,52 +521,28 @@ else
     fail "AI verification readiness: Needs improvement ($AI_PASSED/4 checks)"
 fi
 
-info "  AI code requires: lint + type-check + ≥80% coverage + peer review"
+info "  AI code requires: lint + type-check + >=80% coverage + peer review"
 
 # =============================================================================
 # Check 13: Git Status
 # =============================================================================
 echo -e "\n${BLUE}[13/13] Checking Git Status...${NC}"
-=======
-# Check 6: Docker
-# =============================================================================
-echo -e "\n${BLUE}[6/7] Checking Docker...${NC}"
-
-if command -v docker &> /dev/null; then
-    pass "Docker installed"
-    
-    # Check if Docker daemon is running
-    if docker info &> /dev/null; then
-        pass "Docker daemon running"
-    else
-        warn "Docker daemon not running (start Docker Desktop or dockerd)"
-    fi
-else
-    warn "Docker not installed (required for local builds/testing)"
-    info "  Install from: https://docs.docker.com/get-docker/"
-fi
-
-# =============================================================================
-# Check 7: Git Status
-# =============================================================================
-echo -e "\n${BLUE}[7/7] Checking Git Status...${NC}"
->>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
 
 if [ -d ".git" ]; then
     pass "Git repository initialized"
-    
+
     # Check current branch
     CURRENT_BRANCH=$(git branch --show-current 2>/dev/null)
     if [ -n "$CURRENT_BRANCH" ]; then
         info "Current branch: $CURRENT_BRANCH"
-        
+
         if [ "$CURRENT_BRANCH" = "main" ]; then
             pass "On main branch (deployment will trigger on push)"
         else
             info "Not on main branch (merge to main to deploy)"
         fi
     fi
-    
+
     # Check for uncommitted changes
     if git diff-index --quiet HEAD -- 2>/dev/null; then
         pass "No uncommitted changes"
@@ -616,7 +567,6 @@ echo -e "${GREEN}Passed: $PASSED${NC}"
 echo -e "${YELLOW}Warnings: $WARNINGS${NC}"
 echo -e "${RED}Failed: $FAILED${NC}"
 
-<<<<<<< HEAD
 # =============================================================================
 # Sprint Validation Score (Measurable Standards)
 # =============================================================================
@@ -626,7 +576,6 @@ echo -e "${BLUE}=============================================${NC}"
 
 # Calculate weighted overall score
 # Weights: Code Quality 15%, Security 20%, Documentation 10%, Testing 20%, DORA 15%, AI 10%
-# Note: Remaining 10% buffer for rounding
 OVERALL_SCORE=$(( (CODE_QUALITY_SCORE * 15 + SECURITY_SCORE * 20 + DOC_SCORE * 10 + TEST_SCORE * 20 + DORA_SCORE * 15 + AI_SCORE * 10) / 90 ))
 
 echo ""
@@ -689,21 +638,6 @@ else
     else
         echo -e "${RED}✗ Critical issues detected. Fix errors before deploying.${NC}"
     fi
-=======
-echo ""
-
-if [ $FAILED -eq 0 ]; then
-    if [ $WARNINGS -eq 0 ]; then
-        echo -e "${GREEN}✓ All checks passed! Ready for deployment.${NC}"
-        STATUS=0
-    else
-        echo -e "${YELLOW}⚠ Warnings detected. Review warnings above.${NC}"
-        echo -e "${YELLOW}  You can proceed with deployment, but consider addressing warnings.${NC}"
-        STATUS=0
-    fi
-else
-    echo -e "${RED}✗ Critical issues detected. Fix errors before deploying.${NC}"
->>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
     STATUS=1
 fi
 
@@ -744,13 +678,8 @@ else
     if ! [ -f ".github/workflows/deploy.yml" ]; then
         echo "  • Create deployment workflow: .github/workflows/deploy.yml"
     fi
-<<<<<<< HEAD
     if ! command -v az &> /dev/null; then
         echo "  • Install Azure CLI: https://docs.microsoft.com/cli/azure/install-azure-cli"
-=======
-    if ! [ -f "docker/api/Dockerfile" ]; then
-        echo "  • Create Dockerfile: docker/api/Dockerfile"
->>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
     fi
     if ! [ -f "package.json" ]; then
         echo "  • Initialize Node.js project: npm init"

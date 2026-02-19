@@ -3,18 +3,21 @@
  * 
  * This config is used when running `npx jest` from the workspace root.
  * Individual apps/libs have their own jest configs for isolated testing.
+ * 
+ * Frontend (apps/web) uses Vitest - run separately with `npm run test -w web`
  */
 module.exports = {
-  // Only test apps that have proper configurations
+  // Jest projects - each should have their own jest.config
   projects: [
     '<rootDir>/apps/api',
     '<rootDir>/apps/cli',
+    '<rootDir>/libs/orchestrator',
     '<rootDir>/test/regression',
+    '<rootDir>/test/performance',
   ],
-  // Exclude libs that need special setup or dependencies
+  // Exclude paths from all projects
   testPathIgnorePatterns: [
     '/node_modules/',
-    '/libs/orchestrator/', // Requires tiktoken, pino etc.
     '/dist/',
   ],
   testTimeout: 30000,

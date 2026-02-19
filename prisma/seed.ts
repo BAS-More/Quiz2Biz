@@ -3,6 +3,7 @@ import { seedStandards } from './seeds/standards.seed';
 import { seedBusinessIncubator } from './seeds/business-incubator.seed';
 import { seedDimensions } from './seeds/dimensions.seed';
 import { seedReadinessQuestions } from './seeds/questions.seed';
+import { seedProjectTypes } from './seeds/project-types.seed';
 
 const prisma = new PrismaClient();
 
@@ -499,6 +500,10 @@ async function main(): Promise<void> {
   // Seed Quiz2Biz dimensions and readiness questions
   await seedDimensions();
   await seedReadinessQuestions();
+
+  // Seed project types with dimensions and document types
+  // Must run AFTER seedDimensions so existing tech dimensions can be migrated
+  await seedProjectTypes();
 
   console.log('Database seed completed successfully!');
 }

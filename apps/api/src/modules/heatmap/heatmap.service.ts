@@ -299,8 +299,13 @@ export class HeatmapService {
       throw new NotFoundException(`Session not found: ${sessionId}`);
     }
 
+    // Filter dimensions by project type if session has one set
+    const dimensionWhere: { isActive: boolean; projectTypeId?: string | null } = { isActive: true };
+    if (session.projectTypeId) {
+      dimensionWhere.projectTypeId = session.projectTypeId;
+    }
     const dimensions = await this.prisma.dimensionCatalog.findMany({
-      where: { isActive: true },
+      where: dimensionWhere,
       orderBy: { orderIndex: 'asc' },
     });
 

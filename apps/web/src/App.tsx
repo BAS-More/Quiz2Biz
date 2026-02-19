@@ -29,6 +29,7 @@ const UpgradePage = lazy(() => import('./pages/billing/UpgradePage').then(m => (
 const PrivacyPage = lazy(() => import('./pages/legal/PrivacyPage').then(m => ({ default: m.PrivacyPage })));
 const TermsPage = lazy(() => import('./pages/legal/TermsPage').then(m => ({ default: m.TermsPage })));
 const HelpPage = lazy(() => import('./pages/help/HelpPage').then(m => ({ default: m.HelpPage })));
+const IdeaCapturePage = lazy(() => import('./pages/idea-capture/IdeaCapturePage').then(m => ({ default: m.IdeaCapturePage })));
 
 // Loading fallback for lazy-loaded routes
 function PageLoader() {
@@ -129,6 +130,7 @@ export default function App() {
           >
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="idea" element={<IdeaCapturePage />} />
             <Route path="questionnaire/:action?" element={<QuestionnairePage />} />
             <Route path="heatmap/:sessionId" element={<HeatmapPage />} />
             {featureFlags.legacyModules && (

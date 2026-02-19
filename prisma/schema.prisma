@@ -439,6 +439,7 @@ model Session {
   evidenceItems   EvidenceRegistry[]
   decisions       DecisionLog[]
   scoreSnapshots  ScoreSnapshot[]
+  conversations   ConversationMessage[]
 
   @@index([userId])
   @@index([projectTypeId])
@@ -722,6 +723,29 @@ model DocumentTypeStandard {
   @@index([documentTypeId])
   @@index([standardId])
   @@map("document_type_standards")
+}
+
+// =============================================================================
+// CONVERSATION HISTORY MODELS
+// =============================================================================
+
+// Conversation messages for AI-enhanced questionnaire flow
+model ConversationMessage {
+  id         String   @id @default(uuid())
+  sessionId  String   @map("session_id")
+  questionId String?  @map("question_id")
+
+  role      String                // "user" | "assistant" | "system"
+  content   String   @db.Text     // Message content
+  metadata  Json     @default("{}") // AI analysis, follow-up flags, etc.
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  session  Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([sessionId, createdAt])
+  @@map("conversation_messages")
 }
 
 // =============================================================================

@@ -54,6 +54,13 @@ export default (): Record<string, unknown> => ({
     fromName: process.env.EMAIL_FROM_NAME || 'Quiz2Biz',
   },
 
+  // Claude AI (Anthropic)
+  claude: {
+    apiKey: process.env.ANTHROPIC_API_KEY,
+    model: process.env.CLAUDE_MODEL || 'claude-sonnet-4-6',
+    maxTokens: parseInt(process.env.CLAUDE_MAX_TOKENS || '4096', 10),
+  },
+
   // Frontend URL for email links
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3001',
 

@@ -106,11 +106,11 @@ export function DashboardPage() {
           </div>
         </div>
         <button
-          onClick={() => navigate('/questionnaire/new')}
+          onClick={() => navigate('/idea')}
           className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-medium shadow-xs hover:bg-brand-700 hover:shadow-elevated active:bg-brand-800 transition-all cursor-pointer"
         >
           <Plus className="h-4 w-4" />
-          New Assessment
+          New Project
         </button>
       </div>
 
@@ -166,13 +166,13 @@ export function DashboardPage() {
                     <ClipboardList className="h-8 w-8 text-surface-300" />
                   </div>
                   <p className="text-sm font-medium text-surface-700">No active assessments</p>
-                  <p className="text-sm text-surface-400 mt-1 max-w-sm mx-auto">Start a new assessment to begin evaluating your readiness.</p>
+                  <p className="text-sm text-surface-400 mt-1 max-w-sm mx-auto">Describe your idea to get started with AI-powered analysis.</p>
                   <button
-                    onClick={() => navigate('/questionnaire/new')}
+                    onClick={() => navigate('/idea')}
                     className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors cursor-pointer"
                   >
                     <Plus className="h-4 w-4" />
-                    Start your first assessment
+                    Start your first project
                   </button>
                 </div>
               ) : (
@@ -298,15 +298,15 @@ export function DashboardPage() {
             </div>
             <div className="p-2">
               <button
-                onClick={() => navigate('/questionnaire/new')}
+                onClick={() => navigate('/idea')}
                 className="flex items-center w-full gap-3 px-3 py-2.5 rounded-lg text-left hover:bg-brand-50 transition-colors group cursor-pointer"
               >
                 <div className="w-9 h-9 rounded-lg bg-brand-50 flex items-center justify-center text-brand-600 group-hover:bg-brand-100 transition-colors">
-                  <ClipboardList className="h-4 w-4" />
+                  <Sparkles className="h-4 w-4" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-surface-900">New Assessment</p>
-                  <p className="text-xs text-surface-400">Start a readiness evaluation</p>
+                  <p className="text-sm font-medium text-surface-900">New Project</p>
+                  <p className="text-xs text-surface-400">Capture your idea and generate documents</p>
                 </div>
                 <ArrowRight className="h-4 w-4 text-surface-300 group-hover:text-brand-500 transition-colors" />
               </button>
