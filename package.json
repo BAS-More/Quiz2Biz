@@ -89,10 +89,6 @@
       "prettier --write"
     ]
   },
-  "engines": {
-    "node": ">=22.0.0",
-    "npm": ">=10.0.0"
-  },
   "dependencies": {
     "@azure/storage-blob": "^12.30.0",
     "@nestjs/common": "^10.3.0",

@@ -67,7 +67,7 @@ export class PaymentService {
     }
 
     this.stripe = new Stripe(stripeKey, {
-      apiVersion: '2025-12-15.clover',
+      apiVersion: '2025-12-15' as Stripe.LatestApiVersion,
     });
   }
 
