@@ -12,9 +12,10 @@ describe('QpgService', () => {
   let contextBuilder: ContextBuilderService;
   let promptGenerator: PromptGeneratorService;
   let prisma: PrismaService;
+  let module: TestingModule;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [
         QpgService,
         {
@@ -52,6 +53,12 @@ describe('QpgService', () => {
     contextBuilder = module.get<ContextBuilderService>(ContextBuilderService);
     promptGenerator = module.get<PromptGeneratorService>(PromptGeneratorService);
     prisma = module.get<PrismaService>(PrismaService);
+  });
+
+  afterAll(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('generatePromptsForSession', () => {

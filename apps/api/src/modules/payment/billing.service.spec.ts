@@ -7,9 +7,10 @@ describe('BillingService', () => {
   let service: BillingService;
   let prisma: PrismaService;
   let paymentService: PaymentService;
+  let module: TestingModule;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [
         BillingService,
         {
@@ -41,6 +42,12 @@ describe('BillingService', () => {
     service = module.get<BillingService>(BillingService);
     prisma = module.get<PrismaService>(PrismaService);
     paymentService = module.get<PaymentService>(PaymentService);
+  });
+
+  afterAll(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('getInvoices', () => {

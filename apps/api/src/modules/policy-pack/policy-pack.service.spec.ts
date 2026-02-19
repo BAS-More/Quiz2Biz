@@ -15,9 +15,10 @@ describe('PolicyPackService', () => {
   let terraformRules: TerraformRulesService;
   let exportService: PolicyExportService;
   let prisma: PrismaService;
+  let module: TestingModule;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [
         PolicyPackService,
         {
@@ -72,6 +73,12 @@ describe('PolicyPackService', () => {
     terraformRules = module.get<TerraformRulesService>(TerraformRulesService);
     exportService = module.get<PolicyExportService>(PolicyExportService);
     prisma = module.get<PrismaService>(PrismaService);
+  });
+
+  afterAll(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('generatePolicyPack', () => {

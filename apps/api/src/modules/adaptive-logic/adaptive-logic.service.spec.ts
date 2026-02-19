@@ -7,6 +7,7 @@ import { QuestionType, VisibilityAction } from '@prisma/client';
 describe('AdaptiveLogicService', () => {
   let service: AdaptiveLogicService;
   let prismaService: any; // Use any for mocked service
+  let module: TestingModule;
 
   const mockQuestion = {
     id: 'q-001',
@@ -29,7 +30,7 @@ describe('AdaptiveLogicService', () => {
       },
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [
         AdaptiveLogicService,
         ConditionEvaluator,
@@ -42,6 +43,12 @@ describe('AdaptiveLogicService', () => {
 
     service = module.get<AdaptiveLogicService>(AdaptiveLogicService);
     prismaService = module.get(PrismaService);
+  });
+
+  afterAll(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   it('should be defined', () => {

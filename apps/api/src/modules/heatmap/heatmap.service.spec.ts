@@ -9,6 +9,7 @@ describe('HeatmapService', () => {
   let service: HeatmapService;
   let prisma: PrismaService;
   let redis: RedisService;
+  let module: TestingModule;
 
   const mockPrisma = {
     session: {
@@ -76,7 +77,7 @@ describe('HeatmapService', () => {
   ];
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [
         HeatmapService,
         {
@@ -95,6 +96,12 @@ describe('HeatmapService', () => {
     redis = module.get<RedisService>(RedisService);
 
     jest.clearAllMocks();
+  });
+
+  afterAll(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('generateHeatmap', () => {

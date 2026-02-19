@@ -10,6 +10,7 @@ describe('PaymentService', () => {
   let service: PaymentService;
   let configService: ConfigService;
   let mockStripe: jest.Mocked<Stripe>;
+  let module: TestingModule;
 
   beforeEach(async () => {
     mockStripe = {
@@ -42,7 +43,7 @@ describe('PaymentService', () => {
 
     (Stripe as any).mockImplementation(() => mockStripe);
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [
         PaymentService,
         {
@@ -67,6 +68,12 @@ describe('PaymentService', () => {
 
     service = module.get<PaymentService>(PaymentService);
     configService = module.get<ConfigService>(ConfigService);
+  });
+
+  afterAll(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('isConfigured', () => {

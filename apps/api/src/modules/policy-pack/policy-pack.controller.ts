@@ -13,7 +13,7 @@ import archiver from 'archiver';
 @ApiTags('Policy Pack Generator')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@Controller('api/policy-pack')
+@Controller('policy-pack')
 export class PolicyPackController {
   private readonly logger = new Logger(PolicyPackController.name);
 

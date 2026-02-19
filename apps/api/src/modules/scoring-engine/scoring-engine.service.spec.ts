@@ -9,6 +9,7 @@ describe('ScoringEngineService', () => {
   let service: ScoringEngineService;
   let prismaService: any; // Use any for mocked service
   let redisService: any; // Use any for mocked service
+  let module: TestingModule;
 
   // Test data
   const mockSessionId = 'session-uuid-123';
@@ -159,7 +160,7 @@ describe('ScoringEngineService', () => {
       del: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [
         ScoringEngineService,
         { provide: PrismaService, useValue: mockPrismaService },
@@ -170,6 +171,12 @@ describe('ScoringEngineService', () => {
     service = module.get<ScoringEngineService>(ScoringEngineService);
     prismaService = module.get(PrismaService);
     redisService = module.get(RedisService);
+  });
+
+  afterAll(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('calculateScore', () => {

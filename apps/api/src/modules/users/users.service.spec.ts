@@ -8,6 +8,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 describe('UsersService', () => {
   let service: UsersService;
   let prisma: jest.Mocked<PrismaService>;
+  let module: TestingModule;
 
   const mockUser = {
     id: 'user-123',
@@ -46,7 +47,7 @@ describe('UsersService', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [
         UsersService,
         { provide: PrismaService, useValue: mockPrismaService },
@@ -55,6 +56,12 @@ describe('UsersService', () => {
 
     service = module.get<UsersService>(UsersService);
     prisma = module.get(PrismaService);
+  });
+
+  afterAll(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('findById', () => {

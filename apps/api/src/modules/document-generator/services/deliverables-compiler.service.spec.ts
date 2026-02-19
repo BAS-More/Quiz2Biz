@@ -7,6 +7,7 @@ import { SessionStatus, DecisionStatus } from '@prisma/client';
 describe('DeliverablesCompilerService', () => {
   let service: DeliverablesCompilerService;
   let prisma: PrismaService;
+  let module: TestingModule;
 
   const mockPrisma = {
     session: {
@@ -100,7 +101,7 @@ describe('DeliverablesCompilerService', () => {
   ];
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [
         DeliverablesCompilerService,
         {
@@ -114,6 +115,12 @@ describe('DeliverablesCompilerService', () => {
     prisma = module.get<PrismaService>(PrismaService);
 
     jest.clearAllMocks();
+  });
+
+  afterAll(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('compileDeliverablesPack', () => {

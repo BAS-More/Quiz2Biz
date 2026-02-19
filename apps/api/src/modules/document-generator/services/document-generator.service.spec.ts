@@ -14,6 +14,7 @@ describe('DocumentGeneratorService', () => {
   let templateEngine: TemplateEngineService;
   let documentBuilder: DocumentBuilderService;
   let storage: StorageService;
+  let module: TestingModule;
 
   const mockPrisma = {
     session: {
@@ -72,7 +73,7 @@ describe('DocumentGeneratorService', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [
         DocumentGeneratorService,
         {
@@ -105,6 +106,12 @@ describe('DocumentGeneratorService', () => {
     storage = module.get<StorageService>(StorageService);
 
     jest.clearAllMocks();
+  });
+
+  afterAll(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('generateDocument', () => {

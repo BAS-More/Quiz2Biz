@@ -9,6 +9,7 @@ describe('EvidenceRegistryService', () => {
   let service: EvidenceRegistryService;
   let prisma: PrismaService;
   let configService: ConfigService;
+  let module: TestingModule;
 
   const mockPrisma = {
     evidenceRegistry: {
@@ -45,7 +46,7 @@ describe('EvidenceRegistryService', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [
         EvidenceRegistryService,
         {
@@ -68,6 +69,12 @@ describe('EvidenceRegistryService', () => {
 
     // Mock Azure Storage configuration (not initialized to avoid actual connection)
     mockConfigService.get.mockReturnValue(null);
+  });
+
+  afterAll(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('uploadEvidence', () => {

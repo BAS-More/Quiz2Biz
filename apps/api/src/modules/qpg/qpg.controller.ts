@@ -19,7 +19,7 @@ import { PromptGeneratorService } from './services/prompt-generator.service';
 @ApiTags('QPG - Qoder Prompt Generator')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@Controller('api/qpg')
+@Controller('qpg')
 export class QpgController {
   private readonly logger = new Logger(QpgController.name);
 

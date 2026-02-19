@@ -7,9 +7,10 @@ import { SUBSCRIPTION_TIERS } from './payment.service';
 describe('SubscriptionService', () => {
   let service: SubscriptionService;
   let prisma: PrismaService;
+  let module: TestingModule;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [
         SubscriptionService,
         {
@@ -33,6 +34,12 @@ describe('SubscriptionService', () => {
 
     service = module.get<SubscriptionService>(SubscriptionService);
     prisma = module.get<PrismaService>(PrismaService);
+  });
+
+  afterAll(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('getOrganizationSubscription', () => {

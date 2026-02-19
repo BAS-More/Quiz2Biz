@@ -8,6 +8,7 @@ describe('EvidenceIntegrityService', () => {
   let service: EvidenceIntegrityService;
   let prisma: PrismaService;
   let configService: ConfigService;
+  let module: TestingModule;
 
   const mockPrisma = {
     evidenceRegistry: {
@@ -28,7 +29,7 @@ describe('EvidenceIntegrityService', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [
         EvidenceIntegrityService,
         {
@@ -47,6 +48,12 @@ describe('EvidenceIntegrityService', () => {
     configService = module.get<ConfigService>(ConfigService);
 
     jest.clearAllMocks();
+  });
+
+  afterAll(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('chainEvidence', () => {

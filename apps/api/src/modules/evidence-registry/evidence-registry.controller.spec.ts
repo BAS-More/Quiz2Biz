@@ -10,6 +10,7 @@ describe('EvidenceRegistryController', () => {
   let evidenceService: EvidenceRegistryService;
   let integrityService: EvidenceIntegrityService;
   let ciIngestionService: CIArtifactIngestionService;
+  let module: TestingModule;
 
   const mockEvidenceService = {
     uploadEvidence: jest.fn(),
@@ -40,7 +41,7 @@ describe('EvidenceRegistryController', () => {
   };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       controllers: [EvidenceRegistryController],
       providers: [
         {
@@ -64,6 +65,12 @@ describe('EvidenceRegistryController', () => {
     ciIngestionService = module.get<CIArtifactIngestionService>(CIArtifactIngestionService);
 
     jest.clearAllMocks();
+  });
+
+  afterAll(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('uploadEvidence', () => {

@@ -57,7 +57,7 @@ export class DocumentController {
     type: [DocumentTypeResponseDto],
   })
   async listDocumentTypes(): Promise<DocumentTypeResponseDto[]> {
-    return this.documentGeneratorService.listDocumentTypes();
+    return this.documentGeneratorService.listDocumentTypes() as unknown as DocumentTypeResponseDto[];
   }
 
   @Get('session/:sessionId')

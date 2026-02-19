@@ -5,9 +5,10 @@ import { PrismaService } from '@libs/database';
 describe('AdminAuditService', () => {
   let service: AdminAuditService;
   let prisma: PrismaService;
+  let module: TestingModule;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [
         AdminAuditService,
         {
@@ -23,6 +24,12 @@ describe('AdminAuditService', () => {
 
     service = module.get<AdminAuditService>(AdminAuditService);
     prisma = module.get<PrismaService>(PrismaService);
+  });
+
+  afterAll(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('log', () => {
