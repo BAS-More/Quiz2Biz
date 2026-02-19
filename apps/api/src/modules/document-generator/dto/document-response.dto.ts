@@ -15,14 +15,14 @@ export class DocumentTypeResponseDto {
   @ApiProperty()
   slug: string;
 
-  @ApiPropertyOptional()
-  description?: string;
+  @ApiPropertyOptional({ nullable: true })
+  description: string | null;
 
   @ApiProperty({ enum: DocumentCategoryValues, enumName: 'DocumentCategory' })
   category: DocumentCategory;
 
-  @ApiPropertyOptional()
-  estimatedPages?: number;
+  @ApiPropertyOptional({ nullable: true })
+  estimatedPages: number | null;
 
   @ApiProperty()
   isActive: boolean;

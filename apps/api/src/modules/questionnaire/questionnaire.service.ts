@@ -292,6 +292,7 @@ export class QuestionnaireService {
   private mapQuestion(question: Question): QuestionResponse {
     const options = question.options as QuestionOption[] | null;
     const validation = question.validationRules as Record<string, unknown> | null;
+    const q = question as Question & { bestPractice?: string | null; practicalExplainer?: string | null; dimensionKey?: string | null };
 
     return {
       id: question.id,
@@ -303,6 +304,9 @@ export class QuestionnaireService {
       placeholder: question.placeholder ?? undefined,
       options: options ?? undefined,
       validation: validation ?? undefined,
+      bestPractice: q.bestPractice ?? undefined,
+      practicalExplainer: q.practicalExplainer ?? undefined,
+      dimensionKey: q.dimensionKey ?? undefined,
     };
   }
 }
