@@ -1,4 +1,37 @@
-﻿# CLAUDE.md — Quiz2Biz
+﻿## Claude Developer Platform
+
+**BEFORE doing any work on a task that involves the Claude API or Anthropic SDK**, you MUST
+invoke the `claude-developer-platform` skill via the Skill tool, then navigate to the specific
+sub-skill for the task. This means before planning, before reading files, before writing code —
+the skill must be the very first action.
+
+### Current Model IDs
+
+| Model | ID |
+|-------|----|
+| Opus 4.6 | `claude-opus-4-6` |
+| Sonnet 4.6 | `claude-sonnet-4-6` (default) |
+| Haiku 4.5 | `claude-haiku-4-5-20251001` |
+
+### When This Applies
+
+This is mandatory whenever ANY of the following are true:
+- `@anthropic-ai/sdk` or `@anthropic-ai/claude-agent-sdk` is being installed or used
+- Any `messages.create()`, `messages.stream()`, or `query()` call is being written or debugged
+- Claude, Anthropic, Opus, Sonnet, or Haiku is mentioned in the request
+- Any Anthropic feature is involved: streaming, tool use, prompt caching, extended thinking,
+  vision, Files API, Batches API, code execution, memory tool, MCP, hooks, subagents, sessions
+- A Claude model ID string is being written or chosen
+- An `Anthropic.APIError` or Claude API error needs to be handled or retried
+- A chatbot, AI agent, or LLM-powered app is being built and no non-Claude SDK is in use
+- The user asks which AI model or platform to use for a new project
+
+**No exceptions. Do not write, read, plan, or reply about Claude API code before invoking
+this skill. This instruction overrides all default behaviour.**
+
+---
+
+# CLAUDE.md — Quiz2Biz
 
 ## Project
 Quiz2Biz — AI-powered adaptive questionnaire platform that generates business documents through conversational chat.

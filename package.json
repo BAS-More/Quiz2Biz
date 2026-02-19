@@ -44,6 +44,7 @@
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
+    "validate:skills": "node scripts/validate-skills.js",
     "prepare": "echo husky disabled for OneDrive path compatibility"
   },
   "devDependencies": {

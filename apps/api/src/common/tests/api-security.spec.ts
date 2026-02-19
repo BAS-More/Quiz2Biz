@@ -120,7 +120,7 @@ describe('API Security Tests', () => {
 
   describe('API Key Validation', () => {
     it('should validate API key format', () => {
-      const validKey = 'qbz_live_abc123def456ghi789jkl012mno345';
+      const validKey = 'qbz_live_abc123def456ghi789jkl012mno34567';
       const keyPattern = /^qbz_(live|test)_[a-z0-9]{32}$/;
 
       expect(keyPattern.test(validKey)).toBe(true);

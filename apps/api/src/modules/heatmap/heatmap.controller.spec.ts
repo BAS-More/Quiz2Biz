@@ -192,6 +192,14 @@ Red (>0.15),2`;
 - **A Amber**: Residual 0.05 - 0.15 (moderate risk)
 - **R Red**: Residual > 0.15 (high risk)`;
 
+      // Sanitized version (HTML-escaped for security)
+      const sanitizedMarkdown = mockMarkdown
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
       mockHeatmapService.exportToMarkdown.mockResolvedValue(mockMarkdown);
 
       const mockResponse = {
@@ -203,13 +211,13 @@ Red (>0.15),2`;
       await controller.exportToMarkdown('session-123', mockResponse);
 
       expect(mockHeatmapService.exportToMarkdown).toHaveBeenCalledWith('session-123');
-      expect(mockResponse.setHeader).toHaveBeenCalledWith('Content-Type', 'text/markdown');
+      expect(mockResponse.setHeader).toHaveBeenCalledWith('Content-Type', 'text/plain; charset=utf-8');
       expect(mockResponse.setHeader).toHaveBeenCalledWith(
         'Content-Disposition',
         'attachment; filename="heatmap-session-123.md"',
       );
       expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.send).toHaveBeenCalledWith(mockMarkdown);
+      expect(mockResponse.send).toHaveBeenCalledWith(sanitizedMarkdown);
     });
   });
 
