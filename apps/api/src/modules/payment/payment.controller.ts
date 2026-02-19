@@ -32,7 +32,7 @@ import Stripe from 'stripe';
  * PaymentController - API endpoints for payment and subscription management
  */
 @ApiTags('payment')
-@Controller('api/payment')
+@Controller('payment')
 export class PaymentController {
   private readonly logger = new Logger(PaymentController.name);
   private readonly webhookSecret: string;

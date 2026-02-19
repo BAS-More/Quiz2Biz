@@ -54,7 +54,7 @@ class TestAdapterConnectionDto {
 @ApiTags('Adapters')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@Controller('api/adapters')
+@Controller('adapters')
 export class AdapterController {
   constructor(
     private readonly githubAdapter: GitHubAdapter,

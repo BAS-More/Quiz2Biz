@@ -12,12 +12,14 @@ import type {
   PasswordResetPayload,
 } from '../types';
 
+const AUTH_PREFIX = '/api/v1/auth';
+
 export const authApi = {
   /**
    * Register a new user
    */
   register: async (payload: RegisterPayload): Promise<TokenResponse> => {
-    const { data } = await apiClient.post<TokenResponse>('/auth/register', payload);
+    const { data } = await apiClient.post<TokenResponse>(`${AUTH_PREFIX}/register`, payload);
     return data;
   },
 
@@ -25,7 +27,7 @@ export const authApi = {
    * Login with email and password
    */
   login: async (payload: LoginPayload): Promise<TokenResponse> => {
-    const { data } = await apiClient.post<TokenResponse>('/auth/login', payload);
+    const { data } = await apiClient.post<TokenResponse>(`${AUTH_PREFIX}/login`, payload);
     return data;
   },
 
@@ -33,7 +35,7 @@ export const authApi = {
    * Logout and invalidate refresh token
    */
   logout: async (refreshToken: string): Promise<MessageResponse> => {
-    const { data } = await apiClient.post<MessageResponse>('/auth/logout', { refreshToken });
+    const { data } = await apiClient.post<MessageResponse>(`${AUTH_PREFIX}/logout`, { refreshToken });
     return data;
   },
 
@@ -41,7 +43,7 @@ export const authApi = {
    * Verify email with token
    */
   verifyEmail: async (token: string): Promise<VerifyEmailResponse> => {
-    const { data } = await apiClient.post<VerifyEmailResponse>('/auth/verify-email', { token });
+    const { data } = await apiClient.post<VerifyEmailResponse>(`${AUTH_PREFIX}/verify-email`, { token });
     return data;
   },
 
@@ -49,7 +51,7 @@ export const authApi = {
    * Resend verification email
    */
   resendVerification: async (email: string): Promise<MessageResponse> => {
-    const { data } = await apiClient.post<MessageResponse>('/auth/resend-verification', { email });
+    const { data } = await apiClient.post<MessageResponse>(`${AUTH_PREFIX}/resend-verification`, { email });
     return data;
   },
 
@@ -57,7 +59,7 @@ export const authApi = {
    * Request password reset email
    */
   forgotPassword: async (email: string): Promise<MessageResponse> => {
-    const { data } = await apiClient.post<MessageResponse>('/auth/forgot-password', { email });
+    const { data } = await apiClient.post<MessageResponse>(`${AUTH_PREFIX}/forgot-password`, { email });
     return data;
   },
 
@@ -65,7 +67,7 @@ export const authApi = {
    * Reset password with token
    */
   resetPassword: async (payload: PasswordResetPayload): Promise<MessageResponse> => {
-    const { data } = await apiClient.post<MessageResponse>('/auth/reset-password', payload);
+    const { data } = await apiClient.post<MessageResponse>(`${AUTH_PREFIX}/reset-password`, payload);
     return data;
   },
 
@@ -73,7 +75,7 @@ export const authApi = {
    * Get current user profile
    */
   getMe: async () => {
-    const { data } = await apiClient.get('/auth/me');
+    const { data } = await apiClient.get(`${AUTH_PREFIX}/me`);
     return data;
   },
 };

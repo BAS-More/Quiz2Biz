@@ -6,7 +6,7 @@
 import { apiClient } from './client';
 
 const API_PREFIX = '/api/v1';
-const PAYMENT_PREFIX = `${API_PREFIX}/api/payment`;
+const PAYMENT_PREFIX = `${API_PREFIX}/payment`;
 
 interface CurrentUserProfile {
   organization?: {
