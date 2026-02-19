@@ -11,13 +11,14 @@ const STATUS_CONFIG = {
   paid: { label: 'Paid', className: 'bg-green-100 text-green-700' },
   void: { label: 'Void', className: 'bg-gray-100 text-gray-500' },
   uncollectible: { label: 'Uncollectible', className: 'bg-red-100 text-red-700' },
+  unknown: { label: 'Unknown', className: 'bg-gray-100 text-gray-700' },
 };
 
 function formatCurrency(amount: number, currency: string): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currency.toUpperCase(),
-  }).format(amount / 100);
+  }).format(amount);
 }
 
 function formatDate(dateString: string): string {
@@ -29,12 +30,12 @@ function formatDate(dateString: string): string {
 }
 
 function InvoiceRow({ invoice }: { invoice: Invoice }) {
-  const status = STATUS_CONFIG[invoice.status];
+  const status = STATUS_CONFIG[invoice.status] ?? STATUS_CONFIG.unknown;
 
   return (
     <tr className="hover:bg-gray-50">
       <td className="px-6 py-4 whitespace-nowrap">
-        <span className="text-sm font-medium text-gray-900">{invoice.number}</span>
+        <span className="text-sm font-medium text-gray-900">{invoice.stripeInvoiceId}</span>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <span className={`px-2 py-1 text-xs font-medium rounded-full ${status.className}`}>
@@ -45,16 +46,16 @@ function InvoiceRow({ invoice }: { invoice: Invoice }) {
         {formatCurrency(invoice.amount, invoice.currency)}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-        {formatDate(invoice.periodStart)} - {formatDate(invoice.periodEnd)}
+        {invoice.paidAt ? formatDate(invoice.paidAt) : '-'}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-        {invoice.paidAt ? formatDate(invoice.paidAt) : '-'}
+        {formatDate(invoice.createdAt)}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
         <div className="flex items-center justify-end gap-3">
-          {invoice.hostedUrl && (
+          {invoice.invoiceUrl && (
             <a
-              href={invoice.hostedUrl}
+              href={invoice.invoiceUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:text-blue-800"
@@ -62,9 +63,9 @@ function InvoiceRow({ invoice }: { invoice: Invoice }) {
               View
             </a>
           )}
-          {invoice.invoicePdf && (
+          {invoice.invoicePdfUrl && (
             <a
-              href={invoice.invoicePdf}
+              href={invoice.invoicePdfUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:text-blue-800"
@@ -158,10 +159,10 @@ export function InvoicesPage() {
                   Amount
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Period
+                  Paid
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Paid
+                  Issued
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions

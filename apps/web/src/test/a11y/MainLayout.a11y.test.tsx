@@ -20,9 +20,9 @@ vi.mock('../../stores/auth', () => ({
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: 'LayoutDashboard' },
-  { name: 'Questionnaires', href: '/questionnaires', icon: 'ClipboardList' },
+  { name: 'Assessments', href: '/questionnaire/new', icon: 'ClipboardList' },
   { name: 'Documents', href: '/documents', icon: 'FileText' },
-  { name: 'Settings', href: '/settings', icon: 'Settings' },
+  { name: 'Billing', href: '/billing', icon: 'CreditCard' },
 ];
 
 // Accessible mock MainLayout component

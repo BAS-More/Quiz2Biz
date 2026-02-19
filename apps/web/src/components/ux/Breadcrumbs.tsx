@@ -65,31 +65,31 @@ export const DEFAULT_ROUTE_MAPPINGS: RouteMapping[] = [
     ],
   },
   {
-    pattern: /^\/questionnaires$/,
+    pattern: /^\/questionnaire\/new$/,
     breadcrumbs: [
       { label: 'Home', href: '/', icon: '🏠' },
       { label: 'Dashboard', href: '/dashboard', icon: '📊' },
-      { label: 'Questionnaires', href: '/questionnaires', icon: '📝', isCurrent: true },
+      { label: 'Assessments', href: '/questionnaire/new', icon: '📝', isCurrent: true },
     ],
   },
   {
-    pattern: /^\/questionnaires\/([^/]+)$/,
+    pattern: /^\/questionnaire\/([^/]+)$/,
     breadcrumbs: (params) => [
       { label: 'Home', href: '/', icon: '🏠' },
       { label: 'Dashboard', href: '/dashboard', icon: '📊' },
-      { label: 'Questionnaires', href: '/questionnaires', icon: '📝' },
+      { label: 'Assessments', href: '/questionnaire/new', icon: '📝' },
       { label: params.name || 'Assessment', href: params.href, icon: '📋', isCurrent: true },
     ],
   },
   {
-    pattern: /^\/questionnaires\/([^/]+)\/question\/([^/]+)$/,
+    pattern: /^\/questionnaire\/([^/]+)\/question\/([^/]+)$/,
     breadcrumbs: (params) => [
       { label: 'Home', href: '/', icon: '🏠' },
       { label: 'Dashboard', href: '/dashboard', icon: '📊' },
-      { label: 'Questionnaires', href: '/questionnaires', icon: '📝' },
+      { label: 'Assessments', href: '/questionnaire/new', icon: '📝' },
       {
         label: params.assessmentName || 'Assessment',
-        href: `/questionnaires/${params.assessmentId}`,
+        href: `/questionnaire/${params.assessmentId}`,
         icon: '📋',
       },
       { label: `Question ${params.questionNumber || ''}`, isCurrent: true, icon: '❓' },
@@ -114,7 +114,7 @@ export const DEFAULT_ROUTE_MAPPINGS: RouteMapping[] = [
     pattern: /^\/billing$/,
     breadcrumbs: [
       { label: 'Home', href: '/', icon: '🏠' },
-      { label: 'Settings', href: '/settings', icon: '⚙️' },
+      { label: 'Dashboard', href: '/dashboard', icon: '📊' },
       { label: 'Billing', href: '/billing', icon: '💳', isCurrent: true },
     ],
   },

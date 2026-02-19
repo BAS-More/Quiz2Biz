@@ -289,4 +289,98 @@ If Claude cannot comply with any of the above:
 
 ---
 
+## Product Alignment Decisions (Current)
+
+- Source of truth for product direction: `Quiz2Biz-Change-Specification.docx` (13 February 2026).
+- `Quiz2Biz qoder explain.docx` is a historical reference; use it only where it does not conflict with the source of truth.
+- V1 scope decision: defer/hide legacy readiness modules from default UX, keep code behind feature flags:
+  - Evidence Registry
+  - Decision Log
+  - Policy Pack
+  - QPG prompt generation
+  - Mandatory 95% readiness completion gate
+
+## Quality & Standards (Deliverables Planning and Creation)
+
+When planning or creating deliverables, the agent must apply this section as a required checklist.
+
+### 1) Planning Standards
+- Every deliverable plan must include explicit traceability to source-of-truth requirements.
+- Every plan must define: scope in/out, dependencies, risks, acceptance criteria, and rollback path.
+- Plans must prioritize user workflow continuity (idea capture -> question flow -> document selection -> download).
+
+### 2) Implementation Standards
+- API contract consistency is mandatory:
+  - single prefix strategy (`/api/v1/...`)
+  - frontend and backend route parity
+  - DTO/request-response parity
+- Data model behavior must be project-type aware where required by source-of-truth requirements.
+- Deferred legacy modules must not appear in default V1 navigation or core flow.
+
+### 3) Validation Standards
+- Each deliverable must include:
+  - unit/integration tests for changed logic
+  - end-to-end validation for affected user workflow
+  - evidence of pass/fail results
+- Block release for contract mismatches between web and API.
+- Block release for broken primary routes in navigation.
+
+### 4) Definition of Done (DoD) for Deliverables
+- Requirement traceability updated.
+- Code, tests, and documentation updated together.
+- No unresolved P0/P1 defects in changed scope.
+- Rollback/feature-flag strategy documented for the change.
+
+## Deliverable Document Templates (Business Plans, Project Specs, etc.)
+
+This section defines output document templates for deliverables. It is separate from agent behavior rules.
+
+### A) Universal Deliverable Template
+- Title
+- Document Type
+- Owner
+- Date
+- Version
+- Status
+- Executive Summary
+- Source-of-Truth Traceability (`Quiz2Biz-Change-Specification.docx` references)
+- Scope (In/Out)
+- User Workflow Impact
+- Technical Changes (API, data model, UI/UX, flags)
+- Validation & Evidence
+- Risks, Mitigations, Rollback
+- Acceptance Criteria Mapping (PASS/FAIL/BLOCKED)
+
+### B) Business Plan Template
+- Executive Summary
+- Problem / Opportunity
+- Target Market & Segments
+- Value Proposition
+- Business Model & Pricing
+- Go-To-Market Strategy
+- Operations Plan
+- Technology & Delivery Plan
+- Financial Projections
+- Risks & Assumptions
+- Milestones and KPIs
+- Appendices / Supporting Evidence
+
+### C) Project Specification Template
+- Objective
+- Background / Context
+- Functional Requirements
+- Non-Functional Requirements
+- User Flows / Journey
+- Data Model Requirements
+- API Contract Requirements
+- UI/UX Requirements
+- Testing Requirements
+- Deployment / Rollout Plan
+- Observability / Monitoring
+- Security / Compliance Requirements
+- Risks / Dependencies / Constraints
+- Acceptance Criteria
+
+---
+
 **Execute all development tasks with these standards applied consistently.**

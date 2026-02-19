@@ -224,6 +224,19 @@ export class PaymentService {
   }
 
   /**
+   * Resume a subscription by clearing cancel_at_period_end
+   */
+  async resumeSubscription(subscriptionId: string): Promise<Stripe.Subscription> {
+    if (!this.isConfigured()) {
+      throw new BadRequestException('Payment service not configured');
+    }
+
+    return this.stripe.subscriptions.update(subscriptionId, {
+      cancel_at_period_end: false,
+    });
+  }
+
+  /**
    * Update subscription to a different tier
    */
   async updateSubscription(

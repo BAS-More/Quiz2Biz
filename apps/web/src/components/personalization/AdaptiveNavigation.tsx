@@ -145,11 +145,9 @@ const STORAGE_KEYS = {
 
 const defaultNavItems: NavItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: '📊', path: '/dashboard' },
-  { id: 'questionnaires', label: 'Questionnaires', icon: '📝', path: '/questionnaires' },
-  { id: 'assessments', label: 'Assessments', icon: '✅', path: '/assessments' },
+  { id: 'assessments', label: 'Assessments', icon: '📝', path: '/questionnaire/new' },
   { id: 'documents', label: 'Documents', icon: '📄', path: '/documents' },
-  { id: 'analytics', label: 'Analytics', icon: '📈', path: '/analytics' },
-  { id: 'settings', label: 'Settings', icon: '⚙️', path: '/settings' },
+  { id: 'billing', label: 'Billing', icon: '💳', path: '/billing' },
   { id: 'help', label: 'Help Center', icon: '❓', path: '/help' },
 ];
 

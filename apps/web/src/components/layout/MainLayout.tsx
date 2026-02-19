@@ -9,7 +9,6 @@ import {
   LayoutDashboard,
   FileText,
   ClipboardList,
-  Settings,
   LogOut,
   Menu,
   X,
@@ -22,10 +21,9 @@ import { clsx } from 'clsx';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Assessments', href: '/questionnaires', icon: ClipboardList },
+  { name: 'Assessments', href: '/questionnaire/new', icon: ClipboardList },
   { name: 'Documents', href: '/documents', icon: FileText },
   { name: 'Billing', href: '/billing', icon: CreditCard },
-  { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 const bottomNav = [

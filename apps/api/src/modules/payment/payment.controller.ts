@@ -5,6 +5,7 @@ import {
   Body,
   Headers,
   Req,
+  Query,
   HttpCode,
   HttpStatus,
   BadRequestException,
@@ -101,8 +102,96 @@ export class PaymentController {
   @ApiBearerAuth('JWT-auth')
   async getInvoices(
     @Req() req: Request & { params: { customerId: string } },
+    @Query('limit') limit?: string,
   ): Promise<InvoiceResponseDto[]> {
-    return this.billingService.getInvoices(req.params.customerId);
+    const parsedLimit = limit ? parseInt(limit, 10) : undefined;
+    const safeLimit = Number.isFinite(parsedLimit) ? parsedLimit : undefined;
+    return this.billingService.getInvoices(req.params.customerId, safeLimit);
+  }
+
+  /**
+   * Get usage stats and tier limits for an organization
+   */
+  @Get('usage/:organizationId')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  async getUsage(
+    @Req() req: Request & { params: { organizationId: string } },
+  ): Promise<{
+    questionnaires: { used: number; limit: number };
+    responses: { used: number; limit: number };
+    documents: { used: number; limit: number };
+    apiCalls: { used: number; limit: number };
+  }> {
+    const organizationId = req.params.organizationId;
+
+    const [usage, subscription] = await Promise.all([
+      this.billingService.getUsageStats(organizationId),
+      this.subscriptionService.getOrganizationSubscription(organizationId),
+    ]);
+
+    const toLimit = (value: number | string): number => (typeof value === 'number' ? value : 0);
+
+    return {
+      questionnaires: {
+        used: usage.questionnaires,
+        limit: toLimit(subscription.features.questionnaires),
+      },
+      responses: {
+        used: usage.responses,
+        limit: toLimit(subscription.features.responses),
+      },
+      documents: {
+        used: usage.documents,
+        limit: toLimit(subscription.features.documents),
+      },
+      apiCalls: {
+        used: usage.apiCalls,
+        limit: toLimit(subscription.features.apiCalls),
+      },
+    };
+  }
+
+  /**
+   * Schedule subscription cancellation at period end
+   */
+  @Post('cancel/:organizationId')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  async cancelSubscription(
+    @Req() req: Request & { params: { organizationId: string } },
+  ): Promise<{ message: string }> {
+    const organizationId = req.params.organizationId;
+    const subscription = await this.subscriptionService.getOrganizationSubscription(organizationId);
+
+    if (!subscription.stripeSubscriptionId) {
+      throw new BadRequestException('No active Stripe subscription found');
+    }
+
+    await this.paymentService.cancelSubscription(subscription.stripeSubscriptionId, true);
+
+    return { message: 'Subscription cancellation scheduled for end of billing period' };
+  }
+
+  /**
+   * Resume a subscription that is set to cancel at period end
+   */
+  @Post('resume/:organizationId')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  async resumeSubscription(
+    @Req() req: Request & { params: { organizationId: string } },
+  ): Promise<{ message: string }> {
+    const organizationId = req.params.organizationId;
+    const subscription = await this.subscriptionService.getOrganizationSubscription(organizationId);
+
+    if (!subscription.stripeSubscriptionId) {
+      throw new BadRequestException('No active Stripe subscription found');
+    }
+
+    await this.paymentService.resumeSubscription(subscription.stripeSubscriptionId);
+
+    return { message: 'Subscription resumed successfully' };
   }
 
   /**

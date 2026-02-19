@@ -39,7 +39,7 @@ describe('MainLayout', () => {
     expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /assessments/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /documents/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /settings/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /billing/i })).toBeInTheDocument();
   });
 
   it('displays user email', () => {
@@ -94,10 +94,10 @@ describe('MainLayout', () => {
     expect(screen.getByRole('link', { name: /dashboard/i })).toHaveAttribute('href', '/dashboard');
     expect(screen.getByRole('link', { name: /assessments/i })).toHaveAttribute(
       'href',
-      '/questionnaires',
+      '/questionnaire/new',
     );
     expect(screen.getByRole('link', { name: /documents/i })).toHaveAttribute('href', '/documents');
-    expect(screen.getByRole('link', { name: /settings/i })).toHaveAttribute('href', '/settings');
+    expect(screen.getByRole('link', { name: /billing/i })).toHaveAttribute('href', '/billing');
   });
 
   it('has accessible navigation landmark', () => {
