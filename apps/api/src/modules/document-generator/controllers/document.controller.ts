@@ -137,6 +137,7 @@ export class DocumentController {
       slug: string;
       description: string | null;
       category: string;
+      outputFormats: string[];
       estimatedPages: number | null;
       isActive: boolean;
     };
@@ -160,6 +161,7 @@ export class DocumentController {
             slug: document.documentType.slug,
             description: document.documentType.description,
             category: document.documentType.category as DocumentTypeResponseDto['category'],
+            outputFormats: document.documentType.outputFormats,
             estimatedPages: document.documentType.estimatedPages,
             isActive: document.documentType.isActive,
           }

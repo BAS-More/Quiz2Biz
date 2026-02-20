@@ -11,25 +11,35 @@ export interface DocumentType {
   id: string;
   slug: string;
   name: string;
-  description: string;
+  description: string | null;
   category: string;
   outputFormats: string[];
-  estimatedPages: number;
+  estimatedPages: number | null;
   isActive: boolean;
 }
 
 export interface DocumentResponse {
   id: string;
-  fileName?: string;
+  sessionId: string;
+  documentTypeId: string;
   status: string;
-  format?: string;
-  downloadUrl?: string;
+  format: string;
+  fileName?: string;
+  fileSize?: string;
+  version: number;
+  generatedAt?: string;
+  createdAt: string;
+  updatedAt: string;
   documentType?: {
     id: string;
     name: string;
     slug: string;
+    description?: string | null;
+    category: string;
+    outputFormats: string[];
+    estimatedPages?: number | null;
+    isActive: boolean;
   };
-  createdAt: string;
 }
 
 export async function listDocumentTypes(): Promise<DocumentType[]> {

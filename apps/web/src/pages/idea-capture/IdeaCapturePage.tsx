@@ -44,14 +44,25 @@ export function IdeaCapturePage() {
     setError(null);
     setStep('analyzing');
 
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 60_000);
+
     try {
       const response = await submitIdea(rawInput, title || undefined);
       setIdeaResponse(response);
       setSelectedProjectTypeSlug(response.analysis.recommendedProjectType.slug);
       setStep('results');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to analyze idea. Please try again.');
+      if (err instanceof DOMException && err.name === 'AbortError') {
+        setError('Analysis timed out. Please try again with a shorter description.');
+      } else if (err instanceof TypeError && err.message === 'Failed to fetch') {
+        setError('Network error — please check your connection and try again.');
+      } else {
+        setError(err instanceof Error ? err.message : 'Failed to analyze idea. Please try again.');
+      }
       setStep('input');
+    } finally {
+      clearTimeout(timeout);
     }
   }, [rawInput, title]);
 

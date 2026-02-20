@@ -88,7 +88,7 @@ export function DocumentsPage() {
     setGenerationError(null);
   }, [setSearchParams]);
 
-  const handleGenerate = useCallback(async (docType: DocumentType, format: 'DOCX' | 'PDF') => {
+  const handleGenerate = useCallback(async (docType: DocumentType) => {
     if (!selectedSessionId) {
       setGenerationError('Please select a session first.');
       return;
@@ -96,7 +96,7 @@ export function DocumentsPage() {
     setGeneratingSlug(docType.slug);
     setGenerationError(null);
     try {
-      await requestDocumentGeneration(selectedSessionId, docType.id, format);
+      await requestDocumentGeneration(selectedSessionId, docType.id, 'DOCX');
     } catch (err: unknown) {
       const message = (err as { response?: { data?: { message?: string } }; message?: string })
         ?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Generation failed';
@@ -263,7 +263,7 @@ export function DocumentsPage() {
                   <p className="text-xs text-surface-500 mb-4 flex-1">{docType.description}</p>
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => handleGenerate(docType, 'DOCX')}
+                      onClick={() => handleGenerate(docType)}
                       disabled={isGenerating || !canGenerate}
                       className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-brand-600 text-white text-xs font-medium rounded-lg hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                     >
@@ -280,9 +280,9 @@ export function DocumentsPage() {
                       )}
                     </button>
                     <button
-                      onClick={() => handleGenerate(docType, 'PDF')}
-                      disabled={isGenerating || !canGenerate}
-                      className="inline-flex items-center justify-center gap-1 px-3 py-2 border border-surface-200 text-surface-600 text-xs font-medium rounded-lg hover:bg-surface-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                      disabled
+                      title="PDF export coming soon"
+                      className="inline-flex items-center justify-center gap-1 px-3 py-2 border border-surface-200 text-surface-400 text-xs font-medium rounded-lg opacity-50 cursor-not-allowed transition-all"
                     >
                       <FileDown className="w-3.5 h-3.5" />
                       PDF

@@ -21,6 +21,9 @@ export class DocumentTypeResponseDto {
   @ApiProperty({ enum: DocumentCategoryValues, enumName: 'DocumentCategory' })
   category: DocumentCategory;
 
+  @ApiProperty({ type: [String], description: 'Supported output formats' })
+  outputFormats: string[];
+
   @ApiPropertyOptional({ nullable: true })
   estimatedPages: number | null;
 

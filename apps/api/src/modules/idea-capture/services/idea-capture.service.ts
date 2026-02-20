@@ -162,6 +162,7 @@ export class IdeaCaptureService {
         projectTypeId: ideaCapture.projectTypeId,
         isActive: true,
       },
+      orderBy: [{ isDefault: 'desc' }, { createdAt: 'desc' }],
     });
 
     if (!questionnaire) {

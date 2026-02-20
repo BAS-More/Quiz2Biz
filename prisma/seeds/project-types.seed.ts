@@ -281,6 +281,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'business-plan',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 25,
+    // Core questions: strategy/vision, stakeholder alignment, budget, system architecture, requirements
+    requiredQuestions: ['q-strategy-001', 'q-strategy-002', 'q-finance-001', 'q-arch-001', 'q-req-001'],
   },
   {
     slug: 'marketing-strategy-doc',
@@ -290,6 +292,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'business-plan',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 15,
+    // Core questions: strategy/vision, requirements definition, market requirements, people/team
+    requiredQuestions: ['q-strategy-001', 'q-req-001', 'q-req-002', 'q-people-001', 'q-people-002'],
   },
   {
     slug: 'financial-projections-doc',
@@ -299,6 +303,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'business-plan',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 12,
+    // Core questions: budget tracking, TCO analysis, cloud cost optimization
+    requiredQuestions: ['q-finance-001', 'q-finance-002', 'q-finance-003'],
   },
   {
     slug: 'investor-pitch-doc',
@@ -308,6 +314,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'business-plan',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 10,
+    // Core questions: strategy/vision, stakeholder alignment, budget, architecture, requirements
+    requiredQuestions: ['q-strategy-001', 'q-strategy-002', 'q-finance-001', 'q-arch-001', 'q-req-001'],
   },
   {
     slug: 'ai-prompts-doc',
@@ -317,6 +325,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'business-plan',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 8,
+    // Core questions: strategy/vision, operations
+    requiredQuestions: ['q-strategy-001', 'q-ops-001'],
   },
   {
     slug: 'ms-strategy-doc',
@@ -326,6 +336,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'marketing-strategy',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 18,
+    // Core questions: strategy/vision, requirements definition, market requirements, people/team
+    requiredQuestions: ['q-strategy-001', 'q-req-001', 'q-req-002', 'q-people-001'],
   },
   {
     slug: 'fp-report-doc',
@@ -335,6 +347,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'financial-projections',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 20,
+    // Core questions: budget tracking, TCO analysis, cloud cost optimization
+    requiredQuestions: ['q-finance-001', 'q-finance-002', 'q-finance-003'],
   },
 ];
 
@@ -491,6 +505,7 @@ export async function seedProjectTypes(): Promise<void> {
         projectTypeId,
         outputFormats: dt.outputFormats,
         estimatedPages: dt.estimatedPages,
+        requiredQuestions: dt.requiredQuestions,
         isActive: true,
       },
       create: {
@@ -501,11 +516,26 @@ export async function seedProjectTypes(): Promise<void> {
         projectTypeId,
         outputFormats: dt.outputFormats,
         estimatedPages: dt.estimatedPages,
+        requiredQuestions: dt.requiredQuestions,
         isActive: true,
         metadata: {},
       },
     });
     console.log(`    ✓ DocumentType: ${dt.name} (${dt.slug}) → ${dt.projectTypeSlug}`);
+  }
+
+  // Link existing questionnaires to project types
+  // The Business Startup Incubator and main questionnaire both serve the business-plan type
+  if (bpTypeId) {
+    console.log('\n  🔗 Linking questionnaires to project types...');
+    const linked = await prisma.questionnaire.updateMany({
+      where: {
+        projectTypeId: null,
+        isActive: true,
+      },
+      data: { projectTypeId: bpTypeId },
+    });
+    console.log(`    ✓ Linked ${linked.count} orphaned questionnaire(s) to business-plan`);
   }
 
   console.log('\n✅ Project Types seeded successfully');

@@ -56,6 +56,8 @@ export interface QuestionOption {
   id: string;
   label: string;
   description?: string;
+  icon?: string;
+  value?: string | number | boolean;
 }
 
 export interface QuestionItem {
@@ -152,7 +154,7 @@ export interface HeatmapResult {
     dimensionKey: string;
     severityBucket: string;
     cellValue: number;
-    colorCode: 'GREEN' | 'AMBER' | 'RED';
+    colorCode: string; // Backend returns HeatmapColor hex codes (#28A745, #FFC107, #DC3545)
     questionCount: number;
   }[];
   dimensions: string[];

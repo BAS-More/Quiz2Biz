@@ -53,9 +53,14 @@ export function HeatmapPage() {
   };
 
   const colorMap: Record<string, string> = {
+    // Semantic names (if backend returns enum key)
     GREEN: '#22c55e',
     AMBER: '#f59e0b',
     RED: '#ef4444',
+    // Hex codes (backend HeatmapColor enum values)
+    '#28A745': '#22c55e',
+    '#FFC107': '#f59e0b',
+    '#DC3545': '#ef4444',
   };
 
   if (isLoading) {

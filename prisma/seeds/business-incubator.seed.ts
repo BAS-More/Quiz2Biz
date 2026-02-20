@@ -1,4 +1,4 @@
-import { PrismaClient, QuestionType } from '@prisma/client';
+import { PrismaClient, QuestionType, VisibilityAction } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -36,7 +36,7 @@ export async function seedBusinessIncubator() {
       isDefault: true,
       isActive: true,
       estimatedTime: 60, // minutes
-      createdBy: 'system',
+      // createdById left null — will be linked to admin user if needed post-seed
       metadata: {
         targetAudience: 'entrepreneurs, startups, business owners',
         documentTypes: ['CTO', 'BA', 'CFO', 'SEO'],
@@ -108,16 +108,7 @@ export async function seedBusinessIncubator() {
                   metadata: {
                     outputMapping: ['business_plan.company_description.founded_date'],
                   },
-                  visibilityRules: {
-                    create: [
-                      {
-                        conditionQuestionId: '', // Will be set after questions are created
-                        operator: 'not_equals',
-                        value: 'internal',
-                        action: 'show',
-                      },
-                    ],
-                  },
+                  // Visibility rule added post-creation (requires conditionQuestionId)
                 },
                 {
                   text: "What is your company's legal structure?",
@@ -195,7 +186,7 @@ export async function seedBusinessIncubator() {
                 },
                 {
                   text: 'Provide a detailed description of what your business does.',
-                  type: QuestionType.LONG_TEXT,
+                  type: QuestionType.TEXTAREA,
                   isRequired: true,
                   orderIndex: 6,
                   helpText:
@@ -245,7 +236,7 @@ export async function seedBusinessIncubator() {
                 },
                 {
                   text: "What are your company's core values?",
-                  type: QuestionType.MULTI_CHOICE,
+                  type: QuestionType.MULTIPLE_CHOICE,
                   isRequired: false,
                   orderIndex: 9,
                   helpText: 'Select 2-5 values that guide your business decisions',
@@ -373,7 +364,7 @@ export async function seedBusinessIncubator() {
                 },
                 {
                   text: 'Describe the main problem your product/service solves.',
-                  type: QuestionType.LONG_TEXT,
+                  type: QuestionType.TEXTAREA,
                   isRequired: true,
                   orderIndex: 3,
                   helpText: 'Clearly articulate the pain point or need your solution addresses',
@@ -388,7 +379,7 @@ export async function seedBusinessIncubator() {
                 },
                 {
                   text: 'How does your product/service solve this problem?',
-                  type: QuestionType.LONG_TEXT,
+                  type: QuestionType.TEXTAREA,
                   isRequired: true,
                   orderIndex: 4,
                   helpText: 'Explain your unique solution and approach',
@@ -403,7 +394,7 @@ export async function seedBusinessIncubator() {
                 },
                 {
                   text: 'What makes your solution unique or better than alternatives?',
-                  type: QuestionType.LONG_TEXT,
+                  type: QuestionType.TEXTAREA,
                   isRequired: true,
                   orderIndex: 5,
                   helpText: 'Describe your competitive advantage and differentiation',
@@ -421,7 +412,7 @@ export async function seedBusinessIncubator() {
                 },
                 {
                   text: 'Select the key features of your MVP (Minimum Viable Product):',
-                  type: QuestionType.MULTI_CHOICE,
+                  type: QuestionType.MULTIPLE_CHOICE,
                   isRequired: true,
                   orderIndex: 6,
                   helpText: 'Choose 3-10 essential features for your initial launch',
@@ -503,7 +494,7 @@ export async function seedBusinessIncubator() {
                 },
                 {
                   text: 'Describe your ideal customer profile in detail:',
-                  type: QuestionType.LONG_TEXT,
+                  type: QuestionType.TEXTAREA,
                   isRequired: true,
                   orderIndex: 1,
                   helpText: 'Include demographics, behaviors, pain points, and goals',
@@ -521,7 +512,7 @@ export async function seedBusinessIncubator() {
                 },
                 {
                   text: 'What industries does your solution target?',
-                  type: QuestionType.MULTI_CHOICE,
+                  type: QuestionType.MULTIPLE_CHOICE,
                   isRequired: true,
                   orderIndex: 2,
                   helpText: 'Select all applicable industries',
@@ -575,6 +566,33 @@ export async function seedBusinessIncubator() {
       },
     },
   });
+
+  // Post-creation: wire up visibility rules that reference other questions by orderIndex
+  const businessFoundationSection = await prisma.section.findFirst({
+    where: { questionnaireId: questionnaire.id, orderIndex: 0 },
+    include: { questions: { orderBy: { orderIndex: 'asc' } } },
+  });
+
+  if (businessFoundationSection) {
+    const existingOrNewQuestion = businessFoundationSection.questions.find(q => q.orderIndex === 1);
+    const foundingDateQuestion = businessFoundationSection.questions.find(q => q.orderIndex === 2);
+
+    if (existingOrNewQuestion && foundingDateQuestion) {
+      await prisma.visibilityRule.create({
+        data: {
+          questionId: foundingDateQuestion.id,
+          condition: {
+            conditionQuestionId: existingOrNewQuestion.id,
+            operator: 'not_equals',
+            value: 'internal',
+          },
+          action: VisibilityAction.SHOW,
+          targetQuestionIds: [],
+        },
+      });
+      console.log('  🔗 Linked visibility rule: founding date → business type question');
+    }
+  }
 
   console.log(`✅ Created questionnaire: ${questionnaire.name} (ID: ${questionnaire.id})`);
   console.log(

@@ -723,6 +723,7 @@ export class SessionService {
         percentage: progress.percentage,
         answeredQuestions: progress.answered,
         totalQuestions: progress.total || totalQuestions,
+        estimatedTimeRemaining: questionsLeft > 0 ? Math.ceil(questionsLeft * 1.5) : 0,
         sectionsLeft,
         questionsLeft,
         totalSections: sectionInfo?.totalSections ?? 0,
@@ -752,6 +753,9 @@ export class SessionService {
       placeholder: question.placeholder ?? undefined,
       options: options ?? undefined,
       validation: validation ?? undefined,
+      bestPractice: question.bestPractice ?? undefined,
+      practicalExplainer: question.practicalExplainer ?? undefined,
+      dimensionKey: question.dimensionKey ?? undefined,
     };
   }
 
