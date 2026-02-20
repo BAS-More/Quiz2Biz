@@ -5,6 +5,7 @@ import { PrismaService } from '@libs/database';
 import { TemplateEngineService } from './template-engine.service';
 import { DocumentBuilderService } from './document-builder.service';
 import { StorageService } from './storage.service';
+import { AiDocumentContentService } from './ai-document-content.service';
 import { NotificationService } from '../../notifications/notification.service';
 import { SessionStatus, DocumentStatus } from '@prisma/client';
 
@@ -54,6 +55,10 @@ describe('DocumentGeneratorService', () => {
     sendDocumentReadyNotification: jest.fn(),
   };
 
+  const mockAiContentService = {
+    generateDocumentContent: jest.fn(),
+  };
+
   const mockSession = {
     id: 'session-123',
     userId: 'user-456',
@@ -91,6 +96,10 @@ describe('DocumentGeneratorService', () => {
         {
           provide: StorageService,
           useValue: mockStorage,
+        },
+        {
+          provide: AiDocumentContentService,
+          useValue: mockAiContentService,
         },
         {
           provide: NotificationService,

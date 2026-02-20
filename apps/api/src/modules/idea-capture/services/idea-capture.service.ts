@@ -34,7 +34,7 @@ export class IdeaCaptureService {
       availableProjectTypes.map((pt) => ({
         slug: pt.slug,
         name: pt.name,
-        description: pt.description,
+        description: pt.description ?? '',
       })),
     );
 
@@ -51,8 +51,8 @@ export class IdeaCaptureService {
         rawInput: dto.rawInput,
         title: dto.title || null,
         projectTypeId: selectedProjectTypeId,
-        analysis: analysisResult as unknown as Record<string, unknown>,
-        suggestedQuestions: null,
+        analysis: analysisResult as object,
+        suggestedQuestions: undefined,
         status: 'ANALYZED',
       },
       include: {
@@ -64,7 +64,10 @@ export class IdeaCaptureService {
       `Idea captured: ${ideaCapture.id}, recommended: ${analysisResult.recommendedProjectType.slug}`,
     );
 
-    return this.toResponseDto(ideaCapture, analysisResult, availableProjectTypes);
+    return this.toResponseDto(ideaCapture, analysisResult, availableProjectTypes.map(pt => ({
+      ...pt,
+      description: pt.description ?? '',
+    })));
   }
 
   async getById(id: string): Promise<IdeaCaptureResponseDto> {
@@ -93,7 +96,10 @@ export class IdeaCaptureService {
       summary: string;
     };
 
-    return this.toResponseDto(ideaCapture, analysis, availableProjectTypes);
+    return this.toResponseDto(ideaCapture, analysis, availableProjectTypes.map(pt => ({
+      ...pt,
+      description: pt.description ?? '',
+    })));
   }
 
   async confirmProjectType(
@@ -168,6 +174,7 @@ export class IdeaCaptureService {
       data: {
         userId,
         questionnaireId: questionnaire.id,
+        questionnaireVersion: questionnaire.version,
         projectTypeId: ideaCapture.projectTypeId,
         ideaCaptureId: ideaCapture.id,
         status: 'IN_PROGRESS',

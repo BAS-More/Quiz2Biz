@@ -34,6 +34,8 @@ export interface SessionResponse {
   status: 'IN_PROGRESS' | 'COMPLETED' | 'ABANDONED' | 'EXPIRED';
   persona?: Persona;
   industry?: string;
+  projectTypeName?: string;
+  projectTypeSlug?: string;
   readinessScore?: number;
   progress: {
     percentage: number;

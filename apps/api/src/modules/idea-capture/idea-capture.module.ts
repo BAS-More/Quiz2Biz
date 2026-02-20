@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { IdeaCaptureController } from './idea-capture.controller';
+import { ProjectTypesController } from './project-types.controller';
 import { IdeaCaptureService } from './services/idea-capture.service';
 import { ClaudeAiService } from './services/claude-ai.service';
 
@@ -12,10 +13,11 @@ import { ClaudeAiService } from './services/claude-ai.service';
  *   GET    /api/v1/sessions/idea/:id     — Get idea details
  *   PATCH  /api/v1/sessions/idea/:id/confirm — Confirm project type
  *   POST   /api/v1/sessions/idea/:id/session — Create questionnaire session
+ *   GET    /api/v1/project-types            — List active project types
  */
 @Module({
   imports: [ConfigModule],
-  controllers: [IdeaCaptureController],
+  controllers: [IdeaCaptureController, ProjectTypesController],
   providers: [IdeaCaptureService, ClaudeAiService],
   exports: [IdeaCaptureService, ClaudeAiService],
 })

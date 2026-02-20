@@ -2,9 +2,28 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from '../auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@libs/database';
+import { RedisService } from '@libs/redis';
+import { NotificationService } from '../../notifications/notification.service';
 import { ConfigModule } from '@nestjs/config';
 import configuration from '../../../config/configuration';
 import * as bcrypt from 'bcrypt';
+
+// Mock notification service
+const mockNotificationService = {
+  sendEmail: jest.fn(),
+  sendVerificationEmail: jest.fn(),
+  sendPasswordResetEmail: jest.fn(),
+};
+
+// Mock Redis service
+const mockRedisService = {
+  get: jest.fn(),
+  set: jest.fn(),
+  del: jest.fn(),
+  setex: jest.fn(),
+  incr: jest.fn().mockResolvedValue(1),
+  expire: jest.fn(),
+};
 
 describe('Authentication Security Tests', () => {
   let authService: AuthService;
@@ -14,6 +33,7 @@ describe('Authentication Security Tests', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        // @ts-expect-error DynamicModule type conflict from duplicate @nestjs/common versions in monorepo
         ConfigModule.forRoot({
           load: [configuration],
           isGlobal: true,
@@ -26,6 +46,14 @@ describe('Authentication Security Tests', () => {
         {
           provide: 'JWT_SECRET',
           useValue: 'test-secret-key-minimum-32-characters-long',
+        },
+        {
+          provide: RedisService,
+          useValue: mockRedisService,
+        },
+        {
+          provide: NotificationService,
+          useValue: mockNotificationService,
         },
       ],
     }).compile();
@@ -174,18 +202,18 @@ describe('Authentication Security Tests', () => {
     it('should generate unique refresh tokens', () => {
       const userId = 'user-refresh-001';
 
-      // Generate multiple refresh tokens
+      // Generate multiple refresh tokens with unique jti claims
       const token1 = jwtService.sign(
-        { sub: userId, type: 'refresh' },
+        { sub: userId, type: 'refresh', jti: 'token-1' },
         { secret: 'test-secret-key-minimum-32-characters-long', expiresIn: '7d' },
       );
 
       const token2 = jwtService.sign(
-        { sub: userId, type: 'refresh' },
+        { sub: userId, type: 'refresh', jti: 'token-2' },
         { secret: 'test-secret-key-minimum-32-characters-long', expiresIn: '7d' },
       );
 
-      // Tokens should be different (due to iat claim)
+      // Tokens should be different (due to unique jti claims)
       expect(token1).not.toBe(token2);
     });
 

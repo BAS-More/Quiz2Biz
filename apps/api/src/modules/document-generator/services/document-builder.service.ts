@@ -18,6 +18,7 @@ import {
 } from 'docx';
 import { DocumentCategory } from '@prisma/client';
 import { TemplateData, StandardSection } from './template-engine.service';
+import { GeneratedDocumentContent } from './ai-document-content.service';
 
 export interface DocumentTypeInfo {
   name: string;
@@ -61,6 +62,61 @@ export class DocumentBuilderService {
             default: this.buildFooter(),
           },
           children: sections,
+        },
+      ],
+    });
+
+    return Packer.toBuffer(doc);
+  }
+
+  /**
+   * Build a DOCX document from AI-generated content sections.
+   * Used when AI content service produces structured sections.
+   */
+  async buildDocumentFromAiContent(
+    aiContent: GeneratedDocumentContent,
+    documentType: DocumentTypeInfo,
+  ): Promise<Buffer> {
+    this.logger.log(`Building AI-generated document: ${aiContent.title}`);
+
+    const children: Paragraph[] = [];
+
+    // Title
+    children.push(this.buildTitle(aiContent.title));
+
+    // Summary
+    if (aiContent.summary) {
+      children.push(this.buildHeading('Executive Summary', HeadingLevel.HEADING_1));
+      children.push(this.buildParagraph(aiContent.summary));
+      children.push(this.buildEmptyParagraph());
+    }
+
+    // AI-generated sections
+    for (const section of aiContent.sections) {
+      children.push(this.buildHeading(section.heading, HeadingLevel.HEADING_1));
+      // Split content into paragraphs on double-newline
+      const paragraphs = section.content.split(/\n\n+/).filter((p) => p.trim().length > 0);
+      for (const para of paragraphs) {
+        children.push(this.buildParagraph(para.trim()));
+      }
+      children.push(this.buildEmptyParagraph());
+    }
+
+    const doc = new Document({
+      creator: 'Quiz2Biz AI Document Generator',
+      title: aiContent.title,
+      description: `AI-generated ${documentType.name}`,
+      styles: this.getDocumentStyles(),
+      sections: [
+        {
+          properties: {
+            page: {
+              margin: { top: 1440, right: 1440, bottom: 1440, left: 1440 },
+            },
+          },
+          headers: { default: this.buildHeader(documentType.name) },
+          footers: { default: this.buildFooter() },
+          children,
         },
       ],
     });

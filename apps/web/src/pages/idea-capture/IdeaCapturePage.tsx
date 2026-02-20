@@ -21,7 +21,7 @@ import {
   ChevronRight,
   Loader2,
 } from 'lucide-react';
-import { submitIdea, confirmProjectType, createSessionFromIdea } from '../../api/idea-capture';
+import { submitIdea, createSessionFromIdea } from '../../api/idea-capture';
 import type { IdeaCaptureResponse, ProjectTypeRecommendation } from '../../api/idea-capture';
 
 type Step = 'input' | 'analyzing' | 'results' | 'creating-session';

@@ -160,9 +160,9 @@ export class DocumentAdminController {
         id: doc.documentType.id,
         name: doc.documentType.name,
         slug: doc.documentType.slug,
-        description: doc.documentType.description ?? undefined,
+        description: doc.documentType.description,
         category: doc.documentType.category,
-        estimatedPages: doc.documentType.estimatedPages ?? undefined,
+        estimatedPages: doc.documentType.estimatedPages,
         isActive: doc.documentType.isActive,
       },
     }));

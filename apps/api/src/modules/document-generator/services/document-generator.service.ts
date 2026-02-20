@@ -5,6 +5,8 @@ import { TemplateEngineService } from './template-engine.service';
 import { DocumentBuilderService } from './document-builder.service';
 import { StorageService } from './storage.service';
 import { NotificationService } from '../../notifications/notification.service';
+import { AiDocumentContentService, SessionAnswer } from './ai-document-content.service';
+import { getDocumentTemplate } from '../templates/document-templates';
 
 export interface GenerateDocumentParams {
   sessionId: string;
@@ -26,6 +28,7 @@ export class DocumentGeneratorService {
     private readonly documentBuilder: DocumentBuilderService,
     private readonly storage: StorageService,
     private readonly notificationService: NotificationService,
+    private readonly aiContentService: AiDocumentContentService,
   ) {}
 
   /**
@@ -129,7 +132,8 @@ export class DocumentGeneratorService {
   }
 
   /**
-   * Process document generation
+   * Process document generation — uses AI content service when available,
+   * falls back to template-based generation.
    */
   private async processDocumentGeneration(
     documentId: string,
@@ -143,18 +147,40 @@ export class DocumentGeneratorService {
 
     this.logger.log(`Generating document ${documentId} of type ${documentType.name}`);
 
-    // Assemble template data
-    const templateData = await this.templateEngine.assembleTemplateData(
-      document.sessionId,
-      documentType.slug,
-    );
+    let buffer: Buffer;
+    let generationMethod = 'template';
 
-    // Build DOCX
-    const buffer = await this.documentBuilder.buildDocument(templateData, {
-      name: documentType.name,
-      slug: documentType.slug,
-      category: documentType.category,
-    });
+    // Try AI-powered generation first
+    const template = getDocumentTemplate(documentType.slug);
+    if (template) {
+      const sessionAnswers = await this.loadSessionAnswers(document.sessionId);
+      const projectTypeName = await this.getProjectTypeName(document.sessionId);
+
+      const aiContent = await this.aiContentService.generateDocumentContent({
+        projectTypeName,
+        documentTypeName: documentType.name,
+        sessionAnswers,
+        documentTemplateSections: template.sections,
+      });
+
+      buffer = await this.documentBuilder.buildDocumentFromAiContent(aiContent, {
+        name: documentType.name,
+        slug: documentType.slug,
+        category: documentType.category,
+      });
+      generationMethod = 'ai';
+    } else {
+      // Fallback: legacy template-based generation
+      const templateData = await this.templateEngine.assembleTemplateData(
+        document.sessionId,
+        documentType.slug,
+      );
+      buffer = await this.documentBuilder.buildDocument(templateData, {
+        name: documentType.name,
+        slug: documentType.slug,
+        category: documentType.category,
+      });
+    }
 
     // Upload to storage
     const fileName = `${documentType.slug}-${documentId}.docx`;
@@ -174,18 +200,57 @@ export class DocumentGeneratorService {
         fileSize: BigInt(uploadResult.fileSize),
         generatedAt: new Date(),
         generationMetadata: {
-          templateVersion: templateData.metadata.version,
+          generationMethod,
           generatedAt: new Date().toISOString(),
         },
       },
     });
 
-    this.logger.log(`Document ${documentId} generated successfully`);
+    this.logger.log(`Document ${documentId} generated successfully (method: ${generationMethod})`);
 
     // Notify user that document is ready (fire-and-forget)
     this.notifyDocumentOwner(document.sessionId, [uploadResult.fileName], 'ready').catch((err) =>
       this.logger.warn('Failed to send documents-ready notification', err),
     );
+  }
+
+  /**
+   * Load all session answers formatted for AI document generation.
+   */
+  private async loadSessionAnswers(sessionId: string): Promise<SessionAnswer[]> {
+    const responses = await this.prisma.response.findMany({
+      where: { sessionId, isValid: true },
+      include: {
+        question: {
+          select: { text: true, dimensionKey: true },
+        },
+      },
+    });
+
+    return responses
+      .filter((r) => r.question)
+      .map((r) => {
+        const value = r.value as Record<string, unknown>;
+        const answerText = typeof value === 'string'
+          ? value
+          : (value?.text as string) ?? JSON.stringify(value);
+        return {
+          question: r.question.text,
+          answer: answerText,
+          dimensionKey: r.question.dimensionKey ?? 'general',
+        };
+      });
+  }
+
+  /**
+   * Get the project type name for a session.
+   */
+  private async getProjectTypeName(sessionId: string): Promise<string> {
+    const session = await this.prisma.session.findUnique({
+      where: { id: sessionId },
+      include: { projectType: { select: { name: true } } },
+    });
+    return session?.projectType?.name ?? 'Business Project';
   }
 
   /**
@@ -266,6 +331,37 @@ export class DocumentGeneratorService {
       where: { isActive: true },
       orderBy: [{ category: 'asc' }, { name: 'asc' }],
     });
+  }
+
+  /**
+   * List document types scoped to a project type
+   */
+  async listDocumentTypesByProjectType(projectTypeId: string): Promise<DocumentType[]> {
+    return this.prisma.documentType.findMany({
+      where: { isActive: true, projectTypeId },
+      orderBy: [{ category: 'asc' }, { name: 'asc' }],
+    });
+  }
+
+  /**
+   * Get document types available for a specific session.
+   * Falls back to all active doc types if session has no project type.
+   */
+  async getDocumentTypesForSession(sessionId: string): Promise<DocumentType[]> {
+    const session = await this.prisma.session.findUnique({
+      where: { id: sessionId },
+      select: { projectTypeId: true },
+    });
+
+    if (!session) {
+      throw new NotFoundException(`Session with ID ${sessionId} not found`);
+    }
+
+    if (session.projectTypeId) {
+      return this.listDocumentTypesByProjectType(session.projectTypeId);
+    }
+
+    return this.listDocumentTypes();
   }
 
   /**

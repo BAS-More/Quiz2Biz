@@ -5,9 +5,10 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, AlertTriangle, Loader2, Target, Users } from 'lucide-react';
+import { ArrowLeft, CheckCircle, AlertTriangle, Loader2, Target, Users, MessageCircle, SkipForward } from 'lucide-react';
 import { useQuestionnaireStore } from '../../stores/questionnaire';
 import { questionnaireApi, type Persona, type QuestionnaireListItem } from '../../api/questionnaire';
+import { submitAnswerWithAi, submitFollowUp, type ConversationMessage, type FollowUpResult } from '../../api/conversation';
 
 const PERSONA_OPTIONS: { value: Persona; label: string; description: string }[] = [
   { value: 'CTO', label: 'CTO', description: 'Architecture, security, DevOps, quality' },
@@ -45,17 +46,28 @@ export function QuestionnairePage() {
   const [questionnaireLoadError, setQuestionnaireLoadError] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState<Persona>('CTO');
   const startTimeRef = useRef<number>(0);
+
+  // Conversational AI follow-up state
+  const [followUp, setFollowUp] = useState<FollowUpResult | null>(null);
+  const [followUpAnswer, setFollowUpAnswer] = useState('');
+  const [isSubmittingFollowUp, setIsSubmittingFollowUp] = useState(false);
+  const [conversationMessages, setConversationMessages] = useState<ConversationMessage[]>([]);
   
   // Current question changes reset - using question ID as dependency for value state
   const currentQuestionId = currentQuestions[0]?.id;
   const [currentValue, setCurrentValue] = useState<unknown>(null);
   const [valueQuestionId, setValueQuestionId] = useState(currentQuestionId);
   
-  // Reset value when question changes (separate state update to avoid effect)
+  // Reset value and follow-up when question changes
   if (currentQuestionId !== valueQuestionId) {
     setValueQuestionId(currentQuestionId);
     if (currentValue !== null) {
       setCurrentValue(null);
+    }
+    if (followUp !== null) {
+      setFollowUp(null);
+      setFollowUpAnswer('');
+      setConversationMessages([]);
     }
   }
 
@@ -94,13 +106,56 @@ export function QuestionnairePage() {
   const handleSubmit = useCallback(async () => {
     if (!session || !currentQuestions[0] || isValueEmpty) return;
     const timeSpent = Math.round((Date.now() - startTimeRef.current) / 1000);
+
+    // Submit the answer to the scoring engine
     await submitResponse(session.id, currentQuestions[0].id, currentValue, timeSpent);
-  }, [session, currentQuestions, currentValue, isValueEmpty, submitResponse]);
+
+    // For text/textarea answers, also evaluate with AI for follow-up
+    const q = currentQuestions[0];
+    const isTextAnswer = q.type === 'TEXT' || q.type === 'TEXTAREA';
+    if (isTextAnswer && typeof currentValue === 'string' && currentValue.trim().length > 10) {
+      try {
+        const result = await submitAnswerWithAi(
+          session.id,
+          q.id,
+          q.text,
+          currentValue.trim(),
+          currentSection?.name ?? 'general',
+        );
+        if (result.followUp.shouldFollowUp && result.followUp.followUpQuestion) {
+          setFollowUp(result.followUp);
+          setConversationMessages(result.conversationMessages);
+        }
+      } catch {
+        // Non-critical — if AI follow-up fails, continue normally
+      }
+    }
+  }, [session, currentQuestions, currentValue, isValueEmpty, submitResponse, currentSection]);
 
   const handleComplete = useCallback(async () => {
     if (!session) return;
     await completeSession(session.id);
   }, [session, completeSession]);
+
+  const handleFollowUpSubmit = useCallback(async () => {
+    if (!session || !currentQuestions[0] || !followUpAnswer.trim()) return;
+    setIsSubmittingFollowUp(true);
+    try {
+      const msg = await submitFollowUp(session.id, currentQuestions[0].id, followUpAnswer.trim());
+      setConversationMessages((prev) => [...prev, msg]);
+      setFollowUp(null);
+      setFollowUpAnswer('');
+    } catch {
+      // Non-critical
+    } finally {
+      setIsSubmittingFollowUp(false);
+    }
+  }, [session, currentQuestions, followUpAnswer]);
+
+  const handleSkipFollowUp = useCallback(() => {
+    setFollowUp(null);
+    setFollowUpAnswer('');
+  }, []);
 
   // --- NEW SESSION: Persona selector + questionnaire picker ---
   if (isNew && !session) {
@@ -205,22 +260,22 @@ export function QuestionnairePage() {
       <div className="space-y-6">
         <div className="bg-white rounded-lg shadow p-8 text-center">
           <CheckCircle className="h-16 w-16 mx-auto text-green-500 mb-4" aria-hidden="true" />
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Assessment Complete!</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Project Complete!</h1>
           <p className="text-gray-600 mb-4">
-            Your readiness score: <span className="text-2xl font-bold text-green-600">{readinessScore?.toFixed(1) ?? 'N/A'}%</span>
+            Your score: <span className="text-2xl font-bold text-green-600">{readinessScore?.toFixed(1) ?? 'N/A'}%</span>
           </p>
           <div className="flex justify-center gap-4">
+            <button
+              onClick={() => navigate(`/documents?sessionId=${session.id}`)}
+              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Generate Documents
+            </button>
             <button
               onClick={() => navigate('/dashboard')}
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               View Dashboard
-            </button>
-            <button
-              onClick={() => navigate('/questionnaire/new')}
-              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Start New Assessment
             </button>
           </div>
         </div>
@@ -411,6 +466,75 @@ export function QuestionnairePage() {
               )}
             </button>
           </div>
+
+          {/* AI Follow-up section */}
+          {followUp && followUp.followUpQuestion && (
+            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-start gap-2 mb-3">
+                <MessageCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-medium text-blue-900">AI Follow-up</p>
+                  <p className="text-sm text-blue-800 mt-1">{followUp.followUpQuestion}</p>
+                  {followUp.missingAreas.length > 0 && (
+                    <p className="text-xs text-blue-600 mt-1">
+                      Areas to explore: {followUp.missingAreas.join(', ')}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <textarea
+                value={followUpAnswer}
+                onChange={(e) => setFollowUpAnswer(e.target.value)}
+                placeholder="Add more details..."
+                className="w-full p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[80px] text-sm"
+                rows={3}
+              />
+              <div className="mt-2 flex items-center justify-end gap-2">
+                <button
+                  onClick={handleSkipFollowUp}
+                  className="inline-flex items-center gap-1 px-3 py-1.5 text-xs text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  <SkipForward className="h-3.5 w-3.5" />
+                  Skip
+                </button>
+                <button
+                  onClick={handleFollowUpSubmit}
+                  disabled={isSubmittingFollowUp || !followUpAnswer.trim()}
+                  className="px-4 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                >
+                  {isSubmittingFollowUp ? (
+                    <span className="flex items-center">
+                      <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                      Sending...
+                    </span>
+                  ) : (
+                    'Send'
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Conversation history for current question */}
+          {conversationMessages.length > 1 && (
+            <div className="mt-3 space-y-2">
+              {conversationMessages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`p-2 rounded-lg text-sm ${
+                    msg.role === 'assistant'
+                      ? 'bg-blue-50 text-blue-900 ml-4'
+                      : 'bg-gray-50 text-gray-900 mr-4'
+                  }`}
+                >
+                  <span className="text-xs font-medium text-gray-500">
+                    {msg.role === 'assistant' ? 'AI' : 'You'}:
+                  </span>{' '}
+                  {msg.content}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow p-8 text-center">

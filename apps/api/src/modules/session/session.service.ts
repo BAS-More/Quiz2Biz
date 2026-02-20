@@ -40,6 +40,8 @@ export interface SessionResponse {
   status: SessionStatus;
   persona?: Persona;
   industry?: string;
+  projectTypeName?: string;
+  projectTypeSlug?: string;
   readinessScore?: number;
   progress: ProgressInfo;
   currentSection?: {
@@ -163,6 +165,7 @@ export class SessionService {
       },
       include: {
         currentSection: true,
+        projectType: { select: { name: true, slug: true } },
       },
     });
 
@@ -175,6 +178,7 @@ export class SessionService {
       include: {
         currentSection: true,
         questionnaire: true,
+        projectType: { select: { name: true, slug: true } },
       },
     });
 
@@ -213,6 +217,7 @@ export class SessionService {
         include: {
           currentSection: true,
           questionnaire: true,
+          projectType: { select: { name: true, slug: true } },
         },
       }),
       this.prisma.session.count({ where }),
@@ -693,7 +698,10 @@ export class SessionService {
   }
 
   private mapToSessionResponse(
-    session: Session & { currentSection?: { id: string; name: string } | null },
+    session: Session & {
+      currentSection?: { id: string; name: string } | null;
+      projectType?: { name: string; slug: string } | null;
+    },
     totalQuestions: number,
     sectionInfo?: { totalSections: number; completedSections: number },
   ): SessionResponse {
@@ -708,6 +716,8 @@ export class SessionService {
       status: session.status,
       persona: session.persona ?? undefined,
       industry: session.industry ?? undefined,
+      projectTypeName: session.projectType?.name ?? undefined,
+      projectTypeSlug: session.projectType?.slug ?? undefined,
       readinessScore: session.readinessScore ? Number(session.readinessScore) : undefined,
       progress: {
         percentage: progress.percentage,

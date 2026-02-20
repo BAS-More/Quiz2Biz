@@ -9,6 +9,7 @@ import { DocumentBuilderService } from './services/document-builder.service';
 import { TemplateEngineService } from './services/template-engine.service';
 import { StorageService } from './services/storage.service';
 import { DeliverablesCompilerService } from './services/deliverables-compiler.service';
+import { AiDocumentContentService } from './services/ai-document-content.service';
 
 @Module({
   imports: [PrismaModule, ConfigModule],
@@ -19,7 +20,8 @@ import { DeliverablesCompilerService } from './services/deliverables-compiler.se
     TemplateEngineService,
     StorageService,
     DeliverablesCompilerService,
+    AiDocumentContentService,
   ],
-  exports: [DocumentGeneratorService, DeliverablesCompilerService],
+  exports: [DocumentGeneratorService, DeliverablesCompilerService, AiDocumentContentService],
 })
 export class DocumentGeneratorModule {}

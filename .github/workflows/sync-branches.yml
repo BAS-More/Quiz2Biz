@@ -58,10 +58,7 @@ jobs:
           SUCCESSFUL_SYNCS=()
           FAILED_SYNCS=()
           ALREADY_SYNCED=()
-<<<<<<< HEAD
           SKIPPED_BRANCHES=()
-=======
->>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
           
           for branch in "${BRANCHES[@]}"; do
             echo "========================================="
@@ -71,11 +68,7 @@ jobs:
             # Check if remote branch exists
             if ! git ls-remote --heads origin "$branch" | grep -q "$branch"; then
               echo "⚠️  Branch does not exist on remote, skipping"
-<<<<<<< HEAD
               SKIPPED_BRANCHES+=("$branch (not found)")
-=======
-              FAILED_SYNCS+=("$branch (not found)")
->>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
               echo ""
               continue
             fi
@@ -156,15 +149,12 @@ jobs:
             printf '%s\n' "${SUCCESSFUL_SYNCS[@]}" | sed 's/^/  ✓ /'
             echo ""
           fi
-<<<<<<< HEAD
 
           if [ ${#SKIPPED_BRANCHES[@]} -gt 0 ]; then
             echo "Skipped (${#SKIPPED_BRANCHES[@]}):"
             printf '%s\n' "${SKIPPED_BRANCHES[@]}" | sed 's/^/  - /'
             echo ""
           fi
-=======
->>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
           
           if [ ${#FAILED_SYNCS[@]} -gt 0 ]; then
             echo "Failed to sync (${#FAILED_SYNCS[@]}):"
@@ -176,10 +166,7 @@ jobs:
           echo "Total: ${#BRANCHES[@]} branches"
           echo "Already synced: ${#ALREADY_SYNCED[@]}"
           echo "Newly synced: ${#SUCCESSFUL_SYNCS[@]}"
-<<<<<<< HEAD
           echo "Skipped: ${#SKIPPED_BRANCHES[@]}"
-=======
->>>>>>> 7014c237a566e158c61db50d59f9e4bedba5fcc7
           echo "Failed: ${#FAILED_SYNCS[@]}"
           echo ""
           

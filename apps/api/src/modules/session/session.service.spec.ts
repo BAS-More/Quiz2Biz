@@ -142,7 +142,7 @@ describe('SessionService', () => {
           questionnaireId: mockQuestionnaireId,
           status: SessionStatus.IN_PROGRESS,
         }),
-        include: { currentSection: true },
+        include: expect.objectContaining({ currentSection: true }),
       });
     });
 

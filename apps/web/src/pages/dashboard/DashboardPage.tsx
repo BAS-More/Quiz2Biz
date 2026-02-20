@@ -147,7 +147,7 @@ export function DashboardPage() {
                 <div className="w-8 h-8 rounded-lg bg-brand-50 flex items-center justify-center">
                   <ClipboardList className="h-4 w-4 text-brand-600" />
                 </div>
-                <h2 className="text-base font-semibold text-surface-900">Active Assessments</h2>
+                <h2 className="text-base font-semibold text-surface-900">Active Projects</h2>
               </div>
               {activeSessions.length > 0 && (
                 <span className="text-xs font-medium text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full">
@@ -165,7 +165,7 @@ export function DashboardPage() {
                   <div className="mx-auto w-16 h-16 rounded-2xl bg-surface-50 flex items-center justify-center mb-4">
                     <ClipboardList className="h-8 w-8 text-surface-300" />
                   </div>
-                  <p className="text-sm font-medium text-surface-700">No active assessments</p>
+                  <p className="text-sm font-medium text-surface-700">No active projects</p>
                   <p className="text-sm text-surface-400 mt-1 max-w-sm mx-auto">Describe your idea to get started with AI-powered analysis.</p>
                   <button
                     onClick={() => navigate('/idea')}
@@ -187,14 +187,14 @@ export function DashboardPage() {
                       onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/questionnaire?sessionId=${s.id}`); }}
                     >
                       <div className="flex items-center gap-4 flex-1 min-w-0">
-                        {/* Persona avatar */}
+                        {/* Project type avatar */}
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-100 to-accent-100 flex items-center justify-center text-brand-700 text-xs font-bold shrink-0">
-                          {s.persona?.slice(0, 3) ?? 'GEN'}
+                          {(s.projectTypeName ?? s.persona ?? 'P').slice(0, 2).toUpperCase()}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-medium text-surface-900 truncate">
-                              {s.persona ?? 'General'} Assessment
+                              {s.projectTypeName ?? s.persona ?? 'Project'}
                             </span>
                             {s.readinessScore != null && (
                               <span className={clsx(
@@ -240,7 +240,7 @@ export function DashboardPage() {
                   <div className="w-8 h-8 rounded-lg bg-success-50 flex items-center justify-center">
                     <CheckCircle className="h-4 w-4 text-success-600" />
                   </div>
-                  <h2 className="text-base font-semibold text-surface-900">Completed Assessments</h2>
+                  <h2 className="text-base font-semibold text-surface-900">Completed Projects</h2>
                 </div>
                 <span className="text-xs font-medium text-success-600 bg-success-50 px-2 py-0.5 rounded-full">
                   {completedSessions.length} done
@@ -254,11 +254,11 @@ export function DashboardPage() {
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="w-8 h-8 rounded-lg bg-success-50 flex items-center justify-center text-success-600 text-xs font-bold shrink-0">
-                        {s.persona?.slice(0, 2) ?? 'GN'}
+                        {(s.projectTypeName ?? s.persona ?? 'P').slice(0, 2).toUpperCase()}
                       </div>
                       <div className="min-w-0">
                         <span className="text-sm font-medium text-surface-900 truncate block">
-                          {s.persona ?? 'General'} Assessment
+                          {s.projectTypeName ?? s.persona ?? 'Project'}
                         </span>
                         <span className="text-xs text-surface-400">
                           Score: {s.readinessScore?.toFixed(1) ?? 'N/A'}%
@@ -281,13 +281,13 @@ export function DashboardPage() {
           <Card className="animate-slide-up text-center" style={{ animationDelay: '0.15s' }}>
             <div className="flex items-center justify-center gap-2 mb-4">
               <Sparkles className="h-4 w-4 text-accent-500" />
-              <h3 className="text-sm font-semibold text-surface-700">Overall Readiness</h3>
+              <h3 className="text-sm font-semibold text-surface-700">Project Score</h3>
             </div>
             <ProgressRing value={avgScore} size={120} strokeWidth={8} />
             <p className="text-xs text-surface-400 mt-3">
-              {avgScore >= 95 ? 'Excellent! You meet the readiness threshold.'
-                : avgScore > 0 ? `${(95 - avgScore).toFixed(0)} points to reach the 95% threshold`
-                  : 'Complete an assessment to see your score'}
+              {avgScore >= 95 ? 'Excellent! Your project scores are outstanding.'
+                : avgScore > 0 ? `Average score across ${completedSessions.length} project${completedSessions.length !== 1 ? 's' : ''}`
+                  : 'Complete a project questionnaire to see your score'}
             </p>
           </Card>
 
