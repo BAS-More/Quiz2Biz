@@ -78,6 +78,21 @@ export class QpgController {
   }
 
   /**
+   * Get generated prompts for a session (read-only)
+   */
+  @Get('session/:sessionId')
+  @ApiOperation({
+    summary: 'Get generated prompts for a session',
+    description: 'Generates and returns prompts for all gaps in the session',
+  })
+  @ApiParam({ name: 'sessionId', description: 'Questionnaire session ID' })
+  @ApiResponse({ status: 200, description: 'Prompts retrieved successfully' })
+  async getSessionPrompts(@Param('sessionId') sessionId: string) {
+    this.logger.log(`Getting prompts for session: ${sessionId}`);
+    return this.qpgService.generatePromptsForSession(sessionId);
+  }
+
+  /**
    * Get available prompt templates
    */
   @Get('templates')

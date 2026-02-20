@@ -336,7 +336,7 @@ export class DocumentGeneratorService {
   /**
    * List document types scoped to a project type
    */
-  async listDocumentTypesByProjectType(projectTypeId: string): Promise<DocumentType[]> {
+  private async listDocumentTypesByProjectType(projectTypeId: string): Promise<DocumentType[]> {
     return this.prisma.documentType.findMany({
       where: { isActive: true, projectTypeId },
       orderBy: [{ category: 'asc' }, { name: 'asc' }],

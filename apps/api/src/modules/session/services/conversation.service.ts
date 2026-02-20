@@ -131,49 +131,6 @@ export class ConversationService {
     return messages.map((m) => this.toDto(m));
   }
 
-  /**
-   * Get full conversation history formatted for document generation context.
-   * Returns a condensed format: question → answer pairs with follow-ups.
-   */
-  async getConversationForDocGen(
-    sessionId: string,
-  ): Promise<Array<{ question: string; answer: string; followUps: string[] }>> {
-    const messages = await this.prisma.conversationMessage.findMany({
-      where: { sessionId },
-      orderBy: { createdAt: 'asc' },
-    });
-
-    const byQuestion = new Map<string, typeof messages>();
-    for (const msg of messages) {
-      const qId = msg.questionId || '__system__';
-      const arr = byQuestion.get(qId) || [];
-      arr.push(msg);
-      byQuestion.set(qId, arr);
-    }
-
-    const result: Array<{ question: string; answer: string; followUps: string[] }> = [];
-
-    for (const [, qMessages] of byQuestion) {
-      const userMessages = qMessages.filter((m) => m.role === 'user');
-      const assistantMessages = qMessages.filter((m) => m.role === 'assistant');
-
-      if (userMessages.length === 0) continue;
-
-      const questionText =
-        (userMessages[0].metadata as Record<string, unknown>)?.questionText as string ||
-        'Question';
-      const answer = userMessages[0].content;
-      const followUps = [
-        ...assistantMessages.map((m) => `AI: ${m.content}`),
-        ...userMessages.slice(1).map((m) => `User: ${m.content}`),
-      ];
-
-      result.push({ question: questionText, answer, followUps });
-    }
-
-    return result;
-  }
-
   private toDto(message: {
     id: string;
     role: string;

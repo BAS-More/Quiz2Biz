@@ -68,6 +68,9 @@ export interface QuestionItem {
   placeholder?: string;
   options?: QuestionOption[];
   validation?: Record<string, unknown>;
+  bestPractice?: string;
+  practicalExplainer?: string;
+  dimensionKey?: string;
 }
 
 export interface SubmitResponseRequest {
@@ -87,6 +90,11 @@ export interface SubmitResponseResult {
     text: string;
     dimensionKey: string;
     expectedScoreLift: number;
+  };
+  adaptiveChanges?: {
+    questionsAdded: string[];
+    questionsRemoved: string[];
+    newEstimatedTotal: number;
   };
   progress: SessionResponse['progress'];
   createdAt: string;
