@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 env:
-  NODE_VERSION: '20.x'
+  NODE_VERSION: '22.x'
 
 jobs:
   validate-dependabot-update:
@@ -45,3 +45,21 @@ jobs:
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+
+      - name: Build packages
+        run: npx turbo run build --filter=api --filter=database --filter=redis --filter=shared
+
+      - name: Run security audit
+        run: npm audit --production --audit-level=high
+        continue-on-error: true
+
+      - name: Validation summary
+        run: |
+          echo "## Dependabot Update Validation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dependencies**: Installed successfully" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build**: Completed successfully" >> $GITHUB_STEP_SUMMARY
+          echo "- **PR Ready**: Safe to merge after review" >> $GITHUB_STEP_SUMMARY

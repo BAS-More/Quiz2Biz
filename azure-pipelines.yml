@@ -25,7 +25,7 @@ variables:
   acrName: "acrquestionnairedev"
 
   # Build Configuration
-  nodeVersion: "20.x"
+  nodeVersion: "22.x"
   imageName: "questionnaire-api"
   imageTag: "$(Build.BuildId)"
 
@@ -649,7 +649,7 @@ stages:
               inlineScript: |
                 terraform init \
                   -backend-config="resource_group_name=rg-terraform-state" \
-                  -backend-config="storage_account_name=stterraformstate" \
+                  -backend-config="storage_account_name=stquestterraform34cdae54" \
                   -backend-config="container_name=tfstate" \
                   -backend-config="key=questionnaire.dev.tfstate"
 
@@ -704,7 +704,7 @@ stages:
               inlineScript: |
                 terraform init \
                   -backend-config="resource_group_name=rg-terraform-state" \
-                  -backend-config="storage_account_name=stterraformstate" \
+                  -backend-config="storage_account_name=stquestterraform34cdae54" \
                   -backend-config="container_name=tfstate" \
                   -backend-config="key=questionnaire.dev.tfstate"
 

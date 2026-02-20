@@ -20,12 +20,12 @@ on:
         default: 'development'
 
 env:
-  NODE_VERSION: '20.x'
+  NODE_VERSION: '22.x'
   REGISTRY_NAME: acrquestionnaireprod
   IMAGE_NAME: quiz-api
   RESOURCE_GROUP: rg-questionnaire-prod
   CONTAINER_APP_NAME: ca-questionnaire-api-prod
-  HEALTH_PATH: /api/v1/health
+  HEALTH_PATH: /health
 
 permissions:
   contents: read
