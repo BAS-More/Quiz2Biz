@@ -4,10 +4,9 @@
 import {
   getDisasterRecoveryTargets,
   getBackupConfigurations,
-  getRecoveryProcedures,
-  getFailoverConfiguration,
-  getPointInTimeRecoveryConfig,
-  calculateRecoveryMetrics,
+  getDRProcedures,
+  getFailoverConfig,
+  getPITRConfig,
   DisasterRecoveryTargets,
 } from './disaster-recovery.config';
 
