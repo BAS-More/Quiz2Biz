@@ -1,0 +1,380 @@
+/**
+ * @fileoverview Tests for feature-flags.config.ts
+ */
+import {
+  getLaunchDarklyConfig,
+  getDefaultFeatureFlags,
+  getDefaultABTests,
+  FeatureFlagService,
+  FlagEvaluationContext,
+} from './feature-flags.config';
+
+describe('getLaunchDarklyConfig', () => {
+  const originalEnv = process.env;
+
+  beforeEach(() => {
+    process.env = { ...originalEnv };
+  });
+
+  afterAll(() => {
+    process.env = originalEnv;
+  });
+
+  it('should return default config when no env vars set', () => {
+    delete process.env.LAUNCHDARKLY_SDK_KEY;
+    delete process.env.LAUNCHDARKLY_PROJECT_KEY;
+    delete process.env.LAUNCHDARKLY_OFFLINE;
+
+    const config = getLaunchDarklyConfig();
+
+    expect(config.sdkKey).toBe('');
+    expect(config.projectKey).toBe('quiz2biz');
+    expect(config.options.offline).toBe(false);
+  });
+
+  it('should use env vars when set', () => {
+    process.env.LAUNCHDARKLY_SDK_KEY = 'sdk-key-123';
+    process.env.LAUNCHDARKLY_CLIENT_SIDE_ID = 'client-id-456';
+    process.env.LAUNCHDARKLY_PROJECT_KEY = 'my-project';
+    process.env.LAUNCHDARKLY_OFFLINE = 'true';
+
+    const config = getLaunchDarklyConfig();
+
+    expect(config.sdkKey).toBe('sdk-key-123');
+    expect(config.clientSideId).toBe('client-id-456');
+    expect(config.projectKey).toBe('my-project');
+    expect(config.options.offline).toBe(true);
+  });
+
+  it('should have correct base URIs', () => {
+    const config = getLaunchDarklyConfig();
+
+    expect(config.baseUri).toBe('https://sdk.launchdarkly.com');
+    expect(config.eventsUri).toBe('https://events.launchdarkly.com');
+    expect(config.streamUri).toBe('https://stream.launchdarkly.com');
+  });
+
+  it('should have private attributes configured', () => {
+    const config = getLaunchDarklyConfig();
+
+    expect(config.options.privateAttributes).toContain('email');
+    expect(config.options.privateAttributes).toContain('password');
+    expect(config.options.privateAttributes).toContain('creditCard');
+  });
+
+  it('should have correct option defaults', () => {
+    const config = getLaunchDarklyConfig();
+
+    expect(config.options.sendEvents).toBe(true);
+    expect(config.options.stream).toBe(true);
+    expect(config.options.flushInterval).toBe(5000);
+    expect(config.options.timeout).toBe(5000);
+  });
+});
+
+describe('getDefaultFeatureFlags', () => {
+  it('should return array of flags', () => {
+    const flags = getDefaultFeatureFlags();
+    expect(Array.isArray(flags)).toBe(true);
+    expect(flags.length).toBeGreaterThan(0);
+  });
+
+  it('should have new-questionnaire-flow flag', () => {
+    const flags = getDefaultFeatureFlags();
+    const flag = flags.find((f) => f.key === 'new-questionnaire-flow');
+
+    expect(flag).toBeDefined();
+    expect(flag?.kind).toBe('boolean');
+    expect(flag?.defaultValue).toBe(false);
+  });
+
+  it('should have ai-suggestions flag with prerequisite', () => {
+    const flags = getDefaultFeatureFlags();
+    const flag = flags.find((f) => f.key === 'ai-suggestions');
+
+    expect(flag).toBeDefined();
+    expect(flag?.prerequisites).toBeDefined();
+    expect(flag?.prerequisites?.[0].key).toBe('new-questionnaire-flow');
+  });
+
+  it('should have enhanced-heatmap flag', () => {
+    const flags = getDefaultFeatureFlags();
+    const flag = flags.find((f) => f.key === 'enhanced-heatmap');
+
+    expect(flag).toBeDefined();
+    expect(flag?.tags).toContain('ab-test');
+  });
+
+  it('should have pricing-page-redesign as string flag', () => {
+    const flags = getDefaultFeatureFlags();
+    const flag = flags.find((f) => f.key === 'pricing-page-redesign');
+
+    expect(flag).toBeDefined();
+    expect(flag?.kind).toBe('string');
+    expect(flag?.variations.length).toBe(4);
+  });
+
+  it('should have dark-mode flag', () => {
+    const flags = getDefaultFeatureFlags();
+    const flag = flags.find((f) => f.key === 'dark-mode');
+
+    expect(flag).toBeDefined();
+    expect(flag?.tags).toContain('accessibility');
+  });
+
+  it('should have external-api-killswitch', () => {
+    const flags = getDefaultFeatureFlags();
+    const flag = flags.find((f) => f.key === 'external-api-killswitch');
+
+    expect(flag).toBeDefined();
+    expect(flag?.tags).toContain('kill-switch');
+    expect(flag?.defaultValue).toBe(true);
+  });
+
+  it('should have rate-limit-config as json flag', () => {
+    const flags = getDefaultFeatureFlags();
+    const flag = flags.find((f) => f.key === 'rate-limit-config');
+
+    expect(flag).toBeDefined();
+    expect(flag?.kind).toBe('json');
+    expect(flag?.defaultValue).toEqual({ requestsPerMinute: 60, burstSize: 10 });
+  });
+
+  it('should have environment configs for all flags', () => {
+    const flags = getDefaultFeatureFlags();
+
+    flags.forEach((flag) => {
+      expect(flag.environments.length).toBe(3);
+      const envKeys = flag.environments.map((e) => e.key);
+      expect(envKeys).toContain('development');
+      expect(envKeys).toContain('staging');
+      expect(envKeys).toContain('production');
+    });
+  });
+});
+
+describe('getDefaultABTests', () => {
+  it('should return array of A/B tests', () => {
+    const tests = getDefaultABTests();
+    expect(Array.isArray(tests)).toBe(true);
+    expect(tests.length).toBeGreaterThan(0);
+  });
+
+  it('should have questionnaire-cta-test', () => {
+    const tests = getDefaultABTests();
+    const test = tests.find((t) => t.key === 'questionnaire-cta-test');
+
+    expect(test).toBeDefined();
+    expect(test?.hypothesis).toContain('CTA button');
+    expect(test?.primaryMetric).toBe('questionnaire_completion_rate');
+  });
+
+  it('should have onboarding-flow-test', () => {
+    const tests = getDefaultABTests();
+    const test = tests.find((t) => t.key === 'onboarding-flow-test');
+
+    expect(test).toBeDefined();
+    expect(test?.variants.length).toBe(3);
+  });
+
+  it('should have control variant in all tests', () => {
+    const tests = getDefaultABTests();
+
+    tests.forEach((test) => {
+      const control = test.variants.find((v) => v.isControl);
+      expect(control).toBeDefined();
+    });
+  });
+
+  it('should have valid allocation totals', () => {
+    const tests = getDefaultABTests();
+
+    tests.forEach((test) => {
+      const totalAllocation = test.variants.reduce((sum, v) => sum + v.allocation, 0);
+      expect(totalAllocation).toBe(100);
+    });
+  });
+});
+
+describe('FeatureFlagService', () => {
+  let service: FeatureFlagService;
+  const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+
+  beforeEach(() => {
+    service = new FeatureFlagService();
+    consoleSpy.mockClear();
+  });
+
+  afterAll(() => {
+    consoleSpy.mockRestore();
+  });
+
+  it('should initialize with default flags', () => {
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('[FeatureFlags] Initialized with'),
+    );
+  });
+
+  describe('getBooleanFlag', () => {
+    it('should return default value for unknown flag', () => {
+      const result = service.getBooleanFlag('unknown-flag', {});
+      expect(result).toBe(false);
+    });
+
+    it('should return custom default value', () => {
+      const result = service.getBooleanFlag('unknown-flag', {}, true);
+      expect(result).toBe(true);
+    });
+
+    it('should evaluate targeting rules', () => {
+      const context: FlagEvaluationContext = {
+        userRole: 'beta',
+      };
+
+      const result = service.getBooleanFlag('dark-mode', context);
+      expect(result).toBe(true);
+    });
+
+    it('should return off variation when targeting disabled', () => {
+      const context: FlagEvaluationContext = {};
+      const result = service.getBooleanFlag('external-api-killswitch', context);
+      expect(typeof result).toBe('boolean');
+    });
+  });
+
+  describe('getStringFlag', () => {
+    it('should return default value for unknown flag', () => {
+      const result = service.getStringFlag('unknown-flag', {});
+      expect(result).toBe('');
+    });
+
+    it('should return custom default value', () => {
+      const result = service.getStringFlag('unknown-flag', {}, 'custom-default');
+      expect(result).toBe('custom-default');
+    });
+
+    it('should return default for non-string flags', () => {
+      const result = service.getStringFlag('dark-mode', {}, 'default');
+      expect(result).toBe('default');
+    });
+  });
+
+  describe('getJsonFlag', () => {
+    it('should return default value for unknown flag', () => {
+      const defaultValue = { key: 'value' };
+      const result = service.getJsonFlag('unknown-flag', {}, defaultValue);
+      expect(result).toEqual(defaultValue);
+    });
+
+    it('should evaluate rate-limit-config flag', () => {
+      const context: FlagEvaluationContext = {};
+      const result = service.getJsonFlag(
+        'rate-limit-config',
+        context,
+        { requestsPerMinute: 0, burstSize: 0 },
+      );
+      expect(result).toHaveProperty('requestsPerMinute');
+    });
+
+    it('should return increased limits for enterprise', () => {
+      const context: FlagEvaluationContext = {
+        subscriptionTier: 'ENTERPRISE',
+      };
+      const result = service.getJsonFlag(
+        'rate-limit-config',
+        context,
+        { requestsPerMinute: 60, burstSize: 10 },
+      );
+      expect(result.requestsPerMinute).toBe(120);
+    });
+  });
+
+  describe('getAllFlags', () => {
+    it('should return all flags for context', () => {
+      const context: FlagEvaluationContext = {
+        userId: 'user-123',
+        email: 'test@example.com',
+      };
+
+      const flags = service.getAllFlags(context);
+
+      expect(flags).toHaveProperty('new-questionnaire-flow');
+      expect(flags).toHaveProperty('ai-suggestions');
+      expect(flags).toHaveProperty('dark-mode');
+    });
+  });
+
+  describe('track', () => {
+    it('should log track event', () => {
+      const context: FlagEvaluationContext = { userId: 'user-123' };
+      const data = { buttonClicked: true };
+
+      service.track('button_click', context, data);
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining('[FeatureFlags] Track event: button_click'),
+        expect.objectContaining({ context, data }),
+      );
+    });
+  });
+
+  describe('close', () => {
+    it('should log client closed', async () => {
+      await service.close();
+
+      expect(consoleSpy).toHaveBeenCalledWith('[FeatureFlags] Client closed');
+    });
+  });
+
+  describe('targeting rules', () => {
+    it('should match email endsWith rule', () => {
+      const context: FlagEvaluationContext = {
+        email: 'user@quiz2biz.com',
+      };
+
+      const result = service.getBooleanFlag('new-questionnaire-flow', context);
+      expect(result).toBe(true);
+    });
+
+    it('should match userRole in rule', () => {
+      const context: FlagEvaluationContext = {
+        userRole: 'admin',
+      };
+
+      const result = service.getBooleanFlag('dark-mode', context);
+      expect(result).toBe(true);
+    });
+
+    it('should match subscriptionTier rule', () => {
+      const context: FlagEvaluationContext = {
+        subscriptionTier: 'ENTERPRISE',
+      };
+
+      // ai-suggestions requires new-questionnaire-flow
+      const result = service.getBooleanFlag('ai-suggestions', context);
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('rollout evaluation', () => {
+    it('should produce consistent results for same user', () => {
+      const context: FlagEvaluationContext = {
+        userId: 'consistent-user-123',
+      };
+
+      const result1 = service.getBooleanFlag('new-questionnaire-flow', context);
+      const result2 = service.getBooleanFlag('new-questionnaire-flow', context);
+
+      expect(result1).toBe(result2);
+    });
+
+    it('should use email as bucket key if no userId', () => {
+      const context: FlagEvaluationContext = {
+        email: 'test@example.com',
+      };
+
+      const result = service.getBooleanFlag('new-questionnaire-flow', context);
+      expect(typeof result).toBe('boolean');
+    });
+  });
+});
