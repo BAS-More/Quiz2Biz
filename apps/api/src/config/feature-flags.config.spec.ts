@@ -198,14 +198,14 @@ describe('getDefaultABTests', () => {
 
 describe('FeatureFlagService', () => {
   let service: FeatureFlagService;
-  const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+  let consoleSpy: jest.SpyInstance;
 
   beforeEach(() => {
+    consoleSpy = jest.spyOn(console, 'log').mockImplementation();
     service = new FeatureFlagService();
-    consoleSpy.mockClear();
   });
 
-  afterAll(() => {
+  afterEach(() => {
     consoleSpy.mockRestore();
   });
 

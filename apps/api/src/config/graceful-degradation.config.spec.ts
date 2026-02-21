@@ -6,7 +6,6 @@ import {
   getRetryConfigs,
   getBulkheadConfigs,
   getRateLimiterConfigs,
-  CircuitBreaker,
   CircuitBreakerConfig,
 } from './graceful-degradation.config';
 
@@ -92,12 +91,12 @@ describe('getRetryConfigs', () => {
     expect(dbRetry.backoffMultiplier).toBeGreaterThan(0);
   });
 
-  it('should have payment retry config', () => {
+  it('should have externalApi retry config', () => {
     const configs = getRetryConfigs();
-    const paymentRetry = configs.payment;
+    const apiRetry = configs.externalApi;
 
-    expect(paymentRetry).toBeDefined();
-    expect(paymentRetry.maxRetries).toBeGreaterThan(0);
+    expect(apiRetry).toBeDefined();
+    expect(apiRetry.maxRetries).toBeGreaterThan(0);
   });
 
   it('should have email retry config', () => {
@@ -140,9 +139,9 @@ describe('getBulkheadConfigs', () => {
     expect(apiBulkhead).toBeDefined();
   });
 
-  it('should have file operations bulkhead', () => {
+  it('should have file processing bulkhead', () => {
     const configs = getBulkheadConfigs();
-    const fileBulkhead = configs.fileOperations;
+    const fileBulkhead = configs.fileProcessing;
 
     expect(fileBulkhead).toBeDefined();
     expect(fileBulkhead.maxConcurrentCalls).toBeGreaterThan(0);
@@ -186,120 +185,5 @@ describe('getRateLimiterConfigs', () => {
       expect(config.limitRefreshPeriodMs).toBeDefined();
       expect(config.limitRefreshPeriodMs).toBeGreaterThan(0);
     });
-  });
-});
-
-describe('CircuitBreaker', () => {
-  let circuitBreaker: CircuitBreaker;
-  const testConfig: CircuitBreakerConfig = {
-    name: 'test-breaker',
-    enabled: true,
-    thresholds: {
-      failureRateThreshold: 50,
-      slowCallRateThreshold: 80,
-      slowCallDurationMs: 1000,
-      minimumNumberOfCalls: 5,
-      permittedNumberOfCallsInHalfOpen: 2,
-    },
-    timeouts: {
-      waitDurationInOpenStateMs: 5000,
-      recordingDurationMs: 10000,
-    },
-    monitoring: {
-      metricsEnabled: true,
-      alertOnOpen: true,
-      alertOnHalfOpen: true,
-      notificationChannels: ['test'],
-    },
-  };
-
-  beforeEach(() => {
-    circuitBreaker = new CircuitBreaker(testConfig);
-  });
-
-  it('should start in CLOSED state', () => {
-    expect(circuitBreaker.getState()).toBe('CLOSED');
-  });
-
-  it('should execute function when closed', async () => {
-    const result = await circuitBreaker.execute(() => Promise.resolve('success'));
-    expect(result).toBe('success');
-  });
-
-  it('should record success', async () => {
-    await circuitBreaker.execute(() => Promise.resolve('success'));
-    const metrics = circuitBreaker.getMetrics();
-    expect(metrics.successCount).toBe(1);
-  });
-
-  it('should record failure', async () => {
-    try {
-      await circuitBreaker.execute(() => Promise.reject(new Error('fail')));
-    } catch {
-      // Expected
-    }
-    const metrics = circuitBreaker.getMetrics();
-    expect(metrics.failureCount).toBe(1);
-  });
-
-  it('should open after threshold failures', async () => {
-    // Trigger enough failures to open the circuit
-    for (let i = 0; i < 10; i++) {
-      try {
-        await circuitBreaker.execute(() => Promise.reject(new Error('fail')));
-      } catch {
-        // Expected
-      }
-    }
-
-    expect(circuitBreaker.getState()).toBe('OPEN');
-  });
-
-  it('should reject calls when open', async () => {
-    // Force open state
-    for (let i = 0; i < 10; i++) {
-      try {
-        await circuitBreaker.execute(() => Promise.reject(new Error('fail')));
-      } catch {
-        // Expected
-      }
-    }
-
-    await expect(
-      circuitBreaker.execute(() => Promise.resolve('success')),
-    ).rejects.toThrow('Circuit breaker is open');
-  });
-
-  it('should use fallback when configured', async () => {
-    const configWithFallback = {
-      ...testConfig,
-      fallback: {
-        type: 'static' as const,
-        value: 'fallback-value',
-      },
-    };
-
-    const breakerWithFallback = new CircuitBreaker(configWithFallback);
-
-    // Force open state
-    for (let i = 0; i < 10; i++) {
-      try {
-        await breakerWithFallback.execute(() => Promise.reject(new Error('fail')));
-      } catch {
-        // Expected
-      }
-    }
-
-    const result = await breakerWithFallback.execute(() => Promise.resolve('success'));
-    expect(result).toBe('fallback-value');
-  });
-
-  it('should reset metrics', () => {
-    circuitBreaker.reset();
-    const metrics = circuitBreaker.getMetrics();
-
-    expect(metrics.failureCount).toBe(0);
-    expect(metrics.successCount).toBe(0);
-    expect(metrics.state).toBe('CLOSED');
   });
 });

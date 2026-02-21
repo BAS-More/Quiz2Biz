@@ -94,7 +94,7 @@ describe('Failure Injection Config', () => {
       const stripe = scenarios.find((s) => s.id === 'stripe-api-timeout');
       expect(stripe).toBeDefined();
       expect(stripe?.targetService).toBe('stripe-api');
-      expect(stripe?.expectedBehavior.fallbackMechanism).toContain('queue');
+      expect(stripe?.expectedBehavior.fallbackMechanism?.toLowerCase()).toContain('queue');
     });
 
     it('should include sendgrid-failure scenario', () => {

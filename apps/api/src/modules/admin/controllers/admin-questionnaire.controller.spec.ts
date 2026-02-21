@@ -21,18 +21,32 @@ describe('AdminQuestionnaireController', () => {
     id: 'q-1',
     name: 'Test Questionnaire',
     description: 'Test description',
+    projectTypeId: null,
+    industry: null,
+    version: 1,
     isActive: true,
+    isDefault: false,
+    estimatedTime: null,
+    metadata: {},
+    createdById: 'user-1',
     createdAt: new Date(),
     updatedAt: new Date(),
+    publishedAt: null,
     sections: [],
+    _count: { sessions: 0 },
   };
 
   const mockSection = {
     id: 'section-1',
     questionnaireId: 'q-1',
-    title: 'Test Section',
-    order: 1,
-    questions: [],
+    name: 'Test Section',
+    description: null,
+    estimatedTime: null,
+    metadata: {},
+    icon: null,
+    orderIndex: 1,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   const mockQuestion = {
@@ -82,7 +96,7 @@ describe('AdminQuestionnaireController', () => {
         total: 1,
       });
 
-      const result = await controller.listQuestionnaires({ page: 1, limit: 20 });
+      const result = await controller.listQuestionnaires({ page: 1, limit: 20, skip: 0 });
 
       expect(result.items).toHaveLength(1);
       expect(result.pagination.total).toBe(1);
@@ -95,7 +109,7 @@ describe('AdminQuestionnaireController', () => {
         total: 0,
       });
 
-      const result = await controller.listQuestionnaires({});
+      const result = await controller.listQuestionnaires({ page: 1, limit: 20, skip: 0 });
 
       expect(result.pagination.page).toBe(1);
       expect(result.pagination.limit).toBe(20);
@@ -158,25 +172,25 @@ describe('AdminQuestionnaireController', () => {
     it('should create a new section', async () => {
       service.createSection.mockResolvedValue(mockSection);
 
-      const dto = { title: 'Test Section', order: 1 };
+      const dto = { name: 'Test Section', orderIndex: 1 };
 
       const result = await controller.createSection('q-1', dto, mockUser as any);
 
-      expect(result.title).toBe('Test Section');
+      expect(result.name).toBe('Test Section');
       expect(service.createSection).toHaveBeenCalledWith('q-1', dto, 'user-1');
     });
   });
 
   describe('updateSection', () => {
     it('should update section', async () => {
-      const updated = { ...mockSection, title: 'Updated Section' };
+      const updated = { ...mockSection, name: 'Updated Section' };
       service.updateSection.mockResolvedValue(updated);
 
-      const dto = { title: 'Updated Section' };
+      const dto = { name: 'Updated Section' };
 
       const result = await controller.updateSection('section-1', dto, mockUser as any);
 
-      expect(result.title).toBe('Updated Section');
+      expect(result.name).toBe('Updated Section');
       expect(service.updateSection).toHaveBeenCalledWith('section-1', dto, 'user-1');
     });
   });

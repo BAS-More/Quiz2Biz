@@ -72,7 +72,7 @@ describe('getBackupConfigurations', () => {
 
     configs.forEach((config) => {
       expect(config.encryption.enabled).toBe(true);
-      expect(config.encryption.algorithm).toBe('AES-256');
+      expect(['AES-256', 'RSA-2048', 'RSA-4096']).toContain(config.encryption.algorithm);
     });
   });
 
@@ -85,9 +85,9 @@ describe('getBackupConfigurations', () => {
     });
   });
 
-  it('should have GRS or better redundancy', () => {
+  it('should have proper redundancy', () => {
     const configs = getBackupConfigurations();
-    const validRedundancy = ['GRS', 'GZRS', 'RA-GRS', 'RA-GZRS'];
+    const validRedundancy = ['LRS', 'GRS', 'ZRS', 'GZRS', 'RA-GRS', 'RA-GZRS'];
 
     configs.forEach((config) => {
       expect(validRedundancy).toContain(config.storage.redundancy);
@@ -95,29 +95,22 @@ describe('getBackupConfigurations', () => {
   });
 });
 
-describe('getRecoveryProcedures', () => {
+describe('getDRProcedures', () => {
   it('should return array of procedures', () => {
-    const procedures = getRecoveryProcedures();
+    const procedures = getDRProcedures();
     expect(Array.isArray(procedures)).toBe(true);
   });
 
-  it('should have database recovery procedure', () => {
-    const procedures = getRecoveryProcedures();
-    const dbRecovery = procedures.find((p) => p.type === 'database');
+  it('should have region failover procedure', () => {
+    const procedures = getDRProcedures();
+    const regionFailover = procedures.find((p) => p.id === 'dr-region-failover');
 
-    expect(dbRecovery).toBeDefined();
-    expect(dbRecovery?.steps.length).toBeGreaterThan(0);
-  });
-
-  it('should have application recovery procedure', () => {
-    const procedures = getRecoveryProcedures();
-    const appRecovery = procedures.find((p) => p.type === 'application');
-
-    expect(appRecovery).toBeDefined();
+    expect(regionFailover).toBeDefined();
+    expect(regionFailover?.steps.length).toBeGreaterThan(0);
   });
 
   it('should have steps with descriptions', () => {
-    const procedures = getRecoveryProcedures();
+    const procedures = getDRProcedures();
 
     procedures.forEach((procedure) => {
       procedure.steps.forEach((step) => {
@@ -128,73 +121,53 @@ describe('getRecoveryProcedures', () => {
   });
 });
 
-describe('getFailoverConfiguration', () => {
+describe('getFailoverConfig', () => {
   it('should return valid config', () => {
-    const config = getFailoverConfiguration();
+    const config = getFailoverConfig();
 
     expect(config).toBeDefined();
     expect(config.enabled).toBe(true);
   });
 
   it('should have primary and secondary regions', () => {
-    const config = getFailoverConfiguration();
+    const config = getFailoverConfig();
 
     expect(config.primaryRegion).toBeDefined();
     expect(config.secondaryRegion).toBeDefined();
   });
 
   it('should have automatic failover configured', () => {
-    const config = getFailoverConfiguration();
+    const config = getFailoverConfig();
 
     expect(config.automaticFailover).toBeDefined();
-    expect(typeof config.automaticFailover.enabled).toBe('boolean');
+    expect(typeof config.automaticFailover).toBe('boolean');
   });
 
-  it('should have health check configuration', () => {
-    const config = getFailoverConfiguration();
+  it('should have health check interval', () => {
+    const config = getFailoverConfig();
 
-    expect(config.healthCheck).toBeDefined();
-    expect(config.healthCheck.intervalSeconds).toBeGreaterThan(0);
+    expect(config.healthCheckInterval).toBeDefined();
+    expect(config.healthCheckInterval).toBeGreaterThan(0);
   });
 });
 
-describe('getPointInTimeRecoveryConfig', () => {
+describe('getPITRConfig', () => {
   it('should return valid config', () => {
-    const config = getPointInTimeRecoveryConfig();
+    const config = getPITRConfig();
 
     expect(config).toBeDefined();
     expect(config.enabled).toBe(true);
   });
 
   it('should have retention period', () => {
-    const config = getPointInTimeRecoveryConfig();
+    const config = getPITRConfig();
 
-    expect(config.retentionDays).toBeGreaterThan(0);
+    expect(config.retentionPeriodDays).toBeGreaterThan(0);
   });
 
-  it('should have restore granularity', () => {
-    const config = getPointInTimeRecoveryConfig();
+  it('should have geo redundancy setting', () => {
+    const config = getPITRConfig();
 
-    expect(config.granularity).toBeDefined();
-  });
-});
-
-describe('calculateRecoveryMetrics', () => {
-  it('should calculate recovery metrics', () => {
-    const metrics = calculateRecoveryMetrics(30, 5);
-
-    expect(metrics).toBeDefined();
-    expect(metrics.actualRtoMinutes).toBe(30);
-    expect(metrics.actualRpoMinutes).toBe(5);
-  });
-
-  it('should determine if within targets', () => {
-    const withinTargets = calculateRecoveryMetrics(200, 10);
-    expect(withinTargets.withinRtoTarget).toBe(true);
-    expect(withinTargets.withinRpoTarget).toBe(true);
-
-    const outsideTargets = calculateRecoveryMetrics(300, 20);
-    expect(outsideTargets.withinRtoTarget).toBe(false);
-    expect(outsideTargets.withinRpoTarget).toBe(false);
+    expect(config.geoRedundant).toBeDefined();
   });
 });

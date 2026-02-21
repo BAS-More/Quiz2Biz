@@ -10,6 +10,34 @@ import {
 } from './base.template';
 
 import { documentTemplates, DocumentTemplate } from './document-templates';
+import { TEMPLATE_REGISTRY } from './index';
+
+// Import all individual templates for coverage
+import { TECHNOLOGY_ROADMAP_TEMPLATE } from './technology-roadmap.template';
+import { BUSINESS_PLAN_TEMPLATE } from './business-plan.template';
+import { TECHNOLOGY_STRATEGY_TEMPLATE } from './technology-strategy.template';
+import { PRODUCT_ARCHITECTURE_TEMPLATE } from './product-architecture.template';
+import { API_DOCUMENTATION_TEMPLATE } from './api-documentation.template';
+import { DATA_MODELS_TEMPLATE } from './data-models.template';
+import { USER_FLOW_MAPS_TEMPLATE } from './user-flow-maps.template';
+import { TECHNICAL_DEBT_REGISTER_TEMPLATE } from './technical-debt-register.template';
+import { INFORMATION_SECURITY_POLICY_TEMPLATE } from './information-security-policy.template';
+import { INCIDENT_RESPONSE_PLAN_TEMPLATE } from './incident-response-plan.template';
+import { DATA_PROTECTION_POLICY_TEMPLATE } from './data-protection-policy.template';
+import { DISASTER_RECOVERY_PLAN_TEMPLATE } from './disaster-recovery-plan.template';
+import { ENGINEERING_HANDBOOK_TEMPLATE } from './engineering-handbook.template';
+import { VENDOR_MANAGEMENT_TEMPLATE } from './vendor-management.template';
+import { ONBOARDING_OFFBOARDING_TEMPLATE } from './onboarding-offboarding.template';
+import { IP_ASSIGNMENT_NDA_TEMPLATE } from './ip-assignment-nda.template';
+import { BUSINESS_REQUIREMENTS_TEMPLATE } from './business-requirements.template';
+import { FUNCTIONAL_REQUIREMENTS_TEMPLATE } from './functional-requirements.template';
+import { PROCESS_MAPS_TEMPLATE } from './process-maps.template';
+import { USER_STORIES_TEMPLATE } from './user-stories.template';
+import { REQUIREMENTS_TRACEABILITY_TEMPLATE } from './requirements-traceability.template';
+import { STAKEHOLDER_ANALYSIS_TEMPLATE } from './stakeholder-analysis.template';
+import { BUSINESS_CASE_TEMPLATE } from './business-case.template';
+import { WIREFRAMES_MOCKUPS_TEMPLATE } from './wireframes-mockups.template';
+import { CHANGE_REQUEST_TEMPLATE } from './change-request.template';
 
 describe('Base Template Configuration', () => {
   describe('BASE_STYLES', () => {
@@ -155,6 +183,74 @@ describe('Document Templates', () => {
           expect(section.description).toBeDefined();
         });
       });
+    });
+  });
+});
+
+describe('TEMPLATE_REGISTRY', () => {
+  it('should have all templates registered', () => {
+    expect(Object.keys(TEMPLATE_REGISTRY).length).toBeGreaterThan(20);
+  });
+
+  it('should have technology-roadmap loader', () => {
+    expect(TEMPLATE_REGISTRY['technology-roadmap']).toBeDefined();
+  });
+
+  it('should load templates asynchronously', async () => {
+    const loader = TEMPLATE_REGISTRY['business-plan'];
+    const template = await loader();
+    expect(template).toBeDefined();
+    expect(template.slug).toBe('business-plan');
+  });
+});
+
+describe('Individual Template Exports', () => {
+  const allTemplates = [
+    { name: 'TECHNOLOGY_ROADMAP_TEMPLATE', template: TECHNOLOGY_ROADMAP_TEMPLATE },
+    { name: 'BUSINESS_PLAN_TEMPLATE', template: BUSINESS_PLAN_TEMPLATE },
+    { name: 'TECHNOLOGY_STRATEGY_TEMPLATE', template: TECHNOLOGY_STRATEGY_TEMPLATE },
+    { name: 'PRODUCT_ARCHITECTURE_TEMPLATE', template: PRODUCT_ARCHITECTURE_TEMPLATE },
+    { name: 'API_DOCUMENTATION_TEMPLATE', template: API_DOCUMENTATION_TEMPLATE },
+    { name: 'DATA_MODELS_TEMPLATE', template: DATA_MODELS_TEMPLATE },
+    { name: 'USER_FLOW_MAPS_TEMPLATE', template: USER_FLOW_MAPS_TEMPLATE },
+    { name: 'TECHNICAL_DEBT_REGISTER_TEMPLATE', template: TECHNICAL_DEBT_REGISTER_TEMPLATE },
+    { name: 'INFORMATION_SECURITY_POLICY_TEMPLATE', template: INFORMATION_SECURITY_POLICY_TEMPLATE },
+    { name: 'INCIDENT_RESPONSE_PLAN_TEMPLATE', template: INCIDENT_RESPONSE_PLAN_TEMPLATE },
+    { name: 'DATA_PROTECTION_POLICY_TEMPLATE', template: DATA_PROTECTION_POLICY_TEMPLATE },
+    { name: 'DISASTER_RECOVERY_PLAN_TEMPLATE', template: DISASTER_RECOVERY_PLAN_TEMPLATE },
+    { name: 'ENGINEERING_HANDBOOK_TEMPLATE', template: ENGINEERING_HANDBOOK_TEMPLATE },
+    { name: 'VENDOR_MANAGEMENT_TEMPLATE', template: VENDOR_MANAGEMENT_TEMPLATE },
+    { name: 'ONBOARDING_OFFBOARDING_TEMPLATE', template: ONBOARDING_OFFBOARDING_TEMPLATE },
+    { name: 'IP_ASSIGNMENT_NDA_TEMPLATE', template: IP_ASSIGNMENT_NDA_TEMPLATE },
+    { name: 'BUSINESS_REQUIREMENTS_TEMPLATE', template: BUSINESS_REQUIREMENTS_TEMPLATE },
+    { name: 'FUNCTIONAL_REQUIREMENTS_TEMPLATE', template: FUNCTIONAL_REQUIREMENTS_TEMPLATE },
+    { name: 'PROCESS_MAPS_TEMPLATE', template: PROCESS_MAPS_TEMPLATE },
+    { name: 'USER_STORIES_TEMPLATE', template: USER_STORIES_TEMPLATE },
+    { name: 'REQUIREMENTS_TRACEABILITY_TEMPLATE', template: REQUIREMENTS_TRACEABILITY_TEMPLATE },
+    { name: 'STAKEHOLDER_ANALYSIS_TEMPLATE', template: STAKEHOLDER_ANALYSIS_TEMPLATE },
+    { name: 'BUSINESS_CASE_TEMPLATE', template: BUSINESS_CASE_TEMPLATE },
+    { name: 'WIREFRAMES_MOCKUPS_TEMPLATE', template: WIREFRAMES_MOCKUPS_TEMPLATE },
+    { name: 'CHANGE_REQUEST_TEMPLATE', template: CHANGE_REQUEST_TEMPLATE },
+  ];
+
+  it.each(allTemplates)('$name should be defined', ({ template }) => {
+    expect(template).toBeDefined();
+  });
+
+  it.each(allTemplates)('$name should have required properties', ({ template }) => {
+    expect(template.slug).toBeDefined();
+    expect(template.name).toBeDefined();
+    expect(template.description).toBeDefined();
+    expect(template.category).toBeDefined();
+    expect(template.sections).toBeDefined();
+    expect(Array.isArray(template.sections)).toBe(true);
+  });
+
+  it.each(allTemplates)('$name should have valid sections', ({ template }) => {
+    expect(template.sections.length).toBeGreaterThan(0);
+    template.sections.forEach(section => {
+      expect(section.heading).toBeDefined();
+      expect(section.description).toBeDefined();
     });
   });
 });

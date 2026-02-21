@@ -2,11 +2,13 @@
  * @fileoverview Tests for adapters module
  */
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
 import { AdapterController } from './adapter.controller';
 import { GitHubAdapter } from './github.adapter';
 import { GitLabAdapter } from './gitlab.adapter';
 import { JiraConfluenceAdapter } from './jira-confluence.adapter';
 import { AdapterConfigService, AdapterType } from './adapter-config.service';
+import { PrismaService } from '@libs/database';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 
 describe('AdapterController', () => {
@@ -103,10 +105,10 @@ describe('AdapterController', () => {
   describe('getTypeInfo', () => {
     it('should return adapter type information', () => {
       const typeInfo = {
-        type: 'github',
-        name: 'GitHub',
+        displayName: 'GitHub',
         description: 'GitHub integration',
-        requiredFields: ['token', 'owner', 'repo'],
+        icon: 'github',
+        capabilities: ['pull_requests', 'workflow_runs'],
       };
       adapterConfigService.getAdapterTypeInfo.mockReturnValue(typeInfo);
 
@@ -211,21 +213,19 @@ describe('AdapterController', () => {
 
 describe('GitHubAdapter', () => {
   let adapter: GitHubAdapter;
-  let configService: jest.Mocked<any>;
-  let prismaService: jest.Mocked<any>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         GitHubAdapter,
         {
-          provide: 'ConfigService',
+          provide: ConfigService,
           useValue: {
             get: jest.fn(),
           },
         },
         {
-          provide: 'PrismaService',
+          provide: PrismaService,
           useValue: {
             evidence: {
               create: jest.fn(),
@@ -237,8 +237,6 @@ describe('GitHubAdapter', () => {
     }).compile();
 
     adapter = module.get<GitHubAdapter>(GitHubAdapter);
-    configService = module.get('ConfigService');
-    prismaService = module.get('PrismaService');
   });
 
   // Note: These tests would need proper mocking of fetch
@@ -256,13 +254,13 @@ describe('GitLabAdapter', () => {
       providers: [
         GitLabAdapter,
         {
-          provide: 'ConfigService',
+          provide: ConfigService,
           useValue: {
             get: jest.fn(),
           },
         },
         {
-          provide: 'PrismaService',
+          provide: PrismaService,
           useValue: {
             evidence: {
               create: jest.fn(),
@@ -289,13 +287,13 @@ describe('JiraConfluenceAdapter', () => {
       providers: [
         JiraConfluenceAdapter,
         {
-          provide: 'ConfigService',
+          provide: ConfigService,
           useValue: {
             get: jest.fn(),
           },
         },
         {
-          provide: 'PrismaService',
+          provide: PrismaService,
           useValue: {
             evidence: {
               create: jest.fn(),
