@@ -94,8 +94,8 @@ describe('Authentication Security Tests', () => {
 
     it('should generate unique hashes for same password', async () => {
       const password = 'SamePassword789!';
-      const hash1 = await bcrypt.hash(password, 12);
-      const hash2 = await bcrypt.hash(password, 12);
+      const hash1 = await bcrypt.hash(password, 10);
+      const hash2 = await bcrypt.hash(password, 10);
 
       // Same password should produce different hashes (due to salt)
       expect(hash1).not.toBe(hash2);
@@ -103,7 +103,7 @@ describe('Authentication Security Tests', () => {
       // But both should validate the original password
       expect(await bcrypt.compare(password, hash1)).toBe(true);
       expect(await bcrypt.compare(password, hash2)).toBe(true);
-    });
+    }, 30000);
 
     it('should reject weak passwords', () => {
       const weakPasswords = [

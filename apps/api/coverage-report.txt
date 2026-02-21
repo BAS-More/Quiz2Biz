@@ -1,0 +1,1293 @@
+﻿[32m[Nest] 116516  - [39m22/02/2026, 1:41:40 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:41 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +914ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:41 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +229ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +221ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +233ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +48ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +27ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +10ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +15ms[39m
+node.exe : PASS src/modules/evidence-regist
+ry/evidence-integrity.service.spec.ts 
+(36.74 s)
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" 
+"C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified 
+   : (PASS src/module...ec.ts (36.74 s):S  
+  tring) [], RemoteException
+    + FullyQualifiedErrorId : NativeComman 
+   dError
+ 
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +216ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +275ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +32ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +17ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +30ms[39m
+[33m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [33m   WARN[39m [38;5;3m[ModuleTokenFactory] [39m[33mThe module "InternalCoreModule" is taking 12.60ms to serialize, this may be caused by larger objects statically assigned to the module. More details: https://github.com/nestjs/nest/issues/12738[39m[38;5;3m +38ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:42 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +35ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +12ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +33ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +45ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +19ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +42ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +21ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +21ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +17ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +22ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +10ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +30ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +33ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +27ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +21ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:43 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+PASS src/modules/session/session.service.sp
+ec.ts (37.429 s)
+PASS src/modules/policy-pack/policy-pack.co
+ntroller.spec.ts (37.64 s)
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:45 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:45 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +24ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:45 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +16ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:45 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +18ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:45 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:45 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+PASS src/modules/policy-pack/policy-pack.se
+rvice.spec.ts
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:45 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:45 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +26ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:45 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +22ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:45 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +14ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:45 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +14ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:45 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +19ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:45 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:45 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:45 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +14ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:45 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +33ms[39m
+PASS src/modules/session/session.controller
+.spec.ts (39.572 s)
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:46 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:46 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +26ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:46 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:46 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +12ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:46 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +13ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:46 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +13ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:46 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +15ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:46 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +21ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:46 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +14ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:46 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:46 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:46 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:46 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +12ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:46 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +11ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:46 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +13ms[39m
+PASS src/modules/evidence-registry/evidence
+-registry.controller.spec.ts (40.444 s)
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:50 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:50 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +70ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:50 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +84ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:50 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:50 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +61ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:50 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:50 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+PASS src/modules/qpg/qpg.controller.spec.ts
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:51 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:51 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +19ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:52 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +229ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:52 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +25ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:52 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:52 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:52 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +10ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:52 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +62ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:52 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:52 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +87ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:52 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +10ms[39m
+PASS 
+src/modules/auth/auth.controller.spec.ts 
+(8.736 s)
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:52 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +320ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:52 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +169ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:52 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+(node:116516) Warning: 
+`--localstorage-file` was provided without 
+a valid path
+(Use `node --trace-warnings ...` to show 
+where the warning was created)
+PASS src/modules/document-generator/control
+lers/document.controller.spec.ts (10.011 s)
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:53 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:53 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +34ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:53 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +25ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:53 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +11ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:53 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:53 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +18ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:53 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+PASS src/modules/payment/payment.controller
+.spec.ts (7.352 s)
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:53 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +21ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +131ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +16ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +54ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +31ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +15ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +15ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +16ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+(node:60716) Warning: 
+`--localstorage-file` was provided without 
+a valid path
+(Use `node --trace-warnings ...` to show 
+where the warning was created)
+PASS src/modules/document-generator/service
+s/document-generator.service.spec.ts 
+(9.289 s)
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +186ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +21ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +27ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +10ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +21ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +11ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +58ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +26ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +23ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +29ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:54 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:55 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +9ms[39m
+PASS src/modules/evidence-registry/evidence
+-registry.service.spec.ts
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:55 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +44ms[39m
+[32m[Nest] 33632  - [39m22/02/2026, 1:41:55 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m
+[32m[Nest] 33632  - [39m22/02/2026, 1:41:55 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 33632  - [39m22/02/2026, 1:41:55 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +39ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:55 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:55 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +16ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +38ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +187ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +18ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +12ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +14ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +24ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +14ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+PASS 
+src/modules/payment/billing.service.spec.ts
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +191ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +16ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +22ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +16ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +15ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+PASS 
+src/modules/heatmap/heatmap.service.spec.ts
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:56 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +11ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +50ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +18ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +17ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +12ms[39m
+PASS src/modules/scoring-engine/scoring-eng
+ine.controller.spec.ts
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +51ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +26ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +23ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +43ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +29ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +20ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +51ms[39m
+PASS 
+src/modules/users/users.controller.spec.ts
+PASS src/modules/heatmap/heatmap.controller
+.spec.ts
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +51ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +78ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +72ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +30ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +12ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:58 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +30ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:59 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +49ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:59 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +30ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:59 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +49ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:59 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +11ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:59 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +35ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:59 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +214ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:59 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:59 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:41:59 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +47ms[39m
+PASS src/modules/document-generator/service
+s/deliverables-compiler.service.spec.ts
+PASS src/common/tests/validation/code-hygie
+ne.spec.ts (5.163 s)
+  ÔùÅ Console
+
+    console.warn
+      Files exceeding 400 lines:
+      src\config\alerting-rules.config.ts: 
+772 lines (max 400)
+      src\config\appinsights.config.ts: 
+579 lines (max 400)
+      
+src\config\canary-deployment.config.ts: 
+1004 lines (max 400)
+      
+src\config\chaos-engineering.config.ts: 
+1265 lines (max 400)
+      
+src\config\disaster-recovery.config.ts: 
+791 lines (max 400)
+      
+src\config\failure-injection.config.ts: 
+1083 lines (max 400)
+      src\config\feature-flags.config.ts: 
+914 lines (max 400)
+      
+src\config\graceful-degradation.config.ts: 
+906 lines (max 400)
+      
+src\config\incident-response.config.ts: 
+1111 lines (max 400)
+      
+src\config\resource-pressure.config.ts: 
+902 lines (max 400)
+      src\modules\adapters\adapter-config.s
+ervice.ts: 468 lines (max 400)
+      src\modules\adapters\adapter.controll
+er.ts: 474 lines (max 400)
+      
+src\modules\adapters\github.adapter.ts: 
+595 lines (max 400)
+      
+src\modules\adapters\gitlab.adapter.ts: 
+842 lines (max 400)
+      src\modules\adapters\jira-confluence.
+adapter.ts: 891 lines (max 400)
+      src\modules\adaptive-logic\evaluators
+\condition.evaluator.ts: 406 lines (max 
+400)
+      src\modules\admin\services\admin-ques
+tionnaire.service.ts: 575 lines (max 400)
+      src\modules\auth\auth.service.ts: 
+509 lines (max 400)
+      src\modules\decision-log\approval-wor
+kflow.service.ts: 652 lines (max 400)
+      src\modules\document-generator\servic
+es\deliverables-compiler.service.ts: 1385 
+lines (max 400)
+      src\modules\document-generator\servic
+es\document-builder.service.ts: 539 lines 
+(max 400)
+      src\modules\document-generator\servic
+es\document-generator.service.ts: 483 
+lines (max 400)
+      src\modules\document-generator\templa
+tes\business-plan.template.ts: 497 lines 
+(max 400)
+      src\modules\document-generator\templa
+tes\engineering-handbook.template.ts: 420 
+lines (max 400)
+      src\modules\document-generator\templa
+tes\process-maps.template.ts: 422 lines 
+(max 400)
+      src\modules\document-generator\templa
+tes\wireframes-mockups.template.ts: 447 
+lines (max 400)
+      src\modules\evidence-registry\ci-arti
+fact-ingestion.service.ts: 794 lines (max 
+400)
+      src\modules\evidence-registry\evidenc
+e-integrity.service.ts: 607 lines (max 400)
+      src\modules\evidence-registry\evidenc
+e-registry.controller.ts: 462 lines (max 
+400)
+      src\modules\evidence-registry\evidenc
+e-registry.service.ts: 910 lines (max 400)
+      
+src\modules\heatmap\heatmap.service.ts: 
+826 lines (max 400)
+      src\modules\notifications\adaptive-ca
+rd.service.ts: 686 lines (max 400)
+      src\modules\notifications\notificatio
+n.service.ts: 469 lines (max 400)
+      src\modules\policy-pack\services\cont
+rol-mapping.service.ts: 480 lines (max 400)
+      src\modules\scoring-engine\scoring-en
+gine.service.ts: 966 lines (max 400)
+      
+src\modules\session\session.service.ts: 
+1256 lines (max 400)
+
+    [0m [90m 53 |[39m
+     [90m 54 |[39m       [36mif[39m 
+(violations[33m.[39mlength [33m>[39m 
+[35m0[39m) {
+    [31m[1m>[22m[39m[90m 55 |[39m    
+     console[33m.[39mwarn([32m'Files 
+exceeding 400 lines:\n'[39m [33m+[39m vi
+olations[33m.[39mjoin([32m'\n'[39m))[3
+3m;[39m
+     [90m    |[39m                 
+[31m[1m^[22m[39m
+     [90m 56 |[39m       }
+     [90m 57 |[39m       [90m// Allow 
+some violations but flag them[39m
+     [90m 58 |[39m       expect(violation
+s[33m.[39mlength)[33m.[39mtoBeLessThan(
+[35m50[39m)[33m;[39m[0m
+
+      at Object.<anonymous> (common/tests/v
+alidation/code-hygiene.spec.ts:55:17)
+
+    console.warn
+      Functions exceeding 30 lines:
+      src\common\filters\http-exception.fil
+ter.ts:26 catch(): 76 lines
+      
+src\common\guards\subscription.guard.ts:51 
+canActivate(): 109 lines
+      src\common\interceptors\logging.inter
+ceptor.ts:10 intercept(): 46 lines
+      src\common\services\memory-optimizati
+on.service.ts:28 onModuleInit(): 184 lines
+      src\health.controller.ts:75 check(): 
+269 lines
+      src\modules\adapters\adapter-config.s
+ervice.ts:90 getAdapterConfigs(): 378 lines
+      src\modules\adapters\adapter.controll
+er.ts:71 getSupportedTypes(): 403 lines
+      src\modules\adaptive-logic\adaptive-l
+ogic.service.ts:80 if(): 52 lines
+      src\modules\adaptive-logic\adaptive-l
+ogic.service.ts:180 evaluateCondition(): 
+102 lines
+      src\modules\adaptive-logic\evaluators
+\condition.evaluator.ts:9 evaluate(): 397 
+lines
+
+    [0m [90m 106 |[39m
+     [90m 107 |[39m       [36mif[39m 
+(violations[33m.[39mlength [33m>[39m 
+[35m0[39m) {
+    [31m[1m>[22m[39m[90m 108 |[39m   
+      
+console[33m.[39mwarn([32m'Functions 
+exceeding 30 lines:\n'[39m [33m+[39m vio
+lations[33m.[39mslice([35m0[39m[33m,[
+39m [35m10[39m)[33m.[39mjoin([32m'\n'
+[39m))[33m;[39m
+     [90m     |[39m                 
+[31m[1m^[22m[39m
+     [90m 109 |[39m       }
+     [90m 110 |[39m       [90m// Allow 
+some violations but flag them[39m
+     [90m 111 |[39m       expect(violatio
+ns[33m.[39mlength)[33m.[39mtoBeLessThan
+([35m100[39m)[33m;[39m[0m
+
+      at Object.<anonymous> (common/tests/v
+alidation/code-hygiene.spec.ts:108:17)
+
+    console.warn
+      Potential code duplication found:
+      Block duplicated 3 times: 
+alerting-rules.config.ts:116, 
+alerting-rules.config.ts:130, 
+alerting-rules.config.ts:144
+      Block duplicated 4 times: 
+alerting-rules.config.ts:147, 
+alerting-rules.config.ts:224, 
+alerting-rules.config.ts:306
+      Block duplicated 4 times: 
+alerting-rules.config.ts:165, 
+alerting-rules.config.ts:179, 
+alerting-rules.config.ts:207
+      Block duplicated 3 times: 
+alerting-rules.config.ts:166, 
+alerting-rules.config.ts:180, 
+alerting-rules.config.ts:208
+      Block duplicated 5 times: 
+alerting-rules.config.ts:387, 
+alerting-rules.config.ts:401, 
+alerting-rules.config.ts:416
+
+    [0m [90m 210 |[39m
+     [90m 211 |[39m       [36mif[39m 
+(duplicates[33m.[39mlength [33m>[39m 
+[35m0[39m) {
+    [31m[1m>[22m[39m[90m 212 |[39m   
+      
+console[33m.[39mwarn([32m'Potential 
+code duplication found:\n'[39m 
+[33m+[39m duplicates[33m.[39mslice([35
+m0[39m[33m,[39m [35m5[39m)[33m.[39mj
+oin([32m'\n'[39m))[33m;[39m
+     [90m     |[39m                 
+[31m[1m^[22m[39m
+     [90m 213 |[39m       }
+     [90m 214 |[39m       [90m// Some 
+duplication is acceptable in a growing 
+codebase[39m
+     [90m 215 |[39m       expect(duplicat
+es[33m.[39mlength)[33m.[39mtoBeLessThan
+([35m500[39m)[33m;[39m[0m
+
+      at Object.<anonymous> (common/tests/v
+alidation/code-hygiene.spec.ts:212:17)
+
+    console.warn
+      Found 81 uses of 'any' type - 
+consider using specific types
+
+    [0m [90m 385 |[39m
+     [90m 386 |[39m       [36mif[39m 
+(anyCount [33m>[39m [35m50[39m) {
+    [31m[1m>[22m[39m[90m 387 |[39m   
+      console[33m.[39mwarn([32m`Found 
+${anyCount} uses of 'any' type - consider 
+using specific types`[39m)[33m;[39m
+     [90m     |[39m                 
+[31m[1m^[22m[39m
+     [90m 388 |[39m       }
+     [90m 389 |[39m       expect(anyCount
+)[33m.[39mtoBeLessThan([35m150[39m)[33
+m;[39m
+     [90m 390 |[39m     })[33m;[39m[0m
+
+      at Object.<anonymous> (common/tests/v
+alidation/code-hygiene.spec.ts:387:17)
+
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:01 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:02 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +464ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:02 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +16ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:03 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +1232ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:03 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:03 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +97ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:03 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +14ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:03 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +48ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:03 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +45ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:03 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +23ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:03 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +11ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:03 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +27ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:03 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +12ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:03 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +51ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:03 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +16ms[39m
+PASS src/modules/admin/tests/admin-question
+naire.service.spec.ts (5.059 s)
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:04 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:04 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +40ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:04 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +21ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:04 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +14ms[39m
+PASS src/modules/questionnaire/questionnair
+e.controller.spec.ts (5.652 s)
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:04 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:04 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +148ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:04 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:04 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +11ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:04 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:04 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +29ms[39m
+PASS src/modules/auth/tests/auth.security.t
+est.ts (58.861 s)
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:05 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +218ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:05 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +27ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:05 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:05 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:05 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:05 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +13ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:05 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:05 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:05 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:05 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +10ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:05 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:05 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +49ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:05 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +49ms[39m
+PASS src/modules/payment/payment.service.sp
+ec.ts (5.561 s)
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:05 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:05 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +86ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:05 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:05 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +182ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +124ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +31ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+PASS src/common/tests/api-security.spec.ts
+PASS src/modules/standards/standards.servic
+e.spec.ts
+[31m[Nest] 60716  - [39m22/02/2026, 
+1:42:06 am [31m  ERROR[39m 
+[38;5;3m[AuthService] [39m[31mFailed to 
+send verification email to 
+new@example.com:[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +100ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +34ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[31m[Nest] 60716  - [39m22/02/2026, 
+1:42:06 am [31m  ERROR[39m 
+[38;5;3m[AuthService] [39mTypeError: this
+.notificationService.sendVerificationEmail 
+is not a function
+    at AuthService.sendVerificationEmail [
+90m(C:\Repos\Quiz-to-Build\apps\api\[39msr
+c\modules\auth\auth.service.ts:311:38[90m)
+[39m
+[90m    at processTicksAndRejections (node
+:internal/process/task_queues:104:5)[39m
+    at AuthService.register [90m(C:\Repos\
+Quiz-to-Build\apps\api\[39msrc\modules\aut
+h\auth.service.ts:98:7[90m)[39m
+    at Object.<anonymous> [90m(C:\Repos\Qu
+iz-to-Build\apps\api\[39msrc\modules\auth\
+auth.service.spec.ts:116:22[90m)[39m
+[31m[Nest] 60716  - [39m22/02/2026, 
+1:42:06 am [31m  ERROR[39m 
+[38;5;3m[AuthService] [39m[31mFailed to 
+send verification email to 
+test@example.com:[39m
+[31m[Nest] 60716  - [39m22/02/2026, 
+1:42:06 am [31m  ERROR[39m 
+[38;5;3m[AuthService] [39mTypeError: this
+.notificationService.sendVerificationEmail 
+is not a function
+    at AuthService.sendVerificationEmail [
+90m(C:\Repos\Quiz-to-Build\apps\api\[39msr
+c\modules\auth\auth.service.ts:311:38[90m)
+[39m
+[90m    at processTicksAndRejections (node
+:internal/process/task_queues:104:5)[39m
+    at AuthService.register [90m(C:\Repos\
+Quiz-to-Build\apps\api\[39msrc\modules\aut
+h\auth.service.ts:98:7[90m)[39m
+    at Object.<anonymous> [90m(C:\Repos\Qu
+iz-to-Build\apps\api\[39msrc\modules\auth\
+auth.service.spec.ts:149:7[90m)[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +194ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +21ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +11ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +14ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +10ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +14ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +13ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +11ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +20ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +10ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +22ms[39m
+[31m[Nest] 60716  - [39m22/02/2026, 
+1:42:06 am [31m  ERROR[39m 
+[38;5;3m[AuthService] [39m[31mFailed to 
+send verification email to 
+test@example.com:[39m
+[31m[Nest] 60716  - [39m22/02/2026, 
+1:42:06 am [31m  ERROR[39m 
+[38;5;3m[AuthService] [39mTypeError: this
+.notificationService.sendVerificationEmail 
+is not a function
+    at AuthService.sendVerificationEmail [
+90m(C:\Repos\Quiz-to-Build\apps\api\[39msr
+c\modules\auth\auth.service.ts:311:38[90m)
+[39m
+[90m    at processTicksAndRejections (node
+:internal/process/task_queues:104:5)[39m
+    at AuthService.register [90m(C:\Repos\
+Quiz-to-Build\apps\api\[39msrc\modules\aut
+h\auth.service.ts:98:7[90m)[39m
+    at Object.<anonymous> [90m(C:\Repos\Qu
+iz-to-Build\apps\api\[39msrc\modules\auth\
+auth.service.spec.ts:401:7[90m)[39m
+PASS src/modules/auth/auth.service.spec.ts 
+(7.809 s)
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +39ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +192ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +10ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +17ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +51ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +10ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +31ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:06 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +20ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +38ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +11ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +17ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +59ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +15ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +24ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +12ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +30ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[31m[Nest] 51868  - [39m22/02/2026, 
+1:42:07 am [31m  ERROR[39m 
+[38;5;3m[ScoringEngineService] 
+[39m[31mFailed to calculate score for 
+session-error[39m
+[31m[Nest] 51868  - [39m22/02/2026, 
+1:42:07 am [31m  ERROR[39m 
+[38;5;3m[ScoringEngineService] 
+[39mNotFoundException: Session not found: 
+session-error
+    at ScoringEngineService.calculateScore 
+[90m(C:\Repos\Quiz-to-Build\apps\api\[39m
+src\modules\scoring-engine\scoring-engine.s
+ervice.ts:121:13[90m)[39m
+[90m    at processTicksAndRejections (node
+:internal/process/task_queues:104:5)[39m
+    at async Promise.all (index 1)
+    at 
+ScoringEngineService.calculateBatchScores 
+[90m(C:\Repos\Quiz-to-Build\apps\api\[39ms
+rc\modules\scoring-engine\scoring-engine.se
+rvice.ts:559:28[90m)[39m
+    at Object.<anonymous> [90m(C:\Repos\Qu
+iz-to-Build\apps\api\[39msrc\modules\scori
+ng-engine\scoring-engine.service.spec.ts:47
+0:23[90m)[39m {
+  response: {
+    message: [32m'Session not found: 
+session-error'[39m,
+    error: [32m'Not Found'[39m,
+    statusCode: [33m404[39m
+  },
+  status: [33m404[39m,
+  options: {}
+}
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +53ms[39m
+[32m[Nest] 33632  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 33632  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +21ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +43ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 33632  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +20ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +18ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +27ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +11ms[39m
+[32m[Nest] 33632  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +35ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +13ms[39m
+[32m[Nest] 33632  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +10ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +16ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 33632  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +31ms[39m
+[32m[Nest] 33632  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +96ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +60ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +15ms[39m
+PASS src/modules/qpg/qpg.service.spec.ts
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +47ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +17ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +88ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +64ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+PASS src/modules/payment/subscription.servi
+ce.spec.ts
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +43ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 21880  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +15ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +63ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +11ms[39m
+PASS src/modules/scoring-engine/scoring-eng
+ine.service.spec.ts
+PASS src/modules/idea-capture/project-types
+.controller.spec.ts
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:07 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +31ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +29ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +12ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +10ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +14ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +13ms[39m
+[31m[Nest] 60716  - [39m22/02/2026, 
+1:42:08 am [31m  ERROR[39m 
+[38;5;3m[AdminAuditService] 
+[39m[31mFailed to create audit log: DB 
+Error[39m
+Error: DB Error
+    at Object.<anonymous> (C:\Repos\Quiz-to
+-Build\apps\api\src\modules\admin\services\
+admin-audit.service.spec.ts:94:63)
+    at Promise.then.completed (C:\Repos\Qui
+z-to-Build\apps\api\node_modules\jest-circu
+s\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Quiz-to-
+Build\apps\api\node_modules\jest-circus\bui
+ld\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz-to-Bu
+ild\apps\api\node_modules\jest-circus\build
+\run.js:316:40)
+    at processTicksAndRejections 
+(node:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Build\app
+s\api\node_modules\jest-circus\build\run.js
+:252:3)
+    at _runTestsForDescribeBlock (C:\Repos\
+Quiz-to-Build\apps\api\node_modules\jest-ci
+rcus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Repos\
+Quiz-to-Build\apps\api\node_modules\jest-ci
+rcus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Repos\
+Quiz-to-Build\apps\api\node_modules\jest-ci
+rcus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\apps\api
+\node_modules\jest-circus\build\run.js:71:3
+)
+    at runAndTransformResultsToJestFormat (
+C:\Repos\Quiz-to-Build\apps\api\node_module
+s\jest-circus\build\legacy-code-todo-rewrit
+e\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-Build\
+apps\api\node_modules\jest-circus\build\leg
+acy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Repos\Quiz-to-Bu
+ild\apps\api\node_modules\jest-runner\build
+\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Build\apps
+\api\node_modules\jest-runner\build\runTest
+.js:444:34)
+    at Object.worker (C:\Repos\Quiz-to-Buil
+d\apps\api\node_modules\jest-runner\build\t
+estWorker.js:106:12)
+PASS src/modules/admin/services/admin-audit
+.service.spec.ts
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +23ms[39m
+[32m[Nest] 60716  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +103ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +10ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+PASS src/modules/questionnaire/questionnair
+e.service.spec.ts
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +29ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 116516  - [39m22/02/2026, 1:42:08 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +15ms[39m
+[32m[Nest] 33632  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 33632  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +26ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+PASS src/modules/document-generator/tests/t
+emplate-engine.service.spec.ts
+[32m[Nest] 33632  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +80ms[39m
+[32m[Nest] 33632  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 33632  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +10ms[39m
+[32m[Nest] 33632  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 33632  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +60ms[39m
+[32m[Nest] 33632  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +29ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +11ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +18ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +13ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +16ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +11ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +12ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +20ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 30948  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +9ms[39m
+PASS src/modules/adaptive-logic/adaptive-lo
+gic.service.spec.ts
+PASS 
+src/modules/users/users.service.spec.ts
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +69ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +7ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +6ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+[32m[Nest] 51868  - [39m22/02/2026, 1:42:09 am [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRootTestModule dependencies initialized[39m[38;5;3m +5ms[39m
+PASS src/common/tests/validation/security-s
+can.spec.ts
+PASS src/common/tests/validation/ux-quality
+.spec.ts
+PASS src/common/tests/validation/accessibil
+ity.spec.ts
+  ÔùÅ Console
+
+    console.warn
+      Found 50 potential accessibility 
+issues
+
+    [0m [90m 92 |[39m       [90m// 
+Allow some violations but flag for 
+review[39m
+     [90m 93 |[39m       [36mif[39m 
+(violations[33m.[39mlength [33m>[39m 
+[35m5[39m) {
+    [31m[1m>[22m[39m[90m 94 |[39m    
+     console[33m.[39mwarn([32m`Found 
+${violations.length} potential 
+accessibility issues`[39m)[33m;[39m
+     [90m    |[39m                 
+[31m[1m^[22m[39m
+     [90m 95 |[39m       }
+     [90m 96 |[39m       expect(violation
+s[33m.[39mlength)[33m.[39mtoBeLessThan(
+[35m100[39m)[33m;[39m
+     [90m 97 |[39m     })[33m;[39m[0m
+
+      at Object.<anonymous> (common/tests/v
+alidation/accessibility.spec.ts:94:17)
+
+PASS src/common/tests/input-validation.secu
+rity.spec.ts
+PASS src/modules/adaptive-logic/evaluators/
+condition.evaluator.spec.ts
+'true' is not recognized as an internal or 
+external command,
+operable program or batch file.
+PASS src/common/tests/validation/dependency
+-health.spec.ts (66.68 s)
+  ÔùÅ Console
+
+    console.warn
+      npm audit check skipped due to error
+
+    [0m [90m 158 |[39m       } 
+[36mcatch[39m (error) {
+     [90m 159 |[39m         [90m// npm 
+audit command failed - might be network 
+issue[39m
+    [31m[1m>[22m[39m[90m 160 |[39m   
+      console[33m.[39mwarn([32m'npm 
+audit check skipped due to 
+error'[39m)[33m;[39m
+     [90m     |[39m                 
+[31m[1m^[22m[39m
+     [90m 161 |[39m         expect([36mt
+rue[39m)[33m.[39mtoBe([36mtrue[39m)[3
+3m;[39m
+     [90m 162 |[39m       }
+     [90m 163 |[39m     })[33m;[39m[0m
+
+      at Object.<anonymous> (common/tests/v
+alidation/dependency-health.spec.ts:160:17)
+
+A worker process has failed to exit 
+gracefully and has been force exited. This 
+is likely caused by tests leaking due to 
+improper teardown. Try running with 
+--detectOpenHandles to find leaks. Active 
+timers can also cause this, ensure that 
+.unref() was called on them.
+Failed to collect coverage from C:\Repos\Qu
+iz-to-Build\apps\api\src\modules\document-g
+enerator\controllers\document-admin.control
+ler.ts
+ERROR: [96msrc/modules/document-generator/
+controllers/document-admin.controller.ts[0
+m:[93m147[0m:[93m5[0m - 
+[91merror[0m[90m TS2322: [0mType '{ 
+id: string; sessionId: string; 
+documentTypeId: string; status: 
+DocumentStatus; format: string; fileName: 
+string | undefined; fileSize: string | 
+undefined; version: number; generatedAt: 
+Date | undefined; createdAt: Date; 
+updatedAt: Date; documentType: { ...; }; 
+}[]' is not assignable to type 
+'DocumentResponseDto[]'.
+  Type '{ id: string; sessionId: string; 
+documentTypeId: string; status: 
+$Enums.DocumentStatus; format: string; 
+fileName: string | undefined; fileSize: 
+string | undefined; version: number; 
+generatedAt: Date | undefined; createdAt: 
+Date; updatedAt: Date; documentType: { 
+...; }; }' is not assignable to type 
+'DocumentResponseDto'.
+    Types of property 'documentType' are 
+incompatible.
+      Property 'outputFormats' is missing 
+in type '{ id: string; name: string; slug: 
+string; description: string | null; 
+category: $Enums.DocumentCategory; 
+estimatedPages: number | null; isActive: 
+boolean; }' but required in type 
+'DocumentTypeResponseDto'.
+
+[7m147[0m     return documents.map((doc) 
+=> ({
+[7m   [0m [91m    ~~~~~~[0m
+
+  [96msrc/modules/document-generator/dto/d
+ocument-response.dto.ts[0m:[93m25[0m:[9
+3m3[0m
+    [7m25[0m   outputFormats: string[];
+    [7m  [0m [96m  ~~~~~~~~~~~~~[0m
+    'outputFormats' is declared here.
+STACK: 
+--------------------------------------------|---------|----------|---------|---------|----------------------------------------------------------------------------------------------------------
+File                                        | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                                                                                        
+--------------------------------------------|---------|----------|---------|---------|----------------------------------------------------------------------------------------------------------
+All files                                   |   37.58 |     29.1 |   34.75 |   37.16 |                                                                                                          
+ src                                        |       0 |        0 |       0 |       0 |                                                                                                          
+  health.controller.ts                      |       0 |        0 |       0 |       0 | 1-337                                                                                                    
+ src/common/filters                         |       0 |        0 |       0 |       0 |                                                                                                          
+  http-exception.filter.ts                  |       0 |        0 |       0 |       0 | 1-99                                                                                                     
+ src/common/guards                          |   12.83 |     2.77 |      10 |   10.29 |                                                                                                          
+  csrf.guard.ts                             |   25.33 |     7.69 |   22.22 |      20 | 26,49-177,191-219                                                                                        
+  index.ts                                  |       0 |      100 |     100 |       0 | 1-2                                                                                                      
+  subscription.guard.ts                     |       0 |        0 |       0 |       0 | 1-270                                                                                                    
+ src/common/interceptors                    |       0 |        0 |       0 |       0 |                                                                                                          
+  logging.interceptor.ts                    |       0 |        0 |       0 |       0 | 1-40                                                                                                     
+  transform.interceptor.ts                  |       0 |      100 |       0 |       0 | 1-21                                                                                                     
+ src/common/services                        |       0 |        0 |       0 |       0 |                                                                                                          
+  memory-optimization.service.ts            |       0 |        0 |       0 |       0 | 1-209                                                                                                    
+ src/common/tests                           |       0 |      100 |     100 |       0 |                                                                                                          
+  index.ts                                  |       0 |      100 |     100 |       0 | 26-28                                                                                                    
+ src/common/tests/validation                |       0 |      100 |     100 |       0 |                                                                                                          
+  index.ts                                  |       0 |      100 |     100 |       0 | 21                                                                                                       
+ src/config                                 |    0.25 |     6.81 |    0.47 |    0.13 |                                                                                                          
+  alerting-rules.config.ts                  |       0 |        0 |       0 |       0 | 61-768                                                                                                   
+  appinsights.config.ts                     |       0 |        0 |       0 |       0 | 7-576                                                                                                    
+  canary-deployment.config.ts               |       0 |        0 |       0 |       0 | 140-991                                                                                                  
+  chaos-engineering.config.ts               |       0 |        0 |       0 |       0 | 286-1258                                                                                                 
+  configuration.ts                          |     100 |    65.21 |     100 |     100 | 3-46                                                                                                     
+  disaster-recovery.config.ts               |       0 |        0 |       0 |       0 | 40-783                                                                                                   
+  failure-injection.config.ts               |       0 |        0 |       0 |       0 | 94-1073                                                                                                  
+  feature-flags.config.ts                   |       0 |        0 |       0 |       0 | 194-908                                                                                                  
+  graceful-degradation.config.ts            |       0 |        0 |       0 |       0 | 62-895                                                                                                   
+  incident-response.config.ts               |       0 |        0 |       0 |       0 | 132-1102                                                                                                 
+  resource-pressure.config.ts               |       0 |        0 |       0 |       0 | 74-892                                                                                                   
+  sentry.config.ts                          |       0 |        0 |       0 |       0 | 8-215                                                                                                    
+  uptime-monitoring.config.ts               |       0 |        0 |       0 |       0 | 12-368                                                                                                   
+ src/modules/adapters                       |       0 |        0 |       0 |       0 |                                                                                                          
+  adapter-config.service.ts                 |       0 |        0 |       0 |       0 | 1-465                                                                                                    
+  adapter.controller.ts                     |       0 |        0 |       0 |       0 | 1-471                                                                                                    
+  github.adapter.ts                         |       0 |        0 |       0 |       0 | 1-592                                                                                                    
+  gitlab.adapter.ts                         |       0 |        0 |       0 |       0 | 1-839                                                                                                    
+  index.ts                                  |       0 |      100 |     100 |       0 | 1-6                                                                                                      
+  jira-confluence.adapter.ts                |       0 |        0 |       0 |       0 | 1-883                                                                                                    
+ src/modules/adaptive-logic                 |    67.7 |    54.28 |   76.19 |   64.28 |                                                                                                          
+  adaptive-logic.service.ts                 |    67.7 |    54.28 |   76.19 |   64.28 | 117-121,125,142-174,229-279                                                                              
+ src/modules/adaptive-logic/evaluators      |   74.17 |    71.53 |   95.23 |    73.1 |                                                                                                          
+  condition.evaluator.ts                    |   74.17 |    71.53 |   95.23 |    73.1 | 64,70,86,130-134,161-170,178,188-196,207,221,235,245-252,260,267,294,297,319,333,346,366-367,381,398-403 
+ src/modules/admin/controllers              |       0 |        0 |       0 |       0 |                                                                                                          
+  admin-questionnaire.controller.ts         |       0 |        0 |       0 |       0 | 1-272                                                                                                    
+ src/modules/admin/dto                      |       0 |      100 |       0 |       0 |                                                                                                          
+  create-question.dto.ts                    |       0 |      100 |     100 |       0 | 1-107                                                                                                    
+  create-questionnaire.dto.ts               |       0 |      100 |     100 |       0 | 1-35                                                                                                     
+  create-section.dto.ts                     |       0 |      100 |     100 |       0 | 1-39                                                                                                     
+  create-visibility-rule.dto.ts             |       0 |      100 |     100 |       0 | 1-49                                                                                                     
+  index.ts                                  |       0 |      100 |       0 |       0 | 2-17                                                                                                     
+  reorder-questions.dto.ts                  |       0 |      100 |       0 |       0 | 1-21                                                                                                     
+  reorder-sections.dto.ts                   |       0 |      100 |       0 |       0 | 1-21                                                                                                     
+  update-question.dto.ts                    |       0 |      100 |     100 |       0 | 1-4                                                                                                      
+  update-questionnaire.dto.ts               |       0 |      100 |     100 |       0 | 1-10                                                                                                     
+  update-section.dto.ts                     |       0 |      100 |     100 |       0 | 1-4                                                                                                      
+  update-visibility-rule.dto.ts             |       0 |      100 |     100 |       0 | 1-4                                                                                                      
+ src/modules/admin/services                 |   63.86 |       64 |   70.83 |   61.94 |                                                                                                          
+  admin-audit.service.ts                    |     100 |    84.61 |     100 |     100 | 40-41                                                                                                    
+  admin-questionnaire.service.ts            |   59.81 |    56.75 |   68.18 |   58.25 | 156-171,226-252,262,292,330,369-403,413,443,471-566                                                      
+ src/modules/auth                           |   68.34 |    48.88 |   78.57 |   67.69 |                                                                                                          
+  auth.controller.ts                        |     100 |    33.33 |     100 |     100 | 55                                                                                                       
+  auth.service.ts                           |   59.87 |       50 |    64.7 |   59.35 | 100,277,285-287,293,312,323-499                                                                          
+ src/modules/auth/decorators                |    64.7 |        0 |   33.33 |   64.28 |                                                                                                          
+  public.decorator.ts                       |      80 |      100 |       0 |     100 |                                                                                                          
+  roles.decorator.ts                        |     100 |      100 |     100 |     100 |                                                                                                          
+  user.decorator.ts                         |   28.57 |        0 |       0 |   28.57 | 9-16                                                                                                     
+ src/modules/auth/dto                       |     100 |      100 |     100 |     100 |                                                                                                          
+  login.dto.ts                              |     100 |      100 |     100 |     100 |                                                                                                          
+  refresh-token.dto.ts                      |     100 |      100 |     100 |     100 |                                                                                                          
+  register.dto.ts                           |     100 |      100 |     100 |     100 |                                                                                                          
+  token.dto.ts                              |     100 |      100 |     100 |     100 |                                                                                                          
+  verification.dto.ts                       |     100 |      100 |     100 |     100 |                                                                                                          
+ src/modules/auth/guards                    |   41.02 |        0 |   33.33 |   35.29 |                                                                                                          
+  jwt-auth.guard.ts                         |      45 |        0 |   33.33 |   38.88 | 13-35                                                                                                    
+  roles.guard.ts                            |   36.84 |        0 |   33.33 |   31.25 | 12-34                                                                                                    
+ src/modules/auth/oauth                     |       0 |        0 |       0 |       0 |                                                                                                          
+  index.ts                                  |       0 |      100 |     100 |       0 | 1-2                                                                                                      
+  oauth.controller.ts                       |       0 |        0 |       0 |       0 | 1-124                                                                                                    
+  oauth.service.ts                          |       0 |        0 |       0 |       0 | 1-353                                                                                                    
+ src/modules/auth/strategies                |       0 |        0 |       0 |       0 |                                                                                                          
+  jwt.strategy.ts                           |       0 |        0 |       0 |       0 | 1-31                                                                                                     
+ src/modules/decision-log                   |       0 |        0 |       0 |       0 |                                                                                                          
+  approval-workflow.service.ts              |       0 |        0 |       0 |       0 | 1-649                                                                                                    
+  decision-log.controller.ts                |       0 |      100 |       0 |       0 | 1-251                                                                                                    
+  decision-log.service.ts                   |       0 |        0 |       0 |       0 | 1-380                                                                                                    
+  index.ts                                  |       0 |      100 |     100 |       0 | 1-6                                                                                                      
+ src/modules/decision-log/decorators        |       0 |        0 |       0 |       0 |                                                                                                          
+  require-approval.decorator.ts             |       0 |        0 |       0 |       0 | 1-192                                                                                                    
+ src/modules/decision-log/dto               |       0 |      100 |     100 |       0 |                                                                                                          
+  decision.dto.ts                           |       0 |      100 |     100 |       0 | 1-149                                                                                                    
+  index.ts                                  |       0 |      100 |     100 |       0 | 1                                                                                                        
+ src/modules/document-generator/controllers |   38.57 |       60 |   33.33 |   38.09 |                                                                                                          
+  deliverables-compiler.controller.ts       |       0 |        0 |       0 |       0 | 1-253                                                                                                    
+  document.controller.ts                    |    93.1 |       90 |   77.77 |    92.3 | 60,70                                                                                                    
+ src/modules/document-generator/dto         |   97.79 |      100 |   22.22 |   98.46 |                                                                                                          
+  create-document-type.dto.ts               |     100 |      100 |     100 |     100 |                                                                                                          
+  deliverables-pack.dto.ts                  |   96.36 |      100 |       0 |   96.36 | 43,60                                                                                                    
+  document-response.dto.ts                  |     100 |      100 |     100 |     100 |                                                                                                          
+  index.ts                                  |     100 |      100 |      25 |     100 |                                                                                                          
+  request-generation.dto.ts                 |   85.71 |      100 |     100 |     100 |                                                                                                          
+  review-document.dto.ts                    |     100 |      100 |     100 |     100 |                                                                                                          
+  update-document-type.dto.ts               |     100 |      100 |     100 |     100 |                                                                                                          
+ src/modules/document-generator/services    |   52.94 |    35.31 |   61.76 |   51.33 |                                                                                                          
+  ai-document-content.service.ts            |    6.66 |        0 |       0 |    4.59 | 61-364                                                                                                   
+  deliverables-compiler.service.ts          |   89.81 |    75.38 |   97.67 |    89.2 | 342-389,996,1004-1006,1207,1274,1293-1295,1318-1319                                                      
+  document-builder.service.ts               |    4.44 |        0 |       0 |    3.03 | 31-536                                                                                                   
+  document-generator.service.ts             |    59.5 |     31.7 |   42.85 |   58.62 | 156-171,221-253,290,294,308-435,466-474                                                                  
+  storage.service.ts                        |   12.76 |        0 |       0 |    8.88 | 20-143                                                                                                   
+  template-engine.service.ts                |   75.55 |       45 |      75 |    75.9 | 90,163-166,179-199,213-214,218-219,227-228,247-248,268                                                   
+ src/modules/document-generator/templates   |    2.46 |      100 |    1.29 |    3.57 |                                                                                                          
+  api-documentation.template.ts             |       0 |      100 |     100 |       0 | 9-114                                                                                                    
+  base.template.ts                          |       0 |      100 |     100 |       0 | 5-100                                                                                                    
+  business-case.template.ts                 |       0 |      100 |     100 |       0 | 9-129                                                                                                    
+  business-plan.template.ts                 |       0 |      100 |     100 |       0 | 9-146                                                                                                    
+  business-requirements.template.ts         |       0 |      100 |     100 |       0 | 9-121                                                                                                    
+  change-request.template.ts                |       0 |      100 |     100 |       0 | 9-155                                                                                                    
+  data-models.template.ts                   |       0 |      100 |     100 |       0 | 9-114                                                                                                    
+  data-protection-policy.template.ts        |       0 |      100 |     100 |       0 | 9-108                                                                                                    
+  disaster-recovery-plan.template.ts        |       0 |      100 |     100 |       0 | 9-143                                                                                                    
+  document-templates.ts                     |      80 |      100 |      50 |      80 | 315                                                                                                      
+  engineering-handbook.template.ts          |       0 |      100 |     100 |       0 | 9-161                                                                                                    
+  functional-requirements.template.ts       |       0 |      100 |     100 |       0 | 9-132                                                                                                    
+  incident-response-plan.template.ts        |       0 |      100 |     100 |       0 | 9-102                                                                                                    
+  index.ts                                  |       0 |      100 |       0 |       0 | 7-86                                                                                                     
+  information-security-policy.template.ts   |       0 |      100 |     100 |       0 | 9-132                                                                                                    
+  ip-assignment-nda.template.ts             |       0 |      100 |     100 |       0 | 9-92                                                                                                     
+  onboarding-offboarding.template.ts        |       0 |      100 |     100 |       0 | 9-142                                                                                                    
+  process-maps.template.ts                  |       0 |      100 |     100 |       0 | 9-195                                                                                                    
+  product-architecture.template.ts          |       0 |      100 |     100 |       0 | 9-111                                                                                                    
+  requirements-traceability.template.ts     |       0 |      100 |     100 |       0 | 9-120                                                                                                    
+  stakeholder-analysis.template.ts          |       0 |      100 |     100 |       0 | 9-183                                                                                                    
+  technical-debt-register.template.ts       |       0 |      100 |     100 |       0 | 9-109                                                                                                    
+  technology-roadmap.template.ts            |       0 |      100 |     100 |       0 | 9-80                                                                                                     
+  technology-strategy.template.ts           |       0 |      100 |     100 |       0 | 9-90                                                                                                     
+  user-flow-maps.template.ts                |       0 |      100 |     100 |       0 | 9-112                                                                                                    
+  user-stories.template.ts                  |       0 |      100 |     100 |       0 | 9-163                                                                                                    
+  vendor-management.template.ts             |       0 |      100 |     100 |       0 | 9-109                                                                                                    
+  wireframes-mockups.template.ts            |       0 |      100 |     100 |       0 | 9-205                                                                                                    
+ src/modules/evidence-registry              |   52.45 |    30.13 |   69.23 |   51.61 |                                                                                                          
+  ci-artifact-ingestion.service.ts          |    3.72 |        0 |       0 |    2.68 | 38-685                                                                                                   
+  evidence-integrity.service.ts             |   94.87 |    73.52 |     100 |   94.69 | 100,316-317,379,492,495                                                                                  
+  evidence-registry.controller.ts           |     100 |      100 |     100 |     100 |                                                                                                          
+  evidence-registry.service.ts              |   63.72 |    56.94 |   81.25 |    63.5 | 51,62,70-73,147-149,154,186-207,251-259,379-391,403-411,420,451,587-701,786-820                          
+  index.ts                                  |       0 |      100 |     100 |       0 | 1-6                                                                                                      
+ src/modules/evidence-registry/dto          |     100 |      100 |     100 |     100 |                                                                                                          
+  evidence.dto.ts                           |     100 |      100 |     100 |     100 |                                                                                                          
+  index.ts                                  |     100 |      100 |     100 |     100 |                                                                                                          
+ src/modules/heatmap                        |   63.72 |    28.08 |   60.56 |   63.69 |                                                                                                          
+  heatmap.controller.ts                     |     100 |       50 |     100 |     100 | 39                                                                                                       
+  heatmap.service.ts                        |   60.07 |    27.58 |   54.83 |      60 | 151,251-254,283-285,305,399,409,431-727                                                                  
+  index.ts                                  |       0 |      100 |     100 |       0 | 1-4                                                                                                      
+ src/modules/heatmap/dto                    |     100 |      100 |     100 |     100 |                                                                                                          
+  index.ts                                  |     100 |      100 |     100 |     100 |                                                                                                          
+ src/modules/idea-capture                   |   33.33 |      100 |   28.57 |   30.76 |                                                                                                          
+  idea-capture.controller.ts                |       0 |      100 |       0 |       0 | 1-94                                                                                                     
+  project-types.controller.ts               |     100 |      100 |     100 |     100 |                                                                                                          
+ src/modules/idea-capture/dto               |       0 |      100 |     100 |       0 |                                                                                                          
+  confirm-project-type.dto.ts               |       0 |      100 |     100 |       0 | 1-10                                                                                                     
+  create-idea.dto.ts                        |       0 |      100 |     100 |       0 | 1-31                                                                                                     
+  idea-response.dto.ts                      |       0 |      100 |     100 |       0 | 1-81                                                                                                     
+ src/modules/idea-capture/services          |       0 |        0 |       0 |       0 |                                                                                                          
+  claude-ai.service.ts                      |       0 |        0 |       0 |       0 | 1-258                                                                                                    
+  idea-capture.service.ts                   |       0 |        0 |       0 |       0 | 1-248                                                                                                    
+ src/modules/notifications                  |    3.04 |        0 |       0 |    2.39 |                                                                                                          
+  adaptive-card.service.ts                  |       0 |        0 |       0 |       0 | 1-612                                                                                                    
+  index.ts                                  |       0 |      100 |     100 |       0 | 1-3                                                                                                      
+  notification.controller.ts                |       0 |      100 |       0 |       0 | 1-34                                                                                                     
+  notification.service.ts                   |    6.95 |        0 |       0 |     5.4 | 26-145,161-465                                                                                           
+  teams-webhook.controller.ts               |       0 |        0 |       0 |       0 | 1-341                                                                                                    
+ src/modules/notifications/dto              |   94.59 |      100 |     100 |   94.59 |                                                                                                          
+  email-template.dto.ts                     |     100 |      100 |     100 |     100 |                                                                                                          
+  index.ts                                  |       0 |      100 |     100 |       0 | 1-2                                                                                                      
+  send-email.dto.ts                         |     100 |      100 |     100 |     100 |                                                                                                          
+ src/modules/payment                        |   80.22 |    51.66 |   85.71 |   79.28 |                                                                                                          
+  billing.service.ts                        |     100 |    60.97 |     100 |     100 | 52,78-159,212-228                                                                                        
+  payment.controller.ts                     |   55.55 |    14.28 |    62.5 |   54.02 | 168,189,206-315                                                                                          
+  payment.service.ts                        |   84.61 |    51.51 |    92.3 |   84.21 | 96,159,179,200,214,230-234,247,276,287,303                                                               
+  subscription.service.ts                   |     100 |    88.88 |     100 |     100 | 56,171                                                                                                   
+ src/modules/payment/dto                    |     100 |      100 |     100 |     100 |                                                                                                          
+  payment.dto.ts                            |     100 |      100 |     100 |     100 |                                                                                                          
+ src/modules/policy-pack                    |   82.79 |     37.5 |    87.5 |   82.02 |                                                                                                          
+  index.ts                                  |       0 |      100 |     100 |       0 | 1-5                                                                                                      
+  policy-pack.controller.ts                 |      75 |      100 |   88.88 |   73.68 | 81-105                                                                                                   
+  policy-pack.service.ts                    |   97.91 |     37.5 |   85.71 |   97.82 | 102                                                                                                      
+ src/modules/policy-pack/services           |   11.06 |        0 |       0 |    7.14 |                                                                                                          
+  control-mapping.service.ts                |   22.72 |        0 |       0 |   15.78 | 16-477                                                                                                   
+  index.ts                                  |       0 |      100 |     100 |       0 | 1-5                                                                                                      
+  opa-policy.service.ts                     |   16.66 |        0 |       0 |   10.71 | 10-241                                                                                                   
+  policy-export.service.ts                  |     3.5 |        0 |       0 |     1.8 | 10-267                                                                                                   
+  policy-generator.service.ts               |   18.91 |        0 |       0 |   15.62 | 33-309                                                                                                   
+  terraform-rules.service.ts                |   22.22 |      100 |       0 |   13.33 | 17-186                                                                                                   
+ src/modules/policy-pack/types              |     100 |      100 |     100 |     100 |                                                                                                          
+  index.ts                                  |     100 |      100 |     100 |     100 |                                                                                                          
+  policy-pack.types.ts                      |     100 |      100 |     100 |     100 |                                                                                                          
+ src/modules/qpg                            |   85.71 |       50 |   84.21 |   85.39 |                                                                                                          
+  index.ts                                  |       0 |      100 |     100 |       0 | 1-6                                                                                                      
+  qpg.controller.ts                         |   84.31 |    42.85 |   72.72 |    85.1 | 61-65,91-92                                                                                              
+  qpg.service.ts                            |     100 |    55.55 |     100 |     100 | 57-60                                                                                                    
+ src/modules/qpg/dto                        |     100 |      100 |     100 |     100 |                                                                                                          
+  generate-prompts.dto.ts                   |     100 |      100 |     100 |     100 |                                                                                                          
+  index.ts                                  |     100 |      100 |     100 |     100 |                                                                                                          
+ src/modules/qpg/services                   |   11.71 |        0 |       0 |    7.56 |                                                                                                          
+  context-builder.service.ts                |   11.36 |        0 |       0 |    7.31 | 11-129                                                                                                   
+  index.ts                                  |       0 |      100 |     100 |       0 | 1-3                                                                                                      
+  prompt-generator.service.ts               |    7.46 |        0 |       0 |    4.76 | 11-220                                                                                                   
+  prompt-template.service.ts                |   35.71 |        0 |       0 |      25 | 10-376                                                                                                   
+ src/modules/qpg/types                      |     100 |      100 |     100 |     100 |                                                                                                          
+  index.ts                                  |     100 |      100 |     100 |     100 |                                                                                                          
+  qpg.types.ts                              |     100 |      100 |     100 |     100 |                                                                                                          
+ src/modules/questionnaire                  |   88.67 |    75.47 |      90 |   89.36 |                                                                                                          
+  questionnaire.controller.ts               |     100 |       50 |     100 |     100 | 33-36                                                                                                    
+  questionnaire.service.ts                  |   84.61 |    78.72 |   88.23 |   85.71 | 195-224                                                                                                  
+ src/modules/scoring-engine                 |   80.44 |    61.53 |   73.77 |   80.85 |                                                                                                          
+  index.ts                                  |       0 |      100 |       0 |       0 | 1-19                                                                                                     
+  scoring-engine.controller.ts              |     100 |      100 |     100 |     100 |                                                                                                          
+  scoring-engine.service.ts                 |   84.05 |    61.53 |   90.24 |   84.93 | 34,48,130,181-184,367,492,504-507,607,644,706,709-714,779-803,891,898                                    
+ src/modules/scoring-engine/dto             |   80.28 |    28.57 |      20 |   80.28 |                                                                                                          
+  calculate-score.dto.ts                    |      80 |    28.57 |      20 |      80 | 42-54,83-93,113                                                                                          
+  index.ts                                  |     100 |      100 |     100 |     100 |                                                                                                          
+ src/modules/session                        |   61.96 |    61.35 |    55.4 |   61.31 |                                                                                                          
+  session-expiration.service.ts             |       0 |        0 |       0 |       0 | 1-78                                                                                                     
+  session.controller.ts                     |     100 |       50 |     100 |     100 | 69-129                                                                                                   
+  session.service.ts                        |   63.37 |    64.22 |   52.45 |   62.32 | 259,266,381-382,392,440,547-549,675,693-697,825,851-852,868-1192                                         
+ src/modules/session/controllers            |       0 |      100 |       0 |       0 |                                                                                                          
+  conversation.controller.ts                |       0 |      100 |       0 |       0 | 1-87                                                                                                     
+ src/modules/session/dto                    |   95.23 |      100 |       0 |   95.23 |                                                                                                          
+  continue-session.dto.ts                   |   83.33 |      100 |       0 |   83.33 | 11                                                                                                       
+  create-session.dto.ts                     |     100 |      100 |     100 |     100 |                                                                                                          
+  submit-response.dto.ts                    |     100 |      100 |     100 |     100 |                                                                                                          
+ src/modules/session/services               |       0 |        0 |       0 |       0 |                                                                                                          
+  conversation.service.ts                   |       0 |        0 |       0 |       0 | 1-142                                                                                                    
+ src/modules/standards                      |   63.33 |    78.57 |   70.58 |   62.65 |                                                                                                          
+  standards.controller.ts                   |       0 |      100 |       0 |       0 | 1-85                                                                                                     
+  standards.service.ts                      |   80.28 |    78.57 |     100 |   78.78 | 32-33,54-55,82,96-100,137-138,192-193,203                                                                
+ src/modules/standards/dto                  |       0 |      100 |     100 |       0 |                                                                                                          
+  standard.dto.ts                           |       0 |      100 |     100 |       0 | 1-92                                                                                                     
+ src/modules/standards/types                |     100 |      100 |     100 |     100 |                                                                                                          
+  standard.types.ts                         |     100 |      100 |     100 |     100 |                                                                                                          
+ src/modules/users                          |     100 |    77.77 |     100 |     100 |                                                                                                          
+  users.controller.ts                       |     100 |       50 |     100 |     100 | 57-60                                                                                                    
+  users.service.ts                          |     100 |    83.33 |     100 |     100 | 94,104,173-174,195                                                                                       
+ src/modules/users/dto                      |     100 |      100 |     100 |     100 |                                                                                                          
+  update-user.dto.ts                        |     100 |      100 |     100 |     100 |                                                                                                          
+--------------------------------------------|---------|----------|---------|---------|----------------------------------------------------------------------------------------------------------
+Jest: "global" coverage threshold for 
+functions (35%) not met: 34.75%
+
+Test Suites: 41 passed, 41 total
+Tests:       613 passed, 613 total
+Snapshots:   0 total
+Time:        132.735 s, estimated 182 s
+Ran all test suites.

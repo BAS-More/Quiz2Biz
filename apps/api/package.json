@@ -105,7 +105,11 @@
     "moduleNameMapper": {
       "^@libs/database(.*)$": "<rootDir>/../../../libs/database/src$1",
       "^@libs/redis(.*)$": "<rootDir>/../../../libs/redis/src$1",
-      "^@libs/shared(.*)$": "<rootDir>/../../../libs/shared/src$1"
-    }
+      "^@libs/shared(.*)$": "<rootDir>/../../../libs/shared/src$1",
+      "^archiver$": "<rootDir>/../../../node_modules/archiver"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(readdir-glob|minimatch|brace-expansion|balanced-match)/)"
+    ]
   }
 }
