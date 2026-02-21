@@ -17,6 +17,8 @@ describe('modules/heatmap index', () => {
   });
 
   it('should export DTOs', () => {
-    expect(heatmap.HeatmapConfigDto).toBeDefined();
+    expect(heatmap.GenerateHeatmapDto).toBeDefined();
+    expect(heatmap.HeatmapCellDto).toBeDefined();
+    expect(heatmap.HeatmapResultDto).toBeDefined();
   });
 });
