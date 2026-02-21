@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';
+import { EmailType, SendEmailDto, BulkSendEmailDto } from './dto/send-email.dto';
 
 describe('NotificationController', () => {
   let controller: NotificationController;
@@ -25,10 +26,10 @@ describe('NotificationController', () => {
 
   describe('sendEmail', () => {
     it('should send a single email successfully', async () => {
-      const dto = {
+      const dto: SendEmailDto = {
         to: 'test@example.com',
         subject: 'Test Subject',
-        template: 'welcome',
+        type: EmailType.WELCOME,
         data: { name: 'Test User' },
       };
       const mockResponse = {
@@ -45,10 +46,10 @@ describe('NotificationController', () => {
     });
 
     it('should handle email sending failure', async () => {
-      const dto = {
+      const dto: SendEmailDto = {
         to: 'test@example.com',
         subject: 'Test',
-        template: 'welcome',
+        type: EmailType.WELCOME,
         data: {},
       };
 
@@ -60,10 +61,10 @@ describe('NotificationController', () => {
 
   describe('sendBulkEmails', () => {
     it('should send multiple emails successfully', async () => {
-      const dto = {
+      const dto: BulkSendEmailDto = {
         emails: [
-          { to: 'user1@example.com', subject: 'Test 1', template: 'welcome', data: {} },
-          { to: 'user2@example.com', subject: 'Test 2', template: 'welcome', data: {} },
+          { to: 'user1@example.com', subject: 'Test 1', type: EmailType.WELCOME, data: {} },
+          { to: 'user2@example.com', subject: 'Test 2', type: EmailType.WELCOME, data: {} },
         ],
       };
       const mockResponses = [
@@ -81,10 +82,10 @@ describe('NotificationController', () => {
     });
 
     it('should handle partial failure in bulk send', async () => {
-      const dto = {
+      const dto: BulkSendEmailDto = {
         emails: [
-          { to: 'user1@example.com', subject: 'Test 1', template: 'welcome', data: {} },
-          { to: 'invalid', subject: 'Test 2', template: 'welcome', data: {} },
+          { to: 'user1@example.com', subject: 'Test 1', type: EmailType.WELCOME, data: {} },
+          { to: 'invalid', subject: 'Test 2', type: EmailType.WELCOME, data: {} },
         ],
       };
       const mockResponses = [
@@ -101,7 +102,7 @@ describe('NotificationController', () => {
     });
 
     it('should handle empty email list', async () => {
-      const dto = { emails: [] };
+      const dto: BulkSendEmailDto = { emails: [] };
       mockNotificationService.sendBulkEmails.mockResolvedValue([]);
 
       const result = await controller.sendBulkEmails(dto);

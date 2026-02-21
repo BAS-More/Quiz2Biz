@@ -35,7 +35,7 @@ describe('ConversationController', () => {
         dimensionContext: 'SECURITY',
       };
       const mockResult = {
-        followUp: { needed: true, question: 'Can you elaborate on the encryption type?' },
+        followUp: { shouldFollowUp: true, followUpQuestion: 'Can you elaborate on the encryption type?', completenessScore: 0.5, missingAreas: ['details'] },
         conversationMessages: [{ id: 'm-1', content: 'We use encryption', role: 'user' }],
       };
 
@@ -62,7 +62,7 @@ describe('ConversationController', () => {
         dimensionContext: 'COMPLIANCE',
       };
       const mockResult = {
-        followUp: { needed: false, question: null },
+        followUp: { shouldFollowUp: false, completenessScore: 1.0, missingAreas: [] },
         conversationMessages: [{ id: 'm-1', content: 'Complete answer', role: 'user' }],
       };
 
@@ -70,7 +70,7 @@ describe('ConversationController', () => {
 
       const result = await controller.submitAnswerWithAi(sessionId, dto);
 
-      expect(result.followUp.needed).toBe(false);
+      expect(result.followUp.shouldFollowUp).toBe(false);
     });
   });
 
