@@ -249,8 +249,8 @@ describe('Individual Template Exports', () => {
   it.each(allTemplates)('$name should have valid sections', ({ template }) => {
     expect(template.sections.length).toBeGreaterThan(0);
     template.sections.forEach(section => {
-      expect(section.heading).toBeDefined();
-      expect(section.description).toBeDefined();
+      expect(section.title).toBeDefined();
+      expect(section.id).toBeDefined();
     });
   });
 });

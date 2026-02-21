@@ -162,6 +162,7 @@ export class DocumentAdminController {
         slug: doc.documentType.slug,
         description: doc.documentType.description,
         category: doc.documentType.category,
+        outputFormats: ['pdf', 'docx'],
         estimatedPages: doc.documentType.estimatedPages,
         isActive: doc.documentType.isActive,
       },

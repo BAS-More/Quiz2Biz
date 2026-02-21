@@ -25,7 +25,7 @@ env:
   IMAGE_NAME: quiz-api
   RESOURCE_GROUP: rg-questionnaire-prod
   CONTAINER_APP_NAME: ca-questionnaire-api-prod
-  HEALTH_PATH: /health
+  HEALTH_PATH: /api/v1/health
 
 permissions:
   contents: read
