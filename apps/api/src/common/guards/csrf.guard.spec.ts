@@ -89,34 +89,140 @@ describe('CsrfGuard', () => {
       expect(guard.canActivate(context)).toBe(true);
     });
 
-    // TODO: These tests are skipped due to mock context issues - the guard returns true
-    // even when tokens are missing/mismatched, suggesting headers aren't being read correctly
-    it.skip('should throw when header token is missing', () => {
-      const context = createMockContext('POST', {}, { [CSRF_TOKEN_COOKIE]: 'token123' });
-      expect(() => guard.canActivate(context)).toThrow();
+    it('should throw ForbiddenException when header token is missing', () => {
+      mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
+        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
+        if (key === 'CSRF_DISABLED') return 'false';
+        return defaultValue;
+      });
+      mockReflector.get.mockReturnValue(false);
+      
+      const validToken = CsrfGuard.generateToken('test-csrf-secret');
+      const context = createMockContext('POST', {}, { [CSRF_TOKEN_COOKIE]: validToken });
+      
+      expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
     });
 
-    it.skip('should throw when cookie token is missing', () => {
-      const context = createMockContext('POST', { [CSRF_TOKEN_HEADER]: 'token123' }, {});
-      expect(() => guard.canActivate(context)).toThrow();
+    it('should throw ForbiddenException when cookie token is missing', () => {
+      mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
+        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
+        if (key === 'CSRF_DISABLED') return 'false';
+        return defaultValue;
+      });
+      mockReflector.get.mockReturnValue(false);
+      
+      const validToken = CsrfGuard.generateToken('test-csrf-secret');
+      const context = createMockContext('POST', { [CSRF_TOKEN_HEADER]: validToken }, {});
+      
+      expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
     });
 
-    it.skip('should throw when token lengths do not match', () => {
+    it('should throw ForbiddenException when token lengths do not match', () => {
+      mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
+        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
+        if (key === 'CSRF_DISABLED') return 'false';
+        return defaultValue;
+      });
+      mockReflector.get.mockReturnValue(false);
+      
       const context = createMockContext(
         'POST',
         { [CSRF_TOKEN_HEADER]: 'short' },
         { [CSRF_TOKEN_COOKIE]: 'much_longer_token' },
       );
-      expect(() => guard.canActivate(context)).toThrow();
+      
+      expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
     });
 
-    it.skip('should throw when tokens do not match same length', () => {
+    it('should throw ForbiddenException when tokens do not match (same length)', () => {
+      mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
+        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
+        if (key === 'CSRF_DISABLED') return 'false';
+        return defaultValue;
+      });
+      mockReflector.get.mockReturnValue(false);
+      
       const context = createMockContext(
         'POST',
         { [CSRF_TOKEN_HEADER]: 'aaaaaaaaaa' },
         { [CSRF_TOKEN_COOKIE]: 'bbbbbbbbbb' },
       );
-      expect(() => guard.canActivate(context)).toThrow();
+      
+      expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
+    });
+
+    it('should throw ForbiddenException for invalid token format', () => {
+      mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
+        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
+        if (key === 'CSRF_DISABLED') return 'false';
+        return defaultValue;
+      });
+      mockReflector.get.mockReturnValue(false);
+      
+      // Invalid token - not proper base64 with valid HMAC
+      const invalidToken = Buffer.from('invalid.format').toString('base64');
+      const context = createMockContext(
+        'POST',
+        { [CSRF_TOKEN_HEADER]: invalidToken },
+        { [CSRF_TOKEN_COOKIE]: invalidToken },
+      );
+      
+      expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
+    });
+
+    it('should throw ForbiddenException for token with wrong HMAC', () => {
+      mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
+        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
+        if (key === 'CSRF_DISABLED') return 'false';
+        return defaultValue;
+      });
+      mockReflector.get.mockReturnValue(false);
+      
+      // Token generated with different secret
+      const wrongSecretToken = CsrfGuard.generateToken('wrong-secret');
+      const context = createMockContext(
+        'POST',
+        { [CSRF_TOKEN_HEADER]: wrongSecretToken },
+        { [CSRF_TOKEN_COOKIE]: wrongSecretToken },
+      );
+      
+      expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
+    });
+
+    it('should throw for DELETE method without valid CSRF', () => {
+      mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
+        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
+        if (key === 'CSRF_DISABLED') return 'false';
+        return defaultValue;
+      });
+      mockReflector.get.mockReturnValue(false);
+      
+      const context = createMockContext('DELETE', {}, {});
+      expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
+    });
+
+    it('should throw for PUT method without valid CSRF', () => {
+      mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
+        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
+        if (key === 'CSRF_DISABLED') return 'false';
+        return defaultValue;
+      });
+      mockReflector.get.mockReturnValue(false);
+      
+      const context = createMockContext('PUT', {}, {});
+      expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
+    });
+
+    it('should throw for PATCH method without valid CSRF', () => {
+      mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
+        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
+        if (key === 'CSRF_DISABLED') return 'false';
+        return defaultValue;
+      });
+      mockReflector.get.mockReturnValue(false);
+      
+      const context = createMockContext('PATCH', {}, {});
+      expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
     });
 
     it('should validate correctly formatted matching tokens', () => {

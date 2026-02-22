@@ -222,4 +222,336 @@ describe('PaymentController', () => {
       expect(mockPaymentService.resumeSubscription).toHaveBeenCalledWith('sub_123');
     });
   });
+
+  describe('cancelSubscription - error cases', () => {
+    it('should throw BadRequestException if no stripe subscription', async () => {
+      mockSubscriptionService.getOrganizationSubscription.mockResolvedValue({
+        stripeSubscriptionId: null,
+      });
+
+      const mockRequest = { params: { organizationId: 'org-123' } };
+
+      await expect(controller.cancelSubscription(mockRequest as any)).rejects.toThrow(
+        'No active Stripe subscription found',
+      );
+    });
+  });
+
+  describe('resumeSubscription - error cases', () => {
+    it('should throw BadRequestException if no stripe subscription', async () => {
+      mockSubscriptionService.getOrganizationSubscription.mockResolvedValue({
+        stripeSubscriptionId: null,
+      });
+
+      const mockRequest = { params: { organizationId: 'org-123' } };
+
+      await expect(controller.resumeSubscription(mockRequest as any)).rejects.toThrow(
+        'No active Stripe subscription found',
+      );
+    });
+  });
+
+  describe('getInvoices - edge cases', () => {
+    it('should handle undefined limit', async () => {
+      mockBillingService.getInvoices.mockResolvedValue([]);
+
+      const mockRequest = { params: { customerId: 'cus_123' } };
+      await controller.getInvoices(mockRequest as any, undefined);
+
+      expect(mockBillingService.getInvoices).toHaveBeenCalledWith('cus_123', undefined);
+    });
+
+    it('should handle non-numeric limit gracefully', async () => {
+      mockBillingService.getInvoices.mockResolvedValue([]);
+
+      const mockRequest = { params: { customerId: 'cus_123' } };
+      await controller.getInvoices(mockRequest as any, 'not-a-number');
+
+      expect(mockBillingService.getInvoices).toHaveBeenCalledWith('cus_123', undefined);
+    });
+  });
+
+  describe('handleWebhook', () => {
+    let webhookController: PaymentController;
+    let webhookModule: TestingModule;
+
+    const createMockRequest = (rawBody: Buffer | undefined) => ({
+      rawBody,
+    });
+
+    beforeEach(async () => {
+      // Create controller with valid webhook secret for webhook tests
+      const webhookMockConfigService = {
+        get: jest.fn().mockReturnValue('whsec_valid_test_secret'),
+      };
+
+      webhookModule = await Test.createTestingModule({
+        controllers: [PaymentController],
+        providers: [
+          { provide: PaymentService, useValue: mockPaymentService },
+          { provide: SubscriptionService, useValue: mockSubscriptionService },
+          { provide: BillingService, useValue: mockBillingService },
+          { provide: ConfigService, useValue: webhookMockConfigService },
+        ],
+      }).compile();
+
+      webhookController = webhookModule.get<PaymentController>(PaymentController);
+    });
+
+    afterEach(async () => {
+      if (webhookModule) {
+        await webhookModule.close();
+      }
+    });
+
+    it('should throw BadRequestException if webhook secret not configured', async () => {
+      // Re-create controller with empty webhook secret
+      const moduleWithNoSecret = await Test.createTestingModule({
+        controllers: [PaymentController],
+        providers: [
+          { provide: PaymentService, useValue: mockPaymentService },
+          { provide: SubscriptionService, useValue: mockSubscriptionService },
+          { provide: BillingService, useValue: mockBillingService },
+          { provide: ConfigService, useValue: { get: jest.fn().mockReturnValue('') } },
+        ],
+      }).compile();
+
+      const controllerNoSecret = moduleWithNoSecret.get<PaymentController>(PaymentController);
+
+      const mockRequest = createMockRequest(Buffer.from('{}'));
+
+      await expect(
+        controllerNoSecret.handleWebhook(mockRequest as any, 'sig_test'),
+      ).rejects.toThrow('Webhook secret not configured');
+
+      await moduleWithNoSecret.close();
+    });
+
+    it('should throw BadRequestException if raw body is missing', async () => {
+      const mockRequest = createMockRequest(undefined);
+
+      await expect(
+        webhookController.handleWebhook(mockRequest as any, 'sig_test'),
+      ).rejects.toThrow('Missing raw body for webhook verification');
+    });
+
+    it('should throw BadRequestException on invalid signature', async () => {
+      mockPaymentService.constructWebhookEvent.mockImplementation(() => {
+        throw new Error('Invalid signature');
+      });
+
+      const mockRequest = createMockRequest(Buffer.from('{}'));
+
+      await expect(
+        webhookController.handleWebhook(mockRequest as any, 'invalid_sig'),
+      ).rejects.toThrow('Invalid webhook signature');
+    });
+
+    it('should handle checkout.session.completed event', async () => {
+      const mockEvent = {
+        type: 'checkout.session.completed',
+        data: {
+          object: {
+            id: 'cs_test',
+            metadata: { organizationId: 'org-123', tier: 'PROFESSIONAL' },
+            customer: 'cus_123',
+            subscription: 'sub_123',
+          },
+        },
+      };
+      mockPaymentService.constructWebhookEvent.mockReturnValue(mockEvent);
+      mockSubscriptionService.activateSubscription.mockResolvedValue({});
+
+      const mockRequest = createMockRequest(Buffer.from('{}'));
+      const result = await webhookController.handleWebhook(mockRequest as any, 'sig_test');
+
+      expect(result.received).toBe(true);
+      expect(mockSubscriptionService.activateSubscription).toHaveBeenCalledWith({
+        organizationId: 'org-123',
+        stripeCustomerId: 'cus_123',
+        stripeSubscriptionId: 'sub_123',
+        tier: 'PROFESSIONAL',
+      });
+    });
+
+    it('should handle checkout.session.completed with missing metadata', async () => {
+      const mockEvent = {
+        type: 'checkout.session.completed',
+        data: {
+          object: {
+            id: 'cs_test',
+            metadata: {},
+          },
+        },
+      };
+      mockPaymentService.constructWebhookEvent.mockReturnValue(mockEvent);
+
+      const mockRequest = createMockRequest(Buffer.from('{}'));
+      const result = await webhookController.handleWebhook(mockRequest as any, 'sig_test');
+
+      expect(result.received).toBe(true);
+      expect(mockSubscriptionService.activateSubscription).not.toHaveBeenCalled();
+    });
+
+    it('should handle customer.subscription.updated event', async () => {
+      const mockEvent = {
+        type: 'customer.subscription.updated',
+        data: {
+          object: {
+            id: 'sub_123',
+            customer: 'cus_123',
+            status: 'active',
+            current_period_end: Math.floor(Date.now() / 1000) + 86400,
+            cancel_at_period_end: false,
+          },
+        },
+      };
+      mockPaymentService.constructWebhookEvent.mockReturnValue(mockEvent);
+      mockSubscriptionService.syncSubscriptionStatus.mockResolvedValue({});
+
+      const mockRequest = createMockRequest(Buffer.from('{}'));
+      const result = await webhookController.handleWebhook(mockRequest as any, 'sig_test');
+
+      expect(result.received).toBe(true);
+      expect(mockSubscriptionService.syncSubscriptionStatus).toHaveBeenCalled();
+    });
+
+    it('should handle customer.subscription.created event', async () => {
+      const mockEvent = {
+        type: 'customer.subscription.created',
+        data: {
+          object: {
+            id: 'sub_123',
+            customer: 'cus_123',
+            status: 'active',
+            current_period_end: Math.floor(Date.now() / 1000) + 86400,
+            cancel_at_period_end: false,
+          },
+        },
+      };
+      mockPaymentService.constructWebhookEvent.mockReturnValue(mockEvent);
+      mockSubscriptionService.syncSubscriptionStatus.mockResolvedValue({});
+
+      const mockRequest = createMockRequest(Buffer.from('{}'));
+      const result = await webhookController.handleWebhook(mockRequest as any, 'sig_test');
+
+      expect(result.received).toBe(true);
+      expect(mockSubscriptionService.syncSubscriptionStatus).toHaveBeenCalled();
+    });
+
+    it('should handle customer.subscription.deleted event', async () => {
+      const mockEvent = {
+        type: 'customer.subscription.deleted',
+        data: {
+          object: {
+            id: 'sub_123',
+          },
+        },
+      };
+      mockPaymentService.constructWebhookEvent.mockReturnValue(mockEvent);
+      mockSubscriptionService.cancelSubscriptionByStripeId.mockResolvedValue({});
+
+      const mockRequest = createMockRequest(Buffer.from('{}'));
+      const result = await webhookController.handleWebhook(mockRequest as any, 'sig_test');
+
+      expect(result.received).toBe(true);
+      expect(mockSubscriptionService.cancelSubscriptionByStripeId).toHaveBeenCalledWith('sub_123');
+    });
+
+    it('should handle invoice.payment_succeeded event', async () => {
+      const mockEvent = {
+        type: 'invoice.payment_succeeded',
+        data: {
+          object: {
+            id: 'inv_123',
+            customer: 'cus_123',
+            amount_paid: 9900,
+            currency: 'usd',
+            status_transitions: { paid_at: Math.floor(Date.now() / 1000) },
+          },
+        },
+      };
+      mockPaymentService.constructWebhookEvent.mockReturnValue(mockEvent);
+      mockBillingService.recordPayment.mockResolvedValue({});
+
+      const mockRequest = createMockRequest(Buffer.from('{}'));
+      const result = await webhookController.handleWebhook(mockRequest as any, 'sig_test');
+
+      expect(result.received).toBe(true);
+      expect(mockBillingService.recordPayment).toHaveBeenCalledWith(
+        expect.objectContaining({
+          stripeInvoiceId: 'inv_123',
+          amount: 9900,
+          status: 'paid',
+        }),
+      );
+    });
+
+    it('should handle invoice.payment_failed event', async () => {
+      const mockEvent = {
+        type: 'invoice.payment_failed',
+        data: {
+          object: {
+            id: 'inv_123',
+            customer: 'cus_123',
+            amount_due: 9900,
+            currency: 'usd',
+            last_finalization_error: { message: 'Card declined' },
+          },
+        },
+      };
+      mockPaymentService.constructWebhookEvent.mockReturnValue(mockEvent);
+      mockBillingService.recordPaymentFailure.mockResolvedValue({});
+
+      const mockRequest = createMockRequest(Buffer.from('{}'));
+      const result = await webhookController.handleWebhook(mockRequest as any, 'sig_test');
+
+      expect(result.received).toBe(true);
+      expect(mockBillingService.recordPaymentFailure).toHaveBeenCalledWith(
+        expect.objectContaining({
+          stripeInvoiceId: 'inv_123',
+          failureReason: 'Card declined',
+        }),
+      );
+    });
+
+    it('should handle unhandled webhook event type', async () => {
+      const mockEvent = {
+        type: 'unknown.event.type',
+        data: { object: {} },
+      };
+      mockPaymentService.constructWebhookEvent.mockReturnValue(mockEvent);
+
+      const mockRequest = createMockRequest(Buffer.from('{}'));
+      const result = await webhookController.handleWebhook(mockRequest as any, 'sig_test');
+
+      expect(result.received).toBe(true);
+    });
+  });
+
+  describe('getUsage - edge cases', () => {
+    it('should handle string feature limits', async () => {
+      mockBillingService.getUsageStats.mockResolvedValue({
+        questionnaires: 25,
+        responses: 500,
+        documents: 10,
+        apiCalls: 5000,
+      });
+
+      mockSubscriptionService.getOrganizationSubscription.mockResolvedValue({
+        features: {
+          questionnaires: 'unlimited',
+          responses: 'unlimited',
+          documents: 'unlimited',
+          apiCalls: 'unlimited',
+        },
+      });
+
+      const mockRequest = { params: { organizationId: 'org-123' } };
+      const result = await controller.getUsage(mockRequest as any);
+
+      expect(result.questionnaires.limit).toBe(0);
+      expect(result.responses.limit).toBe(0);
+    });
+  });
 });

@@ -269,4 +269,413 @@ describe('NotificationService', () => {
       expect(result.to).toBe('admin@example.com');
     });
   });
+
+  describe('Brevo provider error handling', () => {
+    let brevoService: NotificationService;
+
+    beforeEach(async () => {
+      const brevoConfig = {
+        get: jest.fn((key: string, defaultValue?: string) => {
+          if (key === 'BREVO_API_KEY') return 'brevo-api-key';
+          if (key === 'EMAIL_FROM') return 'test@quiz2biz.com';
+          if (key === 'EMAIL_FROM_NAME') return 'Quiz2Biz Test';
+          if (key === 'FRONTEND_URL') return 'http://localhost:3001';
+          return defaultValue;
+        }),
+      };
+
+      const module = await Test.createTestingModule({
+        providers: [
+          NotificationService,
+          { provide: PrismaService, useValue: mockPrismaService },
+          { provide: ConfigService, useValue: brevoConfig },
+        ],
+      }).compile();
+
+      brevoService = module.get<NotificationService>(NotificationService);
+    });
+
+    it('should handle Brevo API error response', async () => {
+      (global.fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 401,
+        text: async () => 'Unauthorized',
+      });
+
+      const result = await brevoService.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: EmailType.CUSTOM,
+        textContent: 'Test',
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('Brevo error: 401');
+    });
+
+    it('should handle Brevo API network error', async () => {
+      (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
+
+      const result = await brevoService.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: EmailType.CUSTOM,
+        textContent: 'Test',
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Network error');
+    });
+
+    it('should handle non-Error exceptions', async () => {
+      (global.fetch as jest.Mock).mockRejectedValueOnce('String error');
+
+      const result = await brevoService.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: EmailType.CUSTOM,
+        textContent: 'Test',
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Unknown error');
+    });
+
+    it('should include text content in Brevo request', async () => {
+      (global.fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ messageId: 'msg-123' }),
+      });
+
+      await brevoService.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: EmailType.CUSTOM,
+        htmlContent: '<p>HTML</p>',
+        textContent: 'Plain text',
+      });
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        'https://api.brevo.com/v3/smtp/email',
+        expect.objectContaining({
+          body: expect.stringContaining('textContent'),
+        }),
+      );
+    });
+  });
+
+  describe('SendGrid provider error handling', () => {
+    let sendgridService: NotificationService;
+
+    beforeEach(async () => {
+      const sendgridConfig = {
+        get: jest.fn((key: string, defaultValue?: string) => {
+          if (key === 'SENDGRID_API_KEY') return 'sendgrid-api-key';
+          if (key === 'EMAIL_FROM') return 'test@quiz2biz.com';
+          if (key === 'EMAIL_FROM_NAME') return 'Quiz2Biz Test';
+          if (key === 'FRONTEND_URL') return 'http://localhost:3001';
+          return defaultValue;
+        }),
+      };
+
+      const module = await Test.createTestingModule({
+        providers: [
+          NotificationService,
+          { provide: PrismaService, useValue: mockPrismaService },
+          { provide: ConfigService, useValue: sendgridConfig },
+        ],
+      }).compile();
+
+      sendgridService = module.get<NotificationService>(NotificationService);
+    });
+
+    it('should handle SendGrid 202 status as success', async () => {
+      (global.fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 202,
+        headers: new Headers({ 'x-message-id': 'sg-msg-123' }),
+      });
+
+      const result = await sendgridService.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: EmailType.CUSTOM,
+        textContent: 'Test',
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.messageId).toBe('sg-msg-123');
+    });
+
+    it('should handle SendGrid API error response', async () => {
+      (global.fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 403,
+        text: async () => 'Forbidden',
+      });
+
+      const result = await sendgridService.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: EmailType.CUSTOM,
+        textContent: 'Test',
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('SendGrid error: 403');
+    });
+
+    it('should handle SendGrid network error', async () => {
+      (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Connection refused'));
+
+      const result = await sendgridService.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: EmailType.CUSTOM,
+        textContent: 'Test',
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Connection refused');
+    });
+
+    it('should handle non-Error exceptions in SendGrid', async () => {
+      (global.fetch as jest.Mock).mockRejectedValueOnce({ code: 'TIMEOUT' });
+
+      const result = await sendgridService.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: EmailType.CUSTOM,
+        textContent: 'Test',
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Unknown error');
+    });
+
+    it('should include text content in SendGrid request', async () => {
+      (global.fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        status: 202,
+        headers: new Headers(),
+      });
+
+      await sendgridService.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: EmailType.CUSTOM,
+        htmlContent: '<p>HTML</p>',
+        textContent: 'Plain text',
+      });
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        'https://api.sendgrid.com/v3/mail/send',
+        expect.objectContaining({
+          body: expect.stringContaining('text/plain'),
+        }),
+      );
+    });
+
+    it('should not include text content when only html provided', async () => {
+      (global.fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        status: 202,
+        headers: new Headers(),
+      });
+
+      await sendgridService.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: EmailType.CUSTOM,
+        htmlContent: '<p>HTML only</p>',
+      });
+
+      const fetchCall = (global.fetch as jest.Mock).mock.calls[0];
+      const body = JSON.parse(fetchCall[1].body);
+      expect(body.content).toHaveLength(1);
+      expect(body.content[0].type).toBe('text/html');
+    });
+  });
+
+  describe('sendEmail - template handling', () => {
+    it('should throw error for unknown template type', async () => {
+      const result = await service.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: 'UNKNOWN_TYPE' as EmailType,
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('Unknown email template type');
+    });
+
+    it('should handle template with textTemplate', async () => {
+      const result = await service.sendEmail({
+        to: 'user@example.com',
+        subject: 'Welcome',
+        type: EmailType.WELCOME,
+        data: {
+          userName: 'John',
+          actionUrl: 'http://localhost/dashboard',
+        },
+      });
+
+      expect(result.success).toBe(true);
+    });
+
+    it('should process template variables in subject', async () => {
+      const result = await service.sendEmail({
+        to: 'user@example.com',
+        subject: 'Verify',
+        type: EmailType.VERIFICATION,
+        data: {
+          userName: 'Jane',
+          actionUrl: 'http://localhost/verify',
+          expiresIn: '24 hours',
+        },
+      });
+
+      expect(result.success).toBe(true);
+    });
+  });
+
+  describe('processTemplate - {{#each}} blocks', () => {
+    it('should process array iteration in template', async () => {
+      const result = await service.sendDocumentsReadyEmail(
+        'user@example.com',
+        'John',
+        'session-123',
+        ['Document1.pdf', 'Document2.pdf', 'Document3.pdf'],
+      );
+
+      expect(result.success).toBe(true);
+    });
+
+    it('should handle empty array in {{#each}} block', async () => {
+      const result = await service.sendDocumentsReadyEmail(
+        'user@example.com',
+        'John',
+        'session-123',
+        [],
+      );
+
+      expect(result.success).toBe(true);
+    });
+
+    it('should handle non-array in {{#each}} block', async () => {
+      const result = await service.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: EmailType.DOCUMENTS_READY,
+        data: {
+          userName: 'John',
+          actionUrl: 'http://localhost',
+          documentNames: 'not-an-array' as unknown as string[],
+        },
+      });
+
+      expect(result.success).toBe(true);
+    });
+  });
+
+  describe('logEmailSent - error handling', () => {
+    it('should handle audit log creation failure gracefully', async () => {
+      mockPrismaService.auditLog.create.mockRejectedValueOnce(
+        new Error('Database connection failed'),
+      );
+
+      // Should not throw
+      const result = await service.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: EmailType.CUSTOM,
+        textContent: 'Test',
+      });
+
+      // Email should still succeed even if audit log fails
+      expect(result.success).toBe(true);
+    });
+  });
+
+  describe('sendEmail - exception handling', () => {
+    let errorService: NotificationService;
+
+    beforeEach(async () => {
+      const brevoConfig = {
+        get: jest.fn((key: string, defaultValue?: string) => {
+          if (key === 'BREVO_API_KEY') return 'brevo-api-key';
+          if (key === 'EMAIL_FROM') return 'test@quiz2biz.com';
+          if (key === 'EMAIL_FROM_NAME') return 'Quiz2Biz Test';
+          if (key === 'FRONTEND_URL') return 'http://localhost:3001';
+          return defaultValue;
+        }),
+      };
+
+      const module = await Test.createTestingModule({
+        providers: [
+          NotificationService,
+          { provide: PrismaService, useValue: mockPrismaService },
+          { provide: ConfigService, useValue: brevoConfig },
+        ],
+      }).compile();
+
+      errorService = module.get<NotificationService>(NotificationService);
+    });
+
+    it('should handle exception in sendEmail', async () => {
+      // Mock fetch to throw an error
+      (global.fetch as jest.Mock).mockImplementationOnce(() => {
+        throw new Error('Unexpected error');
+      });
+
+      const result = await errorService.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: EmailType.CUSTOM,
+        textContent: 'Test',
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Unexpected error');
+    });
+
+    it('should handle non-Error exception in sendEmail', async () => {
+      (global.fetch as jest.Mock).mockImplementationOnce(() => {
+        throw 'String exception';
+      });
+
+      const result = await errorService.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: EmailType.CUSTOM,
+        textContent: 'Test',
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Unknown error');
+    });
+  });
+
+  describe('sendEmail - CUSTOM type variations', () => {
+    it('should send custom email with only textContent', async () => {
+      const result = await service.sendEmail({
+        to: 'user@example.com',
+        subject: 'Plain text email',
+        type: EmailType.CUSTOM,
+        textContent: 'This is plain text only',
+      });
+
+      expect(result.success).toBe(true);
+    });
+
+    it('should use empty string when no content provided for CUSTOM', async () => {
+      const result = await service.sendEmail({
+        to: 'user@example.com',
+        subject: 'Empty email',
+        type: EmailType.CUSTOM,
+      });
+
+      expect(result.success).toBe(true);
+    });
+  });
 });

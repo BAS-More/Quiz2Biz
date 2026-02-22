@@ -10,7 +10,7 @@
     "lint": "eslint \"src/**/*.ts\" --fix"
   },
   "dependencies": {
-    "@nestjs/common": "^11.1.13",
+    "@nestjs/common": "^10.3.0",
     "@prisma/client": "^5.8.0"
   },
   "devDependencies": {
