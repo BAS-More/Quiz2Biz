@@ -38,20 +38,20 @@
         "chalk": "^4.1.2",
         "commander": "^11.1.0",
         "conf": "^10.2.0",
-        "eslint": "10.0.1",
-        "eslint-plugin-jsx-a11y": "6.4.1",
         "inquirer": "^8.2.6",
         "ora": "^5.4.1",
-        "table": "^6.8.1",
-        "typescript-eslint": "8.36.0"
+        "table": "^6.8.1"
     },
     "devDependencies": {
         "@types/inquirer": "^9.0.7",
         "@types/jest": "^30.0.0",
         "@types/node": "^20.10.0",
-        "jest": "^25.0.0",
-        "ts-jest": "^27.0.3",
-        "typescript": "^5.3.0"
+        "eslint": "^9.0.0",
+        "eslint-plugin-jsx-a11y": "^6.10.0",
+        "jest": "^29.0.0",
+        "ts-jest": "^29.0.0",
+        "typescript": "^5.3.0",
+        "typescript-eslint": "^8.0.0"
     },
     "engines": {
         "node": ">=18.0.0"

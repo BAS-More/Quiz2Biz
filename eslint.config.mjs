@@ -20,7 +20,7 @@ const relaxedTypeCheckRules = {
 export default tseslint.config(
   // Global ignores
   {
-    ignores: ['**/dist/**', '**/node_modules/**', '**/coverage/**', 'apps/web/**'],
+    ignores: ['**/dist/**', '**/node_modules/**', '**/coverage/**', 'apps/web/**', '**/*.js', '**/*.mjs'],
   },
 
   // Base config for all TS files

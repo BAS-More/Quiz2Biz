@@ -641,6 +641,7 @@ describe('NotificationService', () => {
 
     it('should handle non-Error exception in sendEmail', async () => {
       (global.fetch as jest.Mock).mockImplementationOnce(() => {
+        // eslint-disable-next-line @typescript-eslint/only-throw-error
         throw 'String exception';
       });
 

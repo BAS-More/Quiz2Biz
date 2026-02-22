@@ -10,7 +10,7 @@
     "lint": "eslint \"src/**/*.ts\" --fix"
   },
   "dependencies": {
-    "@nestjs/swagger": "^11.2.6",
+    "@nestjs/swagger": "^7.4.2",
     "@sentry/node": "9.20.0",
     "@swc/cli": "0.1.63",
     "class-transformer": "^0.5.1",

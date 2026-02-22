@@ -117,15 +117,17 @@
     "@nestjs/throttler": "^6.5.0",
     "@sentry/nestjs": "9.20.0",
     "@sentry/node": "9.20.0",
+    "@types/jest": "^29.5.14",
     "archiver": "^4.0.2",
     "docx": "^9.5.1",
     "google-auth-library": "^10.5.0",
     "helmet": "^8.1.0",
+    "jest": "^29.7.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1",
-    "ts-jest": "27.0.3",
+    "ts-jest": "^29.4.6",
     "tsconfig-paths": "^4.2.0"
   },
   "overrides": {
