@@ -1,6 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import * as https from 'https';
+import * as http from 'http';
+import { PassThrough } from 'stream';
 import { EvidenceIntegrityService } from './evidence-integrity.service';
 import { PrismaService } from '@libs/database';
 
@@ -521,12 +524,36 @@ describe('EvidenceIntegrityService', () => {
   describe('requestTimestamp', () => {
     it('creates RFC 3161 timestamp request', async () => {
       const dataHash = 'a'.repeat(64);
+      const mockTsaResponse = Buffer.from('mock-timestamp-token');
+
+      const requestSpy = jest.spyOn(https, 'request').mockImplementation(
+        ((_options: https.RequestOptions, callback?: (res: http.IncomingMessage) => void) => {
+          const req = new PassThrough() as unknown as http.ClientRequest;
+
+          req.end = (() => {
+            const res = new PassThrough() as unknown as http.IncomingMessage;
+            (res as { statusCode?: number }).statusCode = 200;
+            if (callback) {
+              callback(res);
+            }
+            (res as unknown as PassThrough).emit('data', mockTsaResponse);
+            (res as unknown as PassThrough).emit('end');
+            return req;
+          }) as http.ClientRequest['end'];
+
+          return req;
+        }) as typeof https.request,
+      );
 
       // This test validates the internal timestamp request logic
-      // Service should successfully create and return a timestamp
       const result = await service.requestTimestamp(dataHash);
+
+      expect(requestSpy).toHaveBeenCalled();
       expect(result).toBeDefined();
       expect(result.hashedMessage).toBe(dataHash);
+      expect(result.token).toBe(mockTsaResponse.toString('base64'));
+
+      requestSpy.mockRestore();
     });
   });
 

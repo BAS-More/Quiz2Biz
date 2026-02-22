@@ -33,7 +33,6 @@ describe('Authentication Security Tests', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        // @ts-expect-error DynamicModule type conflict from duplicate @nestjs/common versions in monorepo
         ConfigModule.forRoot({
           load: [configuration],
           isGlobal: true,

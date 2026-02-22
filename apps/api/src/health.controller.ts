@@ -99,7 +99,7 @@ export class HealthController {
     // Check Memory
     const memoryCheck = this.checkMemory();
     checks.push(memoryCheck);
-    if (memoryCheck.status === 'unhealthy') {
+    if (memoryCheck.status === 'unhealthy' && overallStatus !== 'unhealthy') {
       overallStatus = 'degraded';
     }
 
