@@ -28,7 +28,7 @@ describe('TransformInterceptor', () => {
     it('should transform response data to ApiResponse format', (done) => {
       const testData = { id: 1, name: 'Test' };
       mockCallHandler = {
-        handle: () => of(testData),
+        handle: () => of(testData) as any,
       };
 
       interceptor.intercept(mockExecutionContext, mockCallHandler).subscribe({
@@ -45,7 +45,7 @@ describe('TransformInterceptor', () => {
 
     it('should include valid ISO timestamp in meta', (done) => {
       mockCallHandler = {
-        handle: () => of({ test: true }),
+        handle: () => of({ test: true }) as any,
       };
 
       interceptor.intercept(mockExecutionContext, mockCallHandler).subscribe({
@@ -61,7 +61,7 @@ describe('TransformInterceptor', () => {
     it('should handle undefined request-id header', (done) => {
       mockRequest.headers = {};
       mockCallHandler = {
-        handle: () => of({ test: true }),
+        handle: () => of({ test: true }) as any,
       };
 
       interceptor.intercept(mockExecutionContext, mockCallHandler).subscribe({
@@ -75,7 +75,7 @@ describe('TransformInterceptor', () => {
     it('should handle array data', (done) => {
       const testData = [{ id: 1 }, { id: 2 }];
       mockCallHandler = {
-        handle: () => of(testData),
+        handle: () => of(testData) as any,
       };
 
       interceptor.intercept(mockExecutionContext, mockCallHandler).subscribe({
@@ -90,7 +90,7 @@ describe('TransformInterceptor', () => {
 
     it('should handle null data', (done) => {
       mockCallHandler = {
-        handle: () => of(null),
+        handle: () => of(null) as any,
       };
 
       interceptor.intercept(mockExecutionContext, mockCallHandler).subscribe({
@@ -104,7 +104,7 @@ describe('TransformInterceptor', () => {
 
     it('should handle primitive data types', (done) => {
       mockCallHandler = {
-        handle: () => of('string data'),
+        handle: () => of('string data') as any,
       };
 
       interceptor.intercept(mockExecutionContext, mockCallHandler).subscribe({
@@ -118,7 +118,7 @@ describe('TransformInterceptor', () => {
 
     it('should handle number data', (done) => {
       mockCallHandler = {
-        handle: () => of(42),
+        handle: () => of(42) as any,
       };
 
       interceptor.intercept(mockExecutionContext, mockCallHandler).subscribe({
@@ -132,7 +132,7 @@ describe('TransformInterceptor', () => {
 
     it('should handle boolean data', (done) => {
       mockCallHandler = {
-        handle: () => of(true),
+        handle: () => of(true) as any,
       };
 
       interceptor.intercept(mockExecutionContext, mockCallHandler).subscribe({
@@ -155,7 +155,7 @@ describe('TransformInterceptor', () => {
         },
       };
       mockCallHandler = {
-        handle: () => of(nestedData),
+        handle: () => of(nestedData) as any,
       };
 
       interceptor.intercept(mockExecutionContext, mockCallHandler).subscribe({

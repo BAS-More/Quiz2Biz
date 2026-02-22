@@ -1,9 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as https from 'https';
 import * as http from 'http';
-import { PassThrough } from 'stream';
 import { EvidenceIntegrityService } from './evidence-integrity.service';
 import { PrismaService } from '@libs/database';
 
@@ -525,34 +523,40 @@ describe('EvidenceIntegrityService', () => {
     it('creates RFC 3161 timestamp request', async () => {
       const dataHash = 'a'.repeat(64);
       const mockTsaResponse = Buffer.from('mock-timestamp-token');
+      const server = http.createServer((req, res) => {
+        const chunks: Buffer[] = [];
+        req.on('data', (chunk: Buffer) => chunks.push(chunk));
+        req.on('end', () => {
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/timestamp-reply');
+          res.end(mockTsaResponse);
+        });
+      });
 
-      const requestSpy = jest.spyOn(https, 'request').mockImplementation(
-        ((_options: https.RequestOptions, callback?: (res: http.IncomingMessage) => void) => {
-          const req = new PassThrough() as unknown as http.ClientRequest;
+      await new Promise<void>((resolve) => {
+        server.listen(0, '127.0.0.1', () => resolve());
+      });
 
-          req.end = (() => {
-            const res = new PassThrough() as unknown as http.IncomingMessage;
-            (res as { statusCode?: number }).statusCode = 200;
-            if (callback) {
-              callback(res);
-            }
-            (res as unknown as PassThrough).emit('data', mockTsaResponse);
-            (res as unknown as PassThrough).emit('end');
-            return req;
-          }) as http.ClientRequest['end'];
-
-          return req;
-        }) as typeof https.request,
-      );
+      const address = server.address();
+      const port = typeof address === 'object' && address ? address.port : 0;
+      (service as unknown as { tsaUrl: string }).tsaUrl = `http://127.0.0.1:${port}/tsr`;
 
       const result = await service.requestTimestamp(dataHash);
 
-      expect(requestSpy).toHaveBeenCalled();
       expect(result).toBeDefined();
       expect(result.hashedMessage).toBe(dataHash);
       expect(result.token).toBe(mockTsaResponse.toString('base64'));
+      expect(result.tsaUrl).toBe(`http://127.0.0.1:${port}/tsr`);
 
-      requestSpy.mockRestore();
+      await new Promise<void>((resolve, reject) => {
+        server.close((error) => {
+          if (error) {
+            reject(error);
+            return;
+          }
+          resolve();
+        });
+      });
     });
   });
 

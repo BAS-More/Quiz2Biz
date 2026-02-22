@@ -47,9 +47,9 @@ describe('LoggingInterceptor', () => {
   };
 
   const createMockCallHandler = (result: unknown, shouldError = false): CallHandler => ({
-    handle: () => shouldError
+    handle: () => (shouldError
       ? throwError(() => new Error('Test error'))
-      : of(result),
+      : of(result)) as any,
   });
 
   describe('intercept', () => {
