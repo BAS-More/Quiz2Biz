@@ -22,7 +22,7 @@ describe('JwtStrategy', () => {
   beforeEach(async () => {
     const mockConfigService = {
       get: jest.fn((key: string) => {
-        if (key === 'jwt.secret') return 'test-jwt-secret';
+        if (key === 'jwt.secret') {return 'test-jwt-secret';}
         return null;
       }),
     };

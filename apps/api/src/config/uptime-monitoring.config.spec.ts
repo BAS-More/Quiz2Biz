@@ -201,7 +201,7 @@ describe('isMaintenanceWindow', () => {
   it('should return true during maintenance window', () => {
     // Sunday 3 AM UTC
     const mockDate = new Date('2025-01-19T03:00:00Z');
-    jest.spyOn(global, 'Date').mockImplementation(() => mockDate as Date);
+    jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
 
     expect(isMaintenanceWindow()).toBe(true);
   });
@@ -209,7 +209,7 @@ describe('isMaintenanceWindow', () => {
   it('should return false outside maintenance window', () => {
     // Monday 10 AM UTC
     const mockDate = new Date('2025-01-20T10:00:00Z');
-    jest.spyOn(global, 'Date').mockImplementation(() => mockDate as Date);
+    jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
 
     expect(isMaintenanceWindow()).toBe(false);
   });

@@ -73,7 +73,7 @@ describe('StorageService', () => {
     it('should handle missing connection string', async () => {
       const noConnectionConfig = {
         get: jest.fn((key: string, defaultValue?: string) => {
-          if (key === 'AZURE_STORAGE_CONNECTION_STRING') return undefined;
+          if (key === 'AZURE_STORAGE_CONNECTION_STRING') {return undefined;}
           return defaultValue;
         }),
       };

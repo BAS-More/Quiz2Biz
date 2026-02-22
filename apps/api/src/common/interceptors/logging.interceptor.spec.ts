@@ -26,7 +26,7 @@ describe('LoggingInterceptor', () => {
       url: overrides.url || '/api/test',
       ip: overrides.ip || '127.0.0.1',
       get: jest.fn((header: string) => {
-        if (header === 'user-agent') return userAgent;
+        if (header === 'user-agent') {return userAgent;}
         return '';
       }),
       headers: {

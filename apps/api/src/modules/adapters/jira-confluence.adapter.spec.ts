@@ -25,7 +25,7 @@ describe('JiraConfluenceAdapter', () => {
 
   const mockConfigService = {
     get: jest.fn().mockImplementation((key: string) => {
-      if (key === 'JIRA_DOMAIN') return 'test-org.atlassian.net';
+      if (key === 'JIRA_DOMAIN') {return 'test-org.atlassian.net';}
       return undefined;
     }),
   };
@@ -45,7 +45,7 @@ describe('JiraConfluenceAdapter', () => {
     configService = module.get<ConfigService>(ConfigService);
     jest.clearAllMocks();
     mockConfigService.get.mockImplementation((key: string) => {
-      if (key === 'JIRA_DOMAIN') return 'test-org.atlassian.net';
+      if (key === 'JIRA_DOMAIN') {return 'test-org.atlassian.net';}
       return undefined;
     });
   });

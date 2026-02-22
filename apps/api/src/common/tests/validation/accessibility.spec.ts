@@ -22,7 +22,7 @@ describe('Accessibility Validation', () => {
    * Recursively get all React component files
    */
   function getReactFiles(dir: string, files: string[] = []): string[] {
-    if (!fs.existsSync(dir)) return files;
+    if (!fs.existsSync(dir)) {return files;}
 
     const entries = fs.readdirSync(dir, { withFileTypes: true });
     for (const entry of entries) {
@@ -120,7 +120,7 @@ describe('Accessibility Validation', () => {
     it('should have visible focus styles defined', () => {
       const cssFiles: string[] = [];
       const findCssFiles = (dir: string) => {
-        if (!fs.existsSync(dir)) return;
+        if (!fs.existsSync(dir)) {return;}
         const entries = fs.readdirSync(dir, { withFileTypes: true });
         for (const entry of entries) {
           const fullPath = path.join(dir, entry.name);

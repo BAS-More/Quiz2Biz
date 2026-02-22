@@ -17,8 +17,8 @@ describe('CsrfGuard', () => {
 
   const mockConfigService = {
     get: jest.fn((key: string, defaultValue?: any) => {
-      if (key === 'CSRF_SECRET') return 'test-csrf-secret';
-      if (key === 'CSRF_DISABLED') return 'false';
+      if (key === 'CSRF_SECRET') {return 'test-csrf-secret';}
+      if (key === 'CSRF_DISABLED') {return 'false';}
       return defaultValue;
     }),
   };
@@ -74,8 +74,8 @@ describe('CsrfGuard', () => {
 
     it('should allow POST when CSRF is disabled via environment', () => {
       mockConfigService.get.mockImplementation((key: string) => {
-        if (key === 'CSRF_DISABLED') return 'true';
-        if (key === 'CSRF_SECRET') return 'test-secret';
+        if (key === 'CSRF_DISABLED') {return 'true';}
+        if (key === 'CSRF_SECRET') {return 'test-secret';}
         return undefined;
       });
 
@@ -91,8 +91,8 @@ describe('CsrfGuard', () => {
 
     it('should throw ForbiddenException when header token is missing', () => {
       mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
-        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
-        if (key === 'CSRF_DISABLED') return 'false';
+        if (key === 'CSRF_SECRET') {return 'test-csrf-secret';}
+        if (key === 'CSRF_DISABLED') {return 'false';}
         return defaultValue;
       });
       mockReflector.get.mockReturnValue(false);
@@ -105,8 +105,8 @@ describe('CsrfGuard', () => {
 
     it('should throw ForbiddenException when cookie token is missing', () => {
       mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
-        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
-        if (key === 'CSRF_DISABLED') return 'false';
+        if (key === 'CSRF_SECRET') {return 'test-csrf-secret';}
+        if (key === 'CSRF_DISABLED') {return 'false';}
         return defaultValue;
       });
       mockReflector.get.mockReturnValue(false);
@@ -119,8 +119,8 @@ describe('CsrfGuard', () => {
 
     it('should throw ForbiddenException when token lengths do not match', () => {
       mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
-        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
-        if (key === 'CSRF_DISABLED') return 'false';
+        if (key === 'CSRF_SECRET') {return 'test-csrf-secret';}
+        if (key === 'CSRF_DISABLED') {return 'false';}
         return defaultValue;
       });
       mockReflector.get.mockReturnValue(false);
@@ -136,8 +136,8 @@ describe('CsrfGuard', () => {
 
     it('should throw ForbiddenException when tokens do not match (same length)', () => {
       mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
-        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
-        if (key === 'CSRF_DISABLED') return 'false';
+        if (key === 'CSRF_SECRET') {return 'test-csrf-secret';}
+        if (key === 'CSRF_DISABLED') {return 'false';}
         return defaultValue;
       });
       mockReflector.get.mockReturnValue(false);
@@ -153,8 +153,8 @@ describe('CsrfGuard', () => {
 
     it('should throw ForbiddenException for invalid token format', () => {
       mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
-        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
-        if (key === 'CSRF_DISABLED') return 'false';
+        if (key === 'CSRF_SECRET') {return 'test-csrf-secret';}
+        if (key === 'CSRF_DISABLED') {return 'false';}
         return defaultValue;
       });
       mockReflector.get.mockReturnValue(false);
@@ -172,8 +172,8 @@ describe('CsrfGuard', () => {
 
     it('should throw ForbiddenException for token with wrong HMAC', () => {
       mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
-        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
-        if (key === 'CSRF_DISABLED') return 'false';
+        if (key === 'CSRF_SECRET') {return 'test-csrf-secret';}
+        if (key === 'CSRF_DISABLED') {return 'false';}
         return defaultValue;
       });
       mockReflector.get.mockReturnValue(false);
@@ -191,8 +191,8 @@ describe('CsrfGuard', () => {
 
     it('should throw for DELETE method without valid CSRF', () => {
       mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
-        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
-        if (key === 'CSRF_DISABLED') return 'false';
+        if (key === 'CSRF_SECRET') {return 'test-csrf-secret';}
+        if (key === 'CSRF_DISABLED') {return 'false';}
         return defaultValue;
       });
       mockReflector.get.mockReturnValue(false);
@@ -203,8 +203,8 @@ describe('CsrfGuard', () => {
 
     it('should throw for PUT method without valid CSRF', () => {
       mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
-        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
-        if (key === 'CSRF_DISABLED') return 'false';
+        if (key === 'CSRF_SECRET') {return 'test-csrf-secret';}
+        if (key === 'CSRF_DISABLED') {return 'false';}
         return defaultValue;
       });
       mockReflector.get.mockReturnValue(false);
@@ -215,8 +215,8 @@ describe('CsrfGuard', () => {
 
     it('should throw for PATCH method without valid CSRF', () => {
       mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
-        if (key === 'CSRF_SECRET') return 'test-csrf-secret';
-        if (key === 'CSRF_DISABLED') return 'false';
+        if (key === 'CSRF_SECRET') {return 'test-csrf-secret';}
+        if (key === 'CSRF_DISABLED') {return 'false';}
         return defaultValue;
       });
       mockReflector.get.mockReturnValue(false);
@@ -263,9 +263,9 @@ describe('CsrfService', () => {
 
   const mockConfigService = {
     get: jest.fn((key: string, defaultValue?: any) => {
-      if (key === 'CSRF_SECRET') return 'test-csrf-secret';
-      if (key === 'CSRF_TOKEN_MAX_AGE') return 86400000;
-      if (key === 'NODE_ENV') return 'development';
+      if (key === 'CSRF_SECRET') {return 'test-csrf-secret';}
+      if (key === 'CSRF_TOKEN_MAX_AGE') {return 86400000;}
+      if (key === 'NODE_ENV') {return 'development';}
       return defaultValue;
     }),
   };
@@ -302,8 +302,8 @@ describe('CsrfService', () => {
 
     it('should return secure option in production', () => {
       mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
-        if (key === 'NODE_ENV') return 'production';
-        if (key === 'CSRF_TOKEN_MAX_AGE') return 86400000;
+        if (key === 'NODE_ENV') {return 'production';}
+        if (key === 'CSRF_TOKEN_MAX_AGE') {return 86400000;}
         return defaultValue;
       });
 

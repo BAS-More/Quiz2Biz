@@ -59,7 +59,7 @@ describe('ClaudeAiService', () => {
     it('should not initialize client when API key is missing', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') return undefined;
+          if (key === 'claude.apiKey') {return undefined;}
           return mockConfigService.get(key, defaultValue);
         }),
       };
@@ -89,7 +89,7 @@ describe('ClaudeAiService', () => {
     it('should return fallback analysis when client is not initialized', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') return undefined;
+          if (key === 'claude.apiKey') {return undefined;}
           return mockConfigService.get(key, defaultValue);
         }),
       };
@@ -120,7 +120,7 @@ describe('ClaudeAiService', () => {
     it('should extract themes from keywords in fallback mode', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') return undefined;
+          if (key === 'claude.apiKey') {return undefined;}
           return mockConfigService.get(key, defaultValue);
         }),
       };
@@ -148,7 +148,7 @@ describe('ClaudeAiService', () => {
     it('should return general business idea when no keywords match', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') return undefined;
+          if (key === 'claude.apiKey') {return undefined;}
           return mockConfigService.get(key, defaultValue);
         }),
       };
@@ -174,7 +174,7 @@ describe('ClaudeAiService', () => {
     it('should score project types based on keyword matching', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') return undefined;
+          if (key === 'claude.apiKey') {return undefined;}
           return mockConfigService.get(key, defaultValue);
         }),
       };
@@ -200,7 +200,7 @@ describe('ClaudeAiService', () => {
     it('should include strengths based on theme count', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') return undefined;
+          if (key === 'claude.apiKey') {return undefined;}
           return mockConfigService.get(key, defaultValue);
         }),
       };
@@ -228,7 +228,7 @@ describe('ClaudeAiService', () => {
     it('should return default follow-up when client is not initialized', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') return undefined;
+          if (key === 'claude.apiKey') {return undefined;}
           return mockConfigService.get(key, defaultValue);
         }),
       };

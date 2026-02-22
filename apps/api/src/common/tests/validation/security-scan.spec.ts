@@ -48,7 +48,7 @@ describe('Security Scan Validation', () => {
       const violations: string[] = [];
 
       for (const file of files) {
-        if (file.includes('.spec.') || file.includes('.test.') || file.includes('__mocks__')) continue;
+        if (file.includes('.spec.') || file.includes('.test.') || file.includes('__mocks__')) {continue;}
 
         const content = fs.readFileSync(file, 'utf-8');
         for (const { name, pattern } of secretPatterns) {
@@ -101,7 +101,7 @@ describe('Security Scan Validation', () => {
       const violations: string[] = [];
 
       for (const file of files) {
-        if (file.includes('.spec.') || file.includes('.test.') || file.includes('config')) continue;
+        if (file.includes('.spec.') || file.includes('.test.') || file.includes('config')) {continue;}
 
         const content = fs.readFileSync(file, 'utf-8');
         for (const { name, pattern } of dangerousPatterns) {
@@ -231,7 +231,7 @@ describe('Security Scan Validation', () => {
       const violations: string[] = [];
 
       for (const file of files) {
-        if (file.includes('.spec.') || file.includes('.test.')) continue;
+        if (file.includes('.spec.') || file.includes('.test.')) {continue;}
 
         const content = fs.readFileSync(file, 'utf-8');
         const logStatements = content.match(/console\.log\([^)]*(?:password|secret|token|apiKey|authorization)[^)]*\)/gi);
@@ -271,7 +271,7 @@ describe('Security Scan Validation', () => {
       const violations: string[] = [];
 
       for (const file of files) {
-        if (file.includes('.spec.') || file.includes('.test.')) continue;
+        if (file.includes('.spec.') || file.includes('.test.')) {continue;}
 
         const content = fs.readFileSync(file, 'utf-8');
         for (const { name, pattern } of vulnerablePatterns) {

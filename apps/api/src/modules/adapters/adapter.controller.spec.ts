@@ -423,7 +423,7 @@ describe('AdapterController', () => {
         { ...mockConfig, id: 'adapter-2', type: 'gitlab' as AdapterType, config: { token: 'token', projectId: 123 } },
       ]);
       mockAdapterConfigService.getAdapterConfig.mockImplementation((tenantId, adapterId) => {
-        if (adapterId === 'adapter-1') return Promise.resolve(mockConfig);
+        if (adapterId === 'adapter-1') {return Promise.resolve(mockConfig);}
         return Promise.resolve({ ...mockConfig, id: 'adapter-2', type: 'gitlab' as AdapterType, config: { token: 'token', projectId: 123 } });
       });
       mockAdapterConfigService.updateSyncStatus.mockResolvedValue(undefined);

@@ -252,7 +252,7 @@ Respond ONLY with valid JSON (no markdown, no code fences):
     const found = new Set<string>();
     for (const word of words) {
       const theme = themeKeywords[word];
-      if (theme) found.add(theme);
+      if (theme) {found.add(theme);}
     }
 
     return found.size > 0 ? Array.from(found) : ['general business idea'];

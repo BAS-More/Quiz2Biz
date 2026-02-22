@@ -196,7 +196,7 @@ export class QuestionnaireService {
       where: { slug: projectTypeSlug },
     });
 
-    if (!projectType) return null;
+    if (!projectType) {return null;}
 
     const questionnaire = await this.prisma.questionnaire.findFirst({
       where: { projectTypeId: projectType.id, isActive: true },

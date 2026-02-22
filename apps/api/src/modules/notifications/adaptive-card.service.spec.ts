@@ -223,8 +223,8 @@ describe('AdaptiveCardService', () => {
 
     it('should use approval webhook URL if available', async () => {
       mockConfigService.get.mockImplementation((key: string) => {
-        if (key === 'TEAMS_APPROVAL_WEBHOOK_URL') return undefined;
-        if (key === 'TEAMS_WEBHOOK_URL') return undefined;
+        if (key === 'TEAMS_APPROVAL_WEBHOOK_URL') {return undefined;}
+        if (key === 'TEAMS_WEBHOOK_URL') {return undefined;}
         return undefined;
       });
       await service.notifyApprovalRequired({} as ApprovalRequestCardData);

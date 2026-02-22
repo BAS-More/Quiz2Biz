@@ -307,13 +307,13 @@ describe('shouldSendAlert', () => {
 
   it('should send medium alerts during business hours', () => {
     const mockDate = new Date('2025-01-15T14:00:00');
-    jest.spyOn(global, 'Date').mockImplementation(() => mockDate as Date);
+    jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
     expect(shouldSendAlert('medium')).toBe(true);
   });
 
   it('should not send low alerts during quiet hours', () => {
     const mockDate = new Date('2025-01-15T23:00:00');
-    jest.spyOn(global, 'Date').mockImplementation(() => mockDate as Date);
+    jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
     expect(shouldSendAlert('low')).toBe(false);
   });
 });

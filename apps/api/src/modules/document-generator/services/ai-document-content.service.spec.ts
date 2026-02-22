@@ -53,7 +53,7 @@ describe('AiDocumentContentService', () => {
   describe('onModuleInit', () => {
     it('should log warning when API key not configured', () => {
       mockConfigService.get.mockImplementation((key: string) => {
-        if (key === 'claude.apiKey') return undefined;
+        if (key === 'claude.apiKey') {return undefined;}
         return undefined;
       });
       service.onModuleInit();
@@ -62,7 +62,7 @@ describe('AiDocumentContentService', () => {
 
     it('should initialize client when API key configured', () => {
       mockConfigService.get.mockImplementation((key: string) => {
-        if (key === 'claude.apiKey') return 'test-api-key';
+        if (key === 'claude.apiKey') {return 'test-api-key';}
         return undefined;
       });
       service.onModuleInit();

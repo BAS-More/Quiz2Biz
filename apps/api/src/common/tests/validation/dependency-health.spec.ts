@@ -121,7 +121,7 @@ describe('Dependency Health Validation', () => {
       let hasVersionRanges = false;
       for (const { pkg } of packages) {
         const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
-        for (const version of Object.values(allDeps) as string[]) {
+        for (const version of Object.values(allDeps)) {
           if (version.startsWith('^') || version.startsWith('~')) {
             hasVersionRanges = true;
             break;
@@ -335,7 +335,7 @@ describe('Dependency Health Validation', () => {
       const srcDir = path.join(rootDir, 'apps/api/src');
 
       function getAllTsFiles(dir: string, files: string[] = []): string[] {
-        if (!fs.existsSync(dir)) return files;
+        if (!fs.existsSync(dir)) {return files;}
         const entries = fs.readdirSync(dir, { withFileTypes: true });
         for (const entry of entries) {
           const fullPath = path.join(dir, entry.name);

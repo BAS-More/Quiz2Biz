@@ -441,9 +441,9 @@ describe.skip('Transaction & Concurrency Tests', () => {
       // User 2 attempts update (should check lastActivityAt first)
       const current = await prisma.session.findUnique({ where: { id: testSessionId } });
 
-      if (current!.lastActivityAt!.getTime() !== user2Read.lastActivityAt!.getTime()) {
+      if (current!.lastActivityAt.getTime() !== user2Read.lastActivityAt!.getTime()) {
         // Conflict detected - user2's read is stale
-        expect(current!.lastActivityAt!.getTime()).toBeGreaterThan(user2Read.lastActivityAt!.getTime());
+        expect(current!.lastActivityAt.getTime()).toBeGreaterThan(user2Read.lastActivityAt!.getTime());
 
         // User 2 should re-read and retry
         const refreshed = await prisma.session.findUnique({ where: { id: testSessionId } });
