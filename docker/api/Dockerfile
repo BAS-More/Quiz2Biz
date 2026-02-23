@@ -14,7 +14,6 @@ COPY libs/database/package*.json ./libs/database/
 COPY libs/redis/package*.json ./libs/redis/
 COPY libs/shared/package*.json ./libs/shared/
 
-COPY package-lock.json ./
 RUN npm ci --legacy-peer-deps || npm install --legacy-peer-deps
 
 # Copy source files
@@ -52,7 +51,6 @@ COPY libs/database/package*.json ./libs/database/
 COPY libs/redis/package*.json ./libs/redis/
 COPY libs/shared/package*.json ./libs/shared/
 
-COPY package-lock.json ./
 RUN npm ci --legacy-peer-deps || npm install --legacy-peer-deps
 
 # Copy source files
@@ -75,12 +73,12 @@ ARG IMAGE_VERSION=unknown
 
 # OCI labels for supply chain tracking
 LABEL org.opencontainers.image.title="questionnaire-api" \
-      org.opencontainers.image.description="Quiz2Biz API — NestJS backend" \
-      org.opencontainers.image.vendor="Quiz2Biz" \
-      org.opencontainers.image.source="https://github.com/Avi-Bendetsky/Quiz-to-build" \
-      org.opencontainers.image.licenses="UNLICENSED" \
-      org.opencontainers.image.base.name="docker.io/library/node:22-alpine" \
-      org.opencontainers.image.version=$IMAGE_VERSION
+    org.opencontainers.image.description="Quiz2Biz API — NestJS backend" \
+    org.opencontainers.image.vendor="Quiz2Biz" \
+    org.opencontainers.image.source="https://github.com/Avi-Bendetsky/Quiz-to-build" \
+    org.opencontainers.image.licenses="UNLICENSED" \
+    org.opencontainers.image.base.name="docker.io/library/node:22-alpine" \
+    org.opencontainers.image.version=$IMAGE_VERSION
 
 WORKDIR /app
 
@@ -115,7 +113,7 @@ EXPOSE 3000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/v1/health || exit 1
 
 # Start the application
 CMD ["./entrypoint.sh"]

@@ -1,6 +1,9 @@
 # Production stage - serve pre-built assets with nginx
 FROM nginx:1.27-alpine
 
+# Install security patches
+RUN apk upgrade --no-cache
+
 # Create non-root user
 RUN addgroup -g 1001 -S webapp && \
     adduser -S webapp -u 1001

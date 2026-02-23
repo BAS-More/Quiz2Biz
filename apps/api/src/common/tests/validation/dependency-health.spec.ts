@@ -121,7 +121,7 @@ describe('Dependency Health Validation', () => {
       let hasVersionRanges = false;
       for (const { pkg } of packages) {
         const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
-        for (const version of Object.values(allDeps) as string[]) {
+        for (const version of Object.values(allDeps)) {
           if (version.startsWith('^') || version.startsWith('~')) {
             hasVersionRanges = true;
             break;

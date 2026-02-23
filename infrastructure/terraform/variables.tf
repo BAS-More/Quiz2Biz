@@ -67,7 +67,7 @@ variable "postgresql_storage_mb" {
 variable "postgresql_version" {
   description = "PostgreSQL version"
   type        = string
-  default     = "15"
+  default     = "16"
 }
 
 variable "db_name" {

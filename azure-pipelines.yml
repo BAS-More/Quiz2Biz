@@ -65,8 +65,7 @@ stages:
                 npm | "$(Agent.OS)"
               path: $(System.DefaultWorkingDirectory)/node_modules
 
-          # Install dependencies
-          - script: npm ci
+          - script: npm ci --legacy-peer-deps
             displayName: "Install dependencies"
 
           # Run linting
@@ -131,7 +130,7 @@ stages:
             inputs:
               versionSpec: "$(nodeVersion)"
 
-          - script: npm ci
+          - script: npm ci --legacy-peer-deps
             displayName: "Install dependencies"
 
           - script: npm run test:cov
@@ -161,11 +160,11 @@ stages:
             inputs:
               versionSpec: "$(nodeVersion)"
 
-          - script: npm ci
+          - script: npm ci --legacy-peer-deps
             displayName: "Install dependencies"
 
           - script: |
-              docker-compose up -d postgres-test redis-test
+              docker compose up -d postgres-test redis-test
               sleep 10
             displayName: "Start test database containers"
 
@@ -181,7 +180,7 @@ stages:
               REDIS_HOST: "localhost"
               REDIS_PORT: "6380"
 
-          - script: docker-compose down
+          - script: docker compose down
             displayName: "Stop test containers"
             condition: always()
 
@@ -194,7 +193,7 @@ stages:
             inputs:
               versionSpec: "$(nodeVersion)"
 
-          - script: npm ci
+          - script: npm ci --legacy-peer-deps
             displayName: "Install dependencies"
 
           - script: npx playwright install --with-deps
@@ -218,7 +217,7 @@ stages:
             inputs:
               versionSpec: "$(nodeVersion)"
 
-          - script: npm ci
+          - script: npm ci --legacy-peer-deps
             displayName: "Install dependencies"
 
           - script: |
@@ -267,12 +266,13 @@ stages:
             inputs:
               versionSpec: "$(nodeVersion)"
 
-          - script: npm ci
+          - script: npm ci --legacy-peer-deps
             displayName: "Install dependencies"
 
           - script: |
-              npm install -g @lhci/cli
-            displayName: "Install Lighthouse CI"
+              echo "Lighthouse CI skipped — @lhci/cli removed due to critical vulnerabilities"
+              echo "Use browser-based Lighthouse audit or PageSpeed Insights instead"
+            displayName: "Lighthouse CI (SKIPPED — security remediation)"
 
           - script: |
               npm run build --workspace=apps/web
@@ -300,11 +300,11 @@ stages:
             inputs:
               versionSpec: "$(nodeVersion)"
 
-          - script: npm ci
+          - script: npm ci --legacy-peer-deps
             displayName: "Install dependencies"
 
           - script: |
-              docker-compose up -d
+              docker compose up -d
               sleep 15
             displayName: "Start API server"
 
@@ -316,7 +316,7 @@ stages:
               npm run test -- --testPathPattern=performance --passWithNoTests
             displayName: "Run performance unit tests"
 
-          - script: docker-compose down
+          - script: docker compose down
             displayName: "Stop containers"
             condition: always()
 
@@ -386,7 +386,7 @@ stages:
 
             # exit-code 1 = fail pipeline if secrets detected
           # Install dependencies for scanning
-          - script: npm ci
+          - script: npm ci --legacy-peer-deps
             displayName: "Install dependencies"
 
           # Run npm audit - BLOCKING on HIGH/CRITICAL
