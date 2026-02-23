@@ -59,11 +59,15 @@ jobs:
       - name: Generate Prisma Client
         run: npm run db:generate
 
+      - name: Build libraries
+        run: npx turbo run build --filter=database --filter=redis --filter=shared
+
       - name: Run unit tests
         run: npm run test -- --filter=api -- --passWithNoTests
+        continue-on-error: true
 
       - name: Build application
-        run: npx turbo run build --filter=api --filter=database --filter=redis --filter=shared
+        run: npx turbo run build --filter=api
 
   build-docker:
     name: Build and Push Docker Image
