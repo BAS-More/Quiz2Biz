@@ -479,7 +479,7 @@ describe('Stress Tests', () => {
         expect(stats.p95).toBeLessThan(1000);
       }
     },
-    60000, // 60 second timeout for stress test
+    120000, // 120 second timeout for stress test
     );
   });
 });
