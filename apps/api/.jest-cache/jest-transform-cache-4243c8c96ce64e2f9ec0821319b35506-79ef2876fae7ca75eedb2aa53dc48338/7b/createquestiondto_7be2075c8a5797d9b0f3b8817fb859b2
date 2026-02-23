@@ -1,0 +1,147 @@
+17f0642247abb0092c6a78c73892ff85
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CreateQuestionDto = exports.QuestionOptionDto = void 0;
+const class_validator_1 = require("class-validator");
+const swagger_1 = require("@nestjs/swagger");
+const client_1 = require("@prisma/client");
+// Extract enum values for Swagger schema generation
+const QuestionTypeValues = Object.values(client_1.QuestionType);
+class QuestionOptionDto {
+    value;
+    label;
+    description;
+}
+exports.QuestionOptionDto = QuestionOptionDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'option_1' }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], QuestionOptionDto.prototype, "value", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'Option 1' }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], QuestionOptionDto.prototype, "label", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'Additional description for option' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], QuestionOptionDto.prototype, "description", void 0);
+class CreateQuestionDto {
+    text;
+    type;
+    helpText;
+    explanation;
+    placeholder;
+    isRequired;
+    options;
+    validationRules;
+    defaultValue;
+    suggestedAnswer;
+    industryTags;
+    documentMappings;
+    orderIndex;
+    metadata;
+}
+exports.CreateQuestionDto = CreateQuestionDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'What is your company name?' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(1000),
+    __metadata("design:type", String)
+], CreateQuestionDto.prototype, "text", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ enum: QuestionTypeValues, enumName: 'QuestionType', example: 'TEXT' }),
+    (0, class_validator_1.IsEnum)(client_1.QuestionType),
+    __metadata("design:type", String)
+], CreateQuestionDto.prototype, "type", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'Enter the legal name of your company' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateQuestionDto.prototype, "helpText", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'This will be used in official documents' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateQuestionDto.prototype, "explanation", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'e.g., Acme Corporation' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateQuestionDto.prototype, "placeholder", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ default: false }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], CreateQuestionDto.prototype, "isRequired", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        type: [QuestionOptionDto],
+        description: 'Options for choice-based questions',
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    __metadata("design:type", Array)
+], CreateQuestionDto.prototype, "options", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        example: { minLength: 2, maxLength: 200 },
+        description: 'Validation rules',
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsObject)(),
+    __metadata("design:type", Object)
+], CreateQuestionDto.prototype, "validationRules", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Default value for the question' }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Object)
+], CreateQuestionDto.prototype, "defaultValue", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'AI-generated suggested answer' }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Object)
+], CreateQuestionDto.prototype, "suggestedAnswer", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: ['technology', 'saas'], description: 'Industry tags' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsString)({ each: true }),
+    __metadata("design:type", Array)
+], CreateQuestionDto.prototype, "industryTags", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Mappings to document fields' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsObject)(),
+    __metadata("design:type", Object)
+], CreateQuestionDto.prototype, "documentMappings", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 0, description: 'Order position' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.Min)(0),
+    __metadata("design:type", Number)
+], CreateQuestionDto.prototype, "orderIndex", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Additional metadata' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsObject)(),
+    __metadata("design:type", Object)
+], CreateQuestionDto.prototype, "metadata", void 0);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcYWRtaW5cXGR0b1xcY3JlYXRlLXF1ZXN0aW9uLmR0by50cyIsIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7QUFBQSxxREFVeUI7QUFDekIsNkNBQW1FO0FBQ25FLDJDQUE4QztBQUU5QyxvREFBb0Q7QUFDcEQsTUFBTSxrQkFBa0IsR0FBRyxNQUFNLENBQUMsTUFBTSxDQUFDLHFCQUFZLENBQUMsQ0FBQztBQUV2RCxNQUFhLGlCQUFpQjtJQUc1QixLQUFLLENBQVM7SUFJZCxLQUFLLENBQVM7SUFLZCxXQUFXLENBQVU7Q0FDdEI7QUFiRCw4Q0FhQztBQVZDO0lBRkMsSUFBQSxxQkFBVyxFQUFDLEVBQUUsT0FBTyxFQUFFLFVBQVUsRUFBRSxDQUFDO0lBQ3BDLElBQUEsMEJBQVEsR0FBRTs7Z0RBQ0c7QUFJZDtJQUZDLElBQUEscUJBQVcsRUFBQyxFQUFFLE9BQU8sRUFBRSxVQUFVLEVBQUUsQ0FBQztJQUNwQyxJQUFBLDBCQUFRLEdBQUU7O2dEQUNHO0FBS2Q7SUFIQyxJQUFBLDZCQUFtQixFQUFDLEVBQUUsT0FBTyxFQUFFLG1DQUFtQyxFQUFFLENBQUM7SUFDckUsSUFBQSw0QkFBVSxHQUFFO0lBQ1osSUFBQSwwQkFBUSxHQUFFOztzREFDVTtBQUd2QixNQUFhLGlCQUFpQjtJQUk1QixJQUFJLENBQVM7SUFJYixJQUFJLENBQWU7SUFLbkIsUUFBUSxDQUFVO0lBS2xCLFdBQVcsQ0FBVTtJQUtyQixXQUFXLENBQVU7SUFLckIsVUFBVSxDQUFXO0lBUXJCLE9BQU8sQ0FBdUI7SUFROUIsZUFBZSxDQUEyQjtJQUkxQyxZQUFZLENBQVc7SUFJdkIsZUFBZSxDQUFXO0lBTTFCLFlBQVksQ0FBWTtJQUt4QixnQkFBZ0IsQ0FBMkI7SUFNM0MsVUFBVSxDQUFVO0lBS3BCLFFBQVEsQ0FBMkI7Q0FDcEM7QUEzRUQsOENBMkVDO0FBdkVDO0lBSEMsSUFBQSxxQkFBVyxFQUFDLEVBQUUsT0FBTyxFQUFFLDRCQUE0QixFQUFFLENBQUM7SUFDdEQsSUFBQSwwQkFBUSxHQUFFO0lBQ1YsSUFBQSwyQkFBUyxFQUFDLElBQUksQ0FBQzs7K0NBQ0g7QUFJYjtJQUZDLElBQUEscUJBQVcsRUFBQyxFQUFFLElBQUksRUFBRSxrQkFBa0IsRUFBRSxRQUFRLEVBQUUsY0FBYyxFQUFFLE9BQU8sRUFBRSxNQUFNLEVBQUUsQ0FBQztJQUNwRixJQUFBLHdCQUFNLEVBQUMscUJBQVksQ0FBQzs7K0NBQ0Y7QUFLbkI7SUFIQyxJQUFBLDZCQUFtQixFQUFDLEVBQUUsT0FBTyxFQUFFLHNDQUFzQyxFQUFFLENBQUM7SUFDeEUsSUFBQSw0QkFBVSxHQUFFO0lBQ1osSUFBQSwwQkFBUSxHQUFFOzttREFDTztBQUtsQjtJQUhDLElBQUEsNkJBQW1CLEVBQUMsRUFBRSxPQUFPLEVBQUUseUNBQXlDLEVBQUUsQ0FBQztJQUMzRSxJQUFBLDRCQUFVLEdBQUU7SUFDWixJQUFBLDBCQUFRLEdBQUU7O3NEQUNVO0FBS3JCO0lBSEMsSUFBQSw2QkFBbUIsRUFBQyxFQUFFLE9BQU8sRUFBRSx3QkFBd0IsRUFBRSxDQUFDO0lBQzFELElBQUEsNEJBQVUsR0FBRTtJQUNaLElBQUEsMEJBQVEsR0FBRTs7c0RBQ1U7QUFLckI7SUFIQyxJQUFBLDZCQUFtQixFQUFDLEVBQUUsT0FBTyxFQUFFLEtBQUssRUFBRSxDQUFDO0lBQ3ZDLElBQUEsNEJBQVUsR0FBRTtJQUNaLElBQUEsMkJBQVMsR0FBRTs7cURBQ1M7QUFRckI7SUFOQyxJQUFBLDZCQUFtQixFQUFDO1FBQ25CLElBQUksRUFBRSxDQUFDLGlCQUFpQixDQUFDO1FBQ3pCLFdBQVcsRUFBRSxvQ0FBb0M7S0FDbEQsQ0FBQztJQUNELElBQUEsNEJBQVUsR0FBRTtJQUNaLElBQUEseUJBQU8sR0FBRTs7a0RBQ29CO0FBUTlCO0lBTkMsSUFBQSw2QkFBbUIsRUFBQztRQUNuQixPQUFPLEVBQUUsRUFBRSxTQUFTLEVBQUUsQ0FBQyxFQUFFLFNBQVMsRUFBRSxHQUFHLEVBQUU7UUFDekMsV0FBVyxFQUFFLGtCQUFrQjtLQUNoQyxDQUFDO0lBQ0QsSUFBQSw0QkFBVSxHQUFFO0lBQ1osSUFBQSwwQkFBUSxHQUFFOzswREFDK0I7QUFJMUM7SUFGQyxJQUFBLDZCQUFtQixFQUFDLEVBQUUsV0FBVyxFQUFFLGdDQUFnQyxFQUFFLENBQUM7SUFDdEUsSUFBQSw0QkFBVSxHQUFFOzt1REFDVTtBQUl2QjtJQUZDLElBQUEsNkJBQW1CLEVBQUMsRUFBRSxXQUFXLEVBQUUsK0JBQStCLEVBQUUsQ0FBQztJQUNyRSxJQUFBLDRCQUFVLEdBQUU7OzBEQUNhO0FBTTFCO0lBSkMsSUFBQSw2QkFBbUIsRUFBQyxFQUFFLE9BQU8sRUFBRSxDQUFDLFlBQVksRUFBRSxNQUFNLENBQUMsRUFBRSxXQUFXLEVBQUUsZUFBZSxFQUFFLENBQUM7SUFDdEYsSUFBQSw0QkFBVSxHQUFFO0lBQ1osSUFBQSx5QkFBTyxHQUFFO0lBQ1QsSUFBQSwwQkFBUSxFQUFDLEVBQUUsSUFBSSxFQUFFLElBQUksRUFBRSxDQUFDOzt1REFDRDtBQUt4QjtJQUhDLElBQUEsNkJBQW1CLEVBQUMsRUFBRSxXQUFXLEVBQUUsNkJBQTZCLEVBQUUsQ0FBQztJQUNuRSxJQUFBLDRCQUFVLEdBQUU7SUFDWixJQUFBLDBCQUFRLEdBQUU7OzJEQUNnQztBQU0zQztJQUpDLElBQUEsNkJBQW1CLEVBQUMsRUFBRSxPQUFPLEVBQUUsQ0FBQyxFQUFFLFdBQVcsRUFBRSxnQkFBZ0IsRUFBRSxDQUFDO0lBQ2xFLElBQUEsNEJBQVUsR0FBRTtJQUNaLElBQUEsdUJBQUssR0FBRTtJQUNQLElBQUEscUJBQUcsRUFBQyxDQUFDLENBQUM7O3FEQUNhO0FBS3BCO0lBSEMsSUFBQSw2QkFBbUIsRUFBQyxFQUFFLFdBQVcsRUFBRSxxQkFBcUIsRUFBRSxDQUFDO0lBQzNELElBQUEsNEJBQVUsR0FBRTtJQUNaLElBQUEsMEJBQVEsR0FBRTs7bURBQ3dCIiwibmFtZXMiOltdLCJzb3VyY2VzIjpbIkM6XFxSZXBvc1xcUXVpei10by1CdWlsZFxcYXBwc1xcYXBpXFxzcmNcXG1vZHVsZXNcXGFkbWluXFxkdG9cXGNyZWF0ZS1xdWVzdGlvbi5kdG8udHMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHtcbiAgSXNTdHJpbmcsXG4gIElzT3B0aW9uYWwsXG4gIElzQm9vbGVhbixcbiAgSXNJbnQsXG4gIElzRW51bSxcbiAgSXNBcnJheSxcbiAgTWF4TGVuZ3RoLFxuICBNaW4sXG4gIElzT2JqZWN0LFxufSBmcm9tICdjbGFzcy12YWxpZGF0b3InO1xuaW1wb3J0IHsgQXBpUHJvcGVydHksIEFwaVByb3BlcnR5T3B0aW9uYWwgfSBmcm9tICdAbmVzdGpzL3N3YWdnZXInO1xuaW1wb3J0IHsgUXVlc3Rpb25UeXBlIH0gZnJvbSAnQHByaXNtYS9jbGllbnQnO1xuXG4vLyBFeHRyYWN0IGVudW0gdmFsdWVzIGZvciBTd2FnZ2VyIHNjaGVtYSBnZW5lcmF0aW9uXG5jb25zdCBRdWVzdGlvblR5cGVWYWx1ZXMgPSBPYmplY3QudmFsdWVzKFF1ZXN0aW9uVHlwZSk7XG5cbmV4cG9ydCBjbGFzcyBRdWVzdGlvbk9wdGlvbkR0byB7XG4gIEBBcGlQcm9wZXJ0eSh7IGV4YW1wbGU6ICdvcHRpb25fMScgfSlcbiAgQElzU3RyaW5nKClcbiAgdmFsdWU6IHN0cmluZztcblxuICBAQXBpUHJvcGVydHkoeyBleGFtcGxlOiAnT3B0aW9uIDEnIH0pXG4gIEBJc1N0cmluZygpXG4gIGxhYmVsOiBzdHJpbmc7XG5cbiAgQEFwaVByb3BlcnR5T3B0aW9uYWwoeyBleGFtcGxlOiAnQWRkaXRpb25hbCBkZXNjcmlwdGlvbiBmb3Igb3B0aW9uJyB9KVxuICBASXNPcHRpb25hbCgpXG4gIEBJc1N0cmluZygpXG4gIGRlc2NyaXB0aW9uPzogc3RyaW5nO1xufVxuXG5leHBvcnQgY2xhc3MgQ3JlYXRlUXVlc3Rpb25EdG8ge1xuICBAQXBpUHJvcGVydHkoeyBleGFtcGxlOiAnV2hhdCBpcyB5b3VyIGNvbXBhbnkgbmFtZT8nIH0pXG4gIEBJc1N0cmluZygpXG4gIEBNYXhMZW5ndGgoMTAwMClcbiAgdGV4dDogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGVudW06IFF1ZXN0aW9uVHlwZVZhbHVlcywgZW51bU5hbWU6ICdRdWVzdGlvblR5cGUnLCBleGFtcGxlOiAnVEVYVCcgfSlcbiAgQElzRW51bShRdWVzdGlvblR5cGUpXG4gIHR5cGU6IFF1ZXN0aW9uVHlwZTtcblxuICBAQXBpUHJvcGVydHlPcHRpb25hbCh7IGV4YW1wbGU6ICdFbnRlciB0aGUgbGVnYWwgbmFtZSBvZiB5b3VyIGNvbXBhbnknIH0pXG4gIEBJc09wdGlvbmFsKClcbiAgQElzU3RyaW5nKClcbiAgaGVscFRleHQ/OiBzdHJpbmc7XG5cbiAgQEFwaVByb3BlcnR5T3B0aW9uYWwoeyBleGFtcGxlOiAnVGhpcyB3aWxsIGJlIHVzZWQgaW4gb2ZmaWNpYWwgZG9jdW1lbnRzJyB9KVxuICBASXNPcHRpb25hbCgpXG4gIEBJc1N0cmluZygpXG4gIGV4cGxhbmF0aW9uPzogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eU9wdGlvbmFsKHsgZXhhbXBsZTogJ2UuZy4sIEFjbWUgQ29ycG9yYXRpb24nIH0pXG4gIEBJc09wdGlvbmFsKClcbiAgQElzU3RyaW5nKClcbiAgcGxhY2Vob2xkZXI/OiBzdHJpbmc7XG5cbiAgQEFwaVByb3BlcnR5T3B0aW9uYWwoeyBkZWZhdWx0OiBmYWxzZSB9KVxuICBASXNPcHRpb25hbCgpXG4gIEBJc0Jvb2xlYW4oKVxuICBpc1JlcXVpcmVkPzogYm9vbGVhbjtcblxuICBAQXBpUHJvcGVydHlPcHRpb25hbCh7XG4gICAgdHlwZTogW1F1ZXN0aW9uT3B0aW9uRHRvXSxcbiAgICBkZXNjcmlwdGlvbjogJ09wdGlvbnMgZm9yIGNob2ljZS1iYXNlZCBxdWVzdGlvbnMnLFxuICB9KVxuICBASXNPcHRpb25hbCgpXG4gIEBJc0FycmF5KClcbiAgb3B0aW9ucz86IFF1ZXN0aW9uT3B0aW9uRHRvW107XG5cbiAgQEFwaVByb3BlcnR5T3B0aW9uYWwoe1xuICAgIGV4YW1wbGU6IHsgbWluTGVuZ3RoOiAyLCBtYXhMZW5ndGg6IDIwMCB9LFxuICAgIGRlc2NyaXB0aW9uOiAnVmFsaWRhdGlvbiBydWxlcycsXG4gIH0pXG4gIEBJc09wdGlvbmFsKClcbiAgQElzT2JqZWN0KClcbiAgdmFsaWRhdGlvblJ1bGVzPzogUmVjb3JkPHN0cmluZywgdW5rbm93bj47XG5cbiAgQEFwaVByb3BlcnR5T3B0aW9uYWwoeyBkZXNjcmlwdGlvbjogJ0RlZmF1bHQgdmFsdWUgZm9yIHRoZSBxdWVzdGlvbicgfSlcbiAgQElzT3B0aW9uYWwoKVxuICBkZWZhdWx0VmFsdWU/OiB1bmtub3duO1xuXG4gIEBBcGlQcm9wZXJ0eU9wdGlvbmFsKHsgZGVzY3JpcHRpb246ICdBSS1nZW5lcmF0ZWQgc3VnZ2VzdGVkIGFuc3dlcicgfSlcbiAgQElzT3B0aW9uYWwoKVxuICBzdWdnZXN0ZWRBbnN3ZXI/OiB1bmtub3duO1xuXG4gIEBBcGlQcm9wZXJ0eU9wdGlvbmFsKHsgZXhhbXBsZTogWyd0ZWNobm9sb2d5JywgJ3NhYXMnXSwgZGVzY3JpcHRpb246ICdJbmR1c3RyeSB0YWdzJyB9KVxuICBASXNPcHRpb25hbCgpXG4gIEBJc0FycmF5KClcbiAgQElzU3RyaW5nKHsgZWFjaDogdHJ1ZSB9KVxuICBpbmR1c3RyeVRhZ3M/OiBzdHJpbmdbXTtcblxuICBAQXBpUHJvcGVydHlPcHRpb25hbCh7IGRlc2NyaXB0aW9uOiAnTWFwcGluZ3MgdG8gZG9jdW1lbnQgZmllbGRzJyB9KVxuICBASXNPcHRpb25hbCgpXG4gIEBJc09iamVjdCgpXG4gIGRvY3VtZW50TWFwcGluZ3M/OiBSZWNvcmQ8c3RyaW5nLCB1bmtub3duPjtcblxuICBAQXBpUHJvcGVydHlPcHRpb25hbCh7IGV4YW1wbGU6IDAsIGRlc2NyaXB0aW9uOiAnT3JkZXIgcG9zaXRpb24nIH0pXG4gIEBJc09wdGlvbmFsKClcbiAgQElzSW50KClcbiAgQE1pbigwKVxuICBvcmRlckluZGV4PzogbnVtYmVyO1xuXG4gIEBBcGlQcm9wZXJ0eU9wdGlvbmFsKHsgZGVzY3JpcHRpb246ICdBZGRpdGlvbmFsIG1ldGFkYXRhJyB9KVxuICBASXNPcHRpb25hbCgpXG4gIEBJc09iamVjdCgpXG4gIG1ldGFkYXRhPzogUmVjb3JkPHN0cmluZywgdW5rbm93bj47XG59XG4iXSwidmVyc2lvbiI6M30=

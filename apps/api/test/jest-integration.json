@@ -20,6 +20,7 @@
         "^@libs/redis(.*)$": "<rootDir>/../../../../libs/redis/src$1",
         "^@libs/shared(.*)$": "<rootDir>/../../../../libs/shared/src$1"
     },
+    "cacheDirectory": "<rootDir>/../../.jest-cache/integration",
     "testTimeout": 30000,
     "verbose": true
 }

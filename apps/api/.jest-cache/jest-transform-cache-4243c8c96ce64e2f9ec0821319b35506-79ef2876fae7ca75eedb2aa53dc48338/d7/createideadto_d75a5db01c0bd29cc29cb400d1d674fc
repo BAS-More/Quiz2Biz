@@ -1,0 +1,53 @@
+62d68140324891c4ee73f061f6fe222a
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CreateIdeaDto = void 0;
+const swagger_1 = require("@nestjs/swagger");
+const class_validator_1 = require("class-validator");
+class CreateIdeaDto {
+    rawInput;
+    title;
+    projectTypeId;
+}
+exports.CreateIdeaDto = CreateIdeaDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Free-form text describing the business idea or project',
+        example: 'I want to start a mobile app for pet owners that connects them with local vets and pet sitters. I am thinking subscription model with premium features.',
+        minLength: 10,
+        maxLength: 10000,
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MinLength)(10, { message: 'Please provide at least a brief description of your idea (10+ characters).' }),
+    (0, class_validator_1.MaxLength)(10000),
+    __metadata("design:type", String)
+], CreateIdeaDto.prototype, "rawInput", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        description: 'Optional title for the idea',
+        example: 'PetConnect App',
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(200),
+    __metadata("design:type", String)
+], CreateIdeaDto.prototype, "title", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        description: 'If the user already knows which project type they want',
+        example: '123e4567-e89b-12d3-a456-426614174000',
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsUUID)(),
+    __metadata("design:type", String)
+], CreateIdeaDto.prototype, "projectTypeId", void 0);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcaWRlYS1jYXB0dXJlXFxkdG9cXGNyZWF0ZS1pZGVhLmR0by50cyIsIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7QUFBQSw2Q0FBbUU7QUFDbkUscURBQXFGO0FBRXJGLE1BQWEsYUFBYTtJQVV4QixRQUFRLENBQVM7SUFTakIsS0FBSyxDQUFVO0lBUWYsYUFBYSxDQUFVO0NBQ3hCO0FBNUJELHNDQTRCQztBQWxCQztJQVRDLElBQUEscUJBQVcsRUFBQztRQUNYLFdBQVcsRUFBRSx3REFBd0Q7UUFDckUsT0FBTyxFQUFFLHlKQUF5SjtRQUNsSyxTQUFTLEVBQUUsRUFBRTtRQUNiLFNBQVMsRUFBRSxLQUFLO0tBQ2pCLENBQUM7SUFDRCxJQUFBLDBCQUFRLEdBQUU7SUFDVixJQUFBLDJCQUFTLEVBQUMsRUFBRSxFQUFFLEVBQUUsT0FBTyxFQUFFLDRFQUE0RSxFQUFFLENBQUM7SUFDeEcsSUFBQSwyQkFBUyxFQUFDLEtBQUssQ0FBQzs7K0NBQ0E7QUFTakI7SUFQQyxJQUFBLDZCQUFtQixFQUFDO1FBQ25CLFdBQVcsRUFBRSw2QkFBNkI7UUFDMUMsT0FBTyxFQUFFLGdCQUFnQjtLQUMxQixDQUFDO0lBQ0QsSUFBQSw0QkFBVSxHQUFFO0lBQ1osSUFBQSwwQkFBUSxHQUFFO0lBQ1YsSUFBQSwyQkFBUyxFQUFDLEdBQUcsQ0FBQzs7NENBQ0E7QUFRZjtJQU5DLElBQUEsNkJBQW1CLEVBQUM7UUFDbkIsV0FBVyxFQUFFLHdEQUF3RDtRQUNyRSxPQUFPLEVBQUUsc0NBQXNDO0tBQ2hELENBQUM7SUFDRCxJQUFBLDRCQUFVLEdBQUU7SUFDWixJQUFBLHdCQUFNLEdBQUU7O29EQUNjIiwibmFtZXMiOltdLCJzb3VyY2VzIjpbIkM6XFxSZXBvc1xcUXVpei10by1CdWlsZFxcYXBwc1xcYXBpXFxzcmNcXG1vZHVsZXNcXGlkZWEtY2FwdHVyZVxcZHRvXFxjcmVhdGUtaWRlYS5kdG8udHMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgQXBpUHJvcGVydHksIEFwaVByb3BlcnR5T3B0aW9uYWwgfSBmcm9tICdAbmVzdGpzL3N3YWdnZXInO1xyXG5pbXBvcnQgeyBJc1N0cmluZywgSXNPcHRpb25hbCwgSXNVVUlELCBNaW5MZW5ndGgsIE1heExlbmd0aCB9IGZyb20gJ2NsYXNzLXZhbGlkYXRvcic7XHJcblxyXG5leHBvcnQgY2xhc3MgQ3JlYXRlSWRlYUR0byB7XHJcbiAgQEFwaVByb3BlcnR5KHtcclxuICAgIGRlc2NyaXB0aW9uOiAnRnJlZS1mb3JtIHRleHQgZGVzY3JpYmluZyB0aGUgYnVzaW5lc3MgaWRlYSBvciBwcm9qZWN0JyxcclxuICAgIGV4YW1wbGU6ICdJIHdhbnQgdG8gc3RhcnQgYSBtb2JpbGUgYXBwIGZvciBwZXQgb3duZXJzIHRoYXQgY29ubmVjdHMgdGhlbSB3aXRoIGxvY2FsIHZldHMgYW5kIHBldCBzaXR0ZXJzLiBJIGFtIHRoaW5raW5nIHN1YnNjcmlwdGlvbiBtb2RlbCB3aXRoIHByZW1pdW0gZmVhdHVyZXMuJyxcclxuICAgIG1pbkxlbmd0aDogMTAsXHJcbiAgICBtYXhMZW5ndGg6IDEwMDAwLFxyXG4gIH0pXHJcbiAgQElzU3RyaW5nKClcclxuICBATWluTGVuZ3RoKDEwLCB7IG1lc3NhZ2U6ICdQbGVhc2UgcHJvdmlkZSBhdCBsZWFzdCBhIGJyaWVmIGRlc2NyaXB0aW9uIG9mIHlvdXIgaWRlYSAoMTArIGNoYXJhY3RlcnMpLicgfSlcclxuICBATWF4TGVuZ3RoKDEwMDAwKVxyXG4gIHJhd0lucHV0OiBzdHJpbmc7XHJcblxyXG4gIEBBcGlQcm9wZXJ0eU9wdGlvbmFsKHtcclxuICAgIGRlc2NyaXB0aW9uOiAnT3B0aW9uYWwgdGl0bGUgZm9yIHRoZSBpZGVhJyxcclxuICAgIGV4YW1wbGU6ICdQZXRDb25uZWN0IEFwcCcsXHJcbiAgfSlcclxuICBASXNPcHRpb25hbCgpXHJcbiAgQElzU3RyaW5nKClcclxuICBATWF4TGVuZ3RoKDIwMClcclxuICB0aXRsZT86IHN0cmluZztcclxuXHJcbiAgQEFwaVByb3BlcnR5T3B0aW9uYWwoe1xyXG4gICAgZGVzY3JpcHRpb246ICdJZiB0aGUgdXNlciBhbHJlYWR5IGtub3dzIHdoaWNoIHByb2plY3QgdHlwZSB0aGV5IHdhbnQnLFxyXG4gICAgZXhhbXBsZTogJzEyM2U0NTY3LWU4OWItMTJkMy1hNDU2LTQyNjYxNDE3NDAwMCcsXHJcbiAgfSlcclxuICBASXNPcHRpb25hbCgpXHJcbiAgQElzVVVJRCgpXHJcbiAgcHJvamVjdFR5cGVJZD86IHN0cmluZztcclxufVxyXG4iXSwidmVyc2lvbiI6M30=

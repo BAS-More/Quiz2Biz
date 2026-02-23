@@ -1,0 +1,69 @@
+03c7e45af03538c07207e6e14b4696ef
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.NotificationController = void 0;
+const common_1 = require("@nestjs/common");
+const swagger_1 = require("@nestjs/swagger");
+const notification_service_1 = require("./notification.service");
+const dto_1 = require("./dto");
+const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+const roles_guard_1 = require("../auth/guards/roles.guard");
+const roles_decorator_1 = require("../auth/decorators/roles.decorator");
+const client_1 = require("@prisma/client");
+let NotificationController = class NotificationController {
+    notificationService;
+    constructor(notificationService) {
+        this.notificationService = notificationService;
+    }
+    async sendEmail(dto) {
+        return this.notificationService.sendEmail(dto);
+    }
+    async sendBulkEmails(dto) {
+        return this.notificationService.sendBulkEmails(dto);
+    }
+};
+exports.NotificationController = NotificationController;
+__decorate([
+    (0, common_1.Post)('send'),
+    (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOperation)({ summary: 'Send a single email (Admin only)' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Email sent', type: dto_1.EmailResponseDto }),
+    (0, swagger_1.ApiResponse)({ status: 403, description: 'Forbidden - Admin access required' }),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [dto_1.SendEmailDto]),
+    __metadata("design:returntype", Promise)
+], NotificationController.prototype, "sendEmail", null);
+__decorate([
+    (0, common_1.Post)('send-bulk'),
+    (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOperation)({ summary: 'Send multiple emails (Admin only)' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Emails sent', type: [dto_1.EmailResponseDto] }),
+    (0, swagger_1.ApiResponse)({ status: 403, description: 'Forbidden - Admin access required' }),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [dto_1.BulkSendEmailDto]),
+    __metadata("design:returntype", Promise)
+], NotificationController.prototype, "sendBulkEmails", null);
+exports.NotificationController = NotificationController = __decorate([
+    (0, swagger_1.ApiTags)('Notifications'),
+    (0, common_1.Controller)('notifications'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
+    __metadata("design:paramtypes", [notification_service_1.NotificationService])
+], NotificationController);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcbm90aWZpY2F0aW9uc1xcbm90aWZpY2F0aW9uLmNvbnRyb2xsZXIudHMiLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7O0FBQUEsMkNBQXlGO0FBQ3pGLDZDQUFvRjtBQUNwRixpRUFBNkQ7QUFDN0QsK0JBQXlFO0FBQ3pFLGtFQUE2RDtBQUM3RCw0REFBd0Q7QUFDeEQsd0VBQTJEO0FBQzNELDJDQUEwQztBQU1uQyxJQUFNLHNCQUFzQixHQUE1QixNQUFNLHNCQUFzQjtJQUNKO0lBQTdCLFlBQTZCLG1CQUF3QztRQUF4Qyx3QkFBbUIsR0FBbkIsbUJBQW1CLENBQXFCO0lBQUcsQ0FBQztJQVFuRSxBQUFOLEtBQUssQ0FBQyxTQUFTLENBQVMsR0FBaUI7UUFDdkMsT0FBTyxJQUFJLENBQUMsbUJBQW1CLENBQUMsU0FBUyxDQUFDLEdBQUcsQ0FBQyxDQUFDO0lBQ2pELENBQUM7SUFRSyxBQUFOLEtBQUssQ0FBQyxjQUFjLENBQVMsR0FBcUI7UUFDaEQsT0FBTyxJQUFJLENBQUMsbUJBQW1CLENBQUMsY0FBYyxDQUFDLEdBQUcsQ0FBQyxDQUFDO0lBQ3RELENBQUM7Q0FDRixDQUFBO0FBdEJZLHdEQUFzQjtBQVMzQjtJQU5MLElBQUEsYUFBSSxFQUFDLE1BQU0sQ0FBQztJQUNaLElBQUEsdUJBQUssRUFBQyxpQkFBUSxDQUFDLEtBQUssRUFBRSxpQkFBUSxDQUFDLFdBQVcsQ0FBQztJQUMzQyxJQUFBLGlCQUFRLEVBQUMsbUJBQVUsQ0FBQyxFQUFFLENBQUM7SUFDdkIsSUFBQSxzQkFBWSxFQUFDLEVBQUUsT0FBTyxFQUFFLGtDQUFrQyxFQUFFLENBQUM7SUFDN0QsSUFBQSxxQkFBVyxFQUFDLEVBQUUsTUFBTSxFQUFFLEdBQUcsRUFBRSxXQUFXLEVBQUUsWUFBWSxFQUFFLElBQUksRUFBRSxzQkFBZ0IsRUFBRSxDQUFDO0lBQy9FLElBQUEscUJBQVcsRUFBQyxFQUFFLE1BQU0sRUFBRSxHQUFHLEVBQUUsV0FBVyxFQUFFLG1DQUFtQyxFQUFFLENBQUM7SUFDOUQsV0FBQSxJQUFBLGFBQUksR0FBRSxDQUFBOztxQ0FBTSxrQkFBWTs7dURBRXhDO0FBUUs7SUFOTCxJQUFBLGFBQUksRUFBQyxXQUFXLENBQUM7SUFDakIsSUFBQSx1QkFBSyxFQUFDLGlCQUFRLENBQUMsS0FBSyxFQUFFLGlCQUFRLENBQUMsV0FBVyxDQUFDO0lBQzNDLElBQUEsaUJBQVEsRUFBQyxtQkFBVSxDQUFDLEVBQUUsQ0FBQztJQUN2QixJQUFBLHNCQUFZLEVBQUMsRUFBRSxPQUFPLEVBQUUsbUNBQW1DLEVBQUUsQ0FBQztJQUM5RCxJQUFBLHFCQUFXLEVBQUMsRUFBRSxNQUFNLEVBQUUsR0FBRyxFQUFFLFdBQVcsRUFBRSxhQUFhLEVBQUUsSUFBSSxFQUFFLENBQUMsc0JBQWdCLENBQUMsRUFBRSxDQUFDO0lBQ2xGLElBQUEscUJBQVcsRUFBQyxFQUFFLE1BQU0sRUFBRSxHQUFHLEVBQUUsV0FBVyxFQUFFLG1DQUFtQyxFQUFFLENBQUM7SUFDekQsV0FBQSxJQUFBLGFBQUksR0FBRSxDQUFBOztxQ0FBTSxzQkFBZ0I7OzREQUVqRDtpQ0FyQlUsc0JBQXNCO0lBSmxDLElBQUEsaUJBQU8sRUFBQyxlQUFlLENBQUM7SUFDeEIsSUFBQSxtQkFBVSxFQUFDLGVBQWUsQ0FBQztJQUMzQixJQUFBLGtCQUFTLEVBQUMsNkJBQVksRUFBRSx3QkFBVSxDQUFDO0lBQ25DLElBQUEsdUJBQWEsR0FBRTtxQ0FFb0MsMENBQW1CO0dBRDFELHNCQUFzQixDQXNCbEMiLCJuYW1lcyI6W10sInNvdXJjZXMiOlsiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcbm90aWZpY2F0aW9uc1xcbm90aWZpY2F0aW9uLmNvbnRyb2xsZXIudHMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgQ29udHJvbGxlciwgUG9zdCwgQm9keSwgVXNlR3VhcmRzLCBIdHRwQ29kZSwgSHR0cFN0YXR1cyB9IGZyb20gJ0BuZXN0anMvY29tbW9uJztcbmltcG9ydCB7IEFwaVRhZ3MsIEFwaU9wZXJhdGlvbiwgQXBpUmVzcG9uc2UsIEFwaUJlYXJlckF1dGggfSBmcm9tICdAbmVzdGpzL3N3YWdnZXInO1xuaW1wb3J0IHsgTm90aWZpY2F0aW9uU2VydmljZSB9IGZyb20gJy4vbm90aWZpY2F0aW9uLnNlcnZpY2UnO1xuaW1wb3J0IHsgU2VuZEVtYWlsRHRvLCBFbWFpbFJlc3BvbnNlRHRvLCBCdWxrU2VuZEVtYWlsRHRvIH0gZnJvbSAnLi9kdG8nO1xuaW1wb3J0IHsgSnd0QXV0aEd1YXJkIH0gZnJvbSAnLi4vYXV0aC9ndWFyZHMvand0LWF1dGguZ3VhcmQnO1xuaW1wb3J0IHsgUm9sZXNHdWFyZCB9IGZyb20gJy4uL2F1dGgvZ3VhcmRzL3JvbGVzLmd1YXJkJztcbmltcG9ydCB7IFJvbGVzIH0gZnJvbSAnLi4vYXV0aC9kZWNvcmF0b3JzL3JvbGVzLmRlY29yYXRvcic7XG5pbXBvcnQgeyBVc2VyUm9sZSB9IGZyb20gJ0BwcmlzbWEvY2xpZW50JztcblxuQEFwaVRhZ3MoJ05vdGlmaWNhdGlvbnMnKVxuQENvbnRyb2xsZXIoJ25vdGlmaWNhdGlvbnMnKVxuQFVzZUd1YXJkcyhKd3RBdXRoR3VhcmQsIFJvbGVzR3VhcmQpXG5AQXBpQmVhcmVyQXV0aCgpXG5leHBvcnQgY2xhc3MgTm90aWZpY2F0aW9uQ29udHJvbGxlciB7XG4gIGNvbnN0cnVjdG9yKHByaXZhdGUgcmVhZG9ubHkgbm90aWZpY2F0aW9uU2VydmljZTogTm90aWZpY2F0aW9uU2VydmljZSkge31cblxuICBAUG9zdCgnc2VuZCcpXG4gIEBSb2xlcyhVc2VyUm9sZS5BRE1JTiwgVXNlclJvbGUuU1VQRVJfQURNSU4pXG4gIEBIdHRwQ29kZShIdHRwU3RhdHVzLk9LKVxuICBAQXBpT3BlcmF0aW9uKHsgc3VtbWFyeTogJ1NlbmQgYSBzaW5nbGUgZW1haWwgKEFkbWluIG9ubHkpJyB9KVxuICBAQXBpUmVzcG9uc2UoeyBzdGF0dXM6IDIwMCwgZGVzY3JpcHRpb246ICdFbWFpbCBzZW50JywgdHlwZTogRW1haWxSZXNwb25zZUR0byB9KVxuICBAQXBpUmVzcG9uc2UoeyBzdGF0dXM6IDQwMywgZGVzY3JpcHRpb246ICdGb3JiaWRkZW4gLSBBZG1pbiBhY2Nlc3MgcmVxdWlyZWQnIH0pXG4gIGFzeW5jIHNlbmRFbWFpbChAQm9keSgpIGR0bzogU2VuZEVtYWlsRHRvKTogUHJvbWlzZTxFbWFpbFJlc3BvbnNlRHRvPiB7XG4gICAgcmV0dXJuIHRoaXMubm90aWZpY2F0aW9uU2VydmljZS5zZW5kRW1haWwoZHRvKTtcbiAgfVxuXG4gIEBQb3N0KCdzZW5kLWJ1bGsnKVxuICBAUm9sZXMoVXNlclJvbGUuQURNSU4sIFVzZXJSb2xlLlNVUEVSX0FETUlOKVxuICBASHR0cENvZGUoSHR0cFN0YXR1cy5PSylcbiAgQEFwaU9wZXJhdGlvbih7IHN1bW1hcnk6ICdTZW5kIG11bHRpcGxlIGVtYWlscyAoQWRtaW4gb25seSknIH0pXG4gIEBBcGlSZXNwb25zZSh7IHN0YXR1czogMjAwLCBkZXNjcmlwdGlvbjogJ0VtYWlscyBzZW50JywgdHlwZTogW0VtYWlsUmVzcG9uc2VEdG9dIH0pXG4gIEBBcGlSZXNwb25zZSh7IHN0YXR1czogNDAzLCBkZXNjcmlwdGlvbjogJ0ZvcmJpZGRlbiAtIEFkbWluIGFjY2VzcyByZXF1aXJlZCcgfSlcbiAgYXN5bmMgc2VuZEJ1bGtFbWFpbHMoQEJvZHkoKSBkdG86IEJ1bGtTZW5kRW1haWxEdG8pOiBQcm9taXNlPEVtYWlsUmVzcG9uc2VEdG9bXT4ge1xuICAgIHJldHVybiB0aGlzLm5vdGlmaWNhdGlvblNlcnZpY2Uuc2VuZEJ1bGtFbWFpbHMoZHRvKTtcbiAgfVxufVxuIl0sInZlcnNpb24iOjN9

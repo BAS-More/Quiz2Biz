@@ -1,0 +1,40 @@
+84d4d6fa653474b3ea8340e568b36408
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.LoginDto = void 0;
+const class_validator_1 = require("class-validator");
+const swagger_1 = require("@nestjs/swagger");
+class LoginDto {
+    email;
+    password;
+    // Populated by controller, not from request body
+    ip;
+}
+exports.LoginDto = LoginDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'user@example.com' }),
+    (0, class_validator_1.IsEmail)({}, { message: 'Invalid email format' }),
+    __metadata("design:type", String)
+], LoginDto.prototype, "email", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'SecureP@ss123' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MinLength)(1, { message: 'Password is required' }),
+    __metadata("design:type", String)
+], LoginDto.prototype, "password", void 0);
+__decorate([
+    (0, swagger_1.ApiHideProperty)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], LoginDto.prototype, "ip", void 0);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcYXV0aFxcZHRvXFxsb2dpbi5kdG8udHMiLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7O0FBQUEscURBQTJFO0FBQzNFLDZDQUErRDtBQUUvRCxNQUFhLFFBQVE7SUFHbkIsS0FBSyxDQUFTO0lBS2QsUUFBUSxDQUFTO0lBRWpCLGlEQUFpRDtJQUlqRCxFQUFFLENBQVU7Q0FDYjtBQWZELDRCQWVDO0FBWkM7SUFGQyxJQUFBLHFCQUFXLEVBQUMsRUFBRSxPQUFPLEVBQUUsa0JBQWtCLEVBQUUsQ0FBQztJQUM1QyxJQUFBLHlCQUFPLEVBQUMsRUFBRSxFQUFFLEVBQUUsT0FBTyxFQUFFLHNCQUFzQixFQUFFLENBQUM7O3VDQUNuQztBQUtkO0lBSEMsSUFBQSxxQkFBVyxFQUFDLEVBQUUsT0FBTyxFQUFFLGVBQWUsRUFBRSxDQUFDO0lBQ3pDLElBQUEsMEJBQVEsR0FBRTtJQUNWLElBQUEsMkJBQVMsRUFBQyxDQUFDLEVBQUUsRUFBRSxPQUFPLEVBQUUsc0JBQXNCLEVBQUUsQ0FBQzs7MENBQ2pDO0FBTWpCO0lBSEMsSUFBQSx5QkFBZSxHQUFFO0lBQ2pCLElBQUEsNEJBQVUsR0FBRTtJQUNaLElBQUEsMEJBQVEsR0FBRTs7b0NBQ0MiLCJuYW1lcyI6W10sInNvdXJjZXMiOlsiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcYXV0aFxcZHRvXFxsb2dpbi5kdG8udHMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgSXNFbWFpbCwgSXNTdHJpbmcsIE1pbkxlbmd0aCwgSXNPcHRpb25hbCB9IGZyb20gJ2NsYXNzLXZhbGlkYXRvcic7XG5pbXBvcnQgeyBBcGlQcm9wZXJ0eSwgQXBpSGlkZVByb3BlcnR5IH0gZnJvbSAnQG5lc3Rqcy9zd2FnZ2VyJztcblxuZXhwb3J0IGNsYXNzIExvZ2luRHRvIHtcbiAgQEFwaVByb3BlcnR5KHsgZXhhbXBsZTogJ3VzZXJAZXhhbXBsZS5jb20nIH0pXG4gIEBJc0VtYWlsKHt9LCB7IG1lc3NhZ2U6ICdJbnZhbGlkIGVtYWlsIGZvcm1hdCcgfSlcbiAgZW1haWw6IHN0cmluZztcblxuICBAQXBpUHJvcGVydHkoeyBleGFtcGxlOiAnU2VjdXJlUEBzczEyMycgfSlcbiAgQElzU3RyaW5nKClcbiAgQE1pbkxlbmd0aCgxLCB7IG1lc3NhZ2U6ICdQYXNzd29yZCBpcyByZXF1aXJlZCcgfSlcbiAgcGFzc3dvcmQ6IHN0cmluZztcblxuICAvLyBQb3B1bGF0ZWQgYnkgY29udHJvbGxlciwgbm90IGZyb20gcmVxdWVzdCBib2R5XG4gIEBBcGlIaWRlUHJvcGVydHkoKVxuICBASXNPcHRpb25hbCgpXG4gIEBJc1N0cmluZygpXG4gIGlwPzogc3RyaW5nO1xufVxuIl0sInZlcnNpb24iOjN9

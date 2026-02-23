@@ -1,0 +1,55 @@
+905145744b9fb6a574638775e726d4d4
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProjectTypesController = void 0;
+const common_1 = require("@nestjs/common");
+const swagger_1 = require("@nestjs/swagger");
+const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+const database_1 = require("@libs/database");
+let ProjectTypesController = class ProjectTypesController {
+    prisma;
+    constructor(prisma) {
+        this.prisma = prisma;
+    }
+    async listProjectTypes() {
+        return this.prisma.projectType.findMany({
+            where: { isActive: true },
+            orderBy: [{ isDefault: 'desc' }, { name: 'asc' }],
+            select: {
+                id: true,
+                slug: true,
+                name: true,
+                description: true,
+                icon: true,
+                isDefault: true,
+                metadata: true,
+            },
+        });
+    }
+};
+exports.ProjectTypesController = ProjectTypesController;
+__decorate([
+    (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: 'List all active project types' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'List of active project types' }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ProjectTypesController.prototype, "listProjectTypes", null);
+exports.ProjectTypesController = ProjectTypesController = __decorate([
+    (0, swagger_1.ApiTags)('project-types'),
+    (0, common_1.Controller)('project-types'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
+    __metadata("design:paramtypes", [database_1.PrismaService])
+], ProjectTypesController);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcaWRlYS1jYXB0dXJlXFxwcm9qZWN0LXR5cGVzLmNvbnRyb2xsZXIudHMiLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7O0FBQUEsMkNBQTREO0FBQzVELDZDQUFvRjtBQUNwRixrRUFBNkQ7QUFDN0QsNkNBQStDO0FBTXhDLElBQU0sc0JBQXNCLEdBQTVCLE1BQU0sc0JBQXNCO0lBQ0o7SUFBN0IsWUFBNkIsTUFBcUI7UUFBckIsV0FBTSxHQUFOLE1BQU0sQ0FBZTtJQUFHLENBQUM7SUFLaEQsQUFBTixLQUFLLENBQUMsZ0JBQWdCO1FBQ3BCLE9BQU8sSUFBSSxDQUFDLE1BQU0sQ0FBQyxXQUFXLENBQUMsUUFBUSxDQUFDO1lBQ3RDLEtBQUssRUFBRSxFQUFFLFFBQVEsRUFBRSxJQUFJLEVBQUU7WUFDekIsT0FBTyxFQUFFLENBQUMsRUFBRSxTQUFTLEVBQUUsTUFBTSxFQUFFLEVBQUUsRUFBRSxJQUFJLEVBQUUsS0FBSyxFQUFFLENBQUM7WUFDakQsTUFBTSxFQUFFO2dCQUNOLEVBQUUsRUFBRSxJQUFJO2dCQUNSLElBQUksRUFBRSxJQUFJO2dCQUNWLElBQUksRUFBRSxJQUFJO2dCQUNWLFdBQVcsRUFBRSxJQUFJO2dCQUNqQixJQUFJLEVBQUUsSUFBSTtnQkFDVixTQUFTLEVBQUUsSUFBSTtnQkFDZixRQUFRLEVBQUUsSUFBSTthQUNmO1NBQ0YsQ0FBQyxDQUFDO0lBQ0wsQ0FBQztDQUNGLENBQUE7QUFyQlksd0RBQXNCO0FBTTNCO0lBSEwsSUFBQSxZQUFHLEdBQUU7SUFDTCxJQUFBLHNCQUFZLEVBQUMsRUFBRSxPQUFPLEVBQUUsK0JBQStCLEVBQUUsQ0FBQztJQUMxRCxJQUFBLHFCQUFXLEVBQUMsRUFBRSxNQUFNLEVBQUUsR0FBRyxFQUFFLFdBQVcsRUFBRSw4QkFBOEIsRUFBRSxDQUFDOzs7OzhEQWV6RTtpQ0FwQlUsc0JBQXNCO0lBSmxDLElBQUEsaUJBQU8sRUFBQyxlQUFlLENBQUM7SUFDeEIsSUFBQSxtQkFBVSxFQUFDLGVBQWUsQ0FBQztJQUMzQixJQUFBLGtCQUFTLEVBQUMsNkJBQVksQ0FBQztJQUN2QixJQUFBLHVCQUFhLEdBQUU7cUNBRXVCLHdCQUFhO0dBRHZDLHNCQUFzQixDQXFCbEMiLCJuYW1lcyI6W10sInNvdXJjZXMiOlsiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcaWRlYS1jYXB0dXJlXFxwcm9qZWN0LXR5cGVzLmNvbnRyb2xsZXIudHMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgQ29udHJvbGxlciwgR2V0LCBVc2VHdWFyZHMgfSBmcm9tICdAbmVzdGpzL2NvbW1vbic7XHJcbmltcG9ydCB7IEFwaVRhZ3MsIEFwaU9wZXJhdGlvbiwgQXBpUmVzcG9uc2UsIEFwaUJlYXJlckF1dGggfSBmcm9tICdAbmVzdGpzL3N3YWdnZXInO1xyXG5pbXBvcnQgeyBKd3RBdXRoR3VhcmQgfSBmcm9tICcuLi9hdXRoL2d1YXJkcy9qd3QtYXV0aC5ndWFyZCc7XHJcbmltcG9ydCB7IFByaXNtYVNlcnZpY2UgfSBmcm9tICdAbGlicy9kYXRhYmFzZSc7XHJcblxyXG5AQXBpVGFncygncHJvamVjdC10eXBlcycpXHJcbkBDb250cm9sbGVyKCdwcm9qZWN0LXR5cGVzJylcclxuQFVzZUd1YXJkcyhKd3RBdXRoR3VhcmQpXHJcbkBBcGlCZWFyZXJBdXRoKClcclxuZXhwb3J0IGNsYXNzIFByb2plY3RUeXBlc0NvbnRyb2xsZXIge1xyXG4gIGNvbnN0cnVjdG9yKHByaXZhdGUgcmVhZG9ubHkgcHJpc21hOiBQcmlzbWFTZXJ2aWNlKSB7fVxyXG5cclxuICBAR2V0KClcclxuICBAQXBpT3BlcmF0aW9uKHsgc3VtbWFyeTogJ0xpc3QgYWxsIGFjdGl2ZSBwcm9qZWN0IHR5cGVzJyB9KVxyXG4gIEBBcGlSZXNwb25zZSh7IHN0YXR1czogMjAwLCBkZXNjcmlwdGlvbjogJ0xpc3Qgb2YgYWN0aXZlIHByb2plY3QgdHlwZXMnIH0pXHJcbiAgYXN5bmMgbGlzdFByb2plY3RUeXBlcygpIHtcclxuICAgIHJldHVybiB0aGlzLnByaXNtYS5wcm9qZWN0VHlwZS5maW5kTWFueSh7XHJcbiAgICAgIHdoZXJlOiB7IGlzQWN0aXZlOiB0cnVlIH0sXHJcbiAgICAgIG9yZGVyQnk6IFt7IGlzRGVmYXVsdDogJ2Rlc2MnIH0sIHsgbmFtZTogJ2FzYycgfV0sXHJcbiAgICAgIHNlbGVjdDoge1xyXG4gICAgICAgIGlkOiB0cnVlLFxyXG4gICAgICAgIHNsdWc6IHRydWUsXHJcbiAgICAgICAgbmFtZTogdHJ1ZSxcclxuICAgICAgICBkZXNjcmlwdGlvbjogdHJ1ZSxcclxuICAgICAgICBpY29uOiB0cnVlLFxyXG4gICAgICAgIGlzRGVmYXVsdDogdHJ1ZSxcclxuICAgICAgICBtZXRhZGF0YTogdHJ1ZSxcclxuICAgICAgfSxcclxuICAgIH0pO1xyXG4gIH1cclxufVxyXG4iXSwidmVyc2lvbiI6M30=

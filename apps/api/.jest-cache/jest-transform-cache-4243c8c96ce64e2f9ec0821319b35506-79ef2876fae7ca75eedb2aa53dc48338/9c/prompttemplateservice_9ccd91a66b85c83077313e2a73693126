@@ -1,0 +1,378 @@
+2553796dcf58bfbb51d8a80c75207de2
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var PromptTemplateService_1;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PromptTemplateService = void 0;
+/**
+ * Prompt Template Service
+ * Manages prompt templates for all 11 readiness dimensions
+ */
+const common_1 = require("@nestjs/common");
+const types_1 = require("../types");
+let PromptTemplateService = PromptTemplateService_1 = class PromptTemplateService {
+    logger = new common_1.Logger(PromptTemplateService_1.name);
+    /**
+     * In-memory template store (can be moved to database later)
+     */
+    templates = new Map();
+    constructor() {
+        this.initializeDefaultTemplates();
+    }
+    /**
+     * Get template for a specific dimension
+     */
+    async getTemplateForDimension(dimensionKey) {
+        return this.templates.get(dimensionKey) || null;
+    }
+    /**
+     * Get all available templates
+     */
+    async getAllTemplates() {
+        return Array.from(this.templates.values());
+    }
+    /**
+     * Initialize default templates for all 11 dimensions
+     */
+    initializeDefaultTemplates() {
+        const defaultTemplates = [
+            // Architecture & Security (weight: 0.15)
+            {
+                id: 'tpl-arch-sec',
+                dimensionKey: 'arch_sec',
+                version: '1.0.0',
+                goalTemplate: 'Implement {{bestPractice}} to address the security/architecture gap in {{dimensionName}}',
+                taskTemplates: [
+                    {
+                        order: 1,
+                        template: 'Review current {{dimensionName}} implementation against {{standardRefs}}',
+                    },
+                    { order: 2, template: 'Design solution architecture following {{bestPractice}}' },
+                    { order: 3, template: 'Implement security controls as specified' },
+                    { order: 4, template: 'Create architecture documentation with C4 diagrams' },
+                    { order: 5, template: 'Conduct security review and threat modeling' },
+                ],
+                defaultAcceptanceCriteria: [
+                    'All OWASP Top 10 vulnerabilities addressed',
+                    'Architecture diagram updated and reviewed',
+                    'Security controls documented and tested',
+                    'Penetration testing passed with no HIGH/CRITICAL findings',
+                ],
+                defaultConstraints: [
+                    'Must comply with {{standardRefs}} requirements',
+                    'Must not introduce breaking changes to existing APIs',
+                    'Must maintain backward compatibility',
+                ],
+                defaultDeliverables: [
+                    'Updated architecture documentation',
+                    'Security control implementation',
+                    'Test reports and evidence',
+                    'Threat model document',
+                ],
+                evidenceType: types_1.EvidenceType.ARCHITECTURE_DIAGRAM,
+                baseEffortHours: 16,
+            },
+            // DevOps & Infrastructure (weight: 0.12)
+            {
+                id: 'tpl-devops-iac',
+                dimensionKey: 'devops_iac',
+                version: '1.0.0',
+                goalTemplate: 'Establish {{bestPractice}} for DevOps and infrastructure automation',
+                taskTemplates: [
+                    { order: 1, template: 'Audit current CI/CD pipeline configuration' },
+                    { order: 2, template: 'Implement infrastructure as code using Terraform/Bicep' },
+                    { order: 3, template: 'Configure automated security scanning in pipeline' },
+                    { order: 4, template: 'Set up monitoring and alerting' },
+                    { order: 5, template: 'Document deployment procedures' },
+                ],
+                defaultAcceptanceCriteria: [
+                    'CI/CD pipeline passes all quality gates',
+                    'Infrastructure is version controlled',
+                    'Deployment is fully automated',
+                    'Monitoring dashboards operational',
+                ],
+                defaultConstraints: [
+                    'Must use approved cloud services only',
+                    'Must implement least-privilege access',
+                    'Must maintain audit logs',
+                ],
+                defaultDeliverables: [
+                    'Updated pipeline configuration',
+                    'IaC templates',
+                    'Runbook documentation',
+                    'Monitoring dashboard',
+                ],
+                evidenceType: types_1.EvidenceType.CONFIG,
+                baseEffortHours: 12,
+            },
+            // Quality & Testing (weight: 0.10)
+            {
+                id: 'tpl-quality-test',
+                dimensionKey: 'quality_test',
+                version: '1.0.0',
+                goalTemplate: 'Implement {{bestPractice}} to ensure software quality and testing coverage',
+                taskTemplates: [
+                    { order: 1, template: 'Define testing strategy and coverage requirements' },
+                    { order: 2, template: 'Implement unit tests for critical business logic' },
+                    { order: 3, template: 'Create integration test suite' },
+                    { order: 4, template: 'Set up automated testing in CI/CD' },
+                    { order: 5, template: 'Document testing procedures and standards' },
+                ],
+                defaultAcceptanceCriteria: [
+                    'Code coverage >= 80%',
+                    'All critical paths have tests',
+                    'No HIGH/CRITICAL bugs in production',
+                    'Performance benchmarks met',
+                ],
+                defaultConstraints: [
+                    'Tests must run in < 10 minutes',
+                    'Must not affect production data',
+                    'Must be repeatable and deterministic',
+                ],
+                defaultDeliverables: [
+                    'Test suite implementation',
+                    'Coverage reports',
+                    'Testing documentation',
+                    'CI/CD integration',
+                ],
+                evidenceType: types_1.EvidenceType.TEST_REPORT,
+                baseEffortHours: 10,
+            },
+            // Finance (weight: 0.10)
+            {
+                id: 'tpl-finance',
+                dimensionKey: 'finance',
+                version: '1.0.0',
+                goalTemplate: 'Establish {{bestPractice}} for financial controls and unit economics',
+                taskTemplates: [
+                    { order: 1, template: 'Document unit economics model' },
+                    { order: 2, template: 'Implement cost tracking and attribution' },
+                    { order: 3, template: 'Set up financial dashboards' },
+                    { order: 4, template: 'Create budget and forecast models' },
+                    { order: 5, template: 'Establish financial controls and approval workflows' },
+                ],
+                defaultAcceptanceCriteria: [
+                    'Unit economics clearly documented',
+                    'Cost attribution implemented',
+                    'Financial controls in place',
+                    'Monthly reporting operational',
+                ],
+                defaultConstraints: [
+                    'Must comply with accounting standards',
+                    'Must maintain audit trail',
+                    'Must integrate with existing systems',
+                ],
+                defaultDeliverables: [
+                    'Financial model documentation',
+                    'Cost tracking implementation',
+                    'Dashboard and reports',
+                    'Control procedures',
+                ],
+                evidenceType: types_1.EvidenceType.DOCUMENT,
+                baseEffortHours: 8,
+            },
+            // Strategy (weight: 0.08)
+            {
+                id: 'tpl-strategy',
+                dimensionKey: 'strategy',
+                version: '1.0.0',
+                goalTemplate: 'Define {{bestPractice}} for strategic alignment and vision',
+                taskTemplates: [
+                    { order: 1, template: 'Document strategic vision and objectives' },
+                    { order: 2, template: 'Create OKR framework' },
+                    { order: 3, template: 'Align product roadmap with strategy' },
+                    { order: 4, template: 'Establish strategic review cadence' },
+                ],
+                defaultAcceptanceCriteria: [
+                    'Strategy document approved by stakeholders',
+                    'OKRs defined and measurable',
+                    'Roadmap aligned with strategy',
+                ],
+                defaultConstraints: [
+                    'Must align with company mission',
+                    'Must be achievable within resources',
+                ],
+                defaultDeliverables: ['Strategy document', 'OKR framework', 'Aligned roadmap'],
+                evidenceType: types_1.EvidenceType.DOCUMENT,
+                baseEffortHours: 6,
+            },
+            // Requirements (weight: 0.08)
+            {
+                id: 'tpl-requirements',
+                dimensionKey: 'requirements',
+                version: '1.0.0',
+                goalTemplate: 'Implement {{bestPractice}} for requirements management',
+                taskTemplates: [
+                    { order: 1, template: 'Document functional requirements' },
+                    { order: 2, template: 'Define acceptance criteria for each requirement' },
+                    { order: 3, template: 'Create requirements traceability matrix' },
+                    { order: 4, template: 'Establish change control process' },
+                ],
+                defaultAcceptanceCriteria: [
+                    'All requirements documented and approved',
+                    'Traceability matrix complete',
+                    'Change control process operational',
+                ],
+                defaultConstraints: ['Must follow standard templates', 'Must be version controlled'],
+                defaultDeliverables: [
+                    'Requirements document',
+                    'Traceability matrix',
+                    'Change control procedures',
+                ],
+                evidenceType: types_1.EvidenceType.DOCUMENT,
+                baseEffortHours: 6,
+            },
+            // Data & AI (weight: 0.08)
+            {
+                id: 'tpl-data-ai',
+                dimensionKey: 'data_ai',
+                version: '1.0.0',
+                goalTemplate: 'Establish {{bestPractice}} for data governance and AI ethics',
+                taskTemplates: [
+                    { order: 1, template: 'Document data classification scheme' },
+                    { order: 2, template: 'Implement data quality controls' },
+                    { order: 3, template: 'Create AI ethics guidelines' },
+                    { order: 4, template: 'Set up data lineage tracking' },
+                ],
+                defaultAcceptanceCriteria: [
+                    'Data classification implemented',
+                    'Quality metrics defined and tracked',
+                    'AI ethics guidelines documented',
+                ],
+                defaultConstraints: [
+                    'Must comply with data protection regulations',
+                    'Must maintain data integrity',
+                ],
+                defaultDeliverables: [
+                    'Data governance documentation',
+                    'Quality control implementation',
+                    'AI ethics policy',
+                ],
+                evidenceType: types_1.EvidenceType.POLICY,
+                baseEffortHours: 8,
+            },
+            // Privacy & Legal (weight: 0.08)
+            {
+                id: 'tpl-privacy-legal',
+                dimensionKey: 'privacy_legal',
+                version: '1.0.0',
+                goalTemplate: 'Implement {{bestPractice}} for privacy and legal compliance',
+                taskTemplates: [
+                    { order: 1, template: 'Conduct privacy impact assessment' },
+                    { order: 2, template: 'Implement data subject rights workflows' },
+                    { order: 3, template: 'Create privacy policy and notices' },
+                    { order: 4, template: 'Document consent management' },
+                ],
+                defaultAcceptanceCriteria: [
+                    'Privacy impact assessment complete',
+                    'Data subject rights automated',
+                    'Privacy documentation published',
+                ],
+                defaultConstraints: ['Must comply with GDPR/CCPA', 'Must maintain consent records'],
+                defaultDeliverables: [
+                    'Privacy impact assessment',
+                    'Rights management implementation',
+                    'Privacy documentation',
+                ],
+                evidenceType: types_1.EvidenceType.POLICY,
+                baseEffortHours: 8,
+            },
+            // Service Operations (weight: 0.08)
+            {
+                id: 'tpl-service-ops',
+                dimensionKey: 'service_ops',
+                version: '1.0.0',
+                goalTemplate: 'Establish {{bestPractice}} for service operations and support',
+                taskTemplates: [
+                    { order: 1, template: 'Define SLAs and SLOs' },
+                    { order: 2, template: 'Implement incident management process' },
+                    { order: 3, template: 'Create runbooks for common issues' },
+                    { order: 4, template: 'Set up on-call rotation and escalation' },
+                ],
+                defaultAcceptanceCriteria: [
+                    'SLAs defined and monitored',
+                    'Incident process documented',
+                    'Runbooks complete for top issues',
+                ],
+                defaultConstraints: ['Must maintain audit trail', 'Must meet response time SLAs'],
+                defaultDeliverables: [
+                    'SLA documentation',
+                    'Incident management process',
+                    'Operational runbooks',
+                ],
+                evidenceType: types_1.EvidenceType.DOCUMENT,
+                baseEffortHours: 6,
+            },
+            // Compliance & Policy (weight: 0.07)
+            {
+                id: 'tpl-compliance-policy',
+                dimensionKey: 'compliance_policy',
+                version: '1.0.0',
+                goalTemplate: 'Implement {{bestPractice}} for compliance and policy management',
+                taskTemplates: [
+                    { order: 1, template: 'Map controls to regulatory requirements' },
+                    { order: 2, template: 'Implement compliance monitoring' },
+                    { order: 3, template: 'Create policy documentation' },
+                    { order: 4, template: 'Set up compliance reporting' },
+                ],
+                defaultAcceptanceCriteria: [
+                    'Control mapping complete',
+                    'Compliance monitoring operational',
+                    'Policies documented and approved',
+                ],
+                defaultConstraints: [
+                    'Must align with {{standardRefs}}',
+                    'Must maintain evidence for audits',
+                ],
+                defaultDeliverables: [
+                    'Control mapping',
+                    'Monitoring implementation',
+                    'Policy documentation',
+                ],
+                evidenceType: types_1.EvidenceType.AUDIT_LOG,
+                baseEffortHours: 8,
+            },
+            // People & Change (weight: 0.06)
+            {
+                id: 'tpl-people-change',
+                dimensionKey: 'people_change',
+                version: '1.0.0',
+                goalTemplate: 'Establish {{bestPractice}} for people management and change adoption',
+                taskTemplates: [
+                    { order: 1, template: 'Document roles and responsibilities' },
+                    { order: 2, template: 'Create training plan' },
+                    { order: 3, template: 'Implement change communication strategy' },
+                    { order: 4, template: 'Set up feedback mechanisms' },
+                ],
+                defaultAcceptanceCriteria: [
+                    'RACI matrix documented',
+                    'Training materials complete',
+                    'Communication plan executed',
+                ],
+                defaultConstraints: ['Must align with HR policies', 'Must maintain confidentiality'],
+                defaultDeliverables: ['RACI matrix', 'Training materials', 'Communication plan'],
+                evidenceType: types_1.EvidenceType.DOCUMENT,
+                baseEffortHours: 4,
+            },
+        ];
+        // Load templates into map
+        for (const template of defaultTemplates) {
+            this.templates.set(template.dimensionKey, template);
+        }
+        this.logger.log(`Initialized ${this.templates.size} prompt templates`);
+    }
+};
+exports.PromptTemplateService = PromptTemplateService;
+exports.PromptTemplateService = PromptTemplateService = PromptTemplateService_1 = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [])
+], PromptTemplateService);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xccXBnXFxzZXJ2aWNlc1xccHJvbXB0LXRlbXBsYXRlLnNlcnZpY2UudHMiLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7OztBQUFBOzs7R0FHRztBQUNILDJDQUFvRDtBQUNwRCxvQ0FBd0Q7QUFHakQsSUFBTSxxQkFBcUIsNkJBQTNCLE1BQU0scUJBQXFCO0lBQ2YsTUFBTSxHQUFHLElBQUksZUFBTSxDQUFDLHVCQUFxQixDQUFDLElBQUksQ0FBQyxDQUFDO0lBRWpFOztPQUVHO0lBQ2MsU0FBUyxHQUFnQyxJQUFJLEdBQUcsRUFBRSxDQUFDO0lBRXBFO1FBQ0UsSUFBSSxDQUFDLDBCQUEwQixFQUFFLENBQUM7SUFDcEMsQ0FBQztJQUVEOztPQUVHO0lBQ0gsS0FBSyxDQUFDLHVCQUF1QixDQUFDLFlBQW9CO1FBQ2hELE9BQU8sSUFBSSxDQUFDLFNBQVMsQ0FBQyxHQUFHLENBQUMsWUFBWSxDQUFDLElBQUksSUFBSSxDQUFDO0lBQ2xELENBQUM7SUFFRDs7T0FFRztJQUNILEtBQUssQ0FBQyxlQUFlO1FBQ25CLE9BQU8sS0FBSyxDQUFDLElBQUksQ0FBQyxJQUFJLENBQUMsU0FBUyxDQUFDLE1BQU0sRUFBRSxDQUFDLENBQUM7SUFDN0MsQ0FBQztJQUVEOztPQUVHO0lBQ0ssMEJBQTBCO1FBQ2hDLE1BQU0sZ0JBQWdCLEdBQXFCO1lBQ3pDLHlDQUF5QztZQUN6QztnQkFDRSxFQUFFLEVBQUUsY0FBYztnQkFDbEIsWUFBWSxFQUFFLFVBQVU7Z0JBQ3hCLE9BQU8sRUFBRSxPQUFPO2dCQUNoQixZQUFZLEVBQ1YsMEZBQTBGO2dCQUM1RixhQUFhLEVBQUU7b0JBQ2I7d0JBQ0UsS0FBSyxFQUFFLENBQUM7d0JBQ1IsUUFBUSxFQUFFLDBFQUEwRTtxQkFDckY7b0JBQ0QsRUFBRSxLQUFLLEVBQUUsQ0FBQyxFQUFFLFFBQVEsRUFBRSx5REFBeUQsRUFBRTtvQkFDakYsRUFBRSxLQUFLLEVBQUUsQ0FBQyxF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QUFDLEVBQUUsUUFBUSxFQUFFLHlDQUF5QyxFQUFFO29CQUNqRSxFQUFFLEtBQUssRUFBRSxDQUFDLEVBQUUsUUFBUSxFQUFFLDRCQUE0QixFQUFFO2lCQUNyRDtnQkFDRCx5QkFBeUIsRUFBRTtvQkFDekIsd0JBQXdCO29CQUN4Qiw2QkFBNkI7b0JBQzdCLDZCQUE2QjtpQkFDOUI7Z0JBQ0Qsa0JBQWtCLEVBQUUsQ0FBQyw2QkFBNkIsRUFBRSwrQkFBK0IsQ0FBQztnQkFDcEYsbUJBQW1CLEVBQUUsQ0FBQyxhQUFhLEVBQUUsb0JBQW9CLEVBQUUsb0JBQW9CLENBQUM7Z0JBQ2hGLFlBQVksRUFBRSxvQkFBWSxDQUFDLFFBQVE7Z0JBQ25DLGVBQWUsRUFBRSxDQUFDO2FBQ25CO1NBQ0YsQ0FBQztRQUVGLDBCQUEwQjtRQUMxQixLQUFLLE1BQU0sUUFBUSxJQUFJLGdCQUFnQixFQUFFLENBQUM7WUFDeEMsSUFBSSxDQUFDLFNBQVMsQ0FBQyxHQUFHLENBQUMsUUFBUSxDQUFDLFlBQVksRUFBRSxRQUFRLENBQUMsQ0FBQztRQUN0RCxDQUFDO1FBRUQsSUFBSSxDQUFDLE1BQU0sQ0FBQyxHQUFHLENBQUMsZUFBZSxJQUFJLENBQUMsU0FBUyxDQUFDLElBQUksbUJBQW1CLENBQUMsQ0FBQztJQUN6RSxDQUFDO0NBQ0YsQ0FBQTtBQWpYWSxzREFBcUI7Z0NBQXJCLHFCQUFxQjtJQURqQyxJQUFBLG1CQUFVLEdBQUU7O0dBQ0EscUJBQXFCLENBaVhqQyIsIm5hbWVzIjpbXSwic291cmNlcyI6WyJDOlxcUmVwb3NcXFF1aXotdG8tQnVpbGRcXGFwcHNcXGFwaVxcc3JjXFxtb2R1bGVzXFxxcGdcXHNlcnZpY2VzXFxwcm9tcHQtdGVtcGxhdGUuc2VydmljZS50cyJdLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIFByb21wdCBUZW1wbGF0ZSBTZXJ2aWNlXG4gKiBNYW5hZ2VzIHByb21wdCB0ZW1wbGF0ZXMgZm9yIGFsbCAxMSByZWFkaW5lc3MgZGltZW5zaW9uc1xuICovXG5pbXBvcnQgeyBJbmplY3RhYmxlLCBMb2dnZXIgfSBmcm9tICdAbmVzdGpzL2NvbW1vbic7XG5pbXBvcnQgeyBQcm9tcHRUZW1wbGF0ZSwgRXZpZGVuY2VUeXBlIH0gZnJvbSAnLi4vdHlwZXMnO1xuXG5ASW5qZWN0YWJsZSgpXG5leHBvcnQgY2xhc3MgUHJvbXB0VGVtcGxhdGVTZXJ2aWNlIHtcbiAgcHJpdmF0ZSByZWFkb25seSBsb2dnZXIgPSBuZXcgTG9nZ2VyKFByb21wdFRlbXBsYXRlU2VydmljZS5uYW1lKTtcblxuICAvKipcbiAgICogSW4tbWVtb3J5IHRlbXBsYXRlIHN0b3JlIChjYW4gYmUgbW92ZWQgdG8gZGF0YWJhc2UgbGF0ZXIpXG4gICAqL1xuICBwcml2YXRlIHJlYWRvbmx5IHRlbXBsYXRlczogTWFwPHN0cmluZywgUHJvbXB0VGVtcGxhdGU+ID0gbmV3IE1hcCgpO1xuXG4gIGNvbnN0cnVjdG9yKCkge1xuICAgIHRoaXMuaW5pdGlhbGl6ZURlZmF1bHRUZW1wbGF0ZXMoKTtcbiAgfVxuXG4gIC8qKlxuICAgKiBHZXQgdGVtcGxhdGUgZm9yIGEgc3BlY2lmaWMgZGltZW5zaW9uXG4gICAqL1xuICBhc3luYyBnZXRUZW1wbGF0ZUZvckRpbWVuc2lvbihkaW1lbnNpb25LZXk6IHN0cmluZyk6IFByb21pc2U8UHJvbXB0VGVtcGxhdGUgfCBudWxsPiB7XG4gICAgcmV0dXJuIHRoaXMudGVtcGxhdGVzLmdldChkaW1lbnNpb25LZXkpIHx8IG51bGw7XG4gIH1cblxuICAvKipcbiAgICogR2V0IGFsbCBhdmFpbGFibGUgdGVtcGxhdGVzXG4gICAqL1xuICBhc3luYyBnZXRBbGxUZW1wbGF0ZXMoKTogUHJvbWlzZTxQcm9tcHRUZW1wbGF0ZVtdPiB7XG4gICAgcmV0dXJuIEFycmF5LmZyb20odGhpcy50ZW1wbGF0ZXMudmFsdWVzKCkpO1xuICB9XG5cbiAgLyoqXG4gICAqIEluaXRpYWxpemUgZGVmYXVsdCB0ZW1wbGF0ZXMgZm9yIGFsbCAxMSBkaW1lbnNpb25zXG4gICAqL1xuICBwcml2YXRlIGluaXRpYWxpemVEZWZhdWx0VGVtcGxhdGVzKCk6IHZvaWQge1xuICAgIGNvbnN0IGRlZmF1bHRUZW1wbGF0ZXM6IFByb21wdFRlbXBsYXRlW10gPSBbXG4gICAgICAvLyBBcmNoaXRlY3R1cmUgJiBTZWN1cml0eSAod2VpZ2h0OiAwLjE1KVxuICAgICAge1xuICAgICAgICBpZDogJ3RwbC1hcmNoLXNlYycsXG4gICAgICAgIGRpbWVuc2lvbktleTogJ2FyY2hfc2VjJyxcbiAgICAgICAgdmVyc2lvbjogJzEuMC4wJyxcbiAgICAgICAgZ29hbFRlbXBsYXRlOlxuICAgICAgICAgICdJbXBsZW1lbnQge3tiZXN0UHJhY3RpY2V9fSB0byBhZGRyZXNzIHRoZSBzZWN1cml0eS9hcmNoaXRlY3R1cmUgZ2FwIGluIHt7ZGltZW5zaW9uTmFtZX19JyxcbiAgICAgICAgdGFza1RlbXBsYXRlczogW1xuICAgICAgICAgIHtcbiAgICAgICAgICAgIG9yZGVyOiAxLFxuICAgICAgICAgICAgdGVtcGxhdGU6ICdSZXZpZXcgY3VycmVudCB7e2RpbWVuc2lvbk5hbWV9fSBpbXBsZW1lbnRhdGlvbiBhZ2FpbnN0IHt7c3RhbmRhcmRSZWZzfX0nLFxuICAgICAgICAgIH0sXG4gICAgICAgICAgeyBvcmRlcjogMiwgdGVtcGxhdGU6ICdEZXNpZ24gc29sdXRpb24gYXJjaGl0ZWN0dXJlIGZvbGxvd2luZyB7e2Jlc3RQcmFjdGljZX19JyB9LFxuICAgICAgICAgIHsgb3JkZXI6IDMsIHRlbXBsYXRlOiAnSW1wbGVtZW50IHNlY3VyaXR5IGNvbnRyb2xzIGFzIHNwZWNpZmllZCcgfSxcbiAgICAgICAgICB7IG9yZGVyOiA0LCB0ZW1wbGF0ZTogJ0NyZWF0ZSBhcmNoaXRlY3R1cmUgZG9jdW1lbnRhdGlvbiB3aXRoIEM0IGRpYWdyYW1zJyB9LFxuICAgICAgICAgIHsgb3JkZXI6IDUsIHRlbXBsYXRlOiAnQ29uZHVjdCBzZWN1cml0eSByZXZpZXcgYW5kIHRocmVhdCBtb2RlbGluZycgfSxcbiAgICAgICAgXSxcbiAgICAgICAgZGVmYXVsdEFjY2VwdGFuY2VDcml0ZXJpYTogW1xuICAgICAgICAgICdBbGwgT1dBU1AgVG9wIDEwIHZ1bG5lcmFiaWxpdGllcyBhZGRyZXNzZWQnLFxuICAgICAgICAgICdBcmNoaXRlY3R1cmUgZGlhZ3JhbSB1cGRhdGVkIGFuZCByZXZpZXdlZCcsXG4gICAgICAgICAgJ1NlY3VyaXR5IGNvbnRyb2xzIGRvY3VtZW50ZWQgYW5kIHRlc3RlZCcsXG4gICAgICAgICAgJ1BlbmV0cmF0aW9uIHRlc3RpbmcgcGFzc2VkIHdpdGggbm8gSElHSC9DUklUSUNBTCBmaW5kaW5ncycsXG4gICAgICAgIF0sXG4gICAgICAgIGRlZmF1bHRDb25zdHJhaW50czogW1xuICAgICAgICAgICdNdXN0IGNvbXBseSB3aXRoIHt7c3RhbmRhcmRSZWZzfX0gcmVxdWlyZW1lbnRzJyxcbiAgICAgICAgICAnTXVzdCBub3QgaW50cm9kdWNlIGJyZWFraW5nIGNoYW5nZXMgdG8gZXhpc3RpbmcgQVBJcycsXG4gICAgICAgICAgJ011c3QgbWFpbnRhaW4gYmFja3dhcmQgY29tcGF0aWJpbGl0eScsXG4gICAgICAgIF0sXG4gICAgICAgIGRlZmF1bHREZWxpdmVyYWJsZXM6IFtcbiAgICAgICAgICAnVXBkYXRlZCBhcmNoaXRlY3R1cmUgZG9jdW1lbnRhdGlvbicsXG4gICAgICAgICAgJ1NlY3VyaXR5IGNvbnRyb2wgaW1wbGVtZW50YXRpb24nLFxuICAgICAgICAgICdUZXN0IHJlcG9ydHMgYW5kIGV2aWRlbmNlJyxcbiAgICAgICAgICAnVGhyZWF0IG1vZGVsIGRvY3VtZW50JyxcbiAgICAgICAgXSxcbiAgICAgICAgZXZpZGVuY2VUeXBlOiBFdmlkZW5jZVR5cGUuQVJDSElURUNUVVJFX0RJQUdSQU0sXG4gICAgICAgIGJhc2VFZmZvcnRIb3VyczogMTYsXG4gICAgICB9LFxuXG4gICAgICAvLyBEZXZPcHMgJiBJbmZyYXN0cnVjdHVyZSAod2VpZ2h0OiAwLjEyKVxuICAgICAge1xuICAgICAgICBpZDogJ3RwbC1kZXZvcHMtaWFjJyxcbiAgICAgICAgZGltZW5zaW9uS2V5OiAnZGV2b3BzX2lhYycsXG4gICAgICAgIHZlcnNpb246ICcxLjAuMCcsXG4gICAgICAgIGdvYWxUZW1wbGF0ZTogJ0VzdGFibGlzaCB7e2Jlc3RQcmFjdGljZX19IGZvciBEZXZPcHMgYW5kIGluZnJhc3RydWN0dXJlIGF1dG9tYXRpb24nLFxuICAgICAgICB0YXNrVGVtcGxhdGVzOiBbXG4gICAgICAgICAgeyBvcmRlcjogMSwgdGVtcGxhdGU6ICdBdWRpdCBjdXJyZW50IENJL0NEIHBpcGVsaW5lIGNvbmZpZ3VyYXRpb24nIH0sXG4gICAgICAgICAgeyBvcmRlcjogMiwgdGVtcGxhdGU6ICdJbXBsZW1lbnQgaW5mcmFzdHJ1Y3R1cmUgYXMgY29kZSB1c2luZyBUZXJyYWZvcm0vQmljZXAnIH0sXG4gICAgICAgICAgeyBvcmRlcjogMywgdGVtcGxhdGU6ICdDb25maWd1cmUgYXV0b21hdGVkIHNlY3VyaXR5IHNjYW5uaW5nIGluIHBpcGVsaW5lJyB9LFxuICAgICAgICAgIHsgb3JkZXI6IDQsIHRlbXBsYXRlOiAnU2V0IHVwIG1vbml0b3JpbmcgYW5kIGFsZXJ0aW5nJyB9LFxuICAgICAgICAgIHsgb3JkZXI6IDUsIHRlbXBsYXRlOiAnRG9jdW1lbnQgZGVwbG95bWVudCBwcm9jZWR1cmVzJyB9LFxuICAgICAgICBdLFxuICAgICAgICBkZWZhdWx0QWNjZXB0YW5jZUNyaXRlcmlhOiBbXG4gICAgICAgICAgJ0NJL0NEIHBpcGVsaW5lIHBhc3NlcyBhbGwgcXVhbGl0eSBnYXRlcycsXG4gICAgICAgICAgJ0luZnJhc3RydWN0dXJlIGlzIHZlcnNpb24gY29udHJvbGxlZCcsXG4gICAgICAgICAgJ0RlcGxveW1lbnQgaXMgZnVsbHkgYXV0b21hdGVkJyxcbiAgICAgICAgICAnTW9uaXRvcmluZyBkYXNoYm9hcmRzIG9wZXJhdGlvbmFsJyxcbiAgICAgICAgXSxcbiAgICAgICAgZGVmYXVsdENvbnN0cmFpbnRzOiBbXG4gICAgICAgICAgJ011c3QgdXNlIGFwcHJvdmVkIGNsb3VkIHNlcnZpY2VzIG9ubHknLFxuICAgICAgICAgICdNdXN0IGltcGxlbWVudCBsZWFzdC1wcml2aWxlZ2UgYWNjZXNzJyxcbiAgICAgICAgICAnTXVzdCBtYWludGFpbiBhdWRpdCBsb2dzJyxcbiAgICAgICAgXSxcbiAgICAgICAgZGVmYXVsdERlbGl2ZXJhYmxlczogW1xuICAgICAgICAgICdVcGRhdGVkIHBpcGVsaW5lIGNvbmZpZ3VyYXRpb24nLFxuICAgICAgICAgICdJYUMgdGVtcGxhdGVzJyxcbiAgICAgICAgICAnUnVuYm9vayBkb2N1bWVudGF0aW9uJyxcbiAgICAgICAgICAnTW9uaXRvcmluZyBkYXNoYm9hcmQnLFxuICAgICAgICBdLFxuICAgICAgICBldmlkZW5jZVR5cGU6IEV2aWRlbmNlVHlwZS5DT05GSUcsXG4gICAgICAgIGJhc2VFZmZvcnRIb3VyczogMTIsXG4gICAgICB9LFxuXG4gICAgICAvLyBRdWFsaXR5ICYgVGVzdGluZyAod2VpZ2h0OiAwLjEwKVxuICAgICAge1xuICAgICAgICBpZDogJ3RwbC1xdWFsaXR5LXRlc3QnLFxuICAgICAgICBkaW1lbnNpb25LZXk6ICdxdWFsaXR5X3Rlc3QnLFxuICAgICAgICB2ZXJzaW9uOiAnMS4wLjAnLFxuICAgICAgICBnb2FsVGVtcGxhdGU6ICdJbXBsZW1lbnQge3tiZXN0UHJhY3RpY2V9fSB0byBlbnN1cmUgc29mdHdhcmUgcXVhbGl0eSBhbmQgdGVzdGluZyBjb3ZlcmFnZScsXG4gICAgICAgIHRhc2tUZW1wbGF0ZXM6IFtcbiAgICAgICAgICB7IG9yZGVyOiAxLCB0ZW1wbGF0ZTogJ0RlZmluZSB0ZXN0aW5nIHN0cmF0ZWd5IGFuZCBjb3ZlcmFnZSByZXF1aXJlbWVudHMnIH0sXG4gICAgICAgICAgeyBvcmRlcjogMiwgdGVtcGxhdGU6ICdJbXBsZW1lbnQgdW5pdCB0ZXN0cyBmb3IgY3JpdGljYWwgYnVzaW5lc3MgbG9naWMnIH0sXG4gICAgICAgICAgeyBvcmRlcjogMywgdGVtcGxhdGU6ICdDcmVhdGUgaW50ZWdyYXRpb24gdGVzdCBzdWl0ZScgfSxcbiAgICAgICAgICB7IG9yZGVyOiA0LCB0ZW1wbGF0ZTogJ1NldCB1cCBhdXRvbWF0ZWQgdGVzdGluZyBpbiBDSS9DRCcgfSxcbiAgICAgICAgICB7IG9yZGVyOiA1LCB0ZW1wbGF0ZTogJ0RvY3VtZW50IHRlc3RpbmcgcHJvY2VkdXJlcyBhbmQgc3RhbmRhcmRzJyB9LFxuICAgICAgICBdLFxuICAgICAgICBkZWZhdWx0QWNjZXB0YW5jZUNyaXRlcmlhOiBbXG4gICAgICAgICAgJ0NvZGUgY292ZXJhZ2UgPj0gODAlJyxcbiAgICAgICAgICAnQWxsIGNyaXRpY2FsIHBhdGhzIGhhdmUgdGVzdHMnLFxuICAgICAgICAgICdObyBISUdIL0NSSVRJQ0FMIGJ1Z3MgaW4gcHJvZHVjdGlvbicsXG4gICAgICAgICAgJ1BlcmZvcm1hbmNlIGJlbmNobWFya3MgbWV0JyxcbiAgICAgICAgXSxcbiAgICAgICAgZGVmYXVsdENvbnN0cmFpbnRzOiBbXG4gICAgICAgICAgJ1Rlc3RzIG11c3QgcnVuIGluIDwgMTAgbWludXRlcycsXG4gICAgICAgICAgJ011c3Qgbm90IGFmZmVjdCBwcm9kdWN0aW9uIGRhdGEnLFxuICAgICAgICAgICdNdXN0IGJlIHJlcGVhdGFibGUgYW5kIGRldGVybWluaXN0aWMnLFxuICAgICAgICBdLFxuICAgICAgICBkZWZhdWx0RGVsaXZlcmFibGVzOiBbXG4gICAgICAgICAgJ1Rlc3Qgc3VpdGUgaW1wbGVtZW50YXRpb24nLFxuICAgICAgICAgICdDb3ZlcmFnZSByZXBvcnRzJyxcbiAgICAgICAgICAnVGVzdGluZyBkb2N1bWVudGF0aW9uJyxcbiAgICAgICAgICAnQ0kvQ0QgaW50ZWdyYXRpb24nLFxuICAgICAgICBdLFxuICAgICAgICBldmlkZW5jZVR5cGU6IEV2aWRlbmNlVHlwZS5URVNUX1JFUE9SVCxcbiAgICAgICAgYmFzZUVmZm9ydEhvdXJzOiAxMCxcbiAgICAgIH0sXG5cbiAgICAgIC8vIEZpbmFuY2UgKHdlaWdodDogMC4xMClcbiAgICAgIHtcbiAgICAgICAgaWQ6ICd0cGwtZmluYW5jZScsXG4gICAgICAgIGRpbWVuc2lvbktleTogJ2ZpbmFuY2UnLFxuICAgICAgICB2ZXJzaW9uOiAnMS4wLjAnLFxuICAgICAgICBnb2FsVGVtcGxhdGU6ICdFc3RhYmxpc2gge3tiZXN0UHJhY3RpY2V9fSBmb3IgZmluYW5jaWFsIGNvbnRyb2xzIGFuZCB1bml0IGVjb25vbWljcycsXG4gICAgICAgIHRhc2tUZW1wbGF0ZXM6IFtcbiAgICAgICAgICB7IG9yZGVyOiAxLCB0ZW1wbGF0ZTogJ0RvY3VtZW50IHVuaXQgZWNvbm9taWNzIG1vZGVsJyB9LFxuICAgICAgICAgIHsgb3JkZXI6IDIsIHRlbXBsYXRlOiAnSW1wbGVtZW50IGNvc3QgdHJhY2tpbmcgYW5kIGF0dHJpYnV0aW9uJyB9LFxuICAgICAgICAgIHsgb3JkZXI6IDMsIHRlbXBsYXRlOiAnU2V0IHVwIGZpbmFuY2lhbCBkYXNoYm9hcmRzJyB9LFxuICAgICAgICAgIHsgb3JkZXI6IDQsIHRlbXBsYXRlOiAnQ3JlYXRlIGJ1ZGdldCBhbmQgZm9yZWNhc3QgbW9kZWxzJyB9LFxuICAgICAgICAgIHsgb3JkZXI6IDUsIHRlbXBsYXRlOiAnRXN0YWJsaXNoIGZpbmFuY2lhbCBjb250cm9scyBhbmQgYXBwcm92YWwgd29ya2Zsb3dzJyB9LFxuICAgICAgICBdLFxuICAgICAgICBkZWZhdWx0QWNjZXB0YW5jZUNyaXRlcmlhOiBbXG4gICAgICAgICAgJ1VuaXQgZWNvbm9taWNzIGNsZWFybHkgZG9jdW1lbnRlZCcsXG4gICAgICAgICAgJ0Nvc3QgYXR0cmlidXRpb24gaW1wbGVtZW50ZWQnLFxuICAgICAgICAgICdGaW5hbmNpYWwgY29udHJvbHMgaW4gcGxhY2UnLFxuICAgICAgICAgICdNb250aGx5IHJlcG9ydGluZyBvcGVyYXRpb25hbCcsXG4gICAgICAgIF0sXG4gICAgICAgIGRlZmF1bHRDb25zdHJhaW50czogW1xuICAgICAgICAgICdNdXN0IGNvbXBseSB3aXRoIGFjY291bnRpbmcgc3RhbmRhcmRzJyxcbiAgICAgICAgICAnTXVzdCBtYWludGFpbiBhdWRpdCB0cmFpbCcsXG4gICAgICAgICAgJ011c3QgaW50ZWdyYXRlIHdpdGggZXhpc3Rpbmcgc3lzdGVtcycsXG4gICAgICAgIF0sXG4gICAgICAgIGRlZmF1bHREZWxpdmVyYWJsZXM6IFtcbiAgICAgICAgICAnRmluYW5jaWFsIG1vZGVsIGRvY3VtZW50YXRpb24nLFxuICAgICAgICAgICdDb3N0IHRyYWNraW5nIGltcGxlbWVudGF0aW9uJyxcbiAgICAgICAgICAnRGFzaGJvYXJkIGFuZCByZXBvcnRzJyxcbiAgICAgICAgICAnQ29udHJvbCBwcm9jZWR1cmVzJyxcbiAgICAgICAgXSxcbiAgICAgICAgZXZpZGVuY2VUeXBlOiBFdmlkZW5jZVR5cGUuRE9DVU1FTlQsXG4gICAgICAgIGJhc2VFZmZvcnRIb3VyczogOCxcbiAgICAgIH0sXG5cbiAgICAgIC8vIFN0cmF0ZWd5ICh3ZWlnaHQ6IDAuMDgpXG4gICAgICB7XG4gICAgICAgIGlkOiAndHBsLXN0cmF0ZWd5JyxcbiAgICAgICAgZGltZW5zaW9uS2V5OiAnc3RyYXRlZ3knLFxuICAgICAgICB2ZXJzaW9uOiAnMS4wLjAnLFxuICAgICAgICBnb2FsVGVtcGxhdGU6ICdEZWZpbmUge3tiZXN0UHJhY3RpY2V9fSBmb3Igc3RyYXRlZ2ljIGFsaWdubWVudCBhbmQgdmlzaW9uJyxcbiAgICAgICAgdGFza1RlbXBsYXRlczogW1xuICAgICAgICAgIHsgb3JkZXI6IDEsIHRlbXBsYXRlOiAnRG9jdW1lbnQgc3RyYXRlZ2ljIHZpc2lvbiBhbmQgb2JqZWN0aXZlcycgfSxcbiAgICAgICAgICB7IG9yZGVyOiAyLCB0ZW1wbGF0ZTogJ0NyZWF0ZSBPS1IgZnJhbWV3b3JrJyB9LFxuICAgICAgICAgIHsgb3JkZXI6IDMsIHRlbXBsYXRlOiAnQWxpZ24gcHJvZHVjdCByb2FkbWFwIHdpdGggc3RyYXRlZ3knIH0sXG4gICAgICAgICAgeyBvcmRlcjogNCwgdGVtcGxhdGU6ICdFc3RhYmxpc2ggc3RyYXRlZ2ljIHJldmlldyBjYWRlbmNlJyB9LFxuICAgICAgICBdLFxuICAgICAgICBkZWZhdWx0QWNjZXB0YW5jZUNyaXRlcmlhOiBbXG4gICAgICAgICAgJ1N0cmF0ZWd5IGRvY3VtZW50IGFwcHJvdmVkIGJ5IHN0YWtlaG9sZGVycycsXG4gICAgICAgICAgJ09LUnMgZGVmaW5lZCBhbmQgbWVhc3VyYWJsZScsXG4gICAgICAgICAgJ1JvYWRtYXAgYWxpZ25lZCB3aXRoIHN0cmF0ZWd5JyxcbiAgICAgICAgXSxcbiAgICAgICAgZGVmYXVsdENvbnN0cmFpbnRzOiBbXG4gICAgICAgICAgJ011c3QgYWxpZ24gd2l0aCBjb21wYW55IG1pc3Npb24nLFxuICAgICAgICAgICdNdXN0IGJlIGFjaGlldmFibGUgd2l0aGluIHJlc291cmNlcycsXG4gICAgICAgIF0sXG4gICAgICAgIGRlZmF1bHREZWxpdmVyYWJsZXM6IFsnU3RyYXRlZ3kgZG9jdW1lbnQnLCAnT0tSIGZyYW1ld29yaycsICdBbGlnbmVkIHJvYWRtYXAnXSxcbiAgICAgICAgZXZpZGVuY2VUeXBlOiBFdmlkZW5jZVR5cGUuRE9DVU1FTlQsXG4gICAgICAgIGJhc2VFZmZvcnRIb3VyczogNixcbiAgICAgIH0sXG5cbiAgICAgIC8vIFJlcXVpcmVtZW50cyAod2VpZ2h0OiAwLjA4KVxuICAgICAge1xuICAgICAgICBpZDogJ3RwbC1yZXF1aXJlbWVudHMnLFxuICAgICAgICBkaW1lbnNpb25LZXk6ICdyZXF1aXJlbWVudHMnLFxuICAgICAgICB2ZXJzaW9uOiAnMS4wLjAnLFxuICAgICAgICBnb2FsVGVtcGxhdGU6ICdJbXBsZW1lbnQge3tiZXN0UHJhY3RpY2V9fSBmb3IgcmVxdWlyZW1lbnRzIG1hbmFnZW1lbnQnLFxuICAgICAgICB0YXNrVGVtcGxhdGVzOiBbXG4gICAgICAgICAgeyBvcmRlcjogMSwgdGVtcGxhdGU6ICdEb2N1bWVudCBmdW5jdGlvbmFsIHJlcXVpcmVtZW50cycgfSxcbiAgICAgICAgICB7IG9yZGVyOiAyLCB0ZW1wbGF0ZTogJ0RlZmluZSBhY2NlcHRhbmNlIGNyaXRlcmlhIGZvciBlYWNoIHJlcXVpcmVtZW50JyB9LFxuICAgICAgICAgIHsgb3JkZXI6IDMsIHRlbXBsYXRlOiAnQ3JlYXRlIHJlcXVpcmVtZW50cyB0cmFjZWFiaWxpdHkgbWF0cml4JyB9LFxuICAgICAgICAgIHsgb3JkZXI6IDQsIHRlbXBsYXRlOiAnRXN0YWJsaXNoIGNoYW5nZSBjb250cm9sIHByb2Nlc3MnIH0sXG4gICAgICAgIF0sXG4gICAgICAgIGRlZmF1bHRBY2NlcHRhbmNlQ3JpdGVyaWE6IFtcbiAgICAgICAgICAnQWxsIHJlcXVpcmVtZW50cyBkb2N1bWVudGVkIGFuZCBhcHByb3ZlZCcsXG4gICAgICAgICAgJ1RyYWNlYWJpbGl0eSBtYXRyaXggY29tcGxldGUnLFxuICAgICAgICAgICdDaGFuZ2UgY29udHJvbCBwcm9jZXNzIG9wZXJhdGlvbmFsJyxcbiAgICAgICAgXSxcbiAgICAgICAgZGVmYXVsdENvbnN0cmFpbnRzOiBbJ011c3QgZm9sbG93IHN0YW5kYXJkIHRlbXBsYXRlcycsICdNdXN0IGJlIHZlcnNpb24gY29udHJvbGxlZCddLFxuICAgICAgICBkZWZhdWx0RGVsaXZlcmFibGVzOiBbXG4gICAgICAgICAgJ1JlcXVpcmVtZW50cyBkb2N1bWVudCcsXG4gICAgICAgICAgJ1RyYWNlYWJpbGl0eSBtYXRyaXgnLFxuICAgICAgICAgICdDaGFuZ2UgY29udHJvbCBwcm9jZWR1cmVzJyxcbiAgICAgICAgXSxcbiAgICAgICAgZXZpZGVuY2VUeXBlOiBFdmlkZW5jZVR5cGUuRE9DVU1FTlQsXG4gICAgICAgIGJhc2VFZmZvcnRIb3VyczogNixcbiAgICAgIH0sXG5cbiAgICAgIC8vIERhdGEgJiBBSSAod2VpZ2h0OiAwLjA4KVxuICAgICAge1xuICAgICAgICBpZDogJ3RwbC1kYXRhLWFpJyxcbiAgICAgICAgZGltZW5zaW9uS2V5OiAnZGF0YV9haScsXG4gICAgICAgIHZlcnNpb246ICcxLjAuMCcsXG4gICAgICAgIGdvYWxUZW1wbGF0ZTogJ0VzdGFibGlzaCB7e2Jlc3RQcmFjdGljZX19IGZvciBkYXRhIGdvdmVybmFuY2UgYW5kIEFJIGV0aGljcycsXG4gICAgICAgIHRhc2tUZW1wbGF0ZXM6IFtcbiAgICAgICAgICB7IG9yZGVyOiAxLCB0ZW1wbGF0ZTogJ0RvY3VtZW50IGRhdGEgY2xhc3NpZmljYXRpb24gc2NoZW1lJyB9LFxuICAgICAgICAgIHsgb3JkZXI6IDIsIHRlbXBsYXRlOiAnSW1wbGVtZW50IGRhdGEgcXVhbGl0eSBjb250cm9scycgfSxcbiAgICAgICAgICB7IG9yZGVyOiAzLCB0ZW1wbGF0ZTogJ0NyZWF0ZSBBSSBldGhpY3MgZ3VpZGVsaW5lcycgfSxcbiAgICAgICAgICB7IG9yZGVyOiA0LCB0ZW1wbGF0ZTogJ1NldCB1cCBkYXRhIGxpbmVhZ2UgdHJhY2tpbmcnIH0sXG4gICAgICAgIF0sXG4gICAgICAgIGRlZmF1bHRBY2NlcHRhbmNlQ3JpdGVyaWE6IFtcbiAgICAgICAgICAnRGF0YSBjbGFzc2lmaWNhdGlvbiBpbXBsZW1lbnRlZCcsXG4gICAgICAgICAgJ1F1YWxpdHkgbWV0cmljcyBkZWZpbmVkIGFuZCB0cmFja2VkJyxcbiAgICAgICAgICAnQUkgZXRoaWNzIGd1aWRlbGluZXMgZG9jdW1lbnRlZCcsXG4gICAgICAgIF0sXG4gICAgICAgIGRlZmF1bHRDb25zdHJhaW50czogW1xuICAgICAgICAgICdNdXN0IGNvbXBseSB3aXRoIGRhdGEgcHJvdGVjdGlvbiByZWd1bGF0aW9ucycsXG4gICAgICAgICAgJ011c3QgbWFpbnRhaW4gZGF0YSBpbnRlZ3JpdHknLFxuICAgICAgICBdLFxuICAgICAgICBkZWZhdWx0RGVsaXZlcmFibGVzOiBbXG4gICAgICAgICAgJ0RhdGEgZ292ZXJuYW5jZSBkb2N1bWVudGF0aW9uJyxcbiAgICAgICAgICAnUXVhbGl0eSBjb250cm9sIGltcGxlbWVudGF0aW9uJyxcbiAgICAgICAgICAnQUkgZXRoaWNzIHBvbGljeScsXG4gICAgICAgIF0sXG4gICAgICAgIGV2aWRlbmNlVHlwZTogRXZpZGVuY2VUeXBlLlBPTElDWSxcbiAgICAgICAgYmFzZUVmZm9ydEhvdXJzOiA4LFxuICAgICAgfSxcblxuICAgICAgLy8gUHJpdmFjeSAmIExlZ2FsICh3ZWlnaHQ6IDAuMDgpXG4gICAgICB7XG4gICAgICAgIGlkOiAndHBsLXByaXZhY3ktbGVnYWwnLFxuICAgICAgICBkaW1lbnNpb25LZXk6ICdwcml2YWN5X2xlZ2FsJyxcbiAgICAgICAgdmVyc2lvbjogJzEuMC4wJyxcbiAgICAgICAgZ29hbFRlbXBsYXRlOiAnSW1wbGVtZW50IHt7YmVzdFByYWN0aWNlfX0gZm9yIHByaXZhY3kgYW5kIGxlZ2FsIGNvbXBsaWFuY2UnLFxuICAgICAgICB0YXNrVGVtcGxhdGVzOiBbXG4gICAgICAgICAgeyBvcmRlcjogMSwgdGVtcGxhdGU6ICdDb25kdWN0IHByaXZhY3kgaW1wYWN0IGFzc2Vzc21lbnQnIH0sXG4gICAgICAgICAgeyBvcmRlcjogMiwgdGVtcGxhdGU6ICdJbXBsZW1lbnQgZGF0YSBzdWJqZWN0IHJpZ2h0cyB3b3JrZmxvd3MnIH0sXG4gICAgICAgICAgeyBvcmRlcjogMywgdGVtcGxhdGU6ICdDcmVhdGUgcHJpdmFjeSBwb2xpY3kgYW5kIG5vdGljZXMnIH0sXG4gICAgICAgICAgeyBvcmRlcjogNCwgdGVtcGxhdGU6ICdEb2N1bWVudCBjb25zZW50IG1hbmFnZW1lbnQnIH0sXG4gICAgICAgIF0sXG4gICAgICAgIGRlZmF1bHRBY2NlcHRhbmNlQ3JpdGVyaWE6IFtcbiAgICAgICAgICAnUHJpdmFjeSBpbXBhY3QgYXNzZXNzbWVudCBjb21wbGV0ZScsXG4gICAgICAgICAgJ0RhdGEgc3ViamVjdCByaWdodHMgYXV0b21hdGVkJyxcbiAgICAgICAgICAnUHJpdmFjeSBkb2N1bWVudGF0aW9uIHB1Ymxpc2hlZCcsXG4gICAgICAgIF0sXG4gICAgICAgIGRlZmF1bHRDb25zdHJhaW50czogWydNdXN0IGNvbXBseSB3aXRoIEdEUFIvQ0NQQScsICdNdXN0IG1haW50YWluIGNvbnNlbnQgcmVjb3JkcyddLFxuICAgICAgICBkZWZhdWx0RGVsaXZlcmFibGVzOiBbXG4gICAgICAgICAgJ1ByaXZhY3kgaW1wYWN0IGFzc2Vzc21lbnQnLFxuICAgICAgICAgICdSaWdodHMgbWFuYWdlbWVudCBpbXBsZW1lbnRhdGlvbicsXG4gICAgICAgICAgJ1ByaXZhY3kgZG9jdW1lbnRhdGlvbicsXG4gICAgICAgIF0sXG4gICAgICAgIGV2aWRlbmNlVHlwZTogRXZpZGVuY2VUeXBlLlBPTElDWSxcbiAgICAgICAgYmFzZUVmZm9ydEhvdXJzOiA4LFxuICAgICAgfSxcblxuICAgICAgLy8gU2VydmljZSBPcGVyYXRpb25zICh3ZWlnaHQ6IDAuMDgpXG4gICAgICB7XG4gICAgICAgIGlkOiAndHBsLXNlcnZpY2Utb3BzJyxcbiAgICAgICAgZGltZW5zaW9uS2V5OiAnc2VydmljZV9vcHMnLFxuICAgICAgICB2ZXJzaW9uOiAnMS4wLjAnLFxuICAgICAgICBnb2FsVGVtcGxhdGU6ICdFc3RhYmxpc2gge3tiZXN0UHJhY3RpY2V9fSBmb3Igc2VydmljZSBvcGVyYXRpb25zIGFuZCBzdXBwb3J0JyxcbiAgICAgICAgdGFza1RlbXBsYXRlczogW1xuICAgICAgICAgIHsgb3JkZXI6IDEsIHRlbXBsYXRlOiAnRGVmaW5lIFNMQXMgYW5kIFNMT3MnIH0sXG4gICAgICAgICAgeyBvcmRlcjogMiwgdGVtcGxhdGU6ICdJbXBsZW1lbnQgaW5jaWRlbnQgbWFuYWdlbWVudCBwcm9jZXNzJyB9LFxuICAgICAgICAgIHsgb3JkZXI6IDMsIHRlbXBsYXRlOiAnQ3JlYXRlIHJ1bmJvb2tzIGZvciBjb21tb24gaXNzdWVzJyB9LFxuICAgICAgICAgIHsgb3JkZXI6IDQsIHRlbXBsYXRlOiAnU2V0IHVwIG9uLWNhbGwgcm90YXRpb24gYW5kIGVzY2FsYXRpb24nIH0sXG4gICAgICAgIF0sXG4gICAgICAgIGRlZmF1bHRBY2NlcHRhbmNlQ3JpdGVyaWE6IFtcbiAgICAgICAgICAnU0xBcyBkZWZpbmVkIGFuZCBtb25pdG9yZWQnLFxuICAgICAgICAgICdJbmNpZGVudCBwcm9jZXNzIGRvY3VtZW50ZWQnLFxuICAgICAgICAgICdSdW5ib29rcyBjb21wbGV0ZSBmb3IgdG9wIGlzc3VlcycsXG4gICAgICAgIF0sXG4gICAgICAgIGRlZmF1bHRDb25zdHJhaW50czogWydNdXN0IG1haW50YWluIGF1ZGl0IHRyYWlsJywgJ011c3QgbWVldCByZXNwb25zZSB0aW1lIFNMQXMnXSxcbiAgICAgICAgZGVmYXVsdERlbGl2ZXJhYmxlczogW1xuICAgICAgICAgICdTTEEgZG9jdW1lbnRhdGlvbicsXG4gICAgICAgICAgJ0luY2lkZW50IG1hbmFnZW1lbnQgcHJvY2VzcycsXG4gICAgICAgICAgJ09wZXJhdGlvbmFsIHJ1bmJvb2tzJyxcbiAgICAgICAgXSxcbiAgICAgICAgZXZpZGVuY2VUeXBlOiBFdmlkZW5jZVR5cGUuRE9DVU1FTlQsXG4gICAgICAgIGJhc2VFZmZvcnRIb3VyczogNixcbiAgICAgIH0sXG5cbiAgICAgIC8vIENvbXBsaWFuY2UgJiBQb2xpY3kgKHdlaWdodDogMC4wNylcbiAgICAgIHtcbiAgICAgICAgaWQ6ICd0cGwtY29tcGxpYW5jZS1wb2xpY3knLFxuICAgICAgICBkaW1lbnNpb25LZXk6ICdjb21wbGlhbmNlX3BvbGljeScsXG4gICAgICAgIHZlcnNpb246ICcxLjAuMCcsXG4gICAgICAgIGdvYWxUZW1wbGF0ZTogJ0ltcGxlbWVudCB7e2Jlc3RQcmFjdGljZX19IGZvciBjb21wbGlhbmNlIGFuZCBwb2xpY3kgbWFuYWdlbWVudCcsXG4gICAgICAgIHRhc2tUZW1wbGF0ZXM6IFtcbiAgICAgICAgICB7IG9yZGVyOiAxLCB0ZW1wbGF0ZTogJ01hcCBjb250cm9scyB0byByZWd1bGF0b3J5IHJlcXVpcmVtZW50cycgfSxcbiAgICAgICAgICB7IG9yZGVyOiAyLCB0ZW1wbGF0ZTogJ0ltcGxlbWVudCBjb21wbGlhbmNlIG1vbml0b3JpbmcnIH0sXG4gICAgICAgICAgeyBvcmRlcjogMywgdGVtcGxhdGU6ICdDcmVhdGUgcG9saWN5IGRvY3VtZW50YXRpb24nIH0sXG4gICAgICAgICAgeyBvcmRlcjogNCwgdGVtcGxhdGU6ICdTZXQgdXAgY29tcGxpYW5jZSByZXBvcnRpbmcnIH0sXG4gICAgICAgIF0sXG4gICAgICAgIGRlZmF1bHRBY2NlcHRhbmNlQ3JpdGVyaWE6IFtcbiAgICAgICAgICAnQ29udHJvbCBtYXBwaW5nIGNvbXBsZXRlJyxcbiAgICAgICAgICAnQ29tcGxpYW5jZSBtb25pdG9yaW5nIG9wZXJhdGlvbmFsJyxcbiAgICAgICAgICAnUG9saWNpZXMgZG9jdW1lbnRlZCBhbmQgYXBwcm92ZWQnLFxuICAgICAgICBdLFxuICAgICAgICBkZWZhdWx0Q29uc3RyYWludHM6IFtcbiAgICAgICAgICAnTXVzdCBhbGlnbiB3aXRoIHt7c3RhbmRhcmRSZWZzfX0nLFxuICAgICAgICAgICdNdXN0IG1haW50YWluIGV2aWRlbmNlIGZvciBhdWRpdHMnLFxuICAgICAgICBdLFxuICAgICAgICBkZWZhdWx0RGVsaXZlcmFibGVzOiBbXG4gICAgICAgICAgJ0NvbnRyb2wgbWFwcGluZycsXG4gICAgICAgICAgJ01vbml0b3JpbmcgaW1wbGVtZW50YXRpb24nLFxuICAgICAgICAgICdQb2xpY3kgZG9jdW1lbnRhdGlvbicsXG4gICAgICAgIF0sXG4gICAgICAgIGV2aWRlbmNlVHlwZTogRXZpZGVuY2VUeXBlLkFVRElUX0xPRyxcbiAgICAgICAgYmFzZUVmZm9ydEhvdXJzOiA4LFxuICAgICAgfSxcblxuICAgICAgLy8gUGVvcGxlICYgQ2hhbmdlICh3ZWlnaHQ6IDAuMDYpXG4gICAgICB7XG4gICAgICAgIGlkOiAndHBsLXBlb3BsZS1jaGFuZ2UnLFxuICAgICAgICBkaW1lbnNpb25LZXk6ICdwZW9wbGVfY2hhbmdlJyxcbiAgICAgICAgdmVyc2lvbjogJzEuMC4wJyxcbiAgICAgICAgZ29hbFRlbXBsYXRlOiAnRXN0YWJsaXNoIHt7YmVzdFByYWN0aWNlfX0gZm9yIHBlb3BsZSBtYW5hZ2VtZW50IGFuZCBjaGFuZ2UgYWRvcHRpb24nLFxuICAgICAgICB0YXNrVGVtcGxhdGVzOiBbXG4gICAgICAgICAgeyBvcmRlcjogMSwgdGVtcGxhdGU6ICdEb2N1bWVudCByb2xlcyBhbmQgcmVzcG9uc2liaWxpdGllcycgfSxcbiAgICAgICAgICB7IG9yZGVyOiAyLCB0ZW1wbGF0ZTogJ0NyZWF0ZSB0cmFpbmluZyBwbGFuJyB9LFxuICAgICAgICAgIHsgb3JkZXI6IDMsIHRlbXBsYXRlOiAnSW1wbGVtZW50IGNoYW5nZSBjb21tdW5pY2F0aW9uIHN0cmF0ZWd5JyB9LFxuICAgICAgICAgIHsgb3JkZXI6IDQsIHRlbXBsYXRlOiAnU2V0IHVwIGZlZWRiYWNrIG1lY2hhbmlzbXMnIH0sXG4gICAgICAgIF0sXG4gICAgICAgIGRlZmF1bHRBY2NlcHRhbmNlQ3JpdGVyaWE6IFtcbiAgICAgICAgICAnUkFDSSBtYXRyaXggZG9jdW1lbnRlZCcsXG4gICAgICAgICAgJ1RyYWluaW5nIG1hdGVyaWFscyBjb21wbGV0ZScsXG4gICAgICAgICAgJ0NvbW11bmljYXRpb24gcGxhbiBleGVjdXRlZCcsXG4gICAgICAgIF0sXG4gICAgICAgIGRlZmF1bHRDb25zdHJhaW50czogWydNdXN0IGFsaWduIHdpdGggSFIgcG9saWNpZXMnLCAnTXVzdCBtYWludGFpbiBjb25maWRlbnRpYWxpdHknXSxcbiAgICAgICAgZGVmYXVsdERlbGl2ZXJhYmxlczogWydSQUNJIG1hdHJpeCcsICdUcmFpbmluZyBtYXRlcmlhbHMnLCAnQ29tbXVuaWNhdGlvbiBwbGFuJ10sXG4gICAgICAgIGV2aWRlbmNlVHlwZTogRXZpZGVuY2VUeXBlLkRPQ1VNRU5ULFxuICAgICAgICBiYXNlRWZmb3J0SG91cnM6IDQsXG4gICAgICB9LFxuICAgIF07XG5cbiAgICAvLyBMb2FkIHRlbXBsYXRlcyBpbnRvIG1hcFxuICAgIGZvciAoY29uc3QgdGVtcGxhdGUgb2YgZGVmYXVsdFRlbXBsYXRlcykge1xuICAgICAgdGhpcy50ZW1wbGF0ZXMuc2V0KHRlbXBsYXRlLmRpbWVuc2lvbktleSwgdGVtcGxhdGUpO1xuICAgIH1cblxuICAgIHRoaXMubG9nZ2VyLmxvZyhgSW5pdGlhbGl6ZWQgJHt0aGlzLnRlbXBsYXRlcy5zaXplfSBwcm9tcHQgdGVtcGxhdGVzYCk7XG4gIH1cbn1cbiJdLCJ2ZXJzaW9uIjozfQ==

@@ -15,5 +15,6 @@
     "^@libs/redis(.*)$": "<rootDir>/../../libs/redis/src$1",
     "^@libs/shared(.*)$": "<rootDir>/../../libs/shared/src$1"
   },
+  "cacheDirectory": "<rootDir>/../.jest-cache/e2e",
   "testTimeout": 30000
 }

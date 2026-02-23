@@ -1,0 +1,31 @@
+3d632ec0488a4d22facaf955e8e513a4
+"use strict";
+/**
+ * Validation Test Suite Index
+ *
+ * This module exports all validation test suites for organized testing.
+ * All tests are automatically discovered by Jest via *.spec.ts pattern.
+ *
+ * Test Suites:
+ * - security-scan.spec.ts: OWASP Top 10, secrets detection, injection prevention
+ * - accessibility.spec.ts: WCAG 2.1, ARIA compliance, contrast ratios
+ * - ux-quality.spec.ts: Nielsen heuristics, error handling, user feedback
+ * - code-hygiene.spec.ts: SOLID, DRY, naming conventions, type safety
+ * - dependency-health.spec.ts: Package versions, security vulnerabilities, licenses
+ *
+ * Run all validation tests:
+ *   npm test -- --testPathPattern="validation"
+ *
+ * Run specific validation test:
+ *   npm test -- --testPathPattern="security-scan"
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.VALIDATION_TEST_SUITES = void 0;
+exports.VALIDATION_TEST_SUITES = [
+    'security-scan.spec.ts',
+    'accessibility.spec.ts',
+    'ux-quality.spec.ts',
+    'code-hygiene.spec.ts',
+    'dependency-health.spec.ts',
+];
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcY29tbW9uXFx0ZXN0c1xcdmFsaWRhdGlvblxcaW5kZXgudHMiLCJtYXBwaW5ncyI6IjtBQUFBOzs7Ozs7Ozs7Ozs7Ozs7Ozs7R0FrQkc7OztBQUVVLFFBQUEsc0JBQXNCLEdBQUc7SUFDcEMsdUJBQXVCO0lBQ3ZCLHVCQUF1QjtJQUN2QixvQkFBb0I7SUFDcEIsc0JBQXNCO0lBQ3RCLDJCQUEyQjtDQUNuQixDQUFDIiwibmFtZXMiOltdLCJzb3VyY2VzIjpbIkM6XFxSZXBvc1xcUXVpei10by1CdWlsZFxcYXBwc1xcYXBpXFxzcmNcXGNvbW1vblxcdGVzdHNcXHZhbGlkYXRpb25cXGluZGV4LnRzIl0sInNvdXJjZXNDb250ZW50IjpbIi8qKlxyXG4gKiBWYWxpZGF0aW9uIFRlc3QgU3VpdGUgSW5kZXhcclxuICogXHJcbiAqIFRoaXMgbW9kdWxlIGV4cG9ydHMgYWxsIHZhbGlkYXRpb24gdGVzdCBzdWl0ZXMgZm9yIG9yZ2FuaXplZCB0ZXN0aW5nLlxyXG4gKiBBbGwgdGVzdHMgYXJlIGF1dG9tYXRpY2FsbHkgZGlzY292ZXJlZCBieSBKZXN0IHZpYSAqLnNwZWMudHMgcGF0dGVybi5cclxuICogXHJcbiAqIFRlc3QgU3VpdGVzOlxyXG4gKiAtIHNlY3VyaXR5LXNjYW4uc3BlYy50czogT1dBU1AgVG9wIDEwLCBzZWNyZXRzIGRldGVjdGlvbiwgaW5qZWN0aW9uIHByZXZlbnRpb25cclxuICogLSBhY2Nlc3NpYmlsaXR5LnNwZWMudHM6IFdDQUcgMi4xLCBBUklBIGNvbXBsaWFuY2UsIGNvbnRyYXN0IHJhdGlvc1xyXG4gKiAtIHV4LXF1YWxpdHkuc3BlYy50czogTmllbHNlbiBoZXVyaXN0aWNzLCBlcnJvciBoYW5kbGluZywgdXNlciBmZWVkYmFja1xyXG4gKiAtIGNvZGUtaHlnaWVuZS5zcGVjLnRzOiBTT0xJRCwgRFJZLCBuYW1pbmcgY29udmVudGlvbnMsIHR5cGUgc2FmZXR5XHJcbiAqIC0gZGVwZW5kZW5jeS1oZWFsdGguc3BlYy50czogUGFja2FnZSB2ZXJzaW9ucywgc2VjdXJpdHkgdnVsbmVyYWJpbGl0aWVzLCBsaWNlbnNlc1xyXG4gKiBcclxuICogUnVuIGFsbCB2YWxpZGF0aW9uIHRlc3RzOlxyXG4gKiAgIG5wbSB0ZXN0IC0tIC0tdGVzdFBhdGhQYXR0ZXJuPVwidmFsaWRhdGlvblwiXHJcbiAqIFxyXG4gKiBSdW4gc3BlY2lmaWMgdmFsaWRhdGlvbiB0ZXN0OlxyXG4gKiAgIG5wbSB0ZXN0IC0tIC0tdGVzdFBhdGhQYXR0ZXJuPVwic2VjdXJpdHktc2NhblwiXHJcbiAqL1xyXG5cclxuZXhwb3J0IGNvbnN0IFZBTElEQVRJT05fVEVTVF9TVUlURVMgPSBbXHJcbiAgJ3NlY3VyaXR5LXNjYW4uc3BlYy50cycsXHJcbiAgJ2FjY2Vzc2liaWxpdHkuc3BlYy50cycsXHJcbiAgJ3V4LXF1YWxpdHkuc3BlYy50cycsXHJcbiAgJ2NvZGUtaHlnaWVuZS5zcGVjLnRzJyxcclxuICAnZGVwZW5kZW5jeS1oZWFsdGguc3BlYy50cycsXHJcbl0gYXMgY29uc3Q7XHJcblxyXG5leHBvcnQgdHlwZSBWYWxpZGF0aW9uVGVzdFN1aXRlID0gKHR5cGVvZiBWQUxJREFUSU9OX1RFU1RfU1VJVEVTKVtudW1iZXJdO1xyXG4iXSwidmVyc2lvbiI6M30=

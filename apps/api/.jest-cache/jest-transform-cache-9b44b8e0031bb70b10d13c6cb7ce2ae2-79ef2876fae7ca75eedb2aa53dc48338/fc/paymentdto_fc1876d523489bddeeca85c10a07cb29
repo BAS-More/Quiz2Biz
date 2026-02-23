@@ -1,0 +1,146 @@
+5a9cf47ca1be45fa018df280c995e656
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CancelSubscriptionDto = exports.UpdateSubscriptionDto = exports.InvoiceResponseDto = exports.SubscriptionResponseDto = exports.CreatePortalSessionDto = exports.CreateCheckoutDto = exports.SubscriptionStatusDto = exports.SubscriptionTierDto = void 0;
+const class_validator_1 = require("class-validator");
+var SubscriptionTierDto;
+(function (SubscriptionTierDto) {
+    SubscriptionTierDto["FREE"] = "FREE";
+    SubscriptionTierDto["PROFESSIONAL"] = "PROFESSIONAL";
+    SubscriptionTierDto["ENTERPRISE"] = "ENTERPRISE";
+})(SubscriptionTierDto || (exports.SubscriptionTierDto = SubscriptionTierDto = {}));
+var SubscriptionStatusDto;
+(function (SubscriptionStatusDto) {
+    SubscriptionStatusDto["ACTIVE"] = "active";
+    SubscriptionStatusDto["PAST_DUE"] = "past_due";
+    SubscriptionStatusDto["UNPAID"] = "unpaid";
+    SubscriptionStatusDto["CANCELED"] = "canceled";
+    SubscriptionStatusDto["INCOMPLETE"] = "incomplete";
+    SubscriptionStatusDto["TRIALING"] = "trialing";
+})(SubscriptionStatusDto || (exports.SubscriptionStatusDto = SubscriptionStatusDto = {}));
+/**
+ * DTO for creating a checkout session
+ */
+class CreateCheckoutDto {
+    organizationId;
+    tier;
+    successUrl;
+    cancelUrl;
+    customerId;
+}
+exports.CreateCheckoutDto = CreateCheckoutDto;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateCheckoutDto.prototype, "organizationId", void 0);
+__decorate([
+    (0, class_validator_1.IsEnum)(SubscriptionTierDto),
+    __metadata("design:type", String)
+], CreateCheckoutDto.prototype, "tier", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateCheckoutDto.prototype, "successUrl", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateCheckoutDto.prototype, "cancelUrl", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateCheckoutDto.prototype, "customerId", void 0);
+/**
+ * DTO for creating a customer portal session
+ */
+class CreatePortalSessionDto {
+    customerId;
+    returnUrl;
+}
+exports.CreatePortalSessionDto = CreatePortalSessionDto;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreatePortalSessionDto.prototype, "customerId", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreatePortalSessionDto.prototype, "returnUrl", void 0);
+/**
+ * Response DTO for subscription status
+ */
+class SubscriptionResponseDto {
+    organizationId;
+    tier;
+    status;
+    stripeCustomerId;
+    stripeSubscriptionId;
+    currentPeriodEnd;
+    cancelAtPeriodEnd;
+    features;
+}
+exports.SubscriptionResponseDto = SubscriptionResponseDto;
+/**
+ * Response DTO for invoice
+ */
+class InvoiceResponseDto {
+    id;
+    stripeInvoiceId;
+    amount;
+    currency;
+    status;
+    paidAt;
+    createdAt;
+    invoiceUrl;
+    invoicePdfUrl;
+}
+exports.InvoiceResponseDto = InvoiceResponseDto;
+/**
+ * DTO for upgrading/downgrading subscription
+ */
+class UpdateSubscriptionDto {
+    subscriptionId;
+    newTier;
+}
+exports.UpdateSubscriptionDto = UpdateSubscriptionDto;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], UpdateSubscriptionDto.prototype, "subscriptionId", void 0);
+__decorate([
+    (0, class_validator_1.IsEnum)(SubscriptionTierDto),
+    __metadata("design:type", String)
+], UpdateSubscriptionDto.prototype, "newTier", void 0);
+/**
+ * DTO for canceling subscription
+ */
+class CancelSubscriptionDto {
+    subscriptionId;
+    cancelImmediately;
+}
+exports.CancelSubscriptionDto = CancelSubscriptionDto;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CancelSubscriptionDto.prototype, "subscriptionId", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Boolean)
+], CancelSubscriptionDto.prototype, "cancelImmediately", void 0);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiL21udC9jL1JlcG9zL1F1aXotdG8tQnVpbGQvYXBwcy9hcGkvc3JjL21vZHVsZXMvcGF5bWVudC9kdG8vcGF5bWVudC5kdG8udHMiLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7O0FBQUEscURBQTJFO0FBRTNFLElBQVksbUJBSVg7QUFKRCxXQUFZLG1CQUFtQjtJQUM3QixvQ0FBYSxDQUFBO0lBQ2Isb0RBQTZCLENBQUE7SUFDN0IsZ0RBQXlCLENBQUE7QUFDM0IsQ0FBQyxFQUpXLG1CQUFtQixtQ0FBbkIsbUJBQW1CLFFBSTlCO0FBRUQsSUFBWSxxQkFPWDtBQVBELFdBQVkscUJBQXFCO0lBQy9CLDBDQUFpQixDQUFBO0lBQ2pCLDhDQUFxQixDQUFBO0lBQ3JCLDBDQUFpQixDQUFBO0lBQ2pCLDhDQUFxQixDQUFBO0lBQ3JCLGtEQUF5QixDQUFBO0lBQ3pCLDhDQUFxQixDQUFBO0FBQ3ZCLENBQUMsRUFQVyxxQkFBcUIscUNBQXJCLHFCQUFxQixRQU9oQztBQUVEOztHQUVHO0FBQ0gsTUFBYSxpQkFBaUI7SUFHNUIsY0FBYyxDQUFTO0lBR3ZCLElBQUksQ0FBc0I7SUFJMUIsVUFBVSxDQUFTO0lBSW5CLFNBQVMsQ0FBUztJQUlsQixVQUFVLENBQVU7Q0FDckI7QUFuQkQsOENBbUJDO0FBaEJDO0lBRkMsSUFBQSwwQkFBUSxHQUFFO0lBQ1YsSUFBQSw0QkFBVSxHQUFFOzt5REFDVTtBQUd2QjtJQURDLElBQUEsd0JBQU0sRUFBQyxtQkFBbUIsQ0FBQzs7K0NBQ0Y7QUFJMUI7SUFGQyxJQUFBLDBCQUFRLEdBQUU7SUFDVixJQUFBLDRCQUFVLEdBQUU7O3FEQUNNO0FBSW5CO0lBRkMsSUFBQSwwQkFBUSxHQUFFO0lBQ1YsSUFBQSw0QkFBVSxHQUFFOztvREFDSztBQUlsQjtJQUZDLElBQUEsNEJBQVUsR0FBRTtJQUNaLElBQUEsMEJBQVEsR0FBRTs7cURBQ1M7QUFHdEI7O0dBRUc7QUFDSCxNQUFhLHNCQUFzQjtJQUdqQyxVQUFVLENBQVM7SUFJbkIsU0FBUyxDQUFTO0NBQ25CO0FBUkQsd0RBUUM7QUFMQztJQUZDLElBQUEsMEJBQVEsR0FBRTtJQUNWLElBQUEsNEJBQVUsR0FBRTs7MERBQ007QUFJbkI7SUFGQyxJQUFBLDBCQUFRLEdBQUU7SUFDVixJQUFBLDRCQUFVLEdBQUU7O3lEQUNLO0FBR3BCOztHQUVHO0FBQ0gsTUFBYSx1QkFBdUI7SUFDbEMsY0FBYyxDQUFTO0lBQ3ZCLElBQUksQ0FBc0I7SUFDMUIsTUFBTSxDQUF3QjtJQUM5QixnQkFBZ0IsQ0FBVTtJQUMxQixvQkFBb0IsQ0FBVTtJQUM5QixnQkFBZ0IsQ0FBUTtJQUN4QixpQkFBaUIsQ0FBVTtJQUMzQixRQUFRLENBTU47Q0FDSDtBQWZELDBEQWVDO0FBRUQ7O0dBRUc7QUFDSCxNQUFhLGtCQUFrQjtJQUM3QixFQUFFLENBQVM7SUFDWCxlQUFlLENBQVM7SUFDeEIsTUFBTSxDQUFTO0lBQ2YsUUFBUSxDQUFTO0lBQ2pCLE1BQU0sQ0FBUztJQUNmLE1BQU0sQ0FBUTtJQUNkLFNBQVMsQ0FBTztJQUNoQixVQUFVLENBQVU7SUFDcEIsYUFBYSxDQUFVO0NBQ3hCO0FBVkQsZ0RBVUM7QUFFRDs7R0FFRztBQUNILE1BQWEscUJBQXFCO0lBR2hDLGNBQWMsQ0FBUztJQUd2QixPQUFPLENBQXNCO0NBQzlCO0FBUEQsc0RBT0M7QUFKQztJQUZDLElBQUEsMEJBQVEsR0FBRTtJQUNWLElBQUEsNEJBQVUsR0FBRTs7NkRBQ1U7QUFHdkI7SUFEQyxJQUFBLHdCQUFNLEVBQUMsbUJBQW1CLENBQUM7O3NEQUNDO0FBRy9COztHQUVHO0FBQ0gsTUFBYSxxQkFBcUI7SUFHaEMsY0FBYyxDQUFTO0lBR3ZCLGlCQUFpQixDQUFXO0NBQzdCO0FBUEQsc0RBT0M7QUFKQztJQUZDLElBQUEsMEJBQVEsR0FBRTtJQUNWLElBQUEsNEJBQVUsR0FBRTs7NkRBQ1U7QUFHdkI7SUFEQyxJQUFBLDRCQUFVLEdBQUU7O2dFQUNlIiwibmFtZXMiOltdLCJzb3VyY2VzIjpbIi9tbnQvYy9SZXBvcy9RdWl6LXRvLUJ1aWxkL2FwcHMvYXBpL3NyYy9tb2R1bGVzL3BheW1lbnQvZHRvL3BheW1lbnQuZHRvLnRzIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IElzU3RyaW5nLCBJc05vdEVtcHR5LCBJc09wdGlvbmFsLCBJc0VudW0gfSBmcm9tICdjbGFzcy12YWxpZGF0b3InO1xuXG5leHBvcnQgZW51bSBTdWJzY3JpcHRpb25UaWVyRHRvIHtcbiAgRlJFRSA9ICdGUkVFJyxcbiAgUFJPRkVTU0lPTkFMID0gJ1BST0ZFU1NJT05BTCcsXG4gIEVOVEVSUFJJU0UgPSAnRU5URVJQUklTRScsXG59XG5cbmV4cG9ydCBlbnVtIFN1YnNjcmlwdGlvblN0YXR1c0R0byB7XG4gIEFDVElWRSA9ICdhY3RpdmUnLFxuICBQQVNUX0RVRSA9ICdwYXN0X2R1ZScsXG4gIFVOUEFJRCA9ICd1bnBhaWQnLFxuICBDQU5DRUxFRCA9ICdjYW5jZWxlZCcsXG4gIElOQ09NUExFVEUgPSAnaW5jb21wbGV0ZScsXG4gIFRSSUFMSU5HID0gJ3RyaWFsaW5nJyxcbn1cblxuLyoqXG4gKiBEVE8gZm9yIGNyZWF0aW5nIGEgY2hlY2tvdXQgc2Vzc2lvblxuICovXG5leHBvcnQgY2xhc3MgQ3JlYXRlQ2hlY2tvdXREdG8ge1xuICBASXNTdHJpbmcoKVxuICBASXNOb3RFbXB0eSgpXG4gIG9yZ2FuaXphdGlvbklkOiBzdHJpbmc7XG5cbiAgQElzRW51bShTdWJzY3JpcHRpb25UaWVyRHRvKVxuICB0aWVyOiBTdWJzY3JpcHRpb25UaWVyRHRvO1xuXG4gIEBJc1N0cmluZygpXG4gIEBJc05vdEVtcHR5KClcbiAgc3VjY2Vzc1VybDogc3RyaW5nO1xuXG4gIEBJc1N0cmluZygpXG4gIEBJc05vdEVtcHR5KClcbiAgY2FuY2VsVXJsOiBzdHJpbmc7XG5cbiAgQElzT3B0aW9uYWwoKVxuICBASXNTdHJpbmcoKVxuICBjdXN0b21lcklkPzogc3RyaW5nO1xufVxuXG4vKipcbiAqIERUTyBmb3IgY3JlYXRpbmcgYSBjdXN0b21lciBwb3J0YWwgc2Vzc2lvblxuICovXG5leHBvcnQgY2xhc3MgQ3JlYXRlUG9ydGFsU2Vzc2lvbkR0byB7XG4gIEBJc1N0cmluZygpXG4gIEBJc05vdEVtcHR5KClcbiAgY3VzdG9tZXJJZDogc3RyaW5nO1xuXG4gIEBJc1N0cmluZygpXG4gIEBJc05vdEVtcHR5KClcbiAgcmV0dXJuVXJsOiBzdHJpbmc7XG59XG5cbi8qKlxuICogUmVzcG9uc2UgRFRPIGZvciBzdWJzY3JpcHRpb24gc3RhdHVzXG4gKi9cbmV4cG9ydCBjbGFzcyBTdWJzY3JpcHRpb25SZXNwb25zZUR0byB7XG4gIG9yZ2FuaXphdGlvbklkOiBzdHJpbmc7XG4gIHRpZXI6IFN1YnNjcmlwdGlvblRpZXJEdG87XG4gIHN0YXR1czogU3Vic2NyaXB0aW9uU3RhdHVzRHRvO1xuICBzdHJpcGVDdXN0b21lcklkPzogc3RyaW5nO1xuICBzdHJpcGVTdWJzY3JpcHRpb25JZD86IHN0cmluZztcbiAgY3VycmVudFBlcmlvZEVuZD86IERhdGU7XG4gIGNhbmNlbEF0UGVyaW9kRW5kOiBib29sZWFuO1xuICBmZWF0dXJlczoge1xuICAgIHF1ZXN0aW9ubmFpcmVzOiBudW1iZXI7XG4gICAgcmVzcG9uc2VzOiBudW1iZXI7XG4gICAgZG9jdW1lbnRzOiBudW1iZXI7XG4gICAgYXBpQ2FsbHM6IG51bWJlcjtcbiAgICBzdXBwb3J0OiBzdHJpbmc7XG4gIH07XG59XG5cbi8qKlxuICogUmVzcG9uc2UgRFRPIGZvciBpbnZvaWNlXG4gKi9cbmV4cG9ydCBjbGFzcyBJbnZvaWNlUmVzcG9uc2VEdG8ge1xuICBpZDogc3RyaW5nO1xuICBzdHJpcGVJbnZvaWNlSWQ6IHN0cmluZztcbiAgYW1vdW50OiBudW1iZXI7XG4gIGN1cnJlbmN5OiBzdHJpbmc7XG4gIHN0YXR1czogc3RyaW5nO1xuICBwYWlkQXQ/OiBEYXRlO1xuICBjcmVhdGVkQXQ6IERhdGU7XG4gIGludm9pY2VVcmw/OiBzdHJpbmc7XG4gIGludm9pY2VQZGZVcmw/OiBzdHJpbmc7XG59XG5cbi8qKlxuICogRFRPIGZvciB1cGdyYWRpbmcvZG93bmdyYWRpbmcgc3Vic2NyaXB0aW9uXG4gKi9cbmV4cG9ydCBjbGFzcyBVcGRhdGVTdWJzY3JpcHRpb25EdG8ge1xuICBASXNTdHJpbmcoKVxuICBASXNOb3RFbXB0eSgpXG4gIHN1YnNjcmlwdGlvbklkOiBzdHJpbmc7XG5cbiAgQElzRW51bShTdWJzY3JpcHRpb25UaWVyRHRvKVxuICBuZXdUaWVyOiBTdWJzY3JpcHRpb25UaWVyRHRvO1xufVxuXG4vKipcbiAqIERUTyBmb3IgY2FuY2VsaW5nIHN1YnNjcmlwdGlvblxuICovXG5leHBvcnQgY2xhc3MgQ2FuY2VsU3Vic2NyaXB0aW9uRHRvIHtcbiAgQElzU3RyaW5nKClcbiAgQElzTm90RW1wdHkoKVxuICBzdWJzY3JpcHRpb25JZDogc3RyaW5nO1xuXG4gIEBJc09wdGlvbmFsKClcbiAgY2FuY2VsSW1tZWRpYXRlbHk/OiBib29sZWFuO1xufVxuIl0sInZlcnNpb24iOjN9

@@ -1,0 +1,284 @@
+fd4a5761014b97295bc73a16475eaa8f
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ExportUrlResponseDto = exports.ExportFormatDto = exports.DeliverablePackResponseDto = exports.PackMetadataDto = exports.PackSummaryDto = exports.CompiledDocumentDto = exports.DocumentSectionDto = exports.CompileDeliverablesDto = void 0;
+const swagger_1 = require("@nestjs/swagger");
+const class_validator_1 = require("class-validator");
+const class_transformer_1 = require("class-transformer");
+/**
+ * DTOs for Deliverables Pack Compiler
+ * Implements Quiz2Biz document generation requirements
+ */
+class CompileDeliverablesDto {
+    sessionId;
+    includeDecisionLog;
+    includeReadinessReport;
+    includePolicyPack;
+    autoSection;
+    maxWordsPerSection;
+}
+exports.CompileDeliverablesDto = CompileDeliverablesDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Session ID to compile deliverables for' }),
+    (0, class_validator_1.IsUUID)(),
+    __metadata("design:type", String)
+], CompileDeliverablesDto.prototype, "sessionId", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Include decision log in pack', default: true }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], CompileDeliverablesDto.prototype, "includeDecisionLog", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Include readiness report in pack', default: true }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], CompileDeliverablesDto.prototype, "includeReadinessReport", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Include policy/standard/procedure pack', default: true }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], CompileDeliverablesDto.prototype, "includePolicyPack", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        description: 'Enable auto-sectioning (≤1000 words per section)',
+        default: true,
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], CompileDeliverablesDto.prototype, "autoSection", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Maximum words per section (100-2000)', default: 1000 }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Min)(100),
+    (0, class_validator_1.Max)(2000),
+    (0, class_transformer_1.Type)(() => Number),
+    __metadata("design:type", Number)
+], CompileDeliverablesDto.prototype, "maxWordsPerSection", void 0);
+class DocumentSectionDto {
+    id;
+    title;
+    content;
+    wordCount;
+    subSections;
+    order;
+}
+exports.DocumentSectionDto = DocumentSectionDto;
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], DocumentSectionDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], DocumentSectionDto.prototype, "title", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], DocumentSectionDto.prototype, "content", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Number)
+], DocumentSectionDto.prototype, "wordCount", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ type: () => [DocumentSectionDto] }),
+    __metadata("design:type", Array)
+], DocumentSectionDto.prototype, "subSections", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Number)
+], DocumentSectionDto.prototype, "order", void 0);
+class CompiledDocumentDto {
+    id;
+    title;
+    category;
+    sections;
+    wordCount;
+    subSectionCount;
+    generatedAt;
+}
+exports.CompiledDocumentDto = CompiledDocumentDto;
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], CompiledDocumentDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], CompiledDocumentDto.prototype, "title", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        enum: [
+            'ARCHITECTURE',
+            'SDLC',
+            'TESTING',
+            'DEVSECOPS',
+            'PRIVACY',
+            'OBSERVABILITY',
+            'FINANCE',
+            'GOVERNANCE',
+            'READINESS',
+        ],
+    }),
+    __metadata("design:type", String)
+], CompiledDocumentDto.prototype, "category", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: [DocumentSectionDto] }),
+    __metadata("design:type", Array)
+], CompiledDocumentDto.prototype, "sections", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Number)
+], CompiledDocumentDto.prototype, "wordCount", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Number)
+], CompiledDocumentDto.prototype, "subSectionCount", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Date)
+], CompiledDocumentDto.prototype, "generatedAt", void 0);
+class PackSummaryDto {
+    totalDocuments;
+    totalSections;
+    totalWordCount;
+    categories;
+    completenessScore;
+}
+exports.PackSummaryDto = PackSummaryDto;
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Number)
+], PackSummaryDto.prototype, "totalDocuments", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Number)
+], PackSummaryDto.prototype, "totalSections", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Number)
+], PackSummaryDto.prototype, "totalWordCount", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Document count per category' }),
+    __metadata("design:type", Object)
+], PackSummaryDto.prototype, "categories", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Overall completeness score (0-100)' }),
+    __metadata("design:type", Number)
+], PackSummaryDto.prototype, "completenessScore", void 0);
+class PackMetadataDto {
+    sessionId;
+    userId;
+    questionnaireVersion;
+    industry;
+    readinessScore;
+    dimensionScores;
+    generationTimestamp;
+}
+exports.PackMetadataDto = PackMetadataDto;
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], PackMetadataDto.prototype, "sessionId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], PackMetadataDto.prototype, "userId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Number)
+], PackMetadataDto.prototype, "questionnaireVersion", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)(),
+    __metadata("design:type", String)
+], PackMetadataDto.prototype, "industry", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Number)
+], PackMetadataDto.prototype, "readinessScore", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Scores per dimension' }),
+    __metadata("design:type", Object)
+], PackMetadataDto.prototype, "dimensionScores", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], PackMetadataDto.prototype, "generationTimestamp", void 0);
+class DeliverablePackResponseDto {
+    sessionId;
+    generatedAt;
+    documents;
+    summary;
+    readinessScore;
+    metadata;
+}
+exports.DeliverablePackResponseDto = DeliverablePackResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], DeliverablePackResponseDto.prototype, "sessionId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Date)
+], DeliverablePackResponseDto.prototype, "generatedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: [CompiledDocumentDto] }),
+    __metadata("design:type", Array)
+], DeliverablePackResponseDto.prototype, "documents", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: PackSummaryDto }),
+    __metadata("design:type", PackSummaryDto)
+], DeliverablePackResponseDto.prototype, "summary", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Number)
+], DeliverablePackResponseDto.prototype, "readinessScore", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: PackMetadataDto }),
+    __metadata("design:type", PackMetadataDto)
+], DeliverablePackResponseDto.prototype, "metadata", void 0);
+class ExportFormatDto {
+    format;
+}
+exports.ExportFormatDto = ExportFormatDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ enum: ['json', 'pdf', 'docx', 'zip'] }),
+    __metadata("design:type", String)
+], ExportFormatDto.prototype, "format", void 0);
+class ExportUrlResponseDto {
+    url;
+    expiresAt;
+    format;
+    estimatedSize;
+}
+exports.ExportUrlResponseDto = ExportUrlResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Secure download URL for exported pack' }),
+    __metadata("design:type", String)
+], ExportUrlResponseDto.prototype, "url", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'URL expiration timestamp' }),
+    __metadata("design:type", Date)
+], ExportUrlResponseDto.prototype, "expiresAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Export format' }),
+    __metadata("design:type", String)
+], ExportUrlResponseDto.prototype, "format", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Estimated file size in bytes' }),
+    __metadata("design:type", Number)
+], ExportUrlResponseDto.prototype, "estimatedSize", void 0);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcZG9jdW1lbnQtZ2VuZXJhdG9yXFxkdG9cXGRlbGl2ZXJhYmxlcy1wYWNrLmR0by50cyIsIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7QUFBQSw2Q0FBbUU7QUFDbkUscURBQW9GO0FBQ3BGLHlEQUF5QztBQUV6Qzs7O0dBR0c7QUFFSCxNQUFhLHNCQUFzQjtJQUdqQyxTQUFTLENBQVM7SUFLbEIsa0JBQWtCLENBQVc7SUFLN0Isc0JBQXNCLENBQVc7SUFLakMsaUJBQWlCLENBQVc7SUFRNUIsV0FBVyxDQUFXO0lBUXRCLGtCQUFrQixDQUFVO0NBQzdCO0FBbkNELHdEQW1DQztBQWhDQztJQUZDLElBQUEscUJBQVcsRUFBQyxFQUFFLFdBQVcsRUFBRSx3Q0FBd0MsRUFBRSxDQUFDO0lBQ3RFLElBQUEsd0JBQU0sR0FBRTs7eURBQ1M7QUFLbEI7SUFIQyxJQUFBLDZCQUFtQixFQUFDLEVBQUUsV0FBVyxFQUFFLDhCQUE4QixFQUFFLE9BQU8sRUFBRSxJQUFJLEVBQUUsQ0FBQztJQUNuRixJQUFBLDRCQUFVLEdBQUU7SUFDWixJQUFBLDJCQUFTLEdBQUU7O2tFQUNpQjtBQUs3QjtJQUhDLElBQUEsNkJBQW1CLEVBQUMsRUFBRSxXQUFXLEVBQUUsa0NBQWtDLEVBQUUsT0FBTyxFQUFFLElBQUksRUFBRSxDQUFDO0lBQ3ZGLElBQUEsNEJBQVUsR0FBRTtJQUNaLElBQUEsMkJBQVMsR0FBRTs7c0VBQ3FCO0FBS2pDO0lBSEMsSUFBQSw2QkFBbUIsRUFBQyxFQUFFLFdBQVcsRUFBRSx3Q0FBd0MsRUFBRSxPQUFPLEVBQUUsSUFBSSxFQUFFLENBQUM7SUFDN0YsSUFBQSw0QkFBVSxHQUFFO0lBQ1osSUFBQSwyQkFBUyxHQUFFOztpRUFDZ0I7QUFRNUI7SUFOQyxJQUFBLDZCQUFtQixFQUFDO1FBQ25CLFdBQVcsRUFBRSxrREFBa0Q7UUFDL0QsT0FBTyxFQUFFLElBQUk7S0FDZCxDQUFDO0lBQ0QsSUFBQSw0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QVM7Q0FDdkI7QUFaRCxvREFZQztBQVZDO0lBREMsSUFBQSxxQkFBVyxFQUFDLEVBQUUsV0FBVyxFQUFFLHVDQUF1QyxFQUFFLENBQUM7O2lEQUMxRDtBQUdaO0lBREMsSUFBQSxxQkFBVyxFQUFDLEVBQUUsV0FBVyxFQUFFLDBCQUEwQixFQUFFLENBQUM7OEJBQzlDLElBQUk7dURBQUM7QUFHaEI7SUFEQyxJQUFBLHFCQUFXLEVBQUMsRUFBRSxXQUFXLEVBQUUsZUFBZSxFQUFFLENBQUM7O29EQUMvQjtBQUdmO0lBREMsSUFBQSxxQkFBVyxFQUFDLEVBQUUsV0FBVyxFQUFFLDhCQUE4QixFQUFFLENBQUM7OzJEQUN2QyIsIm5hbWVzIjpbXSwic291cmNlcyI6WyJDOlxcUmVwb3NcXFF1aXotdG8tQnVpbGRcXGFwcHNcXGFwaVxcc3JjXFxtb2R1bGVzXFxkb2N1bWVudC1nZW5lcmF0b3JcXGR0b1xcZGVsaXZlcmFibGVzLXBhY2suZHRvLnRzIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IEFwaVByb3BlcnR5LCBBcGlQcm9wZXJ0eU9wdGlvbmFsIH0gZnJvbSAnQG5lc3Rqcy9zd2FnZ2VyJztcbmltcG9ydCB7IElzVVVJRCwgSXNCb29sZWFuLCBJc09wdGlvbmFsLCBJc051bWJlciwgTWluLCBNYXggfSBmcm9tICdjbGFzcy12YWxpZGF0b3InO1xuaW1wb3J0IHsgVHlwZSB9IGZyb20gJ2NsYXNzLXRyYW5zZm9ybWVyJztcblxuLyoqXG4gKiBEVE9zIGZvciBEZWxpdmVyYWJsZXMgUGFjayBDb21waWxlclxuICogSW1wbGVtZW50cyBRdWl6MkJpeiBkb2N1bWVudCBnZW5lcmF0aW9uIHJlcXVpcmVtZW50c1xuICovXG5cbmV4cG9ydCBjbGFzcyBDb21waWxlRGVsaXZlcmFibGVzRHRvIHtcbiAgQEFwaVByb3BlcnR5KHsgZGVzY3JpcHRpb246ICdTZXNzaW9uIElEIHRvIGNvbXBpbGUgZGVsaXZlcmFibGVzIGZvcicgfSlcbiAgQElzVVVJRCgpXG4gIHNlc3Npb25JZDogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eU9wdGlvbmFsKHsgZGVzY3JpcHRpb246ICdJbmNsdWRlIGRlY2lzaW9uIGxvZyBpbiBwYWNrJywgZGVmYXVsdDogdHJ1ZSB9KVxuICBASXNPcHRpb25hbCgpXG4gIEBJc0Jvb2xlYW4oKVxuICBpbmNsdWRlRGVjaXNpb25Mb2c/OiBib29sZWFuO1xuXG4gIEBBcGlQcm9wZXJ0eU9wdGlvbmFsKHsgZGVzY3JpcHRpb246ICdJbmNsdWRlIHJlYWRpbmVzcyByZXBvcnQgaW4gcGFjaycsIGRlZmF1bHQ6IHRydWUgfSlcbiAgQElzT3B0aW9uYWwoKVxuICBASXNCb29sZWFuKClcbiAgaW5jbHVkZVJlYWRpbmVzc1JlcG9ydD86IGJvb2xlYW47XG5cbiAgQEFwaVByb3BlcnR5T3B0aW9uYWwoeyBkZXNjcmlwdGlvbjogJ0luY2x1ZGUgcG9saWN5L3N0YW5kYXJkL3Byb2NlZHVyZSBwYWNrJywgZGVmYXVsdDogdHJ1ZSB9KVxuICBASXNPcHRpb25hbCgpXG4gIEBJc0Jvb2xlYW4oKVxuICBpbmNsdWRlUG9saWN5UGFjaz86IGJvb2xlYW47XG5cbiAgQEFwaVByb3BlcnR5T3B0aW9uYWwoe1xuICAgIGRlc2NyaXB0aW9uOiAnRW5hYmxlIGF1dG8tc2VjdGlvbmluZyAo4omkMTAwMCB3b3JkcyBwZXIgc2VjdGlvbiknLFxuICAgIGRlZmF1bHQ6IHRydWUsXG4gIH0pXG4gIEBJc09wdGlvbmFsKClcbiAgQElzQm9vbGVhbigpXG4gIGF1dG9TZWN0aW9uPzogYm9vbGVhbjtcblxuICBAQXBpUHJvcGVydHlPcHRpb25hbCh7IGRlc2NyaXB0aW9uOiAnTWF4aW11bSB3b3JkcyBwZXIgc2VjdGlvbiAoMTAwLTIwMDApJywgZGVmYXVsdDogMTAwMCB9KVxuICBASXNPcHRpb25hbCgpXG4gIEBJc051bWJlcigpXG4gIEBNaW4oMTAwKVxuICBATWF4KDIwMDApXG4gIEBUeXBlKCgpID0+IE51bWJlcilcbiAgbWF4V29yZHNQZXJTZWN0aW9uPzogbnVtYmVyO1xufVxuXG5leHBvcnQgY2xhc3MgRG9jdW1lbnRTZWN0aW9uRHRvIHtcbiAgQEFwaVByb3BlcnR5KClcbiAgaWQ6IHN0cmluZztcblxuICBAQXBpUHJvcGVydHkoKVxuICB0aXRsZTogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eSgpXG4gIGNvbnRlbnQ6IHN0cmluZztcblxuICBAQXBpUHJvcGVydHkoKVxuICB3b3JkQ291bnQ6IG51bWJlcjtcblxuICBAQXBpUHJvcGVydHlPcHRpb25hbCh7IHR5cGU6ICgpID0+IFtEb2N1bWVudFNlY3Rpb25EdG9dIH0pXG4gIHN1YlNlY3Rpb25zPzogRG9jdW1lbnRTZWN0aW9uRHRvW107XG5cbiAgQEFwaVByb3BlcnR5KClcbiAgb3JkZXI6IG51bWJlcjtcbn1cblxuZXhwb3J0IGNsYXNzIENvbXBpbGVkRG9jdW1lbnREdG8ge1xuICBAQXBpUHJvcGVydHkoKVxuICBpZDogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eSgpXG4gIHRpdGxlOiBzdHJpbmc7XG5cbiAgQEFwaVByb3BlcnR5KHtcbiAgICBlbnVtOiBbXG4gICAgICAnQVJDSElURUNUVVJFJyxcbiAgICAgICdTRExDJyxcbiAgICAgICdURVNUSU5HJyxcbiAgICAgICdERVZTRUNPUFMnLFxuICAgICAgJ1BSSVZBQ1knLFxuICAgICAgJ09CU0VSVkFCSUxJVFknLFxuICAgICAgJ0ZJTkFOQ0UnLFxuICAgICAgJ0dPVkVSTkFOQ0UnLFxuICAgICAgJ1JFQURJTkVTUycsXG4gICAgXSxcbiAgfSlcbiAgY2F0ZWdvcnk6IHN0cmluZztcblxuICBAQXBpUHJvcGVydHkoeyB0eXBlOiBbRG9jdW1lbnRTZWN0aW9uRHRvXSB9KVxuICBzZWN0aW9uczogRG9jdW1lbnRTZWN0aW9uRHRvW107XG5cbiAgQEFwaVByb3BlcnR5KClcbiAgd29yZENvdW50OiBudW1iZXI7XG5cbiAgQEFwaVByb3BlcnR5KClcbiAgc3ViU2VjdGlvbkNvdW50OiBudW1iZXI7XG5cbiAgQEFwaVByb3BlcnR5KClcbiAgZ2VuZXJhdGVkQXQ6IERhdGU7XG59XG5cbmV4cG9ydCBjbGFzcyBQYWNrU3VtbWFyeUR0byB7XG4gIEBBcGlQcm9wZXJ0eSgpXG4gIHRvdGFsRG9jdW1lbnRzOiBudW1iZXI7XG5cbiAgQEFwaVByb3BlcnR5KClcbiAgdG90YWxTZWN0aW9uczogbnVtYmVyO1xuXG4gIEBBcGlQcm9wZXJ0eSgpXG4gIHRvdGFsV29yZENvdW50OiBudW1iZXI7XG5cbiAgQEFwaVByb3BlcnR5KHsgZGVzY3JpcHRpb246ICdEb2N1bWVudCBjb3VudCBwZXIgY2F0ZWdvcnknIH0pXG4gIGNhdGVnb3JpZXM6IFJlY29yZDxzdHJpbmcsIG51bWJlcj47XG5cbiAgQEFwaVByb3BlcnR5KHsgZGVzY3JpcHRpb246ICdPdmVyYWxsIGNvbXBsZXRlbmVzcyBzY29yZSAoMC0xMDApJyB9KVxuICBjb21wbGV0ZW5lc3NTY29yZTogbnVtYmVyO1xufVxuXG5leHBvcnQgY2xhc3MgUGFja01ldGFkYXRhRHRvIHtcbiAgQEFwaVByb3BlcnR5KClcbiAgc2Vzc2lvbklkOiBzdHJpbmc7XG5cbiAgQEFwaVByb3BlcnR5KClcbiAgdXNlcklkOiBzdHJpbmc7XG5cbiAgQEFwaVByb3BlcnR5KClcbiAgcXVlc3Rpb25uYWlyZVZlcnNpb246IG51bWJlcjtcblxuICBAQXBpUHJvcGVydHlPcHRpb25hbCgpXG4gIGluZHVzdHJ5Pzogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eSgpXG4gIHJlYWRpbmVzc1Njb3JlOiBudW1iZXI7XG5cbiAgQEFwaVByb3BlcnR5KHsgZGVzY3JpcHRpb246ICdTY29yZXMgcGVyIGRpbWVuc2lvbicgfSlcbiAgZGltZW5zaW9uU2NvcmVzOiBSZWNvcmQ8c3RyaW5nLCBudW1iZXI+O1xuXG4gIEBBcGlQcm9wZXJ0eSgpXG4gIGdlbmVyYXRpb25UaW1lc3RhbXA6IHN0cmluZztcbn1cblxuZXhwb3J0IGNsYXNzIERlbGl2ZXJhYmxlUGFja1Jlc3BvbnNlRHRvIHtcbiAgQEFwaVByb3BlcnR5KClcbiAgc2Vzc2lvbklkOiBzdHJpbmc7XG5cbiAgQEFwaVByb3BlcnR5KClcbiAgZ2VuZXJhdGVkQXQ6IERhdGU7XG5cbiAgQEFwaVByb3BlcnR5KHsgdHlwZTogW0NvbXBpbGVkRG9jdW1lbnREdG9dIH0pXG4gIGRvY3VtZW50czogQ29tcGlsZWREb2N1bWVudER0b1tdO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IHR5cGU6IFBhY2tTdW1tYXJ5RHRvIH0pXG4gIHN1bW1hcnk6IFBhY2tTdW1tYXJ5RHRvO1xuXG4gIEBBcGlQcm9wZXJ0eSgpXG4gIHJlYWRpbmVzc1Njb3JlOiBudW1iZXI7XG5cbiAgQEFwaVByb3BlcnR5KHsgdHlwZTogUGFja01ldGFkYXRhRHRvIH0pXG4gIG1ldGFkYXRhOiBQYWNrTWV0YWRhdGFEdG87XG59XG5cbmV4cG9ydCBjbGFzcyBFeHBvcnRGb3JtYXREdG8ge1xuICBAQXBpUHJvcGVydHkoeyBlbnVtOiBbJ2pzb24nLCAncGRmJywgJ2RvY3gnLCAnemlwJ10gfSlcbiAgZm9ybWF0OiAnanNvbicgfCAncGRmJyB8ICdkb2N4JyB8ICd6aXAnO1xufVxuXG5leHBvcnQgY2xhc3MgRXhwb3J0VXJsUmVzcG9uc2VEdG8ge1xuICBAQXBpUHJvcGVydHkoeyBkZXNjcmlwdGlvbjogJ1NlY3VyZSBkb3dubG9hZCBVUkwgZm9yIGV4cG9ydGVkIHBhY2snIH0pXG4gIHVybDogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGRlc2NyaXB0aW9uOiAnVVJMIGV4cGlyYXRpb24gdGltZXN0YW1wJyB9KVxuICBleHBpcmVzQXQ6IERhdGU7XG5cbiAgQEFwaVByb3BlcnR5KHsgZGVzY3JpcHRpb246ICdFeHBvcnQgZm9ybWF0JyB9KVxuICBmb3JtYXQ6IHN0cmluZztcblxuICBAQXBpUHJvcGVydHkoeyBkZXNjcmlwdGlvbjogJ0VzdGltYXRlZCBmaWxlIHNpemUgaW4gYnl0ZXMnIH0pXG4gIGVzdGltYXRlZFNpemU6IG51bWJlcjtcbn1cbiJdLCJ2ZXJzaW9uIjozfQ==

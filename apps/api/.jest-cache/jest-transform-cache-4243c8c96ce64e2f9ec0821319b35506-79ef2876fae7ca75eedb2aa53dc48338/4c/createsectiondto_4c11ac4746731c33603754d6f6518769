@@ -1,0 +1,67 @@
+6322fcaf68667509615f2aaea7764fde
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CreateSectionDto = void 0;
+const class_validator_1 = require("class-validator");
+const swagger_1 = require("@nestjs/swagger");
+class CreateSectionDto {
+    name;
+    description;
+    icon;
+    estimatedTime;
+    orderIndex;
+    metadata;
+}
+exports.CreateSectionDto = CreateSectionDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'Business Foundation', maxLength: 200 }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(200),
+    __metadata("design:type", String)
+], CreateSectionDto.prototype, "name", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'Core business information and goals' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateSectionDto.prototype, "description", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'briefcase' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(50),
+    __metadata("design:type", String)
+], CreateSectionDto.prototype, "icon", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 10, description: 'Estimated time in minutes' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.Min)(1),
+    __metadata("design:type", Number)
+], CreateSectionDto.prototype, "estimatedTime", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        example: 0,
+        description: 'Order position (auto-calculated if not provided)',
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.Min)(0),
+    __metadata("design:type", Number)
+], CreateSectionDto.prototype, "orderIndex", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: {}, description: 'Additional metadata' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsObject)(),
+    __metadata("design:type", Object)
+], CreateSectionDto.prototype, "metadata", void 0);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcYWRtaW5cXGR0b1xcY3JlYXRlLXNlY3Rpb24uZHRvLnRzIiwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7OztBQUFBLHFEQUF3RjtBQUN4Riw2Q0FBbUU7QUFFbkUsTUFBYSxnQkFBZ0I7SUFJM0IsSUFBSSxDQUFTO0lBS2IsV0FBVyxDQUFVO0lBTXJCLElBQUksQ0FBVTtJQU1kLGFBQWEsQ0FBVTtJQVN2QixVQUFVLENBQVU7SUFLcEIsUUFBUSxDQUEyQjtDQUNwQztBQXBDRCw0Q0FvQ0M7QUFoQ0M7SUFIQyxJQUFBLHFCQUFXLEVBQUMsRUFBRSxPQUFPLEVBQUUscUJBQXFCLEVBQUUsU0FBUyxFQUFFLEdBQUcsRUFBRSxDQUFDO0lBQy9ELElBQUEsMEJBQVEsR0FBRTtJQUNWLElBQUEsMkJBQVMsRUFBQyxHQUFHLENBQUM7OzhDQUNGO0FBS2I7SUFIQyxJQUFBLDZCQUFtQixFQUFDLEVBQUUsT0FBTyxFQUFFLHFDQUFxQyxFQUFFLENBQUM7SUFDdkUsSUFBQSw0QkFBVSxHQUFFO0lBQ1osSUFBQSwwQkFBUSxHQUFFOztxREFDVTtBQU1yQjtJQUpDLElBQUEsNkJBQW1CLEVBQUMsRUFBRSxPQUFPLEVBQUUsV0FBVyxFQUFFLENBQUM7SUFDN0MsSUFBQSw0QkFBVSxHQUFFO0lBQ1osSUFBQSwwQkFBUSxHQUFFO0lBQ1YsSUFBQSwyQkFBUyxFQUFDLEVBQUUsQ0FBQzs7OENBQ0E7QUFNZDtJQUpDLElBQUEsNkJBQW1CLEVBQUMsRUFBRSxPQUFPLEVBQUUsRUFBRSxFQUFFLFdBQVcsRUFBRSwyQkFBMkIsRUFBRSxDQUFDO0lBQzlFLElBQUEsNEJBQVUsR0FBRTtJQUNaLElBQUEsdUJBQUssR0FBRTtJQUNQLElBQUEscUJBQUcsRUFBQyxDQUFDLENBQUM7O3VEQUNnQjtBQVN2QjtJQVBDLElBQUEsNkJBQW1CLEVBQUM7UUFDbkIsT0FBTyxFQUFFLENBQUM7UUFDVixXQUFXLEVBQUUsa0RBQWtEO0tBQ2hFLENBQUM7SUFDRCxJQUFBLDRCQUFVLEdBQUU7SUFDWixJQUFBLHVCQUFLLEdBQUU7SUFDUCxJQUFBLHFCQUFHLEVBQUMsQ0FBQyxDQUFDOztvREFDYTtBQUtwQjtJQUhDLElBQUEsNkJBQW1CLEVBQUMsRUFBRSxPQUFPLEVBQUUsRUFBRSxFQUFFLFdBQVcsRUFBRSxxQkFBcUIsRUFBRSxDQUFDO0lBQ3hFLElBQUEsNEJBQVUsR0FBRTtJQUNaLElBQUEsMEJBQVEsR0FBRTs7a0RBQ3dCIiwibmFtZXMiOltdLCJzb3VyY2VzIjpbIkM6XFxSZXBvc1xcUXVpei10by1CdWlsZFxcYXBwc1xcYXBpXFxzcmNcXG1vZHVsZXNcXGFkbWluXFxkdG9cXGNyZWF0ZS1zZWN0aW9uLmR0by50cyJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBJc1N0cmluZywgSXNPcHRpb25hbCwgSXNJbnQsIE1heExlbmd0aCwgTWluLCBJc09iamVjdCB9IGZyb20gJ2NsYXNzLXZhbGlkYXRvcic7XG5pbXBvcnQgeyBBcGlQcm9wZXJ0eSwgQXBpUHJvcGVydHlPcHRpb25hbCB9IGZyb20gJ0BuZXN0anMvc3dhZ2dlcic7XG5cbmV4cG9ydCBjbGFzcyBDcmVhdGVTZWN0aW9uRHRvIHtcbiAgQEFwaVByb3BlcnR5KHsgZXhhbXBsZTogJ0J1c2luZXNzIEZvdW5kYXRpb24nLCBtYXhMZW5ndGg6IDIwMCB9KVxuICBASXNTdHJpbmcoKVxuICBATWF4TGVuZ3RoKDIwMClcbiAgbmFtZTogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eU9wdGlvbmFsKHsgZXhhbXBsZTogJ0NvcmUgYnVzaW5lc3MgaW5mb3JtYXRpb24gYW5kIGdvYWxzJyB9KVxuICBASXNPcHRpb25hbCgpXG4gIEBJc1N0cmluZygpXG4gIGRlc2NyaXB0aW9uPzogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eU9wdGlvbmFsKHsgZXhhbXBsZTogJ2JyaWVmY2FzZScgfSlcbiAgQElzT3B0aW9uYWwoKVxuICBASXNTdHJpbmcoKVxuICBATWF4TGVuZ3RoKDUwKVxuICBpY29uPzogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eU9wdGlvbmFsKHsgZXhhbXBsZTogMTAsIGRlc2NyaXB0aW9uOiAnRXN0aW1hdGVkIHRpbWUgaW4gbWludXRlcycgfSlcbiAgQElzT3B0aW9uYWwoKVxuICBASXNJbnQoKVxuICBATWluKDEpXG4gIGVzdGltYXRlZFRpbWU/OiBudW1iZXI7XG5cbiAgQEFwaVByb3BlcnR5T3B0aW9uYWwoe1xuICAgIGV4YW1wbGU6IDAsXG4gICAgZGVzY3JpcHRpb246ICdPcmRlciBwb3NpdGlvbiAoYXV0by1jYWxjdWxhdGVkIGlmIG5vdCBwcm92aWRlZCknLFxuICB9KVxuICBASXNPcHRpb25hbCgpXG4gIEBJc0ludCgpXG4gIEBNaW4oMClcbiAgb3JkZXJJbmRleD86IG51bWJlcjtcblxuICBAQXBpUHJvcGVydHlPcHRpb25hbCh7IGV4YW1wbGU6IHt9LCBkZXNjcmlwdGlvbjogJ0FkZGl0aW9uYWwgbWV0YWRhdGEnIH0pXG4gIEBJc09wdGlvbmFsKClcbiAgQElzT2JqZWN0KClcbiAgbWV0YWRhdGE/OiBSZWNvcmQ8c3RyaW5nLCB1bmtub3duPjtcbn1cbiJdLCJ2ZXJzaW9uIjozfQ==

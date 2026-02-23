@@ -1,0 +1,116 @@
+ba628c6a70ebdebabb6a89d68f484bf1
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.IdeaCaptureController = void 0;
+const common_1 = require("@nestjs/common");
+const swagger_1 = require("@nestjs/swagger");
+const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+const user_decorator_1 = require("../auth/decorators/user.decorator");
+const idea_capture_service_1 = require("./services/idea-capture.service");
+const create_idea_dto_1 = require("./dto/create-idea.dto");
+const confirm_project_type_dto_1 = require("./dto/confirm-project-type.dto");
+const idea_response_dto_1 = require("./dto/idea-response.dto");
+let IdeaCaptureController = class IdeaCaptureController {
+    ideaCaptureService;
+    constructor(ideaCaptureService) {
+        this.ideaCaptureService = ideaCaptureService;
+    }
+    async captureIdea(dto, user) {
+        return this.ideaCaptureService.captureAndAnalyze(dto, user?.id);
+    }
+    async getIdea(id) {
+        return this.ideaCaptureService.getById(id);
+    }
+    async confirmProjectType(id, dto) {
+        return this.ideaCaptureService.confirmProjectType(id, dto.projectTypeId);
+    }
+    async createSession(id, user) {
+        return this.ideaCaptureService.createSessionFromIdea(id, user.id);
+    }
+};
+exports.IdeaCaptureController = IdeaCaptureController;
+__decorate([
+    (0, common_1.Post)(),
+    (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Submit a business idea for AI analysis',
+        description: 'Accepts free-form text describing a business idea. AI analyzes the input to extract themes, identify gaps, and recommend the best project type.',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 201,
+        description: 'Idea captured and analyzed',
+        type: idea_response_dto_1.IdeaCaptureResponseDto,
+    }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_idea_dto_1.CreateIdeaDto, Object]),
+    __metadata("design:returntype", Promise)
+], IdeaCaptureController.prototype, "captureIdea", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get idea capture details by ID' }),
+    (0, swagger_1.ApiResponse)({ status: 200, type: idea_response_dto_1.IdeaCaptureResponseDto }),
+    __param(0, (0, common_1.Param)('id', common_1.ParseUUIDPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], IdeaCaptureController.prototype, "getIdea", null);
+__decorate([
+    (0, common_1.Patch)(':id/confirm'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)('JWT-auth'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Confirm project type selection for an idea',
+        description: 'After reviewing the AI recommendation, the user confirms which project type to use for their questionnaire session.',
+    }),
+    (0, swagger_1.ApiResponse)({ status: 200, type: idea_response_dto_1.IdeaCaptureResponseDto }),
+    __param(0, (0, common_1.Param)('id', common_1.ParseUUIDPipe)),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, confirm_project_type_dto_1.ConfirmProjectTypeDto]),
+    __metadata("design:returntype", Promise)
+], IdeaCaptureController.prototype, "confirmProjectType", null);
+__decorate([
+    (0, common_1.Post)(':id/session'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)('JWT-auth'),
+    (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Create a questionnaire session from a confirmed idea',
+        description: 'Creates a new questionnaire session linked to the idea capture, using the confirmed project type to load the appropriate questions.',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 201,
+        description: 'Session created',
+        schema: {
+            type: 'object',
+            properties: {
+                sessionId: { type: 'string', format: 'uuid' },
+            },
+        },
+    }),
+    __param(0, (0, common_1.Param)('id', common_1.ParseUUIDPipe)),
+    __param(1, (0, user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], IdeaCaptureController.prototype, "createSession", null);
+exports.IdeaCaptureController = IdeaCaptureController = __decorate([
+    (0, swagger_1.ApiTags)('idea-capture'),
+    (0, common_1.Controller)('sessions/idea'),
+    __metadata("design:paramtypes", [idea_capture_service_1.IdeaCaptureService])
+], IdeaCaptureController);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcaWRlYS1jYXB0dXJlXFxpZGVhLWNhcHR1cmUuY29udHJvbGxlci50cyIsIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7QUFBQSwyQ0FXd0I7QUFDeEIsNkNBQW9GO0FBQ3BGLGtFQUE2RDtBQUM3RCxzRUFBZ0U7QUFFaEUsMEVBQXFFO0FBQ3JFLDJEQUFzRDtBQUN0RCw2RUFBdUU7QUFDdkUsK0RBQWlFO0FBSTFELElBQU0scUJBQXFCLEdBQTNCLE1BQU0scUJBQXFCO0lBQ0g7SUFBN0IsWUFBNkIsa0JBQXNDO1FBQXRDLHVCQUFrQixHQUFsQixrQkFBa0IsQ0FBb0I7SUFBRyxDQUFDO0lBY2pFLEFBQU4sS0FBSyxDQUFDLFdBQVcsQ0FDUCxHQUFrQixFQUNYLElBQXdCO1FBRXZDLE9BQU8sSUFBSSxDQUFDLGtCQUFrQixDQUFDLGlCQUFpQixDQUFDLEdBQUcsRUFBRSxJQUFJLEVBQUUsRUFBRSxDQUFDLENBQUM7SUFDbEUsQ0FBQztJQUtLLEFBQU4sS0FBSyxDQUFDLE9BQU8sQ0FDaUIsRUFBVTtRQUV0QyxPQUFPLElBQUksQ0FBQyxrQkFBa0IsQ0FBQyxPQUFPLENBQUMsRUFBRSxDQUFDLENBQUM7SUFDN0MsQ0FBQztJQVdLLEFBQU4sS0FBSyxDQUFDLGtCQUFrQixDQUNNLEVBQVUsRUFDOUIsR0FBMEI7UUFFbEMsT0FBTyxJQUFJLENBQUMsa0JBQWtCLENBQUMsa0JBQWtCLENBQUMsRUFBRSxFQUFFLEdBQUcsQ0FBQyxhQUFhLENBQUMsQ0FBQztJQUMzRSxDQUFDO0lBcUJLLEFBQU4sS0FBSyxDQUFDLGFBQWEsQ0FDVyxFQUFVLEVBQ3ZCLElBQXVCO1FBRXRDLE9BQU8sSUFBSSxDQUFDLGtCQUFrQixDQUFDLHFCQUFxQixDQUFDLEVBQUUsRUFBRSxJQUFJLENBQUMsRUFBRSxDQUFDLENBQUM7SUFDcEUsQ0FBQztDQUNGLENBQUE7QUF4RVksc0RBQXFCO0FBZTFCO0lBWkwsSUFBQSxhQUFJLEdBQUU7SUFDTixJQUFBLGlCQUFRLEVBQUMsbUJBQVUsQ0FBQyxPQUFPLENBQUM7SUFDNUIsSUFBQSxzQkFBWSxFQUFDO1FBQ1osT0FBTyxFQUFFLHdDQUF3QztRQUNqRCxXQUFXLEVBQ1QsaUpBQWlKO0tBQ3BKLENBQUM7SUFDRCxJQUFBLHFCQUFXLEVBQUM7UUFDWCxNQUFNLEVBQUUsR0FBRztRQUNYLFdBQVcsRUFBRSw0QkFBNEI7UUFDekMsSUFBSSxFQUFFLDBDQUFzQjtLQUM3QixDQUFDO0lBRUMsV0FBQSxJQUFBLGFBQUksR0FBRSxDQUFBO0lBQ04sV0FBQSxJQUFBLDRCQUFXLEdBQUUsQ0FBQTs7cUNBREQsK0JBQWE7O3dEQUkzQjtBQUtLO0lBSEwsSUFBQSxZQUFHLEVBQUMsS0FBSyxDQUFDO0lBQ1YsSUFBQSxzQkFBWSxFQUFDLEVBQUUsT0FBTyxFQUFFLGdDQUFnQyxFQUFFLENBQUM7SUFDM0QsSUFBQSxxQkFBVyxFQUFDLEVBQUUsTUFBTSxFQUFFLEdBQUcsRUFBRSxJQUFJLEVBQUUsMENBQXNCLEVBQUUsQ0FBQztJQUV4RCxXQUFBLElBQUEsY0FBSyxFQUFDLElBQUksRUFBRSxzQkFBYSxDQUFDLENBQUE7Ozs7b0RBRzVCO0FBV0s7SUFUTCxJQUFBLGNBQUssRUFBQyxhQUFhLENBQUM7SUFDcEIsSUFBQSxrQkFBUyxFQUFDLDZCQUFZLENBQUM7SUFDdkIsSUFBQSx1QkFBYSxFQUFDLFVBQVUsQ0FBQztJQUN6QixJQUFBLHNCQUFZLEVBQUM7UUFDWixPQUFPLEVBQUUsNENBQTRDO1FBQ3JELFdBQVcsRUFDVCxxSEFBcUg7S0FDeEgsQ0FBQztJQUNELElBQUEscUJBQVcsRUFBQyxFQUFFLE1BQU0sRUFBRSxHQUFHLEVBQUUsSUFBSSxFQUFFLDBDQUFzQixFQUFFLENBQUM7SUFFeEQsV0FBQSxJQUFBLGNBQUssRUFBQyxJQUFJLEVBQUUsc0JBQWEsQ0FBQyxDQUFBO0lBQzFCLFdBQUEsSUFBQSxhQUFJLEdBQUUsQ0FBQTs7NkNBQU0sZ0RBQXFCOzsrREFHbkM7QUFxQks7SUFuQkwsSUFBQSxhQUFJLEVBQUMsYUFBYSxDQUFDO0lBQ25CLElBQUEsa0JBQVMsRUFBQyw2QkFBWSxDQUFDO0lBQ3ZCLElBQUEsdUJBQWEsRUFBQyxVQUFVLENBQUM7SUFDekIsSUFBQSxpQkFBUSxFQUFDLG1CQUFVLENBQUMsT0FBTyxDQUFDO0lBQzVCLElBQUEsc0JBQVksRUFBQztRQUNaLE9BQU8sRUFBRSxzREFBc0Q7UUFDL0QsV0FBVyxFQUNULHFJQUFxSTtLQUN4SSxDQUFDO0lBQ0QsSUFBQSxxQkFBVyxFQUFDO1FBQ1gsTUFBTSxFQUFFLEdBQUc7UUFDWCxXQUFXLEVBQUUsaUJBQWlCO1FBQzlCLE1BQU0sRUFBRTtZQUNOLElBQUksRUFBRSxRQUFRO1lBQ2QsVUFBVSxFQUFFO2dCQUNWLFNBQVMsRUFBRSxFQUFFLElBQUksRUFBRSxRQUFRLEVBQUUsTUFBTSxFQUFFLE1BQU0sRUFBRTthQUM5QztTQUNGO0tBQ0YsQ0FBQztJQUVDLFdBQUEsSUFBQSxjQUFLLEVBQUMsSUFBSSxFQUFFLHNCQUFhLENBQUMsQ0FBQTtJQUMxQixXQUFBLElBQUEsNEJBQVcsR0FBRSxDQUFBOzs7OzBEQUdmO2dDQXZFVSxxQkFBcUI7SUFGakMsSUFBQSxpQkFBTyxFQUFDLGNBQWMsQ0FBQztJQUN2QixJQUFBLG1CQUFVLEVBQUMsZUFBZSxDQUFDO3FDQUV1Qix5Q0FBa0I7R0FEeEQscUJBQXFCLENBd0VqQyIsIm5hbWVzIjpbXSwic291cmNlcyI6WyJDOlxcUmVwb3NcXFF1aXotdG8tQnVpbGRcXGFwcHNcXGFwaVxcc3JjXFxtb2R1bGVzXFxpZGVhLWNhcHR1cmVcXGlkZWEtY2FwdHVyZS5jb250cm9sbGVyLnRzIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7XHJcbiAgQ29udHJvbGxlcixcclxuICBQb3N0LFxyXG4gIEdldCxcclxuICBQYXRjaCxcclxuICBCb2R5LFxyXG4gIFBhcmFtLFxyXG4gIFBhcnNlVVVJRFBpcGUsXHJcbiAgVXNlR3VhcmRzLFxyXG4gIEh0dHBDb2RlLFxyXG4gIEh0dHBTdGF0dXMsXHJcbn0gZnJvbSAnQG5lc3Rqcy9jb21tb24nO1xyXG5pbXBvcnQgeyBBcGlUYWdzLCBBcGlPcGVyYXRpb24sIEFwaVJlc3BvbnNlLCBBcGlCZWFyZXJBdXRoIH0gZnJvbSAnQG5lc3Rqcy9zd2FnZ2VyJztcclxuaW1wb3J0IHsgSnd0QXV0aEd1YXJkIH0gZnJvbSAnLi4vYXV0aC9ndWFyZHMvand0LWF1dGguZ3VhcmQnO1xyXG5pbXBvcnQgeyBDdXJyZW50VXNlciB9IGZyb20gJy4uL2F1dGgvZGVjb3JhdG9ycy91c2VyLmRlY29yYXRvcic7XHJcbmltcG9ydCB7IEF1dGhlbnRpY2F0ZWRVc2VyIH0gZnJvbSAnLi4vYXV0aC9hdXRoLnNlcnZpY2UnO1xyXG5pbXBvcnQgeyBJZGVhQ2FwdHVyZVNlcnZpY2UgfSBmcm9tICcuL3NlcnZpY2VzL2lkZWEtY2FwdHVyZS5zZXJ2aWNlJztcclxuaW1wb3J0IHsgQ3JlYXRlSWRlYUR0byB9IGZyb20gJy4vZHRvL2NyZWF0ZS1pZGVhLmR0byc7XHJcbmltcG9ydCB7IENvbmZpcm1Qcm9qZWN0VHlwZUR0byB9IGZyb20gJy4vZHRvL2NvbmZpcm0tcHJvamVjdC10eXBlLmR0byc7XHJcbmltcG9ydCB7IElkZWFDYXB0dXJlUmVzcG9uc2VEdG8gfSBmcm9tICcuL2R0by9pZGVhLXJlc3BvbnNlLmR0byc7XHJcblxyXG5AQXBpVGFncygnaWRlYS1jYXB0dXJlJylcclxuQENvbnRyb2xsZXIoJ3Nlc3Npb25zL2lkZWEnKVxyXG5leHBvcnQgY2xhc3MgSWRlYUNhcHR1cmVDb250cm9sbGVyIHtcclxuICBjb25zdHJ1Y3Rvcihwcml2YXRlIHJlYWRvbmx5IGlkZWFDYXB0dXJlU2VydmljZTogSWRlYUNhcHR1cmVTZXJ2aWNlKSB7fVxyXG5cclxuICBAUG9zdCgpXHJcbiAgQEh0dHBDb2RlKEh0dHBTdGF0dXMuQ1JFQVRFRClcclxuICBAQXBpT3BlcmF0aW9uKHtcclxuICAgIHN1bW1hcnk6ICdTdWJtaXQgYSBidXNpbmVzcyBpZGVhIGZvciBBSSBhbmFseXNpcycsXHJcbiAgICBkZXNjcmlwdGlvbjpcclxuICAgICAgJ0FjY2VwdHMgZnJlZS1mb3JtIHRleHQgZGVzY3JpYmluZyBhIGJ1c2luZXNzIGlkZWEuIEFJIGFuYWx5emVzIHRoZSBpbnB1dCB0byBleHRyYWN0IHRoZW1lcywgaWRlbnRpZnkgZ2FwcywgYW5kIHJlY29tbWVuZCB0aGUgYmVzdCBwcm9qZWN0IHR5cGUuJyxcclxuICB9KVxyXG4gIEBBcGlSZXNwb25zZSh7XHJcbiAgICBzdGF0dXM6IDIwMSxcclxuICAgIGRlc2NyaXB0aW9uOiAnSWRlYSBjYXB0dXJlZCBhbmQgYW5hbHl6ZWQnLFxyXG4gICAgdHlwZTogSWRlYUNhcHR1cmVSZXNwb25zZUR0byxcclxuICB9KVxyXG4gIGFzeW5jIGNhcHR1cmVJZGVhKFxyXG4gICAgQEJvZHkoKSBkdG86IENyZWF0ZUlkZWFEdG8sXHJcbiAgICBAQ3VycmVudFVzZXIoKSB1c2VyPzogQXV0aGVudGljYXRlZFVzZXIsXHJcbiAgKTogUHJvbWlzZTxJZGVhQ2FwdHVyZVJlc3BvbnNlRHRvPiB7XHJcbiAgICByZXR1cm4gdGhpcy5pZGVhQ2FwdHVyZVNlcnZpY2UuY2FwdHVyZUFuZEFuYWx5emUoZHRvLCB1c2VyPy5pZCk7XHJcbiAgfVxyXG5cclxuICBAR2V0KCc6aWQnKVxyXG4gIEBBcGlPcGVyYXRpb24oeyBzdW1tYXJ5OiAnR2V0IGlkZWEgY2FwdHVyZSBkZXRhaWxzIGJ5IElEJyB9KVxyXG4gIEBBcGlSZXNwb25zZSh7IHN0YXR1czogMjAwLCB0eXBlOiBJZGVhQ2FwdHVyZVJlc3BvbnNlRHRvIH0pXHJcbiAgYXN5bmMgZ2V0SWRlYShcclxuICAgIEBQYXJhbSgnaWQnLCBQYXJzZVVVSURQaXBlKSBpZDogc3RyaW5nLFxyXG4gICk6IFByb21pc2U8SWRlYUNhcHR1cmVSZXNwb25zZUR0bz4ge1xyXG4gICAgcmV0dXJuIHRoaXMuaWRlYUNhcHR1cmVTZXJ2aWNlLmdldEJ5SWQoaWQpO1xyXG4gIH1cclxuXHJcbiAgQFBhdGNoKCc6aWQvY29uZmlybScpXHJcbiAgQFVzZUd1YXJkcyhKd3RBdXRoR3VhcmQpXHJcbiAgQEFwaUJlYXJlckF1dGgoJ0pXVC1hdXRoJylcclxuICBAQXBpT3BlcmF0aW9uKHtcclxuICAgIHN1bW1hcnk6ICdDb25maXJtIHByb2plY3QgdHlwZSBzZWxlY3Rpb24gZm9yIGFuIGlkZWEnLFxyXG4gICAgZGVzY3JpcHRpb246XHJcbiAgICAgICdBZnRlciByZXZpZXdpbmcgdGhlIEFJIHJlY29tbWVuZGF0aW9uLCB0aGUgdXNlciBjb25maXJtcyB3aGljaCBwcm9qZWN0IHR5cGUgdG8gdXNlIGZvciB0aGVpciBxdWVzdGlvbm5haXJlIHNlc3Npb24uJyxcclxuICB9KVxyXG4gIEBBcGlSZXNwb25zZSh7IHN0YXR1czogMjAwLCB0eXBlOiBJZGVhQ2FwdHVyZVJlc3BvbnNlRHRvIH0pXHJcbiAgYXN5bmMgY29uZmlybVByb2plY3RUeXBlKFxyXG4gICAgQFBhcmFtKCdpZCcsIFBhcnNlVVVJRFBpcGUpIGlkOiBzdHJpbmcsXHJcbiAgICBAQm9keSgpIGR0bzogQ29uZmlybVByb2plY3RUeXBlRHRvLFxyXG4gICk6IFByb21pc2U8SWRlYUNhcHR1cmVSZXNwb25zZUR0bz4ge1xyXG4gICAgcmV0dXJuIHRoaXMuaWRlYUNhcHR1cmVTZXJ2aWNlLmNvbmZpcm1Qcm9qZWN0VHlwZShpZCwgZHRvLnByb2plY3RUeXBlSWQpO1xyXG4gIH1cclxuXHJcbiAgQFBvc3QoJzppZC9zZXNzaW9uJylcclxuICBAVXNlR3VhcmRzKEp3dEF1dGhHdWFyZClcclxuICBAQXBpQmVhcmVyQXV0aCgnSldULWF1dGgnKVxyXG4gIEBIdHRwQ29kZShIdHRwU3RhdHVzLkNSRUFURUQpXHJcbiAgQEFwaU9wZXJhdGlvbih7XHJcbiAgICBzdW1tYXJ5OiAnQ3JlYXRlIGEgcXVlc3Rpb25uYWlyZSBzZXNzaW9uIGZyb20gYSBjb25maXJtZWQgaWRlYScsXHJcbiAgICBkZXNjcmlwdGlvbjpcclxuICAgICAgJ0NyZWF0ZXMgYSBuZXcgcXVlc3Rpb25uYWlyZSBzZXNzaW9uIGxpbmtlZCB0byB0aGUgaWRlYSBjYXB0dXJlLCB1c2luZyB0aGUgY29uZmlybWVkIHByb2plY3QgdHlwZSB0byBsb2FkIHRoZSBhcHByb3ByaWF0ZSBxdWVzdGlvbnMuJyxcclxuICB9KVxyXG4gIEBBcGlSZXNwb25zZSh7XHJcbiAgICBzdGF0dXM6IDIwMSxcclxuICAgIGRlc2NyaXB0aW9uOiAnU2Vzc2lvbiBjcmVhdGVkJyxcclxuICAgIHNjaGVtYToge1xyXG4gICAgICB0eXBlOiAnb2JqZWN0JyxcclxuICAgICAgcHJvcGVydGllczoge1xyXG4gICAgICAgIHNlc3Npb25JZDogeyB0eXBlOiAnc3RyaW5nJywgZm9ybWF0OiAndXVpZCcgfSxcclxuICAgICAgfSxcclxuICAgIH0sXHJcbiAgfSlcclxuICBhc3luYyBjcmVhdGVTZXNzaW9uKFxyXG4gICAgQFBhcmFtKCdpZCcsIFBhcnNlVVVJRFBpcGUpIGlkOiBzdHJpbmcsXHJcbiAgICBAQ3VycmVudFVzZXIoKSB1c2VyOiBBdXRoZW50aWNhdGVkVXNlcixcclxuICApOiBQcm9taXNlPHsgc2Vzc2lvbklkOiBzdHJpbmcgfT4ge1xyXG4gICAgcmV0dXJuIHRoaXMuaWRlYUNhcHR1cmVTZXJ2aWNlLmNyZWF0ZVNlc3Npb25Gcm9tSWRlYShpZCwgdXNlci5pZCk7XHJcbiAgfVxyXG59XHJcbiJdLCJ2ZXJzaW9uIjozfQ==

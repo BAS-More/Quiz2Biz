@@ -1,0 +1,48 @@
+81a44b27f7e154d07515e9680bb4b67e
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RequestGenerationDto = void 0;
+const class_validator_1 = require("class-validator");
+const swagger_1 = require("@nestjs/swagger");
+class RequestGenerationDto {
+    sessionId;
+    documentTypeId;
+    format = 'DOCX';
+}
+exports.RequestGenerationDto = RequestGenerationDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        example: '123e4567-e89b-12d3-a456-426614174000',
+        description: 'Session ID to generate document from',
+    }),
+    (0, class_validator_1.IsUUID)(),
+    __metadata("design:type", String)
+], RequestGenerationDto.prototype, "sessionId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        example: '123e4567-e89b-12d3-a456-426614174000',
+        description: 'Document type ID to generate',
+    }),
+    (0, class_validator_1.IsUUID)(),
+    __metadata("design:type", String)
+], RequestGenerationDto.prototype, "documentTypeId", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        example: 'DOCX',
+        description: 'Output format (only DOCX supported)',
+        default: 'DOCX',
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEnum)(['DOCX']),
+    __metadata("design:type", String)
+], RequestGenerationDto.prototype, "format", void 0);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcZG9jdW1lbnQtZ2VuZXJhdG9yXFxkdG9cXHJlcXVlc3QtZ2VuZXJhdGlvbi5kdG8udHMiLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7O0FBQUEscURBQTZEO0FBQzdELDZDQUFtRTtBQUVuRSxNQUFhLG9CQUFvQjtJQU0vQixTQUFTLENBQVM7SUFPbEIsY0FBYyxDQUFTO0lBU3ZCLE1BQU0sR0FBWSxNQUFNLENBQUM7Q0FDMUI7QUF2QkQsb0RBdUJDO0FBakJDO0lBTEMsSUFBQSxxQkFBVyxFQUFDO1FBQ1gsT0FBTyxFQUFFLHNDQUFzQztRQUMvQyxXQUFXLEVBQUUsc0NBQXNDO0tBQ3BELENBQUM7SUFDRCxJQUFBLHdCQUFNLEdBQUU7O3VEQUNTO0FBT2xCO0lBTEMsSUFBQSxxQkFBVyxFQUFDO1FBQ1gsT0FBTyxFQUFFLHNDQUFzQztRQUMvQyxXQUFXLEVBQUUsOEJBQThCO0tBQzVDLENBQUM7SUFDRCxJQUFBLHdCQUFNLEdBQUU7OzREQUNjO0FBU3ZCO0lBUEMsSUFBQSw2QkFBbUIsRUFBQztRQUNuQixPQUFPLEVBQUUsTUFBTTtRQUNmLFdBQVcsRUFBRSxxQ0FBcUM7UUFDbEQsT0FBTyxFQUFFLE1BQU07S0FDaEIsQ0FBQztJQUNELElBQUEsNEJBQVUsR0FBRTtJQUNaLElBQUEsd0JBQU0sRUFBQyxDQUFDLE1BQU0sQ0FBQyxDQUFDOztvREFDUSIsIm5hbWVzIjpbXSwic291cmNlcyI6WyJDOlxcUmVwb3NcXFF1aXotdG8tQnVpbGRcXGFwcHNcXGFwaVxcc3JjXFxtb2R1bGVzXFxkb2N1bWVudC1nZW5lcmF0b3JcXGR0b1xccmVxdWVzdC1nZW5lcmF0aW9uLmR0by50cyJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBJc1VVSUQsIElzT3B0aW9uYWwsIElzRW51bSB9IGZyb20gJ2NsYXNzLXZhbGlkYXRvcic7XG5pbXBvcnQgeyBBcGlQcm9wZXJ0eSwgQXBpUHJvcGVydHlPcHRpb25hbCB9IGZyb20gJ0BuZXN0anMvc3dhZ2dlcic7XG5cbmV4cG9ydCBjbGFzcyBSZXF1ZXN0R2VuZXJhdGlvbkR0byB7XG4gIEBBcGlQcm9wZXJ0eSh7XG4gICAgZXhhbXBsZTogJzEyM2U0NTY3LWU4OWItMTJkMy1hNDU2LTQyNjYxNDE3NDAwMCcsXG4gICAgZGVzY3JpcHRpb246ICdTZXNzaW9uIElEIHRvIGdlbmVyYXRlIGRvY3VtZW50IGZyb20nLFxuICB9KVxuICBASXNVVUlEKClcbiAgc2Vzc2lvbklkOiBzdHJpbmc7XG5cbiAgQEFwaVByb3BlcnR5KHtcbiAgICBleGFtcGxlOiAnMTIzZTQ1NjctZTg5Yi0xMmQzLWE0NTYtNDI2NjE0MTc0MDAwJyxcbiAgICBkZXNjcmlwdGlvbjogJ0RvY3VtZW50IHR5cGUgSUQgdG8gZ2VuZXJhdGUnLFxuICB9KVxuICBASXNVVUlEKClcbiAgZG9jdW1lbnRUeXBlSWQ6IHN0cmluZztcblxuICBAQXBpUHJvcGVydHlPcHRpb25hbCh7XG4gICAgZXhhbXBsZTogJ0RPQ1gnLFxuICAgIGRlc2NyaXB0aW9uOiAnT3V0cHV0IGZvcm1hdCAob25seSBET0NYIHN1cHBvcnRlZCknLFxuICAgIGRlZmF1bHQ6ICdET0NYJyxcbiAgfSlcbiAgQElzT3B0aW9uYWwoKVxuICBASXNFbnVtKFsnRE9DWCddKVxuICBmb3JtYXQ/OiAnRE9DWCcgPSAnRE9DWCc7XG59XG4iXSwidmVyc2lvbiI6M30=

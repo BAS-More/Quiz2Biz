@@ -1,0 +1,302 @@
+75a38ed4aa2974f6e6211402043f1e6a
+"use strict";
+/**
+ * Document generation templates for each document type.
+ * Each template defines the section structure that AI will fill with content.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.documentTemplates = void 0;
+exports.getDocumentTemplate = getDocumentTemplate;
+exports.getAllDocumentTemplates = getAllDocumentTemplates;
+exports.documentTemplates = {
+    'business-plan-doc': {
+        slug: 'business-plan-doc',
+        name: 'Business Plan',
+        sections: [
+            {
+                heading: 'Executive Summary',
+                description: 'High-level overview of the business, its mission, and key objectives.',
+                requiredFields: ['business name', 'mission statement', 'key objectives'],
+            },
+            {
+                heading: 'Problem & Opportunity',
+                description: 'The problem being solved and the market opportunity.',
+                requiredFields: ['problem statement', 'market opportunity size'],
+            },
+            {
+                heading: 'Product/Service Description',
+                description: 'Detailed description of the product or service, features, and value proposition.',
+                requiredFields: ['product description', 'unique value proposition'],
+            },
+            {
+                heading: 'Target Market & Customers',
+                description: 'Customer segments, market size (TAM/SAM/SOM), and customer personas.',
+                requiredFields: ['target segments', 'market size estimates'],
+            },
+            {
+                heading: 'Business Model & Revenue',
+                description: 'Revenue streams, pricing strategy, and unit economics.',
+                requiredFields: ['revenue model', 'pricing approach'],
+            },
+            {
+                heading: 'Go-to-Market Strategy',
+                description: 'Marketing channels, launch strategy, and customer acquisition plan.',
+                requiredFields: ['channels', 'launch plan'],
+            },
+            {
+                heading: 'Operations Plan',
+                description: 'Team structure, key hires, operational processes, and partnerships.',
+                requiredFields: ['team structure', 'operational processes'],
+            },
+            {
+                heading: 'Financial Projections',
+                description: '3-5 year revenue projections, expense budgets, cash flow, and break-even analysis.',
+                requiredFields: ['revenue projections', 'expense budget', 'break-even timeline'],
+            },
+            {
+                heading: 'Risk Assessment & Mitigation',
+                description: 'Key risks, mitigation strategies, and contingency plans.',
+                requiredFields: ['risk factors', 'mitigation strategies'],
+            },
+            {
+                heading: 'Milestones & Timeline',
+                description: 'Key milestones, timeline, and success metrics.',
+                requiredFields: ['milestones', 'timeline', 'KPIs'],
+            },
+        ],
+    },
+    'marketing-strategy-doc': {
+        slug: 'marketing-strategy-doc',
+        name: 'Marketing Strategy',
+        sections: [
+            {
+                heading: 'Executive Summary',
+                description: 'Overview of the marketing strategy and key goals.',
+            },
+            {
+                heading: 'Target Audience Analysis',
+                description: 'Customer personas, segments, behaviors, and pain points.',
+                requiredFields: ['customer personas', 'segments'],
+            },
+            {
+                heading: 'Brand & Positioning',
+                description: 'Brand identity, value proposition, and competitive positioning.',
+                requiredFields: ['brand positioning', 'key messages'],
+            },
+            {
+                heading: 'Channel Strategy',
+                description: 'Marketing channels, content distribution, and platform strategy.',
+                requiredFields: ['primary channels', 'content types'],
+            },
+            {
+                heading: 'Content Strategy',
+                description: 'Content types, editorial calendar, SEO strategy, and thought leadership.',
+                requiredFields: ['content pillars', 'publishing cadence'],
+            },
+            {
+                heading: 'Customer Acquisition Plan',
+                description: 'Paid media, organic growth, referral programs, and conversion funnels.',
+                requiredFields: ['acquisition channels', 'funnel stages'],
+            },
+            {
+                heading: 'Budget & Resources',
+                description: 'Marketing budget allocation, team resources, and tool stack.',
+                requiredFields: ['budget breakdown', 'resource allocation'],
+            },
+            {
+                heading: 'Metrics & KPIs',
+                description: 'Performance metrics, attribution models, and success criteria.',
+                requiredFields: ['key metrics', 'targets'],
+            },
+        ],
+    },
+    'financial-projections-doc': {
+        slug: 'financial-projections-doc',
+        name: 'Financial Projections',
+        sections: [
+            {
+                heading: 'Executive Summary',
+                description: 'Overview of financial outlook and key projections.',
+            },
+            {
+                heading: 'Revenue Model',
+                description: 'Revenue streams, pricing tiers, growth assumptions, and conversion rates.',
+                requiredFields: ['revenue streams', 'pricing', 'growth rate'],
+            },
+            {
+                heading: 'Cost Structure',
+                description: 'Fixed costs, variable costs, COGS, and operating expenses.',
+                requiredFields: ['fixed costs', 'variable costs', 'COGS'],
+            },
+            {
+                heading: 'Cash Flow Projections',
+                description: 'Monthly/quarterly cash flow, burn rate, and runway analysis.',
+                requiredFields: ['cash flow forecast', 'burn rate'],
+            },
+            {
+                heading: 'Funding & Investment',
+                description: 'Capital requirements, funding sources, equity structure, and use of funds.',
+                requiredFields: ['capital needed', 'funding sources'],
+            },
+            {
+                heading: 'Break-Even Analysis',
+                description: 'Break-even point, margin targets, and path to profitability.',
+                requiredFields: ['break-even point', 'margin targets'],
+            },
+            {
+                heading: 'Scenarios & Sensitivity',
+                description: 'Best/worst/expected case scenarios and key assumption sensitivity.',
+                requiredFields: ['scenarios', 'key assumptions'],
+            },
+        ],
+    },
+    'investor-pitch-doc': {
+        slug: 'investor-pitch-doc',
+        name: 'Investor Pitch Deck',
+        sections: [
+            {
+                heading: 'The Problem',
+                description: 'Clear statement of the problem and who experiences it.',
+            },
+            {
+                heading: 'The Solution',
+                description: 'Your product/service and how it solves the problem.',
+            },
+            {
+                heading: 'Market Opportunity',
+                description: 'TAM, SAM, SOM and market growth trends.',
+            },
+            {
+                heading: 'Business Model',
+                description: 'How you make money, pricing, and unit economics.',
+            },
+            {
+                heading: 'Traction',
+                description: 'Key metrics, milestones achieved, and growth indicators.',
+            },
+            {
+                heading: 'Team',
+                description: 'Founders, key hires, and relevant experience.',
+            },
+            {
+                heading: 'The Ask',
+                description: 'Funding amount, use of funds, and expected milestones.',
+            },
+        ],
+    },
+    'ai-prompts-doc': {
+        slug: 'ai-prompts-doc',
+        name: 'AI Prompt Library',
+        sections: [
+            {
+                heading: 'Business Operations Prompts',
+                description: 'AI prompts for day-to-day business operations and decision-making.',
+            },
+            {
+                heading: 'Marketing & Content Prompts',
+                description: 'AI prompts for marketing copy, social media, and content creation.',
+            },
+            {
+                heading: 'Customer Service Prompts',
+                description: 'AI prompts for customer communication, support, and engagement.',
+            },
+            {
+                heading: 'Financial Analysis Prompts',
+                description: 'AI prompts for financial modeling, analysis, and reporting.',
+            },
+            {
+                heading: 'Product Development Prompts',
+                description: 'AI prompts for product ideation, specification, and testing.',
+            },
+            {
+                heading: 'Customization Guide',
+                description: 'How to customize and extend these prompts for your specific business needs.',
+            },
+        ],
+    },
+    'ms-strategy-doc': {
+        slug: 'ms-strategy-doc',
+        name: 'Marketing Strategy Report',
+        sections: [
+            {
+                heading: 'Situation Analysis',
+                description: 'Current market position, SWOT analysis, and competitive landscape.',
+            },
+            {
+                heading: 'Target Market Definition',
+                description: 'Detailed customer segments with demographics, psychographics, and behaviors.',
+            },
+            {
+                heading: 'Strategic Objectives',
+                description: 'Marketing goals tied to business objectives with measurable targets.',
+            },
+            {
+                heading: 'Channel Mix Strategy',
+                description: 'Recommended channels, budget allocation per channel, and expected ROI.',
+            },
+            {
+                heading: 'Content & Messaging Framework',
+                description: 'Core messaging, content pillars, brand voice guidelines.',
+            },
+            {
+                heading: 'Implementation Timeline',
+                description: 'Phased rollout plan with key milestones and resource requirements.',
+            },
+            {
+                heading: 'Measurement Framework',
+                description: 'KPIs, reporting cadence, and optimization methodology.',
+            },
+        ],
+    },
+    'fp-report-doc': {
+        slug: 'fp-report-doc',
+        name: 'Financial Projections Report',
+        sections: [
+            {
+                heading: 'Executive Financial Summary',
+                description: 'High-level financial overview and key takeaways.',
+            },
+            {
+                heading: 'Revenue Forecast',
+                description: 'Detailed 3-5 year revenue projections by stream.',
+            },
+            {
+                heading: 'Operating Expenses',
+                description: 'Detailed expense breakdown with growth assumptions.',
+            },
+            {
+                heading: 'Cash Flow Statement',
+                description: 'Monthly/quarterly cash flow with working capital analysis.',
+            },
+            {
+                heading: 'Capital Structure',
+                description: 'Equity, debt, and funding round analysis.',
+            },
+            {
+                heading: 'Profitability Analysis',
+                description: 'Gross margin, operating margin, and net income projections.',
+            },
+            {
+                heading: 'Risk & Sensitivity',
+                description: 'Monte Carlo or scenario analysis on key variables.',
+            },
+            {
+                heading: 'Appendix: Assumptions',
+                description: 'All key assumptions documented with rationale.',
+            },
+        ],
+    },
+};
+/**
+ * Get template by document type slug.
+ */
+function getDocumentTemplate(slug) {
+    return exports.documentTemplates[slug] || null;
+}
+/**
+ * Get all available document templates.
+ */
+function getAllDocumentTemplates() {
+    return Object.values(exports.documentTemplates);
+}
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcZG9jdW1lbnQtZ2VuZXJhdG9yXFx0ZW1wbGF0ZXNcXGRvY3VtZW50LXRlbXBsYXRlcy50cyIsIm1hcHBpbmdzIjoiO0FBQUE7OztHQUdHOzs7QUErU0gsa0RBRUM7QUFLRCwwREFFQztBQTFTWSxRQUFBLGlCQUFpQixHQUFxQztJQUNqRSxtQkFBbUIsRUFBRTtRQUNuQixJQUFJLEVBQUUsbUJBQW1CO1FBQ3pCLElBQUksRUFBRSxlQUFlO1FBQ3JCLFFBQVEsRUFBRTtZQUNSO2dCQUNFLE9BQU8sRUFBRSxtQkFBbUI7Z0JBQzVCLFdBQVcsRUFBRSx1RUFBdUU7Z0JBQ3BGLGNBQWMsRUFBRSxDQUFDLGVBQWUsRUFBRSxtQkFBbUIsRUFBRSxnQkFBZ0IsQ0FBQzthQUN6RTtZQUNEO2dCQUNFLE9BQU8sRUFBRSx1QkFBdUI7Z0JBQ2hDLFdBQVcsRUFBRSxzREFBc0Q7Z0JBQ25FLGNBQWMsRUFBRSxDQUFDLG1CQUFtQixFQUFFLHlCQUF5QixDQUFDO2FBQ2pFO1lBQ0Q7Z0JBQ0UsT0FBTyxFQUFFLDZCQUE2QjtnQkFDdEMsV0FBVyxFQUFFLGtGQUFrRjtnQkFDL0YsY0FBYyxFQUFFLENBQUMscUJBQXFCLEVBQUUsMEJBQTBCLENBQUM7YUFDcEU7WUFDRDtnQkFDRSxPQUFPLEVBQUUsMkJBQTJCO2dCQUNwQyxXQUFXLEVBQUUsc0VBQXNFO2dCQUNuRixjQUFjLEVBQUUsQ0FBQyxpQkFBaUIsRUFBRSx1QkFBdUIsQ0FBQzthQUM3RDtZQUNEO2dCQUNFLE9BQU8sRUFBRSwwQkFBMEI7Z0JBQ25DLFdBQVcsRUFBRSx3REFBd0Q7Z0JBQ3JFLGNBQWMsRUFBRSxDQUFDLGVBQWUsRUFBRSxrQkFBa0IsQ0FBQzthQUN0RDtZQUNEO2dCQUNFLE9BQU8sRUFBRSx1QkFBdUI7Z0JBQ2hDLFdBQVcsRUFBRSxxRUFBcUU7Z0JBQ2xGLGNBQWMsRUFBRSxDQUFDLFVBQVUsRUFBRSxhQUFhLENBQUM7YUFDNUM7WUFDRDtn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QUN0QyxXQUFXLEVBQUUsa0RBQWtEO2FBQ2hFO1lBQ0Q7Z0JBQ0UsT0FBTyxFQUFFLGtCQUFrQjtnQkFDM0IsV0FBVyxFQUFFLGtEQUFrRDthQUNoRTtZQUNEO2dCQUNFLE9BQU8sRUFBRSxvQkFBb0I7Z0JBQzdCLFdBQVcsRUFBRSxxREFBcUQ7YUFDbkU7WUFDRDtnQkFDRSxPQUFPLEVBQUUscUJBQXFCO2dCQUM5QixXQUFXLEVBQUUsNERBQTREO2FBQzFFO1lBQ0Q7Z0JBQ0UsT0FBTyxFQUFFLG1CQUFtQjtnQkFDNUIsV0FBVyxFQUFFLDJDQUEyQzthQUN6RDtZQUNEO2dCQUNFLE9BQU8sRUFBRSx3QkFBd0I7Z0JBQ2pDLFdBQVcsRUFBRSw2REFBNkQ7YUFDM0U7WUFDRDtnQkFDRSxPQUFPLEVBQUUsb0JBQW9CO2dCQUM3QixXQUFXLEVBQUUsb0RBQW9EO2FBQ2xFO1lBQ0Q7Z0JBQ0UsT0FBTyxFQUFFLHVCQUF1QjtnQkFDaEMsV0FBVyxFQUFFLGdEQUFnRDthQUM5RDtTQUNGO0tBQ0Y7Q0FDRixDQUFDO0FBRUY7O0dBRUc7QUFDSCxTQUFnQixtQkFBbUIsQ0FBQyxJQUFZO0lBQzlDLE9BQU8seUJBQWlCLENBQUMsSUFBSSxDQUFDLElBQUksSUFBSSxDQUFDO0FBQ3pDLENBQUM7QUFFRDs7R0FFRztBQUNILFNBQWdCLHVCQUF1QjtJQUNyQyxPQUFPLE1BQU0sQ0FBQyxNQUFNLENBQUMseUJBQWlCLENBQUMsQ0FBQztBQUMxQyxDQUFDIiwibmFtZXMiOltdLCJzb3VyY2VzIjpbIkM6XFxSZXBvc1xcUXVpei10by1CdWlsZFxcYXBwc1xcYXBpXFxzcmNcXG1vZHVsZXNcXGRvY3VtZW50LWdlbmVyYXRvclxcdGVtcGxhdGVzXFxkb2N1bWVudC10ZW1wbGF0ZXMudHMiXSwic291cmNlc0NvbnRlbnQiOlsiLyoqXHJcbiAqIERvY3VtZW50IGdlbmVyYXRpb24gdGVtcGxhdGVzIGZvciBlYWNoIGRvY3VtZW50IHR5cGUuXHJcbiAqIEVhY2ggdGVtcGxhdGUgZGVmaW5lcyB0aGUgc2VjdGlvbiBzdHJ1Y3R1cmUgdGhhdCBBSSB3aWxsIGZpbGwgd2l0aCBjb250ZW50LlxyXG4gKi9cclxuXHJcbmV4cG9ydCBpbnRlcmZhY2UgRG9jdW1lbnRUZW1wbGF0ZVNlY3Rpb24ge1xyXG4gIGhlYWRpbmc6IHN0cmluZztcclxuICBkZXNjcmlwdGlvbjogc3RyaW5nO1xyXG4gIHJlcXVpcmVkRmllbGRzPzogc3RyaW5nW107XHJcbn1cclxuXHJcbmV4cG9ydCBpbnRlcmZhY2UgRG9jdW1lbnRUZW1wbGF0ZSB7XHJcbiAgc2x1Zzogc3RyaW5nO1xyXG4gIG5hbWU6IHN0cmluZztcclxuICBzZWN0aW9uczogRG9jdW1lbnRUZW1wbGF0ZVNlY3Rpb25bXTtcclxufVxyXG5cclxuZXhwb3J0IGNvbnN0IGRvY3VtZW50VGVtcGxhdGVzOiBSZWNvcmQ8c3RyaW5nLCBEb2N1bWVudFRlbXBsYXRlPiA9IHtcclxuICAnYnVzaW5lc3MtcGxhbi1kb2MnOiB7XHJcbiAgICBzbHVnOiAnYnVzaW5lc3MtcGxhbi1kb2MnLFxyXG4gICAgbmFtZTogJ0J1c2luZXNzIFBsYW4nLFxyXG4gICAgc2VjdGlvbnM6IFtcclxuICAgICAge1xyXG4gICAgICAgIGhlYWRpbmc6ICdFeGVjdXRpdmUgU3VtbWFyeScsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdIaWdoLWxldmVsIG92ZXJ2aWV3IG9mIHRoZSBidXNpbmVzcywgaXRzIG1pc3Npb24sIGFuZCBrZXkgb2JqZWN0aXZlcy4nLFxyXG4gICAgICAgIHJlcXVpcmVkRmllbGRzOiBbJ2J1c2luZXNzIG5hbWUnLCAnbWlzc2lvbiBzdGF0ZW1lbnQnLCAna2V5IG9iamVjdGl2ZXMnXSxcclxuICAgICAgfSxcclxuICAgICAge1xyXG4gICAgICAgIGhlYWRpbmc6ICdQcm9ibGVtICYgT3Bwb3J0dW5pdHknLFxyXG4gICAgICAgIGRlc2NyaXB0aW9uOiAnVGhlIHByb2JsZW0gYmVpbmcgc29sdmVkIGFuZCB0aGUgbWFya2V0IG9wcG9ydHVuaXR5LicsXHJcbiAgICAgICAgcmVxdWlyZWRGaWVsZHM6IFsncHJvYmxlbSBzdGF0ZW1lbnQnLCAnbWFya2V0IG9wcG9ydHVuaXR5IHNpemUnXSxcclxuICAgICAgfSxcclxuICAgICAge1xyXG4gICAgICAgIGhlYWRpbmc6ICdQcm9kdWN0L1NlcnZpY2UgRGVzY3JpcHRpb24nLFxyXG4gICAgICAgIGRlc2NyaXB0aW9uOiAnRGV0YWlsZWQgZGVzY3JpcHRpb24gb2YgdGhlIHByb2R1Y3Qgb3Igc2VydmljZSwgZmVhdHVyZXMsIGFuZCB2YWx1ZSBwcm9wb3NpdGlvbi4nLFxyXG4gICAgICAgIHJlcXVpcmVkRmllbGRzOiBbJ3Byb2R1Y3QgZGVzY3JpcHRpb24nLCAndW5pcXVlIHZhbHVlIHByb3Bvc2l0aW9uJ10sXHJcbiAgICAgIH0sXHJcbiAgICAgIHtcclxuICAgICAgICBoZWFkaW5nOiAnVGFyZ2V0IE1hcmtldCAmIEN1c3RvbWVycycsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdDdXN0b21lciBzZWdtZW50cywgbWFya2V0IHNpemUgKFRBTS9TQU0vU09NKSwgYW5kIGN1c3RvbWVyIHBlcnNvbmFzLicsXHJcbiAgICAgICAgcmVxdWlyZWRGaWVsZHM6IFsndGFyZ2V0IHNlZ21lbnRzJywgJ21hcmtldCBzaXplIGVzdGltYXRlcyddLFxyXG4gICAgICB9LFxyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ0J1c2luZXNzIE1vZGVsICYgUmV2ZW51ZScsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdSZXZlbnVlIHN0cmVhbXMsIHByaWNpbmcgc3RyYXRlZ3ksIGFuZCB1bml0IGVjb25vbWljcy4nLFxyXG4gICAgICAgIHJlcXVpcmVkRmllbGRzOiBbJ3JldmVudWUgbW9kZWwnLCAncHJpY2luZyBhcHByb2FjaCddLFxyXG4gICAgICB9LFxyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ0dvLXRvLU1hcmtldCBTdHJhdGVneScsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdNYXJrZXRpbmcgY2hhbm5lbHMsIGxhdW5jaCBzdHJhdGVneSwgYW5kIGN1c3RvbWVyIGFjcXVpc2l0aW9uIHBsYW4uJyxcclxuICAgICAgICByZXF1aXJlZEZpZWxkczogWydjaGFubmVscycsICdsYXVuY2ggcGxhbiddLFxyXG4gICAgICB9LFxyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ09wZXJhdGlvbnMgUGxhbicsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdUZWFtIHN0cnVjdHVyZSwga2V5IGhpcmVzLCBvcGVyYXRpb25hbCBwcm9jZXNzZXMsIGFuZCBwYXJ0bmVyc2hpcHMuJyxcclxuICAgICAgICByZXF1aXJlZEZpZWxkczogWyd0ZWFtIHN0cnVjdHVyZScsICdvcGVyYXRpb25hbCBwcm9jZXNzZXMnXSxcclxuICAgICAgfSxcclxuICAgICAge1xyXG4gICAgICAgIGhlYWRpbmc6ICdGaW5hbmNpYWwgUHJvamVjdGlvbnMnLFxyXG4gICAgICAgIGRlc2NyaXB0aW9uOiAnMy01IHllYXIgcmV2ZW51ZSBwcm9qZWN0aW9ucywgZXhwZW5zZSBidWRnZXRzLCBjYXNoIGZsb3csIGFuZCBicmVhay1ldmVuIGFuYWx5c2lzLicsXHJcbiAgICAgICAgcmVxdWlyZWRGaWVsZHM6IFsncmV2ZW51ZSBwcm9qZWN0aW9ucycsICdleHBlbnNlIGJ1ZGdldCcsICdicmVhay1ldmVuIHRpbWVsaW5lJ10sXHJcbiAgICAgIH0sXHJcbiAgICAgIHtcclxuICAgICAgICBoZWFkaW5nOiAnUmlzayBBc3Nlc3NtZW50ICYgTWl0aWdhdGlvbicsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdLZXkgcmlza3MsIG1pdGlnYXRpb24gc3RyYXRlZ2llcywgYW5kIGNvbnRpbmdlbmN5IHBsYW5zLicsXHJcbiAgICAgICAgcmVxdWlyZWRGaWVsZHM6IFsncmlzayBmYWN0b3JzJywgJ21pdGlnYXRpb24gc3RyYXRlZ2llcyddLFxyXG4gICAgICB9LFxyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ01pbGVzdG9uZXMgJiBUaW1lbGluZScsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdLZXkgbWlsZXN0b25lcywgdGltZWxpbmUsIGFuZCBzdWNjZXNzIG1ldHJpY3MuJyxcclxuICAgICAgICByZXF1aXJlZEZpZWxkczogWydtaWxlc3RvbmVzJywgJ3RpbWVsaW5lJywgJ0tQSXMnXSxcclxuICAgICAgfSxcclxuICAgIF0sXHJcbiAgfSxcclxuXHJcbiAgJ21hcmtldGluZy1zdHJhdGVneS1kb2MnOiB7XHJcbiAgICBzbHVnOiAnbWFya2V0aW5nLXN0cmF0ZWd5LWRvYycsXHJcbiAgICBuYW1lOiAnTWFya2V0aW5nIFN0cmF0ZWd5JyxcclxuICAgIHNlY3Rpb25zOiBbXHJcbiAgICAgIHtcclxuICAgICAgICBoZWFkaW5nOiAnRXhlY3V0aXZlIFN1bW1hcnknLFxyXG4gICAgICAgIGRlc2NyaXB0aW9uOiAnT3ZlcnZpZXcgb2YgdGhlIG1hcmtldGluZyBzdHJhdGVneSBhbmQga2V5IGdvYWxzLicsXHJcbiAgICAgIH0sXHJcbiAgICAgIHtcclxuICAgICAgICBoZWFkaW5nOiAnVGFyZ2V0IEF1ZGllbmNlIEFuYWx5c2lzJyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ0N1c3RvbWVyIHBlcnNvbmFzLCBzZWdtZW50cywgYmVoYXZpb3JzLCBhbmQgcGFpbiBwb2ludHMuJyxcclxuICAgICAgICByZXF1aXJlZEZpZWxkczogWydjdXN0b21lciBwZXJzb25hcycsICdzZWdtZW50cyddLFxyXG4gICAgICB9LFxyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ0JyYW5kICYgUG9zaXRpb25pbmcnLFxyXG4gICAgICAgIGRlc2NyaXB0aW9uOiAnQnJhbmQgaWRlbnRpdHksIHZhbHVlIHByb3Bvc2l0aW9uLCBhbmQgY29tcGV0aXRpdmUgcG9zaXRpb25pbmcuJyxcclxuICAgICAgICByZXF1aXJlZEZpZWxkczogWydicmFuZCBwb3NpdGlvbmluZycsICdrZXkgbWVzc2FnZXMnXSxcclxuICAgICAgfSxcclxuICAgICAge1xyXG4gICAgICAgIGhlYWRpbmc6ICdDaGFubmVsIFN0cmF0ZWd5JyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ01hcmtldGluZyBjaGFubmVscywgY29udGVudCBkaXN0cmlidXRpb24sIGFuZCBwbGF0Zm9ybSBzdHJhdGVneS4nLFxyXG4gICAgICAgIHJlcXVpcmVkRmllbGRzOiBbJ3ByaW1hcnkgY2hhbm5lbHMnLCAnY29udGVudCB0eXBlcyddLFxyXG4gICAgICB9LFxyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ0NvbnRlbnQgU3RyYXRlZ3knLFxyXG4gICAgICAgIGRlc2NyaXB0aW9uOiAnQ29udGVudCB0eXBlcywgZWRpdG9yaWFsIGNhbGVuZGFyLCBTRU8gc3RyYXRlZ3ksIGFuZCB0aG91Z2h0IGxlYWRlcnNoaXAuJyxcclxuICAgICAgICByZXF1aXJlZEZpZWxkczogWydjb250ZW50IHBpbGxhcnMnLCAncHVibGlzaGluZyBjYWRlbmNlJ10sXHJcbiAgICAgIH0sXHJcbiAgICAgIHtcclxuICAgICAgICBoZWFkaW5nOiAnQ3VzdG9tZXIgQWNxdWlzaXRpb24gUGxhbicsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdQYWlkIG1lZGlhLCBvcmdhbmljIGdyb3d0aCwgcmVmZXJyYWwgcHJvZ3JhbXMsIGFuZCBjb252ZXJzaW9uIGZ1bm5lbHMuJyxcclxuICAgICAgICByZXF1aXJlZEZpZWxkczogWydhY3F1aXNpdGlvbiBjaGFubmVscycsICdmdW5uZWwgc3RhZ2VzJ10sXHJcbiAgICAgIH0sXHJcbiAgICAgIHtcclxuICAgICAgICBoZWFkaW5nOiAnQnVkZ2V0ICYgUmVzb3VyY2VzJyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ01hcmtldGluZyBidWRnZXQgYWxsb2NhdGlvbiwgdGVhbSByZXNvdXJjZXMsIGFuZCB0b29sIHN0YWNrLicsXHJcbiAgICAgICAgcmVxdWlyZWRGaWVsZHM6IFsnYnVkZ2V0IGJyZWFrZG93bicsICdyZXNvdXJjZSBhbGxvY2F0aW9uJ10sXHJcbiAgICAgIH0sXHJcbiAgICAgIHtcclxuICAgICAgICBoZWFkaW5nOiAnTWV0cmljcyAmIEtQSXMnLFxyXG4gICAgICAgIGRlc2NyaXB0aW9uOiAnUGVyZm9ybWFuY2UgbWV0cmljcywgYXR0cmlidXRpb24gbW9kZWxzLCBhbmQgc3VjY2VzcyBjcml0ZXJpYS4nLFxyXG4gICAgICAgIHJlcXVpcmVkRmllbGRzOiBbJ2tleSBtZXRyaWNzJywgJ3RhcmdldHMnXSxcclxuICAgICAgfSxcclxuICAgIF0sXHJcbiAgfSxcclxuXHJcbiAgJ2ZpbmFuY2lhbC1wcm9qZWN0aW9ucy1kb2MnOiB7XHJcbiAgICBzbHVnOiAnZmluYW5jaWFsLXByb2plY3Rpb25zLWRvYycsXHJcbiAgICBuYW1lOiAnRmluYW5jaWFsIFByb2plY3Rpb25zJyxcclxuICAgIHNlY3Rpb25zOiBbXHJcbiAgICAgIHtcclxuICAgICAgICBoZWFkaW5nOiAnRXhlY3V0aXZlIFN1bW1hcnknLFxyXG4gICAgICAgIGRlc2NyaXB0aW9uOiAnT3ZlcnZpZXcgb2YgZmluYW5jaWFsIG91dGxvb2sgYW5kIGtleSBwcm9qZWN0aW9ucy4nLFxyXG4gICAgICB9LFxyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ1JldmVudWUgTW9kZWwnLFxyXG4gICAgICAgIGRlc2NyaXB0aW9uOiAnUmV2ZW51ZSBzdHJlYW1zLCBwcmljaW5nIHRpZXJzLCBncm93dGggYXNzdW1wdGlvbnMsIGFuZCBjb252ZXJzaW9uIHJhdGVzLicsXHJcbiAgICAgICAgcmVxdWlyZWRGaWVsZHM6IFsncmV2ZW51ZSBzdHJlYW1zJywgJ3ByaWNpbmcnLCAnZ3Jvd3RoIHJhdGUnXSxcclxuICAgICAgfSxcclxuICAgICAge1xyXG4gICAgICAgIGhlYWRpbmc6ICdDb3N0IFN0cnVjdHVyZScsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdGaXhlZCBjb3N0cywgdmFyaWFibGUgY29zdHMsIENPR1MsIGFuZCBvcGVyYXRpbmcgZXhwZW5zZXMuJyxcclxuICAgICAgICByZXF1aXJlZEZpZWxkczogWydmaXhlZCBjb3N0cycsICd2YXJpYWJsZSBjb3N0cycsICdDT0dTJ10sXHJcbiAgICAgIH0sXHJcbiAgICAgIHtcclxuICAgICAgICBoZWFkaW5nOiAnQ2FzaCBGbG93IFByb2plY3Rpb25zJyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ01vbnRobHkvcXVhcnRlcmx5IGNhc2ggZmxvdywgYnVybiByYXRlLCBhbmQgcnVud2F5IGFuYWx5c2lzLicsXHJcbiAgICAgICAgcmVxdWlyZWRGaWVsZHM6IFsnY2FzaCBmbG93IGZvcmVjYXN0JywgJ2J1cm4gcmF0ZSddLFxyXG4gICAgICB9LFxyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ0Z1bmRpbmcgJiBJbnZlc3RtZW50JyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ0NhcGl0YWwgcmVxdWlyZW1lbnRzLCBmdW5kaW5nIHNvdXJjZXMsIGVxdWl0eSBzdHJ1Y3R1cmUsIGFuZCB1c2Ugb2YgZnVuZHMuJyxcclxuICAgICAgICByZXF1aXJlZEZpZWxkczogWydjYXBpdGFsIG5lZWRlZCcsICdmdW5kaW5nIHNvdXJjZXMnXSxcclxuICAgICAgfSxcclxuICAgICAge1xyXG4gICAgICAgIGhlYWRpbmc6ICdCcmVhay1FdmVuIEFuYWx5c2lzJyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ0JyZWFrLWV2ZW4gcG9pbnQsIG1hcmdpbiB0YXJnZXRzLCBhbmQgcGF0aCB0byBwcm9maXRhYmlsaXR5LicsXHJcbiAgICAgICAgcmVxdWlyZWRGaWVsZHM6IFsnYnJlYWstZXZlbiBwb2ludCcsICdtYXJnaW4gdGFyZ2V0cyddLFxyXG4gICAgICB9LFxyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ1NjZW5hcmlvcyAmIFNlbnNpdGl2aXR5JyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ0Jlc3Qvd29yc3QvZXhwZWN0ZWQgY2FzZSBzY2VuYXJpb3MgYW5kIGtleSBhc3N1bXB0aW9uIHNlbnNpdGl2aXR5LicsXHJcbiAgICAgICAgcmVxdWlyZWRGaWVsZHM6IFsnc2NlbmFyaW9zJywgJ2tleSBhc3N1bXB0aW9ucyddLFxyXG4gICAgICB9LFxyXG4gICAgXSxcclxuICB9LFxyXG5cclxuICAnaW52ZXN0b3ItcGl0Y2gtZG9jJzoge1xyXG4gICAgc2x1ZzogJ2ludmVzdG9yLXBpdGNoLWRvYycsXHJcbiAgICBuYW1lOiAnSW52ZXN0b3IgUGl0Y2ggRGVjaycsXHJcbiAgICBzZWN0aW9uczogW1xyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ1RoZSBQcm9ibGVtJyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ0NsZWFyIHN0YXRlbWVudCBvZiB0aGUgcHJvYmxlbSBhbmQgd2hvIGV4cGVyaWVuY2VzIGl0LicsXHJcbiAgICAgIH0sXHJcbiAgICAgIHtcclxuICAgICAgICBoZWFkaW5nOiAnVGhlIFNvbHV0aW9uJyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ1lvdXIgcHJvZHVjdC9zZXJ2aWNlIGFuZCBob3cgaXQgc29sdmVzIHRoZSBwcm9ibGVtLicsXHJcbiAgICAgIH0sXHJcbiAgICAgIHtcclxuICAgICAgICBoZWFkaW5nOiAnTWFya2V0IE9wcG9ydHVuaXR5JyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ1RBTSwgU0FNLCBTT00gYW5kIG1hcmtldCBncm93dGggdHJlbmRzLicsXHJcbiAgICAgIH0sXHJcbiAgICAgIHtcclxuICAgICAgICBoZWFkaW5nOiAnQnVzaW5lc3MgTW9kZWwnLFxyXG4gICAgICAgIGRlc2NyaXB0aW9uOiAnSG93IHlvdSBtYWtlIG1vbmV5LCBwcmljaW5nLCBhbmQgdW5pdCBlY29ub21pY3MuJyxcclxuICAgICAgfSxcclxuICAgICAge1xyXG4gICAgICAgIGhlYWRpbmc6ICdUcmFjdGlvbicsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdLZXkgbWV0cmljcywgbWlsZXN0b25lcyBhY2hpZXZlZCwgYW5kIGdyb3d0aCBpbmRpY2F0b3JzLicsXHJcbiAgICAgIH0sXHJcbiAgICAgIHtcclxuICAgICAgICBoZWFkaW5nOiAnVGVhbScsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdGb3VuZGVycywga2V5IGhpcmVzLCBhbmQgcmVsZXZhbnQgZXhwZXJpZW5jZS4nLFxyXG4gICAgICB9LFxyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ1RoZSBBc2snLFxyXG4gICAgICAgIGRlc2NyaXB0aW9uOiAnRnVuZGluZyBhbW91bnQsIHVzZSBvZiBmdW5kcywgYW5kIGV4cGVjdGVkIG1pbGVzdG9uZXMuJyxcclxuICAgICAgfSxcclxuICAgIF0sXHJcbiAgfSxcclxuXHJcbiAgJ2FpLXByb21wdHMtZG9jJzoge1xyXG4gICAgc2x1ZzogJ2FpLXByb21wdHMtZG9jJyxcclxuICAgIG5hbWU6ICdBSSBQcm9tcHQgTGlicmFyeScsXHJcbiAgICBzZWN0aW9uczogW1xyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ0J1c2luZXNzIE9wZXJhdGlvbnMgUHJvbXB0cycsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdBSSBwcm9tcHRzIGZvciBkYXktdG8tZGF5IGJ1c2luZXNzIG9wZXJhdGlvbnMgYW5kIGRlY2lzaW9uLW1ha2luZy4nLFxyXG4gICAgICB9LFxyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ01hcmtldGluZyAmIENvbnRlbnQgUHJvbXB0cycsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdBSSBwcm9tcHRzIGZvciBtYXJrZXRpbmcgY29weSwgc29jaWFsIG1lZGlhLCBhbmQgY29udGVudCBjcmVhdGlvbi4nLFxyXG4gICAgICB9LFxyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ0N1c3RvbWVyIFNlcnZpY2UgUHJvbXB0cycsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdBSSBwcm9tcHRzIGZvciBjdXN0b21lciBjb21tdW5pY2F0aW9uLCBzdXBwb3J0LCBhbmQgZW5nYWdlbWVudC4nLFxyXG4gICAgICB9LFxyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ0ZpbmFuY2lhbCBBbmFseXNpcyBQcm9tcHRzJyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ0FJIHByb21wdHMgZm9yIGZpbmFuY2lhbCBtb2RlbGluZywgYW5hbHlzaXMsIGFuZCByZXBvcnRpbmcuJyxcclxuICAgICAgfSxcclxuICAgICAge1xyXG4gICAgICAgIGhlYWRpbmc6ICdQcm9kdWN0IERldmVsb3BtZW50IFByb21wdHMnLFxyXG4gICAgICAgIGRlc2NyaXB0aW9uOiAnQUkgcHJvbXB0cyBmb3IgcHJvZHVjdCBpZGVhdGlvbiwgc3BlY2lmaWNhdGlvbiwgYW5kIHRlc3RpbmcuJyxcclxuICAgICAgfSxcclxuICAgICAge1xyXG4gICAgICAgIGhlYWRpbmc6ICdDdXN0b21pemF0aW9uIEd1aWRlJyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ0hvdyB0byBjdXN0b21pemUgYW5kIGV4dGVuZCB0aGVzZSBwcm9tcHRzIGZvciB5b3VyIHNwZWNpZmljIGJ1c2luZXNzIG5lZWRzLicsXHJcbiAgICAgIH0sXHJcbiAgICBdLFxyXG4gIH0sXHJcblxyXG4gICdtcy1zdHJhdGVneS1kb2MnOiB7XHJcbiAgICBzbHVnOiAnbXMtc3RyYXRlZ3ktZG9jJyxcclxuICAgIG5hbWU6ICdNYXJrZXRpbmcgU3RyYXRlZ3kgUmVwb3J0JyxcclxuICAgIHNlY3Rpb25zOiBbXHJcbiAgICAgIHtcclxuICAgICAgICBoZWFkaW5nOiAnU2l0dWF0aW9uIEFuYWx5c2lzJyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ0N1cnJlbnQgbWFya2V0IHBvc2l0aW9uLCBTV09UIGFuYWx5c2lzLCBhbmQgY29tcGV0aXRpdmUgbGFuZHNjYXBlLicsXHJcbiAgICAgIH0sXHJcbiAgICAgIHtcclxuICAgICAgICBoZWFkaW5nOiAnVGFyZ2V0IE1hcmtldCBEZWZpbml0aW9uJyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ0RldGFpbGVkIGN1c3RvbWVyIHNlZ21lbnRzIHdpdGggZGVtb2dyYXBoaWNzLCBwc3ljaG9ncmFwaGljcywgYW5kIGJlaGF2aW9ycy4nLFxyXG4gICAgICB9LFxyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ1N0cmF0ZWdpYyBPYmplY3RpdmVzJyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ01hcmtldGluZyBnb2FscyB0aWVkIHRvIGJ1c2luZXNzIG9iamVjdGl2ZXMgd2l0aCBtZWFzdXJhYmxlIHRhcmdldHMuJyxcclxuICAgICAgfSxcclxuICAgICAge1xyXG4gICAgICAgIGhlYWRpbmc6ICdDaGFubmVsIE1peCBTdHJhdGVneScsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdSZWNvbW1lbmRlZCBjaGFubmVscywgYnVkZ2V0IGFsbG9jYXRpb24gcGVyIGNoYW5uZWwsIGFuZCBleHBlY3RlZCBST0kuJyxcclxuICAgICAgfSxcclxuICAgICAge1xyXG4gICAgICAgIGhlYWRpbmc6ICdDb250ZW50ICYgTWVzc2FnaW5nIEZyYW1ld29yaycsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdDb3JlIG1lc3NhZ2luZywgY29udGVudCBwaWxsYXJzLCBicmFuZCB2b2ljZSBndWlkZWxpbmVzLicsXHJcbiAgICAgIH0sXHJcbiAgICAgIHtcclxuICAgICAgICBoZWFkaW5nOiAnSW1wbGVtZW50YXRpb24gVGltZWxpbmUnLFxyXG4gICAgICAgIGRlc2NyaXB0aW9uOiAnUGhhc2VkIHJvbGxvdXQgcGxhbiB3aXRoIGtleSBtaWxlc3RvbmVzIGFuZCByZXNvdXJjZSByZXF1aXJlbWVudHMuJyxcclxuICAgICAgfSxcclxuICAgICAge1xyXG4gICAgICAgIGhlYWRpbmc6ICdNZWFzdXJlbWVudCBGcmFtZXdvcmsnLFxyXG4gICAgICAgIGRlc2NyaXB0aW9uOiAnS1BJcywgcmVwb3J0aW5nIGNhZGVuY2UsIGFuZCBvcHRpbWl6YXRpb24gbWV0aG9kb2xvZ3kuJyxcclxuICAgICAgfSxcclxuICAgIF0sXHJcbiAgfSxcclxuXHJcbiAgJ2ZwLXJlcG9ydC1kb2MnOiB7XHJcbiAgICBzbHVnOiAnZnAtcmVwb3J0LWRvYycsXHJcbiAgICBuYW1lOiAnRmluYW5jaWFsIFByb2plY3Rpb25zIFJlcG9ydCcsXHJcbiAgICBzZWN0aW9uczogW1xyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ0V4ZWN1dGl2ZSBGaW5hbmNpYWwgU3VtbWFyeScsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdIaWdoLWxldmVsIGZpbmFuY2lhbCBvdmVydmlldyBhbmQga2V5IHRha2Vhd2F5cy4nLFxyXG4gICAgICB9LFxyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ1JldmVudWUgRm9yZWNhc3QnLFxyXG4gICAgICAgIGRlc2NyaXB0aW9uOiAnRGV0YWlsZWQgMy01IHllYXIgcmV2ZW51ZSBwcm9qZWN0aW9ucyBieSBzdHJlYW0uJyxcclxuICAgICAgfSxcclxuICAgICAge1xyXG4gICAgICAgIGhlYWRpbmc6ICdPcGVyYXRpbmcgRXhwZW5zZXMnLFxyXG4gICAgICAgIGRlc2NyaXB0aW9uOiAnRGV0YWlsZWQgZXhwZW5zZSBicmVha2Rvd24gd2l0aCBncm93dGggYXNzdW1wdGlvbnMuJyxcclxuICAgICAgfSxcclxuICAgICAge1xyXG4gICAgICAgIGhlYWRpbmc6ICdDYXNoIEZsb3cgU3RhdGVtZW50JyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ01vbnRobHkvcXVhcnRlcmx5IGNhc2ggZmxvdyB3aXRoIHdvcmtpbmcgY2FwaXRhbCBhbmFseXNpcy4nLFxyXG4gICAgICB9LFxyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ0NhcGl0YWwgU3RydWN0dXJlJyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ0VxdWl0eSwgZGVidCwgYW5kIGZ1bmRpbmcgcm91bmQgYW5hbHlzaXMuJyxcclxuICAgICAgfSxcclxuICAgICAge1xyXG4gICAgICAgIGhlYWRpbmc6ICdQcm9maXRhYmlsaXR5IEFuYWx5c2lzJyxcclxuICAgICAgICBkZXNjcmlwdGlvbjogJ0dyb3NzIG1hcmdpbiwgb3BlcmF0aW5nIG1hcmdpbiwgYW5kIG5ldCBpbmNvbWUgcHJvamVjdGlvbnMuJyxcclxuICAgICAgfSxcclxuICAgICAge1xyXG4gICAgICAgIGhlYWRpbmc6ICdSaXNrICYgU2Vuc2l0aXZpdHknLFxyXG4gICAgICAgIGRlc2NyaXB0aW9uOiAnTW9udGUgQ2FybG8gb3Igc2NlbmFyaW8gYW5hbHlzaXMgb24ga2V5IHZhcmlhYmxlcy4nLFxyXG4gICAgICB9LFxyXG4gICAgICB7XHJcbiAgICAgICAgaGVhZGluZzogJ0FwcGVuZGl4OiBBc3N1bXB0aW9ucycsXHJcbiAgICAgICAgZGVzY3JpcHRpb246ICdBbGwga2V5IGFzc3VtcHRpb25zIGRvY3VtZW50ZWQgd2l0aCByYXRpb25hbGUuJyxcclxuICAgICAgfSxcclxuICAgIF0sXHJcbiAgfSxcclxufTtcclxuXHJcbi8qKlxyXG4gKiBHZXQgdGVtcGxhdGUgYnkgZG9jdW1lbnQgdHlwZSBzbHVnLlxyXG4gKi9cclxuZXhwb3J0IGZ1bmN0aW9uIGdldERvY3VtZW50VGVtcGxhdGUoc2x1Zzogc3RyaW5nKTogRG9jdW1lbnRUZW1wbGF0ZSB8IG51bGwge1xyXG4gIHJldHVybiBkb2N1bWVudFRlbXBsYXRlc1tzbHVnXSB8fCBudWxsO1xyXG59XHJcblxyXG4vKipcclxuICogR2V0IGFsbCBhdmFpbGFibGUgZG9jdW1lbnQgdGVtcGxhdGVzLlxyXG4gKi9cclxuZXhwb3J0IGZ1bmN0aW9uIGdldEFsbERvY3VtZW50VGVtcGxhdGVzKCk6IERvY3VtZW50VGVtcGxhdGVbXSB7XHJcbiAgcmV0dXJuIE9iamVjdC52YWx1ZXMoZG9jdW1lbnRUZW1wbGF0ZXMpO1xyXG59XHJcbiJdLCJ2ZXJzaW9uIjozfQ==

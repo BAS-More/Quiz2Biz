@@ -1,0 +1,248 @@
+ef53194a0baf723e3b562f3d543736aa
+"use strict";
+/**
+ * Vendor Management Document Template
+ * Category: CTO
+ *
+ * This template defines the structure for generating Vendor Management documents
+ * from questionnaire responses.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.VENDOR_MANAGEMENT_TEMPLATE = void 0;
+const client_1 = require("@prisma/client");
+/**
+ * Template configuration for Vendor Management
+ */
+exports.VENDOR_MANAGEMENT_TEMPLATE = {
+    slug: 'vendor-management',
+    name: 'Vendor Management',
+    category: client_1.DocumentCategory.CTO,
+    description: 'Comprehensive vendor management policy covering selection, contracting, performance monitoring, risk management, and offboarding procedures',
+    estimatedPages: 10,
+    /**
+     * Required content paths that must be populated from questionnaire
+     */
+    requiredFields: [
+        'organization.name',
+        'vendorSelection.evaluationCriteria',
+        'contractManagement.slas',
+        'performanceMonitoring.kpis',
+        'riskManagement.vendorRisks',
+    ],
+    /**
+     * Section order for document generation
+     */
+    sections: [
+        {
+            id: 'document_control',
+            title: 'Document Control',
+            required: true,
+        },
+        {
+            id: 'policy_overview',
+            title: 'Policy Overview',
+            required: true,
+            contentPath: 'policyOverview.purpose',
+        },
+        {
+            id: 'vendor_selection',
+            title: 'Vendor Selection',
+            required: true,
+            subsections: [
+                {
+                    id: 'evaluation_criteria',
+                    title: 'Evaluation Criteria',
+                    contentPath: 'vendorSelection.evaluationCriteria',
+                },
+                {
+                    id: 'rfp_process',
+                    title: 'RFP Process',
+                    contentPath: 'vendorSelection.rfpProcess',
+                },
+                {
+                    id: 'due_diligence',
+                    title: 'Due Diligence',
+                    contentPath: 'vendorSelection.dueDiligence',
+                },
+            ],
+        },
+        {
+            id: 'contract_management',
+            title: 'Contract Management',
+            required: true,
+            subsections: [
+                {
+                    id: 'terms',
+                    title: 'Contract Terms',
+                    contentPath: 'contractManagement.terms',
+                },
+                {
+                    id: 'slas',
+                    title: 'Service Level Agreements',
+                    contentPath: 'contractManagement.slas',
+                },
+                {
+                    id: 'pricing_models',
+                    title: 'Pricing Models',
+                    contentPath: 'contractManagement.pricingModels',
+                },
+            ],
+        },
+        {
+            id: 'performance_monitoring',
+            title: 'Performance Monitoring',
+            required: true,
+            subsections: [
+                {
+                    id: 'kpis',
+                    title: 'Key Performance Indicators',
+                    contentPath: 'performanceMonitoring.kpis',
+                },
+                {
+                    id: 'reporting',
+                    title: 'Reporting Requirements',
+                    contentPath: 'performanceMonitoring.reporting',
+                },
+                {
+                    id: 'review_schedule',
+                    title: 'Review Schedule',
+                    contentPath: 'performanceMonitoring.reviewSchedule',
+                },
+            ],
+        },
+        {
+            id: 'risk_management',
+            title: 'Risk Management',
+            required: true,
+            subsections: [
+                {
+                    id: 'vendor_risks',
+                    title: 'Vendor Risks',
+                    contentPath: 'riskManagement.vendorRisks',
+                },
+                {
+                    id: 'contingency',
+                    title: 'Contingency Planning',
+                    contentPath: 'riskManagement.contingency',
+                },
+                {
+                    id: 'concentration',
+                    title: 'Concentration Risk',
+                    contentPath: 'riskManagement.concentration',
+                },
+            ],
+        },
+        {
+            id: 'compliance',
+            title: 'Compliance',
+            required: true,
+            subsections: [
+                {
+                    id: 'regulatory',
+                    title: 'Regulatory Requirements',
+                    contentPath: 'compliance.regulatory',
+                },
+                {
+                    id: 'data_handling',
+                    title: 'Data Handling',
+                    contentPath: 'compliance.dataHandling',
+                },
+                {
+                    id: 'audit_rights',
+                    title: 'Audit Rights',
+                    contentPath: 'compliance.auditRights',
+                },
+            ],
+        },
+        {
+            id: 'relationship_management',
+            title: 'Relationship Management',
+            required: true,
+            subsections: [
+                {
+                    id: 'communication',
+                    title: 'Communication Protocols',
+                    contentPath: 'relationshipManagement.communication',
+                },
+                {
+                    id: 'escalation',
+                    title: 'Escalation Procedures',
+                    contentPath: 'relationshipManagement.escalation',
+                },
+                {
+                    id: 'strategic_alignment',
+                    title: 'Strategic Alignment',
+                    contentPath: 'relationshipManagement.strategicAlignment',
+                },
+            ],
+        },
+        {
+            id: 'offboarding',
+            title: 'Vendor Offboarding',
+            required: true,
+            subsections: [
+                {
+                    id: 'transition_planning',
+                    title: 'Transition Planning',
+                    contentPath: 'offboarding.transitionPlanning',
+                },
+                {
+                    id: 'data_return',
+                    title: 'Data Return & Destruction',
+                    contentPath: 'offboarding.dataReturn',
+                },
+                {
+                    id: 'contract_termination',
+                    title: 'Contract Termination',
+                    contentPath: 'offboarding.contractTermination',
+                },
+            ],
+        },
+        {
+            id: 'appendices',
+            title: 'Appendices',
+            required: false,
+        },
+    ],
+    /**
+     * Question to content field mappings (question slug -> content path)
+     */
+    questionMappings: {
+        'organization-name': 'organization.name',
+        'organization-industry': 'organization.industry',
+        'organization-size': 'organization.size',
+        'vendor-policy-purpose': 'policyOverview.purpose',
+        'vendor-policy-scope': 'policyOverview.scope',
+        'evaluation-criteria': 'vendorSelection.evaluationCriteria',
+        'rfp-process': 'vendorSelection.rfpProcess',
+        'due-diligence': 'vendorSelection.dueDiligence',
+        'contract-terms': 'contractManagement.terms',
+        'service-level-agreements': 'contractManagement.slas',
+        'pricing-models': 'contractManagement.pricingModels',
+        'vendor-kpis': 'performanceMonitoring.kpis',
+        'vendor-reporting': 'performanceMonitoring.reporting',
+        'review-schedule': 'performanceMonitoring.reviewSchedule',
+        'vendor-risks': 'riskManagement.vendorRisks',
+        'vendor-contingency': 'riskManagement.contingency',
+        'concentration-risk': 'riskManagement.concentration',
+        'regulatory-requirements': 'compliance.regulatory',
+        'vendor-data-handling': 'compliance.dataHandling',
+        'audit-rights': 'compliance.auditRights',
+        'vendor-communication': 'relationshipManagement.communication',
+        'vendor-escalation': 'relationshipManagement.escalation',
+        'strategic-alignment': 'relationshipManagement.strategicAlignment',
+        'transition-planning': 'offboarding.transitionPlanning',
+        'data-return': 'offboarding.dataReturn',
+        'contract-termination': 'offboarding.contractTermination',
+    },
+    /**
+     * Default values for optional fields
+     */
+    defaults: {
+        'performanceMonitoring.reviewSchedule': 'Quarterly performance reviews with annual strategic assessment',
+        'riskManagement.concentration': 'Avoid single-vendor dependency for critical services. Maintain alternative vendor relationships.',
+        'offboarding.transitionPlanning': 'Minimum 90-day transition period with documented knowledge transfer',
+        'compliance.auditRights': 'Organization retains the right to audit vendor operations with 30 days written notice',
+    },
+};
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcZG9jdW1lbnQtZ2VuZXJhdG9yXFx0ZW1wbGF0ZXNcXHZlbmRvci1tYW5hZ2VtZW50LnRlbXBsYXRlLnRzIiwibWFwcGluZ3MiOiI7QUFBQTs7Ozs7O0dBTUc7OztBQUVILDJDQUFrRDtBQWlHbEQ7O0dBRUc7QUFDVSxRQUFBLDBCQUEwQixHQUFHO0lBQ3hDLElBQUksRUFBRSxtQkFBbUI7SUFDekIsSUFBSSxFQUFFLG1CQUFtQjtJQUN6QixRQUFRLEVBQUUseUJBQWdCLENBQUMsR0FBRztJQUM5QixXQUFXLEVBQ1QsNklBQTZJO0lBQy9JLGNBQWMsRUFBRSxFQUFFO0lBRWxCOztPQUVHO0lBQ0gsY0FBYyxFQUFFO1FBQ2QsbUJBQW1CO1FBQ25CLG9DQUFvQztRQUNwQyx5QkFBeUI7UUFDekIsNEJBQTRCO1FBQzVCLDRCQUE0QjtLQUM3QjtJQUVEOztPQUVHO0lBQ0gsUUFBUSxFQUFFO1FBQ1I7WUFDRSxFQUFFLEVBQUUsa0JBQWtCO1lBQ3RCLEtBQUssRUFBRSxrQkFBa0I7WUFDekIsUUFBUSxFQUFFLElBQUk7U0FDZjtRQUNEO1lBQ0UsRUFBRSxFQUFFLGlCQUFpQjtZQUNyQixLQUFLLEVBQUUsaUJBQWlCO1lBQ3hCLFFBQVEsRUFBRSxJQUFJO1lBQ2QsV0FBVyxFQUFFLHdCQUF3QjtTQUN0QztRQUNEO1lBQ0UsRUFBRSxFQUFFLGtCQUFrQjtZQUN0QixLQUFLLEVBQUUsa0JBQWtCO1lBQ3pCLFFBQVEsRUFBRSxJQUFJO1lBQ2QsV0FBVyxFQUFFO2dCQUNYO29CQUNFLEVBQUUsRUFBRSxxQkFBcUI7b0JBQ3pCLEtBQUssRUFBRSxxQkFBcUI7b0JBQzVCLFdBQVcsRUFBRSxvQ0FBb0M7aUJBQ2xEO2dCQUNEO29CQUNFLEVBQUUsRUFBRSxhQUFhO29CQUNqQixLQUFLLEVBQUUsYUFBYTtvQkFDcEIsV0FBVyxFQUFFLDRCQUE0QjtpQkFDMUM7Z0JBQ0Q7b0JBQ0UsRUFBRSxFQUFFLGVBQWU7b0JB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QjtRQUN4QyxzQkFBc0IsRUFBRSxzQ0FBc0M7UUFDOUQsbUJBQW1CLEVBQUUsbUNBQW1DO1FBQ3hELHFCQUFxQixFQUFFLDJDQUEyQztRQUNsRSxxQkFBcUIsRUFBRSxnQ0FBZ0M7UUFDdkQsYUFBYSxFQUFFLHdCQUF3QjtRQUN2QyxzQkFBc0IsRUFBRSxpQ0FBaUM7S0FDMUQ7SUFFRDs7T0FFRztJQUNILFFBQVEsRUFBRTtRQUNSLHNDQUFzQyxFQUFFLGdFQUFnRTtRQUN4Ryw4QkFBOEIsRUFBRSxrR0FBa0c7UUFDbEksZ0NBQWdDLEVBQUUscUVBQXFFO1FBQ3ZHLHdCQUF3QixFQUFFLHVGQUF1RjtLQUNsSDtDQUNGLENBQUMiLCJuYW1lcyI6W10sInNvdXJjZXMiOlsiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcZG9jdW1lbnQtZ2VuZXJhdG9yXFx0ZW1wbGF0ZXNcXHZlbmRvci1tYW5hZ2VtZW50LnRlbXBsYXRlLnRzIl0sInNvdXJjZXNDb250ZW50IjpbIi8qKlxyXG4gKiBWZW5kb3IgTWFuYWdlbWVudCBEb2N1bWVudCBUZW1wbGF0ZVxyXG4gKiBDYXRlZ29yeTogQ1RPXHJcbiAqXHJcbiAqIFRoaXMgdGVtcGxhdGUgZGVmaW5lcyB0aGUgc3RydWN0dXJlIGZvciBnZW5lcmF0aW5nIFZlbmRvciBNYW5hZ2VtZW50IGRvY3VtZW50c1xyXG4gKiBmcm9tIHF1ZXN0aW9ubmFpcmUgcmVzcG9uc2VzLlxyXG4gKi9cclxuXHJcbmltcG9ydCB7IERvY3VtZW50Q2F0ZWdvcnkgfSBmcm9tICdAcHJpc21hL2NsaWVudCc7XHJcblxyXG5leHBvcnQgaW50ZXJmYWNlIFZlbmRvck1hbmFnZW1lbnREYXRhIHtcclxuICBvcmdhbml6YXRpb246IHtcclxuICAgIG5hbWU6IHN0cmluZztcclxuICAgIGluZHVzdHJ5OiBzdHJpbmc7XHJcbiAgICBzaXplOiBzdHJpbmc7XHJcbiAgfTtcclxuICBwb2xpY3lPdmVydmlldzoge1xyXG4gICAgcHVycG9zZTogc3RyaW5nO1xyXG4gICAgc2NvcGU6IHN0cmluZztcclxuICAgIG9iamVjdGl2ZXM6IHN0cmluZ1tdO1xyXG4gIH07XHJcbiAgdmVuZG9yU2VsZWN0aW9uOiB7XHJcbiAgICBldmFsdWF0aW9uQ3JpdGVyaWE6IEV2YWx1YXRpb25Dcml0ZXJpb25bXTtcclxuICAgIHJmcFByb2Nlc3M6IHN0cmluZztcclxuICAgIGR1ZURpbGlnZW5jZTogRHVlRGlsaWdlbmNlSXRlbVtdO1xyXG4gIH07XHJcbiAgY29udHJhY3RNYW5hZ2VtZW50OiB7XHJcbiAgICB0ZXJtczogQ29udHJhY3RUZXJtW107XHJcbiAgICBzbGFzOiBTZXJ2aWNlTGV2ZWxBZ3JlZW1lbnRbXTtcclxuICAgIHByaWNpbmdNb2RlbHM6IHN0cmluZ1tdO1xyXG4gIH07XHJcbiAgcGVyZm9ybWFuY2VNb25pdG9yaW5nOiB7XHJcbiAgICBrcGlzOiBQZXJmb3JtYW5jZUtwaVtdO1xyXG4gICAgcmVwb3J0aW5nOiBzdHJpbmc7XHJcbiAgICByZXZpZXdTY2hlZHVsZTogc3RyaW5nO1xyXG4gIH07XHJcbiAgcmlza01hbmFnZW1lbnQ6IHtcclxuICAgIHZlbmRvclJpc2tzOiBWZW5kb3JSaXNrW107XHJcbiAgICBjb250aW5nZW5jeTogc3RyaW5nW107XHJcbiAgICBjb25jZW50cmF0aW9uOiBzdHJpbmc7XHJcbiAgfTtcclxuICBjb21wbGlhbmNlOiB7XHJcbiAgICByZWd1bGF0b3J5OiBzdHJpbmdbXTtcclxuICAgIGRhdGFIYW5kbGluZzogc3RyaW5nW107XHJcbiAgICBhdWRpdFJpZ2h0czogc3RyaW5nO1xyXG4gIH07XHJcbiAgcmVsYXRpb25zaGlwTWFuYWdlbWVudDoge1xyXG4gICAgY29tbXVuaWNhdGlvbjogc3RyaW5nW107XHJcbiAgICBlc2NhbGF0aW9uOiBFc2NhbGF0aW9uUGF0aFtdO1xyXG4gICAgc3RyYXRlZ2ljQWxpZ25tZW50OiBzdHJpbmc7XHJcbiAgfTtcclxuICBvZmZib2FyZGluZzoge1xyXG4gICAgdHJhbnNpdGlvblBsYW5uaW5nOiBzdHJpbmc7XHJcbiAgICBkYXRhUmV0dXJuOiBzdHJpbmdbXTtcclxuICAgIGNvbnRyYWN0VGVybWluYXRpb246IHN0cmluZztcclxuICB9O1xyXG59XHJcblxyXG5pbnRlcmZhY2UgRXZhbHVhdGlvbkNyaXRlcmlvbiB7XHJcbiAgY3JpdGVyaW9uOiBzdHJpbmc7XHJcbiAgd2VpZ2h0OiBudW1iZXI7XHJcbiAgZGVzY3JpcHRpb246IHN0cmluZztcclxuICBzY29yaW5nTWV0aG9kOiBzdHJpbmc7XHJcbn1cclxuXHJcbmludGVyZmFjZSBEdWVEaWxpZ2VuY2VJdGVtIHtcclxuICBhcmVhOiBzdHJpbmc7XHJcbiAgY2hlY2tzOiBzdHJpbmdbXTtcclxuICByZXF1aXJlZERvY3VtZW50czogc3RyaW5nW107XHJcbn1cclxuXHJcbmludGVyZmFjZSBDb250cmFjdFRlcm0ge1xyXG4gIHRlcm06IHN0cmluZztcclxuICBkZXNjcmlwdGlvbjogc3RyaW5nO1xyXG4gIHByaW9yaXR5OiAnTUFOREFUT1JZJyB8ICdSRUNPTU1FTkRFRCcgfCAnT1BUSU9OQUwnO1xyXG59XHJcblxyXG5pbnRlcmZhY2UgU2VydmljZUxldmVsQWdyZWVtZW50IHtcclxuICBtZXRyaWM6IHN0cmluZztcclxuICB0YXJnZXQ6IHN0cmluZztcclxuICBtZWFzdXJlbWVudE1ldGhvZDogc3RyaW5nO1xyXG4gIHBlbmFsdHk6IHN0cmluZztcclxufVxyXG5cclxuaW50ZXJmYWNlIFBlcmZvcm1hbmNlS3BpIHtcclxuICBuYW1lOiBzdHJpbmc7XHJcbiAgZGVzY3JpcHRpb246IHN0cmluZztcclxuICB0YXJnZXQ6IHN0cmluZztcclxuICBmcmVxdWVuY3k6IHN0cmluZztcclxufVxyXG5cclxuaW50ZXJmYWNlIFZlbmRvclJpc2sge1xyXG4gIHJpc2s6IHN0cmluZztcclxuICBsaWtlbGlob29kOiAnSElHSCcgfCAnTUVESVVNJyB8ICdMT1cnO1xyXG4gIGltcGFjdDogJ0hJR0gnIHwgJ01FRElVTScgfCAnTE9XJztcclxuICBtaXRpZ2F0aW9uOiBzdHJpbmc7XHJcbn1cclxuXHJcbmludGVyZmFjZSBFc2NhbGF0aW9uUGF0aCB7XHJcbiAgbGV2ZWw6IG51bWJlcjtcclxuICB0cmlnZ2VyOiBzdHJpbmc7XHJcbiAgY29udGFjdDogc3RyaW5nO1xyXG4gIHJlc3BvbnNlVGltZTogc3RyaW5nO1xyXG59XHJcblxyXG4vKipcclxuICogVGVtcGxhdGUgY29uZmlndXJhdGlvbiBmb3IgVmVuZG9yIE1hbmFnZW1lbnRcclxuICovXHJcbmV4cG9ydCBjb25zdCBWRU5ET1JfTUFOQUdFTUVOVF9URU1QTEFURSA9IHtcclxuICBzbHVnOiAndmVuZG9yLW1hbmFnZW1lbnQnLFxyXG4gIG5hbWU6ICdWZW5kb3IgTWFuYWdlbWVudCcsXHJcbiAgY2F0ZWdvcnk6IERvY3VtZW50Q2F0ZWdvcnkuQ1RPLFxyXG4gIGRlc2NyaXB0aW9uOlxyXG4gICAgJ0NvbXByZWhlbnNpdmUgdmVuZG9yIG1hbmFnZW1lbnQgcG9saWN5IGNvdmVyaW5nIHNlbGVjdGlvbiwgY29udHJhY3RpbmcsIHBlcmZvcm1hbmNlIG1vbml0b3JpbmcsIHJpc2sgbWFuYWdlbWVudCwgYW5kIG9mZmJvYXJkaW5nIHByb2NlZHVyZXMnLFxyXG4gIGVzdGltYXRlZFBhZ2VzOiAxMCxcclxuXHJcbiAgLyoqXHJcbiAgICogUmVxdWlyZWQgY29udGVudCBwYXRocyB0aGF0IG11c3QgYmUgcG9wdWxhdGVkIGZyb20gcXVlc3Rpb25uYWlyZVxyXG4gICAqL1xyXG4gIHJlcXVpcmVkRmllbGRzOiBbXHJcbiAgICAnb3JnYW5pemF0aW9uLm5hbWUnLFxyXG4gICAgJ3ZlbmRvclNlbGVjdGlvbi5ldmFsdWF0aW9uQ3JpdGVyaWEnLFxyXG4gICAgJ2NvbnRyYWN0TWFuYWdlbWVudC5zbGFzJyxcclxuICAgICdwZXJmb3JtYW5jZU1vbml0b3Jpbmcua3BpcycsXHJcbiAgICAncmlza01hbmFnZW1lbnQudmVuZG9yUmlza3MnLFxyXG4gIF0sXHJcblxyXG4gIC8qKlxyXG4gICAqIFNlY3Rpb24gb3JkZXIgZm9yIGRvY3VtZW50IGdlbmVyYXRpb25cclxuICAgKi9cclxuICBzZWN0aW9uczogW1xyXG4gICAge1xyXG4gICAgICBpZDogJ2RvY3VtZW50X2NvbnRyb2wnLFxyXG4gICAgICB0aXRsZTogJ0RvY3VtZW50IENvbnRyb2wnLFxyXG4gICAgICByZXF1aXJlZDogdHJ1ZSxcclxuICAgIH0sXHJcbiAgICB7XHJcbiAgICAgIGlkOiAncG9saWN5X292ZXJ2aWV3JyxcclxuICAgICAgdGl0bGU6ICdQb2xpY3kgT3ZlcnZpZXcnLFxyXG4gICAgICByZXF1aXJlZDogdHJ1ZSxcclxuICAgICAgY29udGVudFBhdGg6ICdwb2xpY3lPdmVydmlldy5wdXJwb3NlJyxcclxuICAgIH0sXHJcbiAgICB7XHJcbiAgICAgIGlkOiAndmVuZG9yX3NlbGVjdGlvbicsXHJcbiAgICAgIHRpdGxlOiAnVmVuZG9yIFNlbGVjdGlvbicsXHJcbiAgICAgIHJlcXVpcmVkOiB0cnVlLFxyXG4gICAgICBzdWJzZWN0aW9uczogW1xyXG4gICAgICAgIHtcclxuICAgICAgICAgIGlkOiAnZXZhbHVhdGlvbl9jcml0ZXJpYScsXHJcbiAgICAgICAgICB0aXRsZTogJ0V2YWx1YXRpb24gQ3JpdGVyaWEnLFxyXG4gICAgICAgICAgY29udGVudFBhdGg6ICd2ZW5kb3JTZWxlY3Rpb24uZXZhbHVhdGlvbkNyaXRlcmlhJyxcclxuICAgICAgICB9LFxyXG4gICAgICAgIHtcclxuICAgICAgICAgIGlkOiAncmZwX3Byb2Nlc3MnLFxyXG4gICAgICAgICAgdGl0bGU6ICdSRlAgUHJvY2VzcycsXHJcbiAgICAgICAgICBjb250ZW50UGF0aDogJ3ZlbmRvclNlbGVjdGlvbi5yZnBQcm9jZXNzJyxcclxuICAgICAgICB9LFxyXG4gICAgICAgIHtcclxuICAgICAgICAgIGlkOiAnZHVlX2RpbGlnZW5jZScsXHJcbiAgICAgICAgICB0aXRsZTogJ0R1ZSBEaWxpZ2VuY2UnLFxyXG4gICAgICAgICAgY29udGVudFBhdGg6ICd2ZW5kb3JTZWxlY3Rpb24uZHVlRGlsaWdlbmNlJyxcclxuICAgICAgICB9LFxyXG4gICAgICBdLFxyXG4gICAgfSxcclxuICAgIHtcclxuICAgICAgaWQ6ICdjb250cmFjdF9tYW5hZ2VtZW50JyxcclxuICAgICAgdGl0bGU6ICdDb250cmFjdCBNYW5hZ2VtZW50JyxcclxuICAgICAgcmVxdWlyZWQ6IHRydWUsXHJcbiAgICAgIHN1YnNlY3Rpb25zOiBbXHJcbiAgICAgICAge1xyXG4gICAgICAgICAgaWQ6ICd0ZXJtcycsXHJcbiAgICAgICAgICB0aXRsZTogJ0NvbnRyYWN0IFRlcm1zJyxcclxuICAgICAgICAgIGNvbnRlbnRQYXRoOiAnY29udHJhY3RNYW5hZ2VtZW50LnRlcm1zJyxcclxuICAgICAgICB9LFxyXG4gICAgICAgIHtcclxuICAgICAgICAgIGlkOiAnc2xhcycsXHJcbiAgICAgICAgICB0aXRsZTogJ1NlcnZpY2UgTGV2ZWwgQWdyZWVtZW50cycsXHJcbiAgICAgICAgICBjb250ZW50UGF0aDogJ2NvbnRyYWN0TWFuYWdlbWVudC5zbGFzJyxcclxuICAgICAgICB9LFxyXG4gICAgICAgIHtcclxuICAgICAgICAgIGlkOiAncHJpY2luZ19tb2RlbHMnLFxyXG4gICAgICAgICAgdGl0bGU6ICdQcmljaW5nIE1vZGVscycsXHJcbiAgICAgICAgICBjb250ZW50UGF0aDogJ2NvbnRyYWN0TWFuYWdlbWVudC5wcmljaW5nTW9kZWxzJyxcclxuICAgICAgICB9LFxyXG4gICAgICBdLFxyXG4gICAgfSxcclxuICAgIHtcclxuICAgICAgaWQ6ICdwZXJmb3JtYW5jZV9tb25pdG9yaW5nJyxcclxuICAgICAgdGl0bGU6ICdQZXJmb3JtYW5jZSBNb25pdG9yaW5nJyxcclxuICAgICAgcmVxdWlyZWQ6IHRydWUsXHJcbiAgICAgIHN1YnNlY3Rpb25zOiBbXHJcbiAgICAgICAge1xyXG4gICAgICAgICAgaWQ6ICdrcGlzJyxcclxuICAgICAgICAgIHRpdGxlOiAnS2V5IFBlcmZvcm1hbmNlIEluZGljYXRvcnMnLFxyXG4gICAgICAgICAgY29udGVudFBhdGg6ICdwZXJmb3JtYW5jZU1vbml0b3Jpbmcua3BpcycsXHJcbiAgICAgICAgfSxcclxuICAgICAgICB7XHJcbiAgICAgICAgICBpZDogJ3JlcG9ydGluZycsXHJcbiAgICAgICAgICB0aXRsZTogJ1JlcG9ydGluZyBSZXF1aXJlbWVudHMnLFxyXG4gICAgICAgICAgY29udGVudFBhdGg6ICdwZXJmb3JtYW5jZU1vbml0b3JpbmcucmVwb3J0aW5nJyxcclxuICAgICAgICB9LFxyXG4gICAgICAgIHtcclxuICAgICAgICAgIGlkOiAncmV2aWV3X3NjaGVkdWxlJyxcclxuICAgICAgICAgIHRpdGxlOiAnUmV2aWV3IFNjaGVkdWxlJyxcclxuICAgICAgICAgIGNvbnRlbnRQYXRoOiAncGVyZm9ybWFuY2VNb25pdG9yaW5nLnJldmlld1NjaGVkdWxlJyxcclxuICAgICAgICB9LFxyXG4gICAgICBdLFxyXG4gICAgfSxcclxuICAgIHtcclxuICAgICAgaWQ6ICdyaXNrX21hbmFnZW1lbnQnLFxyXG4gICAgICB0aXRsZTogJ1Jpc2sgTWFuYWdlbWVudCcsXHJcbiAgICAgIHJlcXVpcmVkOiB0cnVlLFxyXG4gICAgICBzdWJzZWN0aW9uczogW1xyXG4gICAgICAgIHtcclxuICAgICAgICAgIGlkOiAndmVuZG9yX3Jpc2tzJyxcclxuICAgICAgICAgIHRpdGxlOiAnVmVuZG9yIFJpc2tzJyxcclxuICAgICAgICAgIGNvbnRlbnRQYXRoOiAncmlza01hbmFnZW1lbnQudmVuZG9yUmlza3MnLFxyXG4gICAgICAgIH0sXHJcbiAgICAgICAge1xyXG4gICAgICAgICAgaWQ6ICdjb250aW5nZW5jeScsXHJcbiAgICAgICAgICB0aXRsZTogJ0NvbnRpbmdlbmN5IFBsYW5uaW5nJyxcclxuICAgICAgICAgIGNvbnRlbnRQYXRoOiAncmlza01hbmFnZW1lbnQuY29udGluZ2VuY3knLFxyXG4gICAgICAgIH0sXHJcbiAgICAgICAge1xyXG4gICAgICAgICAgaWQ6ICdjb25jZW50cmF0aW9uJyxcclxuICAgICAgICAgIHRpdGxlOiAnQ29uY2VudHJhdGlvbiBSaXNrJyxcclxuICAgICAgICAgIGNvbnRlbnRQYXRoOiAncmlza01hbmFnZW1lbnQuY29uY2VudHJhdGlvbicsXHJcbiAgICAgICAgfSxcclxuICAgICAgXSxcclxuICAgIH0sXHJcbiAgICB7XHJcbiAgICAgIGlkOiAnY29tcGxpYW5jZScsXHJcbiAgICAgIHRpdGxlOiAnQ29tcGxpYW5jZScsXHJcbiAgICAgIHJlcXVpcmVkOiB0cnVlLFxyXG4gICAgICBzdWJzZWN0aW9uczogW1xyXG4gICAgICAgIHtcclxuICAgICAgICAgIGlkOiAncmVndWxhdG9yeScsXHJcbiAgICAgICAgICB0aXRsZTogJ1JlZ3VsYXRvcnkgUmVxdWlyZW1lbnRzJyxcclxuICAgICAgICAgIGNvbnRlbnRQYXRoOiAnY29tcGxpYW5jZS5yZWd1bGF0b3J5JyxcclxuICAgICAgICB9LFxyXG4gICAgICAgIHtcclxuICAgICAgICAgIGlkOiAnZGF0YV9oYW5kbGluZycsXHJcbiAgICAgICAgICB0aXRsZTogJ0RhdGEgSGFuZGxpbmcnLFxyXG4gICAgICAgICAgY29udGVudFBhdGg6ICdjb21wbGlhbmNlLmRhdGFIYW5kbGluZycsXHJcbiAgICAgICAgfSxcclxuICAgICAgICB7XHJcbiAgICAgICAgICBpZDogJ2F1ZGl0X3JpZ2h0cycsXHJcbiAgICAgICAgICB0aXRsZTogJ0F1ZGl0IFJpZ2h0cycsXHJcbiAgICAgICAgICBjb250ZW50UGF0aDogJ2NvbXBsaWFuY2UuYXVkaXRSaWdodHMnLFxyXG4gICAgICAgIH0sXHJcbiAgICAgIF0sXHJcbiAgICB9LFxyXG4gICAge1xyXG4gICAgICBpZDogJ3JlbGF0aW9uc2hpcF9tYW5hZ2VtZW50JyxcclxuICAgICAgdGl0bGU6ICdSZWxhdGlvbnNoaXAgTWFuYWdlbWVudCcsXHJcbiAgICAgIHJlcXVpcmVkOiB0cnVlLFxyXG4gICAgICBzdWJzZWN0aW9uczogW1xyXG4gICAgICAgIHtcclxuICAgICAgICAgIGlkOiAnY29tbXVuaWNhdGlvbicsXHJcbiAgICAgICAgICB0aXRsZTogJ0NvbW11bmljYXRpb24gUHJvdG9jb2xzJyxcclxuICAgICAgICAgIGNvbnRlbnRQYXRoOiAncmVsYXRpb25zaGlwTWFuYWdlbWVudC5jb21tdW5pY2F0aW9uJyxcclxuICAgICAgICB9LFxyXG4gICAgICAgIHtcclxuICAgICAgICAgIGlkOiAnZXNjYWxhdGlvbicsXHJcbiAgICAgICAgICB0aXRsZTogJ0VzY2FsYXRpb24gUHJvY2VkdXJlcycsXHJcbiAgICAgICAgICBjb250ZW50UGF0aDogJ3JlbGF0aW9uc2hpcE1hbmFnZW1lbnQuZXNjYWxhdGlvbicsXHJcbiAgICAgICAgfSxcclxuICAgICAgICB7XHJcbiAgICAgICAgICBpZDogJ3N0cmF0ZWdpY19hbGlnbm1lbnQnLFxyXG4gICAgICAgICAgdGl0bGU6ICdTdHJhdGVnaWMgQWxpZ25tZW50JyxcclxuICAgICAgICAgIGNvbnRlbnRQYXRoOiAncmVsYXRpb25zaGlwTWFuYWdlbWVudC5zdHJhdGVnaWNBbGlnbm1lbnQnLFxyXG4gICAgICAgIH0sXHJcbiAgICAgIF0sXHJcbiAgICB9LFxyXG4gICAge1xyXG4gICAgICBpZDogJ29mZmJvYXJkaW5nJyxcclxuICAgICAgdGl0bGU6ICdWZW5kb3IgT2ZmYm9hcmRpbmcnLFxyXG4gICAgICByZXF1aXJlZDogdHJ1ZSxcclxuICAgICAgc3Vic2VjdGlvbnM6IFtcclxuICAgICAgICB7XHJcbiAgICAgICAgICBpZDogJ3RyYW5zaXRpb25fcGxhbm5pbmcnLFxyXG4gICAgICAgICAgdGl0bGU6ICdUcmFuc2l0aW9uIFBsYW5uaW5nJyxcclxuICAgICAgICAgIGNvbnRlbnRQYXRoOiAnb2ZmYm9hcmRpbmcudHJhbnNpdGlvblBsYW5uaW5nJyxcclxuICAgICAgICB9LFxyXG4gICAgICAgIHtcclxuICAgICAgICAgIGlkOiAnZGF0YV9yZXR1cm4nLFxyXG4gICAgICAgICAgdGl0bGU6ICdEYXRhIFJldHVybiAmIERlc3RydWN0aW9uJyxcclxuICAgICAgICAgIGNvbnRlbnRQYXRoOiAnb2ZmYm9hcmRpbmcuZGF0YVJldHVybicsXHJcbiAgICAgICAgfSxcclxuICAgICAgICB7XHJcbiAgICAgICAgICBpZDogJ2NvbnRyYWN0X3Rlcm1pbmF0aW9uJyxcclxuICAgICAgICAgIHRpdGxlOiAnQ29udHJhY3QgVGVybWluYXRpb24nLFxyXG4gICAgICAgICAgY29udGVudFBhdGg6ICdvZmZib2FyZGluZy5jb250cmFjdFRlcm1pbmF0aW9uJyxcclxuICAgICAgICB9LFxyXG4gICAgICBdLFxyXG4gICAgfSxcclxuICAgIHtcclxuICAgICAgaWQ6ICdhcHBlbmRpY2VzJyxcclxuICAgICAgdGl0bGU6ICdBcHBlbmRpY2VzJyxcclxuICAgICAgcmVxdWlyZWQ6IGZhbHNlLFxyXG4gICAgfSxcclxuICBdLFxyXG5cclxuICAvKipcclxuICAgKiBRdWVzdGlvbiB0byBjb250ZW50IGZpZWxkIG1hcHBpbmdzIChxdWVzdGlvbiBzbHVnIC0+IGNvbnRlbnQgcGF0aClcclxuICAgKi9cclxuICBxdWVzdGlvbk1hcHBpbmdzOiB7XHJcbiAgICAnb3JnYW5pemF0aW9uLW5hbWUnOiAnb3JnYW5pemF0aW9uLm5hbWUnLFxyXG4gICAgJ29yZ2FuaXphdGlvbi1pbmR1c3RyeSc6ICdvcmdhbml6YXRpb24uaW5kdXN0cnknLFxyXG4gICAgJ29yZ2FuaXphdGlvbi1zaXplJzogJ29yZ2FuaXphdGlvbi5zaXplJyxcclxuICAgICd2ZW5kb3ItcG9saWN5LXB1cnBvc2UnOiAncG9saWN5T3ZlcnZpZXcucHVycG9zZScsXHJcbiAgICAndmVuZG9yLXBvbGljeS1zY29wZSc6ICdwb2xpY3lPdmVydmlldy5zY29wZScsXHJcbiAgICAnZXZhbHVhdGlvbi1jcml0ZXJpYSc6ICd2ZW5kb3JTZWxlY3Rpb24uZXZhbHVhdGlvbkNyaXRlcmlhJyxcclxuICAgICdyZnAtcHJvY2Vzcyc6ICd2ZW5kb3JTZWxlY3Rpb24ucmZwUHJvY2VzcycsXHJcbiAgICAnZHVlLWRpbGlnZW5jZSc6ICd2ZW5kb3JTZWxlY3Rpb24uZHVlRGlsaWdlbmNlJyxcclxuICAgICdjb250cmFjdC10ZXJtcyc6ICdjb250cmFjdE1hbmFnZW1lbnQudGVybXMnLFxyXG4gICAgJ3NlcnZpY2UtbGV2ZWwtYWdyZWVtZW50cyc6ICdjb250cmFjdE1hbmFnZW1lbnQuc2xhcycsXHJcbiAgICAncHJpY2luZy1tb2RlbHMnOiAnY29udHJhY3RNYW5hZ2VtZW50LnByaWNpbmdNb2RlbHMnLFxyXG4gICAgJ3ZlbmRvci1rcGlzJzogJ3BlcmZvcm1hbmNlTW9uaXRvcmluZy5rcGlzJyxcclxuICAgICd2ZW5kb3ItcmVwb3J0aW5nJzogJ3BlcmZvcm1hbmNlTW9uaXRvcmluZy5yZXBvcnRpbmcnLFxyXG4gICAgJ3Jldmlldy1zY2hlZHVsZSc6ICdwZXJmb3JtYW5jZU1vbml0b3JpbmcucmV2aWV3U2NoZWR1bGUnLFxyXG4gICAgJ3ZlbmRvci1yaXNrcyc6ICdyaXNrTWFuYWdlbWVudC52ZW5kb3JSaXNrcycsXHJcbiAgICAndmVuZG9yLWNvbnRpbmdlbmN5JzogJ3Jpc2tNYW5hZ2VtZW50LmNvbnRpbmdlbmN5JyxcclxuICAgICdjb25jZW50cmF0aW9uLXJpc2snOiAncmlza01hbmFnZW1lbnQuY29uY2VudHJhdGlvbicsXHJcbiAgICAncmVndWxhdG9yeS1yZXF1aXJlbWVudHMnOiAnY29tcGxpYW5jZS5yZWd1bGF0b3J5JyxcclxuICAgICd2ZW5kb3ItZGF0YS1oYW5kbGluZyc6ICdjb21wbGlhbmNlLmRhdGFIYW5kbGluZycsXHJcbiAgICAnYXVkaXQtcmlnaHRzJzogJ2NvbXBsaWFuY2UuYXVkaXRSaWdodHMnLFxyXG4gICAgJ3ZlbmRvci1jb21tdW5pY2F0aW9uJzogJ3JlbGF0aW9uc2hpcE1hbmFnZW1lbnQuY29tbXVuaWNhdGlvbicsXHJcbiAgICAndmVuZG9yLWVzY2FsYXRpb24nOiAncmVsYXRpb25zaGlwTWFuYWdlbWVudC5lc2NhbGF0aW9uJyxcclxuICAgICdzdHJhdGVnaWMtYWxpZ25tZW50JzogJ3JlbGF0aW9uc2hpcE1hbmFnZW1lbnQuc3RyYXRlZ2ljQWxpZ25tZW50JyxcclxuICAgICd0cmFuc2l0aW9uLXBsYW5uaW5nJzogJ29mZmJvYXJkaW5nLnRyYW5zaXRpb25QbGFubmluZycsXHJcbiAgICAnZGF0YS1yZXR1cm4nOiAnb2ZmYm9hcmRpbmcuZGF0YVJldHVybicsXHJcbiAgICAnY29udHJhY3QtdGVybWluYXRpb24nOiAnb2ZmYm9hcmRpbmcuY29udHJhY3RUZXJtaW5hdGlvbicsXHJcbiAgfSxcclxuXHJcbiAgLyoqXHJcbiAgICogRGVmYXVsdCB2YWx1ZXMgZm9yIG9wdGlvbmFsIGZpZWxkc1xyXG4gICAqL1xyXG4gIGRlZmF1bHRzOiB7XHJcbiAgICAncGVyZm9ybWFuY2VNb25pdG9yaW5nLnJldmlld1NjaGVkdWxlJzogJ1F1YXJ0ZXJseSBwZXJmb3JtYW5jZSByZXZpZXdzIHdpdGggYW5udWFsIHN0cmF0ZWdpYyBhc3Nlc3NtZW50JyxcclxuICAgICdyaXNrTWFuYWdlbWVudC5jb25jZW50cmF0aW9uJzogJ0F2b2lkIHNpbmdsZS12ZW5kb3IgZGVwZW5kZW5jeSBmb3IgY3JpdGljYWwgc2VydmljZXMuIE1haW50YWluIGFsdGVybmF0aXZlIHZlbmRvciByZWxhdGlvbnNoaXBzLicsXHJcbiAgICAnb2ZmYm9hcmRpbmcudHJhbnNpdGlvblBsYW5uaW5nJzogJ01pbmltdW0gOTAtZGF5IHRyYW5zaXRpb24gcGVyaW9kIHdpdGggZG9jdW1lbnRlZCBrbm93bGVkZ2UgdHJhbnNmZXInLFxyXG4gICAgJ2NvbXBsaWFuY2UuYXVkaXRSaWdodHMnOiAnT3JnYW5pemF0aW9uIHJldGFpbnMgdGhlIHJpZ2h0IHRvIGF1ZGl0IHZlbmRvciBvcGVyYXRpb25zIHdpdGggMzAgZGF5cyB3cml0dGVuIG5vdGljZScsXHJcbiAgfSxcclxufTtcclxuIl0sInZlcnNpb24iOjN9

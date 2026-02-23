@@ -1,0 +1,27 @@
+ef518db9cefa46fb34ca186ca21f3b71
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.NotificationModule = void 0;
+const common_1 = require("@nestjs/common");
+const notification_service_1 = require("./notification.service");
+const notification_controller_1 = require("./notification.controller");
+const adaptive_card_service_1 = require("./adaptive-card.service");
+const teams_webhook_controller_1 = require("./teams-webhook.controller");
+let NotificationModule = class NotificationModule {
+};
+exports.NotificationModule = NotificationModule;
+exports.NotificationModule = NotificationModule = __decorate([
+    (0, common_1.Global)(),
+    (0, common_1.Module)({
+        controllers: [notification_controller_1.NotificationController, teams_webhook_controller_1.TeamsWebhookController],
+        providers: [notification_service_1.NotificationService, adaptive_card_service_1.AdaptiveCardService],
+        exports: [notification_service_1.NotificationService, adaptive_card_service_1.AdaptiveCardService],
+    })
+], NotificationModule);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcbm90aWZpY2F0aW9uc1xcbm90aWZpY2F0aW9uLm1vZHVsZS50cyIsIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7QUFBQSwyQ0FBZ0Q7QUFDaEQsaUVBQTZEO0FBQzdELHVFQUFtRTtBQUNuRSxtRUFBOEQ7QUFDOUQseUVBQW9FO0FBUTdELElBQU0sa0JBQWtCLEdBQXhCLE1BQU0sa0JBQWtCO0NBQUcsQ0FBQTtBQUFyQixnREFBa0I7NkJBQWxCLGtCQUFrQjtJQU45QixJQUFBLGVBQU0sR0FBRTtJQUNSLElBQUEsZUFBTSxFQUFDO1FBQ04sV0FBVyxFQUFFLENBQUMsZ0RBQXNCLEVBQUUsaURBQXNCLENBQUM7UUFDN0QsU0FBUyxFQUFFLENBQUMsMENBQW1CLEVBQUUsMkNBQW1CLENBQUM7UUFDckQsT0FBTyxFQUFFLENBQUMsMENBQW1CLEVBQUUsMkNBQW1CLENBQUM7S0FDcEQsQ0FBQztHQUNXLGtCQUFrQixDQUFHIiwibmFtZXMiOltdLCJzb3VyY2VzIjpbIkM6XFxSZXBvc1xcUXVpei10by1CdWlsZFxcYXBwc1xcYXBpXFxzcmNcXG1vZHVsZXNcXG5vdGlmaWNhdGlvbnNcXG5vdGlmaWNhdGlvbi5tb2R1bGUudHMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgTW9kdWxlLCBHbG9iYWwgfSBmcm9tICdAbmVzdGpzL2NvbW1vbic7XG5pbXBvcnQgeyBOb3RpZmljYXRpb25TZXJ2aWNlIH0gZnJvbSAnLi9ub3RpZmljYXRpb24uc2VydmljZSc7XG5pbXBvcnQgeyBOb3RpZmljYXRpb25Db250cm9sbGVyIH0gZnJvbSAnLi9ub3RpZmljYXRpb24uY29udHJvbGxlcic7XG5pbXBvcnQgeyBBZGFwdGl2ZUNhcmRTZXJ2aWNlIH0gZnJvbSAnLi9hZGFwdGl2ZS1jYXJkLnNlcnZpY2UnO1xuaW1wb3J0IHsgVGVhbXNXZWJob29rQ29udHJvbGxlciB9IGZyb20gJy4vdGVhbXMtd2ViaG9vay5jb250cm9sbGVyJztcblxuQEdsb2JhbCgpXG5ATW9kdWxlKHtcbiAgY29udHJvbGxlcnM6IFtOb3RpZmljYXRpb25Db250cm9sbGVyLCBUZWFtc1dlYmhvb2tDb250cm9sbGVyXSxcbiAgcHJvdmlkZXJzOiBbTm90aWZpY2F0aW9uU2VydmljZSwgQWRhcHRpdmVDYXJkU2VydmljZV0sXG4gIGV4cG9ydHM6IFtOb3RpZmljYXRpb25TZXJ2aWNlLCBBZGFwdGl2ZUNhcmRTZXJ2aWNlXSxcbn0pXG5leHBvcnQgY2xhc3MgTm90aWZpY2F0aW9uTW9kdWxlIHt9XG4iXSwidmVyc2lvbiI6M30=

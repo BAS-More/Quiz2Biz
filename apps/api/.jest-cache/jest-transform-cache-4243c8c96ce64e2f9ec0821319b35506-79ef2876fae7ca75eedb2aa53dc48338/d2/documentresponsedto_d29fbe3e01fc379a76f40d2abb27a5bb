@@ -1,0 +1,143 @@
+24e4ee5ecc540297fed429f65456abe2
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DownloadUrlResponseDto = exports.DocumentResponseDto = exports.DocumentTypeResponseDto = void 0;
+const swagger_1 = require("@nestjs/swagger");
+const client_1 = require("@prisma/client");
+// Extract enum values for Swagger schema generation
+const DocumentCategoryValues = Object.values(client_1.DocumentCategory);
+const DocumentStatusValues = Object.values(client_1.DocumentStatus);
+class DocumentTypeResponseDto {
+    id;
+    name;
+    slug;
+    description;
+    category;
+    outputFormats;
+    estimatedPages;
+    isActive;
+}
+exports.DocumentTypeResponseDto = DocumentTypeResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], DocumentTypeResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], DocumentTypeResponseDto.prototype, "name", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], DocumentTypeResponseDto.prototype, "slug", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ nullable: true }),
+    __metadata("design:type", Object)
+], DocumentTypeResponseDto.prototype, "description", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ enum: DocumentCategoryValues, enumName: 'DocumentCategory' }),
+    __metadata("design:type", String)
+], DocumentTypeResponseDto.prototype, "category", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: [String], description: 'Supported output formats' }),
+    __metadata("design:type", Array)
+], DocumentTypeResponseDto.prototype, "outputFormats", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ nullable: true }),
+    __metadata("design:type", Object)
+], DocumentTypeResponseDto.prototype, "estimatedPages", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Boolean)
+], DocumentTypeResponseDto.prototype, "isActive", void 0);
+class DocumentResponseDto {
+    id;
+    sessionId;
+    documentTypeId;
+    status;
+    format;
+    fileName;
+    fileSize;
+    version;
+    generatedAt;
+    createdAt;
+    updatedAt;
+    documentType;
+}
+exports.DocumentResponseDto = DocumentResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], DocumentResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], DocumentResponseDto.prototype, "sessionId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], DocumentResponseDto.prototype, "documentTypeId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ enum: DocumentStatusValues, enumName: 'DocumentStatus' }),
+    __metadata("design:type", String)
+], DocumentResponseDto.prototype, "status", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], DocumentResponseDto.prototype, "format", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)(),
+    __metadata("design:type", String)
+], DocumentResponseDto.prototype, "fileName", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)(),
+    __metadata("design:type", String)
+], DocumentResponseDto.prototype, "fileSize", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Number)
+], DocumentResponseDto.prototype, "version", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)(),
+    __metadata("design:type", Date)
+], DocumentResponseDto.prototype, "generatedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Date)
+], DocumentResponseDto.prototype, "createdAt", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Date)
+], DocumentResponseDto.prototype, "updatedAt", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ type: DocumentTypeResponseDto }),
+    __metadata("design:type", DocumentTypeResponseDto)
+], DocumentResponseDto.prototype, "documentType", void 0);
+class DownloadUrlResponseDto {
+    url;
+    expiresAt;
+}
+exports.DownloadUrlResponseDto = DownloadUrlResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Secure download URL with SAS token',
+        example: 'https://storage.blob.core.windows.net/documents/...',
+    }),
+    __metadata("design:type", String)
+], DownloadUrlResponseDto.prototype, "url", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'URL expiration time',
+    }),
+    __metadata("design:type", Date)
+], DownloadUrlResponseDto.prototype, "expiresAt", void 0);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcZG9jdW1lbnQtZ2VuZXJhdG9yXFxkdG9cXGRvY3VtZW50LXJlc3BvbnNlLmR0by50cyIsIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7QUFBQSw2Q0FBbUU7QUFDbkUsMkNBQWtFO0FBRWxFLG9EQUFvRDtBQUNwRCxNQUFNLHNCQUFzQixHQUFHLE1BQU0sQ0FBQyxNQUFNLENBQUMseUJBQWdCLENBQUMsQ0FBQztBQUMvRCxNQUFNLG9CQUFvQixHQUFHLE1BQU0sQ0FBQyxNQUFNLENBQUMsdUJBQWMsQ0FBQyxDQUFDO0FBRTNELE1BQWEsdUJBQXVCO0lBRWxDLEVBQUUsQ0FBUztJQUdYLElBQUksQ0FBUztJQUdiLElBQUksQ0FBUztJQUdiLFdBQVcsQ0FBZ0I7SUFHM0IsUUFBUSxDQUFtQjtJQUczQixhQUFhLENBQVc7SUFHeEIsY0FBYyxDQUFnQjtJQUc5QixRQUFRLENBQVU7Q0FDbkI7QUF4QkQsMERBd0JDO0FBdEJDO0lBREMsSUFBQSxxQkFBVyxHQUFFOzttREFDSDtBQUdYO0lBREMsSUFBQSxxQkFBVyxHQUFFOztxREFDRDtBQUdiO0lBREMsSUFBQSxxQkFBVyxHQUFFOztxREFDRDtBQUdiO0lBREMsSUFBQSw2QkFBbUIsRUFBQyxFQUFFLFFBQVEsRUFBRSxJQUFJLEVBQUUsQ0FBQzs7NERBQ2I7QUFHM0I7SUFEQyxJQUFBLHFCQUFXLEVBQUMsRUFBRSxJQUFJLEVBQUUsc0JBQXNCLEVBQUUsUUFBUSxFQUFFLGtCQUFrQixFQUFFLENBQUM7O3lEQUNqRDtBQUczQjtJQURDLElBQUEscUJBQVcsRUFBQyxFQUFFLElBQUksRUFBRSxDQUFDLE1BQU0sQ0FBQyxFQUFFLFdBQVcsRUFBRSwwQkFBMEIsRUFBRSxDQUFDOzs4REFDakQ7QUFHeEI7SUFEQyxJQUFBLDZCQUFtQixFQUFDLEVBQUUsUUFBUSxFQUFFLElBQUksRUFBRSxDQUFDOzsrREFDVjtBQUc5QjtJQURDLElBQUEscUJBQVcsR0FBRTs7eURBQ0k7QUFHcEIsTUFBYSxtQkFBbUI7SUFFOUIsRUFBRSxDQUFTO0lBR1gsU0FBUyxDQUFTO0lBR2xCLGNBQWMsQ0FBUztJQUd2QixNQUFNLENBQWlCO0lBR3ZCLE1BQU0sQ0FBUztJQUdmLFFBQVEsQ0FBVTtJQUdsQixRQUFRLENBQVU7SUFHbEIsT0FBTyxDQUFTO0lBR2hCLFdBQVcsQ0FBUTtJQUduQixTQUFTLENBQU87SUFHaEIsU0FBUyxDQUFPO0lBR2hCLFlBQVksQ0FBMkI7Q0FDeEM7QUFwQ0Qsa0RBb0NDO0FBbENDO0lBREMsSUFBQSxxQkFBVyxHQUFFOzsrQ0FDSDtBQUdYO0lBREMsSUFBQSxxQkFBVyxHQUFFOztzREFDSTtBQUdsQjtJQURDLElBQUEscUJBQVcsR0FBRTs7MkRBQ1M7QUFHdkI7SUFEQyxJQUFBLHFCQUFXLEVBQUMsRUFBRSxJQUFJLEVBQUUsb0JBQW9CLEVBQUUsUUFBUSxFQUFFLGdCQUFnQixFQUFFLENBQUM7O21EQUNqRDtBQUd2QjtJQURDLElBQUEscUJBQVcsR0FBRTs7bURBQ0M7QUFHZjtJQURDLElBQUEsNkJBQW1CLEdBQUU7O3FEQUNKO0FBR2xCO0lBREMsSUFBQSw2QkFBbUIsR0FBRTs7cURBQ0o7QUFHbEI7SUFEQyxJQUFBLHFCQUFXLEdBQUU7O29EQUNFO0FBR2hCO0lBREMsSUFBQSw2QkFBbUIsR0FBRTs4QkFDUixJQUFJO3dEQUFDO0FBR25CO0lBREMsSUFBQSxxQkFBVyxHQUFFOzhCQUNILElBQUk7c0RBQUM7QUFHaEI7SUFEQyxJQUFBLHFCQUFXLEdBQUU7OEJBQ0gsSUFBSTtzREFBQztBQUdoQjtJQURDLElBQUEsNkJBQW1CLEVBQUMsRUFBRSxJQUFJLEVBQUUsdUJBQXVCLEVBQUUsQ0FBQzs4QkFDeEMsdUJBQXVCO3lEQUFDO0FBR3pDLE1BQWEsc0JBQXNCO0lBS2pDLEdBQUcsQ0FBUztJQUtaLFNBQVMsQ0FBTztDQUNqQjtBQVhELHdEQVdDO0FBTkM7SUFKQyxJQUFBLHFCQUFXLEVBQUM7UUFDWCxXQUFXLEVBQUUsb0NBQW9DO1FBQ2pELE9BQU8sRUFBRSxxREFBcUQ7S0FDL0QsQ0FBQzs7bURBQ1U7QUFLWjtJQUhDLElBQUEscUJBQVcsRUFBQztRQUNYLFdBQVcsRUFBRSxxQkFBcUI7S0FDbkMsQ0FBQzs4QkFDUyxJQUFJO3lEQUFDIiwibmFtZXMiOltdLCJzb3VyY2VzIjpbIkM6XFxSZXBvc1xcUXVpei10by1CdWlsZFxcYXBwc1xcYXBpXFxzcmNcXG1vZHVsZXNcXGRvY3VtZW50LWdlbmVyYXRvclxcZHRvXFxkb2N1bWVudC1yZXNwb25zZS5kdG8udHMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgQXBpUHJvcGVydHksIEFwaVByb3BlcnR5T3B0aW9uYWwgfSBmcm9tICdAbmVzdGpzL3N3YWdnZXInO1xuaW1wb3J0IHsgRG9jdW1lbnRTdGF0dXMsIERvY3VtZW50Q2F0ZWdvcnkgfSBmcm9tICdAcHJpc21hL2NsaWVudCc7XG5cbi8vIEV4dHJhY3QgZW51bSB2YWx1ZXMgZm9yIFN3YWdnZXIgc2NoZW1hIGdlbmVyYXRpb25cbmNvbnN0IERvY3VtZW50Q2F0ZWdvcnlWYWx1ZXMgPSBPYmplY3QudmFsdWVzKERvY3VtZW50Q2F0ZWdvcnkpO1xuY29uc3QgRG9jdW1lbnRTdGF0dXNWYWx1ZXMgPSBPYmplY3QudmFsdWVzKERvY3VtZW50U3RhdHVzKTtcblxuZXhwb3J0IGNsYXNzIERvY3VtZW50VHlwZVJlc3BvbnNlRHRvIHtcbiAgQEFwaVByb3BlcnR5KClcbiAgaWQ6IHN0cmluZztcblxuICBAQXBpUHJvcGVydHkoKVxuICBuYW1lOiBzdHJpbmc7XG5cbiAgQEFwaVByb3BlcnR5KClcbiAgc2x1Zzogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eU9wdGlvbmFsKHsgbnVsbGFibGU6IHRydWUgfSlcbiAgZGVzY3JpcHRpb246IHN0cmluZyB8IG51bGw7XG5cbiAgQEFwaVByb3BlcnR5KHsgZW51bTogRG9jdW1lbnRDYXRlZ29yeVZhbHVlcywgZW51bU5hbWU6ICdEb2N1bWVudENhdGVnb3J5JyB9KVxuICBjYXRlZ29yeTogRG9jdW1lbnRDYXRlZ29yeTtcblxuICBAQXBpUHJvcGVydHkoeyB0eXBlOiBbU3RyaW5nXSwgZGVzY3JpcHRpb246ICdTdXBwb3J0ZWQgb3V0cHV0IGZvcm1hdHMnIH0pXG4gIG91dHB1dEZvcm1hdHM6IHN0cmluZ1tdO1xuXG4gIEBBcGlQcm9wZXJ0eU9wdGlvbmFsKHsgbnVsbGFibGU6IHRydWUgfSlcbiAgZXN0aW1hdGVkUGFnZXM6IG51bWJlciB8IG51bGw7XG5cbiAgQEFwaVByb3BlcnR5KClcbiAgaXNBY3RpdmU6IGJvb2xlYW47XG59XG5cbmV4cG9ydCBjbGFzcyBEb2N1bWVudFJlc3BvbnNlRHRvIHtcbiAgQEFwaVByb3BlcnR5KClcbiAgaWQ6IHN0cmluZztcblxuICBAQXBpUHJvcGVydHkoKVxuICBzZXNzaW9uSWQ6IHN0cmluZztcblxuICBAQXBpUHJvcGVydHkoKVxuICBkb2N1bWVudFR5cGVJZDogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGVudW06IERvY3VtZW50U3RhdHVzVmFsdWVzLCBlbnVtTmFtZTogJ0RvY3VtZW50U3RhdHVzJyB9KVxuICBzdGF0dXM6IERvY3VtZW50U3RhdHVzO1xuXG4gIEBBcGlQcm9wZXJ0eSgpXG4gIGZvcm1hdDogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eU9wdGlvbmFsKClcbiAgZmlsZU5hbWU/OiBzdHJpbmc7XG5cbiAgQEFwaVByb3BlcnR5T3B0aW9uYWwoKVxuICBmaWxlU2l6ZT86IHN0cmluZztcblxuICBAQXBpUHJvcGVydHkoKVxuICB2ZXJzaW9uOiBudW1iZXI7XG5cbiAgQEFwaVByb3BlcnR5T3B0aW9uYWwoKVxuICBnZW5lcmF0ZWRBdD86IERhdGU7XG5cbiAgQEFwaVByb3BlcnR5KClcbiAgY3JlYXRlZEF0OiBEYXRlO1xuXG4gIEBBcGlQcm9wZXJ0eSgpXG4gIHVwZGF0ZWRBdDogRGF0ZTtcblxuICBAQXBpUHJvcGVydHlPcHRpb25hbCh7IHR5cGU6IERvY3VtZW50VHlwZVJlc3BvbnNlRHRvIH0pXG4gIGRvY3VtZW50VHlwZT86IERvY3VtZW50VHlwZVJlc3BvbnNlRHRvO1xufVxuXG5leHBvcnQgY2xhc3MgRG93bmxvYWRVcmxSZXNwb25zZUR0byB7XG4gIEBBcGlQcm9wZXJ0eSh7XG4gICAgZGVzY3JpcHRpb246ICdTZWN1cmUgZG93bmxvYWQgVVJMIHdpdGggU0FTIHRva2VuJyxcbiAgICBleGFtcGxlOiAnaHR0cHM6Ly9zdG9yYWdlLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvLi4uJyxcbiAgfSlcbiAgdXJsOiBzdHJpbmc7XG5cbiAgQEFwaVByb3BlcnR5KHtcbiAgICBkZXNjcmlwdGlvbjogJ1VSTCBleHBpcmF0aW9uIHRpbWUnLFxuICB9KVxuICBleHBpcmVzQXQ6IERhdGU7XG59XG4iXSwidmVyc2lvbiI6M30=

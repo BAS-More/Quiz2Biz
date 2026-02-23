@@ -1,0 +1,105 @@
+696cca7c3bc99d6b0067b9700a6f0e5e
+"use strict";
+/**
+ * Base template styles and configuration for all document types
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PLACEHOLDERS = exports.SECTION_ORDER = exports.DOCUMENT_METADATA = exports.PAGE_MARGINS = exports.BASE_STYLES = void 0;
+exports.BASE_STYLES = {
+    document: {
+        font: 'Calibri',
+        fontSize: 24, // 12pt in half-points
+        lineSpacing: 276, // 1.15 line spacing
+    },
+    title: {
+        fontSize: 48, // 24pt
+        bold: true,
+    },
+    heading1: {
+        fontSize: 32, // 16pt
+        bold: true,
+        spaceBefore: 240,
+        spaceAfter: 120,
+    },
+    heading2: {
+        fontSize: 28, // 14pt
+        bold: true,
+        spaceBefore: 200,
+        spaceAfter: 100,
+    },
+    heading3: {
+        fontSize: 24, // 12pt
+        bold: true,
+        spaceBefore: 160,
+        spaceAfter: 80,
+    },
+    paragraph: {
+        spaceAfter: 120,
+    },
+    table: {
+        headerBackground: 'E0E0E0',
+        borderColor: '000000',
+        borderSize: 1,
+    },
+};
+exports.PAGE_MARGINS = {
+    top: 1440, // 1 inch in twips
+    right: 1440,
+    bottom: 1440,
+    left: 1440,
+};
+exports.DOCUMENT_METADATA = {
+    creator: 'Adaptive Questionnaire System',
+    company: 'Your Company Name',
+    lastModifiedBy: 'Document Generator',
+};
+/**
+ * Standard section order for different document categories
+ */
+exports.SECTION_ORDER = {
+    CTO: [
+        'document_control',
+        'executive_summary',
+        'technical_overview',
+        'architecture',
+        'infrastructure',
+        'security',
+        'engineering_standards',
+        'appendices',
+    ],
+    CFO: [
+        'document_control',
+        'executive_summary',
+        'company_description',
+        'market_analysis',
+        'products_services',
+        'marketing_strategy',
+        'operations_plan',
+        'management_team',
+        'financial_projections',
+        'risk_management',
+        'appendices',
+    ],
+    BA: [
+        'document_control',
+        'introduction',
+        'business_requirements',
+        'functional_requirements',
+        'non_functional_requirements',
+        'user_stories',
+        'process_flows',
+        'data_requirements',
+        'acceptance_criteria',
+        'appendices',
+    ],
+};
+/**
+ * Default placeholder values for missing data
+ */
+exports.PLACEHOLDERS = {
+    text: '[Not provided]',
+    number: 0,
+    date: 'TBD',
+    list: [],
+};
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcZG9jdW1lbnQtZ2VuZXJhdG9yXFx0ZW1wbGF0ZXNcXGJhc2UudGVtcGxhdGUudHMiLCJtYXBwaW5ncyI6IjtBQUFBOztHQUVHOzs7QUFFVSxRQUFBLFdBQVcsR0FBRztJQUN6QixRQUFRLEVBQUU7UUFDUixJQUFJLEVBQUUsU0FBUztRQUNmLFFBQVEsRUFBRSxFQUFFLEVBQUUsc0JBQXNCO1FBQ3BDLFdBQVcsRUFBRSxHQUFHLEVBQUUsb0JBQW9CO0tBQ3ZDO0lBQ0QsS0FBSyxFQUFFO1FBQ0wsUUFBUSxFQUFFLEVBQUUsRUFBRSxPQUFPO1FBQ3JCLElBQUksRUFBRSxJQUFJO0tBQ1g7SUFDRCxRQUFRLEVBQUU7UUFDUixRQUFRLEVBQUUsRUFBRSxFQUFFLE9BQU87UUFDckIsSUFBSSxFQUFFLElBQUk7UUFDVixXQUFXLEVBQUUsR0FBRztRQUNoQixVQUFVLEVBQUUsR0FBRztLQUNoQjtJQUNELFFBQVEsRUFBRTtRQUNSLFFBQVEsRUFBRSxFQUFFLEVBQUUsT0FBTztRQUNyQixJQUFJLEVBQUUsSUFBSTtRQUNWLFdBQVcsRUFBRSxHQUFHO1FBQ2hCLFVBQVUsRUFBRSxHQUFHO0tBQ2hCO0lBQ0QsUUFBUSxFQUFFO1FBQ1IsUUFBUSxFQUFFLEVBQUUsRUFBRSxPQUFPO1FBQ3JCLElBQUksRUFBRSxJQUFJO1FBQ1YsV0FBVyxFQUFFLEdBQUc7UUFDaEIsVUFBVSxFQUFFLEVBQUU7S0FDZjtJQUNELFNBQVMsRUFBRTtRQUNULFVBQVUsRUFBRSxHQUFHO0tBQ2hCO0lBQ0QsS0FBSyxFQUFFO1FBQ0wsZ0JBQWdCLEVBQUUsUUFBUTtRQUMxQixXQUFXLEVBQUUsUUFBUTtRQUNyQixVQUFVLEVBQUUsQ0FBQztLQUNkO0NBQ0YsQ0FBQztBQUVXLFFBQUEsWUFBWSxHQUFHO0lBQzFCLEdBQUcsRUFBRSxJQUFJLEVBQUUsa0JBQWtCO0lBQzdCLEtBQUssRUFBRSxJQUFJO0lBQ1gsTUFBTSxFQUFFLElBQUk7SUFDWixJQUFJLEVBQUUsSUFBSTtDQUNYLENBQUM7QUFFVyxRQUFBLGlCQUFpQixHQUFHO0lBQy9CLE9BQU8sRUFBRSwrQkFBK0I7SUFDeEMsT0FBTyxFQUFFLG1CQUFtQjtJQUM1QixjQUFjLEVBQUUsb0JBQW9CO0NBQ3JDLENBQUM7QUFFRjs7R0FFRztBQUNVLFFBQUEsYUFBYSxHQUFHO0lBQzNCLEdBQUcsRUFBRTtRQUNILGtCQUFrQjtRQUNsQixtQkFBbUI7UUFDbkIsb0JBQW9CO1FBQ3BCLGNBQWM7UUFDZCxnQkFBZ0I7UUFDaEIsVUFBVTtRQUNWLHVCQUF1QjtRQUN2QixZQUFZO0tBQ2I7SUFDRCxHQUFHLEVBQUU7UUFDSCxrQkFBa0I7UUFDbEIsbUJBQW1CO1FBQ25CLHFCQUFxQjtRQUNyQixpQkFBaUI7UUFDakIsbUJBQW1CO1FBQ25CLG9CQUFvQjtRQUNwQixpQkFBaUI7UUFDakIsaUJBQWlCO1FBQ2pCLHVCQUF1QjtRQUN2QixpQkFBaUI7UUFDakIsWUFBWTtLQUNiO0lBQ0QsRUFBRSxFQUFFO1FBQ0Ysa0JBQWtCO1FBQ2xCLGNBQWM7UUFDZCx1QkFBdUI7UUFDdkIseUJBQXlCO1FBQ3pCLDZCQUE2QjtRQUM3QixjQUFjO1FBQ2QsZUFBZTtRQUNmLG1CQUFtQjtRQUNuQixxQkFBcUI7UUFDckIsWUFBWTtLQUNiO0NBQ0YsQ0FBQztBQUVGOztHQUVHO0FBQ1UsUUFBQSxZQUFZLEdBQUc7SUFDMUIsSUFBSSxFQUFFLGdCQUFnQjtJQUN0QixNQUFNLEVBQUUsQ0FBQztJQUNULElBQUksRUFBRSxLQUFLO0lBQ1gsSUFBSSxFQUFFLEVBQUU7Q0FDVCxDQUFDIiwibmFtZXMiOltdLCJzb3VyY2VzIjpbIkM6XFxSZXBvc1xcUXVpei10by1CdWlsZFxcYXBwc1xcYXBpXFxzcmNcXG1vZHVsZXNcXGRvY3VtZW50LWdlbmVyYXRvclxcdGVtcGxhdGVzXFxiYXNlLnRlbXBsYXRlLnRzIl0sInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogQmFzZSB0ZW1wbGF0ZSBzdHlsZXMgYW5kIGNvbmZpZ3VyYXRpb24gZm9yIGFsbCBkb2N1bWVudCB0eXBlc1xuICovXG5cbmV4cG9ydCBjb25zdCBCQVNFX1NUWUxFUyA9IHtcbiAgZG9jdW1lbnQ6IHtcbiAgICBmb250OiAnQ2FsaWJyaScsXG4gICAgZm9udFNpemU6IDI0LCAvLyAxMnB0IGluIGhhbGYtcG9pbnRzXG4gICAgbGluZVNwYWNpbmc6IDI3NiwgLy8gMS4xNSBsaW5lIHNwYWNpbmdcbiAgfSxcbiAgdGl0bGU6IHtcbiAgICBmb250U2l6ZTogNDgsIC8vIDI0cHRcbiAgICBib2xkOiB0cnVlLFxuICB9LFxuICBoZWFkaW5nMToge1xuICAgIGZvbnRTaXplOiAzMiwgLy8gMTZwdFxuICAgIGJvbGQ6IHRydWUsXG4gICAgc3BhY2VCZWZvcmU6IDI0MCxcbiAgICBzcGFjZUFmdGVyOiAxMjAsXG4gIH0sXG4gIGhlYWRpbmcyOiB7XG4gICAgZm9udFNpemU6IDI4LCAvLyAxNHB0XG4gICAgYm9sZDogdHJ1ZSxcbiAgICBzcGFjZUJlZm9yZTogMjAwLFxuICAgIHNwYWNlQWZ0ZXI6IDEwMCxcbiAgfSxcbiAgaGVhZGluZzM6IHtcbiAgICBmb250U2l6ZTogMjQsIC8vIDEycHRcbiAgICBib2xkOiB0cnVlLFxuICAgIHNwYWNlQmVmb3JlOiAxNjAsXG4gICAgc3BhY2VBZnRlcjogODAsXG4gIH0sXG4gIHBhcmFncmFwaDoge1xuICAgIHNwYWNlQWZ0ZXI6IDEyMCxcbiAgfSxcbiAgdGFibGU6IHtcbiAgICBoZWFkZXJCYWNrZ3JvdW5kOiAnRTBFMEUwJyxcbiAgICBib3JkZXJDb2xvcjogJzAwMDAwMCcsXG4gICAgYm9yZGVyU2l6ZTogMSxcbiAgfSxcbn07XG5cbmV4cG9ydCBjb25zdCBQQUdFX01BUkdJTlMgPSB7XG4gIHRvcDogMTQ0MCwgLy8gMSBpbmNoIGluIHR3aXBzXG4gIHJpZ2h0OiAxNDQwLFxuICBib3R0b206IDE0NDAsXG4gIGxlZnQ6IDE0NDAsXG59O1xuXG5leHBvcnQgY29uc3QgRE9DVU1FTlRfTUVUQURBVEEgPSB7XG4gIGNyZWF0b3I6ICdBZGFwdGl2ZSBRdWVzdGlvbm5haXJlIFN5c3RlbScsXG4gIGNvbXBhbnk6ICdZb3VyIENvbXBhbnkgTmFtZScsXG4gIGxhc3RNb2RpZmllZEJ5OiAnRG9jdW1lbnQgR2VuZXJhdG9yJyxcbn07XG5cbi8qKlxuICogU3RhbmRhcmQgc2VjdGlvbiBvcmRlciBmb3IgZGlmZmVyZW50IGRvY3VtZW50IGNhdGVnb3JpZXNcbiAqL1xuZXhwb3J0IGNvbnN0IFNFQ1RJT05fT1JERVIgPSB7XG4gIENUTzogW1xuICAgICdkb2N1bWVudF9jb250cm9sJyxcbiAgICAnZXhlY3V0aXZlX3N1bW1hcnknLFxuICAgICd0ZWNobmljYWxfb3ZlcnZpZXcnLFxuICAgICdhcmNoaXRlY3R1cmUnLFxuICAgICdpbmZyYXN0cnVjdHVyZScsXG4gICAgJ3NlY3VyaXR5JyxcbiAgICAnZW5naW5lZXJpbmdfc3RhbmRhcmRzJyxcbiAgICAnYXBwZW5kaWNlcycsXG4gIF0sXG4gIENGTzogW1xuICAgICdkb2N1bWVudF9jb250cm9sJyxcbiAgICAnZXhlY3V0aXZlX3N1bW1hcnknLFxuICAgICdjb21wYW55X2Rlc2NyaXB0aW9uJyxcbiAgICAnbWFya2V0X2FuYWx5c2lzJyxcbiAgICAncHJvZHVjdHNfc2VydmljZXMnLFxuICAgICdtYXJrZXRpbmdfc3RyYXRlZ3knLFxuICAgICdvcGVyYXRpb25zX3BsYW4nLFxuICAgICdtYW5hZ2VtZW50X3RlYW0nLFxuICAgICdmaW5hbmNpYWxfcHJvamVjdGlvbnMnLFxuICAgICdyaXNrX21hbmFnZW1lbnQnLFxuICAgICdhcHBlbmRpY2VzJyxcbiAgXSxcbiAgQkE6IFtcbiAgICAnZG9jdW1lbnRfY29udHJvbCcsXG4gICAgJ2ludHJvZHVjdGlvbicsXG4gICAgJ2J1c2luZXNzX3JlcXVpcmVtZW50cycsXG4gICAgJ2Z1bmN0aW9uYWxfcmVxdWlyZW1lbnRzJyxcbiAgICAnbm9uX2Z1bmN0aW9uYWxfcmVxdWlyZW1lbnRzJyxcbiAgICAndXNlcl9zdG9yaWVzJyxcbiAgICAncHJvY2Vzc19mbG93cycsXG4gICAgJ2RhdGFfcmVxdWlyZW1lbnRzJyxcbiAgICAnYWNjZXB0YW5jZV9jcml0ZXJpYScsXG4gICAgJ2FwcGVuZGljZXMnLFxuICBdLFxufTtcblxuLyoqXG4gKiBEZWZhdWx0IHBsYWNlaG9sZGVyIHZhbHVlcyBmb3IgbWlzc2luZyBkYXRhXG4gKi9cbmV4cG9ydCBjb25zdCBQTEFDRUhPTERFUlMgPSB7XG4gIHRleHQ6ICdbTm90IHByb3ZpZGVkXScsXG4gIG51bWJlcjogMCxcbiAgZGF0ZTogJ1RCRCcsXG4gIGxpc3Q6IFtdLFxufTtcbiJdLCJ2ZXJzaW9uIjozfQ==

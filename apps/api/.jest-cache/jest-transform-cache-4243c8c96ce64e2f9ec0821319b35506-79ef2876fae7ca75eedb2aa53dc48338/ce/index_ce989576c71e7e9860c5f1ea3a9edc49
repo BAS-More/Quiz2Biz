@@ -1,0 +1,261 @@
+c1fddbde00475609909814167f0ebe4d
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.HeatmapDrilldownDto = exports.HeatmapResultDto = exports.HeatmapSummaryDto = exports.HeatmapCellDto = exports.HeatmapCellsQueryDto = exports.GenerateHeatmapDto = exports.HeatmapColors = exports.SeverityBuckets = exports.HeatmapColor = exports.SeverityBucket = void 0;
+const swagger_1 = require("@nestjs/swagger");
+const class_validator_1 = require("class-validator");
+/**
+ * Severity bucket classification for heatmap cells.
+ */
+var SeverityBucket;
+(function (SeverityBucket) {
+    SeverityBucket["LOW"] = "Low";
+    SeverityBucket["MEDIUM"] = "Medium";
+    SeverityBucket["HIGH"] = "High";
+    SeverityBucket["CRITICAL"] = "Critical";
+})(SeverityBucket || (exports.SeverityBucket = SeverityBucket = {}));
+/**
+ * Color codes for heatmap cells based on residual risk.
+ */
+var HeatmapColor;
+(function (HeatmapColor) {
+    HeatmapColor["GREEN"] = "#28A745";
+    HeatmapColor["AMBER"] = "#FFC107";
+    HeatmapColor["RED"] = "#DC3545";
+})(HeatmapColor || (exports.HeatmapColor = HeatmapColor = {}));
+/**
+ * Utility functions for severity and color classification.
+ */
+exports.SeverityBuckets = {
+    getBucket(severity) {
+        if (severity < 0.25) {
+            return SeverityBucket.LOW;
+        }
+        if (severity < 0.5) {
+            return SeverityBucket.MEDIUM;
+        }
+        if (severity < 0.75) {
+            return SeverityBucket.HIGH;
+        }
+        return SeverityBucket.CRITICAL;
+    },
+    order: [SeverityBucket.LOW, SeverityBucket.MEDIUM, SeverityBucket.HIGH, SeverityBucket.CRITICAL],
+};
+exports.HeatmapColors = {
+    getColor(residual) {
+        if (residual <= 0.05) {
+            return HeatmapColor.GREEN;
+        }
+        if (residual <= 0.15) {
+            return HeatmapColor.AMBER;
+        }
+        return HeatmapColor.RED;
+    },
+};
+/**
+ * Request DTO for generating heatmap.
+ */
+class GenerateHeatmapDto {
+    sessionId;
+}
+exports.GenerateHeatmapDto = GenerateHeatmapDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Session ID to generate heatmap for' }),
+    (0, class_validator_1.IsUUID)(),
+    __metadata("design:type", String)
+], GenerateHeatmapDto.prototype, "sessionId", void 0);
+/**
+ * Query params for filtering heatmap cells.
+ */
+class HeatmapCellsQueryDto {
+    dimension;
+    severity;
+}
+exports.HeatmapCellsQueryDto = HeatmapCellsQueryDto;
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Filter by dimension key' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], HeatmapCellsQueryDto.prototype, "dimension", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Filter by severity bucket' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], HeatmapCellsQueryDto.prototype, "severity", void 0);
+/**
+ * Individual heatmap cell representing dimension × severity intersection.
+ */
+class HeatmapCellDto {
+    dimensionId;
+    dimensionKey;
+    severityBucket;
+    cellValue;
+    colorCode;
+    questionCount;
+    constructor(data) {
+        Object.assign(this, data);
+    }
+}
+exports.HeatmapCellDto = HeatmapCellDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Dimension ID' }),
+    __metadata("design:type", String)
+], HeatmapCellDto.prototype, "dimensionId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Dimension key' }),
+    __metadata("design:type", String)
+], HeatmapCellDto.prototype, "dimensionKey", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Severity bucket (Low, Medium, High, Critical)' }),
+    __metadata("design:type", String)
+], HeatmapCellDto.prototype, "severityBucket", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Cell value: Sum(Severity × (1 - Coverage))' }),
+    __metadata("design:type", Number)
+], HeatmapCellDto.prototype, "cellValue", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Color code based on residual risk' }),
+    __metadata("design:type", String)
+], HeatmapCellDto.prototype, "colorCode", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Number of questions in this cell' }),
+    __metadata("design:type", Number)
+], HeatmapCellDto.prototype, "questionCount", void 0);
+/**
+ * Heatmap summary statistics.
+ */
+class HeatmapSummaryDto {
+    totalCells;
+    greenCells;
+    amberCells;
+    redCells;
+    criticalGapCount;
+    overallRiskScore;
+}
+exports.HeatmapSummaryDto = HeatmapSummaryDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Total number of cells in heatmap' }),
+    __metadata("design:type", Number)
+], HeatmapSummaryDto.prototype, "totalCells", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Count of green cells (low risk)' }),
+    __metadata("design:type", Number)
+], HeatmapSummaryDto.prototype, "greenCells", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Count of amber cells (moderate risk)' }),
+    __metadata("design:type", Number)
+], HeatmapSummaryDto.prototype, "amberCells", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Count of red cells (high risk)' }),
+    __metadata("design:type", Number)
+], HeatmapSummaryDto.prototype, "redCells", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Count of critical severity gaps with red color' }),
+    __metadata("design:type", Number)
+], HeatmapSummaryDto.prototype, "criticalGapCount", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Overall risk score (sum of all cell values)' }),
+    __metadata("design:type", Number)
+], HeatmapSummaryDto.prototype, "overallRiskScore", void 0);
+/**
+ * Complete heatmap result with cells, dimensions, and summary.
+ */
+class HeatmapResultDto {
+    sessionId;
+    cells;
+    dimensions;
+    severityBuckets;
+    summary;
+    generatedAt;
+}
+exports.HeatmapResultDto = HeatmapResultDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Session ID' }),
+    __metadata("design:type", String)
+], HeatmapResultDto.prototype, "sessionId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: [HeatmapCellDto], description: 'Heatmap cells' }),
+    __metadata("design:type", Array)
+], HeatmapResultDto.prototype, "cells", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: [String], description: 'List of dimension names' }),
+    __metadata("design:type", Array)
+], HeatmapResultDto.prototype, "dimensions", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: [String], description: 'Severity bucket order' }),
+    __metadata("design:type", Array)
+], HeatmapResultDto.prototype, "severityBuckets", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: HeatmapSummaryDto, description: 'Summary statistics' }),
+    __metadata("design:type", HeatmapSummaryDto)
+], HeatmapResultDto.prototype, "summary", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Timestamp when heatmap was generated' }),
+    __metadata("design:type", Date)
+], HeatmapResultDto.prototype, "generatedAt", void 0);
+/**
+ * Drilldown result showing questions contributing to a specific cell.
+ */
+class HeatmapDrilldownDto {
+    dimensionKey;
+    dimensionName;
+    severityBucket;
+    cellValue;
+    colorCode;
+    questionCount;
+    questions;
+    cell;
+    potentialImprovement;
+}
+exports.HeatmapDrilldownDto = HeatmapDrilldownDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Dimension key' }),
+    __metadata("design:type", String)
+], HeatmapDrilldownDto.prototype, "dimensionKey", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Dimension display name' }),
+    __metadata("design:type", String)
+], HeatmapDrilldownDto.prototype, "dimensionName", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Severity bucket (Low, Medium, High, Critical)' }),
+    __metadata("design:type", String)
+], HeatmapDrilldownDto.prototype, "severityBucket", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Cell value: Sum(Severity × (1 - Coverage))' }),
+    __metadata("design:type", Number)
+], HeatmapDrilldownDto.prototype, "cellValue", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Color code based on residual risk' }),
+    __metadata("design:type", String)
+], HeatmapDrilldownDto.prototype, "colorCode", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Number of questions in this cell' }),
+    __metadata("design:type", Number)
+], HeatmapDrilldownDto.prototype, "questionCount", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Questions contributing to this cell' }),
+    __metadata("design:type", Array)
+], HeatmapDrilldownDto.prototype, "questions", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        type: HeatmapCellDto,
+        description: 'The cell being drilled into (optional)',
+    }),
+    __metadata("design:type", HeatmapCellDto)
+], HeatmapDrilldownDto.prototype, "cell", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Potential improvement if all questions fully covered' }),
+    __metadata("design:type", Number)
+], HeatmapDrilldownDto.prototype, "potentialImprovement", void 0);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcaGVhdG1hcFxcZHRvXFxpbmRleC50cyIsIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7QUFBQSw2Q0FBbUU7QUFDbkUscURBQStEO0FBRS9EOztHQUVHO0FBQ0gsSUFBWSxjQUtYO0FBTEQsV0FBWSxjQUFjO0lBQ3hCLDZCQUFXLENBQUE7SUFDWCxtQ0FBaUIsQ0FBQTtJQUNqQiwrQkFBYSxDQUFBO0lBQ2IsdUNBQXFCLENBQUE7QUFDdkIsQ0FBQyxFQUxXLGNBQWMsOEJBQWQsY0FBYyxRQUt6QjtBQUVEOztHQUVHO0FBQ0gsSUFBWSxZQUlYO0FBSkQsV0FBWSxZQUFZO0lBQ3RCLGlDQUFpQixDQUFBO0lBQ2pCLGlDQUFpQixDQUFBO0lBQ2pCLCtCQUFlLENBQUE7QUFDakIsQ0FBQyxFQUpXLFlBQVksNEJBQVosWUFBWSxRQUl2QjtBQUVEOztHQUVHO0FBQ1UsUUFBQSxlQUFlLEdBQUc7SUFDN0IsU0FBUyxDQUFDLFFBQWdCO1FBQ3hCLElBQUksUUFBUSxHQUFHLElBQUksRUFBRSxDQUFDO1lBQ3BCLE9BQU8sY0FBYyxDQUFDLEdBQUcsQ0FBQztRQUM1QixDQUFDO1FBQ0QsSUFBSSxRQUFRLEdBQUcsR0FBRyxFQUFFLENBQUM7WUFDbkIsT0FBTyxjQUFjLENBQUMsTUFBTSxDQUFDO1FBQy9CLENBQUM7UUFDRCxJQUFJLFFBQVEsR0FBRyxJQUFJLEVBQUUsQ0FBQztZQUNwQixPQUFPLGNBQWMsQ0FBQyxJQUFJLENBQUM7UUFDN0IsQ0FBQztRQUNELE9BQU8sY0FBYyxDQUFDLFFBQVEsQ0FBQztJQUNqQyxDQUFDO0lBQ0QsS0FBSyxFQUFFLENBQUMsY0FBYyxDQUFDLEdBQUcsRUFBRSxjQUFjLENBQUMsTUFBTSxFQUFFLGNBQWMsQ0FBQyxJQUFJLEVBQUUsY0FBYyxDQUFDLFFBQVEsQ0FBQztDQUNqRyxDQUFDO0FBRVcsUUFBQSxhQUFhLEdBQUc7SUFDM0IsUUFBUSxDQUFDLFFBQWdCO1FBQ3ZCLElB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LHFCQUFXLEVBQUMsRUFBRSxXQUFXLEVBQUUsZUFBZSxFQUFFLENBQUM7O3lEQUN6QjtBQUdyQjtJQURDLElBQUEscUJBQVcsRUFBQyxFQUFFLFdBQVcsRUFBRSx3QkFBd0IsRUFBRSxDQUFDOzswREFDakM7QUFHdEI7SUFEQyxJQUFBLHFCQUFXLEVBQUMsRUFBRSxXQUFXLEVBQUUsK0NBQStDLEVBQUUsQ0FBQzs7MkRBQ3RDO0FBR3hDO0lBREMsSUFBQSxxQkFBVyxFQUFDLEVBQUUsV0FBVyxFQUFFLDRDQUE0QyxFQUFFLENBQUM7O3NEQUN6RDtBQUdsQjtJQURDLElBQUEscUJBQVcsRUFBQyxFQUFFLFdBQVcsRUFBRSxtQ0FBbUMsRUFBRSxDQUFDOztzREFDMUM7QUFHeEI7SUFEQyxJQUFBLHFCQUFXLEVBQUMsRUFBRSxXQUFXLEVBQUUsa0NBQWtDLEVBQUUsQ0FBQzs7MERBQzNDO0FBR3RCO0lBREMsSUFBQSxxQkFBVyxFQUFDLEVBQUUsV0FBVyxFQUFFLHFDQUFxQyxFQUFFLENBQUM7OEJBQ3pELEtBQUs7c0RBT2I7QUFNSDtJQUpDLElBQUEsNkJBQW1CLEVBQUM7UUFDbkIsSUFBSSxFQUFFLGNBQWM7UUFDcEIsV0FBVyxFQUFFLHdDQUF3QztLQUN0RCxDQUFDOzhCQUNLLGNBQWM7aURBQUM7QUFHdEI7SUFEQyxJQUFBLDZCQUFtQixFQUFDLEVBQUUsV0FBVyxFQUFFLHNEQUFzRCxFQUFFLENBQUM7O2lFQUMvRCIsIm5hbWVzIjpbXSwic291cmNlcyI6WyJDOlxcUmVwb3NcXFF1aXotdG8tQnVpbGRcXGFwcHNcXGFwaVxcc3JjXFxtb2R1bGVzXFxoZWF0bWFwXFxkdG9cXGluZGV4LnRzIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IEFwaVByb3BlcnR5LCBBcGlQcm9wZXJ0eU9wdGlvbmFsIH0gZnJvbSAnQG5lc3Rqcy9zd2FnZ2VyJztcbmltcG9ydCB7IElzVVVJRCwgSXNPcHRpb25hbCwgSXNTdHJpbmcgfSBmcm9tICdjbGFzcy12YWxpZGF0b3InO1xuXG4vKipcbiAqIFNldmVyaXR5IGJ1Y2tldCBjbGFzc2lmaWNhdGlvbiBmb3IgaGVhdG1hcCBjZWxscy5cbiAqL1xuZXhwb3J0IGVudW0gU2V2ZXJpdHlCdWNrZXQge1xuICBMT1cgPSAnTG93JywgLy8gMC4wIC0gMC4yNVxuICBNRURJVU0gPSAnTWVkaXVtJywgLy8gMC4yNSAtIDAuNTBcbiAgSElHSCA9ICdIaWdoJywgLy8gMC41MCAtIDAuNzVcbiAgQ1JJVElDQUwgPSAnQ3JpdGljYWwnLCAvLyAwLjc1IC0gMS4wXG59XG5cbi8qKlxuICogQ29sb3IgY29kZXMgZm9yIGhlYXRtYXAgY2VsbHMgYmFzZWQgb24gcmVzaWR1YWwgcmlzay5cbiAqL1xuZXhwb3J0IGVudW0gSGVhdG1hcENvbG9yIHtcbiAgR1JFRU4gPSAnIzI4QTc0NScsIC8vIFJlc2lkdWFsIDw9IDAuMDVcbiAgQU1CRVIgPSAnI0ZGQzEwNycsIC8vIFJlc2lkdWFsIDAuMDUgLSAwLjE1XG4gIFJFRCA9ICcjREMzNTQ1JywgLy8gUmVzaWR1YWwgPiAwLjE1XG59XG5cbi8qKlxuICogVXRpbGl0eSBmdW5jdGlvbnMgZm9yIHNldmVyaXR5IGFuZCBjb2xvciBjbGFzc2lmaWNhdGlvbi5cbiAqL1xuZXhwb3J0IGNvbnN0IFNldmVyaXR5QnVja2V0cyA9IHtcbiAgZ2V0QnVja2V0KHNldmVyaXR5OiBudW1iZXIpOiBTZXZlcml0eUJ1Y2tldCB7XG4gICAgaWYgKHNldmVyaXR5IDwgMC4yNSkge1xuICAgICAgcmV0dXJuIFNldmVyaXR5QnVja2V0LkxPVztcbiAgICB9XG4gICAgaWYgKHNldmVyaXR5IDwgMC41KSB7XG4gICAgICByZXR1cm4gU2V2ZXJpdHlCdWNrZXQuTUVESVVNO1xuICAgIH1cbiAgICBpZiAoc2V2ZXJpdHkgPCAwLjc1KSB7XG4gICAgICByZXR1cm4gU2V2ZXJpdHlCdWNrZXQuSElHSDtcbiAgICB9XG4gICAgcmV0dXJuIFNldmVyaXR5QnVja2V0LkNSSVRJQ0FMO1xuICB9LFxuICBvcmRlcjogW1NldmVyaXR5QnVja2V0LkxPVywgU2V2ZXJpdHlCdWNrZXQuTUVESVVNLCBTZXZlcml0eUJ1Y2tldC5ISUdILCBTZXZlcml0eUJ1Y2tldC5DUklUSUNBTF0sXG59O1xuXG5leHBvcnQgY29uc3QgSGVhdG1hcENvbG9ycyA9IHtcbiAgZ2V0Q29sb3IocmVzaWR1YWw6IG51bWJlcik6IEhlYXRtYXBDb2xvciB7XG4gICAgaWYgKHJlc2lkdWFsIDw9IDAuMDUpIHtcbiAgICAgIHJldHVybiBIZWF0bWFwQ29sb3IuR1JFRU47XG4gICAgfVxuICAgIGlmIChyZXNpZHVhbCA8PSAwLjE1KSB7XG4gICAgICByZXR1cm4gSGVhdG1hcENvbG9yLkFNQkVSO1xuICAgIH1cbiAgICByZXR1cm4gSGVhdG1hcENvbG9yLlJFRDtcbiAgfSxcbn07XG5cbi8qKlxuICogUmVxdWVzdCBEVE8gZm9yIGdlbmVyYXRpbmcgaGVhdG1hcC5cbiAqL1xuZXhwb3J0IGNsYXNzIEdlbmVyYXRlSGVhdG1hcER0byB7XG4gIEBBcGlQcm9wZXJ0eSh7IGRlc2NyaXB0aW9uOiAnU2Vzc2lvbiBJRCB0byBnZW5lcmF0ZSBoZWF0bWFwIGZvcicgfSlcbiAgQElzVVVJRCgpXG4gIHNlc3Npb25JZDogc3RyaW5nO1xufVxuXG4vKipcbiAqIFF1ZXJ5IHBhcmFtcyBmb3IgZmlsdGVyaW5nIGhlYXRtYXAgY2VsbHMuXG4gKi9cbmV4cG9ydCBjbGFzcyBIZWF0bWFwQ2VsbHNRdWVyeUR0byB7XG4gIEBBcGlQcm9wZXJ0eU9wdGlvbmFsKHsgZGVzY3JpcHRpb246ICdGaWx0ZXIgYnkgZGltZW5zaW9uIGtleScgfSlcbiAgQElzT3B0aW9uYWwoKVxuICBASXNTdHJpbmcoKVxuICBkaW1lbnNpb24/OiBzdHJpbmc7XG5cbiAgQEFwaVByb3BlcnR5T3B0aW9uYWwoeyBkZXNjcmlwdGlvbjogJ0ZpbHRlciBieSBzZXZlcml0eSBidWNrZXQnIH0pXG4gIEBJc09wdGlvbmFsKClcbiAgQElzU3RyaW5nKClcbiAgc2V2ZXJpdHk/OiBzdHJpbmc7XG59XG5cbi8qKlxuICogSW5kaXZpZHVhbCBoZWF0bWFwIGNlbGwgcmVwcmVzZW50aW5nIGRpbWVuc2lvbiDDlyBzZXZlcml0eSBpbnRlcnNlY3Rpb24uXG4gKi9cbmV4cG9ydCBjbGFzcyBIZWF0bWFwQ2VsbER0byB7XG4gIEBBcGlQcm9wZXJ0eSh7IGRlc2NyaXB0aW9uOiAnRGltZW5zaW9uIElEJyB9KVxuICBkaW1lbnNpb25JZDogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGRlc2NyaXB0aW9uOiAnRGltZW5zaW9uIGtleScgfSlcbiAgZGltZW5zaW9uS2V5OiBzdHJpbmc7XG5cbiAgQEFwaVByb3BlcnR5KHsgZGVzY3JpcHRpb246ICdTZXZlcml0eSBidWNrZXQgKExvdywgTWVkaXVtLCBIaWdoLCBDcml0aWNhbCknIH0pXG4gIHNldmVyaXR5QnVja2V0OiBTZXZlcml0eUJ1Y2tldDtcblxuICBAQXBpUHJvcGVydHkoeyBkZXNjcmlwdGlvbjogJ0NlbGwgdmFsdWU6IFN1bShTZXZlcml0eSDDlyAoMSAtIENvdmVyYWdlKSknIH0pXG4gIGNlbGxWYWx1ZTogbnVtYmVyO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGRlc2NyaXB0aW9uOiAnQ29sb3IgY29kZSBiYXNlZCBvbiByZXNpZHVhbCByaXNrJyB9KVxuICBjb2xvckNvZGU6IEhlYXRtYXBDb2xvcjtcblxuICBAQXBpUHJvcGVydHkoeyBkZXNjcmlwdGlvbjogJ051bWJlciBvZiBxdWVzdGlvbnMgaW4gdGhpcyBjZWxsJyB9KVxuICBxdWVzdGlvbkNvdW50OiBudW1iZXI7XG5cbiAgY29uc3RydWN0b3IoZGF0YTogUGFydGlhbDxIZWF0bWFwQ2VsbER0bz4pIHtcbiAgICBPYmplY3QuYXNzaWduKHRoaXMsIGRhdGEpO1xuICB9XG59XG5cbi8qKlxuICogSGVhdG1hcCBzdW1tYXJ5IHN0YXRpc3RpY3MuXG4gKi9cbmV4cG9ydCBjbGFzcyBIZWF0bWFwU3VtbWFyeUR0byB7XG4gIEBBcGlQcm9wZXJ0eSh7IGRlc2NyaXB0aW9uOiAnVG90YWwgbnVtYmVyIG9mIGNlbGxzIGluIGhlYXRtYXAnIH0pXG4gIHRvdGFsQ2VsbHM6IG51bWJlcjtcblxuICBAQXBpUHJvcGVydHkoeyBkZXNjcmlwdGlvbjogJ0NvdW50IG9mIGdyZWVuIGNlbGxzIChsb3cgcmlzayknIH0pXG4gIGdyZWVuQ2VsbHM6IG51bWJlcjtcblxuICBAQXBpUHJvcGVydHkoeyBkZXNjcmlwdGlvbjogJ0NvdW50IG9mIGFtYmVyIGNlbGxzIChtb2RlcmF0ZSByaXNrKScgfSlcbiAgYW1iZXJDZWxsczogbnVtYmVyO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGRlc2NyaXB0aW9uOiAnQ291bnQgb2YgcmVkIGNlbGxzIChoaWdoIHJpc2spJyB9KVxuICByZWRDZWxsczogbnVtYmVyO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGRlc2NyaXB0aW9uOiAnQ291bnQgb2YgY3JpdGljYWwgc2V2ZXJpdHkgZ2FwcyB3aXRoIHJlZCBjb2xvcicgfSlcbiAgY3JpdGljYWxHYXBDb3VudDogbnVtYmVyO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGRlc2NyaXB0aW9uOiAnT3ZlcmFsbCByaXNrIHNjb3JlIChzdW0gb2YgYWxsIGNlbGwgdmFsdWVzKScgfSlcbiAgb3ZlcmFsbFJpc2tTY29yZTogbnVtYmVyO1xufVxuXG4vKipcbiAqIENvbXBsZXRlIGhlYXRtYXAgcmVzdWx0IHdpdGggY2VsbHMsIGRpbWVuc2lvbnMsIGFuZCBzdW1tYXJ5LlxuICovXG5leHBvcnQgY2xhc3MgSGVhdG1hcFJlc3VsdER0byB7XG4gIEBBcGlQcm9wZXJ0eSh7IGRlc2NyaXB0aW9uOiAnU2Vzc2lvbiBJRCcgfSlcbiAgc2Vzc2lvbklkOiBzdHJpbmc7XG5cbiAgQEFwaVByb3BlcnR5KHsgdHlwZTogW0hlYXRtYXBDZWxsRHRvXSwgZGVzY3JpcHRpb246ICdIZWF0bWFwIGNlbGxzJyB9KVxuICBjZWxsczogSGVhdG1hcENlbGxEdG9bXTtcblxuICBAQXBpUHJvcGVydHkoeyB0eXBlOiBbU3RyaW5nXSwgZGVzY3JpcHRpb246ICdMaXN0IG9mIGRpbWVuc2lvbiBuYW1lcycgfSlcbiAgZGltZW5zaW9uczogc3RyaW5nW107XG5cbiAgQEFwaVByb3BlcnR5KHsgdHlwZTogW1N0cmluZ10sIGRlc2NyaXB0aW9uOiAnU2V2ZXJpdHkgYnVja2V0IG9yZGVyJyB9KVxuICBzZXZlcml0eUJ1Y2tldHM6IHN0cmluZ1tdO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IHR5cGU6IEhlYXRtYXBTdW1tYXJ5RHRvLCBkZXNjcmlwdGlvbjogJ1N1bW1hcnkgc3RhdGlzdGljcycgfSlcbiAgc3VtbWFyeTogSGVhdG1hcFN1bW1hcnlEdG87XG5cbiAgQEFwaVByb3BlcnR5KHsgZGVzY3JpcHRpb246ICdUaW1lc3RhbXAgd2hlbiBoZWF0bWFwIHdhcyBnZW5lcmF0ZWQnIH0pXG4gIGdlbmVyYXRlZEF0OiBEYXRlO1xufVxuXG4vKipcbiAqIERyaWxsZG93biByZXN1bHQgc2hvd2luZyBxdWVzdGlvbnMgY29udHJpYnV0aW5nIHRvIGEgc3BlY2lmaWMgY2VsbC5cbiAqL1xuZXhwb3J0IGNsYXNzIEhlYXRtYXBEcmlsbGRvd25EdG8ge1xuICBAQXBpUHJvcGVydHkoeyBkZXNjcmlwdGlvbjogJ0RpbWVuc2lvbiBrZXknIH0pXG4gIGRpbWVuc2lvbktleTogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGRlc2NyaXB0aW9uOiAnRGltZW5zaW9uIGRpc3BsYXkgbmFtZScgfSlcbiAgZGltZW5zaW9uTmFtZTogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGRlc2NyaXB0aW9uOiAnU2V2ZXJpdHkgYnVja2V0IChMb3csIE1lZGl1bSwgSGlnaCwgQ3JpdGljYWwpJyB9KVxuICBzZXZlcml0eUJ1Y2tldDogU2V2ZXJpdHlCdWNrZXQgfCBzdHJpbmc7XG5cbiAgQEFwaVByb3BlcnR5KHsgZGVzY3JpcHRpb246ICdDZWxsIHZhbHVlOiBTdW0oU2V2ZXJpdHkgw5cgKDEgLSBDb3ZlcmFnZSkpJyB9KVxuICBjZWxsVmFsdWU6IG51bWJlcjtcblxuICBAQXBpUHJvcGVydHkoeyBkZXNjcmlwdGlvbjogJ0NvbG9yIGNvZGUgYmFzZWQgb24gcmVzaWR1YWwgcmlzaycgfSlcbiAgY29sb3JDb2RlOiBIZWF0bWFwQ29sb3I7XG5cbiAgQEFwaVByb3BlcnR5KHsgZGVzY3JpcHRpb246ICdOdW1iZXIgb2YgcXVlc3Rpb25zIGluIHRoaXMgY2VsbCcgfSlcbiAgcXVlc3Rpb25Db3VudDogbnVtYmVyO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGRlc2NyaXB0aW9uOiAnUXVlc3Rpb25zIGNvbnRyaWJ1dGluZyB0byB0aGlzIGNlbGwnIH0pXG4gIHF1ZXN0aW9uczogQXJyYXk8e1xuICAgIHF1ZXN0aW9uSWQ6IHN0cmluZztcbiAgICBxdWVzdGlvblRleHQ6IHN0cmluZztcbiAgICBzZXZlcml0eTogbnVtYmVyO1xuICAgIGNvdmVyYWdlOiBudW1iZXI7XG4gICAgcmVzaWR1YWxSaXNrOiBudW1iZXI7XG4gICAgcmVzcG9uc2VWYWx1ZT86IHN0cmluZztcbiAgfT47XG5cbiAgQEFwaVByb3BlcnR5T3B0aW9uYWwoe1xuICAgIHR5cGU6IEhlYXRtYXBDZWxsRHRvLFxuICAgIGRlc2NyaXB0aW9uOiAnVGhlIGNlbGwgYmVpbmcgZHJpbGxlZCBpbnRvIChvcHRpb25hbCknLFxuICB9KVxuICBjZWxsPzogSGVhdG1hcENlbGxEdG87XG5cbiAgQEFwaVByb3BlcnR5T3B0aW9uYWwoeyBkZXNjcmlwdGlvbjogJ1BvdGVudGlhbCBpbXByb3ZlbWVudCBpZiBhbGwgcXVlc3Rpb25zIGZ1bGx5IGNvdmVyZWQnIH0pXG4gIHBvdGVudGlhbEltcHJvdmVtZW50PzogbnVtYmVyO1xufVxuIl0sInZlcnNpb24iOjN9

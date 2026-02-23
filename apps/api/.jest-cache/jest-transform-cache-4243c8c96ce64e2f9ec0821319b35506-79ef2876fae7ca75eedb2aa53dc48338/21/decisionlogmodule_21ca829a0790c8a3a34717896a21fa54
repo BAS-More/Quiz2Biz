@@ -1,0 +1,38 @@
+364d59355ecbb6f6aa15696775d41fa8
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DecisionLogModule = void 0;
+const common_1 = require("@nestjs/common");
+const decision_log_service_1 = require("./decision-log.service");
+const decision_log_controller_1 = require("./decision-log.controller");
+const approval_workflow_service_1 = require("./approval-workflow.service");
+const require_approval_decorator_1 = require("./decorators/require-approval.decorator");
+const database_1 = require("@libs/database");
+/**
+ * Decision Log Module
+ *
+ * Implements Quiz2Biz append-only forensic decision record:
+ * - Status workflow: DRAFT -> LOCKED -> (AMENDED/SUPERSEDED)
+ * - Append-only enforcement at service layer
+ * - Supersession tracking for decision amendments
+ * - Two-person rule via ApprovalWorkflowService
+ * - Audit export for compliance
+ */
+let DecisionLogModule = class DecisionLogModule {
+};
+exports.DecisionLogModule = DecisionLogModule;
+exports.DecisionLogModule = DecisionLogModule = __decorate([
+    (0, common_1.Module)({
+        imports: [database_1.PrismaModule],
+        controllers: [decision_log_controller_1.DecisionLogController],
+        providers: [decision_log_service_1.DecisionLogService, approval_workflow_service_1.ApprovalWorkflowService, require_approval_decorator_1.ApprovalGuard],
+        exports: [decision_log_service_1.DecisionLogService, approval_workflow_service_1.ApprovalWorkflowService],
+    })
+], DecisionLogModule);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcZGVjaXNpb24tbG9nXFxkZWNpc2lvbi1sb2cubW9kdWxlLnRzIiwibWFwcGluZ3MiOiI7Ozs7Ozs7OztBQUFBLDJDQUF3QztBQUN4QyxpRUFBNEQ7QUFDNUQsdUVBQWtFO0FBQ2xFLDJFQUFzRTtBQUN0RSx3RkFBd0U7QUFDeEUsNkNBQThDO0FBRTlDOzs7Ozs7Ozs7R0FTRztBQU9JLElBQU0saUJBQWlCLEdBQXZCLE1BQU0saUJBQWlCO0NBQUcsQ0FBQTtBQUFwQiw4Q0FBaUI7NEJBQWpCLGlCQUFpQjtJQU43QixJQUFBLGVBQU0sRUFBQztRQUNOLE9BQU8sRUFBRSxDQUFDLHVCQUFZLENBQUM7UUFDdkIsV0FBVyxFQUFFLENBQUMsK0NBQXFCLENBQUM7UUFDcEMsU0FBUyxFQUFFLENBQUMseUNBQWtCLEVBQUUsbURBQXVCLEVBQUUsMENBQWEsQ0FBQztRQUN2RSxPQUFPLEVBQUUsQ0FBQyx5Q0FBa0IsRUFBRSxtREFBdUIsQ0FBQztLQUN2RCxDQUFDO0dBQ1csaUJBQWlCLENBQUciLCJuYW1lcyI6W10sInNvdXJjZXMiOlsiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcZGVjaXNpb24tbG9nXFxkZWNpc2lvbi1sb2cubW9kdWxlLnRzIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IE1vZHVsZSB9IGZyb20gJ0BuZXN0anMvY29tbW9uJztcbmltcG9ydCB7IERlY2lzaW9uTG9nU2VydmljZSB9IGZyb20gJy4vZGVjaXNpb24tbG9nLnNlcnZpY2UnO1xuaW1wb3J0IHsgRGVjaXNpb25Mb2dDb250cm9sbGVyIH0gZnJvbSAnLi9kZWNpc2lvbi1sb2cuY29udHJvbGxlcic7XG5pbXBvcnQgeyBBcHByb3ZhbFdvcmtmbG93U2VydmljZSB9IGZyb20gJy4vYXBwcm92YWwtd29ya2Zsb3cuc2VydmljZSc7XG5pbXBvcnQgeyBBcHByb3ZhbEd1YXJkIH0gZnJvbSAnLi9kZWNvcmF0b3JzL3JlcXVpcmUtYXBwcm92YWwuZGVjb3JhdG9yJztcbmltcG9ydCB7IFByaXNtYU1vZHVsZSB9IGZyb20gJ0BsaWJzL2RhdGFiYXNlJztcblxuLyoqXG4gKiBEZWNpc2lvbiBMb2cgTW9kdWxlXG4gKlxuICogSW1wbGVtZW50cyBRdWl6MkJpeiBhcHBlbmQtb25seSBmb3JlbnNpYyBkZWNpc2lvbiByZWNvcmQ6XG4gKiAtIFN0YXR1cyB3b3JrZmxvdzogRFJBRlQgLT4gTE9DS0VEIC0+IChBTUVOREVEL1NVUEVSU0VERUQpXG4gKiAtIEFwcGVuZC1vbmx5IGVuZm9yY2VtZW50IGF0IHNlcnZpY2UgbGF5ZXJcbiAqIC0gU3VwZXJzZXNzaW9uIHRyYWNraW5nIGZvciBkZWNpc2lvbiBhbWVuZG1lbnRzXG4gKiAtIFR3by1wZXJzb24gcnVsZSB2aWEgQXBwcm92YWxXb3JrZmxvd1NlcnZpY2VcbiAqIC0gQXVkaXQgZXhwb3J0IGZvciBjb21wbGlhbmNlXG4gKi9cbkBNb2R1bGUoe1xuICBpbXBvcnRzOiBbUHJpc21hTW9kdWxlXSxcbiAgY29udHJvbGxlcnM6IFtEZWNpc2lvbkxvZ0NvbnRyb2xsZXJdLFxuICBwcm92aWRlcnM6IFtEZWNpc2lvbkxvZ1NlcnZpY2UsIEFwcHJvdmFsV29ya2Zsb3dTZXJ2aWNlLCBBcHByb3ZhbEd1YXJkXSxcbiAgZXhwb3J0czogW0RlY2lzaW9uTG9nU2VydmljZSwgQXBwcm92YWxXb3JrZmxvd1NlcnZpY2VdLFxufSlcbmV4cG9ydCBjbGFzcyBEZWNpc2lvbkxvZ01vZHVsZSB7fVxuIl0sInZlcnNpb24iOjN9

@@ -1,0 +1,82 @@
+57059eaf666e4a89d8a8218dc3da8dea
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RefreshResponseDto = exports.TokenResponseDto = exports.UserResponseDto = void 0;
+const swagger_1 = require("@nestjs/swagger");
+const client_1 = require("@prisma/client");
+// Re-export enum values for Swagger schema generation
+const UserRoleValues = Object.values(client_1.UserRole);
+class UserResponseDto {
+    id;
+    email;
+    role;
+    name;
+}
+exports.UserResponseDto = UserResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'usr_abc123' }),
+    __metadata("design:type", String)
+], UserResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'user@example.com' }),
+    __metadata("design:type", String)
+], UserResponseDto.prototype, "email", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ enum: UserRoleValues, enumName: 'UserRole', example: 'CLIENT' }),
+    __metadata("design:type", String)
+], UserResponseDto.prototype, "role", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'John Doe', required: false }),
+    __metadata("design:type", String)
+], UserResponseDto.prototype, "name", void 0);
+class TokenResponseDto {
+    accessToken;
+    refreshToken;
+    expiresIn;
+    tokenType;
+    user;
+}
+exports.TokenResponseDto = TokenResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'eyJhbGciOiJIUzI1NiIs...' }),
+    __metadata("design:type", String)
+], TokenResponseDto.prototype, "accessToken", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'dGhpcyBpcyBhIHJlZnJlc2g...' }),
+    __metadata("design:type", String)
+], TokenResponseDto.prototype, "refreshToken", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 900, description: 'Token expiration time in seconds' }),
+    __metadata("design:type", Number)
+], TokenResponseDto.prototype, "expiresIn", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'Bearer' }),
+    __metadata("design:type", String)
+], TokenResponseDto.prototype, "tokenType", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: UserResponseDto }),
+    __metadata("design:type", UserResponseDto)
+], TokenResponseDto.prototype, "user", void 0);
+class RefreshResponseDto {
+    accessToken;
+    expiresIn;
+}
+exports.RefreshResponseDto = RefreshResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'eyJhbGciOiJIUzI1NiIs...' }),
+    __metadata("design:type", String)
+], RefreshResponseDto.prototype, "accessToken", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 900, description: 'Token expiration time in seconds' }),
+    __metadata("design:type", Number)
+], RefreshResponseDto.prototype, "expiresIn", void 0);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcYXV0aFxcZHRvXFx0b2tlbi5kdG8udHMiLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7O0FBQUEsNkNBQThDO0FBQzlDLDJDQUEwQztBQUUxQyxzREFBc0Q7QUFDdEQsTUFBTSxjQUFjLEdBQUcsTUFBTSxDQUFDLE1BQU0sQ0FBQyxpQkFBUSxDQUFDLENBQUM7QUFFL0MsTUFBYSxlQUFlO0lBRTFCLEVBQUUsQ0FBUztJQUdYLEtBQUssQ0FBUztJQUdkLElBQUksQ0FBVztJQUdmLElBQUksQ0FBVTtDQUNmO0FBWkQsMENBWUM7QUFWQztJQURDLElBQUEscUJBQVcsRUFBQyxFQUFFLE9BQU8sRUFBRSxZQUFZLEVBQUUsQ0FBQzs7MkNBQzVCO0FBR1g7SUFEQyxJQUFBLHFCQUFXLEVBQUMsRUFBRSxPQUFPLEVBQUUsa0JBQWtCLEVBQUUsQ0FBQzs7OENBQy9CO0FBR2Q7SUFEQyxJQUFBLHFCQUFXLEVBQUMsRUFBRSxJQUFJLEVBQUUsY0FBYyxFQUFFLFFBQVEsRUFBRSxVQUFVLEVBQUUsT0FBTyxFQUFFLFFBQVEsRUFBRSxDQUFDOzs2Q0FDaEU7QUFHZjtJQURDLElBQUEscUJBQVcsRUFBQyxFQUFFLE9BQU8sRUFBRSxVQUFVLEVBQUUsUUFBUSxFQUFFLEtBQUssRUFBRSxDQUFDOzs2Q0FDeEM7QUFHaEIsTUFBYSxnQkFBZ0I7SUFFM0IsV0FBVyxDQUFTO0lBR3BCLFlBQVksQ0FBUztJQUdyQixTQUFTLENBQVM7SUFHbEIsU0FBUyxDQUFTO0lBR2xCLElBQUksQ0FBa0I7Q0FDdkI7QUFmRCw0Q0FlQztBQWJDO0lBREMsSUFBQSxxQkFBVyxFQUFDLEVBQUUsT0FBTyxFQUFFLHlCQUF5QixFQUFFLENBQUM7O3FEQUNoQztBQUdwQjtJQURDLElBQUEscUJBQVcsRUFBQyxFQUFFLE9BQU8sRUFBRSw0QkFBNEIsRUFBRSxDQUFDOztzREFDbEM7QUFHckI7SUFEQyxJQUFBLHFCQUFXLEVBQUMsRUFBRSxPQUFPLEVBQUUsR0FBRyxFQUFFLFdBQVcsRUFBRSxrQ0FBa0MsRUFBRSxDQUFDOzttREFDN0Q7QUFHbEI7SUFEQyxJQUFBLHFCQUFXLEVBQUMsRUFBRSxPQUFPLEVBQUUsUUFBUSxFQUFFLENBQUM7O21EQUNqQjtBQUdsQjtJQURDLElBQUEscUJBQVcsRUFBQyxFQUFFLElBQUksRUFBRSxlQUFlLEVBQUUsQ0FBQzs4QkFDakMsZUFBZTs4Q0FBQztBQUd4QixNQUFhLGtCQUFrQjtJQUU3QixXQUFXLENBQVM7SUFHcEIsU0FBUyxDQUFTO0NBQ25CO0FBTkQsZ0RBTUM7QUFKQztJQURDLElBQUEscUJBQVcsRUFBQyxFQUFFLE9BQU8sRUFBRSx5QkFBeUIsRUFBRSxDQUFDOzt1REFDaEM7QUFHcEI7SUFEQyxJQUFBLHFCQUFXLEVBQUMsRUFBRSxPQUFPLEVBQUUsR0FBRyxFQUFFLFdBQVcsRUFBRSxrQ0FBa0MsRUFBRSxDQUFDOztxREFDN0QiLCJuYW1lcyI6W10sInNvdXJjZXMiOlsiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcYXV0aFxcZHRvXFx0b2tlbi5kdG8udHMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgQXBpUHJvcGVydHkgfSBmcm9tICdAbmVzdGpzL3N3YWdnZXInO1xuaW1wb3J0IHsgVXNlclJvbGUgfSBmcm9tICdAcHJpc21hL2NsaWVudCc7XG5cbi8vIFJlLWV4cG9ydCBlbnVtIHZhbHVlcyBmb3IgU3dhZ2dlciBzY2hlbWEgZ2VuZXJhdGlvblxuY29uc3QgVXNlclJvbGVWYWx1ZXMgPSBPYmplY3QudmFsdWVzKFVzZXJSb2xlKTtcblxuZXhwb3J0IGNsYXNzIFVzZXJSZXNwb25zZUR0byB7XG4gIEBBcGlQcm9wZXJ0eSh7IGV4YW1wbGU6ICd1c3JfYWJjMTIzJyB9KVxuICBpZDogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGV4YW1wbGU6ICd1c2VyQGV4YW1wbGUuY29tJyB9KVxuICBlbWFpbDogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGVudW06IFVzZXJSb2xlVmFsdWVzLCBlbnVtTmFtZTogJ1VzZXJSb2xlJywgZXhhbXBsZTogJ0NMSUVOVCcgfSlcbiAgcm9sZTogVXNlclJvbGU7XG5cbiAgQEFwaVByb3BlcnR5KHsgZXhhbXBsZTogJ0pvaG4gRG9lJywgcmVxdWlyZWQ6IGZhbHNlIH0pXG4gIG5hbWU/OiBzdHJpbmc7XG59XG5cbmV4cG9ydCBjbGFzcyBUb2tlblJlc3BvbnNlRHRvIHtcbiAgQEFwaVByb3BlcnR5KHsgZXhhbXBsZTogJ2V5SmhiR2NpT2lKSVV6STFOaUlzLi4uJyB9KVxuICBhY2Nlc3NUb2tlbjogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGV4YW1wbGU6ICdkR2hwY3lCcGN5QmhJSEpsWm5KbGMyZy4uLicgfSlcbiAgcmVmcmVzaFRva2VuOiBzdHJpbmc7XG5cbiAgQEFwaVByb3BlcnR5KHsgZXhhbXBsZTogOTAwLCBkZXNjcmlwdGlvbjogJ1Rva2VuIGV4cGlyYXRpb24gdGltZSBpbiBzZWNvbmRzJyB9KVxuICBleHBpcmVzSW46IG51bWJlcjtcblxuICBAQXBpUHJvcGVydHkoeyBleGFtcGxlOiAnQmVhcmVyJyB9KVxuICB0b2tlblR5cGU6IHN0cmluZztcblxuICBAQXBpUHJvcGVydHkoeyB0eXBlOiBVc2VyUmVzcG9uc2VEdG8gfSlcbiAgdXNlcjogVXNlclJlc3BvbnNlRHRvO1xufVxuXG5leHBvcnQgY2xhc3MgUmVmcmVzaFJlc3BvbnNlRHRvIHtcbiAgQEFwaVByb3BlcnR5KHsgZXhhbXBsZTogJ2V5SmhiR2NpT2lKSVV6STFOaUlzLi4uJyB9KVxuICBhY2Nlc3NUb2tlbjogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGV4YW1wbGU6IDkwMCwgZGVzY3JpcHRpb246ICdUb2tlbiBleHBpcmF0aW9uIHRpbWUgaW4gc2Vjb25kcycgfSlcbiAgZXhwaXJlc0luOiBudW1iZXI7XG59XG4iXSwidmVyc2lvbiI6M30=

@@ -1,0 +1,44 @@
+28fe6c377aed867171f389db5ce4c2ae
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RegisterDto = void 0;
+const class_validator_1 = require("class-validator");
+const swagger_1 = require("@nestjs/swagger");
+class RegisterDto {
+    email;
+    password;
+    name;
+}
+exports.RegisterDto = RegisterDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'user@example.com' }),
+    (0, class_validator_1.IsEmail)({}, { message: 'Invalid email format' }),
+    __metadata("design:type", String)
+], RegisterDto.prototype, "email", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'SecureP@ss123', minLength: 8 }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MinLength)(8, { message: 'Password must be at least 8 characters long' }),
+    (0, class_validator_1.MaxLength)(100),
+    (0, class_validator_1.Matches)(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, {
+        message: 'Password must contain at least one lowercase letter, one uppercase letter, and one number',
+    }),
+    __metadata("design:type", String)
+], RegisterDto.prototype, "password", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'John Doe' }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MinLength)(2, { message: 'Name must be at least 2 characters long' }),
+    (0, class_validator_1.MaxLength)(100),
+    __metadata("design:type", String)
+], RegisterDto.prototype, "name", void 0);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcYXV0aFxcZHRvXFxyZWdpc3Rlci5kdG8udHMiLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7O0FBQUEscURBQW1GO0FBQ25GLDZDQUE4QztBQUU5QyxNQUFhLFdBQVc7SUFHdEIsS0FBSyxDQUFTO0lBVWQsUUFBUSxDQUFTO0lBTWpCLElBQUksQ0FBUztDQUNkO0FBcEJELGtDQW9CQztBQWpCQztJQUZDLElBQUEscUJBQVcsRUFBQyxFQUFFLE9BQU8sRUFBRSxrQkFBa0IsRUFBRSxDQUFDO0lBQzVDLElBQUEseUJBQU8sRUFBQyxFQUFFLEVBQUUsRUFBRSxPQUFPLEVBQUUsc0JBQXNCLEVBQUUsQ0FBQzs7MENBQ25DO0FBVWQ7SUFSQyxJQUFBLHFCQUFXLEVBQUMsRUFBRSxPQUFPLEVBQUUsZUFBZSxFQUFFLFNBQVMsRUFBRSxDQUFDLEVBQUUsQ0FBQztJQUN2RCxJQUFBLDBCQUFRLEdBQUU7SUFDVixJQUFBLDJCQUFTLEVBQUMsQ0FBQyxFQUFFLEVBQUUsT0FBTyxFQUFFLDZDQUE2QyxFQUFFLENBQUM7SUFDeEUsSUFBQSwyQkFBUyxFQUFDLEdBQUcsQ0FBQztJQUNkLElBQUEseUJBQU8sRUFBQyxpQ0FBaUMsRUFBRTtRQUMxQyxPQUFPLEVBQ0wsMkZBQTJGO0tBQzlGLENBQUM7OzZDQUNlO0FBTWpCO0lBSkMsSUFBQSxxQkFBVyxFQUFDLEVBQUUsT0FBTyxFQUFFLFVBQVUsRUFBRSxDQUFDO0lBQ3BDLElBQUEsMEJBQVEsR0FBRTtJQUNWLElBQUEsMkJBQVMsRUFBQyxDQUFDLEVBQUUsRUFBRSxPQUFPLEVBQUUseUNBQXlDLEVBQUUsQ0FBQztJQUNwRSxJQUFBLDJCQUFTLEVBQUMsR0FBRyxDQUFDOzt5Q0FDRiIsIm5hbWVzIjpbXSwic291cmNlcyI6WyJDOlxcUmVwb3NcXFF1aXotdG8tQnVpbGRcXGFwcHNcXGFwaVxcc3JjXFxtb2R1bGVzXFxhdXRoXFxkdG9cXHJlZ2lzdGVyLmR0by50cyJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBJc0VtYWlsLCBJc1N0cmluZywgTWluTGVuZ3RoLCBNYXhMZW5ndGgsIE1hdGNoZXMgfSBmcm9tICdjbGFzcy12YWxpZGF0b3InO1xuaW1wb3J0IHsgQXBpUHJvcGVydHkgfSBmcm9tICdAbmVzdGpzL3N3YWdnZXInO1xuXG5leHBvcnQgY2xhc3MgUmVnaXN0ZXJEdG8ge1xuICBAQXBpUHJvcGVydHkoeyBleGFtcGxlOiAndXNlckBleGFtcGxlLmNvbScgfSlcbiAgQElzRW1haWwoe30sIHsgbWVzc2FnZTogJ0ludmFsaWQgZW1haWwgZm9ybWF0JyB9KVxuICBlbWFpbDogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGV4YW1wbGU6ICdTZWN1cmVQQHNzMTIzJywgbWluTGVuZ3RoOiA4IH0pXG4gIEBJc1N0cmluZygpXG4gIEBNaW5MZW5ndGgoOCwgeyBtZXNzYWdlOiAnUGFzc3dvcmQgbXVzdCBiZSBhdCBsZWFzdCA4IGNoYXJhY3RlcnMgbG9uZycgfSlcbiAgQE1heExlbmd0aCgxMDApXG4gIEBNYXRjaGVzKC9eKD89LipbYS16XSkoPz0uKltBLVpdKSg/PS4qXFxkKS8sIHtcbiAgICBtZXNzYWdlOlxuICAgICAgJ1Bhc3N3b3JkIG11c3QgY29udGFpbiBhdCBsZWFzdCBvbmUgbG93ZXJjYXNlIGxldHRlciwgb25lIHVwcGVyY2FzZSBsZXR0ZXIsIGFuZCBvbmUgbnVtYmVyJyxcbiAgfSlcbiAgcGFzc3dvcmQ6IHN0cmluZztcblxuICBAQXBpUHJvcGVydHkoeyBleGFtcGxlOiAnSm9obiBEb2UnIH0pXG4gIEBJc1N0cmluZygpXG4gIEBNaW5MZW5ndGgoMiwgeyBtZXNzYWdlOiAnTmFtZSBtdXN0IGJlIGF0IGxlYXN0IDIgY2hhcmFjdGVycyBsb25nJyB9KVxuICBATWF4TGVuZ3RoKDEwMClcbiAgbmFtZTogc3RyaW5nO1xufVxuIl0sInZlcnNpb24iOjN9

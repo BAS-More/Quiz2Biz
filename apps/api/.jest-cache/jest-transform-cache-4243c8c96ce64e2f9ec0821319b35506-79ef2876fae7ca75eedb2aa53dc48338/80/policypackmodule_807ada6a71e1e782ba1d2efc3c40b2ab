@@ -1,0 +1,46 @@
+c60167cc38d3d00560e5cfa170ea6106
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PolicyPackModule = void 0;
+/**
+ * Policy Pack Module
+ *
+ * Generates compliance-ready policy documents from readiness gaps.
+ * Creates Policy → Standard → Procedure hierarchy aligned with
+ * ISO 27001, NIST CSF, and OWASP ASVS frameworks.
+ */
+const common_1 = require("@nestjs/common");
+const policy_pack_controller_1 = require("./policy-pack.controller");
+const policy_pack_service_1 = require("./policy-pack.service");
+const policy_generator_service_1 = require("./services/policy-generator.service");
+const control_mapping_service_1 = require("./services/control-mapping.service");
+const opa_policy_service_1 = require("./services/opa-policy.service");
+const terraform_rules_service_1 = require("./services/terraform-rules.service");
+const policy_export_service_1 = require("./services/policy-export.service");
+const database_1 = require("@libs/database");
+const qpg_module_1 = require("../qpg/qpg.module");
+let PolicyPackModule = class PolicyPackModule {
+};
+exports.PolicyPackModule = PolicyPackModule;
+exports.PolicyPackModule = PolicyPackModule = __decorate([
+    (0, common_1.Module)({
+        imports: [database_1.PrismaModule, (0, common_1.forwardRef)(() => qpg_module_1.QpgModule)],
+        controllers: [policy_pack_controller_1.PolicyPackController],
+        providers: [
+            policy_pack_service_1.PolicyPackService,
+            policy_generator_service_1.PolicyGeneratorService,
+            control_mapping_service_1.ControlMappingService,
+            opa_policy_service_1.OpaPolicyService,
+            terraform_rules_service_1.TerraformRulesService,
+            policy_export_service_1.PolicyExportService,
+        ],
+        exports: [policy_pack_service_1.PolicyPackService],
+    })
+], PolicyPackModule);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xccG9saWN5LXBhY2tcXHBvbGljeS1wYWNrLm1vZHVsZS50cyIsIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7QUFBQTs7Ozs7O0dBTUc7QUFDSCwyQ0FBb0Q7QUFDcEQscUVBQWdFO0FBQ2hFLCtEQUEwRDtBQUMxRCxrRkFBNkU7QUFDN0UsZ0ZBQTJFO0FBQzNFLHNFQUFpRTtBQUNqRSxnRkFBMkU7QUFDM0UsNEVBQXVFO0FBQ3ZFLDZDQUE4QztBQUM5QyxrREFBOEM7QUFldkMsSUFBTSxnQkFBZ0IsR0FBdEIsTUFBTSxnQkFBZ0I7Q0FBRyxDQUFBO0FBQW5CLDRDQUFnQjsyQkFBaEIsZ0JBQWdCO0lBYjVCLElBQUEsZUFBTSxFQUFDO1FBQ04sT0FBTyxFQUFFLENBQUMsdUJBQVksRUFBRSxJQUFBLG1CQUFVLEVBQUMsR0FBRyxFQUFFLENBQUMsc0JBQVMsQ0FBQyxDQUFDO1FBQ3BELFdBQVcsRUFBRSxDQUFDLDZDQUFvQixDQUFDO1FBQ25DLFNBQVMsRUFBRTtZQUNULHVDQUFpQjtZQUNqQixpREFBc0I7WUFDdEIsK0NBQXFCO1lBQ3JCLHFDQUFnQjtZQUNoQiwrQ0FBcUI7WUFDckIsMkNBQW1CO1NBQ3BCO1FBQ0QsT0FBTyxFQUFFLENBQUMsdUNBQWlCLENBQUM7S0FDN0IsQ0FBQztHQUNXLGdCQUFnQixDQUFHIiwibmFtZXMiOltdLCJzb3VyY2VzIjpbIkM6XFxSZXBvc1xcUXVpei10by1CdWlsZFxcYXBwc1xcYXBpXFxzcmNcXG1vZHVsZXNcXHBvbGljeS1wYWNrXFxwb2xpY3ktcGFjay5tb2R1bGUudHMiXSwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBQb2xpY3kgUGFjayBNb2R1bGVcbiAqXG4gKiBHZW5lcmF0ZXMgY29tcGxpYW5jZS1yZWFkeSBwb2xpY3kgZG9jdW1lbnRzIGZyb20gcmVhZGluZXNzIGdhcHMuXG4gKiBDcmVhdGVzIFBvbGljeSDihpIgU3RhbmRhcmQg4oaSIFByb2NlZHVyZSBoaWVyYXJjaHkgYWxpZ25lZCB3aXRoXG4gKiBJU08gMjcwMDEsIE5JU1QgQ1NGLCBhbmQgT1dBU1AgQVNWUyBmcmFtZXdvcmtzLlxuICovXG5pbXBvcnQgeyBNb2R1bGUsIGZvcndhcmRSZWYgfSBmcm9tICdAbmVzdGpzL2NvbW1vbic7XG5pbXBvcnQgeyBQb2xpY3lQYWNrQ29udHJvbGxlciB9IGZyb20gJy4vcG9saWN5LXBhY2suY29udHJvbGxlcic7XG5pbXBvcnQgeyBQb2xpY3lQYWNrU2VydmljZSB9IGZyb20gJy4vcG9saWN5LXBhY2suc2VydmljZSc7XG5pbXBvcnQgeyBQb2xpY3lHZW5lcmF0b3JTZXJ2aWNlIH0gZnJvbSAnLi9zZXJ2aWNlcy9wb2xpY3ktZ2VuZXJhdG9yLnNlcnZpY2UnO1xuaW1wb3J0IHsgQ29udHJvbE1hcHBpbmdTZXJ2aWNlIH0gZnJvbSAnLi9zZXJ2aWNlcy9jb250cm9sLW1hcHBpbmcuc2VydmljZSc7XG5pbXBvcnQgeyBPcGFQb2xpY3lTZXJ2aWNlIH0gZnJvbSAnLi9zZXJ2aWNlcy9vcGEtcG9saWN5LnNlcnZpY2UnO1xuaW1wb3J0IHsgVGVycmFmb3JtUnVsZXNTZXJ2aWNlIH0gZnJvbSAnLi9zZXJ2aWNlcy90ZXJyYWZvcm0tcnVsZXMuc2VydmljZSc7XG5pbXBvcnQgeyBQb2xpY3lFeHBvcnRTZXJ2aWNlIH0gZnJvbSAnLi9zZXJ2aWNlcy9wb2xpY3ktZXhwb3J0LnNlcnZpY2UnO1xuaW1wb3J0IHsgUHJpc21hTW9kdWxlIH0gZnJvbSAnQGxpYnMvZGF0YWJhc2UnO1xuaW1wb3J0IHsgUXBnTW9kdWxlIH0gZnJvbSAnLi4vcXBnL3FwZy5tb2R1bGUnO1xuXG5ATW9kdWxlKHtcbiAgaW1wb3J0czogW1ByaXNtYU1vZHVsZSwgZm9yd2FyZFJlZigoKSA9PiBRcGdNb2R1bGUpXSxcbiAgY29udHJvbGxlcnM6IFtQb2xpY3lQYWNrQ29udHJvbGxlcl0sXG4gIHByb3ZpZGVyczogW1xuICAgIFBvbGljeVBhY2tTZXJ2aWNlLFxuICAgIFBvbGljeUdlbmVyYXRvclNlcnZpY2UsXG4gICAgQ29udHJvbE1hcHBpbmdTZXJ2aWNlLFxuICAgIE9wYVBvbGljeVNlcnZpY2UsXG4gICAgVGVycmFmb3JtUnVsZXNTZXJ2aWNlLFxuICAgIFBvbGljeUV4cG9ydFNlcnZpY2UsXG4gIF0sXG4gIGV4cG9ydHM6IFtQb2xpY3lQYWNrU2VydmljZV0sXG59KVxuZXhwb3J0IGNsYXNzIFBvbGljeVBhY2tNb2R1bGUge31cbiJdLCJ2ZXJzaW9uIjozfQ==

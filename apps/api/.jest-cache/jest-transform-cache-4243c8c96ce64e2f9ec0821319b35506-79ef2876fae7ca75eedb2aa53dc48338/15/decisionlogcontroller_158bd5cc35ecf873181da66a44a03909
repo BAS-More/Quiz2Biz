@@ -1,0 +1,289 @@
+390729b5be7b07af88ace7a76762d79b
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DecisionLogController = void 0;
+const common_1 = require("@nestjs/common");
+const swagger_1 = require("@nestjs/swagger");
+const decision_log_service_1 = require("./decision-log.service");
+const dto_1 = require("./dto");
+const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+/**
+ * Decision Log Controller
+ *
+ * Provides endpoints for Quiz2Biz append-only decision management:
+ * - Create decisions (DRAFT status)
+ * - Lock decisions (DRAFT -> LOCKED)
+ * - Supersede locked decisions
+ * - Export for audit compliance
+ */
+let DecisionLogController = class DecisionLogController {
+    decisionService;
+    constructor(decisionService) {
+        this.decisionService = decisionService;
+    }
+    /**
+     * Create a new decision
+     */
+    async createDecision(dto, req) {
+        return this.decisionService.createDecision(dto, req.user.userId);
+    }
+    /**
+     * Lock a decision (DRAFT -> LOCKED)
+     */
+    async lockDecision(dto, req) {
+        return this.decisionService.updateDecisionStatus(dto, req.user.userId);
+    }
+    /**
+     * Supersede a locked decision
+     */
+    async supersedeDecision(dto, req) {
+        return this.decisionService.supersedeDecision(dto, req.user.userId);
+    }
+    /**
+     * Get a decision by ID
+     */
+    async getDecision(decisionId) {
+        return this.decisionService.getDecision(decisionId);
+    }
+    /**
+     * List decisions with filters
+     */
+    async listDecisions(filters) {
+        return this.decisionService.listDecisions(filters);
+    }
+    /**
+     * Get supersession chain for a decision
+     */
+    async getSupersessionChain(decisionId) {
+        return this.decisionService.getSupersessionChain(decisionId);
+    }
+    /**
+     * Export decisions for audit
+     */
+    async exportForAudit(sessionId) {
+        return this.decisionService.exportForAudit(sessionId);
+    }
+    /**
+     * Delete a draft decision
+     */
+    async deleteDecision(decisionId, req) {
+        await this.decisionService.deleteDecision(decisionId, req.user.userId);
+    }
+};
+exports.DecisionLogController = DecisionLogController;
+__decorate([
+    (0, common_1.Post)(),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Create a new decision',
+        description: `
+Create a new decision record in DRAFT status.
+DRAFT decisions can be modified until they are locked.
+
+Once locked, decisions cannot be changed - use supersession to amend.
+    `,
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 201,
+        description: 'Decision created successfully',
+        type: dto_1.DecisionResponse,
+    }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [dto_1.CreateDecisionDto, Object]),
+    __metadata("design:returntype", Promise)
+], DecisionLogController.prototype, "createDecision", null);
+__decorate([
+    (0, common_1.Post)('lock'),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Lock a decision',
+        description: `
+Lock a DRAFT decision, making it permanent.
+
+**Append-Only Enforcement:**
+- Only DRAFT decisions can be locked
+- Locked decisions cannot be modified
+- To change a locked decision, use supersession
+    `,
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Decision locked successfully',
+        type: dto_1.DecisionResponse,
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 403,
+        description: 'Decision is not in DRAFT status',
+    }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [dto_1.UpdateDecisionStatusDto, Object]),
+    __metadata("design:returntype", Promise)
+], DecisionLogController.prototype, "lockDecision", null);
+__decorate([
+    (0, common_1.Post)('supersede'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Supersede a locked decision',
+        description: `
+Create a new decision that supersedes an existing LOCKED decision.
+
+This is the ONLY way to "amend" a locked decision.
+The original decision is marked as SUPERSEDED and linked to the new one.
+
+**Audit Trail:**
+- Original decision remains in the log with SUPERSEDED status
+- New decision references the original via supersedesDecisionId
+- Full supersession chain can be retrieved
+    `,
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 201,
+        description: 'Supersession created successfully',
+        type: dto_1.DecisionResponse,
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 400,
+        description: 'Original decision is not in LOCKED status',
+    }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [dto_1.SupersedeDecisionDto, Object]),
+    __metadata("design:returntype", Promise)
+], DecisionLogController.prototype, "supersedeDecision", null);
+__decorate([
+    (0, common_1.Get)(':decisionId'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Get a decision by ID',
+        description: 'Retrieve a single decision record.',
+    }),
+    (0, swagger_1.ApiParam)({
+        name: 'decisionId',
+        description: 'Decision UUID',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Decision found',
+        type: dto_1.DecisionResponse,
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 404,
+        description: 'Decision not found',
+    }),
+    __param(0, (0, common_1.Param)('decisionId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], DecisionLogController.prototype, "getDecision", null);
+__decorate([
+    (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({
+        summary: 'List decisions',
+        description: 'List decisions with optional filters for session, owner, and status.',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'List of decisions',
+        type: [dto_1.DecisionResponse],
+    }),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [dto_1.ListDecisionsDto]),
+    __metadata("design:returntype", Promise)
+], DecisionLogController.prototype, "listDecisions", null);
+__decorate([
+    (0, common_1.Get)(':decisionId/chain'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Get supersession chain',
+        description: 'Get the full supersession history for a decision.',
+    }),
+    (0, swagger_1.ApiParam)({
+        name: 'decisionId',
+        description: 'Decision UUID',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Supersession chain',
+        type: [dto_1.DecisionResponse],
+    }),
+    __param(0, (0, common_1.Param)('decisionId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], DecisionLogController.prototype, "getSupersessionChain", null);
+__decorate([
+    (0, common_1.Get)('export/:sessionId'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Export decisions for audit',
+        description: `
+Export all decisions for a session in audit format.
+Includes supersession chain mapping for compliance review.
+    `,
+    }),
+    (0, swagger_1.ApiParam)({
+        name: 'sessionId',
+        description: 'Session UUID',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Audit export',
+        type: dto_1.DecisionAuditExport,
+    }),
+    __param(0, (0, common_1.Param)('sessionId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], DecisionLogController.prototype, "exportForAudit", null);
+__decorate([
+    (0, common_1.Delete)(':decisionId'),
+    (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Delete a draft decision',
+        description: `
+Delete a DRAFT decision.
+
+**Append-Only Enforcement:**
+- Only DRAFT decisions can be deleted
+- LOCKED and SUPERSEDED decisions are permanent
+    `,
+    }),
+    (0, swagger_1.ApiParam)({
+        name: 'decisionId',
+        description: 'Decision UUID',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 204,
+        description: 'Decision deleted successfully',
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 403,
+        description: 'Cannot delete non-DRAFT decision',
+    }),
+    __param(0, (0, common_1.Param)('decisionId')),
+    __param(1, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], DecisionLogController.prototype, "deleteDecision", null);
+exports.DecisionLogController = DecisionLogController = __decorate([
+    (0, swagger_1.ApiTags)('Decision Log'),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Controller)('decisions'),
+    __metadata("design:paramtypes", [decision_log_service_1.DecisionLogService])
+], DecisionLogController);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcZGVjaXNpb24tbG9nXFxkZWNpc2lvbi1sb2cuY29udHJvbGxlci50cyIsIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7QUFBQSwyQ0FZd0I7QUFDeEIsNkNBQThGO0FBQzlGLGlFQUE0RDtBQUM1RCwrQkFPZTtBQUNmLGtFQUE2RDtBQUU3RDs7Ozs7Ozs7R0FRRztBQUtJLElBQU0scUJBQXFCLEdBQTNCLE1BQU0scUJBQXFCO0lBQ0g7SUFBN0IsWUFBNkIsZUFBbUM7UUFBbkMsb0JBQWUsR0FBZixlQUFlLENBQW9CO0lBQUcsQ0FBQztJQUVwRTs7T0FFRztJQWdCRyxBQUFOLEtBQUssQ0FBQyxjQUFjLENBQ1YsR0FBc0IsRUFDbkIsR0FBaUM7UUFFNUMsT0FBTyxJQUFJLENBQUMsZUFBZSxDQUFDLGNBQWMsQ0FBQyxHQUFHLEVBQUUsR0FBRyxDQUFDLElBQUksQ0FBQyxNQUFNLENBQUMsQ0FBQztJQUNuRSxDQUFDO0lBRUQ7O09BRUc7SUF1QkcsQUFBTixLQUFLLENBQUMsWUFBWSxDQUNSLEdBQTRCLEVBQ3pCLEdBQWlDO1FBRTVDLE9BQU8sSUFBSSxDQUFDLGVBQWUsQ0FBQyxvQkFBb0IsQ0FBQyxHQUFHLEVBQUUsR0FBRyxDQUFDLElBQUksQ0FBQyxNQUFNLENBQUMsQ0FBQztJQUN6RSxDQUFDO0lBRUQ7O09BRUc7SUF5QkcsQUFBTixLQUFLLENBQUMsaUJBQWlCLENBQ2IsR0FBeUIsRUFDdEIsR0FBaUM7UUFFNUMsT0FBTyxJQUFJLENBQUMsZUFBZSxDQUFDLGlCQUFpQixDQUFDLEdBQUcsRUFBRSxHQUFHLENBQUMsSUFBSSxDQUFDLE1BQU0sQ0FBQyxDQUFDO0lBQ3RFLENBQUM7SUFFRDs7T0FFRztJQW1CRyxBQUFOLEtBQUssQ0FBQyxXQUFXLENBQXNCLFVBQWtCO1FBQ3ZELE9BQU8sSUFBSSxDQUFDLGVBQWUsQ0FBQyxXQUFXLENBQUMsVUFBVSxDQUFDLENBQUM7SUFDdEQsQ0FBQztJ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cmNlcyI6WyJDOlxcUmVwb3NcXFF1aXotdG8tQnVpbGRcXGFwcHNcXGFwaVxcc3JjXFxtb2R1bGVzXFxkZWNpc2lvbi1sb2dcXGRlY2lzaW9uLWxvZy5jb250cm9sbGVyLnRzIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7XG4gIENvbnRyb2xsZXIsXG4gIFBvc3QsXG4gIEdldCxcbiAgRGVsZXRlLFxuICBCb2R5LFxuICBQYXJhbSxcbiAgUXVlcnksXG4gIFVzZUd1YXJkcyxcbiAgSHR0cENvZGUsXG4gIEh0dHBTdGF0dXMsXG4gIFJlcXVlc3QsXG59IGZyb20gJ0BuZXN0anMvY29tbW9uJztcbmltcG9ydCB7IEFwaVRhZ3MsIEFwaU9wZXJhdGlvbiwgQXBpUmVzcG9uc2UsIEFwaUJlYXJlckF1dGgsIEFwaVBhcmFtIH0gZnJvbSAnQG5lc3Rqcy9zd2FnZ2VyJztcbmltcG9ydCB7IERlY2lzaW9uTG9nU2VydmljZSB9IGZyb20gJy4vZGVjaXNpb24tbG9nLnNlcnZpY2UnO1xuaW1wb3J0IHtcbiAgQ3JlYXRlRGVjaXNpb25EdG8sXG4gIFVwZGF0ZURlY2lzaW9uU3RhdHVzRHRvLFxuICBTdXBlcnNlZGVEZWNpc2lvbkR0byxcbiAgTGlzdERlY2lzaW9uc0R0byxcbiAgRGVjaXNpb25SZXNwb25zZSxcbiAgRGVjaXNpb25BdWRpdEV4cG9ydCxcbn0gZnJvbSAnLi9kdG8nO1xuaW1wb3J0IHsgSnd0QXV0aEd1YXJkIH0gZnJvbSAnLi4vYXV0aC9ndWFyZHMvand0LWF1dGguZ3VhcmQnO1xuXG4vKipcbiAqIERlY2lzaW9uIExvZyBDb250cm9sbGVyXG4gKlxuICogUHJvdmlkZXMgZW5kcG9pbnRzIGZvciBRdWl6MkJpeiBhcHBlbmQtb25seSBkZWNpc2lvbiBtYW5hZ2VtZW50OlxuICogLSBDcmVhdGUgZGVjaXNpb25zIChEUkFGVCBzdGF0dXMpXG4gKiAtIExvY2sgZGVjaXNpb25zIChEUkFGVCAtPiBMT0NLRUQpXG4gKiAtIFN1cGVyc2VkZSBsb2NrZWQgZGVjaXNpb25zXG4gKiAtIEV4cG9ydCBmb3IgYXVkaXQgY29tcGxpYW5jZVxuICovXG5AQXBpVGFncygnRGVjaXNpb24gTG9nJylcbkBBcGlCZWFyZXJBdXRoKClcbkBVc2VHdWFyZHMoSnd0QXV0aEd1YXJkKVxuQENvbnRyb2xsZXIoJ2RlY2lzaW9ucycpXG5leHBvcnQgY2xhc3MgRGVjaXNpb25Mb2dDb250cm9sbGVyIHtcbiAgY29uc3RydWN0b3IocHJpdmF0ZSByZWFkb25seSBkZWNpc2lvblNlcnZpY2U6IERlY2lzaW9uTG9nU2VydmljZSkge31cblxuICAvKipcbiAgICogQ3JlYXRlIGEgbmV3IGRlY2lzaW9uXG4gICAqL1xuICBAUG9zdCgpXG4gIEBBcGlPcGVyYXRpb24oe1xuICAgIHN1bW1hcnk6ICdDcmVhdGUgYSBuZXcgZGVjaXNpb24nLFxuICAgIGRlc2NyaXB0aW9uOiBgXG5DcmVhdGUgYSBuZXcgZGVjaXNpb24gcmVjb3JkIGluIERSQUZUIHN0YXR1cy5cbkRSQUZUIGRlY2lzaW9ucyBjYW4gYmUgbW9kaWZpZWQgdW50aWwgdGhleSBhcmUgbG9ja2VkLlxuXG5PbmNlIGxvY2tlZCwgZGVjaXNpb25zIGNhbm5vdCBiZSBjaGFuZ2VkIC0gdXNlIHN1cGVyc2Vzc2lvbiB0byBhbWVuZC5cbiAgICBgLFxuICB9KVxuICBAQXBpUmVzcG9uc2Uoe1xuICAgIHN0YXR1czogMjAxLFxuICAgIGRlc2NyaXB0aW9uOiAnRGVjaXNpb24gY3JlYXRlZCBzdWNjZXNzZnVsbHknLFxuICAgIHR5cGU6IERlY2lzaW9uUmVzcG9uc2UsXG4gIH0pXG4gIGFzeW5jIGNyZWF0ZURlY2lzaW9uKFxuICAgIEBCb2R5KCkgZHRvOiBDcmVhdGVEZWNpc2lvbkR0byxcbiAgICBAUmVxdWVzdCgpIHJlcTogeyB1c2VyOiB7IHVzZXJJZDogc3RyaW5nIH0gfSxcbiAgKTogUHJvbWlzZTxEZWNpc2lvblJlc3BvbnNlPiB7XG4gICAgcmV0dXJuIHRoaXMuZGVjaXNpb25TZXJ2aWNlLmNyZWF0ZURlY2lzaW9uKGR0bywgcmVxLnVzZXIudXNlcklkKTtcbiAgfVxuXG4gIC8qKlxuICAgKiBMb2NrIGEgZGVjaXNpb24gKERSQUZUIC0+IExPQ0tFRClcbiAgICovXG4gIEBQb3N0KCdsb2NrJylcbiAgQEh0dHBDb2RlKEh0dHBTdGF0dXMuT0spXG4gIEBBcGlPcGVyYXRpb24oe1xuICAgIHN1bW1hcnk6ICdMb2NrIGEgZGVjaXNpb24nLFxuICAgIGRlc2NyaXB0aW9uOiBgXG5Mb2NrIGEgRFJBRlQgZGVjaXNpb24sIG1ha2luZyBpdCBwZXJtYW5lbnQuXG5cbioqQXBwZW5kLU9ubHkgRW5mb3JjZW1lbnQ6Kipcbi0gT25seSBEUkFGVCBkZWNpc2lvbnMgY2FuIGJlIGxvY2tlZFxuLSBMb2NrZWQgZGVjaXNpb25zIGNhbm5vdCBiZSBtb2RpZmllZFxuLSBUbyBjaGFuZ2UgYSBsb2NrZWQgZGVjaXNpb24sIHVzZSBzdXBlcnNlc3Npb25cbiAgICBgLFxuICB9KVxuICBAQXBpUmVzcG9uc2Uoe1xuICAgIHN0YXR1czogMjAwLFxuICAgIGRlc2NyaXB0aW9uOiAnRGVjaXNpb24gbG9ja2VkIHN1Y2Nlc3NmdWxseScsXG4gICAgdHlwZTogRGVjaXNpb25SZXNwb25zZSxcbiAgfSlcbiAgQEFwaVJlc3BvbnNlKHtcbiAgICBzdGF0dXM6IDQwMyxcbiAgICBkZXNjcmlwdGlvbjogJ0RlY2lzaW9uIGlzIG5vdCBpbiBEUkFGVCBzdGF0dXMnLFxuICB9KVxuICBhc3luYyBsb2NrRGVjaXNpb24oXG4gICAgQEJvZHkoKSBkdG86IFVwZGF0ZURlY2lzaW9uU3RhdHVzRHRvLFxuICAgIEBSZXF1ZXN0KCkgcmVxOiB7IHVzZXI6IHsgdXNlcklkOiBzdHJpbmcgfSB9LFxuICApOiBQcm9taXNlPERlY2lzaW9uUmVzcG9uc2U+IHtcbiAgICByZXR1cm4gdGhpcy5kZWNpc2lvblNlcnZpY2UudXBkYXRlRGVjaXNpb25TdGF0dXMoZHRvLCByZXEudXNlci51c2VySWQpO1xuICB9XG5cbiAgLyoqXG4gICAqIFN1cGVyc2VkZSBhIGxvY2tlZCBkZWNpc2lvblxuICAgKi9cbiAgQFBvc3QoJ3N1cGVyc2VkZScpXG4gIEBBcGlPcGVyYXRpb24oe1xuICAgIHN1bW1hcnk6ICdTdXBlcnNlZGUgYSBsb2NrZWQgZGVjaXNpb24nLFxuICAgIGRlc2NyaXB0aW9uOiBgXG5DcmVhdGUgYSBuZXcgZGVjaXNpb24gdGhhdCBzdXBlcnNlZGVzIGFuIGV4aXN0aW5nIExPQ0tFRCBkZWNpc2lvbi5cblxuVGhpcyBpcyB0aGUgT05MWSB3YXkgdG8gXCJhbWVuZFwiIGEgbG9ja2VkIGRlY2lzaW9uLlxuVGhlIG9yaWdpbmFsIGRlY2lzaW9uIGlzIG1hcmtlZCBhcyBTVVBFUlNFREVEIGFuZCBsaW5rZWQgdG8gdGhlIG5ldyBvbmUuXG5cbioqQXVkaXQgVHJhaWw6Kipcbi0gT3JpZ2luYWwgZGVjaXNpb24gcmVtYWlucyBpbiB0aGUgbG9nIHdpdGggU1VQRVJTRURFRCBzdGF0dXNcbi0gTmV3IGRlY2lzaW9uIHJlZmVyZW5jZXMgdGhlIG9yaWdpbmFsIHZpYSBzdXBlcnNlZGVzRGVjaXNpb25JZFxuLSBGdWxsIHN1cGVyc2Vzc2lvbiBjaGFpbiBjYW4gYmUgcmV0cmlldmVkXG4gICAgYCxcbiAgfSlcbiAgQEFwaVJlc3BvbnNlKHtcbiAgICBzdGF0dXM6IDIwMSxcbiAgICBkZXNjcmlwdGlvbjogJ1N1cGVyc2Vzc2lvbiBjcmVhdGVkIHN1Y2Nlc3NmdWxseScsXG4gICAgdHlwZTogRGVjaXNpb25SZXNwb25zZSxcbiAgfSlcbiAgQEFwaVJlc3BvbnNlKHtcbiAgICBzdGF0dXM6IDQwMCxcbiAgICBkZXNjcmlwdGlvbjogJ09yaWdpbmFsIGRlY2lzaW9uIGlzIG5vdCBpbiBMT0NLRUQgc3RhdHVzJyxcbiAgfSlcbiAgYXN5bmMgc3VwZXJzZWRlRGVjaXNpb24oXG4gICAgQEJvZHkoKSBkdG86IFN1cGVyc2VkZURlY2lzaW9uRHRvLFxuICAgIEBSZXF1ZXN0KCkgcmVxOiB7IHVzZXI6IHsgdXNlcklkOiBzdHJpbmcgfSB9LFxuICApOiBQcm9taXNlPERlY2lzaW9uUmVzcG9uc2U+IHtcbiAgICByZXR1cm4gdGhpcy5kZWNpc2lvblNlcnZpY2Uuc3VwZXJzZWRlRGVjaXNpb24oZHRvLCByZXEudXNlci51c2VySWQpO1xuICB9XG5cbiAgLyoqXG4gICAqIEdldCBhIGRlY2lzaW9uIGJ5IElEXG4gICAqL1xuICBAR2V0KCc6ZGVjaXNpb25JZCcpXG4gIEBBcGlPcGVyYXRpb24oe1xuICAgIHN1bW1hcnk6ICdHZXQgYSBkZWNpc2lvbiBieSBJRCcsXG4gICAgZGVzY3JpcHRpb246ICdSZXRyaWV2ZSBhIHNpbmdsZSBkZWNpc2lvbiByZWNvcmQuJyxcbiAgfSlcbiAgQEFwaVBhcmFtKHtcbiAgICBuYW1lOiAnZGVjaXNpb25JZCcsXG4gICAgZGVzY3JpcHRpb246ICdEZWNpc2lvbiBVVUlEJyxcbiAgfSlcbiAgQEFwaVJlc3BvbnNlKHtcbiAgICBzdGF0dXM6IDIwMCxcbiAgICBkZXNjcmlwdGlvbjogJ0RlY2lzaW9uIGZvdW5kJyxcbiAgICB0eXBlOiBEZWNpc2lvblJlc3BvbnNlLFxuICB9KVxuICBAQXBpUmVzcG9uc2Uoe1xuICAgIHN0YXR1czogNDA0LFxuICAgIGRlc2NyaXB0aW9uOiAnRGVjaXNpb24gbm90IGZvdW5kJyxcbiAgfSlcbiAgYXN5bmMgZ2V0RGVjaXNpb24oQFBhcmFtKCdkZWNpc2lvbklkJykgZGVjaXNpb25JZDogc3RyaW5nKTogUHJvbWlzZTxEZWNpc2lvblJlc3BvbnNlPiB7XG4gICAgcmV0dXJuIHRoaXMuZGVjaXNpb25TZXJ2aWNlLmdldERlY2lzaW9uKGRlY2lzaW9uSWQpO1xuICB9XG5cbiAgLyoqXG4gICAqIExpc3QgZGVjaXNpb25zIHdpdGggZmlsdGVyc1xuICAgKi9cbiAgQEdldCgpXG4gIEBBcGlPcGVyYXRpb24oe1xuICAgIHN1bW1hcnk6ICdMaXN0IGRlY2lzaW9ucycsXG4gICAgZGVzY3JpcHRpb246ICdMaXN0IGRlY2lzaW9ucyB3aXRoIG9wdGlvbmFsIGZpbHRlcnMgZm9yIHNlc3Npb24sIG93bmVyLCBhbmQgc3RhdHVzLicsXG4gIH0pXG4gIEBBcGlSZXNwb25zZSh7XG4gICAgc3RhdHVzOiAyMDAsXG4gICAgZGVzY3JpcHRpb246ICdMaXN0IG9mIGRlY2lzaW9ucycsXG4gICAgdHlwZTogW0RlY2lzaW9uUmVzcG9uc2VdLFxuICB9KVxuICBhc3luYyBsaXN0RGVjaXNpb25zKEBRdWVyeSgpIGZpbHRlcnM6IExpc3REZWNpc2lvbnNEdG8pOiBQcm9taXNlPERlY2lzaW9uUmVzcG9uc2VbXT4ge1xuICAgIHJldHVybiB0aGlzLmRlY2lzaW9uU2VydmljZS5saXN0RGVjaXNpb25zKGZpbHRlcnMpO1xuICB9XG5cbiAgLyoqXG4gICAqIEdldCBzdXBlcnNlc3Npb24gY2hhaW4gZm9yIGEgZGVjaXNpb25cbiAgICovXG4gIEBHZXQoJzpkZWNpc2lvbklkL2NoYWluJylcbiAgQEFwaU9wZXJhdGlvbih7XG4gICAgc3VtbWFyeTogJ0dldCBzdXBlcnNlc3Npb24gY2hhaW4nLFxuICAgIGRlc2NyaXB0aW9uOiAnR2V0IHRoZSBmdWxsIHN1cGVyc2Vzc2lvbiBoaXN0b3J5IGZvciBhIGRlY2lzaW9uLicsXG4gIH0pXG4gIEBBcGlQYXJhbSh7XG4gICAgbmFtZTogJ2RlY2lzaW9uSWQnLFxuICAgIGRlc2NyaXB0aW9uOiAnRGVjaXNpb24gVVVJRCcsXG4gIH0pXG4gIEBBcGlSZXNwb25zZSh7XG4gICAgc3RhdHVzOiAyMDAsXG4gICAgZGVzY3JpcHRpb246ICdTdXBlcnNlc3Npb24gY2hhaW4nLFxuICAgIHR5cGU6IFtEZWNpc2lvblJlc3BvbnNlXSxcbiAgfSlcbiAgYXN5bmMgZ2V0U3VwZXJzZXNzaW9uQ2hhaW4oQFBhcmFtKCdkZWNpc2lvbklkJykgZGVjaXNpb25JZDogc3RyaW5nKTogUHJvbWlzZTxEZWNpc2lvblJlc3BvbnNlW10+IHtcbiAgICByZXR1cm4gdGhpcy5kZWNpc2lvblNlcnZpY2UuZ2V0U3VwZXJzZXNzaW9uQ2hhaW4oZGVjaXNpb25JZCk7XG4gIH1cblxuICAvKipcbiAgICogRXhwb3J0IGRlY2lzaW9ucyBmb3IgYXVkaXRcbiAgICovXG4gIEBHZXQoJ2V4cG9ydC86c2Vzc2lvbklkJylcbiAgQEFwaU9wZXJhdGlvbih7XG4gICAgc3VtbWFyeTogJ0V4cG9ydCBkZWNpc2lvbnMgZm9yIGF1ZGl0JyxcbiAgICBkZXNjcmlwdGlvbjogYFxuRXhwb3J0IGFsbCBkZWNpc2lvbnMgZm9yIGEgc2Vzc2lvbiBpbiBhdWRpdCBmb3JtYXQuXG5JbmNsdWRlcyBzdXBlcnNlc3Npb24gY2hhaW4gbWFwcGluZyBmb3IgY29tcGxpYW5jZSByZXZpZXcuXG4gICAgYCxcbiAgfSlcbiAgQEFwaVBhcmFtKHtcbiAgICBuYW1lOiAnc2Vzc2lvbklkJyxcbiAgICBkZXNjcmlwdGlvbjogJ1Nlc3Npb24gVVVJRCcsXG4gIH0pXG4gIEBBcGlSZXNwb25zZSh7XG4gICAgc3RhdHVzOiAyMDAsXG4gICAgZGVzY3JpcHRpb246ICdBdWRpdCBleHBvcnQnLFxuICAgIHR5cGU6IERlY2lzaW9uQXVkaXRFeHBvcnQsXG4gIH0pXG4gIGFzeW5jIGV4cG9ydEZvckF1ZGl0KEBQYXJhbSgnc2Vzc2lvbklkJykgc2Vzc2lvbklkOiBzdHJpbmcpOiBQcm9taXNlPERlY2lzaW9uQXVkaXRFeHBvcnQ+IHtcbiAgICByZXR1cm4gdGhpcy5kZWNpc2lvblNlcnZpY2UuZXhwb3J0Rm9yQXVkaXQoc2Vzc2lvbklkKTtcbiAgfVxuXG4gIC8qKlxuICAgKiBEZWxldGUgYSBkcmFmdCBkZWNpc2lvblxuICAgKi9cbiAgQERlbGV0ZSgnOmRlY2lzaW9uSWQnKVxuICBASHR0cENvZGUoSHR0cFN0YXR1cy5OT19DT05URU5UKVxuICBAQXBpT3BlcmF0aW9uKHtcbiAgICBzdW1tYXJ5OiAnRGVsZXRlIGEgZHJhZnQgZGVjaXNpb24nLFxuICAgIGRlc2NyaXB0aW9uOiBgXG5EZWxldGUgYSBEUkFGVCBkZWNpc2lvbi5cblxuKipBcHBlbmQtT25seSBFbmZvcmNlbWVudDoqKlxuLSBPbmx5IERSQUZUIGRlY2lzaW9ucyBjYW4gYmUgZGVsZXRlZFxuLSBMT0NLRUQgYW5kIFNVUEVSU0VERUQgZGVjaXNpb25zIGFyZSBwZXJtYW5lbnRcbiAgICBgLFxuICB9KVxuICBAQXBpUGFyYW0oe1xuICAgIG5hbWU6ICdkZWNpc2lvbklkJyxcbiAgICBkZXNjcmlwdGlvbjogJ0RlY2lzaW9uIFVVSUQnLFxuICB9KVxuICBAQXBpUmVzcG9uc2Uoe1xuICAgIHN0YXR1czogMjA0LFxuICAgIGRlc2NyaXB0aW9uOiAnRGVjaXNpb24gZGVsZXRlZCBzdWNjZXNzZnVsbHknLFxuICB9KVxuICBAQXBpUmVzcG9uc2Uoe1xuICAgIHN0YXR1czogNDAzLFxuICAgIGRlc2NyaXB0aW9uOiAnQ2Fubm90IGRlbGV0ZSBub24tRFJBRlQgZGVjaXNpb24nLFxuICB9KVxuICBhc3luYyBkZWxldGVEZWNpc2lvbihcbiAgICBAUGFyYW0oJ2RlY2lzaW9uSWQnKSBkZWNpc2lvbklkOiBzdHJpbmcsXG4gICAgQFJlcXVlc3QoKSByZXE6IHsgdXNlcjogeyB1c2VySWQ6IHN0cmluZyB9IH0sXG4gICk6IFByb21pc2U8dm9pZD4ge1xuICAgIGF3YWl0IHRoaXMuZGVjaXNpb25TZXJ2aWNlLmRlbGV0ZURlY2lzaW9uKGRlY2lzaW9uSWQsIHJlcS51c2VyLnVzZXJJZCk7XG4gIH1cbn1cbiJdLCJ2ZXJzaW9uIjozfQ==

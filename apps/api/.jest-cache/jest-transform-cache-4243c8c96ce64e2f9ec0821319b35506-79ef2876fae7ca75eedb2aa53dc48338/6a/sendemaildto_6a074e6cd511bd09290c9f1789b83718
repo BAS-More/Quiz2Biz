@@ -1,0 +1,105 @@
+80a739bcaaf3dbe7f27565d25c02e03a
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EmailResponseDto = exports.BulkSendEmailDto = exports.SendEmailDto = exports.EmailType = void 0;
+const class_validator_1 = require("class-validator");
+const swagger_1 = require("@nestjs/swagger");
+var EmailType;
+(function (EmailType) {
+    EmailType["VERIFICATION"] = "verification";
+    EmailType["PASSWORD_RESET"] = "password_reset";
+    EmailType["WELCOME"] = "welcome";
+    EmailType["SESSION_REMINDER"] = "session_reminder";
+    EmailType["DOCUMENTS_READY"] = "documents_ready";
+    EmailType["DOCUMENTS_APPROVED"] = "documents_approved";
+    EmailType["REVIEW_PENDING"] = "review_pending";
+    EmailType["CUSTOM"] = "custom";
+})(EmailType || (exports.EmailType = EmailType = {}));
+class SendEmailDto {
+    to;
+    subject;
+    type;
+    data;
+    textContent;
+    htmlContent;
+}
+exports.SendEmailDto = SendEmailDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Recipient email address' }),
+    (0, class_validator_1.IsEmail)(),
+    __metadata("design:type", String)
+], SendEmailDto.prototype, "to", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Email subject' }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], SendEmailDto.prototype, "subject", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ enum: EmailType, description: 'Type of email template to use' }),
+    (0, class_validator_1.IsEnum)(EmailType),
+    __metadata("design:type", String)
+], SendEmailDto.prototype, "type", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Dynamic data to populate the template' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsObject)(),
+    __metadata("design:type", Object)
+], SendEmailDto.prototype, "data", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Plain text content (for custom emails)' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], SendEmailDto.prototype, "textContent", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'HTML content (for custom emails)' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], SendEmailDto.prototype, "htmlContent", void 0);
+class BulkSendEmailDto {
+    emails;
+}
+exports.BulkSendEmailDto = BulkSendEmailDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: [SendEmailDto], description: 'Array of emails to send' }),
+    __metadata("design:type", Array)
+], BulkSendEmailDto.prototype, "emails", void 0);
+class EmailResponseDto {
+    success;
+    messageId;
+    error;
+    to;
+    timestamp;
+}
+exports.EmailResponseDto = EmailResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Whether the email was sent successfully' }),
+    __metadata("design:type", Boolean)
+], EmailResponseDto.prototype, "success", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Message ID from email provider' }),
+    __metadata("design:type", String)
+], EmailResponseDto.prototype, "messageId", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Error message if failed' }),
+    __metadata("design:type", String)
+], EmailResponseDto.prototype, "error", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Recipient email address' }),
+    __metadata("design:type", String)
+], EmailResponseDto.prototype, "to", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Timestamp when email was sent/attempted' }),
+    __metadata("design:type", Date)
+], EmailResponseDto.prototype, "timestamp", void 0);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiQzpcXFJlcG9zXFxRdWl6LXRvLUJ1aWxkXFxhcHBzXFxhcGlcXHNyY1xcbW9kdWxlc1xcbm90aWZpY2F0aW9uc1xcZHRvXFxzZW5kLWVtYWlsLmR0by50cyIsIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7QUFBQSxxREFBa0Y7QUFDbEYsNkNBQW1FO0FBRW5FLElBQVksU0FTWDtBQVRELFdBQVksU0FBUztJQUNuQiwwQ0FBNkIsQ0FBQTtJQUM3Qiw4Q0FBaUMsQ0FBQTtJQUNqQyxnQ0FBbUIsQ0FBQTtJQUNuQixrREFBcUMsQ0FBQTtJQUNyQyxnREFBbUMsQ0FBQTtJQUNuQyxzREFBeUMsQ0FBQTtJQUN6Qyw4Q0FBaUMsQ0FBQTtJQUNqQyw4QkFBaUIsQ0FBQTtBQUNuQixDQUFDLEVBVFcsU0FBUyx5QkFBVCxTQUFTLFFBU3BCO0FBRUQsTUFBYSxZQUFZO0lBR3ZCLEVBQUUsQ0FBUztJQUlYLE9BQU8sQ0FBUztJQUloQixJQUFJLENBQVk7SUFLaEIsSUFBSSxDQUEyQjtJQUsvQixXQUFXLENBQVU7SUFLckIsV0FBVyxDQUFVO0NBQ3RCO0FBM0JELG9DQTJCQztBQXhCQztJQUZDLElBQUEscUJBQVcsRUFBQyxFQUFFLFdBQVcsRUFBRSx5QkFBeUIsRUFBRSxDQUFDO0lBQ3ZELElBQUEseUJBQU8sR0FBRTs7d0NBQ0M7QUFJWDtJQUZDLElBQUEscUJBQVcsRUFBQyxFQUFFLFdBQVcsRUFBRSxlQUFlLEVBQUUsQ0FBQztJQUM3QyxJQUFBLDBCQUFRLEdBQUU7OzZDQUNLO0FBSWhCO0lBRkMsSUFBQSxxQkFBVyxFQUFDLEVBQUUsSUFBSSxFQUFFLFNBQVMsRUFBRSxXQUFXLEVBQUUsK0JBQStCLEVBQUUsQ0FBQztJQUM5RSxJQUFBLHdCQUFNLEVBQUMsU0FBUyxDQUFDOzswQ0FDRjtBQUtoQjtJQUhDLElBQUEsNkJBQW1CLEVBQUMsRUFBRSxXQUFXLEVBQUUsdUNBQXVDLEVBQUUsQ0FBQztJQUM3RSxJQUFBLDRCQUFVLEdBQUU7SUFDWixJQUFBLDBCQUFRLEdBQUU7OzBDQUNvQjtBQUsvQjtJQUhDLElBQUEsNkJBQW1CLEVBQUMsRUFBRSxXQUFXLEVBQUUsd0NBQXdDLEVBQUUsQ0FBQztJQUM5RSxJQUFBLDRCQUFVLEdBQUU7SUFDWixJQUFBLDBCQUFRLEdBQUU7O2lEQUNVO0FBS3JCO0lBSEMsSUFBQSw2QkFBbUIsRUFBQyxFQUFFLFdBQVcsRUFBRSxrQ0FBa0MsRUFBRSxDQUFDO0lBQ3hFLElBQUEsNEJBQVUsR0FBRTtJQUNaLElBQUEsMEJBQVEsR0FBRTs7aURBQ1U7QUFHdkIsTUFBYSxnQkFBZ0I7SUFFM0IsTUFBTSxDQUFpQjtDQUN4QjtBQUhELDRDQUdDO0FBREM7SUFEQyxJQUFBLHFCQUFXLEVBQUMsRUFBRSxJQUFJLEVBQUUsQ0FBQyxZQUFZLENBQUMsRUFBRSxXQUFXLEVBQUUseUJBQXlCLEVBQUUsQ0FBQzs7Z0RBQ3ZEO0FBR3pCLE1BQWEsZ0JBQWdCO0lBRTNCLE9BQU8sQ0FBVTtJQUdqQixTQUFTLENBQVU7SUFHbkIsS0FBSyxDQUFVO0lBR2YsRUFBRSxDQUFTO0lBR1gsU0FBUyxDQUFPO0NBQ2pCO0FBZkQsNENBZUM7QUFiQztJQURDLElBQUEscUJBQVcsRUFBQyxFQUFFLFdBQVcsRUFBRSx5Q0FBeUMsRUFBRSxDQUFDOztpREFDdkQ7QUFHakI7SUFEQyxJQUFBLDZCQUFtQixFQUFDLEVBQUUsV0FBVyxFQUFFLGdDQUFnQyxFQUFFLENBQUM7O21EQUNwRDtBQUduQjtJQURDLElBQUEsNkJBQW1CLEVBQUMsRUFBRSxXQUFXLEVBQUUseUJBQXlCLEVBQUUsQ0FBQzs7K0NBQ2pEO0FBR2Y7SUFEQyxJQUFBLHFCQUFXLEVBQUMsRUFBRSxXQUFXLEVBQUUseUJBQXlCLEVBQUUsQ0FBQzs7NENBQzdDO0FBR1g7SUFEQyxJQUFBLHFCQUFXLEVBQUMsRUFBRSxXQUFXLEVBQUUseUNBQXlDLEVBQUUsQ0FBQzs4QkFDN0QsSUFBSTttREFBQyIsIm5hbWVzIjpbXSwic291cmNlcyI6WyJDOlxcUmVwb3NcXFF1aXotdG8tQnVpbGRcXGFwcHNcXGFwaVxcc3JjXFxtb2R1bGVzXFxub3RpZmljYXRpb25zXFxkdG9cXHNlbmQtZW1haWwuZHRvLnRzIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IElzRW1haWwsIElzU3RyaW5nLCBJc09wdGlvbmFsLCBJc09iamVjdCwgSXNFbnVtIH0gZnJvbSAnY2xhc3MtdmFsaWRhdG9yJztcbmltcG9ydCB7IEFwaVByb3BlcnR5LCBBcGlQcm9wZXJ0eU9wdGlvbmFsIH0gZnJvbSAnQG5lc3Rqcy9zd2FnZ2VyJztcblxuZXhwb3J0IGVudW0gRW1haWxUeXBlIHtcbiAgVkVSSUZJQ0FUSU9OID0gJ3ZlcmlmaWNhdGlvbicsXG4gIFBBU1NXT1JEX1JFU0VUID0gJ3Bhc3N3b3JkX3Jlc2V0JyxcbiAgV0VMQ09NRSA9ICd3ZWxjb21lJyxcbiAgU0VTU0lPTl9SRU1JTkRFUiA9ICdzZXNzaW9uX3JlbWluZGVyJyxcbiAgRE9DVU1FTlRTX1JFQURZID0gJ2RvY3VtZW50c19yZWFkeScsXG4gIERPQ1VNRU5UU19BUFBST1ZFRCA9ICdkb2N1bWVudHNfYXBwcm92ZWQnLFxuICBSRVZJRVdfUEVORElORyA9ICdyZXZpZXdfcGVuZGluZycsXG4gIENVU1RPTSA9ICdjdXN0b20nLFxufVxuXG5leHBvcnQgY2xhc3MgU2VuZEVtYWlsRHRvIHtcbiAgQEFwaVByb3BlcnR5KHsgZGVzY3JpcHRpb246ICdSZWNpcGllbnQgZW1haWwgYWRkcmVzcycgfSlcbiAgQElzRW1haWwoKVxuICB0bzogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGRlc2NyaXB0aW9uOiAnRW1haWwgc3ViamVjdCcgfSlcbiAgQElzU3RyaW5nKClcbiAgc3ViamVjdDogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGVudW06IEVtYWlsVHlwZSwgZGVzY3JpcHRpb246ICdUeXBlIG9mIGVtYWlsIHRlbXBsYXRlIHRvIHVzZScgfSlcbiAgQElzRW51bShFbWFpbFR5cGUpXG4gIHR5cGU6IEVtYWlsVHlwZTtcblxuICBAQXBpUHJvcGVydHlPcHRpb25hbCh7IGRlc2NyaXB0aW9uOiAnRHluYW1pYyBkYXRhIHRvIHBvcHVsYXRlIHRoZSB0ZW1wbGF0ZScgfSlcbiAgQElzT3B0aW9uYWwoKVxuICBASXNPYmplY3QoKVxuICBkYXRhPzogUmVjb3JkPHN0cmluZywgdW5rbm93bj47XG5cbiAgQEFwaVByb3BlcnR5T3B0aW9uYWwoeyBkZXNjcmlwdGlvbjogJ1BsYWluIHRleHQgY29udGVudCAoZm9yIGN1c3RvbSBlbWFpbHMpJyB9KVxuICBASXNPcHRpb25hbCgpXG4gIEBJc1N0cmluZygpXG4gIHRleHRDb250ZW50Pzogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eU9wdGlvbmFsKHsgZGVzY3JpcHRpb246ICdIVE1MIGNvbnRlbnQgKGZvciBjdXN0b20gZW1haWxzKScgfSlcbiAgQElzT3B0aW9uYWwoKVxuICBASXNTdHJpbmcoKVxuICBodG1sQ29udGVudD86IHN0cmluZztcbn1cblxuZXhwb3J0IGNsYXNzIEJ1bGtTZW5kRW1haWxEdG8ge1xuICBAQXBpUHJvcGVydHkoeyB0eXBlOiBbU2VuZEVtYWlsRHRvXSwgZGVzY3JpcHRpb246ICdBcnJheSBvZiBlbWFpbHMgdG8gc2VuZCcgfSlcbiAgZW1haWxzOiBTZW5kRW1haWxEdG9bXTtcbn1cblxuZXhwb3J0IGNsYXNzIEVtYWlsUmVzcG9uc2VEdG8ge1xuICBAQXBpUHJvcGVydHkoeyBkZXNjcmlwdGlvbjogJ1doZXRoZXIgdGhlIGVtYWlsIHdhcyBzZW50IHN1Y2Nlc3NmdWxseScgfSlcbiAgc3VjY2VzczogYm9vbGVhbjtcblxuICBAQXBpUHJvcGVydHlPcHRpb25hbCh7IGRlc2NyaXB0aW9uOiAnTWVzc2FnZSBJRCBmcm9tIGVtYWlsIHByb3ZpZGVyJyB9KVxuICBtZXNzYWdlSWQ/OiBzdHJpbmc7XG5cbiAgQEFwaVByb3BlcnR5T3B0aW9uYWwoeyBkZXNjcmlwdGlvbjogJ0Vycm9yIG1lc3NhZ2UgaWYgZmFpbGVkJyB9KVxuICBlcnJvcj86IHN0cmluZztcblxuICBAQXBpUHJvcGVydHkoeyBkZXNjcmlwdGlvbjogJ1JlY2lwaWVudCBlbWFpbCBhZGRyZXNzJyB9KVxuICB0bzogc3RyaW5nO1xuXG4gIEBBcGlQcm9wZXJ0eSh7IGRlc2NyaXB0aW9uOiAnVGltZXN0YW1wIHdoZW4gZW1haWwgd2FzIHNlbnQvYXR0ZW1wdGVkJyB9KVxuICB0aW1lc3RhbXA6IERhdGU7XG59XG4iXSwidmVyc2lvbiI6M30=
