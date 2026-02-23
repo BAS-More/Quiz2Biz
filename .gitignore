@@ -70,3 +70,7 @@ override.tf.json
 *_override.tf.json
 
 actionlint
+
+# Jest cache
+.jest-cache/
+**/.jest-cache/

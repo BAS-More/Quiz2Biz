@@ -1,1 +1,0 @@
-{"file":"C:\\Repos\\Quiz-to-Build\\libs\\database\\src\\index.ts","mappings":";;;AAAA,mDAAiD;AAAxC,+GAAA,aAAa,OAAA;AACtB,iDAA+C;AAAtC,6GAAA,YAAY,OAAA","names":[],"sources":["C:\\Repos\\Quiz-to-Build\\libs\\database\\src\\index.ts"],"sourcesContent":["export { PrismaService } from './prisma.service';\nexport { PrismaModule } from './prisma.module';\n"],"version":3}
