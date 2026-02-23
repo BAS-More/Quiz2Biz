@@ -47,7 +47,6 @@ export interface NielsenScoreResult {
 // Nielsen's 10 Heuristics Definition
 // ============================================================================
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const NIELSEN_HEURISTICS: NielsenHeuristic[] = [
   {
     id: 1,
@@ -666,7 +665,6 @@ export const NIELSEN_HEURISTICS: NielsenHeuristic[] = [
 // Score Calculation
 // ============================================================================
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function calculateNielsenScore(heuristics: NielsenHeuristic[]): NielsenScoreResult {
   let totalScore = 0;
   let maxScore = 0;

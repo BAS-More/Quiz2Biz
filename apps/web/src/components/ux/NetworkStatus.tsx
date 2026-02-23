@@ -52,7 +52,6 @@ interface NetworkContextValue {
 
 const NetworkContext = createContext<NetworkContextValue | null>(null);
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useNetworkStatus = () => {
   const context = useContext(NetworkContext);
   if (!context) {
@@ -683,7 +682,6 @@ export const PendingRequestsDropdown: React.FC<PendingRequestsDropdownProps> = (
 // Hook for wrapping fetch with network tracking
 // ============================================================================
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function useTrackedFetch() {
   const { addPendingRequest, removePendingRequest, isOffline } = useNetworkStatus();
 

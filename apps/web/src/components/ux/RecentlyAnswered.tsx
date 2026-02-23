@@ -43,7 +43,6 @@ export interface RecentlyAnsweredConfig {
 // Time Formatting Utilities
 // ============================================================================
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function formatRelativeTime(date: Date): string {
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
@@ -71,13 +70,11 @@ export function formatRelativeTime(date: Date): string {
   return date.toLocaleDateString();
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function isRecent(date: Date, thresholdMs: number = 5 * 60 * 1000): boolean {
   const now = new Date();
   return now.getTime() - date.getTime() < thresholdMs;
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function isVeryRecent(date: Date, thresholdMs: number = 60 * 1000): boolean {
   const now = new Date();
   return now.getTime() - date.getTime() < thresholdMs;
@@ -98,7 +95,6 @@ interface RecentlyAnsweredContextValue {
 
 const RecentlyAnsweredContext = React.createContext<RecentlyAnsweredContextValue | null>(null);
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useRecentlyAnswered = () => {
   const context = React.useContext(RecentlyAnsweredContext);
   if (!context) {
@@ -511,7 +507,6 @@ export const RecentAnswersTimeline: React.FC<RecentAnswersTimelineProps> = ({
 // Hook for marking questions as answered
 // ============================================================================
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function useMarkAnswered() {
   const { addAnswer } = useRecentlyAnswered();
 

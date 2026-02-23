@@ -72,7 +72,6 @@ export interface OnboardingState {
 // Default Tours
 // ============================================================================
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const ONBOARDING_TOURS: OnboardingTour[] = [
   {
     id: 'welcome-tour',
@@ -253,7 +252,6 @@ interface OnboardingContextValue {
 
 const OnboardingContext = createContext<OnboardingContextValue | null>(null);
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useOnboarding = () => {
   const context = useContext(OnboardingContext);
   if (!context) {

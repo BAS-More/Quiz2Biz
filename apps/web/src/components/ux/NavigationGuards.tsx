@@ -544,7 +544,6 @@ export const GuardedForm: React.FC<GuardedFormProps> = ({
       markFormClean(formId);
       setIsDirty(false);
       onDirtyChange?.(false);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onSubmit?.(e as any);
     },
     [formId, markFormClean, onDirtyChange, onSubmit],
