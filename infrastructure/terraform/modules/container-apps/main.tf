@@ -109,10 +109,10 @@ resource "azurerm_container_app" "api" {
         value = var.app_insights_connection_string
       }
 
-      # Liveness probe
+      # Liveness probe — uses global prefix api/v1
       liveness_probe {
         transport = "HTTP"
-        path      = "/health/live"
+        path      = "/api/v1/health/live"
         port      = 3000
 
         initial_delay           = 15
@@ -121,10 +121,10 @@ resource "azurerm_container_app" "api" {
         failure_count_threshold = 5
       }
 
-      # Readiness probe
+      # Readiness probe — uses global prefix api/v1
       readiness_probe {
         transport = "HTTP"
-        path      = "/health/ready"
+        path      = "/api/v1/health/ready"
         port      = 3000
 
         interval_seconds        = 10
@@ -132,10 +132,10 @@ resource "azurerm_container_app" "api" {
         failure_count_threshold = 5
       }
 
-      # Startup probe
+      # Startup probe — uses global prefix api/v1
       startup_probe {
         transport = "HTTP"
-        path      = "/health/live"
+        path      = "/api/v1/health/live"
         port      = 3000
 
         interval_seconds        = 5

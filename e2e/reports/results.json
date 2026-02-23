@@ -114,7 +114,7 @@
     "tags": [],
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
-    "version": "1.58.0",
+    "version": "1.58.2",
     "workers": 4,
     "webServer": null
   },
@@ -16892,8 +16892,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-02-20T00:34:52.991Z",
-    "duration": 536.4249999999997,
+    "startTime": "2026-02-23T10:24:10.428Z",
+    "duration": 370.8849999999993,
     "expected": 0,
     "skipped": 820,
     "unexpected": 0,

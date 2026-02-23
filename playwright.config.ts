@@ -98,21 +98,27 @@ export default defineConfig({
   // Output directory for test artifacts
   outputDir: 'e2e/test-results',
 
-  // Web server configuration (starts the app before tests)
-  webServer: [
-    {
-      command: 'cd apps/web && npm run dev',
-      url: 'http://localhost:5173',
-      reuseExistingServer: !process.env.CI,
-      timeout: 120000,
-    },
-    {
-      command: 'cd apps/api && npm run start:dev',
-      url: 'http://localhost:3000/health',
-      reuseExistingServer: !process.env.CI,
-      timeout: 120000,
-    },
-  ],
+  // Web server configuration (starts the app before tests).
+  // Set PLAYWRIGHT_NO_WEBSERVER=1 to skip auto-start and connect to
+  // manually running servers instead (default when running from VS Code).
+  ...(process.env.PLAYWRIGHT_NO_WEBSERVER
+    ? {}
+    : {
+        webServer: [
+          {
+            command: 'cd apps/web && npm run dev',
+            url: 'http://localhost:5173',
+            reuseExistingServer: !process.env.CI,
+            timeout: 120000,
+          },
+          {
+            command: 'cd apps/api && npm run start:dev',
+            url: 'http://localhost:3000/health',
+            reuseExistingServer: !process.env.CI,
+            timeout: 120000,
+          },
+        ],
+      }),
 
   // Test timeout
   timeout: 60000,

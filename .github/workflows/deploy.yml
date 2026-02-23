@@ -27,6 +27,10 @@ env:
   CONTAINER_APP_NAME: ca-questionnaire-api-prod
   HEALTH_PATH: /api/v1/health
 
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 

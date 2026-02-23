@@ -14,12 +14,12 @@ output "resource_group_location" {
 # Networking
 output "vnet_id" {
   description = "ID of the virtual network"
-  value       = ""
+  value       = module.networking.vnet_id
 }
 
 output "vnet_name" {
   description = "Name of the virtual network"
-  value       = ""
+  value       = module.networking.vnet_name
 }
 
 # Container Registry

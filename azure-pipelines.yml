@@ -275,21 +275,9 @@ stages:
             displayName: "Lighthouse CI (SKIPPED — security remediation)"
 
           - script: |
-              npm run build --workspace=apps/web
-              npm run preview --workspace=apps/web &
-              sleep 10
-            displayName: "Build and serve web app"
-
-          - script: |
-              lhci autorun --config=.lighthouserc.json || true
-            displayName: "Run Lighthouse CI"
-
-          - task: PublishBuildArtifacts@1
-            displayName: "Publish Lighthouse reports"
-            condition: succeededOrFailed()
-            inputs:
-              PathtoPublish: ".lighthouseci"
-              ArtifactName: "lighthouse-reports"
+              echo "Web Vitals check skipped — @lhci/cli removed due to critical vulnerabilities"
+              echo "Use browser-based Lighthouse audit or PageSpeed Insights instead"
+            displayName: "Web Vitals Check (SKIPPED — security remediation)"
 
       - job: APIPerformance
         displayName: "API Load Testing"
@@ -889,7 +877,7 @@ stages:
           - script: |
               echo "Checking health endpoint..."
               for i in {1..10}; do
-                response=$(curl -s -o /dev/null -w "%{http_code}" $(apiUrl)/health)
+                response=$(curl -s -o /dev/null -w "%{http_code}" $(apiUrl)/api/v1/health)
                 if [ "$response" = "200" ]; then
                   echo "Health check passed!"
                   exit 0
@@ -903,7 +891,7 @@ stages:
 
           - script: |
               echo "Checking readiness endpoint..."
-              response=$(curl -s -o /dev/null -w "%{http_code}" $(apiUrl)/health/ready)
+              response=$(curl -s -o /dev/null -w "%{http_code}" $(apiUrl)/api/v1/health/ready)
               if [ "$response" = "200" ]; then
                 echo "Readiness check passed!"
               else
