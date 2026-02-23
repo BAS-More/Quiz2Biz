@@ -62,9 +62,9 @@ jobs:
       - name: Build libraries
         run: npx turbo run build --filter=database --filter=redis --filter=shared
 
-      - name: Run unit tests
-        run: npm run test -- --filter=api -- --passWithNoTests
-        continue-on-error: true
+      # Tests run in CI workflow - skipped here to speed up deployment
+      # - name: Run unit tests
+      #   run: npm run test -- --filter=api -- --passWithNoTests
 
       - name: Build application
         run: npx turbo run build --filter=api
