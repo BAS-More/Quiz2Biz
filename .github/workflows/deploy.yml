@@ -60,7 +60,7 @@ jobs:
         run: npm run db:generate
 
       - name: Run unit tests
-        run: npm run test -- --filter=api --passWithNoTests
+        run: npm run test -- --filter=api -- --passWithNoTests
 
       - name: Build application
         run: npx turbo run build --filter=api --filter=database --filter=redis --filter=shared
