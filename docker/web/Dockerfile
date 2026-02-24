@@ -51,8 +51,13 @@ RUN addgroup -g 1001 -S webapp && \
 # Copy built assets from builder
 COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
 
-# Copy nginx configuration
+# Copy nginx configuration (static default + template for runtime substitution)
 COPY docker/web/nginx.conf /etc/nginx/conf.d/default.conf
+COPY docker/web/nginx.conf.template /etc/nginx/templates/default.conf.template
+
+# Copy entrypoint (processes template when API_BACKEND_HOST/URL is set)
+COPY docker/web/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # Expose port
 EXPOSE 80
@@ -61,4 +66,5 @@ EXPOSE 80
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1
 
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]

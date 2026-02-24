@@ -1,0 +1,134 @@
+# Render Blueprint — Quiz2Biz
+# https://docs.render.com/infrastructure-as-code
+#
+# Deploy: Render Dashboard → Blueprints → New Blueprint Instance → select repo
+#
+# After first deploy:
+#   1. Copy the API service URL and paste it into the web service's
+#      CORS_ORIGIN / FRONTEND_URL env vars if the auto-generated names differ.
+#   2. Set ANTHROPIC_API_KEY in the API service's Environment tab.
+#   3. Set any optional secrets (BREVO_API_KEY, STRIPE_SECRET_KEY, etc.).
+
+services:
+  # ── API (NestJS) ──────────────────────────────────────────────────
+  - type: web
+    name: quiz2biz-api
+    runtime: docker
+    dockerfilePath: ./docker/api/Dockerfile
+    dockerContext: .
+    plan: starter
+    region: oregon
+    healthCheckPath: /api/v1/health
+    numInstances: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3000"
+      - key: API_PREFIX
+        value: api/v1
+
+      # ── Database (auto-linked from the databases section) ──
+      - key: DATABASE_URL
+        fromDatabase:
+          name: quiz2biz-db
+          property: connectionString
+
+      # ── Redis ──
+      - key: REDIS_HOST
+        fromService:
+          name: quiz2biz-redis
+          type: redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          name: quiz2biz-redis
+          type: redis
+          property: port
+      - key: REDIS_PASSWORD
+        value: ""
+
+      # ── JWT (auto-generated on first deploy) ──
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 15m
+      - key: JWT_REFRESH_EXPIRES_IN
+        value: 7d
+
+      # ── Security ──
+      - key: BCRYPT_ROUNDS
+        value: "12"
+      - key: THROTTLE_TTL
+        value: "60000"
+      - key: THROTTLE_LIMIT
+        value: "100"
+      - key: THROTTLE_LOGIN_LIMIT
+        value: "5"
+
+      # ── Logging ──
+      - key: LOG_LEVEL
+        value: info
+
+      # ── CORS / Frontend ──
+      # Update these after first deploy if Render assigns a different URL
+      - key: CORS_ORIGIN
+        value: "https://quiz2biz-web.onrender.com"
+      - key: FRONTEND_URL
+        value: "https://quiz2biz-web.onrender.com"
+
+      # ── Claude AI ──
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: CLAUDE_MODEL
+        value: claude-sonnet-4-6
+      - key: CLAUDE_MAX_TOKENS
+        value: "4096"
+
+      # ── Feature flags ──
+      - key: ENABLE_LEGACY_MODULES
+        value: "false"
+
+  # ── Web (React SPA via nginx) ─────────────────────────────────────
+  - type: web
+    name: quiz2biz-web
+    runtime: docker
+    dockerfilePath: ./docker/web/Dockerfile
+    dockerContext: .
+    plan: starter
+    region: oregon
+    healthCheckPath: /
+    numInstances: 1
+    envVars:
+      # Runtime — nginx reverse-proxy target
+      - key: API_BACKEND_HOST
+        fromService:
+          name: quiz2biz-api
+          type: web
+          property: host
+
+      # Build-time — baked into the Vite SPA bundle
+      # Empty string = relative URLs (nginx proxies /api/ to the API)
+      - key: VITE_API_URL
+        value: ""
+      - key: VITE_APP_NAME
+        value: Quiz2Biz
+      - key: VITE_ENABLE_LEGACY_MODULES
+        value: "false"
+
+  # ── Redis ─────────────────────────────────────────────────────────
+  - type: redis
+    name: quiz2biz-redis
+    plan: starter
+    maxmemoryPolicy: allkeys-lru
+    ipAllowList: []
+
+# ── PostgreSQL ────────────────────────────────────────────────────────
+databases:
+  - name: quiz2biz-db
+    plan: starter
+    databaseName: questionnaire
+    postgresMajorVersion: "16"
+    ipAllowList: []
