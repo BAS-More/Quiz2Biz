@@ -50,7 +50,14 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     }
 
     const poolConfig = getConnectionPoolConfig();
-    const url = new URL(baseUrl);
+    let url: URL;
+    try {
+      url = new URL(baseUrl);
+    } catch {
+      throw new Error(
+        'Invalid DATABASE_URL format. Expected postgres:// or postgresql:// URL in environment variable DATABASE_URL.',
+      );
+    }
 
     // Add connection pooling parameters if not present
     if (!url.searchParams.has('connection_limit')) {

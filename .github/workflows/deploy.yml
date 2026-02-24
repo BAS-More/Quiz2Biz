@@ -25,7 +25,7 @@ env:
   IMAGE_NAME: quiz-api
   RESOURCE_GROUP: rg-questionnaire-prod
   CONTAINER_APP_NAME: ca-questionnaire-api-prod
-  HEALTH_PATH: /api/v1/health
+  HEALTH_PATH: /api/v1/health/live
 
 concurrency:
   group: deploy-${{ github.ref }}
@@ -138,6 +138,9 @@ jobs:
           if [ -z "${{ secrets.DATABASE_URL }}" ]; then
             echo "::warning::Missing secret DATABASE_URL"
             MISSING=1
+          elif ! echo "${{ secrets.DATABASE_URL }}" | grep -Eq '^postgres(ql)?://'; then
+            echo "::warning::Invalid DATABASE_URL format (must start with postgres:// or postgresql://)"
+            MISSING=1
           fi
           if [ -z "${{ secrets.REDIS_HOST }}" ]; then
             echo "::warning::Missing secret REDIS_HOST"
@@ -149,6 +152,8 @@ jobs:
           fi
           if [ "$MISSING" -eq 1 ]; then
             echo "deploy_enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::error::Deployment aborted due to missing/invalid required secrets."
+            exit 1
           else
             echo "deploy_enabled=true" >> "$GITHUB_OUTPUT"
           fi
@@ -222,16 +227,45 @@ jobs:
           ATTEMPT=1
           MAX_ATTEMPTS=20
           until [ "$ATTEMPT" -gt "$MAX_ATTEMPTS" ]; do
-            HTTP_STATUS=$(curl --connect-timeout 5 --max-time 10 -s -o /dev/null -w "%{http_code}" "https://${APP_URL}${{ env.HEALTH_PATH }}" || true)
+            set +e
+            HTTP_STATUS=$(curl --connect-timeout 5 --max-time 10 -s -o /tmp/health-body.txt -w "%{http_code}" "https://${APP_URL}${{ env.HEALTH_PATH }}")
+            CURL_EXIT=$?
+            set -e
+
+            if [ "$CURL_EXIT" -ne 0 ]; then
+              HTTP_STATUS=000
+            fi
+
             if [ "$HTTP_STATUS" = "200" ]; then
               echo "Deployment successful - Health check passed"
               exit 0
             fi
-            echo "Health check attempt ${ATTEMPT}/${MAX_ATTEMPTS} returned ${HTTP_STATUS}"
+            echo "Health check attempt ${ATTEMPT}/${MAX_ATTEMPTS} returned status=${HTTP_STATUS}, curl_exit=${CURL_EXIT}"
             ATTEMPT=$((ATTEMPT + 1))
             sleep 15
           done
+
           echo "Health check did not return 200 after ${MAX_ATTEMPTS} attempts"
+          echo "=== Container App ingress ==="
+          az containerapp show \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --query "properties.configuration.ingress.{fqdn:fqdn,external:external,targetPort:targetPort}" \
+            -o jsonc || true
+
+          echo "=== Revisions ==="
+          az containerapp revision list \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --query "[].{name:name,active:properties.active,health:properties.healthState,traffic:properties.trafficWeight}" \
+            -o table || true
+
+          echo "=== Recent container logs ==="
+          az containerapp logs show \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --tail 200 || true
+
           exit 1
 
       - name: Create deployment summary

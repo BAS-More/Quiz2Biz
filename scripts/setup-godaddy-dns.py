@@ -14,34 +14,31 @@ API_SECRET = "URFb65V3c4xkL6KqAhfuqe"
 DOMAIN = "quiz2biz.com"
 
 # DNS Records to configure
-TXT_RECORD = {
+WWW_CNAME_RECORD = {
+    "name": "www",
+    "type": "CNAME",
+    "data": "ca-questionnaire-web-prod.wittyriver-206156ea.australiasoutheast.azurecontainerapps.io",
+    "ttl": 600
+}
+
+API_CNAME_RECORD = {
+    "name": "api",
+    "type": "CNAME",
+    "data": "ca-questionnaire-api-prod.wittyriver-206156ea.australiasoutheast.azurecontainerapps.io",
+    "ttl": 600
+}
+
+WWW_TXT_RECORD = {
     "name": "asuid.www",
     "type": "TXT",
     "data": "E1B712E425D8535DE7111DF02493351CA9886B3CAF1713AA631F3008DFC59CED",
     "ttl": 600
 }
 
-CNAME_RECORD = {
-    "name": "www",
-    "type": "CNAME",
-    "data": "ca-questionnaire-api-dev.ambitioussea-ad6d342d.eastus2.azurecontainerapps.io",
-    "ttl": 600
-}
-
-# Root domain TXT verification record
-ROOT_TXT_RECORD = {
-    "name": "asuid",
+API_TXT_RECORD = {
+    "name": "asuid.api",
     "type": "TXT",
     "data": "E1B712E425D8535DE7111DF02493351CA9886B3CAF1713AA631F3008DFC59CED",
-    "ttl": 600
-}
-
-# Root domain A record (GoDaddy doesn't support CNAME on root)
-# Points to the Container App Environment's static IP
-ROOT_A_RECORD = {
-    "name": "@",
-    "type": "A",
-    "data": "4.153.144.109",
     "ttl": 600
 }
 
@@ -85,31 +82,31 @@ def main():
     print("=" * 60)
     print(f"Domain: {DOMAIN}\n")
 
+    # Configure CNAME record for www subdomain
+    www_cname_success = add_dns_record(WWW_CNAME_RECORD)
+    print()
+
+    # Configure CNAME record for api subdomain
+    api_cname_success = add_dns_record(API_CNAME_RECORD)
+    print()
+
     # Configure TXT record for www domain verification
-    txt_success = add_dns_record(TXT_RECORD)
+    www_txt_success = add_dns_record(WWW_TXT_RECORD)
     print()
 
-    # Configure TXT record for root domain verification
-    root_txt_success = add_dns_record(ROOT_TXT_RECORD)
+    # Configure TXT record for api domain verification
+    api_txt_success = add_dns_record(API_TXT_RECORD)
     print()
 
-    # Configure CNAME record for www domain mapping
-    cname_success = add_dns_record(CNAME_RECORD)
-    print()
-
-    # Configure A record for root domain mapping
-    root_a_success = add_dns_record(ROOT_A_RECORD)
-    print()
-
-    if txt_success and cname_success and root_txt_success:
+    if www_cname_success and api_cname_success and www_txt_success and api_txt_success:
         print("=" * 60)
         print("✓ DNS Configuration Complete!")
         print("=" * 60)
         print("\nDNS records configured:")
-        print(f"  1. TXT: asuid.www.{DOMAIN}")
-        print(f"  2. TXT: asuid.{DOMAIN}")
-        print(f"  3. CNAME: www.{DOMAIN} -> Container App")
-        print(f"  4. A: {DOMAIN} -> Container App IP (root domain)")
+        print(f"  1. CNAME: www.{DOMAIN} -> Web Container App")
+        print(f"  2. CNAME: api.{DOMAIN} -> API Container App")
+        print(f"  3. TXT: asuid.www.{DOMAIN} (Azure verification)")
+        print(f"  4. TXT: asuid.api.{DOMAIN} (Azure verification)")
         print("\nDNS propagation typically takes 5-15 minutes.")
         print("You can now continue with the HTTPS setup.")
         return 0
