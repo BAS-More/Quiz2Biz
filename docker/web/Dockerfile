@@ -24,6 +24,11 @@ ENV VITE_API_URL=$VITE_API_URL
 ENV VITE_MICROSOFT_CLIENT_ID=$VITE_MICROSOFT_CLIENT_ID
 ENV VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID
 
+# Write env file for Vite build (Vite reads from .env files, not shell ENV)
+RUN echo "VITE_API_URL=${VITE_API_URL}" > apps/web/.env.production.local && \
+    echo "VITE_MICROSOFT_CLIENT_ID=${VITE_MICROSOFT_CLIENT_ID}" >> apps/web/.env.production.local && \
+    echo "VITE_GOOGLE_CLIENT_ID=${VITE_GOOGLE_CLIENT_ID}" >> apps/web/.env.production.local
+
 # Build the web application
 RUN npx turbo run build --filter=web
 
