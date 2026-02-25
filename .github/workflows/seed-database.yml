@@ -1,0 +1,86 @@
+name: Seed Database
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options:
+          - production
+        default: 'production'
+      confirm:
+        description: 'Type "CONFIRM" to proceed with seeding'
+        required: true
+        type: string
+
+env:
+  NODE_VERSION: '22.x'
+
+jobs:
+  seed:
+    name: Seed Database
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'CONFIRM'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Run database seed
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          echo "Running database seed for ${{ github.event.inputs.environment }}..."
+          npx prisma db seed
+          echo "✅ Database seed completed successfully"
+
+      - name: Verify seed results
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          echo "Verifying seed data..."
+          npx prisma db execute --stdin <<EOF
+          SELECT 'Users' as table_name, COUNT(*) as count FROM "User"
+          UNION ALL
+          SELECT 'Organizations', COUNT(*) FROM "Organization"
+          UNION ALL
+          SELECT 'Questionnaires', COUNT(*) FROM "Questionnaire"
+          UNION ALL
+          SELECT 'Sections', COUNT(*) FROM "Section"
+          UNION ALL
+          SELECT 'Questions', COUNT(*) FROM "Question";
+          EOF
+
+      - name: Create seed summary
+        if: always()
+        run: |
+          echo "## Database Seed Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment**: ${{ github.event.inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Triggered by**: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+
+  blocked:
+    name: Seed Blocked
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm != 'CONFIRM'
+    steps:
+      - name: Block execution
+        run: |
+          echo "❌ Seed blocked: confirmation text did not match 'CONFIRM'"
+          echo "You entered: '${{ github.event.inputs.confirm }}'"
+          exit 1
