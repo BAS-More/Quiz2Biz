@@ -1,19 +1,31 @@
 /**
  * OAuth callback page that handles the redirect from OAuth providers.
  * This page runs in a popup window, extracts the token from the URL,
- * sends it to the parent window, and closes itself.
+ * exchanges it with the backend, and handles the authentication.
+ * 
+ * If window.opener exists (normal popup flow), sends message to parent and closes.
+ * If window.opener is null (browser cleared it), completes login and redirects to dashboard.
  */
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../../stores/auth';
+
+// OAuth API endpoints
+const OAUTH_ENDPOINTS: Record<string, string> = {
+  google: '/api/auth/oauth/google',
+  microsoft: '/api/auth/oauth/microsoft',
+};
 
 export function OAuthCallbackPage() {
   const { provider } = useParams<{ provider: string }>();
+  const navigate = useNavigate();
+  const { login } = useAuthStore();
   const [status, setStatus] = useState<'processing' | 'success' | 'error'>('processing');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   useEffect(() => {
-    const handleCallback = () => {
+    const handleCallback = async () => {
       try {
         // Get the hash fragment (contains the token for implicit flow)
         const hash = window.location.hash.substring(1);
@@ -27,7 +39,7 @@ export function OAuthCallbackPage() {
           setStatus('error');
           setErrorMessage(errorDescription || error);
 
-          // Send error to parent window
+          // Send error to parent window if available
           if (window.opener) {
             window.opener.postMessage(
               {
@@ -36,12 +48,8 @@ export function OAuthCallbackPage() {
               },
               window.location.origin
             );
+            setTimeout(() => window.close(), 2000);
           }
-
-          // Close popup after a short delay to show the error
-          setTimeout(() => {
-            window.close();
-          }, 2000);
           return;
         }
 
@@ -50,7 +58,7 @@ export function OAuthCallbackPage() {
 
         if (!accessToken) {
           setStatus('error');
-          setErrorMessage('No access token received');
+          setErrorMessage('No access token received from provider');
 
           if (window.opener) {
             window.opener.postMessage(
@@ -60,59 +68,79 @@ export function OAuthCallbackPage() {
               },
               window.location.origin
             );
+            setTimeout(() => window.close(), 2000);
           }
-
-          setTimeout(() => {
-            window.close();
-          }, 2000);
           return;
         }
 
-        // Successfully got the token
+        // Exchange token with backend
+        const endpoint = OAUTH_ENDPOINTS[provider || ''];
+        if (!endpoint) {
+          throw new Error(`Unknown OAuth provider: ${provider}`);
+        }
+
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            accessToken: provider === 'microsoft' ? accessToken : undefined,
+            idToken: provider === 'google' ? accessToken : undefined,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error?.message || 'Authentication failed');
+        }
+
+        const data = await response.json();
+
+        // Successfully authenticated - store in Zustand (persists to localStorage)
+        login(data.accessToken, data.refreshToken, data.user);
+
         setStatus('success');
 
-        // Send token to parent window
+        // If we have a parent window (popup flow), notify it and close
         if (window.opener) {
           window.opener.postMessage(
             {
               type: `${provider}-oauth-callback`,
-              accessToken,
+              accessToken: data.accessToken,
+              success: true,
             },
             window.location.origin
           );
 
-          // Close popup
-          setTimeout(() => {
-            window.close();
-          }, 500);
+          // Close popup after brief delay
+          setTimeout(() => window.close(), 500);
         } else {
-          // If no opener (direct navigation), redirect to login with the token
-          // This shouldn't happen in normal flow but handle it gracefully
-          setErrorMessage('This page should be opened in a popup window');
-          setStatus('error');
+          // No parent window (opener was cleared by browser security)
+          // Auth is already stored in localStorage via Zustand
+          // Redirect to dashboard in this window
+          setTimeout(() => {
+            navigate('/dashboard', { replace: true });
+          }, 1000);
         }
       } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : 'Failed to process authentication';
         setStatus('error');
-        setErrorMessage(err instanceof Error ? err.message : 'Failed to process authentication');
+        setErrorMessage(errorMsg);
 
         if (window.opener) {
           window.opener.postMessage(
             {
               type: `${provider}-oauth-callback`,
-              error: 'Failed to process authentication response',
+              error: errorMsg,
             },
             window.location.origin
           );
+          setTimeout(() => window.close(), 2000);
         }
-
-        setTimeout(() => {
-          window.close();
-        }, 2000);
       }
     };
 
     handleCallback();
-  }, [provider]);
+  }, [provider, login, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface-50">
@@ -143,7 +171,7 @@ export function OAuthCallbackPage() {
               Sign in successful!
             </h2>
             <p className="text-surface-500 mt-2">
-              This window will close automatically.
+              {window.opener ? 'This window will close automatically.' : 'Redirecting to dashboard...'}
             </p>
           </>
         )}
@@ -161,9 +189,19 @@ export function OAuthCallbackPage() {
             <p className="text-red-600 mt-2">
               {errorMessage}
             </p>
-            <p className="text-surface-500 mt-2 text-sm">
-              This window will close automatically.
-            </p>
+            {!window.opener && (
+              <button
+                onClick={() => navigate('/auth/login', { replace: true })}
+                className="mt-4 px-4 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700"
+              >
+                Return to Login
+              </button>
+            )}
+            {window.opener && (
+              <p className="text-surface-500 mt-2 text-sm">
+                This window will close automatically.
+              </p>
+            )}
           </>
         )}
       </div>
