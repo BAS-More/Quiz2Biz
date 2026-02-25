@@ -139,9 +139,11 @@ async function bootstrap(): Promise<void> {
   // Cookie parser for CSRF tokens
   app.use(cookieParser());
 
-  // CORS configuration
+  // CORS configuration - parse comma-separated origins and handle credentials properly
+  const corsOrigin = configService.get<string>('CORS_ORIGIN', '*');
+  const parsedOrigins = corsOrigin === '*' ? '*' : corsOrigin.split(',').map((o) => o.trim());
   app.enableCors({
-    origin: configService.get<string>('CORS_ORIGIN', '*'),
+    origin: parsedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
