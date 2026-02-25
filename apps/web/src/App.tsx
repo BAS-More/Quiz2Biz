@@ -16,6 +16,7 @@ import { featureFlags } from './config/feature-flags.config';
 const LoginPage = lazy(() => import('./pages/auth/LoginPage').then(m => ({ default: m.LoginPage })));
 const RegisterPage = lazy(() => import('./pages/auth/RegisterPage').then(m => ({ default: m.RegisterPage })));
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage').then(m => ({ default: m.ForgotPasswordPage })));
+const OAuthCallbackPage = lazy(() => import('./pages/auth/OAuthCallbackPage').then(m => ({ default: m.OAuthCallbackPage })));
 const DashboardPage = lazy(() => import('./pages/dashboard/DashboardPage').then(m => ({ default: m.DashboardPage })));
 const QuestionnairePage = lazy(() => import('./pages/questionnaire/QuestionnairePage').then(m => ({ default: m.QuestionnairePage })));
 const HeatmapPage = lazy(() => import('./pages/heatmap/HeatmapPage').then(m => ({ default: m.HeatmapPage })));
@@ -151,6 +152,9 @@ export default function App() {
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/help" element={<HelpPage />} />
+
+          {/* OAuth callback routes (run in popup, no auth wrapper needed) */}
+          <Route path="/auth/callback/:provider" element={<OAuthCallbackPage />} />
 
           {/* Fallback - redirect to login */}
           <Route path="*" element={<Navigate to="/auth/login" replace />} />
