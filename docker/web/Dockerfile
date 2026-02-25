@@ -38,6 +38,7 @@ RUN npx turbo run build --filter=web && \
     grep -r "a9552f92" apps/web/dist/assets/*.js || echo "Client ID NOT found in build"
 
 # Production stage - serve with nginx
+# Force rebuild: CSP fix 2026-02-25
 FROM nginx:1.27-alpine AS production
 
 ARG IMAGE_VERSION=unknown
