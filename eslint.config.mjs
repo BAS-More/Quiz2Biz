@@ -74,6 +74,12 @@ export default tseslint.config(
       'eqeqeq': ['error', 'always'],
       'curly': ['error', 'all'],
 
+      // Complexity enforcement (ISO/IEC 5055 compliance)
+      'complexity': ['warn', { max: 15 }],  // Cyclomatic complexity
+      'max-depth': ['warn', { max: 4 }],    // Max nesting depth
+      'max-lines-per-function': ['warn', { max: 50, skipBlankLines: true, skipComments: true }],
+      'max-params': ['warn', { max: 4 }],   // Max function parameters
+
       // Naming conventions
       '@typescript-eslint/naming-convention': [
         'error',

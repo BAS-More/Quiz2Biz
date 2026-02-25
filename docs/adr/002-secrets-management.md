@@ -3,6 +3,14 @@
 ## Status
 Accepted
 
+## Implementation Status
+**IMPLEMENTED** (2026-02-25)
+
+| Environment | Status | Details |
+|-------------|--------|---------|
+| Production | ✅ Deployed | Key Vault `kv-quest-prod-oq2wyq` active |
+| Development | ⚠️ Partial | Using Container App secrets (acceptable for dev) |
+
 ## Date
 2026-01-28
 

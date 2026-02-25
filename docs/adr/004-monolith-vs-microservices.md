@@ -3,6 +3,15 @@
 ## Status
 Accepted
 
+## Implementation Status
+**IMPLEMENTED** (2026-02-25)
+
+| Decision | Status | Details |
+|----------|--------|---------|
+| Modular Monolith | ✅ Deployed | NestJS modules with clear boundaries |
+| API | ✅ Deployed | Single API deployment on Azure Container Apps |
+| Modules | ✅ Deployed | Auth, Session, Scoring, Document-Gen, QPG |
+
 ## Date
 2026-01-28
 

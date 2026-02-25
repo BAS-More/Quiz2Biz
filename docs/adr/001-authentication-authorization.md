@@ -3,6 +3,16 @@
 ## Status
 Accepted
 
+## Implementation Status
+**IMPLEMENTED** (2026-02-25)
+
+| Component | Status | Details |
+|-----------|--------|---------|
+| JWT Auth | ✅ Deployed | Access + Refresh tokens with rotation |
+| RBAC | ✅ Deployed | Admin, Consultant, User roles |
+| Guards | ✅ Deployed | NestJS AuthGuard, RolesGuard |
+| Audit | ✅ Deployed | Auth events logged via interceptors |
+
 ## Date
 2026-01-28
 

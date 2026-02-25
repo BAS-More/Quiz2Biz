@@ -3,6 +3,14 @@
 ## Status
 Accepted
 
+## Implementation Status
+**IMPLEMENTED** (2026-02-25)
+
+| Environment | Status | Version | Details |
+|-------------|--------|---------|---------|
+| Production | ✅ Deployed | PostgreSQL 16 | `psql-questionnaire-prod` Azure Flexible Server |
+| Development | ✅ Deployed | PostgreSQL 16 | `psql-questionnaire-dev` (upgraded from v15) |
+
 ## Date
 2026-01-28
 
