@@ -106,6 +106,9 @@ export default function App() {
       <BrowserRouter>
         <Suspense fallback={<PageLoader />}>
         <Routes>
+          {/* OAuth callback routes - MUST be before /auth to ensure proper matching */}
+          <Route path="/auth/callback/:provider" element={<OAuthCallbackPage />} />
+
           {/* Public auth routes */}
           <Route
             path="/auth"
@@ -152,9 +155,6 @@ export default function App() {
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/help" element={<HelpPage />} />
-
-          {/* OAuth callback routes (run in popup, no auth wrapper needed) */}
-          <Route path="/auth/callback/:provider" element={<OAuthCallbackPage />} />
 
           {/* Fallback - redirect to login */}
           <Route path="*" element={<Navigate to="/auth/login" replace />} />
