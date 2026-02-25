@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -370,7 +370,7 @@ export async function seedProjectTypes(): Promise<void> {
         icon: pt.icon,
         isDefault: pt.isDefault,
         isActive: true,
-        metadata: pt.metadata,
+        metadata: pt.metadata as Record<string, unknown> as Prisma.InputJsonValue,
       },
       create: {
         slug: pt.slug,
@@ -379,7 +379,7 @@ export async function seedProjectTypes(): Promise<void> {
         icon: pt.icon,
         isDefault: pt.isDefault,
         isActive: true,
-        metadata: pt.metadata,
+        metadata: pt.metadata as Record<string, unknown> as Prisma.InputJsonValue,
       },
     });
 
