@@ -1,3 +1,8 @@
+---
+trigger: always_on
+alwaysApply: true
+---
+
 # AVI-OS Rule 11: Delivery Integrity
 
 ## Principle

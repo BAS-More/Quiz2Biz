@@ -1,3 +1,8 @@
+---
+trigger: always_on
+alwaysApply: true
+---
+
 # AVI-OS Rule 02: Deliver 100% of What Is Agreed
 
 ## Principle

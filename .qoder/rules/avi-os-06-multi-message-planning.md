@@ -1,3 +1,8 @@
+---
+trigger: always_on
+alwaysApply: true
+---
+
 # AVI-OS Rule 06: Multi-Message Planning with Milestones
 
 ## Principle

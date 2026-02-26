@@ -1,3 +1,8 @@
+---
+trigger: always_on
+alwaysApply: true
+---
+
 # Constraint: Anti-Drift & Scope Control
 
 ## Core Principles

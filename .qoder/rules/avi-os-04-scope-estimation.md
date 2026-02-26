@@ -1,3 +1,8 @@
+---
+trigger: always_on
+alwaysApply: true
+---
+
 # AVI-OS Rule 04: Scope Estimation Before Starting
 
 ## Principle

@@ -1,3 +1,8 @@
+---
+trigger: always_on
+alwaysApply: true
+---
+
 # Protocol: Reality Check & Fresh Context
 
 ## Core Principles

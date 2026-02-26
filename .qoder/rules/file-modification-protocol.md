@@ -1,3 +1,8 @@
+---
+trigger: always_on
+alwaysApply: true
+---
+
 # Agent Contract - File Modification Protocol
 
 ## Pre-Modification Requirements
