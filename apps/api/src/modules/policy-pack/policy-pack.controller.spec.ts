@@ -145,4 +145,106 @@ describe('PolicyPackController', () => {
       expect(result.rules[0].name).toBe('enforce_tags');
     });
   });
+
+  describe('downloadPolicyPack', () => {
+    it('should create ZIP archive and pipe to response', async () => {
+      const mockGaps = [
+        { dimensionKey: 'arch_sec', questionId: 'q-1', coverage: 0.3 },
+      ];
+
+      const mockBundle = {
+        id: 'bundle-123',
+        name: 'Policy Pack v1',
+        version: '1.0.0',
+        generatedAt: new Date(),
+        policies: [{ id: 'pol-1', dimensionKey: 'arch_sec', title: 'Security Policy' }],
+        opaPolicies: [],
+        terraformRules: null,
+        scoreAtGeneration: 72,
+      };
+
+      const mockFiles = [
+        { path: 'policies/security.md', content: '# Security Policy' },
+        { path: 'README.md', content: '# Policy Pack' },
+      ];
+
+      mockContextBuilder.buildGapContexts.mockResolvedValue(mockGaps);
+      mockPolicyPackService.generatePolicyPack.mockResolvedValue(mockBundle);
+      mockPolicyPackService.getExportStructure.mockReturnValue(mockFiles);
+
+      // Mock response as a writable stream so archiver.pipe(res) works
+      const mockRes = {
+        set: jest.fn(),
+        on: jest.fn().mockReturnThis(),
+        once: jest.fn().mockReturnThis(),
+        emit: jest.fn().mockReturnValue(true),
+        write: jest.fn().mockReturnValue(true),
+        end: jest.fn(),
+        removeListener: jest.fn().mockReturnThis(),
+        writable: true,
+      };
+
+      // Verify the service calls are made correctly
+      expect(mockContextBuilder.buildGapContexts).not.toHaveBeenCalled();
+
+      // Call the controller method - archiver will pipe to the mock response
+      await controller.downloadPolicyPack('session-123', mockRes as any);
+
+      expect(mockContextBuilder.buildGapContexts).toHaveBeenCalledWith('session-123');
+      expect(mockPolicyPackService.generatePolicyPack).toHaveBeenCalledWith('session-123', mockGaps);
+      expect(mockPolicyPackService.getExportStructure).toHaveBeenCalledWith(mockBundle);
+    });
+  });
+
+  describe('generatePolicyPack - edge cases', () => {
+    it('should handle bundle with no terraform rules', async () => {
+      const mockGaps = [{ dimensionKey: 'arch_sec', questionId: 'q-1', coverage: 0.3 }];
+
+      const mockBundle = {
+        id: 'bundle-456',
+        name: 'Policy Pack v2',
+        version: '2.0.0',
+        generatedAt: new Date(),
+        policies: [{ id: 'pol-1', dimensionKey: 'arch_sec', title: 'Security Policy' }],
+        opaPolicies: [],
+        terraformRules: null,
+        scoreAtGeneration: 65,
+      };
+
+      mockContextBuilder.buildGapContexts.mockResolvedValue(mockGaps);
+      mockPolicyPackService.generatePolicyPack.mockResolvedValue(mockBundle);
+
+      const result = await controller.generatePolicyPack('session-456');
+
+      expect(result.hasTerraformRules).toBe(false);
+      expect(result.opaPoliciesCount).toBe(0);
+    });
+
+    it('should return unique dimensions from policies', async () => {
+      const mockGaps = [{ dimensionKey: 'arch_sec', questionId: 'q-1', coverage: 0.3 }];
+
+      const mockBundle = {
+        id: 'bundle-789',
+        name: 'Policy Pack v3',
+        version: '3.0.0',
+        generatedAt: new Date(),
+        policies: [
+          { id: 'pol-1', dimensionKey: 'arch_sec', title: 'Policy 1' },
+          { id: 'pol-2', dimensionKey: 'arch_sec', title: 'Policy 2' },
+          { id: 'pol-3', dimensionKey: 'devops', title: 'Policy 3' },
+        ],
+        opaPolicies: [],
+        terraformRules: null,
+        scoreAtGeneration: 70,
+      };
+
+      mockContextBuilder.buildGapContexts.mockResolvedValue(mockGaps);
+      mockPolicyPackService.generatePolicyPack.mockResolvedValue(mockBundle);
+
+      const result = await controller.generatePolicyPack('session-789');
+
+      expect(result.dimensions).toEqual(['arch_sec', 'devops']);
+      expect(result.policiesCount).toBe(3);
+    });
+  });
 });

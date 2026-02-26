@@ -152,5 +152,128 @@ describe('DocumentController', () => {
       expect(result.expiresAt).toBeInstanceOf(Date);
       expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledWith('doc-123', 'user-123', 30);
     });
+
+    it('should use default 60 minute expiration when expiresIn is not provided', async () => {
+      mockDocumentService.getDownloadUrl.mockResolvedValue(
+        'https://storage.blob.core/doc.pdf?token=abc',
+      );
+
+      const result = await controller.getDownloadUrl('doc-123', undefined as any, mockUser as any);
+
+      expect(result.url).toContain('storage.blob');
+      expect(result.expiresAt).toBeInstanceOf(Date);
+      expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledWith('doc-123', 'user-123', 60);
+    });
+  });
+
+  describe('listDocumentTypes', () => {
+    it('should return list of available document types', async () => {
+      const mockTypes = [
+        {
+          id: 'type-1',
+          name: 'Business Plan',
+          slug: 'business-plan',
+          category: 'BUSINESS',
+          isActive: true,
+        },
+        {
+          id: 'type-2',
+          name: 'Security Report',
+          slug: 'security-report',
+          category: 'COMPLIANCE',
+          isActive: true,
+        },
+      ];
+
+      mockDocumentService.listDocumentTypes.mockResolvedValue(mockTypes);
+
+      const result = await controller.listDocumentTypes();
+
+      expect(result).toHaveLength(2);
+      expect(mockDocumentService.listDocumentTypes).toHaveBeenCalled();
+    });
+  });
+
+  describe('getSessionDocumentTypes', () => {
+    it('should return document types scoped to session project type', async () => {
+      const mockTypes = [
+        {
+          id: 'type-1',
+          name: 'Business Plan',
+          slug: 'business-plan',
+          category: 'BUSINESS',
+          isActive: true,
+        },
+      ];
+
+      (mockDocumentService as any).getDocumentTypesForSession = jest.fn().mockResolvedValue(mockTypes);
+
+      const result = await controller.getSessionDocumentTypes('session-123');
+
+      expect(result).toHaveLength(1);
+      expect((mockDocumentService as any).getDocumentTypesForSession).toHaveBeenCalledWith('session-123');
+    });
+  });
+
+  describe('mapToResponse - edge cases', () => {
+    it('should handle document with no documentType', async () => {
+      const mockDocument = {
+        id: 'doc-123',
+        sessionId: 'session-456',
+        documentTypeId: 'type-789',
+        status: 'PENDING',
+        format: 'PDF',
+        fileName: null,
+        fileSize: null,
+        version: 1,
+        generatedAt: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      mockDocumentService.getDocument.mockResolvedValue(mockDocument);
+
+      const result = await controller.getDocument('doc-123', mockUser as any);
+
+      expect(result.fileName).toBeUndefined();
+      expect(result.fileSize).toBeUndefined();
+      expect(result.generatedAt).toBeUndefined();
+      expect(result.documentType).toBeUndefined();
+    });
+
+    it('should handle document with outputFormats in documentType', async () => {
+      const mockDocument = {
+        id: 'doc-123',
+        sessionId: 'session-456',
+        documentTypeId: 'type-789',
+        status: 'COMPLETED',
+        format: 'PDF',
+        fileName: 'report.pdf',
+        fileSize: BigInt(2048000),
+        version: 1,
+        generatedAt: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        documentType: {
+          id: 'type-789',
+          name: 'Security Report',
+          slug: 'security-report',
+          description: null,
+          category: 'COMPLIANCE',
+          outputFormats: ['PDF', 'DOCX'],
+          estimatedPages: null,
+          isActive: true,
+        },
+      };
+
+      mockDocumentService.getDocument.mockResolvedValue(mockDocument);
+
+      const result = await controller.getDocument('doc-123', mockUser as any);
+
+      expect(result.documentType?.outputFormats).toEqual(['PDF', 'DOCX']);
+      expect(result.documentType?.description).toBeNull();
+      expect(result.documentType?.estimatedPages).toBeNull();
+      expect(result.fileSize).toBe('2048000');
+    });
   });
 });

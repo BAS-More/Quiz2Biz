@@ -280,5 +280,260 @@ describe('IdeaCaptureService', () => {
         service.createSessionFromIdea('idea-1', 'user-1'),
       ).rejects.toThrow(BadRequestException);
     });
+
+    it('should use unknown when projectType name is not available in error message', async () => {
+      mockPrismaService.ideaCapture.findUnique.mockResolvedValue({
+        ...mockIdeaCapture,
+        projectType: null,
+      });
+      mockPrismaService.questionnaire.findFirst.mockResolvedValue(null);
+
+      await expect(
+        service.createSessionFromIdea('idea-1', 'user-1'),
+      ).rejects.toThrow(/unknown/);
+    });
+  });
+
+  describe('Branch coverage - captureAndAnalyze fallback project type', () => {
+    it('should fallback to first project type when recommended slug not found', async () => {
+      mockPrismaService.projectType.findMany.mockResolvedValue(mockProjectTypes);
+      mockClaudeAiService.analyzeIdea.mockResolvedValue({
+        ...mockAnalysisResult,
+        recommendedProjectType: { slug: 'non-existent-slug', confidence: 0.5, reasoning: 'test' },
+      });
+      mockPrismaService.ideaCapture.create.mockResolvedValue({
+        id: 'idea-1',
+        title: null,
+        rawInput: 'Test',
+        analysis: mockAnalysisResult,
+        status: 'ANALYZED',
+        projectTypeId: 'pt-1',
+        createdAt: new Date(),
+        projectType: { id: 'pt-1', slug: 'business-plan', name: 'Business Plan' },
+      });
+
+      await service.captureAndAnalyze({ rawInput: 'Test' });
+
+      // Should fallback to first available project type (pt-1)
+      expect(mockPrismaService.ideaCapture.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            projectTypeId: 'pt-1',
+          }),
+        }),
+      );
+    });
+
+    it('should use null for title when not provided', async () => {
+      mockPrismaService.projectType.findMany.mockResolvedValue(mockProjectTypes);
+      mockClaudeAiService.analyzeIdea.mockResolvedValue(mockAnalysisResult);
+      mockPrismaService.ideaCapture.create.mockResolvedValue({
+        id: 'idea-1',
+        title: null,
+        rawInput: 'Test idea',
+        analysis: mockAnalysisResult,
+        status: 'ANALYZED',
+        projectTypeId: 'pt-1',
+        createdAt: new Date(),
+        projectType: { id: 'pt-1', slug: 'business-plan', name: 'Business Plan' },
+      });
+
+      await service.captureAndAnalyze({ rawInput: 'Test idea' });
+
+      expect(mockPrismaService.ideaCapture.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            title: null,
+          }),
+        }),
+      );
+    });
+
+    it('should handle null description in project types', async () => {
+      const projectTypesWithNullDesc = [
+        { id: 'pt-1', slug: 'business-plan', name: 'Business Plan', description: null },
+      ];
+      mockPrismaService.projectType.findMany.mockResolvedValue(projectTypesWithNullDesc);
+      mockClaudeAiService.analyzeIdea.mockResolvedValue(mockAnalysisResult);
+      mockPrismaService.ideaCapture.create.mockResolvedValue({
+        id: 'idea-1',
+        title: null,
+        rawInput: 'Test',
+        analysis: mockAnalysisResult,
+        status: 'ANALYZED',
+        projectTypeId: 'pt-1',
+        createdAt: new Date(),
+        projectType: { id: 'pt-1', slug: 'business-plan', name: 'Business Plan' },
+      });
+
+      // Should not throw; description ?? '' handles null
+      const result = await service.captureAndAnalyze({ rawInput: 'Test' });
+      expect(result).toBeDefined();
+    });
+  });
+
+  describe('Branch coverage - toResponseDto name fallbacks', () => {
+    it('should use slug as name when recommended project type not found in available', async () => {
+      mockPrismaService.ideaCapture.findUnique.mockResolvedValue({
+        id: 'idea-1',
+        title: null,
+        rawInput: 'Some input',
+        analysis: {
+          ...mockAnalysisResult,
+          recommendedProjectType: { slug: 'unknown-slug', confidence: 0.7, reasoning: 'Test' },
+        },
+        status: 'ANALYZED',
+        projectTypeId: 'pt-1',
+        createdAt: new Date(),
+        projectType: { id: 'pt-1', slug: 'business-plan', name: 'Business Plan' },
+      });
+      mockPrismaService.projectType.findMany.mockResolvedValue(mockProjectTypes);
+
+      const result = await service.getById('idea-1');
+
+      // recommended?.name is undefined, so it falls back to the slug
+      expect(result.analysis.recommendedProjectType.name).toBe('unknown-slug');
+    });
+
+    it('should use slug as name for alternative project types not found in available', async () => {
+      mockPrismaService.ideaCapture.findUnique.mockResolvedValue({
+        id: 'idea-1',
+        title: 'Test',
+        rawInput: 'Some input',
+        analysis: {
+          ...mockAnalysisResult,
+          alternativeProjectTypes: [
+            { slug: 'unknown-alt-slug', confidence: 0.4, reasoning: 'Alt test' },
+          ],
+        },
+        status: 'ANALYZED',
+        projectTypeId: 'pt-1',
+        createdAt: new Date(),
+        projectType: { id: 'pt-1', slug: 'business-plan', name: 'Business Plan' },
+      });
+      mockPrismaService.projectType.findMany.mockResolvedValue(mockProjectTypes);
+
+      const result = await service.getById('idea-1');
+
+      // pt?.name is undefined, so it falls back to alt.slug
+      expect(result.analysis.alternativeProjectTypes![0].name).toBe('unknown-alt-slug');
+    });
+
+    it('should return undefined for title when ideaCapture.title is null', async () => {
+      mockPrismaService.ideaCapture.findUnique.mockResolvedValue({
+        id: 'idea-1',
+        title: null,
+        rawInput: 'Some input',
+        analysis: mockAnalysisResult,
+        status: 'ANALYZED',
+        projectTypeId: 'pt-1',
+        createdAt: new Date(),
+        projectType: { id: 'pt-1', slug: 'business-plan', name: 'Business Plan' },
+      });
+      mockPrismaService.projectType.findMany.mockResolvedValue(mockProjectTypes);
+
+      const result = await service.getById('idea-1');
+
+      expect(result.title).toBeUndefined();
+    });
+
+    it('should return title when ideaCapture.title is set', async () => {
+      mockPrismaService.ideaCapture.findUnique.mockResolvedValue({
+        id: 'idea-1',
+        title: 'My Great Idea',
+        rawInput: 'Some input',
+        analysis: mockAnalysisResult,
+        status: 'ANALYZED',
+        projectTypeId: 'pt-1',
+        createdAt: new Date(),
+        projectType: { id: 'pt-1', slug: 'business-plan', name: 'Business Plan' },
+      });
+      mockPrismaService.projectType.findMany.mockResolvedValue(mockProjectTypes);
+
+      const result = await service.getById('idea-1');
+
+      expect(result.title).toBe('My Great Idea');
+    });
+
+    it('should return undefined for projectTypeId when null', async () => {
+      mockPrismaService.ideaCapture.findUnique.mockResolvedValue({
+        id: 'idea-1',
+        title: null,
+        rawInput: 'Some input',
+        analysis: mockAnalysisResult,
+        status: 'ANALYZED',
+        projectTypeId: null,
+        createdAt: new Date(),
+        projectType: null,
+      });
+      mockPrismaService.projectType.findMany.mockResolvedValue(mockProjectTypes);
+
+      const result = await service.getById('idea-1');
+
+      expect(result.projectTypeId).toBeUndefined();
+    });
+  });
+
+  describe('Branch coverage - toResponseDto with no alternativeProjectTypes', () => {
+    it('should handle analysis without alternativeProjectTypes', async () => {
+      mockPrismaService.ideaCapture.findUnique.mockResolvedValue({
+        id: 'idea-1',
+        title: 'Test',
+        rawInput: 'Some input',
+        analysis: {
+          themes: ['tech'],
+          gaps: ['gap1'],
+          strengths: ['str1'],
+          recommendedProjectType: { slug: 'business-plan', confidence: 0.8, reasoning: 'Test' },
+          summary: 'A summary',
+          // No alternativeProjectTypes key at all
+        },
+        status: 'ANALYZED',
+        projectTypeId: 'pt-1',
+        createdAt: new Date(),
+        projectType: { id: 'pt-1', slug: 'business-plan', name: 'Business Plan' },
+      });
+      mockPrismaService.projectType.findMany.mockResolvedValue(mockProjectTypes);
+
+      const result = await service.getById('idea-1');
+
+      // analysis.alternativeProjectTypes || [] should produce empty array
+      expect(result.analysis.alternativeProjectTypes).toEqual([]);
+    });
+  });
+
+  describe('Branch coverage - createSessionFromIdea metadata themes fallback', () => {
+    it('should use empty array for themes when analysis has no themes', async () => {
+      mockPrismaService.ideaCapture.findUnique.mockResolvedValue({
+        id: 'idea-1',
+        title: 'My Idea',
+        rawInput: 'Input',
+        analysis: {}, // No themes key
+        status: 'CONFIRMED',
+        projectTypeId: 'pt-1',
+        projectType: { id: 'pt-1', slug: 'business-plan', name: 'Business Plan' },
+      });
+      mockPrismaService.questionnaire.findFirst.mockResolvedValue({
+        id: 'q-1',
+        version: 1,
+        projectTypeId: 'pt-1',
+        isActive: true,
+        isDefault: true,
+      });
+      mockPrismaService.session.create.mockResolvedValue({ id: 'session-1' });
+
+      const result = await service.createSessionFromIdea('idea-1', 'user-1');
+
+      expect(result.sessionId).toBe('session-1');
+      expect(mockPrismaService.session.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            metadata: expect.objectContaining({
+              ideaThemes: [],
+            }),
+          }),
+        }),
+      );
+    });
   });
 });

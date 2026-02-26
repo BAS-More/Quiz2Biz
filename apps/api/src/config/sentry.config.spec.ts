@@ -251,3 +251,313 @@ describe('ALERTING_RULES', () => {
     expect(ALERTING_RULES.channels.pagerduty).toBe(false);
   });
 });
+
+// ================================================================
+// ADDITIONAL COVERAGE: beforeSend, beforeSendTransaction,
+// initializeSentry with DSN, config branch coverage, default export
+// ================================================================
+
+describe('initializeSentry - Sentry.init options', () => {
+  const originalEnv = process.env;
+  let consoleSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    process.env = { ...originalEnv };
+    jest.clearAllMocks();
+    consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+  });
+
+  afterEach(() => {
+    consoleSpy.mockRestore();
+  });
+
+  afterAll(() => {
+    process.env = originalEnv;
+  });
+
+  it('should pass correct config to Sentry.init', () => {
+    process.env.SENTRY_DSN = 'https://test@sentry.io/999';
+    process.env.NODE_ENV = 'staging';
+    process.env.SENTRY_RELEASE = 'v2.0.0';
+    process.env.SENTRY_TRACES_SAMPLE_RATE = '0.8';
+    process.env.SENTRY_PROFILES_SAMPLE_RATE = '0.5';
+    process.env.SENTRY_DEBUG = 'true';
+
+    initializeSentry();
+
+    expect(Sentry.init).toHaveBeenCalledWith(
+      expect.objectContaining({
+        dsn: 'https://test@sentry.io/999',
+        environment: 'staging',
+        release: 'v2.0.0',
+        tracesSampleRate: 0.8,
+        profilesSampleRate: 0.5,
+        debug: true,
+      }),
+    );
+  });
+
+  it('should log initialization message with environment', () => {
+    process.env.SENTRY_DSN = 'https://test@sentry.io/123';
+    process.env.NODE_ENV = 'production';
+
+    initializeSentry();
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('production'),
+    );
+  });
+
+  it('should include beforeSend in init options', () => {
+    process.env.SENTRY_DSN = 'https://test@sentry.io/123';
+
+    initializeSentry();
+
+    const initCall = (Sentry.init as jest.Mock).mock.calls[0][0];
+    expect(initCall.beforeSend).toBeDefined();
+    expect(typeof initCall.beforeSend).toBe('function');
+  });
+
+  it('should include beforeSendTransaction in init options', () => {
+    process.env.SENTRY_DSN = 'https://test@sentry.io/123';
+
+    initializeSentry();
+
+    const initCall = (Sentry.init as jest.Mock).mock.calls[0][0];
+    expect(initCall.beforeSendTransaction).toBeDefined();
+    expect(typeof initCall.beforeSendTransaction).toBe('function');
+  });
+
+  it('should include ignoreErrors list', () => {
+    process.env.SENTRY_DSN = 'https://test@sentry.io/123';
+
+    initializeSentry();
+
+    const initCall = (Sentry.init as jest.Mock).mock.calls[0][0];
+    expect(initCall.ignoreErrors).toContain('Non-Error promise rejection captured');
+    expect(initCall.ignoreErrors).toContain('Request aborted');
+    expect(initCall.ignoreErrors).toContain('ECONNRESET');
+    expect(initCall.ignoreErrors).toContain('EPIPE');
+  });
+
+  describe('beforeSend callback', () => {
+    let beforeSend: (event: any) => any;
+
+    beforeEach(() => {
+      process.env.SENTRY_DSN = 'https://test@sentry.io/123';
+      initializeSentry();
+      beforeSend = (Sentry.init as jest.Mock).mock.calls[0][0].beforeSend;
+    });
+
+    it('should strip authorization header from request', () => {
+      const event = {
+        request: {
+          headers: {
+            authorization: 'Bearer secret-token',
+            'content-type': 'application/json',
+          },
+        },
+      };
+
+      const result = beforeSend(event);
+      expect(result.request.headers.authorization).toBeUndefined();
+      expect(result.request.headers['content-type']).toBe('application/json');
+    });
+
+    it('should strip cookie header from request', () => {
+      const event = {
+        request: {
+          headers: {
+            cookie: 'session=abc123',
+          },
+        },
+      };
+
+      const result = beforeSend(event);
+      expect(result.request.headers.cookie).toBeUndefined();
+    });
+
+    it('should strip x-api-key header from request', () => {
+      const event = {
+        request: {
+          headers: {
+            'x-api-key': 'my-secret-key',
+          },
+        },
+      };
+
+      const result = beforeSend(event);
+      expect(result.request.headers['x-api-key']).toBeUndefined();
+    });
+
+    it('should handle event without request headers', () => {
+      const event = { message: 'test error' };
+      const result = beforeSend(event);
+      expect(result).toEqual({ message: 'test error' });
+    });
+
+    it('should handle event with request but no headers', () => {
+      const event = { request: { url: '/api/test' } };
+      const result = beforeSend(event);
+      expect(result.request.url).toBe('/api/test');
+    });
+
+    it('should redact password in breadcrumbs', () => {
+      const event = {
+        breadcrumbs: [
+          { data: { password: 'super-secret', username: 'admin' } },
+          { data: { safe: 'data' } },
+        ],
+      };
+
+      const result = beforeSend(event);
+      expect(result.breadcrumbs[0].data.password).toBe('[REDACTED]');
+      expect(result.breadcrumbs[0].data.username).toBe('admin');
+      expect(result.breadcrumbs[1].data.safe).toBe('data');
+    });
+
+    it('should redact token in breadcrumbs', () => {
+      const event = {
+        breadcrumbs: [
+          { data: { token: 'jwt-abc123', action: 'login' } },
+        ],
+      };
+
+      const result = beforeSend(event);
+      expect(result.breadcrumbs[0].data.token).toBe('[REDACTED]');
+      expect(result.breadcrumbs[0].data.action).toBe('login');
+    });
+
+    it('should handle breadcrumbs without data', () => {
+      const event = {
+        breadcrumbs: [
+          { category: 'http', message: 'request' },
+        ],
+      };
+
+      const result = beforeSend(event);
+      expect(result.breadcrumbs[0].category).toBe('http');
+    });
+
+    it('should handle event without breadcrumbs', () => {
+      const event = { message: 'no breadcrumbs' };
+      const result = beforeSend(event);
+      expect(result).toEqual({ message: 'no breadcrumbs' });
+    });
+
+    it('should return the event after processing', () => {
+      const event = {
+        request: { headers: { authorization: 'Bearer x' } },
+        breadcrumbs: [{ data: { password: 'p', token: 't' } }],
+      };
+
+      const result = beforeSend(event);
+      expect(result).toBeTruthy();
+      expect(result.request.headers.authorization).toBeUndefined();
+      expect(result.breadcrumbs[0].data.password).toBe('[REDACTED]');
+      expect(result.breadcrumbs[0].data.token).toBe('[REDACTED]');
+    });
+  });
+
+  describe('beforeSendTransaction callback', () => {
+    let beforeSendTransaction: (event: any) => any;
+
+    beforeEach(() => {
+      process.env.SENTRY_DSN = 'https://test@sentry.io/123';
+      initializeSentry();
+      beforeSendTransaction = (Sentry.init as jest.Mock).mock.calls[0][0].beforeSendTransaction;
+    });
+
+    it('should filter out GET /health transactions', () => {
+      const event = { transaction: 'GET /health' };
+      const result = beforeSendTransaction(event);
+      expect(result).toBeNull();
+    });
+
+    it('should filter out GET /ready transactions', () => {
+      const event = { transaction: 'GET /ready' };
+      const result = beforeSendTransaction(event);
+      expect(result).toBeNull();
+    });
+
+    it('should filter out GET /live transactions', () => {
+      const event = { transaction: 'GET /live' };
+      const result = beforeSendTransaction(event);
+      expect(result).toBeNull();
+    });
+
+    it('should allow normal API transactions through', () => {
+      const event = { transaction: 'GET /api/v1/sessions' };
+      const result = beforeSendTransaction(event);
+      expect(result).toEqual({ transaction: 'GET /api/v1/sessions' });
+    });
+
+    it('should allow POST transactions through', () => {
+      const event = { transaction: 'POST /api/v1/answers' };
+      const result = beforeSendTransaction(event);
+      expect(result).toEqual({ transaction: 'POST /api/v1/answers' });
+    });
+
+    it('should allow transactions with different paths', () => {
+      const event = { transaction: 'GET /api/v1/documents' };
+      const result = beforeSendTransaction(event);
+      expect(result).not.toBeNull();
+    });
+  });
+});
+
+describe('getSentryConfig - additional branch coverage', () => {
+  const originalEnv = process.env;
+
+  beforeEach(() => {
+    process.env = { ...originalEnv };
+  });
+
+  afterAll(() => {
+    process.env = originalEnv;
+  });
+
+  it('should generate default release with npm_package_version', () => {
+    delete process.env.SENTRY_RELEASE;
+    process.env.npm_package_version = '3.2.1';
+
+    const config = getSentryConfig();
+    expect(config.release).toBe('quiz2biz-api@3.2.1');
+  });
+
+  it('should generate default release with 1.0.0 when no version available', () => {
+    delete process.env.SENTRY_RELEASE;
+    delete process.env.npm_package_version;
+
+    const config = getSentryConfig();
+    expect(config.release).toBe('quiz2biz-api@1.0.0');
+  });
+
+  it('should not enable debug when SENTRY_DEBUG is not "true"', () => {
+    process.env.SENTRY_DEBUG = 'false';
+
+    const config = getSentryConfig();
+    expect(config.debug).toBe(false);
+  });
+
+  it('should not enable debug when SENTRY_DEBUG is undefined', () => {
+    delete process.env.SENTRY_DEBUG;
+
+    const config = getSentryConfig();
+    expect(config.debug).toBe(false);
+  });
+});
+
+describe('default export', () => {
+  it('should export all expected functions', async () => {
+    const defaultExport = await import('./sentry.config').then((m) => m.default);
+    expect(defaultExport.initializeSentry).toBeDefined();
+    expect(defaultExport.captureException).toBeDefined();
+    expect(defaultExport.captureMessage).toBeDefined();
+    expect(defaultExport.setUser).toBeDefined();
+    expect(defaultExport.clearUser).toBeDefined();
+    expect(defaultExport.addBreadcrumb).toBeDefined();
+    expect(defaultExport.startTransaction).toBeDefined();
+    expect(defaultExport.ALERTING_RULES).toBeDefined();
+  });
+});

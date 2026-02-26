@@ -286,5 +286,105 @@ describe('ContextBuilderService', () => {
 
       expect(result[0].standardRefs).toEqual([]);
     });
+
+    it('should return empty array when JSON-parsed value is not an array', async () => {
+      const sessionWithObject = {
+        id: 'session-1',
+        responses: [
+          {
+            ...mockSessionWithResponses.responses[0],
+            question: {
+              ...mockSessionWithResponses.responses[0].question,
+              standardRefs: '"just a string"',
+            },
+          },
+        ],
+      };
+      mockPrismaService.session.findUnique.mockResolvedValue(sessionWithObject);
+
+      const result = await service.buildGapContexts('session-1');
+
+      expect(result[0].standardRefs).toEqual([]);
+    });
+  });
+
+  describe('buildGapContexts - null field fallbacks', () => {
+    it('should use "unknown" for null dimension key', async () => {
+      const sessionNullDimension = {
+        id: 'session-1',
+        responses: [
+          {
+            ...mockSessionWithResponses.responses[0],
+            question: {
+              ...mockSessionWithResponses.responses[0].question,
+              dimension: null,
+            },
+          },
+        ],
+      };
+      mockPrismaService.session.findUnique.mockResolvedValue(sessionNullDimension);
+
+      const result = await service.buildGapContexts('session-1');
+
+      expect(result[0].dimensionKey).toBe('unknown');
+      expect(result[0].dimensionName).toBe('Unknown');
+    });
+
+    it('should use empty string for null bestPractice', async () => {
+      const sessionNullBP = {
+        id: 'session-1',
+        responses: [
+          {
+            ...mockSessionWithResponses.responses[0],
+            question: {
+              ...mockSessionWithResponses.responses[0].question,
+              bestPractice: null,
+            },
+          },
+        ],
+      };
+      mockPrismaService.session.findUnique.mockResolvedValue(sessionNullBP);
+
+      const result = await service.buildGapContexts('session-1');
+
+      expect(result[0].bestPractice).toBe('');
+    });
+
+    it('should use empty string for null practicalExplainer', async () => {
+      const sessionNullExplainer = {
+        id: 'session-1',
+        responses: [
+          {
+            ...mockSessionWithResponses.responses[0],
+            question: {
+              ...mockSessionWithResponses.responses[0].question,
+              practicalExplainer: null,
+            },
+          },
+        ],
+      };
+      mockPrismaService.session.findUnique.mockResolvedValue(sessionNullExplainer);
+
+      const result = await service.buildGapContexts('session-1');
+
+      expect(result[0].practicalExplainer).toBe('');
+    });
+
+    it('should use undefined for null rationale', async () => {
+      const sessionNullRationale = {
+        id: 'session-1',
+        responses: [
+          {
+            ...mockSessionWithResponses.responses[0],
+            rationale: null,
+          },
+        ],
+      };
+      mockPrismaService.session.findUnique.mockResolvedValue(sessionNullRationale);
+
+      const result = await service.buildGapContexts('session-1');
+
+      expect(result[0].userNotes).toBeUndefined();
+    });
   });
 });

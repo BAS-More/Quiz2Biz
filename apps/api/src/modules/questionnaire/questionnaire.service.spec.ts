@@ -389,4 +389,198 @@ describe('QuestionnaireService', () => {
       expect(question?.explanation).toBeUndefined();
     });
   });
+
+  // ===========================================================================
+  // BRANCH COVERAGE TESTS
+  // ===========================================================================
+
+  describe('branch coverage - findAll with projectTypeId filter', () => {
+    it('should include projectTypeId in where clause when provided', async () => {
+      prismaService.questionnaire.findMany.mockResolvedValue([]);
+      prismaService.questionnaire.count.mockResolvedValue(0);
+
+      await service.findAll({ page: 1, limit: 10, skip: 0 }, undefined, 'pt-123');
+
+      expect(prismaService.questionnaire.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { isActive: true, projectTypeId: 'pt-123' },
+        }),
+      );
+    });
+
+    it('should omit projectTypeId from where clause when not provided', async () => {
+      prismaService.questionnaire.findMany.mockResolvedValue([]);
+      prismaService.questionnaire.count.mockResolvedValue(0);
+
+      await service.findAll({ page: 1, limit: 10, skip: 0 });
+
+      expect(prismaService.questionnaire.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { isActive: true },
+        }),
+      );
+    });
+
+    it('should include both industry and projectTypeId when both provided', async () => {
+      prismaService.questionnaire.findMany.mockResolvedValue([]);
+      prismaService.questionnaire.count.mockResolvedValue(0);
+
+      await service.findAll({ page: 1, limit: 10, skip: 0 }, 'tech', 'pt-456');
+
+      expect(prismaService.questionnaire.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { isActive: true, industry: 'tech', projectTypeId: 'pt-456' },
+        }),
+      );
+    });
+  });
+
+  describe('branch coverage - findByProjectTypeSlug', () => {
+    beforeEach(() => {
+      (prismaService as any).projectType = {
+        findUnique: jest.fn(),
+      };
+    });
+
+    it('should return null when project type slug not found', async () => {
+      prismaService.projectType.findUnique.mockResolvedValue(null);
+
+      const result = await service.findByProjectTypeSlug('non-existent-slug');
+
+      expect(result).toBeNull();
+    });
+
+    it('should return questionnaire detail when project type and questionnaire are found', async () => {
+      prismaService.projectType.findUnique.mockResolvedValue({ id: 'pt-1', slug: 'web-app' });
+      prismaService.questionnaire.findFirst.mockResolvedValue(mockQuestionnaire as any);
+
+      const result = await service.findByProjectTypeSlug('web-app');
+
+      expect(result).not.toBeNull();
+      expect(result?.id).toBe('questionnaire-1');
+    });
+
+    it('should return null when project type exists but no matching questionnaire', async () => {
+      prismaService.projectType.findUnique.mockResolvedValue({ id: 'pt-1', slug: 'web-app' });
+      prismaService.questionnaire.findFirst.mockResolvedValue(null);
+
+      const result = await service.findByProjectTypeSlug('web-app');
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('branch coverage - getTotalQuestionCount with persona', () => {
+    it('should include persona filter when persona is provided', async () => {
+      prismaService.question.count.mockResolvedValue(5);
+
+      await service.getTotalQuestionCount('q-1', 'TECHNICAL' as any);
+
+      expect(prismaService.question.count).toHaveBeenCalledWith({
+        where: {
+          section: { questionnaireId: 'q-1' },
+          persona: 'TECHNICAL',
+        },
+      });
+    });
+
+    it('should omit persona filter when persona is undefined', async () => {
+      prismaService.question.count.mockResolvedValue(10);
+
+      await service.getTotalQuestionCount('q-1');
+
+      expect(prismaService.question.count).toHaveBeenCalledWith({
+        where: {
+          section: { questionnaireId: 'q-1' },
+        },
+      });
+    });
+  });
+
+  describe('branch coverage - getQuestionsForPersona', () => {
+    it('should include persona filter when persona is provided', async () => {
+      prismaService.question.findMany.mockResolvedValue([]);
+
+      await service.getQuestionsForPersona('q-1', 'BUSINESS' as any);
+
+      expect(prismaService.question.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            section: { questionnaireId: 'q-1' },
+            persona: 'BUSINESS',
+          },
+        }),
+      );
+    });
+
+    it('should omit persona filter when persona is undefined', async () => {
+      prismaService.question.findMany.mockResolvedValue([]);
+
+      await service.getQuestionsForPersona('q-1');
+
+      expect(prismaService.question.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            section: { questionnaireId: 'q-1' },
+          },
+        }),
+      );
+    });
+  });
+
+  describe('branch coverage - mapQuestion bestPractice/practicalExplainer/dimensionKey', () => {
+    it('should map bestPractice, practicalExplainer, dimensionKey when present', async () => {
+      const questionnaireWithExtras = {
+        ...mockQuestionnaire,
+        sections: [
+          {
+            ...mockQuestionnaire.sections[0],
+            questions: [
+              {
+                ...mockQuestionnaire.sections[0].questions[0],
+                bestPractice: 'Use encryption',
+                practicalExplainer: 'Apply AES-256',
+                dimensionKey: 'security',
+              },
+            ],
+          },
+        ],
+      };
+      prismaService.questionnaire.findUnique.mockResolvedValue(questionnaireWithExtras as any);
+
+      const result = await service.findById('questionnaire-1');
+      const question = result.sections[0].questions?.[0];
+
+      expect(question?.bestPractice).toBe('Use encryption');
+      expect(question?.practicalExplainer).toBe('Apply AES-256');
+      expect(question?.dimensionKey).toBe('security');
+    });
+
+    it('should return undefined for bestPractice, practicalExplainer, dimensionKey when null', async () => {
+      const questionnaireWithNulls = {
+        ...mockQuestionnaire,
+        sections: [
+          {
+            ...mockQuestionnaire.sections[0],
+            questions: [
+              {
+                ...mockQuestionnaire.sections[0].questions[0],
+                bestPractice: null,
+                practicalExplainer: null,
+                dimensionKey: null,
+              },
+            ],
+          },
+        ],
+      };
+      prismaService.questionnaire.findUnique.mockResolvedValue(questionnaireWithNulls as any);
+
+      const result = await service.findById('questionnaire-1');
+      const question = result.sections[0].questions?.[0];
+
+      expect(question?.bestPractice).toBeUndefined();
+      expect(question?.practicalExplainer).toBeUndefined();
+      expect(question?.dimensionKey).toBeUndefined();
+    });
+  });
 });

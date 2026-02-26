@@ -182,4 +182,54 @@ describe('HttpExceptionFilter', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
     });
   });
+
+  describe('uncovered branches', () => {
+    it('should fall back to exception.message when responseObj.message is falsy', () => {
+      const exception = new HttpException(
+        { message: '', error: 'Bad Request' },
+        HttpStatus.BAD_REQUEST,
+      );
+
+      filter.catch(exception, mockHost);
+
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          error: expect.objectContaining({
+            message: expect.any(String),
+          }),
+        }),
+      );
+    });
+
+    it('should fall back to getErrorCode when responseObj.error is falsy', () => {
+      const exception = new HttpException(
+        { message: 'Something failed', error: '' },
+        HttpStatus.FORBIDDEN,
+      );
+
+      filter.catch(exception, mockHost);
+
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          error: expect.objectContaining({
+            code: 'FORBIDDEN',
+          }),
+        }),
+      );
+    });
+
+    it('should return UNKNOWN_ERROR for unmapped status code', () => {
+      const exception = new HttpException('Teapot', 418);
+
+      filter.catch(exception, mockHost);
+
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          error: expect.objectContaining({
+            code: 'UNKNOWN_ERROR',
+          }),
+        }),
+      );
+    });
+  });
 });

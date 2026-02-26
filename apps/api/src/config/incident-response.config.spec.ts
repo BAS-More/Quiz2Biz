@@ -464,6 +464,228 @@ describe('Incident Response Config', () => {
         // May or may not find runbook depending on conditions
         expect(runbook === undefined || runbook !== undefined).toBe(true);
       });
+
+      it('should return undefined when no runbook matches', () => {
+        const incident = manager.createIncident('Test', 'Desc', 'SEV4', ['no_matching_service']);
+        const runbook = manager.getApplicableRunbook(incident);
+        expect(runbook).toBeUndefined();
+      });
+    });
+
+    describe('Branch coverage - constructor with custom config', () => {
+      it('should accept a custom config', () => {
+        const customConfig = getIncidentResponseConfig();
+        const customManager = new IncidentManager(customConfig);
+        const info = customManager.getSeverityInfo('SEV1');
+        expect(info).toBeDefined();
+        expect(info?.level).toBe('SEV1');
+      });
+    });
+
+    describe('Branch coverage - triggerEscalation no path found', () => {
+      it('should handle missing escalation path gracefully', () => {
+        const incident = manager.createIncident('Test', 'Desc', 'SEV4');
+        // SEV4 only has level 1 escalation; triggering level 99 should hit the !path branch
+        const timelineBefore = incident.timeline.length;
+        manager.triggerEscalation(incident, 99);
+        // No escalation entry should be added
+        expect(incident.timeline.length).toBe(timelineBefore);
+      });
+    });
+
+    describe('Branch coverage - triggerEscalation autoEscalate no next level', () => {
+      it('should not schedule auto-escalation when next level does not exist', () => {
+        const incident = manager.createIncident('Test', 'Desc', 'SEV4');
+        // SEV4 has only level 1 with autoEscalate=false, so this tests a direct call
+        // The auto-escalation timer check should find no next level
+        manager.triggerEscalation(incident, 1);
+        const escalationEntries = incident.timeline.filter(
+          (e) => e.type === 'escalation',
+        );
+        // At least one escalation from createIncident + the explicit triggerEscalation call
+        expect(escalationEntries.length).toBeGreaterThanOrEqual(1);
+      });
+    });
+
+    describe('Branch coverage - triggerEscalation autoEscalate with timeout', () => {
+      it('should auto-escalate to next level when incident not resolved', () => {
+        // SEV1 has autoEscalate=true for levels 1-3
+        const incident = manager.createIncident('Test', 'Desc', 'SEV1');
+        // Level 1 has autoEscalate=true, so a timer is set for level 2
+        // Fast-forward the timer
+        jest.advanceTimersByTime(5 * 60 * 1000 + 1000);
+
+        const escalationEntries = incident.timeline.filter(
+          (e) => e.type === 'escalation',
+        );
+        // Should have escalated beyond level 1
+        expect(escalationEntries.length).toBeGreaterThan(1);
+      });
+
+      it('should NOT auto-escalate when incident is resolved before timeout', () => {
+        const incident = manager.createIncident('Test', 'Desc', 'SEV2');
+        const initialEscalations = incident.timeline.filter(
+          (e) => e.type === 'escalation',
+        ).length;
+
+        // Resolve before timeout fires
+        manager.updateStatus(incident.id, 'resolved', 'user@test.com');
+
+        // Advance past all timeout periods
+        jest.advanceTimersByTime(120 * 60 * 1000);
+
+        const finalEscalations = incident.timeline.filter(
+          (e) => e.type === 'escalation',
+        ).length;
+
+        // No additional escalation should have happened after resolution
+        expect(finalEscalations).toBe(initialEscalations);
+      });
+    });
+
+    describe('Branch coverage - updateStatus without notes', () => {
+      it('should update status without notes appended to message', () => {
+        const incident = manager.createIncident('Test', 'Desc', 'SEV2');
+        manager.updateStatus(incident.id, 'mitigating', 'user@test.com');
+
+        const updated = manager.getIncident(incident.id);
+        const entry = updated?.timeline.find(
+          (e) =>
+            e.type === 'status_change' &&
+            e.message.includes('mitigating') &&
+            !e.message.includes(':'),
+        );
+        // The message should be "Status changed from X to mitigating" without notes
+        expect(entry).toBeDefined();
+      });
+
+      it('should throw error for non-existent incident in updateStatus', () => {
+        expect(() => {
+          manager.updateStatus('non-existent', 'resolved', 'user@test.com');
+        }).toThrow('Incident non-existent not found');
+      });
+    });
+
+    describe('Branch coverage - calculateMetrics SLA breaches', () => {
+      it('should detect response SLA breach', () => {
+        const incident = manager.createIncident('Test', 'Desc', 'SEV1');
+        // SEV1 responseTimeMinutes = 15, manually add an ack entry with big gap
+        incident.timeline.push({
+          timestamp: new Date(incident.createdAt.getTime() + 20 * 60 * 1000),
+          type: 'status_change',
+          message: 'Incident acknowledged',
+          author: 'late-user',
+        });
+
+        const metrics = manager.calculateMetrics(incident);
+
+        expect(metrics.timeToAcknowledgeMinutes).toBeGreaterThan(15);
+        expect(metrics.slaBreached.response).toBe(true);
+      });
+
+      it('should detect resolution SLA breach', () => {
+        const incident = manager.createIncident('Test', 'Desc', 'SEV1');
+        // SEV1 resolutionTargetMinutes = 60
+        incident.resolvedAt = new Date(
+          incident.createdAt.getTime() + 120 * 60 * 1000,
+        );
+
+        const metrics = manager.calculateMetrics(incident);
+
+        expect(metrics.timeToResolveMinutes).toBeGreaterThan(60);
+        expect(metrics.slaBreached.resolution).toBe(true);
+      });
+
+      it('should return false for response SLA when not acknowledged', () => {
+        const incident = manager.createIncident('Test', 'Desc', 'SEV1');
+        // Remove any acknowledgment entries
+        incident.timeline = incident.timeline.filter(
+          (e) => !e.message.includes('acknowledged'),
+        );
+
+        const metrics = manager.calculateMetrics(incident);
+
+        expect(metrics.timeToAcknowledgeMinutes).toBeUndefined();
+        expect(metrics.slaBreached.response).toBe(false);
+      });
+
+      it('should return false for resolution SLA when not resolved', () => {
+        const incident = manager.createIncident('Test', 'Desc', 'SEV1');
+        // No resolvedAt set
+
+        const metrics = manager.calculateMetrics(incident);
+
+        expect(metrics.timeToResolveMinutes).toBeUndefined();
+        expect(metrics.slaBreached.resolution).toBe(false);
+      });
+    });
+
+    describe('Branch coverage - getActiveIncidents filters postmortem', () => {
+      it('should exclude postmortem incidents from active list', () => {
+        const incident = manager.createIncident('Test', 'Desc', 'SEV1');
+        manager.updateStatus(incident.id, 'postmortem', 'user@test.com');
+
+        const active = manager.getActiveIncidents();
+        expect(active.find((i) => i.id === incident.id)).toBeUndefined();
+      });
+    });
+  });
+
+  describe('Branch coverage - getCommunicationConfig env vars', () => {
+    const originalEnv = process.env;
+
+    afterEach(() => {
+      process.env = originalEnv;
+    });
+
+    it('should use env var for statusPageUrl when set', () => {
+      process.env = {
+        ...originalEnv,
+        STATUS_PAGE_URL: 'https://custom-status.example.com',
+      };
+      const config = getCommunicationConfig();
+      expect(config.statusPageUrl).toBe('https://custom-status.example.com');
+    });
+
+    it('should use default statusPageUrl when env var not set', () => {
+      process.env = { ...originalEnv };
+      delete process.env.STATUS_PAGE_URL;
+      const config = getCommunicationConfig();
+      expect(config.statusPageUrl).toBe('https://status.quiz2biz.com');
+    });
+
+    it('should use env var for pagerdutyServiceKey when set', () => {
+      process.env = {
+        ...originalEnv,
+        PAGERDUTY_SERVICE_KEY: 'test-pagerduty-key',
+      };
+      const config = getCommunicationConfig();
+      expect(config.pagerdutyServiceKey).toBe('test-pagerduty-key');
+    });
+
+    it('should use empty string for pagerdutyServiceKey when env var not set', () => {
+      process.env = { ...originalEnv };
+      delete process.env.PAGERDUTY_SERVICE_KEY;
+      const config = getCommunicationConfig();
+      expect(config.pagerdutyServiceKey).toBe('');
+    });
+
+    it('should use env var for slackWebhook when set', () => {
+      process.env = {
+        ...originalEnv,
+        SLACK_INCIDENT_WEBHOOK: 'https://hooks.slack.com/test',
+      };
+      const config = getCommunicationConfig();
+      expect(config.slackWebhook).toBe('https://hooks.slack.com/test');
+    });
+
+    it('should use env var for teamsWebhook when set', () => {
+      process.env = {
+        ...originalEnv,
+        TEAMS_INCIDENT_WEBHOOK: 'https://teams.webhook.test',
+      };
+      const config = getCommunicationConfig();
+      expect(config.teamsWebhook).toBe('https://teams.webhook.test');
     });
   });
 });

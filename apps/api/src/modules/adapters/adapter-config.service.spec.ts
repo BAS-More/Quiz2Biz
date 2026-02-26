@@ -985,4 +985,41 @@ describe('AdapterConfigService', () => {
       expect(mockPrismaService.$executeRaw).toHaveBeenCalled();
     });
   });
+
+  describe('uncovered branches - non-Error exceptions', () => {
+    it('should log "Unknown error" when loadFromDatabase throws a non-Error', async () => {
+      mockPrismaService.$queryRaw.mockRejectedValueOnce('string-error');
+      mockConfigService.get.mockReturnValue(undefined);
+
+      const result = await service.getAdapterConfigs(TENANT_ID);
+
+      // Falls back to default configs (empty when no env vars)
+      expect(result).toEqual([]);
+    });
+
+    it('should log "Unknown error" when saveToDatabase throws a non-Error', async () => {
+      mockPrismaService.$queryRaw.mockResolvedValue([]);
+      mockConfigService.get.mockReturnValue(undefined);
+      mockPrismaService.$executeRaw.mockRejectedValueOnce('db-write-string-error');
+
+      await expect(
+        service.upsertAdapterConfig(TENANT_ID, {
+          type: 'github',
+          name: 'GH',
+          enabled: true,
+          config: {},
+        }),
+      ).rejects.toBe('db-write-string-error');
+    });
+
+    it('should log "Unknown error" when removeFromDatabase throws a non-Error', async () => {
+      mockPrismaService.$queryRaw.mockResolvedValue([]);
+      mockConfigService.get.mockReturnValue(undefined);
+      mockPrismaService.$executeRaw.mockRejectedValueOnce(42);
+
+      await expect(
+        service.deleteAdapterConfig(TENANT_ID, 'some-id'),
+      ).rejects.toBe(42);
+    });
+  });
 });

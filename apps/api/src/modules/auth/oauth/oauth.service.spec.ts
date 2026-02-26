@@ -212,5 +212,362 @@ describe('OAuthService', () => {
         ConflictException,
       );
     });
+
+    it('should allow unlinking when user has multiple OAuth accounts and no password', async () => {
+      prismaService.user.findUnique.mockResolvedValue({
+        ...mockUser,
+        passwordHash: null,
+        oauthAccounts: [{ provider: 'google' }, { provider: 'microsoft' }],
+      } as any);
+      prismaService.oAuthAccount.deleteMany.mockResolvedValue({ count: 1 });
+
+      await service.unlinkOAuthAccount('user-1', 'google');
+
+      expect(prismaService.oAuthAccount.deleteMany).toHaveBeenCalledWith({
+        where: { userId: 'user-1', provider: 'google' },
+      });
+    });
+
+    it('should allow unlinking when user has password and only one OAuth account', async () => {
+      prismaService.user.findUnique.mockResolvedValue({
+        ...mockUser,
+        passwordHash: 'hashed-password',
+        oauthAccounts: [{ provider: 'google' }],
+      } as any);
+      prismaService.oAuthAccount.deleteMany.mockResolvedValue({ count: 1 });
+
+      await service.unlinkOAuthAccount('user-1', 'google');
+
+      expect(prismaService.oAuthAccount.deleteMany).toHaveBeenCalledWith({
+        where: { userId: 'user-1', provider: 'google' },
+      });
+    });
+  });
+
+  describe('authenticateWithGoogle', () => {
+    let mockVerifyIdToken: jest.Mock;
+
+    beforeEach(() => {
+      // Access the mock instance created during service construction
+      const { OAuth2Client } = require('google-auth-library');
+      // Get the most recent mock instance (created in current beforeEach)
+      const lastCallIndex = OAuth2Client.mock.results.length - 1;
+      mockVerifyIdToken = OAuth2Client.mock.results[lastCallIndex].value.verifyIdToken;
+    });
+
+    it('should authenticate with valid Google ID token for new user', async () => {
+      mockVerifyIdToken.mockResolvedValue({
+        getPayload: () => ({
+          sub: 'google-user-id-123',
+          email: 'google@example.com',
+          email_verified: true,
+          name: 'Google User',
+          given_name: 'Google',
+          family_name: 'User',
+          picture: 'https://example.com/photo.jpg',
+          locale: 'en',
+        }),
+      });
+
+      prismaService.oAuthAccount.findUnique.mockResolvedValue(null);
+      prismaService.user.findUnique.mockResolvedValue(null);
+      prismaService.user.create.mockResolvedValue({
+        ...mockUser,
+        email: 'google@example.com',
+        name: 'Google User',
+      });
+      jwtService.signAsync.mockResolvedValue('jwt-token');
+
+      const result = await service.authenticateWithGoogle('valid-google-id-token');
+
+      expect(result).toHaveProperty('accessToken');
+      expect(result).toHaveProperty('refreshToken');
+      expect(result.isNewUser).toBe(true);
+      expect(result.user.email).toBe('google@example.com');
+    });
+
+    it('should throw UnauthorizedException when Google token payload is null', async () => {
+      mockVerifyIdToken.mockResolvedValue({
+        getPayload: () => null,
+      });
+
+      await expect(service.authenticateWithGoogle('token-with-null-payload')).rejects.toThrow(
+        UnauthorizedException,
+      );
+    });
+
+    it('should throw UnauthorizedException when Google token verification fails', async () => {
+      mockVerifyIdToken.mockRejectedValue(new Error('Token expired'));
+
+      await expect(service.authenticateWithGoogle('expired-google-token')).rejects.toThrow(
+        UnauthorizedException,
+      );
+    });
+
+    it('should handle email_verified=false from Google', async () => {
+      mockVerifyIdToken.mockResolvedValue({
+        getPayload: () => ({
+          sub: 'google-user-id-456',
+          email: 'unverified@example.com',
+          email_verified: false,
+          name: 'Unverified User',
+        }),
+      });
+
+      prismaService.oAuthAccount.findUnique.mockResolvedValue(null);
+      prismaService.user.findUnique.mockResolvedValue(null);
+      prismaService.user.create.mockResolvedValue({
+        ...mockUser,
+        email: 'unverified@example.com',
+        name: 'Unverified User',
+      });
+      jwtService.signAsync.mockResolvedValue('jwt-token');
+
+      const result = await service.authenticateWithGoogle('valid-token');
+
+      expect(result.isNewUser).toBe(true);
+      expect(prismaService.user.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            emailVerified: false,
+          }),
+        }),
+      );
+    });
+  });
+
+  describe('authenticateWithMicrosoft - additional branches', () => {
+    it('should link to existing user when email already exists', async () => {
+      const mockMsProfile = {
+        id: 'ms-user-id',
+        mail: 'test@example.com',
+        displayName: 'Test User',
+        givenName: 'Test',
+        surname: 'User',
+      };
+
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(mockMsProfile),
+      });
+
+      prismaService.oAuthAccount.findUnique.mockResolvedValue(null);
+      prismaService.user.findUnique.mockResolvedValue(mockUser);
+      prismaService.oAuthAccount.create.mockResolvedValue({} as any);
+      jwtService.signAsync.mockResolvedValue('jwt-token');
+
+      const result = await service.authenticateWithMicrosoft('ms-access-token');
+
+      expect(result.isNewUser).toBe(false);
+      expect(prismaService.oAuthAccount.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            provider: 'microsoft',
+            providerId: 'ms-user-id',
+            userId: mockUser.id,
+          }),
+        }),
+      );
+    });
+
+    it('should update existing OAuth account on login', async () => {
+      const mockMsProfile = {
+        id: 'ms-user-id',
+        mail: 'test@example.com',
+        displayName: 'Test User',
+      };
+
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(mockMsProfile),
+      });
+
+      prismaService.oAuthAccount.findUnique.mockResolvedValue({
+        id: 'oauth-account-1',
+        provider: 'microsoft',
+        providerId: 'ms-user-id',
+        user: mockUser,
+      });
+      prismaService.oAuthAccount.update.mockResolvedValue({} as any);
+      jwtService.signAsync.mockResolvedValue('jwt-token');
+
+      const result = await service.authenticateWithMicrosoft('ms-access-token');
+
+      expect(result.isNewUser).toBe(false);
+      expect(prismaService.oAuthAccount.update).toHaveBeenCalledWith({
+        where: { id: 'oauth-account-1' },
+        data: expect.objectContaining({
+          lastLoginAt: expect.any(Date),
+        }),
+      });
+    });
+
+    it('should use userPrincipalName when mail is not provided', async () => {
+      const mockMsProfile = {
+        id: 'ms-user-id',
+        userPrincipalName: 'upn@example.com',
+        displayName: 'UPN User',
+      };
+
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(mockMsProfile),
+      });
+
+      prismaService.oAuthAccount.findUnique.mockResolvedValue(null);
+      prismaService.user.findUnique.mockResolvedValue(null);
+      prismaService.user.create.mockResolvedValue({
+        ...mockUser,
+        email: 'upn@example.com',
+        name: 'UPN User',
+      });
+      jwtService.signAsync.mockResolvedValue('jwt-token');
+
+      const result = await service.authenticateWithMicrosoft('ms-access-token');
+
+      expect(result.user.email).toBe('upn@example.com');
+      expect(result.isNewUser).toBe(true);
+    });
+
+    it('should handle fetch network error', async () => {
+      (global.fetch as jest.Mock).mockRejectedValue(new Error('Network error'));
+
+      await expect(service.authenticateWithMicrosoft('ms-access-token')).rejects.toThrow(
+        UnauthorizedException,
+      );
+    });
+  });
+
+  describe('handleOAuthLogin - user name fallback', () => {
+    it('should use email prefix as name when profile name is undefined', async () => {
+      const mockMsProfile = {
+        id: 'ms-user-id',
+        mail: 'noname@example.com',
+      };
+
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(mockMsProfile),
+      });
+
+      prismaService.oAuthAccount.findUnique.mockResolvedValue(null);
+      prismaService.user.findUnique.mockResolvedValue(null);
+      prismaService.user.create.mockResolvedValue({
+        id: 'new-user-id',
+        email: 'noname@example.com',
+        name: 'noname',
+        avatar: undefined,
+      });
+      jwtService.signAsync.mockResolvedValue('jwt-token');
+
+      const result = await service.authenticateWithMicrosoft('ms-access-token');
+
+      expect(result.isNewUser).toBe(true);
+      expect(prismaService.user.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            name: 'noname',
+          }),
+        }),
+      );
+    });
+  });
+
+  describe('getLinkedAccounts - additional cases', () => {
+    it('should return empty array when no accounts are linked', async () => {
+      prismaService.oAuthAccount.findMany.mockResolvedValue([]);
+
+      const result = await service.getLinkedAccounts('user-1');
+
+      expect(result).toEqual([]);
+    });
+
+    it('should handle null email in accounts', async () => {
+      prismaService.oAuthAccount.findMany.mockResolvedValue([
+        { provider: 'microsoft', email: null, createdAt: new Date('2025-01-01') },
+      ]);
+
+      const result = await service.getLinkedAccounts('user-1');
+
+      expect(result).toHaveLength(1);
+      expect(result[0].email).toBe('');
+    });
+
+    it('should return multiple accounts with correct mapping', async () => {
+      const date1 = new Date('2025-01-01');
+      const date2 = new Date('2025-06-15');
+      prismaService.oAuthAccount.findMany.mockResolvedValue([
+        { provider: 'google', email: 'user@gmail.com', createdAt: date1 },
+        { provider: 'microsoft', email: 'user@outlook.com', createdAt: date2 },
+      ]);
+
+      const result = await service.getLinkedAccounts('user-1');
+
+      expect(result).toHaveLength(2);
+      expect(result[0]).toEqual({ provider: 'google', email: 'user@gmail.com', linkedAt: date1 });
+      expect(result[1]).toEqual({
+        provider: 'microsoft',
+        email: 'user@outlook.com',
+        linkedAt: date2,
+      });
+    });
+  });
+
+  describe('generateTokens', () => {
+    it('should generate both access and refresh tokens', async () => {
+      // Test indirectly via authenticateWithMicrosoft which calls generateTokens
+      const mockMsProfile = {
+        id: 'ms-user-id',
+        mail: 'test@example.com',
+        displayName: 'Test User',
+      };
+
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(mockMsProfile),
+      });
+
+      prismaService.oAuthAccount.findUnique.mockResolvedValue({
+        id: 'oauth-1',
+        user: { ...mockUser, role: undefined },
+      });
+      prismaService.oAuthAccount.update.mockResolvedValue({} as any);
+      jwtService.signAsync
+        .mockResolvedValueOnce('access-token-value')
+        .mockResolvedValueOnce('refresh-token-value');
+
+      const result = await service.authenticateWithMicrosoft('ms-access-token');
+
+      expect(result.accessToken).toBe('access-token-value');
+      expect(result.refreshToken).toBe('refresh-token-value');
+      expect(jwtService.signAsync).toHaveBeenCalledTimes(2);
+    });
+
+    it('should default role to "user" when user has no role', async () => {
+      const mockMsProfile = {
+        id: 'ms-user-id',
+        mail: 'test@example.com',
+        displayName: 'Test User',
+      };
+
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(mockMsProfile),
+      });
+
+      prismaService.oAuthAccount.findUnique.mockResolvedValue({
+        id: 'oauth-1',
+        user: { id: 'user-1', email: 'test@example.com', name: 'Test', avatar: null },
+      });
+      prismaService.oAuthAccount.update.mockResolvedValue({} as any);
+      jwtService.signAsync.mockResolvedValue('jwt-token');
+
+      await service.authenticateWithMicrosoft('ms-access-token');
+
+      expect(jwtService.signAsync).toHaveBeenCalledWith(
+        expect.objectContaining({ role: 'user' }),
+        expect.any(Object),
+      );
+    });
   });
 });

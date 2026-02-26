@@ -477,4 +477,681 @@ end_of_record
       );
     });
   });
+
+  // =====================================================================
+  // BRANCH COVERAGE TESTS
+  // =====================================================================
+
+  describe('branch coverage: ingestArtifact optional DTO fields', () => {
+    it('should use fallback values when optional DTO fields are undefined', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.question.findFirst.mockResolvedValue({ id: 'q-found' } as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        ciProvider: 'github',
+        buildId: 'build-456',
+        artifactType: 'jest',
+        content: JSON.stringify({ numTotalTests: 5, numPassedTests: 5 }),
+        // All optional fields omitted: questionId, buildNumber, pipelineName,
+        // branch, commitSha, fileName, mimeType, artifactUrl, autoVerify
+      });
+
+      expect(result.status).toBe('SUCCESS');
+      // Verify the create call used fallback values
+      const createCall = mockPrismaService.evidenceRegistry.create.mock.calls[0][0];
+      expect(createCall.data.artifactUrl).toBe('ci://github/build-456/jest');
+      expect(createCall.data.fileName).toBe('jest-build-456');
+      expect(createCall.data.mimeType).toBe('application/json');
+      expect(createCall.data.verified).toBe(false);
+    });
+
+    it('should use provided values when optional DTO fields are present', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q-explicit',
+        ciProvider: 'azure',
+        buildId: 'build-789',
+        buildNumber: '42',
+        pipelineName: 'My Pipeline',
+        artifactType: 'jest',
+        content: '{}',
+        fileName: 'custom-file.json',
+        mimeType: 'text/plain',
+        artifactUrl: 'https://custom.url/artifact',
+        branch: 'develop',
+        commitSha: 'abc123',
+        autoVerify: true,
+      });
+
+      const createCall = mockPrismaService.evidenceRegistry.create.mock.calls[0][0];
+      expect(createCall.data.questionId).toBe('q-explicit');
+      expect(createCall.data.artifactUrl).toBe('https://custom.url/artifact');
+      expect(createCall.data.fileName).toBe('custom-file.json');
+      expect(createCall.data.mimeType).toBe('text/plain');
+      expect(createCall.data.verified).toBe(true);
+    });
+  });
+
+  describe('branch coverage: parseJUnit edge cases', () => {
+    it('should handle content with no testcase/failure/error/skipped matches', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'junit',
+        content: '<testsuite></testsuite>', // No testcase matches
+      });
+
+      expect(result.parsedData.type).toBe('junit');
+      // passRate branch: tests === 0 -> passRate = 0
+      expect((result.parsedData.summary as any).passRate).toBe(0);
+      expect((result.parsedData.summary as any).totalTests).toBe(0);
+    });
+
+    it('should handle content with no time attribute', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'junit',
+        content: '<testsuite><testcase name="t1"/></testsuite>', // no time attr
+      });
+
+      // timeMatch branch: null -> time = 0
+      expect((result.parsedData.summary as any).duration).toBe(0);
+    });
+  });
+
+  describe('branch coverage: parseJest edge cases', () => {
+    it('should handle Jest report with zero total tests (passRate === 0)', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'jest',
+        content: JSON.stringify({
+          numTotalTests: 0,
+          numPassedTests: 0,
+          numFailedTests: 0,
+        }),
+      });
+
+      expect((result.parsedData.summary as any).passRate).toBe(0);
+    });
+
+    it('should handle Jest report with missing optional fields (|| 0 fallbacks)', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'jest',
+        content: JSON.stringify({}), // All fields missing
+      });
+
+      const summary = result.parsedData.summary as any;
+      expect(summary.totalTests).toBe(0);
+      expect(summary.passed).toBe(0);
+      expect(summary.failed).toBe(0);
+      expect(summary.pending).toBe(0);
+      expect(summary.duration).toBe(0);
+      expect(summary.testSuites).toBe(0);
+    });
+
+    it('should handle Jest report with testResults missing duration (|| 0)', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'jest',
+        content: JSON.stringify({
+          numTotalTests: 5,
+          numPassedTests: 5,
+          testResults: [{ name: 'suite1' }, { duration: 500 }], // first has no duration
+        }),
+      });
+
+      expect((result.parsedData.summary as any).duration).toBe(500);
+    });
+
+    it('should handle Jest report with null testResults (|| 0 for reduce)', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'jest',
+        content: JSON.stringify({
+          numTotalTests: 5,
+          numPassedTests: 5,
+          testResults: null, // null testResults
+        }),
+      });
+
+      expect((result.parsedData.summary as any).duration).toBe(0);
+    });
+  });
+
+  describe('branch coverage: parseLcov zero-division ternaries', () => {
+    it('should return 0 percentages when totals are zero', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'lcov',
+        content: 'SF:src/file.ts\nLF:0\nLH:0\nFNF:0\nFNH:0\nBRF:0\nBRH:0\nend_of_record',
+      });
+
+      const summary = result.parsedData.summary as any;
+      expect(summary.lines.percentage).toBe(0);
+      expect(summary.functions.percentage).toBe(0);
+      expect(summary.branches.percentage).toBe(0);
+      expect(summary.overallPercentage).toBe(0);
+    });
+
+    it('should handle parseInt returning NaN (|| 0 fallback)', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'lcov',
+        content: 'SF:src/file.ts\nLF:abc\nLH:xyz\nFNF:def\nFNH:ghi\nBRF:jkl\nBRH:mno\nend_of_record',
+      });
+
+      const summary = result.parsedData.summary as any;
+      expect(summary.lines.total).toBe(0);
+      expect(summary.lines.covered).toBe(0);
+    });
+  });
+
+  describe('branch coverage: parseCobertura no-match ternaries', () => {
+    it('should return 0 values when no XML attributes match', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'cobertura',
+        content: '<coverage></coverage>', // No attributes
+      });
+
+      const summary = result.parsedData.summary as any;
+      expect(summary.lineRate).toBe(0);
+      expect(summary.branchRate).toBe(0);
+      expect(summary.linesValid).toBe(0);
+      expect(summary.linesCovered).toBe(0);
+    });
+  });
+
+  describe('branch coverage: parseCycloneDX edge cases', () => {
+    it('should handle invalid JSON (catch branch)', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'cyclonedx',
+        content: 'not valid json',
+      });
+
+      expect(result.parsedData.error).toBe('Failed to parse CycloneDX SBOM');
+    });
+
+    it('should handle components without licenses', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'cyclonedx',
+        content: JSON.stringify({
+          components: [{ type: 'library', name: 'no-license-pkg' }],
+        }),
+      });
+
+      expect((result.parsedData.summary as any).uniqueLicenses).toEqual([]);
+    });
+
+    it('should handle licenses with id but no name', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'cyclonedx',
+        content: JSON.stringify({
+          components: [
+            { type: 'library', licenses: [{ license: { id: 'MIT' } }] },
+            { type: 'library', licenses: [{ license: {} }] }, // no id, no name
+            { type: 'library', licenses: [{}] }, // no license property
+          ],
+        }),
+      });
+
+      expect((result.parsedData.summary as any).uniqueLicenses).toContain('MIT');
+    });
+  });
+
+  describe('branch coverage: parseSPDX edge cases', () => {
+    it('should handle invalid JSON (catch branch)', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'spdx',
+        content: 'not valid json',
+      });
+
+      expect(result.parsedData.error).toBe('Failed to parse SPDX SBOM');
+    });
+
+    it('should handle packages without licenseConcluded or licenseDeclared', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'spdx',
+        content: JSON.stringify({
+          packages: [{ name: 'pkg-no-license' }], // no licenseConcluded, no licenseDeclared
+        }),
+      });
+
+      expect((result.parsedData.summary as any).uniqueLicenses).toEqual([]);
+    });
+
+    it('should handle packages with only licenseDeclared (no licenseConcluded)', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'spdx',
+        content: JSON.stringify({
+          packages: [{ licenseDeclared: 'Apache-2.0' }],
+        }),
+      });
+
+      expect((result.parsedData.summary as any).uniqueLicenses).toContain('Apache-2.0');
+    });
+  });
+
+  describe('branch coverage: parseTrivy edge cases', () => {
+    it('should handle invalid JSON (catch branch)', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'trivy',
+        content: '{invalid',
+      });
+
+      expect(result.parsedData.error).toBe('Failed to parse Trivy report');
+    });
+
+    it('should handle results without Vulnerabilities array', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'trivy',
+        content: JSON.stringify({ Results: [{}] }), // No Vulnerabilities
+      });
+
+      expect((result.parsedData.summary as any).totalVulnerabilities).toBe(0);
+    });
+
+    it('should handle vulnerability with null Severity (default/unknown branch)', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'trivy',
+        content: JSON.stringify({
+          Results: [{
+            Vulnerabilities: [
+              { VulnerabilityID: 'CVE-1', Severity: null, PkgName: 'pkg' },
+              { VulnerabilityID: 'CVE-2', PkgName: 'pkg2' }, // undefined Severity
+            ],
+          }],
+        }),
+      });
+
+      expect((result.parsedData.summary as any).bySeverity.unknown).toBe(2);
+    });
+
+    it('should handle MEDIUM and LOW severity branches', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'trivy',
+        content: JSON.stringify({
+          Results: [{
+            Vulnerabilities: [
+              { VulnerabilityID: 'CVE-1', Severity: 'MEDIUM', PkgName: 'pkg1' },
+              { VulnerabilityID: 'CVE-2', Severity: 'LOW', PkgName: 'pkg2' },
+            ],
+          }],
+        }),
+      });
+
+      const summary = result.parsedData.summary as any;
+      expect(summary.bySeverity.medium).toBe(1);
+      expect(summary.bySeverity.low).toBe(1);
+      // MEDIUM and LOW should NOT be in criticalAndHigh
+      expect(summary.criticalAndHigh).toHaveLength(0);
+    });
+  });
+
+  describe('branch coverage: parseOWASP edge cases', () => {
+    it('should handle invalid JSON (catch branch)', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'owasp',
+        content: 'invalid json',
+      });
+
+      expect(result.parsedData.error).toBe('Failed to parse OWASP report');
+    });
+
+    it('should use cvssv3.baseSeverity as fallback when severity is missing', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'owasp',
+        content: JSON.stringify({
+          dependencies: [
+            {
+              fileName: 'lib.jar',
+              vulnerabilities: [
+                { name: 'CVE-1', cvssv3: { baseSeverity: 'MEDIUM' } }, // No severity, use cvssv3 fallback
+              ],
+            },
+          ],
+        }),
+      });
+
+      expect((result.parsedData.summary as any).bySeverity.medium).toBe(1);
+    });
+
+    it('should fall back to UNKNOWN when neither severity nor cvssv3 is present', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'owasp',
+        content: JSON.stringify({
+          dependencies: [
+            {
+              fileName: 'lib.jar',
+              vulnerabilities: [
+                { name: 'CVE-1' }, // No severity, no cvssv3
+              ],
+            },
+          ],
+        }),
+      });
+
+      // UNKNOWN doesn't match any switch case, so none of the counters increment
+      const summary = result.parsedData.summary as any;
+      expect(summary.bySeverity.critical).toBe(0);
+      expect(summary.bySeverity.high).toBe(0);
+      expect(summary.bySeverity.medium).toBe(0);
+      expect(summary.bySeverity.low).toBe(0);
+    });
+
+    it('should handle dependencies without vulnerabilities array', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      mockPrismaService.evidenceRegistry.create.mockResolvedValue(mockEvidence as any);
+
+      const result = await service.ingestArtifact({
+        sessionId: 'session-123',
+        questionId: 'q1',
+        ciProvider: 'github',
+        buildId: 'build-1',
+        artifactType: 'owasp',
+        content: JSON.stringify({
+          dependencies: [{ fileName: 'lib.jar' }], // no vulnerabilities
+        }),
+      });
+
+      expect((result.parsedData.summary as any).totalVulnerabilities).toBe(0);
+    });
+  });
+
+  describe('branch coverage: getSessionArtifacts edge cases', () => {
+    it('should filter out evidence with null metadata', async () => {
+      mockPrismaService.evidenceRegistry.findMany.mockResolvedValue([
+        {
+          id: 'ev-1',
+          artifactType: 'DOCUMENT',
+          verified: false,
+          metadata: null,
+          createdAt: new Date(),
+        },
+      ] as any);
+
+      const result = await service.getSessionArtifacts('session-123');
+      expect(result).toHaveLength(0);
+    });
+
+    it('should filter out metadata without ciProvider', async () => {
+      mockPrismaService.evidenceRegistry.findMany.mockResolvedValue([
+        {
+          id: 'ev-1',
+          artifactType: 'TEST_REPORT',
+          verified: false,
+          metadata: { buildId: 'build-1' }, // missing ciProvider
+          createdAt: new Date(),
+        },
+      ] as any);
+
+      const result = await service.getSessionArtifacts('session-123');
+      expect(result).toHaveLength(0);
+    });
+
+    it('should filter out metadata without buildId', async () => {
+      mockPrismaService.evidenceRegistry.findMany.mockResolvedValue([
+        {
+          id: 'ev-1',
+          artifactType: 'TEST_REPORT',
+          verified: false,
+          metadata: { ciProvider: 'github' }, // missing buildId
+          createdAt: new Date(),
+        },
+      ] as any);
+
+      const result = await service.getSessionArtifacts('session-123');
+      expect(result).toHaveLength(0);
+    });
+
+    it('should use fallback values for optional metadata fields', async () => {
+      mockPrismaService.evidenceRegistry.findMany.mockResolvedValue([
+        {
+          id: 'ev-1',
+          artifactType: 'TEST_REPORT',
+          verified: false,
+          fileName: null,
+          metadata: {
+            ciProvider: 'github',
+            buildId: 'build-1',
+            // All optional fields missing: buildNumber, pipelineName, artifactType, branch, commitSha, status
+          },
+          createdAt: new Date(),
+        },
+      ] as any);
+
+      const result = await service.getSessionArtifacts('session-123');
+      expect(result).toHaveLength(1);
+      expect(result[0].buildNumber).toBeNull();
+      expect(result[0].pipelineName).toBeNull();
+      expect(result[0].artifactType).toBe('TEST_REPORT'); // Falls back to evidence.artifactType
+      expect(result[0].branch).toBeNull();
+      expect(result[0].commitSha).toBeNull();
+      expect(result[0].status).toBe('INGESTED');
+      expect(result[0].fileName).toBeNull();
+    });
+  });
+
+  describe('branch coverage: getBuildSummary edge cases', () => {
+    it('should handle artifact without parsedData.summary', async () => {
+      mockPrismaService.evidenceRegistry.findMany.mockResolvedValue([
+        {
+          id: 'ev-1',
+          artifactType: 'TEST_REPORT',
+          verified: false,
+          createdAt: new Date(),
+          metadata: {
+            ciProvider: 'github',
+            buildId: 'build-1',
+            buildNumber: null,
+            pipelineName: null,
+            branch: null,
+            commitSha: null,
+            // no parsedData
+          },
+        },
+      ] as any);
+
+      const result = await service.getBuildSummary('session-123', 'build-1');
+      expect(result.metrics).toEqual({});
+      expect(result.buildNumber).toBeNull();
+      expect(result.pipelineName).toBeNull();
+      expect(result.branch).toBeNull();
+      expect(result.commitSha).toBeNull();
+    });
+
+    it('should use artifact.artifactType when meta.artifactType is missing', async () => {
+      mockPrismaService.evidenceRegistry.findMany.mockResolvedValue([
+        {
+          id: 'ev-1',
+          artifactType: 'SECURITY_SCAN',
+          verified: false,
+          createdAt: new Date(),
+          metadata: {
+            ciProvider: 'github',
+            buildId: 'build-1',
+            // no artifactType in metadata
+            parsedData: { summary: { totalVulns: 5 } },
+          },
+        },
+      ] as any);
+
+      const result = await service.getBuildSummary('session-123', 'build-1');
+      expect(result.metrics).toHaveProperty('SECURITY_SCAN');
+      expect(result.artifactTypes).toContain('SECURITY_SCAN');
+    });
+  });
+
+  describe('branch coverage: bulkIngestArtifacts non-Error thrown', () => {
+    it('should handle non-Error thrown objects in catch block', async () => {
+      mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
+      // First call succeeds, second throws a non-Error
+      mockPrismaService.evidenceRegistry.create
+        .mockResolvedValueOnce(mockEvidence as any)
+        .mockImplementationOnce(() => { throw 'string error'; });
+
+      const result = await service.bulkIngestArtifacts({
+        sessionId: 'session-123',
+        ciProvider: 'github',
+        buildId: 'build-456',
+        artifacts: [
+          { artifactType: 'jest', content: '{}', questionId: 'q1' },
+          { artifactType: 'jest', content: '{}', questionId: 'q2' },
+        ],
+      });
+
+      expect(result.errorCount).toBe(1);
+      expect(result.errors[0].error).toBe('Unknown error');
+    });
+  });
 });

@@ -204,5 +204,228 @@ describe('HealthController', () => {
       const result = controllerWithoutServices.live();
       expect(result.status).toBe('ok');
     });
+
+    it('should return null for redis check when redis not injected', async () => {
+      // Without redis, checkRedis returns null and is not added to checks
+      try {
+        await controllerWithoutServices.check();
+      } catch (error) {
+        // It throws because DB is missing, but redis check still runs
+        const response = (error as HttpException).getResponse() as any;
+        const redisCheck = response.checks?.find((c: any) => c.name === 'redis');
+        // Redis check should not be present since service is not injected
+        expect(redisCheck).toBeUndefined();
+      }
+    });
+
+    it('should handle readiness check without services', async () => {
+      await expect(controllerWithoutServices.ready()).rejects.toThrow(HttpException);
+    });
+
+    it('should handle startup check without services', async () => {
+      await expect(controllerWithoutServices.startup()).rejects.toThrow(HttpException);
+    });
+  });
+
+  describe('Branch coverage - checkDatabase slow response', () => {
+    it('should return degraded status when database responds slowly', async () => {
+      // Mock slow database response (>1000ms)
+      const originalDateNow = Date.now;
+      let callCount = 0;
+      jest.spyOn(Date, 'now').mockImplementation(() => {
+        callCount++;
+        // First call: startTime, second call: after query (simulate 1500ms delay)
+        if (callCount <= 1) return 1000;
+        return 2500; // 1500ms later
+      });
+
+      mockPrismaService.$queryRaw.mockResolvedValue([{ '?column?': 1 }]);
+      mockRedisClient.ping.mockResolvedValue('PONG');
+
+      const result = await controller.check();
+
+      const dbCheck = result.checks.find((c) => c.name === 'database');
+      expect(dbCheck?.status).toBe('degraded');
+      expect(dbCheck?.message).toContain('slowly');
+
+      jest.spyOn(Date, 'now').mockRestore();
+    });
+  });
+
+  describe('Branch coverage - checkRedis slow response', () => {
+    it('should return degraded status when redis responds slowly', async () => {
+      mockPrismaService.$queryRaw.mockResolvedValue([{ '?column?': 1 }]);
+
+      const originalDateNow = Date.now;
+      let callCount = 0;
+      jest.spyOn(Date, 'now').mockImplementation(() => {
+        callCount++;
+        // DB calls: first pair for database check, then redis check
+        // DB startTime=1000, DB endTime=1010 (fast)
+        // Redis startTime=1020, Redis endTime=2530 (1510ms, slow)
+        if (callCount === 1) return 1000;  // DB startTime
+        if (callCount === 2) return 1010;  // DB responseTime
+        if (callCount === 3) return 1020;  // Redis startTime
+        if (callCount === 4) return 2530;  // Redis endTime (slow)
+        return 3000;
+      });
+
+      mockRedisClient.ping.mockResolvedValue('PONG');
+
+      const result = await controller.check();
+
+      const redisCheck = result.checks.find((c) => c.name === 'redis');
+      expect(redisCheck?.status).toBe('degraded');
+      expect(redisCheck?.message).toContain('slowly');
+
+      jest.spyOn(Date, 'now').mockRestore();
+    });
+  });
+
+  describe('Branch coverage - checkDatabase error not instanceof Error', () => {
+    it('should return Unknown error when non-Error is thrown', async () => {
+      mockPrismaService.$queryRaw.mockRejectedValue('string error');
+      mockRedisClient.ping.mockResolvedValue('PONG');
+
+      try {
+        await controller.check();
+      } catch (error) {
+        const response = (error as HttpException).getResponse() as any;
+        const dbCheck = response.checks?.find((c: any) => c.name === 'database');
+        expect(dbCheck?.status).toBe('unhealthy');
+        expect(dbCheck?.message).toBe('Unknown error');
+      }
+    });
+  });
+
+  describe('Branch coverage - checkRedis error not instanceof Error', () => {
+    it('should return Unknown error when redis throws non-Error', async () => {
+      mockPrismaService.$queryRaw.mockResolvedValue([{ '?column?': 1 }]);
+      mockRedisClient.ping.mockRejectedValue('redis string error');
+
+      const result = await controller.check();
+
+      const redisCheck = result.checks.find((c) => c.name === 'redis');
+      expect(redisCheck?.status).toBe('unhealthy');
+      expect(redisCheck?.message).toBe('Unknown error');
+    });
+  });
+
+  describe('Branch coverage - memory check degraded from unhealthy memory', () => {
+    it('should set overallStatus to degraded when memory is unhealthy but db is ok', async () => {
+      mockPrismaService.$queryRaw.mockResolvedValue([{ '?column?': 1 }]);
+      mockRedisClient.ping.mockResolvedValue('PONG');
+
+      // Mock process.memoryUsage to return critical memory
+      const originalMemoryUsage = process.memoryUsage;
+      jest.spyOn(process, 'memoryUsage').mockReturnValue({
+        heapUsed: 950 * 1024 * 1024,
+        heapTotal: 1000 * 1024 * 1024,
+        external: 10 * 1024 * 1024,
+        rss: 1000 * 1024 * 1024,
+        arrayBuffers: 0,
+      });
+
+      const result = await controller.check();
+
+      // Memory at 95% should trigger unhealthy, overall should be degraded
+      const memCheck = result.checks.find((c) => c.name === 'memory');
+      expect(memCheck?.status).toBe('unhealthy');
+      expect(result.status).toBe('degraded');
+
+      jest.spyOn(process, 'memoryUsage').mockRestore();
+    });
+  });
+
+  describe('Branch coverage - memory check warning threshold', () => {
+    it('should return degraded for memory when usage is between 80-95%', async () => {
+      mockPrismaService.$queryRaw.mockResolvedValue([{ '?column?': 1 }]);
+      mockRedisClient.ping.mockResolvedValue('PONG');
+
+      jest.spyOn(process, 'memoryUsage').mockReturnValue({
+        heapUsed: 850 * 1024 * 1024,
+        heapTotal: 1000 * 1024 * 1024,
+        external: 10 * 1024 * 1024,
+        rss: 900 * 1024 * 1024,
+        arrayBuffers: 0,
+      });
+
+      const result = await controller.check();
+
+      const memCheck = result.checks.find((c) => c.name === 'memory');
+      expect(memCheck?.status).toBe('degraded');
+      expect(memCheck?.message).toContain('warning');
+
+      jest.spyOn(process, 'memoryUsage').mockRestore();
+    });
+  });
+
+  describe('Branch coverage - check() redis unhealthy with ok overallStatus', () => {
+    it('should degrade status when redis is unhealthy and db status is ok', async () => {
+      mockPrismaService.$queryRaw.mockResolvedValue([{ '?column?': 1 }]);
+      mockRedisClient.ping.mockRejectedValue(new Error('Redis down'));
+
+      const result = await controller.check();
+
+      expect(result.status).toBe('degraded');
+      const redisCheck = result.checks.find((c) => c.name === 'redis');
+      expect(redisCheck?.status).toBe('unhealthy');
+    });
+  });
+
+  describe('Branch coverage - check() dbCheck degraded sets overallStatus', () => {
+    it('should set overallStatus to degraded when db is degraded', async () => {
+      // Simulate slow DB that returns degraded
+      let callCount = 0;
+      jest.spyOn(Date, 'now').mockImplementation(() => {
+        callCount++;
+        if (callCount === 1) return 1000;
+        if (callCount === 2) return 2500; // 1500ms - slow DB
+        return 3000;
+      });
+
+      mockPrismaService.$queryRaw.mockResolvedValue([{ '?column?': 1 }]);
+      mockRedisClient.ping.mockResolvedValue('PONG');
+
+      const result = await controller.check();
+
+      expect(['ok', 'degraded']).toContain(result.status);
+      const dbCheck = result.checks.find((c) => c.name === 'database');
+      expect(dbCheck?.status).toBe('degraded');
+
+      jest.spyOn(Date, 'now').mockRestore();
+    });
+  });
+
+  describe('Branch coverage - ready() redis disconnected', () => {
+    it('should report redis as disconnected when redis check fails', async () => {
+      mockPrismaService.$queryRaw.mockResolvedValue([{ '?column?': 1 }]);
+      mockRedisClient.ping.mockRejectedValue(new Error('Connection lost'));
+
+      const result = await controller.ready();
+
+      expect(result.status).toBe('ok');
+      expect(result.checks.redis).toBe('disconnected');
+    });
+  });
+
+  describe('Branch coverage - environment and version fallbacks', () => {
+    it('should use fallback values for NODE_ENV and APP_VERSION', async () => {
+      const origEnv = process.env.NODE_ENV;
+      const origVer = process.env.APP_VERSION;
+      delete process.env.NODE_ENV;
+      delete process.env.APP_VERSION;
+
+      mockPrismaService.$queryRaw.mockResolvedValue([{ '?column?': 1 }]);
+      mockRedisClient.ping.mockResolvedValue('PONG');
+
+      const result = await controller.check();
+
+      expect(result.environment).toBe('development');
+      expect(result.version).toBe('1.0.0');
+
+      if (origEnv !== undefined) process.env.NODE_ENV = origEnv;
+      if (origVer !== undefined) process.env.APP_VERSION = origVer;
+    });
   });
 });

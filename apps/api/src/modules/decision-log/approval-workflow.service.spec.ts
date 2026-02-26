@@ -805,6 +805,164 @@ describe('ApprovalWorkflowService', () => {
     });
   });
 
+  describe('executeApprovedAction - POLICY_LOCK category', () => {
+    it('should log policy lock when POLICY_LOCK is approved', async () => {
+      // Create a POLICY_LOCK approval
+      mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
+      mockPrismaService.auditLog.create.mockResolvedValue({});
+
+      const approval = await service.createApprovalRequest(
+        {
+          category: ApprovalCategory.POLICY_LOCK,
+          resourceType: 'Policy',
+          resourceId: 'policy-1',
+          reason: 'Lock this policy',
+        },
+        mockUser.id,
+      );
+
+      // Approve with admin
+      mockPrismaService.user.findUnique.mockResolvedValue(mockAdmin);
+      mockPrismaService.auditLog.create.mockResolvedValue({});
+
+      const result = await service.respondToApproval(
+        { approvalId: approval.id, approved: true },
+        mockAdmin.id,
+      );
+
+      expect(result.status).toBe(ApprovalStatus.APPROVED);
+      // POLICY_LOCK does not update decisionLog, just logs
+      expect(mockPrismaService.decisionLog.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('executeApprovedAction - ADR_APPROVAL category', () => {
+    it('should log ADR approval when ADR_APPROVAL is approved', async () => {
+      mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
+      mockPrismaService.auditLog.create.mockResolvedValue({});
+
+      const approval = await service.createApprovalRequest(
+        {
+          category: ApprovalCategory.ADR_APPROVAL,
+          resourceType: 'ADR',
+          resourceId: 'adr-1',
+          reason: 'Approve ADR',
+        },
+        mockUser.id,
+      );
+
+      const developer = { ...mockAdmin, id: 'dev-1', role: 'DEVELOPER' };
+      mockPrismaService.user.findUnique.mockResolvedValue(developer);
+      mockPrismaService.auditLog.create.mockResolvedValue({});
+
+      const result = await service.respondToApproval(
+        { approvalId: approval.id, approved: true },
+        developer.id,
+      );
+
+      expect(result.status).toBe(ApprovalStatus.APPROVED);
+      // ADR_APPROVAL does not update decisionLog
+      expect(mockPrismaService.decisionLog.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('validateResource - unknown resource type', () => {
+    it('should allow unknown resource types without DB check', async () => {
+      mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
+      mockPrismaService.auditLog.create.mockResolvedValue({});
+
+      const result = await service.createApprovalRequest(
+        {
+          category: ApprovalCategory.HIGH_RISK_DECISION,
+          resourceType: 'UnknownType',
+          resourceId: 'unknown-1',
+          reason: 'Test unknown type',
+        },
+        mockUser.id,
+      );
+
+      expect(result.resourceType).toBe('UnknownType');
+    });
+  });
+
+  describe('requester name fallback', () => {
+    it('should use email when name is null', async () => {
+      const userWithNoName = { ...mockUser, name: null };
+      mockPrismaService.decisionLog.findUnique.mockResolvedValue(mockDecision);
+      mockPrismaService.user.findUnique.mockResolvedValue(userWithNoName);
+      mockPrismaService.auditLog.create.mockResolvedValue({});
+
+      const result = await service.createApprovalRequest(
+        {
+          category: ApprovalCategory.HIGH_RISK_DECISION,
+          resourceType: 'DecisionLog',
+          resourceId: 'decision-1',
+          reason: 'Test',
+        },
+        mockUser.id,
+      );
+
+      expect(result.requesterName).toBe(mockUser.email);
+    });
+  });
+
+  describe('approver name fallback', () => {
+    it('should use email when approver name is null', async () => {
+      mockPrismaService.decisionLog.findUnique.mockResolvedValue(mockDecision);
+      mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
+      mockPrismaService.auditLog.create.mockResolvedValue({});
+
+      const approval = await service.createApprovalRequest(
+        {
+          category: ApprovalCategory.HIGH_RISK_DECISION,
+          resourceType: 'DecisionLog',
+          resourceId: 'decision-1',
+          reason: 'Test',
+        },
+        mockUser.id,
+      );
+
+      const adminNoName = { ...mockAdmin, name: null };
+      mockPrismaService.user.findUnique.mockResolvedValue(adminNoName);
+      mockPrismaService.decisionLog.update.mockResolvedValue({});
+      mockPrismaService.auditLog.create.mockResolvedValue({});
+
+      const result = await service.respondToApproval(
+        { approvalId: approval.id, approved: true },
+        mockAdmin.id,
+      );
+
+      expect(result.approverName).toBe(mockAdmin.email);
+    });
+  });
+
+  describe('executeApprovedAction - non-DecisionLog HIGH_RISK_DECISION', () => {
+    it('should not update decisionLog when resourceType is not DecisionLog', async () => {
+      mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
+      mockPrismaService.auditLog.create.mockResolvedValue({});
+
+      const approval = await service.createApprovalRequest(
+        {
+          category: ApprovalCategory.HIGH_RISK_DECISION,
+          resourceType: 'Policy',
+          resourceId: 'policy-1',
+          reason: 'High risk policy change',
+        },
+        mockUser.id,
+      );
+
+      mockPrismaService.user.findUnique.mockResolvedValue(mockAdmin);
+      mockPrismaService.auditLog.create.mockResolvedValue({});
+
+      await service.respondToApproval(
+        { approvalId: approval.id, approved: true },
+        mockAdmin.id,
+      );
+
+      expect(mockPrismaService.decisionLog.update).not.toHaveBeenCalled();
+    });
+  });
+
   describe('category permissions', () => {
     beforeEach(async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(mockUser);

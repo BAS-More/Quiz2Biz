@@ -76,6 +76,18 @@ variable "db_name" {
   default     = "questionnaire"
 }
 
+variable "enable_database_ha" {
+  description = "Enable zone-redundant high availability for PostgreSQL (recommended for production)"
+  type        = bool
+  default     = false
+}
+
+variable "enable_database_vnet" {
+  description = "Enable VNet integration for private PostgreSQL access (recommended for production)"
+  type        = bool
+  default     = false
+}
+
 # Redis
 variable "redis_sku_name" {
   description = "SKU name for Redis Cache"

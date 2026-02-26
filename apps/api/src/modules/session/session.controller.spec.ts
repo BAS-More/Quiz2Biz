@@ -238,4 +238,79 @@ describe('SessionController', () => {
       expect(mockSessionService.completeSession).toHaveBeenCalledWith('session-123', 'user-123');
     });
   });
+
+  describe('uncovered branches', () => {
+    it('should default page to 1 and limit to 20 when undefined', async () => {
+      const pagination = { skip: 0 } as any; // page and limit are undefined
+      mockSessionService.findAllByUser.mockResolvedValue({
+        items: [],
+        total: 0,
+      });
+
+      const result = await controller.findAll(mockUser as any, pagination);
+
+      expect(result.pagination.page).toBe(1);
+      expect(result.pagination.limit).toBe(20);
+      expect(result.pagination.totalPages).toBe(0);
+    });
+
+    it('should default questionCount to 1 when dto.questionCount is 0/falsy in continueSession', async () => {
+      mockSessionService.continueSession.mockResolvedValue({
+        session: {},
+        nextQuestions: [],
+        progress: {},
+      });
+
+      await controller.continueSession(mockUser as any, 'session-123', { questionCount: 0 });
+
+      expect(mockSessionService.continueSession).toHaveBeenCalledWith('session-123', 'user-123', 1);
+    });
+
+    it('should default questionCount to 1 when dto.questionCount is undefined in continueSession', async () => {
+      mockSessionService.continueSession.mockResolvedValue({
+        session: {},
+        nextQuestions: [],
+        progress: {},
+      });
+
+      await controller.continueSession(mockUser as any, 'session-123', {} as any);
+
+      expect(mockSessionService.continueSession).toHaveBeenCalledWith('session-123', 'user-123', 1);
+    });
+
+    it('should default count to 1 when undefined in getNextQuestion', async () => {
+      mockSessionService.getNextQuestion.mockResolvedValue({
+        questions: [],
+        sessionProgress: {},
+      });
+
+      await controller.getNextQuestion(mockUser as any, 'session-123', undefined);
+
+      expect(mockSessionService.getNextQuestion).toHaveBeenCalledWith('session-123', 'user-123', 1);
+    });
+
+    it('should cap count at 5 in getNextQuestion', async () => {
+      mockSessionService.getNextQuestion.mockResolvedValue({
+        questions: [],
+        sessionProgress: {},
+      });
+
+      await controller.getNextQuestion(mockUser as any, 'session-123', 10);
+
+      expect(mockSessionService.getNextQuestion).toHaveBeenCalledWith('session-123', 'user-123', 5);
+    });
+
+    it('should correctly calculate totalPages with undefined limit', async () => {
+      const pagination = { skip: 0 } as any;
+      mockSessionService.findAllByUser.mockResolvedValue({
+        items: [{ id: '1' }],
+        total: 50,
+      });
+
+      const result = await controller.findAll(mockUser as any, pagination);
+
+      // 50 / 20 = 2.5, ceil = 3
+      expect(result.pagination.totalPages).toBe(3);
+    });
+  });
 });

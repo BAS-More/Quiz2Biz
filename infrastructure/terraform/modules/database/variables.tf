@@ -59,3 +59,14 @@ variable "tags" {
   default     = {}
 }
 
+variable "enable_high_availability" {
+  description = "Enable zone-redundant high availability for production"
+  type        = bool
+  default     = false
+}
+
+variable "enable_vnet_integration" {
+  description = "Enable VNet integration for private database access"
+  type        = bool
+  default     = false
+}

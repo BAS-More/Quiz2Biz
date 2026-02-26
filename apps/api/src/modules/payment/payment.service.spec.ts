@@ -389,4 +389,231 @@ describe('PaymentService', () => {
       expect(result).toBeNull();
     });
   });
+
+  // ===========================================================================
+  // Branch Coverage Tests
+  // ===========================================================================
+
+  describe('branch coverage - createCheckoutSession session.url fallback', () => {
+    it('should return empty string when session.url is null', async () => {
+      (mockStripe.checkout.sessions.create as jest.Mock).mockResolvedValue({
+        id: 'cs_test_123',
+        url: null,
+      } as any);
+
+      const result = await service.createCheckoutSession({
+        organizationId: 'org-123',
+        tier: 'PROFESSIONAL',
+        successUrl: 'https://app.com/success',
+        cancelUrl: 'https://app.com/cancel',
+      });
+
+      expect(result.url).toBe('');
+    });
+  });
+
+  describe('branch coverage - isConfigured guards on various methods', () => {
+    let unconfiguredService: PaymentService;
+
+    beforeEach(async () => {
+      const unconfiguredModule = await Test.createTestingModule({
+        providers: [
+          PaymentService,
+          {
+            provide: ConfigService,
+            useValue: {
+              get: jest.fn(() => undefined),
+            },
+          },
+        ],
+      }).compile();
+
+      unconfiguredService = unconfiguredModule.get<PaymentService>(PaymentService);
+    });
+
+    it('should throw when createPortalSession called without config', async () => {
+      await expect(
+        unconfiguredService.createPortalSession('cus_123', 'https://app.com'),
+      ).rejects.toThrow('Payment service not configured');
+    });
+
+    it('should throw when createCustomer called without config', async () => {
+      await expect(
+        unconfiguredService.createCustomer({
+          email: 'test@example.com',
+          organizationId: 'org-123',
+        }),
+      ).rejects.toThrow('Payment service not configured');
+    });
+
+    it('should throw when getSubscription called without config', async () => {
+      await expect(
+        unconfiguredService.getSubscription('sub_123'),
+      ).rejects.toThrow('Payment service not configured');
+    });
+
+    it('should throw when cancelSubscription called without config', async () => {
+      await expect(
+        unconfiguredService.cancelSubscription('sub_123'),
+      ).rejects.toThrow('Payment service not configured');
+    });
+
+    it('should throw when resumeSubscription called without config', async () => {
+      await expect(
+        unconfiguredService.resumeSubscription('sub_123'),
+      ).rejects.toThrow('Payment service not configured');
+    });
+
+    it('should throw when updateSubscription called without config', async () => {
+      await expect(
+        unconfiguredService.updateSubscription('sub_123', 'ENTERPRISE'),
+      ).rejects.toThrow('Payment service not configured');
+    });
+
+    it('should throw when constructWebhookEvent called without config', () => {
+      expect(() =>
+        unconfiguredService.constructWebhookEvent(
+          Buffer.from('test'),
+          'sig',
+          'secret',
+        ),
+      ).toThrow('Payment service not configured');
+    });
+
+    it('should throw when getInvoices called without config', async () => {
+      await expect(
+        unconfiguredService.getInvoices('cus_123'),
+      ).rejects.toThrow('Payment service not configured');
+    });
+
+    it('should throw when getUpcomingInvoice called without config', async () => {
+      await expect(
+        unconfiguredService.getUpcomingInvoice('cus_123'),
+      ).rejects.toThrow('Payment service not configured');
+    });
+  });
+
+  describe('branch coverage - cancelSubscription at period end false', () => {
+    it('should call subscriptions.cancel when cancelAtPeriodEnd is false', async () => {
+      const mockSub = { id: 'sub_123', status: 'canceled' };
+      (mockStripe.subscriptions.cancel as jest.Mock).mockResolvedValue(mockSub as any);
+
+      const result = await service.cancelSubscription('sub_123', false);
+      expect(mockStripe.subscriptions.cancel).toHaveBeenCalledWith('sub_123');
+      expect(result).toEqual(mockSub);
+    });
+  });
+
+  describe('branch coverage - resumeSubscription', () => {
+    it('should set cancel_at_period_end to false', async () => {
+      const mockSub = { id: 'sub_123', cancel_at_period_end: false };
+      (mockStripe.subscriptions.update as jest.Mock).mockResolvedValue(mockSub as any);
+
+      const result = await service.resumeSubscription('sub_123');
+      expect(mockStripe.subscriptions.update).toHaveBeenCalledWith('sub_123', {
+        cancel_at_period_end: false,
+      });
+      expect(result).toEqual(mockSub);
+    });
+  });
+
+  describe('branch coverage - createCheckoutSession without customerId', () => {
+    it('should not include customer field when customerId is undefined', async () => {
+      (mockStripe.checkout.sessions.create as jest.Mock).mockResolvedValue({
+        id: 'cs_test_123',
+        url: 'https://checkout.stripe.com/pay/cs_test_123',
+      } as any);
+
+      await service.createCheckoutSession({
+        organizationId: 'org-123',
+        tier: 'ENTERPRISE',
+        successUrl: 'https://app.com/success',
+        cancelUrl: 'https://app.com/cancel',
+      });
+
+      const callArg = (mockStripe.checkout.sessions.create as jest.Mock).mock.calls[0][0];
+      expect(callArg.customer).toBeUndefined();
+    });
+  });
+
+  describe('branch coverage - getPriceIdForTier with missing env vars', () => {
+    it('should throw when FREE tier has no priceId', async () => {
+      await expect(
+        service.createCheckoutSession({
+          organizationId: 'org-123',
+          tier: 'FREE',
+          successUrl: 'https://app.com/success',
+          cancelUrl: 'https://app.com/cancel',
+        }),
+      ).rejects.toThrow('Invalid tier for checkout');
+    });
+
+    it('should use fallback priceId when env var returns empty for PROFESSIONAL', async () => {
+      const noEnvModule = await Test.createTestingModule({
+        providers: [
+          PaymentService,
+          {
+            provide: ConfigService,
+            useValue: {
+              get: jest.fn((key: string, defaultValue?: string) => {
+                if (key === 'STRIPE_SECRET_KEY') {return 'sk_test_123';}
+                if (key === 'STRIPE_PRICE_PROFESSIONAL') {return defaultValue;}
+                if (key === 'STRIPE_PRICE_ENTERPRISE') {return defaultValue;}
+                return defaultValue ?? undefined;
+              }),
+            },
+          },
+        ],
+      }).compile();
+
+      const svc = noEnvModule.get<PaymentService>(PaymentService);
+      (mockStripe.checkout.sessions.create as jest.Mock).mockResolvedValue({
+        id: 'cs_test', url: 'https://checkout.stripe.com/cs_test',
+      } as any);
+
+      const result = await svc.createCheckoutSession({
+        organizationId: 'org-1',
+        tier: 'PROFESSIONAL',
+        successUrl: 'https://app.com/success',
+        cancelUrl: 'https://app.com/cancel',
+      });
+
+      expect(result.sessionId).toBe('cs_test');
+    });
+  });
+
+  describe('branch coverage - cancelSubscription default param', () => {
+    it('should use cancelAtPeriodEnd=true by default', async () => {
+      const mockSub = { id: 'sub_123', cancel_at_period_end: true };
+      (mockStripe.subscriptions.update as jest.Mock).mockResolvedValue(mockSub as any);
+
+      const result = await service.cancelSubscription('sub_123');
+
+      expect(mockStripe.subscriptions.update).toHaveBeenCalledWith('sub_123', {
+        cancel_at_period_end: true,
+      });
+      expect(result).toEqual(mockSub);
+    });
+  });
+
+  describe('branch coverage - getInvoices default limit', () => {
+    it('should use default limit of 10', async () => {
+      (mockStripe.invoices.list as jest.Mock).mockResolvedValue({ data: [] } as any);
+
+      await service.getInvoices('cus_123');
+
+      expect(mockStripe.invoices.list).toHaveBeenCalledWith({
+        customer: 'cus_123',
+        limit: 10,
+      });
+    });
+  });
+
+  describe('branch coverage - updateSubscription FREE tier guard', () => {
+    it('should throw for FREE tier in updateSubscription', async () => {
+      await expect(
+        service.updateSubscription('sub_123', 'FREE'),
+      ).rejects.toThrow('Invalid tier for upgrade');
+    });
+  });
 });

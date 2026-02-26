@@ -406,4 +406,210 @@ describe('BillingService', () => {
       });
     });
   });
+
+  // ===========================================================================
+  // Branch Coverage Tests
+  // ===========================================================================
+
+  describe('branch coverage - getInvoices fallback values', () => {
+    it('should use "unknown" when invoice.status is null', async () => {
+      const mockStripeInvoices = [
+        {
+          id: 'in_123',
+          amount_paid: 4900,
+          currency: 'usd',
+          status: null,
+          status_transitions: { paid_at: null },
+          created: 1639900000,
+          hosted_invoice_url: null,
+          invoice_pdf: null,
+        },
+      ];
+
+      jest.spyOn(paymentService, 'getInvoices').mockResolvedValue(mockStripeInvoices as any);
+
+      const result = await service.getInvoices('cus_123');
+
+      expect(result[0].status).toBe('unknown');
+      expect(result[0].paidAt).toBeUndefined();
+      expect(result[0].invoiceUrl).toBeUndefined();
+      expect(result[0].invoicePdfUrl).toBeUndefined();
+    });
+  });
+
+  describe('branch coverage - getUpcomingInvoice fallback values', () => {
+    it('should use fallback when amount_due is 0/falsy', async () => {
+      const mockUpcoming = {
+        amount_due: 0,
+        currency: null,
+        next_payment_attempt: null,
+        lines: {
+          data: [
+            { description: null, amount: null },
+          ],
+        },
+      };
+
+      jest.spyOn(paymentService, 'getUpcomingInvoice').mockResolvedValue(mockUpcoming as any);
+
+      const result = await service.getUpcomingInvoice('cus_123');
+
+      expect(result).not.toBeNull();
+      expect(result!.amount).toBe(0);
+      expect(result!.currency).toBe('USD');
+      // next_payment_attempt is null, should fallback to Date.now() / 1000
+      expect(result!.dueDate).toBeDefined();
+      expect(result!.lineItems[0].description).toBe('Subscription');
+      expect(result!.lineItems[0].amount).toBe(0);
+    });
+
+    it('should handle missing lines.data gracefully', async () => {
+      const mockUpcoming = {
+        amount_due: 4900,
+        currency: 'aud',
+        next_payment_attempt: 1640000000,
+        lines: undefined,
+      };
+
+      jest.spyOn(paymentService, 'getUpcomingInvoice').mockResolvedValue(mockUpcoming as any);
+
+      const result = await service.getUpcomingInvoice('cus_123');
+
+      expect(result).not.toBeNull();
+      expect(result!.lineItems).toEqual([]);
+    });
+  });
+
+  describe('branch coverage - recordPayment with null settings', () => {
+    it('should handle org with null settings', async () => {
+      const mockOrgs = [
+        {
+          id: 'org-123',
+          settings: null,
+        },
+      ];
+
+      jest.spyOn(prisma.organization, 'findMany').mockResolvedValue(mockOrgs as any);
+      jest.spyOn(prisma.organization, 'update').mockResolvedValue({} as any);
+
+      await service.recordPayment({
+        stripeInvoiceId: 'in_123',
+        stripeCustomerId: 'cus_123',
+        amount: 4900,
+        currency: 'USD',
+        status: 'paid',
+        paidAt: new Date('2026-01-28'),
+      });
+
+      expect(prisma.organization.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 'org-123' },
+          data: expect.objectContaining({
+            settings: expect.objectContaining({
+              billingHistory: expect.any(Array),
+            }),
+          }),
+        }),
+      );
+    });
+
+    it('should handle no matching organizations', async () => {
+      jest.spyOn(prisma.organization, 'findMany').mockResolvedValue([]);
+
+      await service.recordPayment({
+        stripeInvoiceId: 'in_123',
+        stripeCustomerId: 'cus_999',
+        amount: 4900,
+        currency: 'USD',
+        status: 'paid',
+        paidAt: new Date('2026-01-28'),
+      });
+
+      expect(prisma.organization.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('branch coverage - recordPaymentFailure with null settings', () => {
+    it('should handle org with null settings', async () => {
+      const mockOrgs = [
+        {
+          id: 'org-123',
+          settings: null,
+        },
+      ];
+
+      jest.spyOn(prisma.organization, 'findMany').mockResolvedValue(mockOrgs as any);
+      jest.spyOn(prisma.organization, 'update').mockResolvedValue({} as any);
+
+      await service.recordPaymentFailure({
+        stripeInvoiceId: 'in_123',
+        stripeCustomerId: 'cus_123',
+        amount: 4900,
+        currency: 'USD',
+        failureReason: 'Card declined',
+      });
+
+      expect(prisma.organization.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 'org-123' },
+          data: expect.objectContaining({
+            settings: expect.objectContaining({
+              paymentFailures: expect.any(Array),
+            }),
+          }),
+        }),
+      );
+    });
+  });
+
+  describe('branch coverage - getBillingSummary with null settings', () => {
+    it('should handle org with null settings', async () => {
+      const mockOrg = {
+        id: 'org-123',
+        settings: null,
+      };
+
+      jest.spyOn(prisma.organization, 'findUnique').mockResolvedValue(mockOrg as any);
+
+      const result = await service.getBillingSummary('org-123');
+
+      expect(result.totalPaid).toBe(0);
+      expect(result.lastPayment).toBeNull();
+      expect(result.hasPaymentFailure).toBe(false);
+      expect(result.lastFailure).toBeNull();
+    });
+
+    it('should handle org with settings but no lastPayment or lastPaymentFailure', async () => {
+      const mockOrg = {
+        id: 'org-123',
+        settings: {
+          billingHistory: [{ amount: 10 }, { amount: 20 }],
+        },
+      };
+
+      jest.spyOn(prisma.organization, 'findUnique').mockResolvedValue(mockOrg as any);
+
+      const result = await service.getBillingSummary('org-123');
+
+      expect(result.totalPaid).toBe(30);
+      expect(result.lastPayment).toBeNull();
+      expect(result.hasPaymentFailure).toBe(false);
+      expect(result.lastFailure).toBeNull();
+    });
+
+    it('should handle billing history record with no amount (fallback to 0)', async () => {
+      const mockOrg = {
+        id: 'org-123',
+        settings: {
+          billingHistory: [{ amount: undefined }, { amount: 10 }],
+        },
+      };
+
+      jest.spyOn(prisma.organization, 'findUnique').mockResolvedValue(mockOrg as any);
+
+      const result = await service.getBillingSummary('org-123');
+
+      expect(result.totalPaid).toBe(10);
+    });
+  });
 });

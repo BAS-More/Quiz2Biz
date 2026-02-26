@@ -109,6 +109,87 @@ describe('QpgController', () => {
 
       expect(result.prompts).toHaveLength(1);
     });
+
+    it('should filter prompts by minResidualRisk', async () => {
+      const dto = {
+        sessionId: 'session-123',
+        minResidualRisk: 0.4,
+      };
+
+      const mockBatch = {
+        sessionId: 'session-123',
+        prompts: [
+          { id: 'p-1', questionId: 'q-1', dimensionKey: 'arch_sec', title: 'Security Prompt' },
+          { id: 'p-2', questionId: 'q-2', dimensionKey: 'devops', title: 'DevOps Prompt' },
+          { id: 'p-3', questionId: 'q-3', dimensionKey: 'quality', title: 'Quality Prompt' },
+        ],
+      };
+
+      const mockGaps = [
+        { questionId: 'q-1', residualRisk: 0.6 },
+        { questionId: 'q-2', residualRisk: 0.2 },
+        { questionId: 'q-3', residualRisk: 0.5 },
+      ];
+
+      mockQpgService.generatePromptsForSession.mockResolvedValue(mockBatch);
+      mockQpgService.getSessionGaps.mockResolvedValue(mockGaps);
+
+      const result = await controller.generatePrompts(dto);
+
+      expect(result.prompts).toHaveLength(2);
+      expect(result.prompts.map((p: any) => p.id)).toEqual(['p-1', 'p-3']);
+      expect(result.filteredCount).toBe(2);
+    });
+
+    it('should apply all filters together (dimensions + minResidualRisk + maxPrompts)', async () => {
+      const dto = {
+        sessionId: 'session-123',
+        dimensions: ['arch_sec', 'quality'],
+        minResidualRisk: 0.3,
+        maxPrompts: 1,
+      };
+
+      const mockBatch = {
+        sessionId: 'session-123',
+        prompts: [
+          { id: 'p-1', questionId: 'q-1', dimensionKey: 'arch_sec' },
+          { id: 'p-2', questionId: 'q-2', dimensionKey: 'devops' },
+          { id: 'p-3', questionId: 'q-3', dimensionKey: 'quality' },
+        ],
+      };
+
+      const mockGaps = [
+        { questionId: 'q-1', residualRisk: 0.5 },
+        { questionId: 'q-3', residualRisk: 0.4 },
+      ];
+
+      mockQpgService.generatePromptsForSession.mockResolvedValue(mockBatch);
+      mockQpgService.getSessionGaps.mockResolvedValue(mockGaps);
+
+      const result = await controller.generatePrompts(dto);
+
+      expect(result.prompts).toHaveLength(1);
+      expect(result.filteredCount).toBe(1);
+    });
+  });
+
+  describe('getSessionPrompts', () => {
+    it('should return prompts for a session', async () => {
+      const mockBatch = {
+        sessionId: 'session-123',
+        generatedAt: new Date(),
+        prompts: [
+          { id: 'p-1', dimensionKey: 'arch_sec' },
+        ],
+      };
+
+      mockQpgService.generatePromptsForSession.mockResolvedValue(mockBatch);
+
+      const result = await controller.getSessionPrompts('session-123');
+
+      expect(result.sessionId).toBe('session-123');
+      expect(mockQpgService.generatePromptsForSession).toHaveBeenCalledWith('session-123');
+    });
   });
 
   describe('getTemplates', () => {

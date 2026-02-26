@@ -35,6 +35,8 @@ export function getSentryConfig(): SentryWebConfig {
   };
 }
 
+const isDev = import.meta.env.DEV;
+
 /**
  * Initialize Sentry for the React app
  * Call this in main.tsx before rendering
@@ -44,7 +46,7 @@ export function initializeSentry(): void {
 
   // Only initialize if DSN is provided
   if (!config.dsn) {
-    console.log('Sentry DSN not configured, skipping initialization');
+    if (isDev) console.log('Sentry DSN not configured, skipping initialization');
     return;
   }
 
@@ -129,7 +131,7 @@ export function initializeSentry(): void {
     ],
   });
 
-  console.log(`Sentry initialized for environment: ${config.environment}`);
+  if (isDev) console.log(`Sentry initialized for environment: ${config.environment}`);
 }
 
 /**
@@ -199,7 +201,7 @@ export const withSentryProfiler = Sentry.withProfiler;
  */
 export function createFeedbackWidget(): void {
   // Feedback widget is configured in Sentry dashboard
-  console.log('Sentry feedback widget available');
+  if (isDev) console.log('Sentry feedback widget available');
 }
 
 export default {

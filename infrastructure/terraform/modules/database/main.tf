@@ -11,16 +11,24 @@ resource "azurerm_postgresql_flexible_server" "main" {
   resource_group_name = var.resource_group_name
   location            = var.location
   version             = var.postgresql_version
-  # Using public access - VNet integration restricted in some regions
-  # delegated_subnet_id    = var.subnet_id
-  # private_dns_zone_id    = var.private_dns_zone_id
+
+  # VNet integration - enable for production private networking
+  delegated_subnet_id = var.enable_vnet_integration ? var.subnet_id : null
+  private_dns_zone_id = var.enable_vnet_integration ? var.private_dns_zone_id : null
+
   administrator_login    = "psqladmin"
   administrator_password = random_password.postgres.result
   storage_mb             = var.storage_mb
   sku_name               = var.sku_name
   backup_retention_days  = 7
 
-  # Note: For production, add high_availability block with mode = "ZoneRedundant"
+  # High Availability - enable for production zone-redundant failover
+  dynamic "high_availability" {
+    for_each = var.enable_high_availability ? [1] : []
+    content {
+      mode = "ZoneRedundant"
+    }
+  }
 
   tags = var.tags
 

@@ -35,6 +35,7 @@ const getAnalyticsConfig = (): AnalyticsConfig => {
 // =============================================================================
 
 let isInitialized = false;
+const isDev = import.meta.env.DEV;
 
 /**
  * Initialize Google Analytics GA4
@@ -44,12 +45,12 @@ export function initializeAnalytics(): void {
   const config = getAnalyticsConfig();
 
   if (isInitialized) {
-    console.log('[Analytics] Already initialized');
+    if (isDev) console.log('[Analytics] Already initialized');
     return;
   }
 
   if (!config.measurementId) {
-    console.log('[Analytics] No measurement ID configured, skipping initialization');
+    if (isDev) console.log('[Analytics] No measurement ID configured, skipping initialization');
     return;
   }
 
@@ -65,7 +66,7 @@ export function initializeAnalytics(): void {
     });
 
     isInitialized = true;
-    console.log(`[Analytics] Initialized with measurement ID: ${config.measurementId}`);
+    if (isDev) console.log(`[Analytics] Initialized with measurement ID: ${config.measurementId}`);
   } catch (error) {
     console.error('[Analytics] Failed to initialize:', error);
   }

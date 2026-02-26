@@ -402,10 +402,18 @@ describe('DocumentGeneratorService', () => {
       mockPrisma.session.findUnique.mockResolvedValue(mockSession);
       mockPrisma.documentType.findUnique.mockResolvedValue(mockDocumentType);
       mockPrisma.document.create.mockResolvedValue(mockCreatedDocument);
-      mockPrisma.document.update.mockResolvedValue({
-        ...mockCreatedDocument,
-        status: DocumentStatus.FAILED,
-      });
+      // First call: processDocumentGeneration sets GENERATING status
+      // Second call: catch block sets FAILED status
+      mockPrisma.document.update
+        .mockResolvedValueOnce({
+          ...mockCreatedDocument,
+          status: DocumentStatus.GENERATING,
+          sessionId: 'session-123',
+        })
+        .mockResolvedValueOnce({
+          ...mockCreatedDocument,
+          status: DocumentStatus.FAILED,
+        });
 
       mockTemplateEngine.assembleTemplateData.mockRejectedValue('string error');
 
@@ -415,8 +423,9 @@ describe('DocumentGeneratorService', () => {
           documentTypeId: 'doc-type-789',
           userId: 'user-456',
         }),
-      ).rejects.toThrow();
+      ).rejects.toBe('string error');
 
+      // The second update call should set FAILED with 'Unknown error'
       expect(mockPrisma.document.update).toHaveBeenCalledWith({
         where: { id: 'doc-001' },
         data: expect.objectContaining({
@@ -1014,6 +1023,176 @@ describe('DocumentGeneratorService', () => {
       const result = await service.getPendingReviewDocuments();
 
       expect(result).toEqual([]);
+    });
+  });
+
+  // =========================================================================
+  // uncovered branches
+  // =========================================================================
+  describe('uncovered branches', () => {
+    // Helper to set up common mocks for the AI generation path
+    const setupAiGenerationMocks = (responseValue: unknown, dimensionKey: string | null, projectTypeSession: unknown, notifySession: unknown) => {
+      mockPrisma.session.findUnique.mockResolvedValue(mockSession); // validation
+      mockPrisma.documentType.findUnique.mockResolvedValue(mockDocumentType);
+      mockPrisma.document.create.mockResolvedValue(mockCreatedDocument);
+
+      mockGetDocumentTemplate.mockReturnValue({
+        slug: 'tech-roadmap',
+        name: 'Technology Roadmap',
+        sections: [{ heading: 'Overview', description: 'Project overview' }],
+      });
+
+      mockPrisma.response.findMany.mockResolvedValue([
+        {
+          value: responseValue,
+          isValid: true,
+          question: { text: 'Question?', dimensionKey },
+        },
+      ]);
+
+      mockPrisma.session.findUnique
+        .mockResolvedValueOnce(mockSession)           // generateDocument validation
+        .mockResolvedValueOnce(projectTypeSession)     // getProjectTypeName
+        .mockResolvedValueOnce(notifySession);         // notifyDocumentOwner
+
+      mockPrisma.document.update.mockResolvedValue({
+        ...mockCreatedDocument,
+        status: DocumentStatus.GENERATING,
+        sessionId: 'session-123',
+      });
+
+      mockAiContentService.generateDocumentContent.mockResolvedValue({
+        title: 'Doc',
+        sections: [{ heading: 'S', content: 'C' }],
+        summary: 'Sum',
+      });
+      mockDocumentBuilder.buildDocumentFromAiContent.mockResolvedValue(Buffer.from('docx'));
+      mockStorage.upload.mockResolvedValue(mockUploadResult);
+
+      mockPrisma.document.findUnique.mockResolvedValue({
+        ...mockCreatedDocument,
+        status: DocumentStatus.GENERATED,
+        documentType: mockDocumentType,
+      });
+    };
+
+    it('should handle string value in loadSessionAnswers (typeof value === "string")', async () => {
+      setupAiGenerationMocks(
+        'plain string answer',                          // value is a string, not object
+        'strategy',
+        { projectType: { name: 'SaaS' } },
+        { user: { email: 'u@t.com', name: 'U' } },
+      );
+
+      const result = await service.generateDocument({
+        sessionId: 'session-123',
+        documentTypeId: 'doc-type-789',
+        userId: 'user-456',
+      });
+
+      expect(result.status).toBe(DocumentStatus.GENERATED);
+      expect(mockAiContentService.generateDocumentContent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sessionAnswers: expect.arrayContaining([
+            expect.objectContaining({ answer: 'plain string answer' }),
+          ]),
+        }),
+      );
+    });
+
+    it('should JSON.stringify value when value.text is undefined in loadSessionAnswers', async () => {
+      setupAiGenerationMocks(
+        { score: 42 },                                  // object without .text
+        'strategy',
+        { projectType: { name: 'SaaS' } },
+        { user: { email: 'u@t.com', name: 'U' } },
+      );
+
+      const result = await service.generateDocument({
+        sessionId: 'session-123',
+        documentTypeId: 'doc-type-789',
+        userId: 'user-456',
+      });
+
+      expect(result.status).toBe(DocumentStatus.GENERATED);
+      expect(mockAiContentService.generateDocumentContent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sessionAnswers: expect.arrayContaining([
+            expect.objectContaining({ answer: JSON.stringify({ score: 42 }) }),
+          ]),
+        }),
+      );
+    });
+
+    it('should default dimensionKey to "general" when null', async () => {
+      setupAiGenerationMocks(
+        { text: 'answer' },
+        null,                                            // null dimensionKey
+        { projectType: { name: 'SaaS' } },
+        { user: { email: 'u@t.com', name: 'U' } },
+      );
+
+      const result = await service.generateDocument({
+        sessionId: 'session-123',
+        documentTypeId: 'doc-type-789',
+        userId: 'user-456',
+      });
+
+      expect(result.status).toBe(DocumentStatus.GENERATED);
+      expect(mockAiContentService.generateDocumentContent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sessionAnswers: expect.arrayContaining([
+            expect.objectContaining({ dimensionKey: 'general' }),
+          ]),
+        }),
+      );
+    });
+
+    it('should default projectType name to "Business Project" when null', async () => {
+      setupAiGenerationMocks(
+        { text: 'answer' },
+        'strategy',
+        { projectType: null },                           // null projectType
+        { user: { email: 'u@t.com', name: 'U' } },
+      );
+
+      const result = await service.generateDocument({
+        sessionId: 'session-123',
+        documentTypeId: 'doc-type-789',
+        userId: 'user-456',
+      });
+
+      expect(result.status).toBe(DocumentStatus.GENERATED);
+      expect(mockAiContentService.generateDocumentContent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          projectTypeName: 'Business Project',
+        }),
+      );
+    });
+
+    it('should fall back to email prefix when user name is null in notifyDocumentOwner', async () => {
+      setupAiGenerationMocks(
+        { text: 'answer' },
+        'strategy',
+        { projectType: { name: 'SaaS' } },
+        { user: { email: 'john@example.com', name: null } },  // null name
+      );
+
+      const result = await service.generateDocument({
+        sessionId: 'session-123',
+        documentTypeId: 'doc-type-789',
+        userId: 'user-456',
+      });
+
+      expect(result.status).toBe(DocumentStatus.GENERATED);
+      // Wait for fire-and-forget notification
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      expect(mockNotificationService.sendDocumentsReadyEmail).toHaveBeenCalledWith(
+        'john@example.com',
+        'john',
+        'session-123',
+        [mockUploadResult.fileName],
+      );
     });
   });
 });

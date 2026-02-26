@@ -554,4 +554,103 @@ describe('PaymentController', () => {
       expect(result.responses.limit).toBe(0);
     });
   });
+
+  describe('uncovered branches', () => {
+    let webhookController2: PaymentController;
+    let webhookModule2: TestingModule;
+
+    const createMockRequest2 = (rawBody: Buffer | undefined) => ({
+      rawBody,
+    });
+
+    beforeEach(async () => {
+      const webhookMockConfigService2 = {
+        get: jest.fn().mockReturnValue('whsec_valid_test_secret'),
+      };
+
+      webhookModule2 = await Test.createTestingModule({
+        controllers: [PaymentController],
+        providers: [
+          { provide: PaymentService, useValue: mockPaymentService },
+          { provide: SubscriptionService, useValue: mockSubscriptionService },
+          { provide: BillingService, useValue: mockBillingService },
+          { provide: ConfigService, useValue: webhookMockConfigService2 },
+        ],
+      }).compile();
+
+      webhookController2 = webhookModule2.get<PaymentController>(PaymentController);
+    });
+
+    afterEach(async () => {
+      if (webhookModule2) {
+        await webhookModule2.close();
+      }
+    });
+
+    it('should use Date.now() fallback when invoice.status_transitions.paid_at is null', async () => {
+      const mockEvent = {
+        type: 'invoice.payment_succeeded',
+        data: {
+          object: {
+            id: 'inv_123',
+            customer: 'cus_123',
+            amount_paid: 9900,
+            currency: 'usd',
+            status_transitions: { paid_at: null },
+          },
+        },
+      };
+      mockPaymentService.constructWebhookEvent.mockReturnValue(mockEvent);
+      mockBillingService.recordPayment.mockResolvedValue({});
+
+      const mockRequest = createMockRequest2(Buffer.from('{}'));
+      const result = await webhookController2.handleWebhook(mockRequest as any, 'sig_test');
+
+      expect(result.received).toBe(true);
+      expect(mockBillingService.recordPayment).toHaveBeenCalledWith(
+        expect.objectContaining({
+          paidAt: expect.any(Date),
+        }),
+      );
+    });
+
+    it('should use "Unknown error" when last_finalization_error is null', async () => {
+      const mockEvent = {
+        type: 'invoice.payment_failed',
+        data: {
+          object: {
+            id: 'inv_fail',
+            customer: 'cus_123',
+            amount_due: 5000,
+            currency: 'usd',
+            last_finalization_error: null,
+          },
+        },
+      };
+      mockPaymentService.constructWebhookEvent.mockReturnValue(mockEvent);
+      mockBillingService.recordPaymentFailure.mockResolvedValue({});
+
+      const mockRequest = createMockRequest2(Buffer.from('{}'));
+      const result = await webhookController2.handleWebhook(mockRequest as any, 'sig_test');
+
+      expect(result.received).toBe(true);
+      expect(mockBillingService.recordPaymentFailure).toHaveBeenCalledWith(
+        expect.objectContaining({
+          failureReason: 'Unknown error',
+        }),
+      );
+    });
+
+    it('should handle non-Error thrown in webhook signature verification', async () => {
+      mockPaymentService.constructWebhookEvent.mockImplementation(() => {
+        throw 'string error thrown';
+      });
+
+      const mockRequest = createMockRequest2(Buffer.from('{}'));
+
+      await expect(
+        webhookController2.handleWebhook(mockRequest as any, 'invalid_sig'),
+      ).rejects.toThrow('Invalid webhook signature');
+    });
+  });
 });

@@ -7,6 +7,7 @@ import {
   getDRProcedures,
   getFailoverConfig,
   getPITRConfig,
+  getDRTestConfigurations,
   DisasterRecoveryTargets,
 } from './disaster-recovery.config';
 
@@ -169,5 +170,124 @@ describe('getPITRConfig', () => {
     const config = getPITRConfig();
 
     expect(config.geoRedundant).toBeDefined();
+  });
+
+  it('should have minimum restore point interval', () => {
+    const config = getPITRConfig();
+
+    expect(config.minRestorePointInterval).toBeDefined();
+    expect(config.minRestorePointInterval).toBe('PT5M');
+  });
+
+  it('should have max restore point age aligning with RPO', () => {
+    const config = getPITRConfig();
+
+    expect(config.maxRestorePointAge).toBe('PT15M');
+  });
+});
+
+describe('getDRTestConfigurations', () => {
+  it('should return array of test configurations', () => {
+    const configs = getDRTestConfigurations();
+    expect(Array.isArray(configs)).toBe(true);
+    expect(configs.length).toBeGreaterThan(0);
+  });
+
+  it('should have quarterly DR drill', () => {
+    const configs = getDRTestConfigurations();
+    const quarterly = configs.find((c) => c.id === 'dr-test-quarterly');
+
+    expect(quarterly).toBeDefined();
+    expect(quarterly?.type).toBe('simulation');
+    expect(quarterly?.frequency).toBe('quarterly');
+  });
+
+  it('should have monthly backup restore test', () => {
+    const configs = getDRTestConfigurations();
+    const monthly = configs.find((c) => c.id === 'dr-test-monthly-backup');
+
+    expect(monthly).toBeDefined();
+    expect(monthly?.type).toBe('parallel');
+    expect(monthly?.frequency).toBe('monthly');
+  });
+
+  it('should have annual full DR exercise', () => {
+    const configs = getDRTestConfigurations();
+    const annual = configs.find((c) => c.id === 'dr-test-annual-full');
+
+    expect(annual).toBeDefined();
+    expect(annual?.type).toBe('cutover');
+    expect(annual?.frequency).toBe('annually');
+  });
+
+  it('should have success criteria with critical flags', () => {
+    const configs = getDRTestConfigurations();
+
+    configs.forEach((config) => {
+      expect(config.successCriteria.length).toBeGreaterThan(0);
+      config.successCriteria.forEach((criteria) => {
+        expect(criteria.metric).toBeDefined();
+        expect(criteria.target).toBeGreaterThan(0);
+        expect(criteria.unit).toBeDefined();
+        expect(typeof criteria.critical).toBe('boolean');
+      });
+    });
+  });
+
+  it('should have participants for each test config', () => {
+    const configs = getDRTestConfigurations();
+
+    configs.forEach((config) => {
+      expect(config.participants.length).toBeGreaterThan(0);
+    });
+  });
+
+  it('should have scope items for each test config', () => {
+    const configs = getDRTestConfigurations();
+
+    configs.forEach((config) => {
+      expect(config.scope.length).toBeGreaterThan(0);
+    });
+  });
+});
+
+describe('getFailoverConfig - detailed checks', () => {
+  it('should have mode set to active-passive', () => {
+    const config = getFailoverConfig();
+    expect(config.mode).toBe('active-passive');
+  });
+
+  it('should have DNS failover configuration', () => {
+    const config = getFailoverConfig();
+    expect(config.dnsFailover).toBeDefined();
+    expect(config.dnsFailover.provider).toBe('azure-traffic-manager');
+    expect(config.dnsFailover.healthCheckPath).toBe('/health/live');
+    expect(config.dnsFailover.routingMethod).toBe('priority');
+  });
+
+  it('should have database failover configuration', () => {
+    const config = getFailoverConfig();
+    expect(config.databaseFailover).toBeDefined();
+    expect(config.databaseFailover.readReplicaEnabled).toBe(true);
+    expect(config.databaseFailover.autoFailoverEnabled).toBe(true);
+  });
+
+  it('should have storage failover configuration', () => {
+    const config = getFailoverConfig();
+    expect(config.storageFailover).toBeDefined();
+    expect(config.storageFailover.type).toBe('RA-GRS');
+    expect(config.storageFailover.failoverStatus).toBe('available');
+  });
+
+  it('should have failover threshold with consecutive failures', () => {
+    const config = getFailoverConfig();
+    expect(config.failoverThreshold.consecutiveFailures).toBeGreaterThan(0);
+    expect(config.failoverThreshold.failureWindowSeconds).toBeGreaterThan(0);
+    expect(config.failoverThreshold.minHealthyPercentage).toBeGreaterThan(0);
+  });
+
+  it('should not have automatic failback enabled', () => {
+    const config = getFailoverConfig();
+    expect(config.automaticFailback).toBe(false);
   });
 });

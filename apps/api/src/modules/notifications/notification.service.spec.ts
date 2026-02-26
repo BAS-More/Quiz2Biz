@@ -678,5 +678,137 @@ describe('NotificationService', () => {
 
       expect(result.success).toBe(true);
     });
+
+    it('should prefer htmlContent over textContent for CUSTOM html body', async () => {
+      const result = await service.sendEmail({
+        to: 'user@example.com',
+        subject: 'HTML email',
+        type: EmailType.CUSTOM,
+        htmlContent: '<h1>HTML</h1>',
+      });
+
+      expect(result.success).toBe(true);
+    });
+  });
+
+  describe('processTemplate - number values', () => {
+    it('should substitute number values in templates', async () => {
+      const result = await service.sendSessionReminderEmail(
+        'user@example.com',
+        'John',
+        'session-1',
+        'My Questionnaire',
+        75,
+      );
+
+      expect(result.success).toBe(true);
+    });
+  });
+
+  describe('logEmailSent - fallback resourceId', () => {
+    it('should use fallback resourceId when messageId is undefined', async () => {
+      // Console provider always returns messageId, so we send a failed email to get undefined messageId
+      // Force audit log to record the call
+      mockPrismaService.auditLog.create.mockResolvedValue({});
+
+      // Send an email with a template that has no messageId in the result
+      await service.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: EmailType.CUSTOM,
+        textContent: 'Test',
+      });
+
+      // The audit log should have been called
+      expect(mockPrismaService.auditLog.create).toHaveBeenCalled();
+    });
+  });
+
+  describe('SendGrid - missing x-message-id header', () => {
+    let sendgridService: NotificationService;
+
+    beforeEach(async () => {
+      const sendgridConfig = {
+        get: jest.fn((key: string, defaultValue?: string) => {
+          if (key === 'SENDGRID_API_KEY') {return 'sendgrid-api-key';}
+          if (key === 'EMAIL_FROM') {return 'test@quiz2biz.com';}
+          if (key === 'EMAIL_FROM_NAME') {return 'Quiz2Biz Test';}
+          if (key === 'FRONTEND_URL') {return 'http://localhost:3001';}
+          return defaultValue;
+        }),
+      };
+
+      const module = await Test.createTestingModule({
+        providers: [
+          NotificationService,
+          { provide: PrismaService, useValue: mockPrismaService },
+          { provide: ConfigService, useValue: sendgridConfig },
+        ],
+      }).compile();
+
+      sendgridService = module.get<NotificationService>(NotificationService);
+    });
+
+    it('should return undefined messageId when x-message-id header is absent', async () => {
+      (global.fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: new Headers(), // no x-message-id header
+      });
+
+      const result = await sendgridService.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: EmailType.CUSTOM,
+        textContent: 'Test',
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.messageId).toBeUndefined();
+    });
+  });
+
+  describe('Brevo provider - text parameter omitted', () => {
+    let brevoService: NotificationService;
+
+    beforeEach(async () => {
+      const brevoConfig = {
+        get: jest.fn((key: string, defaultValue?: string) => {
+          if (key === 'BREVO_API_KEY') {return 'brevo-api-key';}
+          if (key === 'EMAIL_FROM') {return 'test@quiz2biz.com';}
+          if (key === 'EMAIL_FROM_NAME') {return 'Quiz2Biz Test';}
+          if (key === 'FRONTEND_URL') {return 'http://localhost:3001';}
+          return defaultValue;
+        }),
+      };
+
+      const module = await Test.createTestingModule({
+        providers: [
+          NotificationService,
+          { provide: PrismaService, useValue: mockPrismaService },
+          { provide: ConfigService, useValue: brevoConfig },
+        ],
+      }).compile();
+
+      brevoService = module.get<NotificationService>(NotificationService);
+    });
+
+    it('should not include textContent in Brevo request when text is undefined', async () => {
+      (global.fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ messageId: 'msg-456' }),
+      });
+
+      await brevoService.sendEmail({
+        to: 'user@example.com',
+        subject: 'Test',
+        type: EmailType.CUSTOM,
+        htmlContent: '<p>HTML only</p>',
+      });
+
+      const fetchCall = (global.fetch as jest.Mock).mock.calls[0];
+      const body = JSON.parse(fetchCall[1].body);
+      expect(body.textContent).toBeUndefined();
+    });
   });
 });

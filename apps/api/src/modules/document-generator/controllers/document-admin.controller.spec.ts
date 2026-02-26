@@ -190,4 +190,127 @@ describe('DocumentAdminController', () => {
       expect(result.document.rejectionReason).toBe('Not complete');
     });
   });
+
+  // ===========================================================================
+  // BRANCH COVERAGE TESTS
+  // ===========================================================================
+
+  describe('branch coverage - listDocumentTypes pagination defaults', () => {
+    it('should use default page=1 when pagination.page is undefined', async () => {
+      const pagination = { page: undefined as unknown as number, limit: 20, skip: 0 };
+      const result = await controller.listDocumentTypes(pagination);
+
+      expect(result.pagination.page).toBe(1);
+    });
+
+    it('should use default limit=20 when pagination.limit is undefined', async () => {
+      const pagination = { page: 1, limit: undefined as unknown as number, skip: 0 };
+      const result = await controller.listDocumentTypes(pagination);
+
+      expect(result.pagination.limit).toBe(20);
+      expect(result.pagination.totalPages).toBe(1);
+    });
+
+    it('should compute totalPages with Math.ceil correctly', async () => {
+      prismaService.documentType.count.mockResolvedValue(25);
+      const pagination = { page: 1, limit: 10, skip: 0 };
+      const result = await controller.listDocumentTypes(pagination);
+
+      expect(result.pagination.totalPages).toBe(3);
+    });
+  });
+
+  describe('branch coverage - createDocumentType with optional fields', () => {
+    it('should use default empty array for requiredQuestions when not provided', async () => {
+      const dto = {
+        name: 'Doc',
+        slug: 'doc',
+        description: 'Desc',
+        category: DocumentCategory.BA,
+        templatePath: '/t.hbs',
+        estimatedPages: 5,
+        isActive: true,
+      };
+
+      await controller.createDocumentType(dto);
+
+      expect(prismaService.documentType.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          requiredQuestions: [],
+          outputFormats: ['DOCX'],
+          isActive: true,
+        }),
+      });
+    });
+
+    it('should use provided requiredQuestions and outputFormats', async () => {
+      const dto = {
+        name: 'Doc',
+        slug: 'doc',
+        description: 'Desc',
+        category: DocumentCategory.BA,
+        templatePath: '/t.hbs',
+        requiredQuestions: ['q1', 'q2'],
+        outputFormats: ['PDF', 'HTML'],
+        estimatedPages: 5,
+        isActive: false,
+      };
+
+      await controller.createDocumentType(dto);
+
+      expect(prismaService.documentType.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          requiredQuestions: ['q1', 'q2'],
+          outputFormats: ['PDF', 'HTML'],
+          isActive: false,
+        }),
+      });
+    });
+
+    it('should default isActive to true when not provided', async () => {
+      const dto = {
+        name: 'Doc',
+        slug: 'doc',
+        description: 'Desc',
+        category: DocumentCategory.BA,
+        templatePath: '/t.hbs',
+        estimatedPages: 5,
+      };
+
+      await controller.createDocumentType(dto);
+
+      expect(prismaService.documentType.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          isActive: true,
+        }),
+      });
+    });
+  });
+
+  describe('branch coverage - getPendingReviewDocuments nullable fields', () => {
+    it('should handle null fileName and fileSize in document mapping', async () => {
+      const docWithNulls = {
+        ...mockDocument,
+        fileName: null,
+        fileSize: null,
+        generatedAt: null,
+      };
+      documentGeneratorService.getPendingReviewDocuments.mockResolvedValue([docWithNulls]);
+
+      const result = await controller.getPendingReviewDocuments();
+
+      expect(result[0].fileName).toBeUndefined();
+      expect(result[0].fileSize).toBeUndefined();
+      expect(result[0].generatedAt).toBeUndefined();
+    });
+
+    it('should convert BigInt fileSize to string when present', async () => {
+      documentGeneratorService.getPendingReviewDocuments.mockResolvedValue([mockDocument]);
+
+      const result = await controller.getPendingReviewDocuments();
+
+      expect(result[0].fileSize).toBe('1024');
+      expect(result[0].fileName).toBe('document.pdf');
+    });
+  });
 });

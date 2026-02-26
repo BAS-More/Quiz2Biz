@@ -250,4 +250,88 @@ describe('UsersService', () => {
       expect(result.total).toBe(0);
     });
   });
+
+  describe('uncovered branches', () => {
+    it('should default completedSessions to 0 when _count is missing', async () => {
+      const userNoCount = { ...mockUser, _count: undefined };
+      mockPrismaService.user.findUnique.mockResolvedValue(userNoCount);
+      mockPrismaService.document.count.mockResolvedValue(0);
+
+      const result = await service.findById('user-123');
+
+      expect(result.statistics.completedSessions).toBe(0);
+    });
+
+    it('should handle null profile as empty object', async () => {
+      const userNullProfile = { ...mockUser, profile: null };
+      mockPrismaService.user.findUnique.mockResolvedValue(userNullProfile);
+      mockPrismaService.document.count.mockResolvedValue(0);
+
+      const result = await service.findById('user-123');
+
+      expect(result.profile.name).toBeUndefined();
+      expect(result.profile.phone).toBeUndefined();
+    });
+
+    it('should handle null preferences as empty object', async () => {
+      const userNullPrefs = { ...mockUser, preferences: null };
+      mockPrismaService.user.findUnique.mockResolvedValue(userNullPrefs);
+      mockPrismaService.document.count.mockResolvedValue(0);
+
+      const result = await service.findById('user-123');
+
+      expect(result.preferences.notifications).toBeUndefined();
+      expect(result.preferences.theme).toBeUndefined();
+    });
+
+    it('should allow admin to update another user profile (no ForbiddenException)', async () => {
+      const adminUser = { ...mockUser, id: 'admin-1', role: UserRole.ADMIN };
+      mockPrismaService.user.findUnique.mockResolvedValue(adminUser);
+      mockPrismaService.user.update.mockResolvedValue(adminUser);
+      mockPrismaService.document.count.mockResolvedValue(0);
+
+      // different-user requests update of admin-1, but admin-1 IS admin so it passes
+      const result = await service.update('admin-1', { name: 'New' }, 'different-user');
+
+      expect(result).toBeDefined();
+    });
+
+    it('should skip profile update when no name/phone/timezone in dto', async () => {
+      mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
+      mockPrismaService.user.update.mockResolvedValue(mockUser);
+      mockPrismaService.document.count.mockResolvedValue(0);
+
+      await service.update('user-123', { preferences: { theme: 'dark' } }, 'user-123');
+
+      const updateCall = mockPrismaService.user.update.mock.calls[0][0];
+      // updateData should have preferences but not profile
+      expect(updateCall.data.preferences).toBeDefined();
+      expect(updateCall.data.profile).toBeUndefined();
+    });
+
+    it('should handle update with null current profile', async () => {
+      const userNullProfile = { ...mockUser, profile: null };
+      mockPrismaService.user.findUnique.mockResolvedValue(userNullProfile);
+      mockPrismaService.user.update.mockResolvedValue(userNullProfile);
+      mockPrismaService.document.count.mockResolvedValue(0);
+
+      await service.update('user-123', { name: 'New Name' }, 'user-123');
+
+      const updateCall = mockPrismaService.user.update.mock.calls[0][0];
+      expect(updateCall.data.profile).toBeDefined();
+      expect(updateCall.data.profile.name).toBe('New Name');
+    });
+
+    it('should handle update with null current preferences', async () => {
+      const userNullPrefs = { ...mockUser, preferences: null };
+      mockPrismaService.user.findUnique.mockResolvedValue(userNullPrefs);
+      mockPrismaService.user.update.mockResolvedValue(userNullPrefs);
+      mockPrismaService.document.count.mockResolvedValue(0);
+
+      await service.update('user-123', { preferences: { theme: 'light' } }, 'user-123');
+
+      const updateCall = mockPrismaService.user.update.mock.calls[0][0];
+      expect(updateCall.data.preferences).toBeDefined();
+    });
+  });
 });

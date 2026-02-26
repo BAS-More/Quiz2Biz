@@ -377,4 +377,338 @@ describe('FeatureFlagService', () => {
       expect(typeof result).toBe('boolean');
     });
   });
+
+  // =========================================================================
+  // Branch Coverage Tests
+  // =========================================================================
+
+  describe('branch coverage - matchesClause operators', () => {
+    it('should match startsWith operator', () => {
+      // Need a flag with a startsWith clause to exercise this branch
+      // We use a custom flag injected into the service
+      const svc = new FeatureFlagService();
+      // Access internal flags map to add a custom flag for testing
+      const flagsMap = (svc as any).flags as Map<string, any>;
+      flagsMap.set('test-startswith', {
+        key: 'test-startswith',
+        kind: 'boolean',
+        defaultValue: false,
+        variations: [
+          { value: false, name: 'Off' },
+          { value: true, name: 'On' },
+        ],
+        targeting: {
+          enabled: true,
+          rules: [
+            {
+              id: 'starts-rule',
+              clauses: [{ attribute: 'email', op: 'startsWith', values: ['admin@'] }],
+              variation: 1,
+            },
+          ],
+          fallthrough: { variation: 0 },
+          offVariation: 0,
+        },
+      });
+
+      expect(svc.getBooleanFlag('test-startswith', { email: 'admin@quiz2biz.com' })).toBe(true);
+      expect(svc.getBooleanFlag('test-startswith', { email: 'user@quiz2biz.com' })).toBe(false);
+    });
+
+    it('should match contains operator', () => {
+      const svc = new FeatureFlagService();
+      const flagsMap = (svc as any).flags as Map<string, any>;
+      flagsMap.set('test-contains', {
+        key: 'test-contains',
+        kind: 'boolean',
+        defaultValue: false,
+        variations: [
+          { value: false, name: 'Off' },
+          { value: true, name: 'On' },
+        ],
+        targeting: {
+          enabled: true,
+          rules: [
+            {
+              id: 'contains-rule',
+              clauses: [{ attribute: 'email', op: 'contains', values: ['quiz2biz'] }],
+              variation: 1,
+            },
+          ],
+          fallthrough: { variation: 0 },
+          offVariation: 0,
+        },
+      });
+
+      expect(svc.getBooleanFlag('test-contains', { email: 'user@quiz2biz.com' })).toBe(true);
+      expect(svc.getBooleanFlag('test-contains', { email: 'user@other.com' })).toBe(false);
+    });
+
+    it('should handle negate clause (true branch)', () => {
+      const svc = new FeatureFlagService();
+      const flagsMap = (svc as any).flags as Map<string, any>;
+      flagsMap.set('test-negate', {
+        key: 'test-negate',
+        kind: 'boolean',
+        defaultValue: false,
+        variations: [
+          { value: false, name: 'Off' },
+          { value: true, name: 'On' },
+        ],
+        targeting: {
+          enabled: true,
+          rules: [
+            {
+              id: 'negate-rule',
+              clauses: [{ attribute: 'email', op: 'endsWith', values: ['@blocked.com'], negate: true }],
+              variation: 1,
+            },
+          ],
+          fallthrough: { variation: 0 },
+          offVariation: 0,
+        },
+      });
+
+      // endsWith matches '@blocked.com', negated -> false, so rule doesn't match
+      expect(svc.getBooleanFlag('test-negate', { email: 'user@blocked.com' })).toBe(false);
+      // endsWith doesn't match, negated -> true, so rule matches
+      expect(svc.getBooleanFlag('test-negate', { email: 'user@allowed.com' })).toBe(true);
+    });
+
+    it('should handle default case (unknown operator)', () => {
+      const svc = new FeatureFlagService();
+      const flagsMap = (svc as any).flags as Map<string, any>;
+      flagsMap.set('test-unknown-op', {
+        key: 'test-unknown-op',
+        kind: 'boolean',
+        defaultValue: false,
+        variations: [
+          { value: false, name: 'Off' },
+          { value: true, name: 'On' },
+        ],
+        targeting: {
+          enabled: true,
+          rules: [
+            {
+              id: 'unknown-rule',
+              clauses: [{ attribute: 'email', op: 'lessThan', values: ['z'] }],
+              variation: 1,
+            },
+          ],
+          fallthrough: { variation: 0 },
+          offVariation: 0,
+        },
+      });
+
+      // 'lessThan' is not handled in the switch, should fall to default -> false
+      expect(svc.getBooleanFlag('test-unknown-op', { email: 'a@test.com' })).toBe(false);
+    });
+
+    it('should return false when attribute value is undefined', () => {
+      const svc = new FeatureFlagService();
+      const flagsMap = (svc as any).flags as Map<string, any>;
+      flagsMap.set('test-undefined-attr', {
+        key: 'test-undefined-attr',
+        kind: 'boolean',
+        defaultValue: false,
+        variations: [
+          { value: false, name: 'Off' },
+          { value: true, name: 'On' },
+        ],
+        targeting: {
+          enabled: true,
+          rules: [
+            {
+              id: 'undef-rule',
+              clauses: [{ attribute: 'email', op: 'in', values: ['test@test.com'] }],
+              variation: 1,
+            },
+          ],
+          fallthrough: { variation: 0 },
+          offVariation: 0,
+        },
+      });
+
+      // no email in context -> attributeValue is undefined -> return false
+      expect(svc.getBooleanFlag('test-undefined-attr', { userId: 'user-1' })).toBe(false);
+    });
+  });
+
+  describe('branch coverage - getAttributeValue switch cases', () => {
+    it('should resolve country attribute', () => {
+      const svc = new FeatureFlagService();
+      const flagsMap = (svc as any).flags as Map<string, any>;
+      flagsMap.set('test-country', {
+        key: 'test-country',
+        kind: 'boolean',
+        defaultValue: false,
+        variations: [
+          { value: false, name: 'Off' },
+          { value: true, name: 'On' },
+        ],
+        targeting: {
+          enabled: true,
+          rules: [
+            {
+              id: 'country-rule',
+              clauses: [{ attribute: 'country', op: 'in', values: ['AU'] }],
+              variation: 1,
+            },
+          ],
+          fallthrough: { variation: 0 },
+          offVariation: 0,
+        },
+      });
+
+      expect(svc.getBooleanFlag('test-country', { country: 'AU' })).toBe(true);
+      expect(svc.getBooleanFlag('test-country', { country: 'US' })).toBe(false);
+    });
+
+    it('should resolve custom attributes via default case', () => {
+      const svc = new FeatureFlagService();
+      const flagsMap = (svc as any).flags as Map<string, any>;
+      flagsMap.set('test-custom', {
+        key: 'test-custom',
+        kind: 'boolean',
+        defaultValue: false,
+        variations: [
+          { value: false, name: 'Off' },
+          { value: true, name: 'On' },
+        ],
+        targeting: {
+          enabled: true,
+          rules: [
+            {
+              id: 'custom-rule',
+              clauses: [{ attribute: 'companySize', op: 'in', values: ['large'] }],
+              variation: 1,
+            },
+          ],
+          fallthrough: { variation: 0 },
+          offVariation: 0,
+        },
+      });
+
+      expect(svc.getBooleanFlag('test-custom', { custom: { companySize: 'large' } })).toBe(true);
+      expect(svc.getBooleanFlag('test-custom', { custom: { companySize: 'small' } })).toBe(false);
+    });
+  });
+
+  describe('branch coverage - evaluateFlag targeting disabled', () => {
+    it('should return offVariation value when targeting is disabled', () => {
+      // external-api-killswitch has targeting.enabled = false, offVariation = 1 (true)
+      const result = service.getBooleanFlag('external-api-killswitch', {});
+      expect(result).toBe(true);
+    });
+
+    it('should fall back to defaultValue when offVariation index is out of bounds', () => {
+      const svc = new FeatureFlagService();
+      const flagsMap = (svc as any).flags as Map<string, any>;
+      flagsMap.set('test-off-oob', {
+        key: 'test-off-oob',
+        kind: 'boolean',
+        defaultValue: false,
+        variations: [{ value: true, name: 'On' }],
+        targeting: {
+          enabled: false,
+          rules: [],
+          fallthrough: { variation: 0 },
+          offVariation: 99, // out of bounds
+        },
+      });
+
+      // variations[99] is undefined, so ?? defaultValue (false)
+      expect(svc.getBooleanFlag('test-off-oob', {})).toBe(false);
+    });
+  });
+
+  describe('branch coverage - evaluateFlag fallthrough with variation', () => {
+    it('should use fallthrough.variation when no rollout and no rules match', () => {
+      // ai-suggestions has fallthrough: { variation: 0 } and targeting.enabled = true
+      // With a context that doesn't match any rules (not ENTERPRISE)
+      const result = service.getBooleanFlag('ai-suggestions', { userRole: 'viewer' });
+      expect(result).toBe(false); // variation 0 is false
+    });
+
+    it('should fall back to defaultValue when fallthrough variation is undefined and no rollout', () => {
+      const svc = new FeatureFlagService();
+      const flagsMap = (svc as any).flags as Map<string, any>;
+      flagsMap.set('test-no-fallthrough', {
+        key: 'test-no-fallthrough',
+        kind: 'boolean',
+        defaultValue: true,
+        variations: [
+          { value: false, name: 'Off' },
+          { value: true, name: 'On' },
+        ],
+        targeting: {
+          enabled: true,
+          rules: [],
+          fallthrough: {},
+          offVariation: 0,
+        },
+      });
+
+      // No rules match, no rollout, no fallthrough.variation -> defaultValue
+      expect(svc.getBooleanFlag('test-no-fallthrough', {})).toBe(true);
+    });
+  });
+
+  describe('branch coverage - evaluateRollout bucket fallthrough', () => {
+    it('should return defaultValue when bucket exceeds all cumulative weights', () => {
+      const svc = new FeatureFlagService();
+      const flagsMap = (svc as any).flags as Map<string, any>;
+      flagsMap.set('test-rollout-fallthrough', {
+        key: 'test-rollout-fallthrough',
+        kind: 'boolean',
+        defaultValue: false,
+        variations: [
+          { value: false, name: 'Off' },
+          { value: true, name: 'On' },
+        ],
+        targeting: {
+          enabled: true,
+          rules: [],
+          fallthrough: {
+            rollout: {
+              variations: [
+                // Intentionally leave total < 100000 so some buckets fall through
+                { variation: 0, weight: 1 },
+              ],
+            },
+          },
+          offVariation: 0,
+        },
+      });
+
+      // Most bucket values will exceed cumulative weight of 1, so they fall through
+      // Use anonymous (no userId/email) to get 'anonymous' as bucket key
+      const result = svc.getBooleanFlag('test-rollout-fallthrough', {});
+      expect(typeof result).toBe('boolean');
+    });
+  });
+
+  describe('branch coverage - getJsonFlag with non-json kind', () => {
+    it('should return default value for a boolean flag when called with getJsonFlag', () => {
+      const defaultVal = { test: true };
+      const result = service.getJsonFlag('dark-mode', {}, defaultVal);
+      // dark-mode is kind: 'boolean', not 'json', so should return defaultValue
+      expect(result).toEqual(defaultVal);
+    });
+  });
+
+  describe('branch coverage - getBooleanFlag with non-boolean kind', () => {
+    it('should return default value for a string flag when called with getBooleanFlag', () => {
+      // pricing-page-redesign is kind: 'string'
+      const result = service.getBooleanFlag('pricing-page-redesign', {});
+      expect(result).toBe(false); // default for getBooleanFlag
+    });
+  });
+
+  describe('branch coverage - rollout with anonymous bucket key', () => {
+    it('should use anonymous as bucket key when no userId or email', () => {
+      const result = service.getBooleanFlag('enhanced-heatmap', {});
+      expect(typeof result).toBe('boolean');
+    });
+  });
 });

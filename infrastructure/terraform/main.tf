@@ -59,17 +59,19 @@ module "registry" {
 module "database" {
   source = "./modules/database"
 
-  project_name        = var.project_name
-  environment         = var.environment
-  location            = var.location
-  resource_group_name = azurerm_resource_group.main.name
-  subnet_id           = module.networking.subnet_db_id
-  private_dns_zone_id = module.networking.private_dns_zone_postgres_id
-  sku_name            = var.postgresql_sku_name
-  storage_mb          = var.postgresql_storage_mb
-  postgresql_version  = var.postgresql_version
-  db_name             = var.db_name
-  tags                = local.common_tags
+  project_name             = var.project_name
+  environment              = var.environment
+  location                 = var.location
+  resource_group_name      = azurerm_resource_group.main.name
+  subnet_id                = module.networking.subnet_db_id
+  private_dns_zone_id      = module.networking.private_dns_zone_postgres_id
+  sku_name                 = var.postgresql_sku_name
+  storage_mb               = var.postgresql_storage_mb
+  postgresql_version       = var.postgresql_version
+  db_name                  = var.db_name
+  enable_high_availability = var.enable_database_ha
+  enable_vnet_integration  = var.enable_database_vnet
+  tags                     = local.common_tags
 
   depends_on = [module.networking]
 }

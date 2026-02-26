@@ -164,8 +164,8 @@ describe('JiraConfluenceAdapter', () => {
       await expectDomainRejected('127.0.0.2', 'Jira domain not allowed');
     });
 
-    it('should reject IPv6 loopback ::1', async () => {
-      await expectDomainRejected('::1', 'Jira domain not allowed');
+    it('should reject IPv6 loopback ::1 (caught by colon check)', async () => {
+      await expectDomainRejected('::1', 'Invalid Jira domain format');
     });
 
     it('should reject private IP 10.x.x.x', async () => {

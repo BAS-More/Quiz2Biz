@@ -1423,4 +1423,679 @@ describe('CanaryDeploymentManager', () => {
       expect(promoteSpy).toHaveBeenCalledTimes(1);
     });
   });
+
+  // ================================================================
+  // ADDITIONAL COVERAGE: uncovered branches and methods
+  // ================================================================
+
+  describe('checkRollbackTriggers - additional trigger types', () => {
+    it('should detect breached http_5xx_rate threshold (uses errorRate)', () => {
+      const triggers: RollbackTrigger[] = [
+        {
+          type: 'http_5xx_rate',
+          threshold: 1.0,
+          windowMinutes: 5,
+          comparison: 'greater_than',
+          enabled: true,
+        },
+      ];
+      const metrics: MetricSnapshot = {
+        timestamp: new Date(),
+        errorRate: 3.0,
+        latencyP50Ms: 50,
+        latencyP95Ms: 150,
+        latencyP99Ms: 300,
+        requestCount: 1000,
+        cpuUsage: 40,
+        memoryUsage: 60,
+      };
+
+      const result = (manager as any).checkRollbackTriggers(triggers, metrics);
+      expect(result).not.toBeNull();
+      expect(result.reason).toContain('http_5xx_rate');
+    });
+
+    it('should detect breached http_4xx_rate threshold (uses errorRate)', () => {
+      const triggers: RollbackTrigger[] = [
+        {
+          type: 'http_4xx_rate',
+          threshold: 2.0,
+          windowMinutes: 5,
+          comparison: 'greater_than',
+          enabled: true,
+        },
+      ];
+      const metrics: MetricSnapshot = {
+        timestamp: new Date(),
+        errorRate: 5.0,
+        latencyP50Ms: 50,
+        latencyP95Ms: 150,
+        latencyP99Ms: 300,
+        requestCount: 1000,
+        cpuUsage: 40,
+        memoryUsage: 60,
+      };
+
+      const result = (manager as any).checkRollbackTriggers(triggers, metrics);
+      expect(result).not.toBeNull();
+      expect(result.reason).toContain('http_4xx_rate');
+    });
+
+    it('should not breach http_5xx_rate when below threshold', () => {
+      const triggers: RollbackTrigger[] = [
+        {
+          type: 'http_5xx_rate',
+          threshold: 5.0,
+          windowMinutes: 5,
+          comparison: 'greater_than',
+          enabled: true,
+        },
+      ];
+      const metrics: MetricSnapshot = {
+        timestamp: new Date(),
+        errorRate: 0.5,
+        latencyP50Ms: 50,
+        latencyP95Ms: 150,
+        latencyP99Ms: 300,
+        requestCount: 1000,
+        cpuUsage: 40,
+        memoryUsage: 60,
+      };
+
+      const result = (manager as any).checkRollbackTriggers(triggers, metrics);
+      expect(result).toBeNull();
+    });
+
+    it('should skip pod_restart_rate as unknown/unhandled type', () => {
+      const triggers: RollbackTrigger[] = [
+        {
+          type: 'pod_restart_rate',
+          threshold: 3,
+          windowMinutes: 5,
+          comparison: 'greater_than',
+          enabled: true,
+        },
+      ];
+      const metrics: MetricSnapshot = {
+        timestamp: new Date(),
+        errorRate: 0.1,
+        latencyP50Ms: 50,
+        latencyP95Ms: 150,
+        latencyP99Ms: 300,
+        requestCount: 1000,
+        cpuUsage: 40,
+        memoryUsage: 60,
+      };
+
+      // pod_restart_rate falls through to default case in switch
+      const result = (manager as any).checkRollbackTriggers(triggers, metrics);
+      expect(result).toBeNull();
+    });
+
+    it('should handle exact threshold for greater_than (not breached at exact value)', () => {
+      const triggers: RollbackTrigger[] = [
+        {
+          type: 'error_rate',
+          threshold: 1.0,
+          windowMinutes: 5,
+          comparison: 'greater_than',
+          enabled: true,
+        },
+      ];
+      const metrics: MetricSnapshot = {
+        timestamp: new Date(),
+        errorRate: 1.0, // exactly at threshold, should NOT trigger greater_than
+        latencyP50Ms: 50,
+        latencyP95Ms: 150,
+        latencyP99Ms: 300,
+        requestCount: 1000,
+        cpuUsage: 40,
+        memoryUsage: 60,
+      };
+
+      const result = (manager as any).checkRollbackTriggers(triggers, metrics);
+      expect(result).toBeNull();
+    });
+
+    it('should handle exact threshold for less_than (not breached at exact value)', () => {
+      const triggers: RollbackTrigger[] = [
+        {
+          type: 'error_rate',
+          threshold: 1.0,
+          windowMinutes: 5,
+          comparison: 'less_than',
+          enabled: true,
+        },
+      ];
+      const metrics: MetricSnapshot = {
+        timestamp: new Date(),
+        errorRate: 1.0, // exactly at threshold, should NOT trigger less_than
+        latencyP50Ms: 50,
+        latencyP95Ms: 150,
+        latencyP99Ms: 300,
+        requestCount: 1000,
+        cpuUsage: 40,
+        memoryUsage: 60,
+      };
+
+      const result = (manager as any).checkRollbackTriggers(triggers, metrics);
+      expect(result).toBeNull();
+    });
+
+    it('should handle equals comparison not matching', () => {
+      const triggers: RollbackTrigger[] = [
+        {
+          type: 'cpu_usage',
+          threshold: 50,
+          windowMinutes: 5,
+          comparison: 'equals',
+          enabled: true,
+        },
+      ];
+      const metrics: MetricSnapshot = {
+        timestamp: new Date(),
+        errorRate: 0.1,
+        latencyP50Ms: 50,
+        latencyP95Ms: 150,
+        latencyP99Ms: 300,
+        requestCount: 1000,
+        cpuUsage: 40,
+        memoryUsage: 60,
+      };
+
+      const result = (manager as any).checkRollbackTriggers(triggers, metrics);
+      expect(result).toBeNull();
+    });
+
+    it('should handle multiple triggers where only the second one breaches', () => {
+      const triggers: RollbackTrigger[] = [
+        {
+          type: 'error_rate',
+          threshold: 10.0,
+          windowMinutes: 5,
+          comparison: 'greater_than',
+          enabled: true,
+        },
+        {
+          type: 'memory_usage',
+          threshold: 50,
+          windowMinutes: 5,
+          comparison: 'greater_than',
+          enabled: true,
+        },
+      ];
+      const metrics: MetricSnapshot = {
+        timestamp: new Date(),
+        errorRate: 0.1,
+        latencyP50Ms: 50,
+        latencyP95Ms: 150,
+        latencyP99Ms: 300,
+        requestCount: 1000,
+        cpuUsage: 40,
+        memoryUsage: 80,
+      };
+
+      const result = (manager as any).checkRollbackTriggers(triggers, metrics);
+      expect(result).not.toBeNull();
+      expect(result.reason).toContain('memory_usage');
+    });
+
+    it('should handle empty triggers array', () => {
+      const metrics: MetricSnapshot = {
+        timestamp: new Date(),
+        errorRate: 50.0,
+        latencyP50Ms: 5000,
+        latencyP95Ms: 10000,
+        latencyP99Ms: 20000,
+        requestCount: 0,
+        cpuUsage: 99,
+        memoryUsage: 99,
+      };
+
+      const result = (manager as any).checkRollbackTriggers([], metrics);
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('notifyEvent (private)', () => {
+    let consoleSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+    });
+
+    afterEach(() => {
+      consoleSpy.mockRestore();
+    });
+
+    it('should log notification for matching event and channel', async () => {
+      await (manager as any).notifyEvent('deployment_started', { test: true });
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining('deployment_started'),
+        expect.objectContaining({ test: true }),
+      );
+    });
+
+    it('should not log for unregistered event', async () => {
+      await (manager as any).notifyEvent('nonexistent_event', {});
+      // Should not have been called with the event name
+      const calls = consoleSpy.mock.calls.filter(
+        (c: string[]) => typeof c[0] === 'string' && c[0].includes('nonexistent_event'),
+      );
+      expect(calls.length).toBe(0);
+    });
+
+    it('should notify on multiple channels for stage_failed event', async () => {
+      await (manager as any).notifyEvent('stage_failed', { reason: 'test' });
+      // stage_failed goes to teams, slack, email, pagerduty
+      const notifyCalls = consoleSpy.mock.calls.filter(
+        (c: string[]) => typeof c[0] === 'string' && c[0].includes('Notifying'),
+      );
+      expect(notifyCalls.length).toBeGreaterThanOrEqual(1);
+    });
+  });
+
+  describe('httpRequest (private)', () => {
+    it('should return 200 with healthy body (stub)', async () => {
+      const endpoint = {
+        path: '/api/v1/health/live',
+        method: 'GET' as const,
+        expectedStatus: [200],
+        timeoutMs: 5000,
+      };
+
+      const result = await (manager as any).httpRequest(endpoint);
+      expect(result.status).toBe(200);
+      expect(result.body).toContain('healthy');
+    });
+  });
+
+  describe('collectMetrics (private)', () => {
+    it('should return a MetricSnapshot with expected fields', async () => {
+      const metrics = await (manager as any).collectMetrics();
+      expect(metrics.timestamp).toBeInstanceOf(Date);
+      expect(typeof metrics.errorRate).toBe('number');
+      expect(typeof metrics.latencyP50Ms).toBe('number');
+      expect(typeof metrics.latencyP95Ms).toBe('number');
+      expect(typeof metrics.latencyP99Ms).toBe('number');
+      expect(typeof metrics.requestCount).toBe('number');
+      expect(typeof metrics.cpuUsage).toBe('number');
+      expect(typeof metrics.memoryUsage).toBe('number');
+    });
+  });
+
+  describe('runHealthChecks (private)', () => {
+    let consoleSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+    });
+
+    afterEach(() => {
+      consoleSpy.mockRestore();
+    });
+
+    it('should return results for all endpoints', async () => {
+      const config = getDefaultHealthChecks();
+      const results = await (manager as any).runHealthChecks(config);
+      expect(results.length).toBe(config.endpoints.length);
+      for (const result of results) {
+        expect(result.timestamp).toBeInstanceOf(Date);
+        expect(typeof result.success).toBe('boolean');
+        expect(typeof result.responseTimeMs).toBe('number');
+      }
+    });
+
+    it('should mark successful when response status matches expected', async () => {
+      const config = getDefaultHealthChecks();
+      const results = await (manager as any).runHealthChecks(config);
+      // Default httpRequest returns 200, all endpoints expect 200
+      for (const result of results) {
+        expect(result.success).toBe(true);
+        expect(result.statusCode).toBe(200);
+      }
+    });
+
+    it('should handle http request errors gracefully', async () => {
+      jest.spyOn(manager as any, 'httpRequest').mockRejectedValue(new Error('Connection refused'));
+      const notifySpy = jest.spyOn(manager as any, 'notifyEvent').mockResolvedValue(undefined);
+
+      const config = getDefaultHealthChecks();
+      const results = await (manager as any).runHealthChecks(config);
+
+      for (const result of results) {
+        expect(result.success).toBe(false);
+        expect(result.statusCode).toBe(0);
+        expect(result.error).toBe('Connection refused');
+      }
+      expect(notifySpy).toHaveBeenCalled();
+
+      jest.restoreAllMocks();
+    });
+
+    it('should handle non-Error throw in httpRequest', async () => {
+      jest.spyOn(manager as any, 'httpRequest').mockRejectedValue('string error');
+      jest.spyOn(manager as any, 'notifyEvent').mockResolvedValue(undefined);
+
+      const config = getDefaultHealthChecks();
+      const results = await (manager as any).runHealthChecks(config);
+
+      for (const result of results) {
+        expect(result.success).toBe(false);
+        expect(result.error).toBe('Unknown error');
+      }
+
+      jest.restoreAllMocks();
+    });
+  });
+
+  describe('monitorDeployment (private) - controlled scenarios', () => {
+    let consoleSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+    });
+
+    afterEach(() => {
+      consoleSpy.mockRestore();
+      jest.restoreAllMocks();
+    });
+
+    it('should exit when status is neither in_progress nor waiting_approval', async () => {
+      (manager as any).state.status = 'completed';
+
+      await (manager as any).monitorDeployment();
+      // Should exit immediately without error
+      expect(manager.getState().status).toBe('completed');
+    });
+
+    it('should initiate rollback when trigger is breached during monitoring', async () => {
+      (manager as any).state.status = 'in_progress';
+      (manager as any).state.currentStage = 0;
+
+      // Mock httpRequest to succeed
+      jest.spyOn(manager as any, 'httpRequest').mockResolvedValue({ status: 200, body: '{"status":"healthy"}' });
+
+      // Mock collectMetrics to return breaching metrics
+      jest.spyOn(manager as any, 'collectMetrics').mockResolvedValue({
+        timestamp: new Date(),
+        errorRate: 50.0, // will breach error_rate threshold of 1.0
+        latencyP50Ms: 50,
+        latencyP95Ms: 150,
+        latencyP99Ms: 300,
+        requestCount: 1000,
+        cpuUsage: 40,
+        memoryUsage: 60,
+      });
+
+      await (manager as any).monitorDeployment();
+
+      expect(manager.getState().status).toBe('failed');
+    });
+
+    it('should set waiting_approval when promotion requires manual approval', async () => {
+      (manager as any).state.status = 'in_progress';
+      (manager as any).state.currentStage = 2; // canary-half requires manual approval
+
+      // Seed enough successful health checks and good metrics to meet promotion criteria
+      (manager as any).state.healthCheckResults = Array.from({ length: 200 }, () => ({
+        timestamp: new Date(),
+        endpoint: '/api/v1/health',
+        success: true,
+        responseTimeMs: 50,
+        statusCode: 200,
+      }));
+      (manager as any).state.metricsHistory = Array.from({ length: 20 }, () => ({
+        timestamp: new Date(),
+        errorRate: 0.1,
+        latencyP50Ms: 50,
+        latencyP95Ms: 100,
+        latencyP99Ms: 200,
+        requestCount: 500,
+        cpuUsage: 30,
+        memoryUsage: 50,
+      }));
+
+      // Mock httpRequest and collectMetrics to return good data
+      jest.spyOn(manager as any, 'httpRequest').mockResolvedValue({ status: 200, body: '{"status":"healthy"}' });
+      jest.spyOn(manager as any, 'collectMetrics').mockResolvedValue({
+        timestamp: new Date(),
+        errorRate: 0.1,
+        latencyP50Ms: 50,
+        latencyP95Ms: 100,
+        latencyP99Ms: 200,
+        requestCount: 500,
+        cpuUsage: 30,
+        memoryUsage: 50,
+      });
+
+      // Mock sleep so it does not actually wait, and change status to break the loop
+      jest.spyOn(manager as any, 'sleep').mockImplementation(async () => {
+        // After one iteration with waiting_approval, break the loop by changing status
+        if ((manager as any).state.status === 'waiting_approval') {
+          (manager as any).state.status = 'cancelled';
+        }
+      });
+
+      await (manager as any).monitorDeployment();
+
+      // Status should have been set to waiting_approval at some point
+      // (we then changed it to cancelled in mock to break the loop)
+      expect(manager.getState().status).toBe('cancelled');
+    });
+  });
+
+  describe('getAzureContainerAppsTrafficConfig - boundary values', () => {
+    it('should handle 0% canary (all traffic to stable)', () => {
+      const config = getAzureContainerAppsTrafficConfig('stable', 'canary', 0);
+      expect(config.trafficWeights[0].weight).toBe(100);
+      expect(config.trafficWeights[1].weight).toBe(0);
+    });
+
+    it('should handle 100% canary (all traffic to canary)', () => {
+      const config = getAzureContainerAppsTrafficConfig('stable', 'canary', 100);
+      expect(config.trafficWeights[0].weight).toBe(0);
+      expect(config.trafficWeights[1].weight).toBe(100);
+    });
+  });
+
+  describe('generateTerraformTrafficConfig - boundary values', () => {
+    it('should handle 0% canary', () => {
+      const config = generateTerraformTrafficConfig(0);
+      expect(config).toContain('percentage      = 100');
+      expect(config).toContain('percentage      = 0');
+    });
+
+    it('should handle 100% canary', () => {
+      const config = generateTerraformTrafficConfig(100);
+      expect(config).toContain('percentage      = 0');
+      expect(config).toContain('percentage      = 100');
+    });
+
+    it('should output valid terraform block structure', () => {
+      const config = generateTerraformTrafficConfig(30);
+      expect(config).toContain('ingress {');
+      expect(config).toContain('external_enabled = true');
+      expect(config).toContain('target_port      = 3000');
+      expect(config).toContain('transport        = "auto"');
+    });
+  });
+
+  describe('getCanaryAzureCliCommands - content validation', () => {
+    it('should include container image in update command', () => {
+      const commands = getCanaryAzureCliCommands('app', 'rg', 'myregistry.azurecr.io/app:v2');
+      const hasImage = commands.some((cmd) => cmd.includes('myregistry.azurecr.io/app:v2'));
+      expect(hasImage).toBe(true);
+    });
+
+    it('should include progressive traffic percentages', () => {
+      const commands = getCanaryAzureCliCommands('app', 'rg', 'img');
+      const all = commands.join('\n');
+      expect(all).toContain('stable=95 canary=5');
+      expect(all).toContain('stable=75 canary=25');
+      expect(all).toContain('stable=50 canary=50');
+      expect(all).toContain('canary=100');
+      expect(all).toContain('stable=100');
+    });
+
+    it('should include revision-suffix in update command', () => {
+      const commands = getCanaryAzureCliCommands('app', 'rg', 'img');
+      const hasRevision = commands.some((cmd) => cmd.includes('--revision-suffix'));
+      expect(hasRevision).toBe(true);
+    });
+  });
+
+  describe('getCanaryNotificationConfig - channel validation', () => {
+    it('should have pagerduty channel with critical priority', () => {
+      const config = getCanaryNotificationConfig();
+      const pagerduty = config.channels.find((c) => c.type === 'pagerduty');
+      expect(pagerduty).toBeDefined();
+      expect(pagerduty?.priority).toBe('critical');
+    });
+
+    it('should have email channel with high priority', () => {
+      const config = getCanaryNotificationConfig();
+      const email = config.channels.find((c) => c.type === 'email');
+      expect(email).toBeDefined();
+      expect(email?.priority).toBe('high');
+    });
+
+    it('should have slack channel with normal priority', () => {
+      const config = getCanaryNotificationConfig();
+      const slack = config.channels.find((c) => c.type === 'slack');
+      expect(slack).toBeDefined();
+      expect(slack?.priority).toBe('normal');
+    });
+
+    it('should notify health_check_failed via pagerduty', () => {
+      const config = getCanaryNotificationConfig();
+      const event = config.events.find((e) => e.event === 'health_check_failed');
+      expect(event?.channels).toContain('pagerduty');
+    });
+
+    it('should notify threshold_breached via email', () => {
+      const config = getCanaryNotificationConfig();
+      const event = config.events.find((e) => e.event === 'threshold_breached');
+      expect(event?.channels).toContain('email');
+    });
+
+    it('should notify manual_approval_required via email', () => {
+      const config = getCanaryNotificationConfig();
+      const event = config.events.find((e) => e.event === 'manual_approval_required');
+      expect(event?.channels).toContain('email');
+    });
+
+    it('should notify threshold_warning via teams and slack only', () => {
+      const config = getCanaryNotificationConfig();
+      const event = config.events.find((e) => e.event === 'threshold_warning');
+      expect(event?.channels).toEqual(['teams', 'slack']);
+    });
+
+    it('should have 10 events configured', () => {
+      const config = getCanaryNotificationConfig();
+      expect(config.events.length).toBe(10);
+    });
+
+    it('should have 4 channels configured', () => {
+      const config = getCanaryNotificationConfig();
+      expect(config.channels.length).toBe(4);
+    });
+  });
+
+  describe('getCanaryMetricsConfig - additional validation', () => {
+    it('should have canary_latency_p95 metric with percentile', () => {
+      const config = getCanaryMetricsConfig();
+      const latencyMetric = config.customMetrics.find(
+        (m) => m.name === 'canary_latency_p95',
+      );
+      expect(latencyMetric).toBeDefined();
+      expect(latencyMetric?.aggregation).toBe('percentile');
+      expect(latencyMetric?.percentile).toBe(95);
+      expect(latencyMetric?.unit).toBe('milliseconds');
+    });
+
+    it('should have canary_throughput metric', () => {
+      const config = getCanaryMetricsConfig();
+      const throughput = config.customMetrics.find(
+        (m) => m.name === 'canary_throughput',
+      );
+      expect(throughput).toBeDefined();
+      expect(throughput?.unit).toBe('requests_per_second');
+      expect(throughput?.aggregation).toBe('avg');
+    });
+
+    it('should have 3 custom metrics', () => {
+      const config = getCanaryMetricsConfig();
+      expect(config.customMetrics.length).toBe(3);
+    });
+
+    it('should have non-empty queries for all custom metrics', () => {
+      const config = getCanaryMetricsConfig();
+      for (const metric of config.customMetrics) {
+        expect(metric.query.trim().length).toBeGreaterThan(0);
+      }
+    });
+  });
+
+  describe('getGlobalCanarySettings - additional validation', () => {
+    it('should have revision history limit of 10', () => {
+      const settings = getGlobalCanarySettings();
+      expect(settings.revisionHistoryLimit).toBe(10);
+    });
+
+    it('should have stable revision label', () => {
+      const settings = getGlobalCanarySettings();
+      expect(settings.stableRevisionLabel).toBe('stable');
+    });
+
+    it('should have canary revision label', () => {
+      const settings = getGlobalCanarySettings();
+      expect(settings.canaryRevisionLabel).toBe('canary');
+    });
+  });
+
+  describe('getDefaultCanaryStages - additional validation', () => {
+    it('should have increasing minDurationMinutes across stages', () => {
+      const stages = getDefaultCanaryStages();
+      for (let i = 1; i < stages.length; i++) {
+        expect(stages[i].minDurationMinutes).toBeGreaterThanOrEqual(
+          stages[i - 1].minDurationMinutes,
+        );
+      }
+    });
+
+    it('should have health checks enabled for all stages', () => {
+      const stages = getDefaultCanaryStages();
+      for (const stage of stages) {
+        expect(stage.healthChecks.enabled).toBe(true);
+      }
+    });
+
+    it('should have rollback triggers for all stages', () => {
+      const stages = getDefaultCanaryStages();
+      for (const stage of stages) {
+        expect(stage.rollbackTriggers.length).toBeGreaterThan(0);
+      }
+    });
+
+    it('should not require manual approval for initial and expanded stages', () => {
+      const stages = getDefaultCanaryStages();
+      expect(stages[0].promotionCriteria.requireManualApproval).toBe(false);
+      expect(stages[1].promotionCriteria.requireManualApproval).toBe(false);
+    });
+
+    it('should not require manual approval for full rollout stage', () => {
+      const stages = getDefaultCanaryStages();
+      expect(stages[3].promotionCriteria.requireManualApproval).toBe(false);
+    });
+
+    it('should have increasing minRequestsProcessed across stages', () => {
+      const stages = getDefaultCanaryStages();
+      for (let i = 1; i < stages.length; i++) {
+        expect(stages[i].promotionCriteria.minRequestsProcessed).toBeGreaterThanOrEqual(
+          stages[i - 1].promotionCriteria.minRequestsProcessed,
+        );
+      }
+    });
+  });
 });

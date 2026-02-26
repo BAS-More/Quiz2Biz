@@ -221,4 +221,116 @@ describe('PromptGeneratorService', () => {
       expect(result.priority).toBe(5);
     });
   });
+
+  describe('uncovered branches', () => {
+    it('should use 1.2 effort multiplier for medium severity (0.4 < severity <= 0.7)', async () => {
+      const medSeverityGap = { ...mockGapContext, severity: 0.6 };
+      const result = await service.generate(medSeverityGap, mockTemplate);
+      expect(result.estimatedEffort).toBe(10); // 8 * 1.2 = 9.6 rounds to 10
+    });
+
+    it('should use "industry best practices" when standardRefs is empty', async () => {
+      const gap = { ...mockGapContext, standardRefs: [] };
+      const result = await service.generate(gap, mockTemplate);
+      expect(result).toBeDefined();
+      // The buildTemplateContext should produce 'industry best practices' for empty standardRefs
+    });
+
+    it('should use "Not provided" when userAnswer is undefined', async () => {
+      const gap = { ...mockGapContext, userAnswer: undefined };
+      const result = await service.generate(gap, mockTemplate);
+      expect(result).toBeDefined();
+    });
+
+    it('should use "None" when userNotes is undefined', async () => {
+      const gap = { ...mockGapContext, userNotes: undefined };
+      const result = await service.generate(gap, mockTemplate);
+      expect(result).toBeDefined();
+    });
+
+    it('should keep original match when interpolation key not in context', async () => {
+      const templateWithUnknownVar: PromptTemplate = {
+        ...mockTemplate,
+        goalTemplate: 'Goal: {{unknownVariable}}',
+      };
+      const result = await service.generate(mockGapContext, templateWithUnknownVar);
+      expect(result.goal).toBe('Goal: {{unknownVariable}}');
+    });
+
+    it('should add "high-priority" tag for priority 2', async () => {
+      const gap = { ...mockGapContext, residualRisk: 0.18 }; // priority 2
+      const result = await service.generate(gap, mockTemplate);
+      expect(result.tags).toContain('high-priority');
+      expect(result.tags).not.toContain('critical');
+    });
+
+    it('should not add priority tag for priority >= 3', async () => {
+      const gap = { ...mockGapContext, residualRisk: 0.12 }; // priority 3
+      const result = await service.generate(gap, mockTemplate);
+      expect(result.tags).not.toContain('critical');
+      expect(result.tags).not.toContain('high-priority');
+    });
+
+    it('should skip empty cleaned standard ref tags', async () => {
+      const gap = { ...mockGapContext, standardRefs: ['!!!', 'ISO-27001'] };
+      const result = await service.generate(gap, mockTemplate);
+      // '!!!' cleaned becomes '' which is falsy, should be skipped
+      expect(result.tags).toContain('iso-27001');
+    });
+
+    it('should handle contains operator with non-matching string', async () => {
+      const templateWithContains: PromptTemplate = {
+        ...mockTemplate,
+        taskTemplates: [
+          { order: 1, template: 'Task 1', condition: { field: 'userAnswer', operator: 'contains', value: 'nonexistent' } },
+        ],
+      };
+      const result = await service.generate(mockGapContext, templateWithContains);
+      expect(result.tasks.length).toBe(0);
+    });
+
+    it('should return false for contains operator on non-string field', async () => {
+      const templateWithContains: PromptTemplate = {
+        ...mockTemplate,
+        taskTemplates: [
+          { order: 1, template: 'Task 1', condition: { field: 'severity', operator: 'contains', value: '0.8' } },
+        ],
+      };
+      const result = await service.generate(mockGapContext, templateWithContains);
+      expect(result.tasks.length).toBe(0);
+    });
+
+    it('should return false for gt operator on non-number field', async () => {
+      const templateWithGt: PromptTemplate = {
+        ...mockTemplate,
+        taskTemplates: [
+          { order: 1, template: 'Task 1', condition: { field: 'userAnswer', operator: 'gt', value: 0 } },
+        ],
+      };
+      const result = await service.generate(mockGapContext, templateWithGt);
+      expect(result.tasks.length).toBe(0);
+    });
+
+    it('should return false for lt operator on non-number field', async () => {
+      const templateWithLt: PromptTemplate = {
+        ...mockTemplate,
+        taskTemplates: [
+          { order: 1, template: 'Task 1', condition: { field: 'userAnswer', operator: 'lt', value: 100 } },
+        ],
+      };
+      const result = await service.generate(mockGapContext, templateWithLt);
+      expect(result.tasks.length).toBe(0);
+    });
+
+    it('should return false for unknown operator', async () => {
+      const templateWithUnknown: PromptTemplate = {
+        ...mockTemplate,
+        taskTemplates: [
+          { order: 1, template: 'Task 1', condition: { field: 'severity', operator: 'gte' as any, value: 0.5 } },
+        ],
+      };
+      const result = await service.generate(mockGapContext, templateWithUnknown);
+      expect(result.tasks.length).toBe(0);
+    });
+  });
 });

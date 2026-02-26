@@ -255,6 +255,80 @@ describe('CsrfGuard', () => {
       expect(parts.length).toBe(3);
     });
   });
+
+  describe('canActivate - additional edge cases', () => {
+    it('should handle CSRF_DISABLED with mixed case "TRUE"', () => {
+      mockConfigService.get.mockImplementation((key: string) => {
+        if (key === 'CSRF_DISABLED') {return 'TRUE';}
+        if (key === 'CSRF_SECRET') {return 'test-secret';}
+        return undefined;
+      });
+
+      const context = createMockContext('POST');
+      expect(guard.canActivate(context)).toBe(true);
+    });
+
+    it('should not disable CSRF when CSRF_DISABLED is "false"', () => {
+      mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
+        if (key === 'CSRF_DISABLED') {return 'false';}
+        if (key === 'CSRF_SECRET') {return 'test-csrf-secret';}
+        return defaultValue;
+      });
+      mockReflector.get.mockReturnValue(false);
+
+      const context = createMockContext('POST', {}, {});
+      expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
+    });
+
+    it('should handle token with null cookies gracefully', () => {
+      mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
+        if (key === 'CSRF_SECRET') {return 'test-csrf-secret';}
+        if (key === 'CSRF_DISABLED') {return 'false';}
+        return defaultValue;
+      });
+      mockReflector.get.mockReturnValue(false);
+
+      const context = {
+        switchToHttp: jest.fn().mockReturnValue({
+          getRequest: jest.fn().mockReturnValue({
+            method: 'POST',
+            path: '/test',
+            headers: { [CSRF_TOKEN_HEADER]: 'some-token' },
+            cookies: undefined,
+          }),
+        }),
+        getHandler: jest.fn(),
+        getClass: jest.fn(),
+      } as unknown as ExecutionContext;
+
+      expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
+    });
+  });
+});
+
+describe('SkipCsrf decorator', () => {
+  it('should set metadata on method descriptor', () => {
+    const { SkipCsrf } = require('./csrf.guard');
+
+    class TestController {
+      @SkipCsrf()
+      someMethod() {}
+    }
+
+    const instance = new TestController();
+    const metadata = Reflect.getMetadata(CSRF_SKIP_KEY, instance.someMethod);
+    expect(metadata).toBe(true);
+  });
+
+  it('should set metadata on class target when no descriptor', () => {
+    const { SkipCsrf } = require('./csrf.guard');
+
+    @SkipCsrf()
+    class TestClass {}
+
+    const metadata = Reflect.getMetadata(CSRF_SKIP_KEY, TestClass);
+    expect(metadata).toBe(true);
+  });
 });
 
 describe('CsrfService', () => {

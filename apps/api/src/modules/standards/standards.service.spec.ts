@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { StandardsService } from './standards.service';
 import { PrismaService } from '@libs/database';
 import { StandardCategory } from '@prisma/client';
@@ -302,6 +302,81 @@ describe('StandardsService', () => {
         version: '2026',
         isActive: true,
       });
+    });
+  });
+
+  describe('error handling - InternalServerErrorException branches', () => {
+    it('findAll should throw InternalServerErrorException on unexpected error', async () => {
+      prismaService.engineeringStandard.findMany.mockRejectedValue(new Error('DB connection lost'));
+
+      await expect(service.findAll()).rejects.toThrow(InternalServerErrorException);
+    });
+
+    it('findByCategory should throw InternalServerErrorException on unexpected error', async () => {
+      prismaService.engineeringStandard.findUnique.mockRejectedValue(new Error('DB timeout'));
+
+      await expect(
+        service.findByCategory('MODERN_ARCHITECTURE' as StandardCategory),
+      ).rejects.toThrow(InternalServerErrorException);
+    });
+
+    it('findByCategory should re-throw NotFoundException (not wrap it)', async () => {
+      prismaService.engineeringStandard.findUnique.mockResolvedValue(null);
+
+      await expect(
+        service.findByCategory('NONEXISTENT' as StandardCategory),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('findWithMappings should throw InternalServerErrorException on unexpected error', async () => {
+      prismaService.engineeringStandard.findUnique.mockRejectedValue(new Error('Query failed'));
+
+      await expect(
+        service.findWithMappings('MODERN_ARCHITECTURE' as StandardCategory),
+      ).rejects.toThrow(InternalServerErrorException);
+    });
+
+    it('findWithMappings should throw NotFoundException when standard not found', async () => {
+      prismaService.engineeringStandard.findUnique.mockResolvedValue(null);
+
+      await expect(
+        service.findWithMappings('NONEXISTENT' as StandardCategory),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('getStandardsForDocument should throw InternalServerErrorException on unexpected error', async () => {
+      prismaService.documentType.findFirst.mockRejectedValue(new Error('Connection refused'));
+
+      await expect(
+        service.getStandardsForDocument('doc-type-1'),
+      ).rejects.toThrow(InternalServerErrorException);
+    });
+
+    it('generateStandardsSection should throw InternalServerErrorException on unexpected error', async () => {
+      prismaService.documentType.findFirst.mockRejectedValue(new Error('Timeout'));
+
+      await expect(
+        service.generateStandardsSection('doc-type-1'),
+      ).rejects.toThrow(InternalServerErrorException);
+    });
+
+    it('generateStandardsSection should use STANDARD_CATEGORY_TITLES when sectionTitle is null', async () => {
+      const docTypeNullTitle = {
+        ...mockDocumentType,
+        standardMappings: [
+          {
+            ...mockDocumentType.standardMappings[0],
+            sectionTitle: null,
+          },
+        ],
+      };
+      prismaService.documentType.findFirst.mockResolvedValue(docTypeNullTitle as any);
+
+      const result = await service.generateStandardsSection('doc-type-1');
+
+      // Should use the STANDARD_CATEGORY_TITLES fallback, not null
+      expect(result.markdown).toBeDefined();
+      expect(result.standards).toHaveLength(1);
     });
   });
 });

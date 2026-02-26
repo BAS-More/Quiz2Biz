@@ -2,16 +2,30 @@
 """
 GoDaddy DNS Configuration Script
 Configures TXT and CNAME records for Azure Container Apps custom domain
+
+Required environment variables:
+  GODADDY_API_KEY - Your GoDaddy API key
+  GODADDY_API_SECRET - Your GoDaddy API secret
+  GODADDY_DOMAIN - Domain to configure (default: quiz2biz.com)
 """
 
 import requests
 import json
 import sys
+import os
 
-# GoDaddy API Configuration
-API_KEY = "e4CDvNqSEYVm_UtSxc3xmWn5yqPVpGUVJea"
-API_SECRET = "URFb65V3c4xkL6KqAhfuqe"
-DOMAIN = "quiz2biz.com"
+# GoDaddy API Configuration - loaded from environment variables
+API_KEY = os.environ.get("GODADDY_API_KEY")
+API_SECRET = os.environ.get("GODADDY_API_SECRET")
+DOMAIN = os.environ.get("GODADDY_DOMAIN", "quiz2biz.com")
+
+if not API_KEY or not API_SECRET:
+    print("ERROR: Missing required environment variables.")
+    print("Please set GODADDY_API_KEY and GODADDY_API_SECRET")
+    print("Example:")
+    print("  export GODADDY_API_KEY='your-api-key'")
+    print("  export GODADDY_API_SECRET='your-api-secret'")
+    sys.exit(1)
 
 # DNS Records to configure
 WWW_CNAME_RECORD = {
