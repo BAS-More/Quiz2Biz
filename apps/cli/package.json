@@ -14,7 +14,8 @@
         "lint": "eslint src --ext .ts",
         "test": "npx jest",
         "test:watch": "npx jest --watch",
-        "test:cov": "npx jest --coverage",
+        "test:cov": "npx jest --coverage --testPathPattern=config.test.ts",
+        "test:all": "npx jest",
         "prepublishOnly": "npm run build"
     },
     "keywords": [
