@@ -327,4 +327,38 @@ describe('PolicyExportService', () => {
       expect(combinedOpa).toBeUndefined();
     });
   });
+
+  describe('uncovered branches', () => {
+    it('should output "N/A" when scoreAtGeneration is null', () => {
+      const bundleNullScore = {
+        ...mockBundle,
+        scoreAtGeneration: null,
+      } as unknown as PolicyPackBundle;
+
+      const markdown = service.generateReadme(bundleNullScore);
+
+      expect(markdown).toContain('Score at Generation: N/A%');
+    });
+
+    it('should output "As needed" when procedure frequency is null', () => {
+      const policyWithNullFreq = {
+        ...mockPolicyDocument,
+        standards: [
+          {
+            ...mockPolicyDocument.standards[0],
+            procedures: [
+              {
+                ...mockPolicyDocument.standards[0].procedures[0],
+                frequency: null,
+              },
+            ],
+          },
+        ],
+      };
+
+      const markdown = service.generatePolicyMarkdown(policyWithNullFreq as any);
+
+      expect(markdown).toContain('**Frequency:** As needed');
+    });
+  });
 });

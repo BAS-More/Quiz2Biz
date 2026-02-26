@@ -228,4 +228,56 @@ describe('AuthController', () => {
       expect(mockResponse.cookie).toHaveBeenCalled();
     });
   });
+
+  describe('uncovered branches', () => {
+    it('should fall back to connection.remoteAddress when request.ip is falsy', async () => {
+      const loginDto = {
+        email: 'test@example.com',
+        password: 'Password123!',
+      };
+      const requestNoIp = {
+        ip: '',
+        connection: { remoteAddress: '192.168.1.1' },
+      };
+
+      mockAuthService.login.mockResolvedValue({
+        accessToken: 'at',
+        refreshToken: 'rt',
+        expiresIn: 3600,
+        user: { id: 'u1', email: 'test@example.com' },
+      });
+
+      await controller.login(loginDto, requestNoIp as any);
+
+      expect(mockAuthService.login).toHaveBeenCalledWith({
+        ...loginDto,
+        ip: '192.168.1.1',
+      });
+    });
+
+    it('should fall back to "unknown" when both ip and remoteAddress are falsy', async () => {
+      const loginDto = {
+        email: 'test@example.com',
+        password: 'Password123!',
+      };
+      const requestNoIpNoAddr = {
+        ip: '',
+        connection: { remoteAddress: '' },
+      };
+
+      mockAuthService.login.mockResolvedValue({
+        accessToken: 'at',
+        refreshToken: 'rt',
+        expiresIn: 3600,
+        user: { id: 'u1', email: 'test@example.com' },
+      });
+
+      await controller.login(loginDto, requestNoIpNoAddr as any);
+
+      expect(mockAuthService.login).toHaveBeenCalledWith({
+        ...loginDto,
+        ip: 'unknown',
+      });
+    });
+  });
 });

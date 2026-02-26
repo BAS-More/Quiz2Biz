@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import type { SessionProgress } from '../../types';
 import { ProgressDisplay } from './ProgressDisplay';
 
+const isDev = import.meta.env.DEV;
+
 interface DimensionScore {
   key: string;
   name: string;
@@ -82,7 +84,7 @@ export const ScoreDashboard: React.FC<ScoreDashboardProps> = ({
       setScoreData(newScore);
       setLastUpdated(new Date());
     } catch (error) {
-      console.error('Failed to refresh score:', error);
+      if (isDev) console.error('Failed to refresh score:', error);
     } finally {
       setIsLoading(false);
     }

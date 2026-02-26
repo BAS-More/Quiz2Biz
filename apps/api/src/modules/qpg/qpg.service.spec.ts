@@ -390,4 +390,55 @@ describe('QpgService', () => {
       expect(contextBuilder.buildGapContexts).toHaveBeenCalledWith('session-123');
     });
   });
+
+  describe('uncovered branches - readinessScore', () => {
+    const setupMinimalMocks = () => {
+      jest.spyOn(contextBuilder, 'buildGapContexts').mockResolvedValue([]);
+    };
+
+    it('should handle Decimal readinessScore with toNumber()', async () => {
+      setupMinimalMocks();
+      jest.spyOn(prisma.session, 'findUnique').mockResolvedValue({
+        id: 'session-123',
+        readinessScore: { toNumber: () => 80.2 },
+      } as any);
+
+      const result = await service.generatePromptsForSession('session-123');
+
+      expect(result.scoreAtGeneration).toBe(80.2);
+    });
+
+    it('should fall back to Number() when toNumber is not available', async () => {
+      setupMinimalMocks();
+      jest.spyOn(prisma.session, 'findUnique').mockResolvedValue({
+        id: 'session-123',
+        readinessScore: '65.7',
+      } as any);
+
+      const result = await service.generatePromptsForSession('session-123');
+
+      expect(result.scoreAtGeneration).toBe(65.7);
+    });
+
+    it('should default to 0 when session is null', async () => {
+      setupMinimalMocks();
+      jest.spyOn(prisma.session, 'findUnique').mockResolvedValue(null);
+
+      const result = await service.generatePromptsForSession('session-123');
+
+      expect(result.scoreAtGeneration).toBe(0);
+    });
+
+    it('should default to 0 when readinessScore is null', async () => {
+      setupMinimalMocks();
+      jest.spyOn(prisma.session, 'findUnique').mockResolvedValue({
+        id: 'session-123',
+        readinessScore: null,
+      } as any);
+
+      const result = await service.generatePromptsForSession('session-123');
+
+      expect(result.scoreAtGeneration).toBe(0);
+    });
+  });
 });

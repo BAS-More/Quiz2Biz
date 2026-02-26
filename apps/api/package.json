@@ -99,10 +99,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 70,
-        "functions": 79,
-        "lines": 81,
-        "statements": 81
+        "branches": 95,
+        "functions": 95,
+        "lines": 95,
+        "statements": 95
       }
     },
     "cacheDirectory": "<rootDir>/../.jest-cache",

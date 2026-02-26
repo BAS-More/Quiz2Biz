@@ -89,7 +89,8 @@ describe('DashboardPage', () => {
     renderDashboardPage();
 
     expect(screen.getByText('Active Sessions')).toBeInTheDocument();
-    expect(screen.getByText('1')).toBeInTheDocument();
+    // Use more specific selector to target the stat card value
+    expect(screen.getByText('1', { selector: 'p.text-2xl.font-bold.text-surface-900' })).toBeInTheDocument();
   });
 
   it('displays completed sessions count', () => {
@@ -102,7 +103,8 @@ describe('DashboardPage', () => {
     renderDashboardPage();
 
     expect(screen.getByText('Highest Score')).toBeInTheDocument();
-    expect(screen.getByText('92%')).toBeInTheDocument();
+    // Use more specific selector to target the stat card value
+    expect(screen.getByText('92%', { selector: 'p.text-2xl.font-bold.text-surface-900' })).toBeInTheDocument();
   });
 
   it('navigates to idea capture on New Project click', async () => {

@@ -310,4 +310,43 @@ describe('SubscriptionService', () => {
       expect(service.compareTiers('ENTERPRISE', 'ENTERPRISE')).toBe('same');
     });
   });
+
+  describe('uncovered branches', () => {
+    it('should fall back to FREE tier when plan maps to unknown tier', async () => {
+      const mockOrg = {
+        id: 'org-123',
+        subscription: {
+          plan: 'unknown_plan',
+          status: 'active',
+          stripeCustomerId: 'cus_123',
+          stripeSubscriptionId: 'sub_123',
+          currentPeriodEnd: null,
+          cancelAtPeriodEnd: false,
+        },
+      };
+
+      jest.spyOn(prisma.organization, 'findUnique').mockResolvedValue(mockOrg as any);
+
+      const result = await service.getOrganizationSubscription('org-123');
+
+      // UNKNOWN_PLAN is not a valid tier, so SUBSCRIPTION_TIERS[tier] is undefined -> falls back to SUBSCRIPTION_TIERS.FREE
+      expect(result.features).toEqual(SUBSCRIPTION_TIERS.FREE.features);
+    });
+
+    it('should default status to "active" when subscription has no status', async () => {
+      const mockOrg = {
+        id: 'org-123',
+        subscription: {
+          plan: 'free',
+          // status is missing
+        },
+      };
+
+      jest.spyOn(prisma.organization, 'findUnique').mockResolvedValue(mockOrg as any);
+
+      const result = await service.getOrganizationSubscription('org-123');
+
+      expect(result.status).toBe('active');
+    });
+  });
 });

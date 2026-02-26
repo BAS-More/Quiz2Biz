@@ -223,4 +223,99 @@ describe('PolicyPackService', () => {
       expect(result).toBe('combined rego content');
     });
   });
+
+  describe('uncovered branches', () => {
+    const minimalGap: GapContext = {
+      sessionId: 'session-123',
+      questionId: 'q1',
+      dimensionKey: 'security',
+      dimensionName: 'Security',
+      persona: 'CTO',
+      severity: 0.8,
+      currentCoverage: 0.25,
+      residualRisk: 0.6,
+      questionText: 'Test?',
+      answer: 'No',
+      bestPractice: 'Do it',
+      practicalExplainer: 'Explanation',
+      standardRefs: [],
+    } as GapContext;
+
+    it('should handle non-Error thrown in generatePolicyForGap (String(error))', async () => {
+      jest.spyOn(prisma.session, 'findUnique').mockResolvedValue({
+        id: 'session-123',
+        readinessScore: 0,
+      } as any);
+      jest.spyOn(policyGenerator, 'generatePolicyForGap').mockRejectedValue('string error');
+      jest.spyOn(opaPolicy, 'getPoliciesForDimension').mockReturnValue([]);
+      jest.spyOn(terraformRules, 'getRulesForDimension').mockReturnValue([]);
+      jest.spyOn(terraformRules, 'generateFeatureFile').mockReturnValue('');
+      jest.spyOn(exportService, 'generateReadme').mockReturnValue('');
+
+      const result = await service.generatePolicyPack('session-123', [minimalGap]);
+
+      expect(result.policies).toHaveLength(0);
+    });
+
+    it('should handle Decimal readinessScore with toNumber()', async () => {
+      jest.spyOn(prisma.session, 'findUnique').mockResolvedValue({
+        id: 'session-123',
+        readinessScore: { toNumber: () => 92.3 },
+      } as any);
+      jest.spyOn(policyGenerator, 'generatePolicyForGap').mockResolvedValue({ id: 'p1' } as any);
+      jest.spyOn(opaPolicy, 'getPoliciesForDimension').mockReturnValue([]);
+      jest.spyOn(terraformRules, 'getRulesForDimension').mockReturnValue([]);
+      jest.spyOn(terraformRules, 'generateFeatureFile').mockReturnValue('');
+      jest.spyOn(exportService, 'generateReadme').mockReturnValue('');
+
+      const result = await service.generatePolicyPack('session-123', [minimalGap]);
+
+      expect(result.scoreAtGeneration).toBe(92.3);
+    });
+
+    it('should fall back to Number() when toNumber is not available', async () => {
+      jest.spyOn(prisma.session, 'findUnique').mockResolvedValue({
+        id: 'session-123',
+        readinessScore: '88.5',
+      } as any);
+      jest.spyOn(policyGenerator, 'generatePolicyForGap').mockResolvedValue({ id: 'p1' } as any);
+      jest.spyOn(opaPolicy, 'getPoliciesForDimension').mockReturnValue([]);
+      jest.spyOn(terraformRules, 'getRulesForDimension').mockReturnValue([]);
+      jest.spyOn(terraformRules, 'generateFeatureFile').mockReturnValue('');
+      jest.spyOn(exportService, 'generateReadme').mockReturnValue('');
+
+      const result = await service.generatePolicyPack('session-123', [minimalGap]);
+
+      expect(result.scoreAtGeneration).toBe(88.5);
+    });
+
+    it('should default scoreAtGeneration to 0 when session is null', async () => {
+      jest.spyOn(prisma.session, 'findUnique').mockResolvedValue(null);
+      jest.spyOn(policyGenerator, 'generatePolicyForGap').mockResolvedValue({ id: 'p1' } as any);
+      jest.spyOn(opaPolicy, 'getPoliciesForDimension').mockReturnValue([]);
+      jest.spyOn(terraformRules, 'getRulesForDimension').mockReturnValue([]);
+      jest.spyOn(terraformRules, 'generateFeatureFile').mockReturnValue('');
+      jest.spyOn(exportService, 'generateReadme').mockReturnValue('');
+
+      const result = await service.generatePolicyPack('session-123', [minimalGap]);
+
+      expect(result.scoreAtGeneration).toBe(0);
+    });
+
+    it('should default scoreAtGeneration to 0 when readinessScore is null', async () => {
+      jest.spyOn(prisma.session, 'findUnique').mockResolvedValue({
+        id: 'session-123',
+        readinessScore: null,
+      } as any);
+      jest.spyOn(policyGenerator, 'generatePolicyForGap').mockResolvedValue({ id: 'p1' } as any);
+      jest.spyOn(opaPolicy, 'getPoliciesForDimension').mockReturnValue([]);
+      jest.spyOn(terraformRules, 'getRulesForDimension').mockReturnValue([]);
+      jest.spyOn(terraformRules, 'generateFeatureFile').mockReturnValue('');
+      jest.spyOn(exportService, 'generateReadme').mockReturnValue('');
+
+      const result = await service.generatePolicyPack('session-123', [minimalGap]);
+
+      expect(result.scoreAtGeneration).toBe(0);
+    });
+  });
 });

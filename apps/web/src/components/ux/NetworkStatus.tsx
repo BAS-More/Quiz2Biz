@@ -9,6 +9,8 @@
  * Nielsen Heuristic #1: Visibility of System Status
  */
 
+const isDev = import.meta.env.DEV;
+
 import React, { useState, useEffect, useCallback, createContext, useContext, useRef } from 'react';
 
 // ============================================================================
@@ -262,7 +264,7 @@ export const NetworkStatusProvider: React.FC<NetworkStatusProviderProps> = ({
 
   const retryFailedRequests = useCallback(() => {
     // This would be implemented based on your API client's retry mechanism
-    console.log('Retrying failed requests...');
+    if (isDev) console.log('Retrying failed requests...');
   }, []);
 
   const pendingCount = pendingRequests.filter((r) => r.status === 'pending').length;

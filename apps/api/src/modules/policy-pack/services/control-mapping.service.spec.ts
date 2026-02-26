@@ -266,4 +266,31 @@ describe('ControlMappingService', () => {
       expect(apiControls.length).toBeGreaterThan(0);
     });
   });
+
+  describe('uncovered branches', () => {
+    it('should return empty array for unknown framework in getMappingsForDimension', () => {
+      const mappings = service.getMappingsForDimension('arch_sec', ['UNKNOWN_FRAMEWORK' as ComplianceFramework]);
+
+      expect(mappings).toEqual([]);
+    });
+
+    it('should return empty array for unknown framework in getFrameworkControls', () => {
+      const controls = service.getFrameworkControls('UNKNOWN_FRAMEWORK' as ComplianceFramework);
+
+      expect(controls).toEqual([]);
+    });
+
+    it('should handle unknown framework gracefully in getCoverageSummary', () => {
+      // getCoverageSummary iterates Object.values(ComplianceFramework), so
+      // it always uses valid keys. However, if the enum has a value not in
+      // controlMaps, the || [] fallback triggers. We test it indirectly
+      // through getFrameworkControls with an invalid value.
+      const summary = service.getCoverageSummary('arch_sec');
+
+      // All defined frameworks should have numeric counts
+      for (const framework of Object.values(ComplianceFramework)) {
+        expect(typeof summary[framework]).toBe('number');
+      }
+    });
+  });
 });

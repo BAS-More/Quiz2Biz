@@ -711,4 +711,152 @@ describe('FeatureFlagService', () => {
       expect(typeof result).toBe('boolean');
     });
   });
+
+  describe('uncovered branches', () => {
+    it('should use email as bucket key in rollout when userId is missing', () => {
+      const result = service.getBooleanFlag('enhanced-heatmap', { email: 'user@test.com' });
+      expect(typeof result).toBe('boolean');
+    });
+
+    it('should handle rule with rollout instead of direct variation', () => {
+      const svc = new FeatureFlagService();
+      const flagsMap = (svc as any).flags as Map<string, any>;
+      flagsMap.set('test-rule-rollout', {
+        key: 'test-rule-rollout',
+        kind: 'boolean',
+        defaultValue: false,
+        variations: [
+          { value: false, name: 'Off' },
+          { value: true, name: 'On' },
+        ],
+        targeting: {
+          enabled: true,
+          rules: [
+            {
+              id: 'rule-with-rollout',
+              clauses: [{ attribute: 'email', op: 'endsWith', values: ['@test.com'] }],
+              rollout: {
+                variations: [
+                  { variation: 1, weight: 100000 },
+                ],
+              },
+            },
+          ],
+          fallthrough: { variation: 0 },
+          offVariation: 0,
+        },
+      });
+
+      const result = svc.getBooleanFlag('test-rule-rollout', { email: 'admin@test.com', userId: 'u1' });
+      expect(result).toBe(true);
+    });
+
+    it('should fall back to defaultValue when rule.variation is out of bounds', () => {
+      const svc = new FeatureFlagService();
+      const flagsMap = (svc as any).flags as Map<string, any>;
+      flagsMap.set('test-rule-oob', {
+        key: 'test-rule-oob',
+        kind: 'boolean',
+        defaultValue: true,
+        variations: [
+          { value: false, name: 'Off' },
+        ],
+        targeting: {
+          enabled: true,
+          rules: [
+            {
+              id: 'rule-oob',
+              clauses: [{ attribute: 'email', op: 'in', values: ['admin@test.com'] }],
+              variation: 99,
+            },
+          ],
+          fallthrough: { variation: 0 },
+          offVariation: 0,
+        },
+      });
+
+      const result = svc.getBooleanFlag('test-rule-oob', { email: 'admin@test.com' });
+      expect(result).toBe(true); // defaultValue
+    });
+
+    it('should return false for unknown clause operator (default case)', () => {
+      const svc = new FeatureFlagService();
+      const flagsMap = (svc as any).flags as Map<string, any>;
+      flagsMap.set('test-unknown-op', {
+        key: 'test-unknown-op',
+        kind: 'boolean',
+        defaultValue: false,
+        variations: [
+          { value: false, name: 'Off' },
+          { value: true, name: 'On' },
+        ],
+        targeting: {
+          enabled: true,
+          rules: [
+            {
+              id: 'rule-unknown-op',
+              clauses: [{ attribute: 'email', op: 'regex', values: ['.*'] }],
+              variation: 1,
+            },
+          ],
+          fallthrough: { variation: 0 },
+          offVariation: 0,
+        },
+      });
+
+      // Unknown op 'regex' -> matches = false, rule doesn't match -> falls through to variation 0
+      const result = svc.getBooleanFlag('test-unknown-op', { email: 'user@test.com' });
+      expect(result).toBe(false);
+    });
+
+    it('should fall back to defaultValue when rollout variation index is out of bounds', () => {
+      const svc = new FeatureFlagService();
+      const flagsMap = (svc as any).flags as Map<string, any>;
+      flagsMap.set('test-rollout-var-oob', {
+        key: 'test-rollout-var-oob',
+        kind: 'boolean',
+        defaultValue: true,
+        variations: [
+          { value: false, name: 'Off' },
+        ],
+        targeting: {
+          enabled: true,
+          rules: [],
+          fallthrough: {
+            rollout: {
+              variations: [
+                { variation: 99, weight: 100000 },
+              ],
+            },
+          },
+          offVariation: 0,
+        },
+      });
+
+      const result = svc.getBooleanFlag('test-rollout-var-oob', { userId: 'user-1' });
+      expect(result).toBe(true); // variations[99] is undefined -> defaultValue
+    });
+
+    it('should fall back to defaultValue when fallthrough variation is out of bounds', () => {
+      const svc = new FeatureFlagService();
+      const flagsMap = (svc as any).flags as Map<string, any>;
+      flagsMap.set('test-fallthrough-oob', {
+        key: 'test-fallthrough-oob',
+        kind: 'boolean',
+        defaultValue: true,
+        variations: [
+          { value: false, name: 'Off' },
+        ],
+        targeting: {
+          enabled: true,
+          rules: [],
+          fallthrough: { variation: 99 },
+          offVariation: 0,
+        },
+      });
+
+      const result = svc.getBooleanFlag('test-fallthrough-oob', {});
+      expect(result).toBe(true); // variations[99] is undefined -> defaultValue
+    });
+  });
 });

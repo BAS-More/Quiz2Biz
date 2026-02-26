@@ -125,4 +125,33 @@ describe('UsersController', () => {
       expect(mockUsersService.findById).toHaveBeenCalledWith('user-456');
     });
   });
+
+  describe('uncovered branches', () => {
+    it('should default page to 1 and limit to 20 when undefined', async () => {
+      const pagination = { skip: 0 } as any;
+      mockUsersService.findAll.mockResolvedValue({
+        items: [],
+        total: 0,
+      });
+
+      const result = await controller.findAll(pagination);
+
+      expect(result.pagination.page).toBe(1);
+      expect(result.pagination.limit).toBe(20);
+      expect(result.pagination.totalPages).toBe(0);
+    });
+
+    it('should correctly calculate totalPages with undefined limit', async () => {
+      const pagination = { skip: 0 } as any;
+      mockUsersService.findAll.mockResolvedValue({
+        items: [{ id: '1' }],
+        total: 45,
+      });
+
+      const result = await controller.findAll(pagination);
+
+      // 45 / 20 = 2.25, ceil = 3
+      expect(result.pagination.totalPages).toBe(3);
+    });
+  });
 });

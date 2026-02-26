@@ -303,6 +303,44 @@ describe('CsrfGuard', () => {
 
       expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
     });
+
+    it('should reject token with HMAC length mismatch (truncated HMAC)', () => {
+      mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
+        if (key === 'CSRF_SECRET') {return 'test-csrf-secret';}
+        if (key === 'CSRF_DISABLED') {return 'false';}
+        return defaultValue;
+      });
+      mockReflector.get.mockReturnValue(false);
+
+      // Create a 3-part token but with a short HMAC
+      const fakeToken = Buffer.from('12345.abcdef.shrt').toString('base64');
+      const context = createMockContext(
+        'POST',
+        { [CSRF_TOKEN_HEADER]: fakeToken },
+        { [CSRF_TOKEN_COOKIE]: fakeToken },
+      );
+
+      expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
+    });
+
+    it('should handle malformed base64 that throws during validation', () => {
+      mockConfigService.get.mockImplementation((key: string, defaultValue?: any) => {
+        if (key === 'CSRF_SECRET') {return 'test-csrf-secret';}
+        if (key === 'CSRF_DISABLED') {return 'false';}
+        return defaultValue;
+      });
+      mockReflector.get.mockReturnValue(false);
+
+      // Use a string with null bytes that could cause issues in crypto operations
+      const problematicToken = Buffer.from('a.b.\x00\x00').toString('base64');
+      const context = createMockContext(
+        'POST',
+        { [CSRF_TOKEN_HEADER]: problematicToken },
+        { [CSRF_TOKEN_COOKIE]: problematicToken },
+      );
+
+      expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
+    });
   });
 });
 
