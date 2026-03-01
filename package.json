@@ -57,7 +57,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",
     "@eslint/js": "^9.39.1",
-    "@nestjs/cli": "^7.6.0",
+    "@nestjs/cli": "^11.0.16",
     "@nestjs/schematics": "^7.3.1",
     "@playwright/test": "^1.58.0",
     "@swc/cli": "^0.1.63",
@@ -95,7 +95,7 @@
     "turbo": "^1.11.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.36.0",
-    "webpack": "^4.25.1"
+    "webpack": "^5.105.3"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
@@ -120,7 +120,7 @@
     "@nestjs/platform-express": "^10.3.0",
     "@nestjs/schedule": "^2.2.3",
     "@nestjs/swagger": "^2.5.1",
-    "@nestjs/testing": "^7.5.5",
+    "@nestjs/testing": "^11.1.14",
     "@nestjs/throttler": "^6.5.0",
     "@opentelemetry/context-async-hooks": "^2.5.1",
     "@sentry/nestjs": "^8.19.0",
@@ -145,7 +145,8 @@
     "xmldom": "0.6.0",
     "cross-spawn": "7.0.6",
     "ws": "8.18.2",
-    "js-yaml": "4.1.1"
+    "js-yaml": "4.1.1",
+    "serialize-javascript": "6.0.2"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "^4.57.0"
