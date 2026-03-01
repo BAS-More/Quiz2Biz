@@ -91,7 +91,7 @@ describe('AiDocumentContentService', () => {
   describe('onModuleInit', () => {
     it('should log warning when API key not configured', () => {
       mockConfigService.get.mockImplementation((key: string) => {
-        if (key === 'claude.apiKey') return undefined;
+        if (key === 'claude.apiKey') {return undefined;}
         return undefined;
       });
       // Should not throw
@@ -100,7 +100,7 @@ describe('AiDocumentContentService', () => {
 
     it('should initialize Anthropic client when API key is configured', () => {
       mockConfigService.get.mockImplementation((key: string) => {
-        if (key === 'claude.apiKey') return 'test-api-key';
+        if (key === 'claude.apiKey') {return 'test-api-key';}
         return undefined;
       });
       // Should not throw

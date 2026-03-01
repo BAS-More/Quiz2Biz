@@ -1148,6 +1148,7 @@ end_of_record
       mockPrismaService.evidenceRegistry.create
         .mockResolvedValueOnce(mockEvidence as any)
         .mockImplementationOnce(() => {
+          // eslint-disable-next-line @typescript-eslint/only-throw-error
           throw 'string error';
         });
 

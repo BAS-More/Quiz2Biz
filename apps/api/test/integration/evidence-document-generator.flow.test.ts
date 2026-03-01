@@ -331,7 +331,7 @@ This evidence demonstrates substantial coverage of security policy requirements.
       });
 
       expect(rejectedEvidence!.verified).toBe(false);
-      expect((rejectedEvidence!.metadata as any).rejected).toBe(true);
+      expect((rejectedEvidence!.metadata).rejected).toBe(true);
 
       // Clean up
       await prisma.evidenceRegistry.delete({ where: { id: evidence.id } });
@@ -394,10 +394,10 @@ This evidence demonstrates substantial coverage of security policy requirements.
       });
 
       expect(allVersions).toHaveLength(2);
-      expect((allVersions[0].metadata as any).version).toBe(1);
-      expect((allVersions[1].metadata as any).version).toBe(2);
-      expect((allVersions[0].metadata as any).supersededBy).toBe(v2.id);
-      expect((allVersions[1].metadata as any).supersedes).toBe(v1.id);
+      expect((allVersions[0].metadata).version).toBe(1);
+      expect((allVersions[1].metadata).version).toBe(2);
+      expect((allVersions[0].metadata).supersededBy).toBe(v2.id);
+      expect((allVersions[1].metadata).supersedes).toBe(v1.id);
 
       // Clean up
       await prisma.evidenceRegistry.deleteMany({
@@ -437,7 +437,7 @@ This evidence demonstrates substantial coverage of security policy requirements.
         });
 
         expect(rejected!.verified).toBe(false);
-        expect((rejected!.metadata as any).rejectionReason).toContain('50MB');
+        expect((rejected!.metadata).rejectionReason).toContain('50MB');
 
         // Clean up
         await prisma.evidenceRegistry.delete({ where: { id: rejected!.id } });

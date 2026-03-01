@@ -885,8 +885,8 @@ describe('AdapterConfigService', () => {
     it('should skip GitHub default when GITHUB_TOKEN is not set', async () => {
       mockPrismaService.$queryRaw.mockRejectedValueOnce(new Error('DB down'));
       mockConfigService.get.mockImplementation((key: string) => {
-        if (key === 'GITLAB_TOKEN') return 'gl-tok';
-        if (key === 'GITLAB_PROJECT_ID') return '99';
+        if (key === 'GITLAB_TOKEN') {return 'gl-tok';}
+        if (key === 'GITLAB_PROJECT_ID') {return '99';}
         return undefined;
       });
 
@@ -899,9 +899,9 @@ describe('AdapterConfigService', () => {
     it('should skip GitLab default when GITLAB_TOKEN is not set', async () => {
       mockPrismaService.$queryRaw.mockRejectedValueOnce(new Error('DB down'));
       mockConfigService.get.mockImplementation((key: string) => {
-        if (key === 'GITHUB_TOKEN') return 'gh-tok';
-        if (key === 'GITHUB_OWNER') return 'owner';
-        if (key === 'GITHUB_REPO') return 'repo';
+        if (key === 'GITHUB_TOKEN') {return 'gh-tok';}
+        if (key === 'GITHUB_OWNER') {return 'owner';}
+        if (key === 'GITHUB_REPO') {return 'repo';}
         return undefined;
       });
 

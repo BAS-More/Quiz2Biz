@@ -643,6 +643,7 @@ describe('PaymentController', () => {
 
     it('should handle non-Error thrown in webhook signature verification', async () => {
       mockPaymentService.constructWebhookEvent.mockImplementation(() => {
+        // eslint-disable-next-line @typescript-eslint/only-throw-error
         throw 'string error thrown';
       });
 

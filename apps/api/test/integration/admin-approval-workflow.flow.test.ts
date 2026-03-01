@@ -174,7 +174,7 @@ describe.skip('Admin → Approval Workflow Flow Integration', () => {
       });
 
       expect(auditEntry.action).toBe('APPROVE_DECISION');
-      expect((auditEntry.details as any).newStatus).toBe('APPROVED');
+      expect((auditEntry.details).newStatus).toBe('APPROVED');
 
       // Step 5: Notification sent to decision requester
       const approvalNotification = {
@@ -295,7 +295,7 @@ describe.skip('Admin → Approval Workflow Flow Integration', () => {
         },
       });
 
-      expect((firstApproval.decision as any).currentApprovals).toBe(1);
+      expect((firstApproval.decision).currentApprovals).toBe(1);
       expect(firstApproval.approvalStatus).toBe('PENDING');
 
       // Create second admin
@@ -323,7 +323,7 @@ describe.skip('Admin → Approval Workflow Flow Integration', () => {
         },
       });
 
-      expect((secondApproval.decision as any).currentApprovals).toBe(2);
+      expect((secondApproval.decision).currentApprovals).toBe(2);
       expect(secondApproval.approvalStatus).toBe('APPROVED');
 
       // Clean up
@@ -474,7 +474,7 @@ describe.skip('Admin → Approval Workflow Flow Integration', () => {
       });
 
       expect(escalationLog.action).toBe('ESCALATE_DECISION');
-      expect((escalationLog.details as any).escalatedTo).toBe('SENIOR_ADMIN');
+      expect((escalationLog.details).escalatedTo).toBe('SENIOR_ADMIN');
 
       // Clean up
       await prisma.auditLog.delete({ where: { id: escalationLog.id } });
