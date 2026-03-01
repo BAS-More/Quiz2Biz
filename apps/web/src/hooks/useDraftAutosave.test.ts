@@ -17,62 +17,32 @@ const mockLocalStorage = {
   }),
 };
 
+// Helper to create IDBRequest-like objects with async callback support
+const createMockIDBRequest = (result: any = null) => {
+  const req = {
+    get onsuccess() { return this._onsuccess; },
+    set onsuccess(handler) {
+      this._onsuccess = handler;
+      if (handler) queueMicrotask(() => handler());
+    },
+    _onsuccess: null,
+    onerror: null,
+    onupgradeneeded: null,
+    result,
+  };
+  return req;
+};
+
 // Mock IndexedDB
 const mockIndexedDB = {
   open: vi.fn().mockImplementation(() => {
     const mockDB = {
       transaction: vi.fn().mockReturnValue({
         objectStore: vi.fn().mockReturnValue({
-          put: vi.fn().mockImplementation(() => {
-            const req = {
-              get onsuccess() { return this._onsuccess; },
-              set onsuccess(handler) {
-                this._onsuccess = handler;
-                if (handler) queueMicrotask(() => handler());
-              },
-              _onsuccess: null,
-              onerror: null,
-            };
-            return req;
-          }),
-          get: vi.fn().mockImplementation(() => {
-            const req = {
-              get onsuccess() { return this._onsuccess; },
-              set onsuccess(handler) {
-                this._onsuccess = handler;
-                if (handler) queueMicrotask(() => handler());
-              },
-              _onsuccess: null,
-              onerror: null,
-              result: null,
-            };
-            return req;
-          }),
-          delete: vi.fn().mockImplementation(() => {
-            const req = {
-              get onsuccess() { return this._onsuccess; },
-              set onsuccess(handler) {
-                this._onsuccess = handler;
-                if (handler) queueMicrotask(() => handler());
-              },
-              _onsuccess: null,
-              onerror: null,
-            };
-            return req;
-          }),
-          getAll: vi.fn().mockImplementation(() => {
-            const req = {
-              get onsuccess() { return this._onsuccess; },
-              set onsuccess(handler) {
-                this._onsuccess = handler;
-                if (handler) queueMicrotask(() => handler());
-              },
-              _onsuccess: null,
-              onerror: null,
-              result: [],
-            };
-            return req;
-          }),
+          put: vi.fn().mockImplementation(() => createMockIDBRequest()),
+          get: vi.fn().mockImplementation(() => createMockIDBRequest(null)),
+          delete: vi.fn().mockImplementation(() => createMockIDBRequest()),
+          getAll: vi.fn().mockImplementation(() => createMockIDBRequest([])),
         }),
       }),
       objectStoreNames: {
@@ -83,19 +53,7 @@ const mockIndexedDB = {
       }),
     };
     
-    const request = {
-      get onsuccess() { return this._onsuccess; },
-      set onsuccess(handler) {
-        this._onsuccess = handler;
-        if (handler) queueMicrotask(() => handler());
-      },
-      _onsuccess: null,
-      onerror: null,
-      onupgradeneeded: null,
-      result: mockDB,
-    };
-    
-    return request;
+    return createMockIDBRequest(mockDB);
   }),
 };
 
