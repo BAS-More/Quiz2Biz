@@ -201,7 +201,9 @@ describe('TermsPage', () => {
       // Address is rendered with br tags splitting the text
       expect(screen.getByText(/123 Business Park, Suite 100/)).toBeInTheDocument();
       expect(screen.getByText(/Technology City, TC 12345/)).toBeInTheDocument();
-      expect(screen.getByText(/United States/)).toBeInTheDocument();
+      // "United States" appears multiple times (in address and potentially in legal text)
+      const usElements = screen.getAllByText(/United States/);
+      expect(usElements.length).toBeGreaterThanOrEqual(1);
 
       // Email should be a link
       const emailLink = screen.getByText('legal@quiz2biz.com').closest('a');

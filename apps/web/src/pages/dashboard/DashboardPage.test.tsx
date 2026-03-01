@@ -105,7 +105,9 @@ describe('DashboardPage', () => {
 
     expect(screen.getByText('Highest Score')).toBeInTheDocument();
     // The component shows "92%" as the highest score from mockSessions
-    expect(screen.getByText('92%')).toBeInTheDocument();
+    // Multiple elements may show this value (stat card, progress ring, etc.)
+    const scoreElements = screen.getAllByText('92%');
+    expect(scoreElements.length).toBeGreaterThanOrEqual(1);
   });
 
   it('navigates to idea capture on New Project click', async () => {
