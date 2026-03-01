@@ -207,13 +207,21 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: TruffleHog Secret Scanning
+      - name: TruffleHog Secret Scanning (Push/PR)
+        if: github.event_name != 'schedule' && github.event_name != 'workflow_dispatch'
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
           base: ${{ github.event.repository.default_branch }}
           head: HEAD
           extra_args: --debug --only-verified
+
+      - name: TruffleHog Secret Scanning (Schedule/Manual)
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          extra_args: --debug --only-verified --since-commit HEAD~50
 
   security-summary:
     name: Security Scan Summary
