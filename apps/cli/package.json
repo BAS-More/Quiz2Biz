@@ -27,7 +27,13 @@
     "author": "Quiz2Biz Team",
     "license": "MIT",
     "dependencies": {
-        "@sentry/nestjs": "9.20.0",
+        "@nestjs/cli": "7.6.0",
+        "@nestjs/core": "7.5.5",
+        "@nestjs/schedule": "2.2.3",
+        "@nestjs/schematics": "7.3.1",
+        "@nestjs/swagger": "2.5.1",
+        "@nestjs/testing": "7.5.5",
+        "@sentry/nestjs": "^8.19.0",
         "@sentry/node": "9.20.0",
         "@swc/cli": "0.1.63",
         "archiver": "4.0.2",
@@ -37,7 +43,8 @@
         "conf": "^10.2.0",
         "inquirer": "^8.2.6",
         "ora": "^5.4.1",
-        "table": "^6.8.1"
+        "table": "^6.8.1",
+        "webpack": "4.25.1"
     },
     "devDependencies": {
         "@types/inquirer": "^9.0.7",
