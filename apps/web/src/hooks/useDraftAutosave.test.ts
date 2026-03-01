@@ -63,6 +63,8 @@ describe('useDraftAutosave', () => {
     mockLocalStorage.store = {};
 
     // Mock global objects using Vitest helpers to ensure proper cleanup
+    // Stub indexedDB as undefined to exercise the localStorage fallback path
+    // This avoids the complexity of mocking IndexedDB's async callback behavior
     vi.stubGlobal('localStorage', mockLocalStorage as unknown as Storage);
     // Stub indexedDB as undefined to exercise localStorage fallback path
     vi.stubGlobal('indexedDB', undefined);
