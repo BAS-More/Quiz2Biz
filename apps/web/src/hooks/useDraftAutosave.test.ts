@@ -17,6 +17,46 @@ const mockLocalStorage = {
   }),
 };
 
+// Helper to create IDBRequest-like objects with async callback support
+const createMockIDBRequest = (result: unknown = null) => {
+  const req: any = {
+    get onsuccess() { return this.successHandler; },
+    set onsuccess(handler) {
+      this.successHandler = handler;
+      if (handler) queueMicrotask(() => handler({ target: req } as Event));
+    },
+    successHandler: null,
+    onerror: null,
+    onupgradeneeded: null,
+    result,
+  };
+  return req;
+};
+
+// Mock IndexedDB
+const mockIndexedDB = {
+  open: vi.fn().mockImplementation(() => {
+    const mockDB = {
+      transaction: vi.fn().mockReturnValue({
+        objectStore: vi.fn().mockReturnValue({
+          put: vi.fn().mockImplementation(() => createMockIDBRequest()),
+          get: vi.fn().mockImplementation(() => createMockIDBRequest(null)),
+          delete: vi.fn().mockImplementation(() => createMockIDBRequest()),
+          getAll: vi.fn().mockImplementation(() => createMockIDBRequest([])),
+        }),
+      }),
+      objectStoreNames: {
+        contains: vi.fn().mockReturnValue(false),
+      },
+      createObjectStore: vi.fn().mockReturnValue({
+        createIndex: vi.fn(),
+      }),
+    };
+    
+    return createMockIDBRequest(mockDB);
+  }),
+};
+
 describe('useDraftAutosave', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -26,6 +66,7 @@ describe('useDraftAutosave', () => {
     // Stub indexedDB as undefined to exercise the localStorage fallback path
     // This avoids the complexity of mocking IndexedDB's async callback behavior
     vi.stubGlobal('localStorage', mockLocalStorage as unknown as Storage);
+    // Stub indexedDB as undefined to exercise localStorage fallback path
     vi.stubGlobal('indexedDB', undefined);
   });
 
