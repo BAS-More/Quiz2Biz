@@ -76,17 +76,21 @@ function Set-BranchProtection {
     
     try {
         # Use GitHub API via gh CLI
-        $result = gh api `
+        $result = $jsonConfig | gh api `
             --method PUT `
             "repos/$Owner/$Repo/branches/$Branch/protection" `
             --input - `
-            2>&1 <<< $jsonConfig
+            2>&1
         
         if ($LASTEXITCODE -eq 0) {
             Write-Host "✅ Successfully configured protection for $Branch" -ForegroundColor Green
         } else {
             Write-Host "⚠️  Warning: Some protection rules may not have applied" -ForegroundColor Yellow
             Write-Host "   This is normal if status checks haven't run yet" -ForegroundColor Gray
+            if ($result) {
+                Write-Host "   GitHub API response:" -ForegroundColor DarkYellow
+                Write-Host "   $result" -ForegroundColor Gray
+            }
         }
     } catch {
         Write-Host "❌ Failed to configure protection for $Branch" -ForegroundColor Red

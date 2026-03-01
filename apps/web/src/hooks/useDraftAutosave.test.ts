@@ -17,19 +17,32 @@ const mockLocalStorage = {
   }),
 };
 
+// Helper to create IDBRequest-like objects with async callback support
+const createMockIDBRequest = (result: unknown = null) => {
+  const req: any = {
+    get onsuccess() { return this.successHandler; },
+    set onsuccess(handler) {
+      this.successHandler = handler;
+      if (handler) queueMicrotask(() => handler({ target: req } as Event));
+    },
+    successHandler: null,
+    onerror: null,
+    onupgradeneeded: null,
+    result,
+  };
+  return req;
+};
+
 // Mock IndexedDB
 const mockIndexedDB = {
-  open: vi.fn().mockReturnValue({
-    onerror: null,
-    onsuccess: null,
-    onupgradeneeded: null,
-    result: {
+  open: vi.fn().mockImplementation(() => {
+    const mockDB = {
       transaction: vi.fn().mockReturnValue({
         objectStore: vi.fn().mockReturnValue({
-          put: vi.fn().mockReturnValue({ onsuccess: null, onerror: null }),
-          get: vi.fn().mockReturnValue({ onsuccess: null, onerror: null }),
-          delete: vi.fn().mockReturnValue({ onsuccess: null, onerror: null }),
-          getAll: vi.fn().mockReturnValue({ onsuccess: null, onerror: null }),
+          put: vi.fn().mockImplementation(() => createMockIDBRequest()),
+          get: vi.fn().mockImplementation(() => createMockIDBRequest(null)),
+          delete: vi.fn().mockImplementation(() => createMockIDBRequest()),
+          getAll: vi.fn().mockImplementation(() => createMockIDBRequest([])),
         }),
       }),
       objectStoreNames: {
@@ -38,34 +51,27 @@ const mockIndexedDB = {
       createObjectStore: vi.fn().mockReturnValue({
         createIndex: vi.fn(),
       }),
-    },
+    };
+    
+    return createMockIDBRequest(mockDB);
   }),
-  transaction: vi.fn(),
-  objectStore: vi.fn(),
-  put: vi.fn(),
-  get: vi.fn(),
-  delete: vi.fn(),
-  getAll: vi.fn(),
-  createObjectStore: vi.fn(),
-  createIndex: vi.fn(),
 };
 
 describe('useDraftAutosave', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockLocalStorage.store = {};
-    
-    // Mock global objects
-    Object.defineProperty(window, 'localStorage', {
-      value: mockLocalStorage,
-    });
-    
-    Object.defineProperty(window, 'indexedDB', {
-      value: mockIndexedDB,
-    });
+
+    // Mock global objects using Vitest helpers to ensure proper cleanup
+    // Stub indexedDB as undefined to exercise the localStorage fallback path
+    // This avoids the complexity of mocking IndexedDB's async callback behavior
+    vi.stubGlobal('localStorage', mockLocalStorage as unknown as Storage);
+    // Stub indexedDB as undefined to exercise localStorage fallback path
+    vi.stubGlobal('indexedDB', undefined);
   });
 
   afterEach(() => {
+    vi.unstubAllGlobals();
     vi.useRealTimers();
   });
 
