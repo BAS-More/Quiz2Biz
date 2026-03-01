@@ -54,18 +54,14 @@ describe('useDraftAutosave', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockLocalStorage.store = {};
-    
-    // Mock global objects
-    Object.defineProperty(window, 'localStorage', {
-      value: mockLocalStorage,
-    });
-    
-    Object.defineProperty(window, 'indexedDB', {
-      value: mockIndexedDB,
-    });
+
+    // Mock global objects using Vitest helpers to ensure proper cleanup
+    vi.stubGlobal('localStorage', mockLocalStorage as unknown as Storage);
+    vi.stubGlobal('indexedDB', mockIndexedDB as unknown as IDBFactory);
   });
 
   afterEach(() => {
+    vi.unstubAllGlobals();
     vi.useRealTimers();
   });
 
