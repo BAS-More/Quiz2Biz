@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
   pull-requests: write
 
 env:
@@ -27,6 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      issues: write
       pull-requests: write
     
     services:
@@ -164,12 +166,16 @@ jobs:
             
             ${parseFloat(branches) >= thresholdBranches && parseFloat(lines) >= thresholdLines && parseFloat(functions) >= thresholdFunctions && parseFloat(statements) >= thresholdStatements ? '✅ All coverage thresholds met!' : '❌ Some coverage thresholds not met. Please add more tests.'}`;
             
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-            });
+            try {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            } catch (error) {
+              core.warning(`Could not create coverage comment: ${error.message}`);
+            }
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
