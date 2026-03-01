@@ -18,14 +18,14 @@ const mockLocalStorage = {
 };
 
 // Helper to create IDBRequest-like objects with async callback support
-const createMockIDBRequest = (result: any = null) => {
-  const req = {
-    get onsuccess() { return this._onsuccess; },
+const createMockIDBRequest = (result: unknown = null) => {
+  const req: any = {
+    get onsuccess() { return this.successHandler; },
     set onsuccess(handler) {
-      this._onsuccess = handler;
-      if (handler) queueMicrotask(() => handler());
+      this.successHandler = handler;
+      if (handler) queueMicrotask(() => handler({ target: req } as Event));
     },
-    _onsuccess: null,
+    successHandler: null,
     onerror: null,
     onupgradeneeded: null,
     result,
