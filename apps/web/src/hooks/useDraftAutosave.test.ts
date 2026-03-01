@@ -19,17 +19,60 @@ const mockLocalStorage = {
 
 // Mock IndexedDB
 const mockIndexedDB = {
-  open: vi.fn().mockReturnValue({
-    onerror: null,
-    onsuccess: null,
-    onupgradeneeded: null,
-    result: {
+  open: vi.fn().mockImplementation(() => {
+    const mockDB = {
       transaction: vi.fn().mockReturnValue({
         objectStore: vi.fn().mockReturnValue({
-          put: vi.fn().mockReturnValue({ onsuccess: null, onerror: null }),
-          get: vi.fn().mockReturnValue({ onsuccess: null, onerror: null }),
-          delete: vi.fn().mockReturnValue({ onsuccess: null, onerror: null }),
-          getAll: vi.fn().mockReturnValue({ onsuccess: null, onerror: null }),
+          put: vi.fn().mockImplementation(() => {
+            const req = {
+              get onsuccess() { return this._onsuccess; },
+              set onsuccess(handler) {
+                this._onsuccess = handler;
+                if (handler) queueMicrotask(() => handler());
+              },
+              _onsuccess: null,
+              onerror: null,
+            };
+            return req;
+          }),
+          get: vi.fn().mockImplementation(() => {
+            const req = {
+              get onsuccess() { return this._onsuccess; },
+              set onsuccess(handler) {
+                this._onsuccess = handler;
+                if (handler) queueMicrotask(() => handler());
+              },
+              _onsuccess: null,
+              onerror: null,
+              result: null,
+            };
+            return req;
+          }),
+          delete: vi.fn().mockImplementation(() => {
+            const req = {
+              get onsuccess() { return this._onsuccess; },
+              set onsuccess(handler) {
+                this._onsuccess = handler;
+                if (handler) queueMicrotask(() => handler());
+              },
+              _onsuccess: null,
+              onerror: null,
+            };
+            return req;
+          }),
+          getAll: vi.fn().mockImplementation(() => {
+            const req = {
+              get onsuccess() { return this._onsuccess; },
+              set onsuccess(handler) {
+                this._onsuccess = handler;
+                if (handler) queueMicrotask(() => handler());
+              },
+              _onsuccess: null,
+              onerror: null,
+              result: [],
+            };
+            return req;
+          }),
         }),
       }),
       objectStoreNames: {
@@ -38,16 +81,22 @@ const mockIndexedDB = {
       createObjectStore: vi.fn().mockReturnValue({
         createIndex: vi.fn(),
       }),
-    },
+    };
+    
+    const request = {
+      get onsuccess() { return this._onsuccess; },
+      set onsuccess(handler) {
+        this._onsuccess = handler;
+        if (handler) queueMicrotask(() => handler());
+      },
+      _onsuccess: null,
+      onerror: null,
+      onupgradeneeded: null,
+      result: mockDB,
+    };
+    
+    return request;
   }),
-  transaction: vi.fn(),
-  objectStore: vi.fn(),
-  put: vi.fn(),
-  get: vi.fn(),
-  delete: vi.fn(),
-  getAll: vi.fn(),
-  createObjectStore: vi.fn(),
-  createIndex: vi.fn(),
 };
 
 describe('useDraftAutosave', () => {
@@ -57,7 +106,8 @@ describe('useDraftAutosave', () => {
 
     // Mock global objects using Vitest helpers to ensure proper cleanup
     vi.stubGlobal('localStorage', mockLocalStorage as unknown as Storage);
-    vi.stubGlobal('indexedDB', mockIndexedDB as unknown as IDBFactory);
+    // Stub indexedDB as undefined to exercise localStorage fallback path
+    vi.stubGlobal('indexedDB', undefined);
   });
 
   afterEach(() => {
