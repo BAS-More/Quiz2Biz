@@ -56,7 +56,7 @@ describe('PrivacyPage', () => {
       expect(screen.getByText('1. Introduction')).toBeInTheDocument();
       expect(
         screen.getByText(
-          /Quiz2Biz \(\"we\", \"our\", or \"us\"\) is committed to protecting your privacy/,
+          /Quiz2Biz \("we", "our", or "us"\) is committed to protecting your privacy/,
         ),
       ).toBeInTheDocument();
 

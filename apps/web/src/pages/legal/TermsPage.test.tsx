@@ -56,7 +56,7 @@ describe('TermsPage', () => {
       expect(screen.getByText('1. Acceptance of Terms')).toBeInTheDocument();
       expect(
         screen.getByText(
-          /By accessing or using Quiz2Biz \(\"the Service\"\), you agree to be bound by these Terms/,
+          /By accessing or using Quiz2Biz \("the Service"\), you agree to be bound by these Terms/,
         ),
       ).toBeInTheDocument();
 
