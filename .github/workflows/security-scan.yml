@@ -124,28 +124,31 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Install Trivy
-        run: |
-          TRIVY_VERSION="0.58.2"
-          wget -O trivy.tar.gz "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"
-          tar -xzf trivy.tar.gz
-          sudo mv trivy /usr/local/bin/
-          rm trivy.tar.gz
-          trivy --version
-
-      - name: Run Trivy vulnerability scanner
-        run: |
-          trivy image --format sarif --output trivy-results.sarif --severity CRITICAL,HIGH --ignore-unfixed quiz-api:scan || true
+      - name: Run Trivy vulnerability scanner (SARIF)
+        uses: aquasecurity/trivy-action@0.34.1
+        with:
+          image-ref: 'quiz-api:scan'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          ignore-unfixed: true
+          exit-code: '0'
 
       - name: Upload Trivy results to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
 
-      - name: Run Trivy vulnerability scanner (JSON output)
-        run: |
-          trivy image --format json --output trivy-results.json --severity CRITICAL,HIGH,MEDIUM quiz-api:scan || true
+      - name: Run Trivy vulnerability scanner (JSON)
+        uses: aquasecurity/trivy-action@0.34.1
+        with:
+          image-ref: 'quiz-api:scan'
+          format: 'json'
+          output: 'trivy-results.json'
+          severity: 'CRITICAL,HIGH,MEDIUM'
+          ignore-unfixed: true
+          exit-code: '0'
 
       - name: Generate security summary
         if: always()
