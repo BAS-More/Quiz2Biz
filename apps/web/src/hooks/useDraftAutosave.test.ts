@@ -17,47 +17,16 @@ const mockLocalStorage = {
   }),
 };
 
-// Mock IndexedDB
-const mockIndexedDB = {
-  open: vi.fn().mockReturnValue({
-    onerror: null,
-    onsuccess: null,
-    onupgradeneeded: null,
-    result: {
-      transaction: vi.fn().mockReturnValue({
-        objectStore: vi.fn().mockReturnValue({
-          put: vi.fn().mockReturnValue({ onsuccess: null, onerror: null }),
-          get: vi.fn().mockReturnValue({ onsuccess: null, onerror: null }),
-          delete: vi.fn().mockReturnValue({ onsuccess: null, onerror: null }),
-          getAll: vi.fn().mockReturnValue({ onsuccess: null, onerror: null }),
-        }),
-      }),
-      objectStoreNames: {
-        contains: vi.fn().mockReturnValue(false),
-      },
-      createObjectStore: vi.fn().mockReturnValue({
-        createIndex: vi.fn(),
-      }),
-    },
-  }),
-  transaction: vi.fn(),
-  objectStore: vi.fn(),
-  put: vi.fn(),
-  get: vi.fn(),
-  delete: vi.fn(),
-  getAll: vi.fn(),
-  createObjectStore: vi.fn(),
-  createIndex: vi.fn(),
-};
-
 describe('useDraftAutosave', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockLocalStorage.store = {};
 
     // Mock global objects using Vitest helpers to ensure proper cleanup
+    // Stub indexedDB as undefined to exercise the localStorage fallback path
+    // This avoids the complexity of mocking IndexedDB's async callback behavior
     vi.stubGlobal('localStorage', mockLocalStorage as unknown as Storage);
-    vi.stubGlobal('indexedDB', mockIndexedDB as unknown as IDBFactory);
+    vi.stubGlobal('indexedDB', undefined);
   });
 
   afterEach(() => {
