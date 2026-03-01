@@ -330,9 +330,9 @@ describe('PaymentController', () => {
     it('should throw BadRequestException if raw body is missing', async () => {
       const mockRequest = createMockRequest(undefined);
 
-      await expect(
-        webhookController.handleWebhook(mockRequest as any, 'sig_test'),
-      ).rejects.toThrow('Missing raw body for webhook verification');
+      await expect(webhookController.handleWebhook(mockRequest as any, 'sig_test')).rejects.toThrow(
+        'Missing raw body for webhook verification',
+      );
     });
 
     it('should throw BadRequestException on invalid signature', async () => {

@@ -19,7 +19,7 @@ describe('PrivacyPage', () => {
           <Route path="/auth/login" element={<div>Login Page</div>} />
           <Route path="/auth/register" element={<div>Register Page</div>} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
   };
 
@@ -54,7 +54,11 @@ describe('PrivacyPage', () => {
 
       // Section 1: Introduction
       expect(screen.getByText('1. Introduction')).toBeInTheDocument();
-      expect(screen.getByText(/Quiz2Biz \(\"we\", \"our\", or \"us\"\) is committed to protecting your privacy/)).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /Quiz2Biz \(\"we\", \"our\", or \"us\"\) is committed to protecting your privacy/,
+        ),
+      ).toBeInTheDocument();
 
       // Section 2: Information We Collect
       expect(screen.getByText('2. Information We Collect')).toBeInTheDocument();
@@ -72,7 +76,9 @@ describe('PrivacyPage', () => {
 
       // Section 5: Data Security
       expect(screen.getByText('5. Data Security')).toBeInTheDocument();
-      expect(screen.getByText('Encryption of data in transit (TLS 1.3) and at rest (AES-256)')).toBeInTheDocument();
+      expect(
+        screen.getByText('Encryption of data in transit (TLS 1.3) and at rest (AES-256)'),
+      ).toBeInTheDocument();
 
       // Section 6: Data Retention
       expect(screen.getByText('6. Data Retention')).toBeInTheDocument();
@@ -90,7 +96,7 @@ describe('PrivacyPage', () => {
       expect(screen.getByText('9. International Transfers')).toBeInTheDocument();
 
       // Section 10: Children's Privacy
-      expect(screen.getByText('10. Children\'s Privacy')).toBeInTheDocument();
+      expect(screen.getByText("10. Children's Privacy")).toBeInTheDocument();
 
       // Section 11: Changes to This Policy
       expect(screen.getByText('11. Changes to This Policy')).toBeInTheDocument();
@@ -109,13 +115,17 @@ describe('PrivacyPage', () => {
       expect(screen.getByText('Company or organization information')).toBeInTheDocument();
 
       // Usage Information list
-      expect(screen.getByText('Device information (browser type, operating system)')).toBeInTheDocument();
+      expect(
+        screen.getByText('Device information (browser type, operating system)'),
+      ).toBeInTheDocument();
       expect(screen.getByText('IP address and general location')).toBeInTheDocument();
       expect(screen.getByText('Pages visited and features used')).toBeInTheDocument();
 
       // How We Use Your Information list
       expect(screen.getByText('Provide, maintain, and improve our services')).toBeInTheDocument();
-      expect(screen.getByText('Process your assessments and generate readiness scores')).toBeInTheDocument();
+      expect(
+        screen.getByText('Process your assessments and generate readiness scores'),
+      ).toBeInTheDocument();
       expect(screen.getByText('Create and manage your account')).toBeInTheDocument();
       expect(screen.getByText('Process payments and send billing information')).toBeInTheDocument();
 
@@ -126,13 +136,21 @@ describe('PrivacyPage', () => {
       expect(screen.getByText('With Your Consent:')).toBeInTheDocument();
 
       // Data Security list
-      expect(screen.getByText('Encryption of data in transit (TLS 1.3) and at rest (AES-256)')).toBeInTheDocument();
-      expect(screen.getByText('Regular security assessments and penetration testing')).toBeInTheDocument();
-      expect(screen.getByText('Access controls and authentication requirements')).toBeInTheDocument();
+      expect(
+        screen.getByText('Encryption of data in transit (TLS 1.3) and at rest (AES-256)'),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText('Regular security assessments and penetration testing'),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText('Access controls and authentication requirements'),
+      ).toBeInTheDocument();
 
       // Your Rights list
       expect(screen.getByText('Access: Request a copy of your personal data')).toBeInTheDocument();
-      expect(screen.getByText('Correction: Request correction of inaccurate data')).toBeInTheDocument();
+      expect(
+        screen.getByText('Correction: Request correction of inaccurate data'),
+      ).toBeInTheDocument();
       expect(screen.getByText('Deletion: Request deletion of your data')).toBeInTheDocument();
     });
   });
@@ -184,10 +202,14 @@ describe('PrivacyPage', () => {
       renderPrivacyPage();
 
       const currentYear = new Date().getFullYear();
-      expect(screen.getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`)).toBeInTheDocument();
+      expect(
+        screen.getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`),
+      ).toBeInTheDocument();
 
       // Footer should have proper role
-      const footer = screen.getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`).closest('footer');
+      const footer = screen
+        .getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`)
+        .closest('footer');
       expect(footer).toHaveAttribute('role', 'contentinfo');
     });
   });
@@ -278,7 +300,9 @@ describe('PrivacyPage', () => {
       renderPrivacyPage();
 
       const currentYear = new Date().getFullYear();
-      expect(screen.getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`)).toBeInTheDocument();
+      expect(
+        screen.getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`),
+      ).toBeInTheDocument();
     });
   });
 });

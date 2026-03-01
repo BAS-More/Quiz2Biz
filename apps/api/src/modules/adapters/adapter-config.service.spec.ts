@@ -1,11 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@libs/database';
-import {
-  AdapterConfigService,
-  AdapterConfig,
-  AdapterType,
-} from './adapter-config.service';
+import { AdapterConfigService, AdapterConfig, AdapterType } from './adapter-config.service';
 
 describe('AdapterConfigService', () => {
   let service: AdapterConfigService;
@@ -867,9 +863,9 @@ describe('AdapterConfigService', () => {
       mockConfigService.get.mockReturnValue(undefined);
       mockPrismaService.$executeRaw.mockRejectedValueOnce(new Error('Delete failed'));
 
-      await expect(
-        service.deleteAdapterConfig(TENANT_ID, 'some-id'),
-      ).rejects.toThrow('Delete failed');
+      await expect(service.deleteAdapterConfig(TENANT_ID, 'some-id')).rejects.toThrow(
+        'Delete failed',
+      );
     });
   });
 
@@ -1017,9 +1013,7 @@ describe('AdapterConfigService', () => {
       mockConfigService.get.mockReturnValue(undefined);
       mockPrismaService.$executeRaw.mockRejectedValueOnce(42);
 
-      await expect(
-        service.deleteAdapterConfig(TENANT_ID, 'some-id'),
-      ).rejects.toBe(42);
+      await expect(service.deleteAdapterConfig(TENANT_ID, 'some-id')).rejects.toBe(42);
     });
   });
 });

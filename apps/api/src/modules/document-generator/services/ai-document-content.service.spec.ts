@@ -51,7 +51,11 @@ describe('AiDocumentContentService', () => {
     ],
     documentTemplateSections: [
       { heading: 'Executive Summary', description: 'Overview of the project' },
-      { heading: 'Market Analysis', description: 'Target market details', requiredFields: ['target', 'size'] },
+      {
+        heading: 'Market Analysis',
+        description: 'Target market details',
+        requiredFields: ['target', 'size'],
+      },
     ],
   };
 
@@ -201,7 +205,9 @@ describe('AiDocumentContentService', () => {
       expect(mockMessagesStream).toHaveBeenCalledTimes(1);
       expect(result.title).toBe('Business Requirements for SaaS Application');
       expect(result.sections.length).toBe(2);
-      expect(result.summary).toBe('This document outlines business requirements for a SaaS Application.');
+      expect(result.summary).toBe(
+        'This document outlines business requirements for a SaaS Application.',
+      );
     });
 
     it('should fall back to placeholder when Claude returns empty response', async () => {
@@ -489,11 +495,13 @@ describe('AiDocumentContentService', () => {
         projectTypeName: 'App',
         documentTypeName: 'Spec',
         sessionAnswers: [
-          { question: 'Describe your security requirements', answer: 'MFA required', dimensionKey: 'general' },
+          {
+            question: 'Describe your security requirements',
+            answer: 'MFA required',
+            dimensionKey: 'general',
+          },
         ],
-        documentTemplateSections: [
-          { heading: 'Security', description: 'Security overview' },
-        ],
+        documentTemplateSections: [{ heading: 'Security', description: 'Security overview' }],
       };
 
       const result = await service.generateDocumentContent(params);
@@ -507,9 +515,7 @@ describe('AiDocumentContentService', () => {
       const params: GenerateDocumentContentParams = {
         projectTypeName: 'App',
         documentTypeName: 'Doc',
-        sessionAnswers: [
-          { question: 'Budget?', answer: '$100K', dimensionKey: 'finance' },
-        ],
+        sessionAnswers: [{ question: 'Budget?', answer: '$100K', dimensionKey: 'finance' }],
         documentTemplateSections: [
           { heading: 'User Experience', description: 'UX design guidelines' },
         ],
@@ -556,9 +562,7 @@ describe('AiDocumentContentService', () => {
         projectTypeName: 'App',
         documentTypeName: 'Doc',
         sessionAnswers: manyAnswers,
-        documentTemplateSections: [
-          { heading: 'Market', description: 'Market overview' },
-        ],
+        documentTemplateSections: [{ heading: 'Market', description: 'Market overview' }],
       };
 
       const result = await service.generateDocumentContent(params);
@@ -580,9 +584,7 @@ describe('AiDocumentContentService', () => {
           { question: 'Q2', answer: 'A2', dimensionKey: 'general' },
           { question: 'Q3', answer: 'A3', dimensionKey: 'general' },
         ],
-        documentTemplateSections: [
-          { heading: 'Intro', description: 'Introduction' },
-        ],
+        documentTemplateSections: [{ heading: 'Intro', description: 'Introduction' }],
       };
 
       const result = await service.generateDocumentContent(params);

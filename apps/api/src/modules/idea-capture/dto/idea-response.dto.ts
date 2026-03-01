@@ -15,7 +15,8 @@ export class ProjectTypeRecommendationDto {
 
   @ApiProperty({
     description: 'Why this project type was recommended',
-    example: 'Your idea describes a startup with a subscription business model, which aligns well with comprehensive business planning.',
+    example:
+      'Your idea describes a startup with a subscription business model, which aligns well with comprehensive business planning.',
   })
   reasoning: string;
 }
@@ -29,7 +30,11 @@ export class IdeaAnalysisDto {
 
   @ApiProperty({
     description: 'Identified gaps or areas that need further exploration',
-    example: ['target market size not specified', 'no mention of competitive landscape', 'funding strategy unclear'],
+    example: [
+      'target market size not specified',
+      'no mention of competitive landscape',
+      'funding strategy unclear',
+    ],
   })
   gaps: string[];
 
@@ -53,7 +58,8 @@ export class IdeaAnalysisDto {
 
   @ApiProperty({
     description: 'Brief summary of the idea analysis',
-    example: 'Your pet services marketplace idea has a clear value proposition. We recommend starting with a comprehensive Business Plan to cover market analysis, financial projections, and go-to-market strategy.',
+    example:
+      'Your pet services marketplace idea has a clear value proposition. We recommend starting with a comprehensive Business Plan to cover market analysis, financial projections, and go-to-market strategy.',
   })
   summary: string;
 }

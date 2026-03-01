@@ -9,7 +9,7 @@ vi.mock('../../api/questionnaire', () => {
   const questionnaireApi = {
     generatePolicyPack: vi.fn(),
   };
-  
+
   return {
     questionnaireApi,
   };
@@ -50,7 +50,13 @@ describe('PolicyPackPage', () => {
       { id: 'opa-2', name: 'require_encryption' },
       { id: 'opa-3', name: 'validate_resource_tags' },
     ],
-    dimensionsCovered: ['Security', 'Compliance', 'Data Protection', 'Access Control', 'Infrastructure'],
+    dimensionsCovered: [
+      'Security',
+      'Compliance',
+      'Data Protection',
+      'Access Control',
+      'Infrastructure',
+    ],
     terraformRules: `
 resource "aws_s3_bucket" "secure_bucket" {
   bucket = "my-secure-bucket"
@@ -96,7 +102,7 @@ resource "aws_iam_policy" "admin_policy" {
           <Route path="/policy-pack/:sessionId" element={<PolicyPackPage />} />
           <Route path="/dashboard" element={<div>Dashboard</div>} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
   };
 
@@ -111,7 +117,9 @@ resource "aws_iam_policy" "admin_policy" {
       expect(screen.getByText('Policy Pack Generator')).toBeInTheDocument();
 
       // Should show description
-      expect(screen.getByText(/Generate OPA policies, Terraform rules, and governance documents/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Generate OPA policies, Terraform rules, and governance documents/),
+      ).toBeInTheDocument();
 
       // Should show generate button
       const generateButton = screen.getByText('Generate Policy Pack');
@@ -119,7 +127,9 @@ resource "aws_iam_policy" "admin_policy" {
       expect(generateButton).not.toBeDisabled();
 
       // Should show helper text
-      expect(screen.getByText(/This will analyze session gaps and produce policy documents/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/This will analyze session gaps and produce policy documents/),
+      ).toBeInTheDocument();
     });
 
     it('navigates back to dashboard when back link is clicked', () => {
@@ -145,7 +155,7 @@ resource "aws_iam_policy" "admin_policy" {
     it('shows loading state during generation', async () => {
       // Make the API call take some time
       vi.mocked(questionnaireApi.generatePolicyPack).mockImplementation(
-        () => new Promise(resolve => setTimeout(() => resolve(mockPolicyPackData), 100))
+        () => new Promise((resolve) => setTimeout(() => resolve(mockPolicyPackData), 100)),
       );
 
       renderPolicyPackPage();
@@ -163,7 +173,9 @@ resource "aws_iam_policy" "admin_policy" {
     });
 
     it('displays error when generation fails', async () => {
-      vi.mocked(questionnaireApi.generatePolicyPack).mockRejectedValue(new Error('Generation failed'));
+      vi.mocked(questionnaireApi.generatePolicyPack).mockRejectedValue(
+        new Error('Generation failed'),
+      );
 
       renderPolicyPackPage();
 
@@ -249,13 +261,19 @@ resource "aws_iam_policy" "admin_policy" {
       expect(screen.getByText('Access Control Policy')).toBeInTheDocument();
 
       // Should show policy descriptions
-      expect(screen.getByText('Comprehensive security requirements for cloud infrastructure')).toBeInTheDocument();
-      expect(screen.getByText('Guidelines for handling sensitive data and compliance requirements')).toBeInTheDocument();
-      expect(screen.getByText('Role-based access control implementation guidelines')).toBeInTheDocument();
+      expect(
+        screen.getByText('Comprehensive security requirements for cloud infrastructure'),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText('Guidelines for handling sensitive data and compliance requirements'),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText('Role-based access control implementation guidelines'),
+      ).toBeInTheDocument();
 
       // Should show policy cards with proper styling
-      const policyCards = screen.getAllByText(/Policy/).map(el => el.closest('div'));
-      policyCards.forEach(card => {
+      const policyCards = screen.getAllByText(/Policy/).map((el) => el.closest('div'));
+      policyCards.forEach((card) => {
         expect(card).toHaveStyle({ border: '1px solid #e5e7eb' });
         expect(card).toHaveStyle({ borderRadius: '8px' });
         expect(card).toHaveStyle({ padding: '16px' });
@@ -333,22 +351,22 @@ resource "aws_iam_policy" "admin_policy" {
   describe('UI Behavior', () => {
     it('maintains button disabled state during API call', async () => {
       vi.mocked(questionnaireApi.generatePolicyPack).mockImplementation(
-        () => new Promise(resolve => setTimeout(() => resolve(mockPolicyPackData), 200))
+        () => new Promise((resolve) => setTimeout(() => resolve(mockPolicyPackData), 200)),
       );
 
       renderPolicyPackPage();
 
       const generateButton = screen.getByText('Generate Policy Pack');
-      
+
       // Initially enabled
       expect(generateButton).not.toBeDisabled();
-      
+
       fireEvent.click(generateButton);
-      
+
       // Should be disabled during API call
       expect(generateButton).toBeDisabled();
       expect(screen.getByText('Generating...')).toBeInTheDocument();
-      
+
       // Wait for completion
       await waitFor(() => {
         expect(generateButton).not.toBeDisabled();

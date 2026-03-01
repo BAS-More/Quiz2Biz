@@ -436,7 +436,10 @@ describe('JiraConfluenceAdapter', () => {
         summary,
         description: 'A description',
         issuetype: { name: 'Story', iconUrl: 'https://icon' },
-        status: { name: 'In Progress', statusCategory: { key: 'indeterminate', name: 'In Progress' } },
+        status: {
+          name: 'In Progress',
+          statusCategory: { key: 'indeterminate', name: 'In Progress' },
+        },
         priority: { name: 'High' },
         assignee: { displayName: 'Alice', emailAddress: 'alice@test.com' },
         reporter: { displayName: 'Bob', emailAddress: 'bob@test.com' },
@@ -451,12 +454,24 @@ describe('JiraConfluenceAdapter', () => {
         parent: { key: 'TEST-1', fields: { summary: 'Epic' } },
         subtasks: [{ key: 'TEST-3', fields: { summary: 'Sub', status: { name: 'Done' } } }],
         attachment: [
-          { id: 'a1', filename: 'doc.pdf', mimeType: 'application/pdf', size: 1024, created: '2025-01-01T00:00:00Z' },
+          {
+            id: 'a1',
+            filename: 'doc.pdf',
+            mimeType: 'application/pdf',
+            size: 1024,
+            created: '2025-01-01T00:00:00Z',
+          },
         ],
         comment: {
           total: 2,
           comments: [
-            { id: 'c1', author: { displayName: 'Alice' }, body: 'Comment', created: '2025-01-01T00:00:00Z', updated: '2025-01-01T00:00:00Z' },
+            {
+              id: 'c1',
+              author: { displayName: 'Alice' },
+              body: 'Comment',
+              created: '2025-01-01T00:00:00Z',
+              updated: '2025-01-01T00:00:00Z',
+            },
           ],
         },
       },
@@ -593,12 +608,24 @@ describe('JiraConfluenceAdapter', () => {
           components: [{ name: 'Frontend' }, { name: 'Backend' }],
           fixVersions: [],
           attachment: [
-            { id: 'a1', filename: 'screenshot.png', mimeType: 'image/png', size: 2048, created: '2025-01-02T00:00:00Z' },
+            {
+              id: 'a1',
+              filename: 'screenshot.png',
+              mimeType: 'image/png',
+              size: 2048,
+              created: '2025-01-02T00:00:00Z',
+            },
           ],
           comment: {
             total: 1,
             comments: [
-              { id: 'c1', author: { displayName: 'Alice' }, body: 'Fixed it', created: '2025-01-03T00:00:00Z', updated: '2025-01-03T00:00:00Z' },
+              {
+                id: 'c1',
+                author: { displayName: 'Alice' },
+                body: 'Fixed it',
+                created: '2025-01-03T00:00:00Z',
+                updated: '2025-01-03T00:00:00Z',
+              },
             ],
           },
         },
@@ -613,7 +640,13 @@ describe('JiraConfluenceAdapter', () => {
       expect(result.data.key).toBe('TEST-123');
       expect(result.data.components).toEqual(['Frontend', 'Backend']);
       expect(result.data.attachments).toEqual([
-        { id: 'a1', filename: 'screenshot.png', mimeType: 'image/png', size: 2048, created: '2025-01-02T00:00:00Z' },
+        {
+          id: 'a1',
+          filename: 'screenshot.png',
+          mimeType: 'image/png',
+          size: 2048,
+          created: '2025-01-02T00:00:00Z',
+        },
       ]);
       expect(result.data.comments).toEqual([
         { id: 'c1', author: 'Alice', body: 'Fixed it', created: '2025-01-03T00:00:00Z' },
@@ -813,7 +846,9 @@ describe('JiraConfluenceAdapter', () => {
     it('should search with CQL when cql option is provided', async () => {
       mockFetch.mockResolvedValueOnce(okResponse(searchResult));
 
-      const results = await adapter.searchPages(confluenceConfig, { cql: 'type = page AND space = TEST' });
+      const results = await adapter.searchPages(confluenceConfig, {
+        cql: 'type = page AND space = TEST',
+      });
 
       expect(results).toHaveLength(1);
       const calledUrl = mockFetch.mock.calls[0][0] as string;
@@ -869,7 +904,9 @@ describe('JiraConfluenceAdapter', () => {
     });
 
     it('should use the Confluence API base URL', async () => {
-      mockFetch.mockResolvedValueOnce(okResponse({ results: [], start: 0, limit: 25, size: 0, totalSize: 0 }));
+      mockFetch.mockResolvedValueOnce(
+        okResponse({ results: [], start: 0, limit: 25, size: 0, totalSize: 0 }),
+      );
 
       await adapter.searchPages(confluenceConfig);
 
@@ -956,9 +993,7 @@ describe('JiraConfluenceAdapter', () => {
 
       expect(results).toHaveLength(1);
       const calledUrl = mockFetch.mock.calls[0][0] as string;
-      expect(calledUrl).toContain(
-        encodeURIComponent('space = TEST AND label = "architecture"'),
-      );
+      expect(calledUrl).toContain(encodeURIComponent('space = TEST AND label = "architecture"'));
     });
 
     it('should pass custom limit and start options', async () => {
@@ -1042,8 +1077,12 @@ describe('JiraConfluenceAdapter', () => {
     });
 
     it('should update an existing page when existingPageId is provided', async () => {
-      const existingPage = makeConfluencePage({ version: { number: 3, when: '2025-01-01T00:00:00Z', by: { displayName: 'Author' } } });
-      const updatedPage = makeConfluencePage({ version: { number: 4, when: '2025-01-02T00:00:00Z', by: { displayName: 'Author' } } });
+      const existingPage = makeConfluencePage({
+        version: { number: 3, when: '2025-01-01T00:00:00Z', by: { displayName: 'Author' } },
+      });
+      const updatedPage = makeConfluencePage({
+        version: { number: 4, when: '2025-01-02T00:00:00Z', by: { displayName: 'Author' } },
+      });
 
       // GET existing page to read version number
       mockFetch.mockResolvedValueOnce(okResponse(existingPage));
@@ -1145,12 +1184,16 @@ describe('JiraConfluenceAdapter', () => {
       );
 
       // syncPage for doc 1 (POST /content)
-      mockFetch.mockResolvedValueOnce(okResponse(makeConfluencePage({ id: '1001', title: 'Architecture Overview' })));
+      mockFetch.mockResolvedValueOnce(
+        okResponse(makeConfluencePage({ id: '1001', title: 'Architecture Overview' })),
+      );
       // addLabels for doc 1
       mockFetch.mockResolvedValueOnce(okResponse({}));
 
       // syncPage for doc 2 (POST /content)
-      mockFetch.mockResolvedValueOnce(okResponse(makeConfluencePage({ id: '1002', title: 'User Guide' })));
+      mockFetch.mockResolvedValueOnce(
+        okResponse(makeConfluencePage({ id: '1002', title: 'User Guide' })),
+      );
       // addLabels for doc 2
       mockFetch.mockResolvedValueOnce(okResponse({}));
 
@@ -1175,12 +1218,16 @@ describe('JiraConfluenceAdapter', () => {
 
       // syncPage for doc 1 (existing) -> GET existing + PUT update
       mockFetch.mockResolvedValueOnce(okResponse(existingPage)); // GET for version
-      mockFetch.mockResolvedValueOnce(okResponse(makeConfluencePage({ id: '1001', title: 'Architecture Overview' }))); // PUT
+      mockFetch.mockResolvedValueOnce(
+        okResponse(makeConfluencePage({ id: '1001', title: 'Architecture Overview' })),
+      ); // PUT
       // addLabels for doc 1
       mockFetch.mockResolvedValueOnce(okResponse({}));
 
       // syncPage for doc 2 (new) -> POST
-      mockFetch.mockResolvedValueOnce(okResponse(makeConfluencePage({ id: '1002', title: 'User Guide' })));
+      mockFetch.mockResolvedValueOnce(
+        okResponse(makeConfluencePage({ id: '1002', title: 'User Guide' })),
+      );
       // addLabels for doc 2
       mockFetch.mockResolvedValueOnce(okResponse({}));
 
@@ -1200,7 +1247,9 @@ describe('JiraConfluenceAdapter', () => {
       mockFetch.mockResolvedValueOnce(errorResponse(500, 'Internal Server Error'));
 
       // Doc 2 succeeds
-      mockFetch.mockResolvedValueOnce(okResponse(makeConfluencePage({ id: '1002', title: 'User Guide' })));
+      mockFetch.mockResolvedValueOnce(
+        okResponse(makeConfluencePage({ id: '1002', title: 'User Guide' })),
+      );
       // addLabels for doc 2
       mockFetch.mockResolvedValueOnce(okResponse({}));
 
@@ -1262,7 +1311,14 @@ describe('JiraConfluenceAdapter', () => {
 
       await adapter.syncDocumentation(
         confluenceConfig,
-        [{ title: 'Test', content: '# Heading 1\n## Heading 2\n### Heading 3', category: 'test', labels: [] }],
+        [
+          {
+            title: 'Test',
+            content: '# Heading 1\n## Heading 2\n### Heading 3',
+            category: 'test',
+            labels: [],
+          },
+        ],
         'parent-1',
       );
 
@@ -1448,7 +1504,12 @@ describe('JiraConfluenceAdapter', () => {
         }),
       );
 
-      const result = await adapter.ingestAllEvidence(jiraConfig, confluenceConfig, 'session-1', 'TEST');
+      const result = await adapter.ingestAllEvidence(
+        jiraConfig,
+        confluenceConfig,
+        'session-1',
+        'TEST',
+      );
 
       expect(result.ingested).toBe(4); // 1 project + 2 issues + 1 page
       expect(result.results.jira_project).toBe(1);
@@ -1480,7 +1541,12 @@ describe('JiraConfluenceAdapter', () => {
       // searchPages fails
       mockFetch.mockResolvedValueOnce(errorResponse(500, 'Server Error'));
 
-      const result = await adapter.ingestAllEvidence(jiraConfig, confluenceConfig, 'session-1', 'TEST');
+      const result = await adapter.ingestAllEvidence(
+        jiraConfig,
+        confluenceConfig,
+        'session-1',
+        'TEST',
+      );
 
       expect(result.ingested).toBe(0);
       expect(result.errors).toHaveLength(3);

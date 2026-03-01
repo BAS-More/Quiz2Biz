@@ -18,10 +18,7 @@ describe('AdaptiveCardService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        AdaptiveCardService,
-        { provide: ConfigService, useValue: mockConfigService },
-      ],
+      providers: [AdaptiveCardService, { provide: ConfigService, useValue: mockConfigService }],
     }).compile();
 
     service = module.get<AdaptiveCardService>(AdaptiveCardService);
@@ -86,11 +83,23 @@ describe('AdaptiveCardService', () => {
       criticalGaps: 3,
       highGaps: 4,
       gaps: [
-        { question: 'Gap 1', dimension: 'Security', severity: 0.9, coverage: 0.1, questionId: 'q1' },
+        {
+          question: 'Gap 1',
+          dimension: 'Security',
+          severity: 0.9,
+          coverage: 0.1,
+          questionId: 'q1',
+        },
         { question: 'Gap 2', dimension: 'DevOps', severity: 0.75, coverage: 0.2, questionId: 'q2' },
         { question: 'Gap 3', dimension: 'Testing', severity: 0.5, coverage: 0.3, questionId: 'q3' },
         { question: 'Gap 4', dimension: 'Docs', severity: 0.3, coverage: 0.4, questionId: 'q4' },
-        { question: 'Gap 5', dimension: 'Security', severity: 0.6, coverage: 0.2, questionId: 'q5' },
+        {
+          question: 'Gap 5',
+          dimension: 'Security',
+          severity: 0.6,
+          coverage: 0.2,
+          questionId: 'q5',
+        },
         { question: 'Gap 6', dimension: 'Other', severity: 0.4, coverage: 0.5, questionId: 'q6' },
       ],
       gapsUrl: 'https://example.com/gaps',
@@ -223,8 +232,12 @@ describe('AdaptiveCardService', () => {
 
     it('should use approval webhook URL if available', async () => {
       mockConfigService.get.mockImplementation((key: string) => {
-        if (key === 'TEAMS_APPROVAL_WEBHOOK_URL') {return undefined;}
-        if (key === 'TEAMS_WEBHOOK_URL') {return undefined;}
+        if (key === 'TEAMS_APPROVAL_WEBHOOK_URL') {
+          return undefined;
+        }
+        if (key === 'TEAMS_WEBHOOK_URL') {
+          return undefined;
+        }
         return undefined;
       });
       await service.notifyApprovalRequired({} as ApprovalRequestCardData);
@@ -310,34 +323,51 @@ describe('AdaptiveCardService', () => {
       sessionName: 'Emoji Test',
       overallScore: 0.5,
       dimensions: [],
-      progress: { sectionsLeft: 0, questionsLeft: 0, currentSectionProgress: 0, currentSectionTotal: 0 },
+      progress: {
+        sectionsLeft: 0,
+        questionsLeft: 0,
+        currentSectionProgress: 0,
+        currentSectionTotal: 0,
+      },
       heatmapUrl: '',
       continueUrl: '',
     };
 
     it('should use green emoji for score >= 0.95', () => {
-      const data = { ...baseData, dimensions: [{ name: 'A', score: 0.96, questionsAnswered: 10, totalQuestions: 10 }] };
+      const data = {
+        ...baseData,
+        dimensions: [{ name: 'A', score: 0.96, questionsAnswered: 10, totalQuestions: 10 }],
+      };
       const card = service.generateHeatmapCard(data);
       const bodyJson = JSON.stringify(card.body);
       expect(bodyJson).toContain('\u{1F7E2}'); // green circle
     });
 
     it('should use yellow emoji for score >= 0.7 and < 0.95', () => {
-      const data = { ...baseData, dimensions: [{ name: 'B', score: 0.75, questionsAnswered: 7, totalQuestions: 10 }] };
+      const data = {
+        ...baseData,
+        dimensions: [{ name: 'B', score: 0.75, questionsAnswered: 7, totalQuestions: 10 }],
+      };
       const card = service.generateHeatmapCard(data);
       const bodyJson = JSON.stringify(card.body);
       expect(bodyJson).toContain('\u{1F7E1}'); // yellow circle
     });
 
     it('should use orange emoji for score >= 0.4 and < 0.7', () => {
-      const data = { ...baseData, dimensions: [{ name: 'C', score: 0.5, questionsAnswered: 5, totalQuestions: 10 }] };
+      const data = {
+        ...baseData,
+        dimensions: [{ name: 'C', score: 0.5, questionsAnswered: 5, totalQuestions: 10 }],
+      };
       const card = service.generateHeatmapCard(data);
       const bodyJson = JSON.stringify(card.body);
       expect(bodyJson).toContain('\u{1F7E0}'); // orange circle
     });
 
     it('should use red emoji for score < 0.4', () => {
-      const data = { ...baseData, dimensions: [{ name: 'D', score: 0.2, questionsAnswered: 2, totalQuestions: 10 }] };
+      const data = {
+        ...baseData,
+        dimensions: [{ name: 'D', score: 0.2, questionsAnswered: 2, totalQuestions: 10 }],
+      };
       const card = service.generateHeatmapCard(data);
       const bodyJson = JSON.stringify(card.body);
       expect(bodyJson).toContain('\u{1F534}'); // red circle
@@ -349,7 +379,12 @@ describe('AdaptiveCardService', () => {
       sessionName: 'Color Test',
       overallScore: 0.5,
       dimensions: [],
-      progress: { sectionsLeft: 0, questionsLeft: 0, currentSectionProgress: 0, currentSectionTotal: 0 },
+      progress: {
+        sectionsLeft: 0,
+        questionsLeft: 0,
+        currentSectionProgress: 0,
+        currentSectionTotal: 0,
+      },
       heatmapUrl: '',
       continueUrl: '',
     };
@@ -384,28 +419,40 @@ describe('AdaptiveCardService', () => {
     };
 
     it('should use red emoji for severity >= 0.8', () => {
-      const data = { ...baseGapData, gaps: [{ question: 'Q1', dimension: 'D', severity: 0.85, coverage: 0.1, questionId: 'q1' }] };
+      const data = {
+        ...baseGapData,
+        gaps: [{ question: 'Q1', dimension: 'D', severity: 0.85, coverage: 0.1, questionId: 'q1' }],
+      };
       const card = service.generateGapSummaryCard(data);
       const bodyJson = JSON.stringify(card.body);
       expect(bodyJson).toContain('\u{1F534}');
     });
 
     it('should use orange emoji for severity >= 0.6 and < 0.8', () => {
-      const data = { ...baseGapData, gaps: [{ question: 'Q2', dimension: 'D', severity: 0.65, coverage: 0.2, questionId: 'q2' }] };
+      const data = {
+        ...baseGapData,
+        gaps: [{ question: 'Q2', dimension: 'D', severity: 0.65, coverage: 0.2, questionId: 'q2' }],
+      };
       const card = service.generateGapSummaryCard(data);
       const bodyJson = JSON.stringify(card.body);
       expect(bodyJson).toContain('\u{1F7E0}');
     });
 
     it('should use yellow emoji for severity >= 0.4 and < 0.6', () => {
-      const data = { ...baseGapData, gaps: [{ question: 'Q3', dimension: 'D', severity: 0.45, coverage: 0.3, questionId: 'q3' }] };
+      const data = {
+        ...baseGapData,
+        gaps: [{ question: 'Q3', dimension: 'D', severity: 0.45, coverage: 0.3, questionId: 'q3' }],
+      };
       const card = service.generateGapSummaryCard(data);
       const bodyJson = JSON.stringify(card.body);
       expect(bodyJson).toContain('\u{1F7E1}');
     });
 
     it('should use green emoji for severity < 0.4', () => {
-      const data = { ...baseGapData, gaps: [{ question: 'Q4', dimension: 'D', severity: 0.2, coverage: 0.5, questionId: 'q4' }] };
+      const data = {
+        ...baseGapData,
+        gaps: [{ question: 'Q4', dimension: 'D', severity: 0.2, coverage: 0.5, questionId: 'q4' }],
+      };
       const card = service.generateGapSummaryCard(data);
       const bodyJson = JSON.stringify(card.body);
       expect(bodyJson).toContain('\u{1F7E2}');
@@ -437,7 +484,13 @@ describe('AdaptiveCardService', () => {
         criticalGaps: 1,
         highGaps: 0,
         gaps: [
-          { question: 'Critical Gap', dimension: 'Sec', severity: 0.9, coverage: 0.1, questionId: 'q1' },
+          {
+            question: 'Critical Gap',
+            dimension: 'Sec',
+            severity: 0.9,
+            coverage: 0.1,
+            questionId: 'q1',
+          },
         ],
         gapsUrl: '',
         promptsUrl: '',
@@ -453,7 +506,13 @@ describe('AdaptiveCardService', () => {
         criticalGaps: 0,
         highGaps: 0,
         gaps: [
-          { question: 'Medium Gap', dimension: 'Ops', severity: 0.5, coverage: 0.3, questionId: 'q1' },
+          {
+            question: 'Medium Gap',
+            dimension: 'Ops',
+            severity: 0.5,
+            coverage: 0.3,
+            questionId: 'q1',
+          },
         ],
         gapsUrl: '',
         promptsUrl: '',
@@ -524,7 +583,13 @@ describe('AdaptiveCardService', () => {
         criticalGaps: 0,
         highGaps: 0,
         gaps: [
-          { question: 'Coverage Test', dimension: 'Infrastructure', severity: 0.6, coverage: 0.35, questionId: 'q1' },
+          {
+            question: 'Coverage Test',
+            dimension: 'Infrastructure',
+            severity: 0.6,
+            coverage: 0.35,
+            questionId: 'q1',
+          },
         ],
         gapsUrl: '',
         promptsUrl: '',
@@ -775,7 +840,12 @@ describe('AdaptiveCardService', () => {
         sessionName: 'S',
         overallScore: 0.5,
         dimensions: [],
-        progress: { sectionsLeft: 0, questionsLeft: 0, currentSectionProgress: 0, currentSectionTotal: 0 },
+        progress: {
+          sectionsLeft: 0,
+          questionsLeft: 0,
+          currentSectionProgress: 0,
+          currentSectionTotal: 0,
+        },
         heatmapUrl: '',
         continueUrl: '',
       });
@@ -788,8 +858,12 @@ describe('AdaptiveCardService', () => {
   describe('branch coverage - notifyApprovalRequired with approval-specific webhook', () => {
     it('should use TEAMS_APPROVAL_WEBHOOK_URL when set', async () => {
       mockConfigService.get.mockImplementation((key: string) => {
-        if (key === 'TEAMS_APPROVAL_WEBHOOK_URL') {return 'https://teams.webhook/approval';}
-        if (key === 'TEAMS_WEBHOOK_URL') {return 'https://teams.webhook/general';}
+        if (key === 'TEAMS_APPROVAL_WEBHOOK_URL') {
+          return 'https://teams.webhook/approval';
+        }
+        if (key === 'TEAMS_WEBHOOK_URL') {
+          return 'https://teams.webhook/general';
+        }
         return undefined;
       });
 
@@ -814,8 +888,12 @@ describe('AdaptiveCardService', () => {
 
     it('should fall back to TEAMS_WEBHOOK_URL when TEAMS_APPROVAL_WEBHOOK_URL is undefined', async () => {
       mockConfigService.get.mockImplementation((key: string) => {
-        if (key === 'TEAMS_APPROVAL_WEBHOOK_URL') {return undefined;}
-        if (key === 'TEAMS_WEBHOOK_URL') {return 'https://teams.webhook/general';}
+        if (key === 'TEAMS_APPROVAL_WEBHOOK_URL') {
+          return undefined;
+        }
+        if (key === 'TEAMS_WEBHOOK_URL') {
+          return 'https://teams.webhook/general';
+        }
         return undefined;
       });
 
@@ -864,7 +942,9 @@ describe('AdaptiveCardService', () => {
         totalGaps: 1,
         criticalGaps: 0,
         highGaps: 0,
-        gaps: [{ question: 'Edge', dimension: 'D', severity: 0.4, coverage: 0.5, questionId: 'q1' }],
+        gaps: [
+          { question: 'Edge', dimension: 'D', severity: 0.4, coverage: 0.5, questionId: 'q1' },
+        ],
         gapsUrl: '',
         promptsUrl: '',
       };

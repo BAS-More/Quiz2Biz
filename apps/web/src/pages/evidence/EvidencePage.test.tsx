@@ -80,8 +80,8 @@ describe('EvidencePage', () => {
     renderEvidencePage();
 
     expect(screen.getByText('10')).toBeInTheDocument(); // Total
-    expect(screen.getByText('6')).toBeInTheDocument();  // Verified
-    expect(screen.getByText('4')).toBeInTheDocument();  // Pending
+    expect(screen.getByText('6')).toBeInTheDocument(); // Verified
+    expect(screen.getByText('4')).toBeInTheDocument(); // Pending
   });
 
   it('displays evidence items table', () => {

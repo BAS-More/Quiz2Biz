@@ -105,9 +105,9 @@ describe('CIArtifactIngestionService', () => {
     it('should throw BadRequestException for unknown artifact type', async () => {
       mockPrismaService.session.findUnique.mockResolvedValue(mockSession as any);
 
-      await expect(
-        service.ingestArtifact({ ...baseDto, artifactType: 'unknown' }),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.ingestArtifact({ ...baseDto, artifactType: 'unknown' })).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should ingest JUnit XML artifact', async () => {
@@ -331,9 +331,9 @@ end_of_record
       mockPrismaService.question.findFirst.mockResolvedValue(null);
       mockPrismaService.response.findFirst.mockResolvedValue(null);
 
-      await expect(
-        service.ingestArtifact({ ...baseDto, questionId: undefined }),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.ingestArtifact({ ...baseDto, questionId: undefined })).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 
@@ -347,7 +347,11 @@ end_of_record
         ciProvider: 'github',
         buildId: 'build-456',
         artifacts: [
-          { artifactType: 'jest', content: JSON.stringify({ numTotalTests: 10 }), questionId: 'q1' },
+          {
+            artifactType: 'jest',
+            content: JSON.stringify({ numTotalTests: 10 }),
+            questionId: 'q1',
+          },
           { artifactType: 'lcov', content: 'LF:100\nLH:80', questionId: 'q2' },
         ],
       });
@@ -690,7 +694,8 @@ end_of_record
         ciProvider: 'github',
         buildId: 'build-1',
         artifactType: 'lcov',
-        content: 'SF:src/file.ts\nLF:abc\nLH:xyz\nFNF:def\nFNH:ghi\nBRF:jkl\nBRH:mno\nend_of_record',
+        content:
+          'SF:src/file.ts\nLF:abc\nLH:xyz\nFNF:def\nFNH:ghi\nBRF:jkl\nBRH:mno\nend_of_record',
       });
 
       const summary = result.parsedData.summary as any;
@@ -877,12 +882,14 @@ end_of_record
         buildId: 'build-1',
         artifactType: 'trivy',
         content: JSON.stringify({
-          Results: [{
-            Vulnerabilities: [
-              { VulnerabilityID: 'CVE-1', Severity: null, PkgName: 'pkg' },
-              { VulnerabilityID: 'CVE-2', PkgName: 'pkg2' }, // undefined Severity
-            ],
-          }],
+          Results: [
+            {
+              Vulnerabilities: [
+                { VulnerabilityID: 'CVE-1', Severity: null, PkgName: 'pkg' },
+                { VulnerabilityID: 'CVE-2', PkgName: 'pkg2' }, // undefined Severity
+              ],
+            },
+          ],
         }),
       });
 
@@ -900,12 +907,14 @@ end_of_record
         buildId: 'build-1',
         artifactType: 'trivy',
         content: JSON.stringify({
-          Results: [{
-            Vulnerabilities: [
-              { VulnerabilityID: 'CVE-1', Severity: 'MEDIUM', PkgName: 'pkg1' },
-              { VulnerabilityID: 'CVE-2', Severity: 'LOW', PkgName: 'pkg2' },
-            ],
-          }],
+          Results: [
+            {
+              Vulnerabilities: [
+                { VulnerabilityID: 'CVE-1', Severity: 'MEDIUM', PkgName: 'pkg1' },
+                { VulnerabilityID: 'CVE-2', Severity: 'LOW', PkgName: 'pkg2' },
+              ],
+            },
+          ],
         }),
       });
 
@@ -1138,7 +1147,9 @@ end_of_record
       // First call succeeds, second throws a non-Error
       mockPrismaService.evidenceRegistry.create
         .mockResolvedValueOnce(mockEvidence as any)
-        .mockImplementationOnce(() => { throw 'string error'; });
+        .mockImplementationOnce(() => {
+          throw 'string error';
+        });
 
       const result = await service.bulkIngestArtifacts({
         sessionId: 'session-123',

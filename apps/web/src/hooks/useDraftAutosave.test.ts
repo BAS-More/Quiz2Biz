@@ -1,6 +1,11 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { useDraftAutosave, formatTimeSinceSave, isDraftRecoverable, type DraftData } from './useDraftAutosave';
+import {
+  useDraftAutosave,
+  formatTimeSinceSave,
+  isDraftRecoverable,
+  type DraftData,
+} from './useDraftAutosave';
 
 // Mock localStorage
 const mockLocalStorage = {
@@ -20,7 +25,9 @@ const mockLocalStorage = {
 // Helper to create IDBRequest-like objects with async callback support
 const createMockIDBRequest = (result: unknown = null) => {
   const req: any = {
-    get onsuccess() { return this.successHandler; },
+    get onsuccess() {
+      return this.successHandler;
+    },
     set onsuccess(handler) {
       this.successHandler = handler;
       if (handler) queueMicrotask(() => handler({ target: req } as Event));
@@ -52,7 +59,7 @@ const mockIndexedDB = {
         createIndex: vi.fn(),
       }),
     };
-    
+
     return createMockIDBRequest(mockDB);
   }),
 };
@@ -83,7 +90,7 @@ describe('useDraftAutosave', () => {
 
   it('initializes with correct default status', () => {
     const { result } = renderHook(() => useDraftAutosave(mockOptions));
-    
+
     expect(result.current.status).toEqual({
       isSaving: false,
       lastSaved: null,
@@ -109,15 +116,15 @@ describe('useDraftAutosave', () => {
         completedQuestions: 5,
       },
     };
-    
+
     const storageKey = `quiz2biz_draft_test-session-123_test-questionnaire-456`;
     mockLocalStorage.setItem(storageKey, JSON.stringify(mockDraft));
 
     const { result } = renderHook(() => useDraftAutosave(mockOptions));
-    
+
     // Wait for async initialization
     await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
     });
 
     expect(result.current.hasDraft).toBe(true);
@@ -136,9 +143,7 @@ describe('useDraftAutosave', () => {
       },
     };
 
-    const { result } = renderHook(() => 
-      useDraftAutosave({ ...mockOptions, onSaveSuccess })
-    );
+    const { result } = renderHook(() => useDraftAutosave({ ...mockOptions, onSaveSuccess }));
 
     await act(async () => {
       await result.current.saveDraft(mockData);
@@ -149,25 +154,25 @@ describe('useDraftAutosave', () => {
     expect(result.current.status.hasUnsavedChanges).toBe(false);
     expect(result.current.status.error).toBeNull();
     expect(result.current.hasDraft).toBe(true);
-    expect(onSaveSuccess).toHaveBeenCalledWith(expect.objectContaining({
-      sessionId: 'test-session-123',
-      questionnaireId: 'test-questionnaire-456',
-      responses: mockData.responses,
-      currentQuestionIndex: mockData.currentQuestionIndex,
-    }));
+    expect(onSaveSuccess).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sessionId: 'test-session-123',
+        questionnaireId: 'test-questionnaire-456',
+        responses: mockData.responses,
+        currentQuestionIndex: mockData.currentQuestionIndex,
+      }),
+    );
   });
 
   it('handles save errors', async () => {
     const onSaveError = vi.fn();
-    
+
     // Mock localStorage to throw error
     mockLocalStorage.setItem.mockImplementationOnce(() => {
       throw new Error('Storage quota exceeded');
     });
 
-    const { result } = renderHook(() => 
-      useDraftAutosave({ ...mockOptions, onSaveError })
-    );
+    const { result } = renderHook(() => useDraftAutosave({ ...mockOptions, onSaveError }));
 
     await act(async () => {
       await result.current.saveDraft({ responses: {} });
@@ -197,9 +202,7 @@ describe('useDraftAutosave', () => {
     const storageKey = `quiz2biz_draft_test-session-123_test-questionnaire-456`;
     mockLocalStorage.setItem(storageKey, JSON.stringify(mockDraft));
 
-    const { result } = renderHook(() => 
-      useDraftAutosave({ ...mockOptions, onDraftRecovered })
-    );
+    const { result } = renderHook(() => useDraftAutosave({ ...mockOptions, onDraftRecovered }));
 
     let loadedDraft: DraftData | null = null;
     await act(async () => {
@@ -234,7 +237,7 @@ describe('useDraftAutosave', () => {
 
     // Wait for initialization
     await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
     });
 
     expect(result.current.hasDraft).toBe(true);
@@ -280,11 +283,13 @@ describe('useDraftAutosave', () => {
 
   it('handles autosave functionality', async () => {
     vi.useFakeTimers();
-    
-    const { result } = renderHook(() => useDraftAutosave({
-      ...mockOptions,
-      autosaveIntervalMs: 1000,
-    }));
+
+    const { result } = renderHook(() =>
+      useDraftAutosave({
+        ...mockOptions,
+        autosaveIntervalMs: 1000,
+      }),
+    );
 
     // Set up pending changes
     await act(async () => {
