@@ -216,12 +216,25 @@ jobs:
           head: HEAD
           extra_args: --debug --only-verified
 
+      - name: Determine TruffleHog since-commit
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        id: trufflehog_since
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git rev-parse --verify --quiet HEAD~50 >/dev/null; then
+            SINCE_COMMIT="$(git rev-parse HEAD~50)"
+          else
+            SINCE_COMMIT="$(git rev-list --max-parents=0 --reverse HEAD | head -n 1)"
+          fi
+          echo "commit=$SINCE_COMMIT" >> "$GITHUB_OUTPUT"
+
       - name: TruffleHog Secret Scanning (Schedule/Manual)
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          extra_args: --debug --only-verified --since-commit HEAD~50
+          extra_args: --debug --only-verified --since-commit ${{ steps.trufflehog_since.outputs.commit }}
 
   security-summary:
     name: Security Scan Summary
