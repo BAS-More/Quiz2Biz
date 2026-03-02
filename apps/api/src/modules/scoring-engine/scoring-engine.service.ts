@@ -168,7 +168,7 @@ export class ScoringEngineService {
 
     // Calculate statistics
     const totalQuestions = questions.length;
-    const answeredQuestions = questions.filter((q) => q.responses.length > 0).length;
+    const answeredQuestions = questions.filter((q: { responses: unknown[] }) => q.responses.length > 0).length;
     const completionPercentage =
       totalQuestions > 0 ? (answeredQuestions / totalQuestions) * 100 : 0;
 
@@ -267,11 +267,11 @@ export class ScoringEngineService {
     const dimensions = await this.prisma.dimensionCatalog.findMany({
       where: { isActive: true },
     });
-    const dimensionWeightMap = new Map(dimensions.map((d) => [d.key, Number(d.weight)]));
+    const dimensionWeightMap = new Map(dimensions.map((d: { key: string; weight: unknown }) => [d.key, Number(d.weight)]));
 
     // Calculate total severity per dimension for normalization
     const dimensionSeveritySum = new Map<string, number>();
-    questions.forEach((q) => {
+    questions.forEach((q: { dimensionKey: string | null; severity: unknown }) => {
       if (q.dimensionKey) {
         const current = dimensionSeveritySum.get(q.dimensionKey) || 0;
         dimensionSeveritySum.set(q.dimensionKey, current + (q.severity ? Number(q.severity) : this.DEFAULT_SEVERITY));
@@ -604,7 +604,7 @@ export class ScoringEngineService {
     });
 
     const history: ScoreSnapshot[] = snapshots.length > 0
-      ? snapshots.map((s) => ({
+      ? snapshots.map((s: { createdAt: Date; score: unknown; portfolioResidual: unknown; completionPercentage: unknown }) => ({
           timestamp: s.createdAt,
           score: Number(s.score),
           portfolioResidual: Number(s.portfolioResidual),

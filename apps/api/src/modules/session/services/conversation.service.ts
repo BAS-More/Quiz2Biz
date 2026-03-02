@@ -1,5 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
+import { ConversationMessage } from '@prisma/client';
 import { ClaudeAiService, ConversationFollowUp } from '../../idea-capture/services/claude-ai.service';
 
 export interface ConversationMessageDto {
@@ -113,7 +114,7 @@ export class ConversationService {
       orderBy: { createdAt: 'asc' },
     });
 
-    return messages.map((m) => this.toDto(m));
+    return messages.map((m: ConversationMessage) => this.toDto(m));
   }
 
   /**
@@ -128,7 +129,7 @@ export class ConversationService {
       orderBy: { createdAt: 'asc' },
     });
 
-    return messages.map((m) => this.toDto(m));
+    return messages.map((m: ConversationMessage) => this.toDto(m));
   }
 
   private toDto(message: {

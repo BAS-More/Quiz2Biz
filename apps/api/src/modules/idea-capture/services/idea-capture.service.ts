@@ -31,7 +31,7 @@ export class IdeaCaptureService {
 
     const analysisResult = await this.claudeAi.analyzeIdea(
       dto.rawInput,
-      availableProjectTypes.map((pt) => ({
+      availableProjectTypes.map((pt: { slug: string; name: string; description: string | null }) => ({
         slug: pt.slug,
         name: pt.name,
         description: pt.description ?? '',
@@ -39,7 +39,7 @@ export class IdeaCaptureService {
     );
 
     const recommendedType = availableProjectTypes.find(
-      (pt) => pt.slug === analysisResult.recommendedProjectType.slug,
+      (pt: { slug: string }) => pt.slug === analysisResult.recommendedProjectType.slug,
     );
 
     const selectedProjectTypeId =
@@ -64,7 +64,7 @@ export class IdeaCaptureService {
       `Idea captured: ${ideaCapture.id}, recommended: ${analysisResult.recommendedProjectType.slug}`,
     );
 
-    return this.toResponseDto(ideaCapture, analysisResult, availableProjectTypes.map(pt => ({
+    return this.toResponseDto(ideaCapture, analysisResult, availableProjectTypes.map((pt: { id: string; slug: string; name: string; description: string | null }) => ({
       ...pt,
       description: pt.description ?? '',
     })));
@@ -96,7 +96,7 @@ export class IdeaCaptureService {
       summary: string;
     };
 
-    return this.toResponseDto(ideaCapture, analysis, availableProjectTypes.map(pt => ({
+    return this.toResponseDto(ideaCapture, analysis, availableProjectTypes.map((pt: { id: string; slug: string; name: string; description: string | null }) => ({
       ...pt,
       description: pt.description ?? '',
     })));
