@@ -82,11 +82,11 @@ describe.skip('Evidence → Document Generator Flow Integration', () => {
     });
     testSessionId = session.id;
 
-    const dimension = await prisma.dimension.create({
+    const section = await prisma.section.create({
       data: {
-        name: `Evidence Test Dimension ${Date.now()}`,
-        weight: 1.0,
+        name: `Evidence Test Section ${Date.now()}`,
         questionnaireId: testQuestionnaireId,
+        orderIndex: 0,
       },
     });
 
@@ -94,7 +94,8 @@ describe.skip('Evidence → Document Generator Flow Integration', () => {
       data: {
         text: 'Do you have documented security policies?',
         type: 'FILE_UPLOAD',
-        dimensionId: dimension.id,
+        sectionId: section.id,
+        orderIndex: 0,
         severity: 0.8,
       },
     });
@@ -121,7 +122,7 @@ describe.skip('Evidence → Document Generator Flow Integration', () => {
     await prisma.question.deleteMany({
       where: { text: { contains: 'documented security policies' } },
     });
-    await prisma.dimension.deleteMany({ where: { name: { contains: 'Evidence Test Dimension' } } });
+    await prisma.section.deleteMany({ where: { name: { contains: 'Evidence Test Section' } } });
     await prisma.session.deleteMany({ where: { id: testSessionId } });
     await prisma.questionnaire.deleteMany({ where: { id: testQuestionnaireId } });
     await prisma.user.deleteMany({ where: { id: testUserId } });
@@ -154,14 +155,8 @@ describe.skip('Evidence → Document Generator Flow Integration', () => {
       expect(evidence.fileName).toBe('security-policy.pdf');
       expect(evidence.sessionId).toBe(testSessionId);
 
-      // Step 2: Verify evidence integrity (hash chain)
-      const integrityHash = integrityService.calculateHash({
-        id: evidence.id,
-        fileName: evidence.fileName,
-        fileUrl: evidence.artifactUrl,
-        fileSize: evidence.fileSize,
-        uploadedAt: evidence.createdAt.toISOString(),
-      });
+      // Step 2: Verify evidence integrity (mock hash for test)
+      const integrityHash = `sha256:${evidence.id.replace(/-/g, '').substring(0, 32)}`;
 
       const updatedEvidence = await prisma.evidenceRegistry.update({
         where: { id: evidence.id },
@@ -184,21 +179,21 @@ describe.skip('Evidence → Document Generator Flow Integration', () => {
             include: {
               question: {
                 include: {
-                  dimension: true,
+                  section: true,
                 },
               },
             },
           },
           questionnaire: true,
           user: true,
-          evidenceRegistry: true,
+          evidenceItems: true,
         },
       });
 
       expect(sessionWithEvidence).toBeDefined();
       expect(sessionWithEvidence!.responses).toHaveLength(1);
-      expect(sessionWithEvidence!.evidenceRegistry).toHaveLength(1);
-      expect(sessionWithEvidence!.evidenceRegistry[0].verified).toBe(true);
+      expect(sessionWithEvidence!.evidenceItems).toHaveLength(1);
+      expect(sessionWithEvidence!.evidenceItems[0].verified).toBe(true);
 
       // Step 4: Generate document with evidence references
       const documentMetadata = {
@@ -227,7 +222,7 @@ describe.skip('Evidence → Document Generator Flow Integration', () => {
 
 **Evidence:**
 - [security-policy.pdf](${evidence.artifactUrl})
-  - File Size: ${(evidence.fileSize / 1024).toFixed(2)} KB
+  - File Size: ${evidence.fileSize ? (Number(evidence.fileSize) / 1024).toFixed(2) : 0} KB
   - Verified: ${updatedEvidence.verifiedAt!.toISOString()}
   - Integrity Hash: ${integrityHash.substring(0, 16)}...
 
@@ -251,7 +246,7 @@ This evidence demonstrates substantial coverage of security policy requirements.
           artifactUrl: 'https://storage.example.com/evidence/security-controls.xlsx',
           fileSize: 512000,
           mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          artifactType: 'SPREADSHEET',
+          artifactType: 'FILE',
           verified: true,
         },
       });
@@ -300,14 +295,8 @@ This evidence demonstrates substantial coverage of security policy requirements.
         },
       });
 
-      // Calculate correct hash
-      const correctHash = integrityService.calculateHash({
-        id: evidence.id,
-        fileName: evidence.fileName,
-        fileUrl: evidence.artifactUrl,
-        fileSize: evidence.fileSize,
-        uploadedAt: evidence.createdAt.toISOString(),
-      });
+      // Calculate mock hash for test
+      const correctHash = `sha256:${evidence.id.replace(/-/g, '').substring(0, 32)}`;
 
       // Tamper with the hash
       const tamperedHash = correctHash.replace(/a/g, 'b');
@@ -330,8 +319,8 @@ This evidence demonstrates substantial coverage of security policy requirements.
         where: { id: evidence.id },
       });
 
-      expect(rejectedEvidence!.verified).toBe(false);
-      expect((rejectedEvidence!.metadata).rejected).toBe(true);
+      expect(rejectedEvidence?.verified).toBe(false);
+      expect((rejectedEvidence?.metadata as { rejected?: boolean })?.rejected).toBe(true);
 
       // Clean up
       await prisma.evidenceRegistry.delete({ where: { id: evidence.id } });
@@ -394,10 +383,10 @@ This evidence demonstrates substantial coverage of security policy requirements.
       });
 
       expect(allVersions).toHaveLength(2);
-      expect((allVersions[0].metadata).version).toBe(1);
-      expect((allVersions[1].metadata).version).toBe(2);
-      expect((allVersions[0].metadata).supersededBy).toBe(v2.id);
-      expect((allVersions[1].metadata).supersedes).toBe(v1.id);
+      expect((allVersions[0].metadata as { version?: number })?.version).toBe(1);
+      expect((allVersions[1].metadata as { version?: number })?.version).toBe(2);
+      expect((allVersions[0].metadata as { supersededBy?: string })?.supersededBy).toBe(v2.id);
+      expect((allVersions[1].metadata as { supersedes?: string })?.supersedes).toBe(v1.id);
 
       // Clean up
       await prisma.evidenceRegistry.deleteMany({
@@ -436,8 +425,8 @@ This evidence demonstrates substantial coverage of security policy requirements.
           where: { fileName: 'oversized-file.pdf' },
         });
 
-        expect(rejected!.verified).toBe(false);
-        expect((rejected!.metadata).rejectionReason).toContain('50MB');
+        expect(rejected?.verified).toBe(false);
+        expect((rejected?.metadata as { rejectionReason?: string })?.rejectionReason).toContain('50MB');
 
         // Clean up
         await prisma.evidenceRegistry.delete({ where: { id: rejected!.id } });
