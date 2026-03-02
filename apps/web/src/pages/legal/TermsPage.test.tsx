@@ -274,7 +274,9 @@ describe('TermsPage', () => {
       renderTermsPage();
 
       // Should render strong text (Quiz2Biz Legal Team is wrapped in <strong>)
-      expect(screen.getByText('Quiz2Biz Legal Team')).toBeInTheDocument();
+      const legalTeamText = screen.getByText('Quiz2Biz Legal Team');
+      const strongElement = legalTeamText.closest('strong');
+      expect(strongElement).toBeInTheDocument();
 
       // Should render lists properly
       const listItems = screen.getAllByRole('listitem');
