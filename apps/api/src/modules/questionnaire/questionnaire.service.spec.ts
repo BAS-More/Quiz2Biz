@@ -437,7 +437,7 @@ describe('QuestionnaireService', () => {
 
   describe('branch coverage - findByProjectTypeSlug', () => {
     beforeEach(() => {
-      (prismaService).projectType = {
+      prismaService.projectType = {
         findUnique: jest.fn(),
       };
     });

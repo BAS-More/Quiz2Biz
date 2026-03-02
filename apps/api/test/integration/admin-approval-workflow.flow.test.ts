@@ -102,7 +102,8 @@ describe.skip('Admin → Audit Flow Integration', () => {
         data: {
           ownerId: testRegularUserId,
           sessionId: testSessionId,
-          statement: 'Policy Lock for Production Deployment: Lock all security policies to prevent modifications before audit',
+          statement:
+            'Policy Lock for Production Deployment: Lock all security policies to prevent modifications before audit',
           assumptions: 'All stakeholders have reviewed the policy changes',
           references: 'Security Policy v2.0, Audit Requirements Doc',
           status: 'DRAFT',
@@ -172,7 +173,8 @@ describe.skip('Admin → Audit Flow Integration', () => {
         data: {
           ownerId: testAdminUserId,
           sessionId: testSessionId,
-          statement: 'Alternative: Implement dedicated import service with audit trail instead of 2FA bypass',
+          statement:
+            'Alternative: Implement dedicated import service with audit trail instead of 2FA bypass',
           assumptions: 'Better security posture maintained',
           references: 'Security Policy v2.0, Import Service Spec',
           status: 'DRAFT',
@@ -417,7 +419,9 @@ describe.skip('Admin → Audit Flow Integration', () => {
       });
 
       expect(supersessionLog.action).toBe('SUPERSEDE_DECISION');
-      expect((supersessionLog.changes as { supersededBy: string }).supersededBy).toBe(supersedingDecision.id);
+      expect((supersessionLog.changes as { supersededBy: string }).supersededBy).toBe(
+        supersedingDecision.id,
+      );
 
       // Clean up
       await prisma.auditLog.delete({ where: { id: supersessionLog.id } });

@@ -361,11 +361,7 @@ describe('HeatmapPage', () => {
       fireEvent.click(securityHighCell);
 
       await waitFor(() => {
-        expect(mockGetHeatmapDrilldown).toHaveBeenCalledWith(
-          'session-123',
-          'security',
-          'High',
-        );
+        expect(mockGetHeatmapDrilldown).toHaveBeenCalledWith('session-123', 'security', 'High');
       });
     });
 
@@ -427,9 +423,7 @@ describe('HeatmapPage', () => {
     });
 
     it('handles drilldown API error gracefully', async () => {
-      mockGetHeatmapDrilldown.mockRejectedValue(
-        new Error('Drilldown failed'),
-      );
+      mockGetHeatmapDrilldown.mockRejectedValue(new Error('Drilldown failed'));
 
       renderHeatmapPage();
 

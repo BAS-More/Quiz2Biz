@@ -174,9 +174,7 @@ resource "aws_iam_policy" "admin_policy" {
     });
 
     it('displays error when generation fails', async () => {
-      mockGeneratePolicyPack.mockRejectedValue(
-        new Error('Generation failed'),
-      );
+      mockGeneratePolicyPack.mockRejectedValue(new Error('Generation failed'));
 
       renderPolicyPackPage();
 
@@ -238,7 +236,7 @@ resource "aws_iam_policy" "admin_policy" {
       const policiesLabel = screen.getByText('Policies');
       const opaLabel = screen.getByText('OPA Rules');
       const dimensionsLabel = screen.getByText('Dimensions');
-      
+
       expect(policiesLabel.closest('div')).toBeInTheDocument();
       expect(opaLabel.closest('div')).toBeInTheDocument();
       expect(dimensionsLabel.closest('div')).toBeInTheDocument();
