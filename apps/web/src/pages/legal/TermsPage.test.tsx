@@ -306,7 +306,7 @@ describe('TermsPage', () => {
 
       // Should have focusable elements
       const links = screen.getAllByRole('link');
-      expect(links.length).toBeGreaterThan(3); // Adjusted from 8 to be less strict
+      expect(links.length).toBeGreaterThan(8); // Ensure sufficient number of links for navigation
 
       // Should have proper landmark roles
       expect(screen.getByRole('main')).toBeInTheDocument();
