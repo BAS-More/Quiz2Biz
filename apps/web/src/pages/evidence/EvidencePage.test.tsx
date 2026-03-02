@@ -102,7 +102,7 @@ describe('EvidencePage', () => {
     renderEvidencePage();
 
     expect(screen.getByText('Yes')).toBeInTheDocument();
-    expect(screen.getByText('Pending')).toBeInTheDocument();
+    expect(screen.getAllByText('Pending').length).toBeGreaterThanOrEqual(2);
   });
 
   it('renders back to dashboard link', () => {
