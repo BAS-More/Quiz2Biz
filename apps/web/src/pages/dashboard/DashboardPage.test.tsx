@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { DashboardPage } from './DashboardPage';
@@ -88,9 +88,9 @@ describe('DashboardPage', () => {
   it('displays active sessions count', () => {
     renderDashboardPage();
 
-    expect(screen.getByText('Active Sessions')).toBeInTheDocument();
-    // Use more specific selector to target the stat card value
-    expect(screen.getByText('1', { selector: 'p.text-2xl.font-bold.text-surface-900' })).toBeInTheDocument();
+    const activeLabel = screen.getByText('Active Sessions');
+    expect(activeLabel).toBeInTheDocument();
+    expect(within(activeLabel.parentElement!).getByText('1')).toBeInTheDocument();
   });
 
   it('displays completed sessions count', () => {
@@ -102,17 +102,17 @@ describe('DashboardPage', () => {
   it('displays highest score', () => {
     renderDashboardPage();
 
-    expect(screen.getByText('Highest Score')).toBeInTheDocument();
-    // Use more specific selector to target the stat card value
-    expect(screen.getByText('92%', { selector: 'p.text-2xl.font-bold.text-surface-900' })).toBeInTheDocument();
+    const scoreLabel = screen.getByText('Highest Score');
+    expect(scoreLabel).toBeInTheDocument();
+    expect(within(scoreLabel.parentElement!).getByText('92%')).toBeInTheDocument();
   });
 
   it('navigates to idea capture on New Project click', async () => {
     const user = userEvent.setup();
     renderDashboardPage();
 
-    const newProjectButton = screen.getByRole('button', { name: /new project/i });
-    await user.click(newProjectButton);
+    const newProjectButtons = screen.getAllByRole('button', { name: /new project/i });
+    await user.click(newProjectButtons[0]);
 
     expect(mockNavigate).toHaveBeenCalledWith('/idea');
   });
