@@ -158,8 +158,8 @@ describe('CardHeader', () => {
     expect(screen.getByTestId('star-icon')).toBeInTheDocument();
     expect(screen.getByText('Click Me')).toBeInTheDocument();
     
-    // Check layout structure by examining the parent container
-    const container = screen.getByText('Complete Header').closest('div')?.parentElement;
+    // Check layout structure by examining the outermost container
+    const container = screen.getByText('Complete Header').closest('div')?.parentElement?.parentElement;
     expect(container).toHaveClass('flex');
     expect(container).toHaveClass('items-center');
     expect(container).toHaveClass('justify-between');
