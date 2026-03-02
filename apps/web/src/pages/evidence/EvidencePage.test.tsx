@@ -102,7 +102,9 @@ describe('EvidencePage', () => {
     renderEvidencePage();
 
     expect(screen.getByText('Yes')).toBeInTheDocument();
-    expect(screen.getByText('Pending')).toBeInTheDocument();
+    // "Pending" appears multiple times (stat card and verification status)
+    const pendingElements = screen.getAllByText('Pending');
+    expect(pendingElements.length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders back to dashboard link', () => {
