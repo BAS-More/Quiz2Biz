@@ -58,7 +58,7 @@ describe.skip('Evidence → Document Generator Flow Integration', () => {
     const user = await prisma.user.create({
       data: {
         email: `evidence-test-${Date.now()}@test.com`,
-        hashedPassword: 'hashed_password',
+        passwordHash: 'hashed_password',
         role: 'CLIENT',
       },
     });
@@ -66,7 +66,7 @@ describe.skip('Evidence → Document Generator Flow Integration', () => {
 
     const questionnaire = await prisma.questionnaire.create({
       data: {
-        title: `Evidence Test Questionnaire ${Date.now()}`,
+        name: `Evidence Test Questionnaire ${Date.now()}`,
         description: 'Test questionnaire for evidence flow',
       },
     });

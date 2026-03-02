@@ -31,7 +31,7 @@
     "@nestjs/swagger": "^7.4.0",
     "@nestjs/throttler": "^6.5.0",
     "@prisma/client": "^5.8.0",
-    "@sentry/nestjs": "^8.19.0",
+    "@sentry/nestjs": "^10.40.0",
     "@sentry/node": "9.20.0",
     "@swc/cli": "0.1.63",
     "@types/cookie-parser": "^1.4.10",

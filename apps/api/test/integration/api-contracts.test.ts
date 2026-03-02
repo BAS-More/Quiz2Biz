@@ -48,7 +48,7 @@ describe.skip('API Contract Tests - Sessions Endpoints', () => {
     const user = await prisma.user.create({
       data: {
         email: `contract-test-${Date.now()}@test.com`,
-        hashedPassword: 'hashed_password',
+        passwordHash: 'hashed_password',
         role: 'CLIENT',
       },
     });
@@ -60,7 +60,7 @@ describe.skip('API Contract Tests - Sessions Endpoints', () => {
     // Create test questionnaire
     const questionnaire = await prisma.questionnaire.create({
       data: {
-        title: 'Contract Test Questionnaire',
+        name: 'Contract Test Questionnaire',
         description: 'Test questionnaire for API contracts',
       },
     });

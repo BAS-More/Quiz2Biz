@@ -1,23 +1,25 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '@libs/database';
 import { AdminAuditService } from '../../src/modules/admin/services/admin-audit.service';
-// import { NotificationService } from '../../src/modules/notification/notification.service';
 import { ConfigModule } from '@nestjs/config';
 import configuration from '../../src/config/configuration';
 
 /**
- * Integration tests for Admin Approval Workflow
+ * Integration tests for Admin Audit Flow
  *
- * SKIP REASON: NotificationService module doesn't exist in current codebase structure.
- * TODO: Create NotificationService or update tests to remove this dependency.
- *
- * Schema updates completed: USER -> CLIENT role, Session.questionnaireVersion added
+ * SKIP REASON: Requires full AppModule context with running database.
+ * Schema updates completed:
+ * - USER -> CLIENT role
+ * - Session.questionnaireVersion added
+ * - DecisionLog: Now append-only (DRAFT->LOCKED->SUPERSEDED), uses ownerId instead of userId
+ * - DecisionLog: Removed approval workflow fields (approvalStatus, approvedBy, etc.)
+ * - Questionnaire: title -> name
+ * - User: hashedPassword -> passwordHash
  */
-describe.skip('Admin → Approval Workflow Flow Integration', () => {
+describe.skip('Admin → Audit Flow Integration', () => {
   let module: TestingModule;
   let prisma: PrismaService;
   let auditService: AdminAuditService;
-  let notificationService: NotificationService;
 
   // Test data IDs
   let testAdminUserId: string;
@@ -34,18 +36,17 @@ describe.skip('Admin → Approval Workflow Flow Integration', () => {
           isGlobal: true,
         }),
       ],
-      providers: [PrismaService, AdminAuditService, NotificationService],
+      providers: [PrismaService, AdminAuditService],
     }).compile();
 
     prisma = module.get<PrismaService>(PrismaService);
     auditService = module.get<AdminAuditService>(AdminAuditService);
-    notificationService = module.get<NotificationService>(NotificationService);
 
     // Create test admin user
     const admin = await prisma.user.create({
       data: {
         email: `admin-${Date.now()}@test.com`,
-        hashedPassword: 'hashed_password',
+        passwordHash: 'hashed_password',
         role: 'ADMIN',
       },
     });
@@ -55,7 +56,7 @@ describe.skip('Admin → Approval Workflow Flow Integration', () => {
     const user = await prisma.user.create({
       data: {
         email: `user-${Date.now()}@test.com`,
-        hashedPassword: 'hashed_password',
+        passwordHash: 'hashed_password',
         role: 'CLIENT',
       },
     });
@@ -64,8 +65,8 @@ describe.skip('Admin → Approval Workflow Flow Integration', () => {
     // Create test questionnaire
     const questionnaire = await prisma.questionnaire.create({
       data: {
-        title: `Approval Test Questionnaire ${Date.now()}`,
-        description: 'Test questionnaire for approval workflow',
+        name: `Audit Test Questionnaire ${Date.now()}`,
+        description: 'Test questionnaire for audit workflow',
       },
     });
     testQuestionnaireId = questionnaire.id;
@@ -94,104 +95,54 @@ describe.skip('Admin → Approval Workflow Flow Integration', () => {
     await module.close();
   });
 
-  describe('Complete Approval Workflow', () => {
-    it('should create high-risk decision → request approval → admin approves → notification sent', async () => {
-      // Step 1: Create high-risk decision requiring approval
+  describe('Complete Decision Log Workflow', () => {
+    it('should create decision → lock it → record audit trail', async () => {
+      // Step 1: Create decision in DRAFT status (append-only workflow)
       const decision = await prisma.decisionLog.create({
         data: {
-          userId: testRegularUserId,
+          ownerId: testRegularUserId,
           sessionId: testSessionId,
-          title: 'Policy Lock for Production Deployment',
-          description: 'Lock all security policies to prevent modifications before audit',
-          category: 'POLICY',
-          impact: 'HIGH',
-          requiresApproval: true,
-          approvalStatus: 'PENDING',
-          decision: {
-            action: 'LOCK_POLICIES',
-            scope: 'ALL',
-            effectiveDate: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
-          },
+          statement: 'Policy Lock for Production Deployment: Lock all security policies to prevent modifications before audit',
+          assumptions: 'All stakeholders have reviewed the policy changes',
+          references: 'Security Policy v2.0, Audit Requirements Doc',
+          status: 'DRAFT',
         },
       });
       testDecisionLogId = decision.id;
 
-      expect(decision.requiresApproval).toBe(true);
-      expect(decision.approvalStatus).toBe('PENDING');
-      expect(decision.impact).toBe('HIGH');
+      expect(decision.status).toBe('DRAFT');
+      expect(decision.ownerId).toBe(testRegularUserId);
+      expect(decision.statement).toContain('Policy Lock');
 
-      // Step 2: System triggers approval request notification
-      const approvalRequestSent = {
-        to: `admin-${Date.now()}@test.com`,
-        subject: 'Approval Required: Policy Lock for Production Deployment',
-        template: 'approval-request',
-        variables: {
-          decisionId: decision.id,
-          title: decision.title,
-          description: decision.description,
-          requestedBy: testRegularUserId,
-          impact: decision.impact,
-          approvalLink: `https://app.quiz2biz.com/admin/decisions/${decision.id}`,
-        },
-      };
-
-      expect(approvalRequestSent.template).toBe('approval-request');
-      expect(approvalRequestSent.variables.impact).toBe('HIGH');
-
-      // Step 3: Admin reviews and approves decision
-      const approvedDecision = await prisma.decisionLog.update({
+      // Step 2: Lock the decision (DRAFT -> LOCKED)
+      const lockedDecision = await prisma.decisionLog.update({
         where: { id: decision.id },
         data: {
-          approvalStatus: 'APPROVED',
-          approvedBy: testAdminUserId,
-          approvedAt: new Date(),
-          approvalNotes:
-            'Reviewed policy lock request. All requirements met. Approved for production.',
+          status: 'LOCKED',
         },
       });
 
-      expect(approvedDecision.approvalStatus).toBe('APPROVED');
-      expect(approvedDecision.approvedBy).toBe(testAdminUserId);
-      expect(approvedDecision.approvedAt).toBeDefined();
-      expect(approvedDecision.approvalNotes).toContain('Approved');
+      expect(lockedDecision.status).toBe('LOCKED');
 
-      // Step 4: Audit log records approval action
+      // Step 3: Audit log records lock action
       const auditEntry = await prisma.auditLog.create({
         data: {
           userId: testAdminUserId,
-          action: 'APPROVE_DECISION',
+          action: 'LOCK_DECISION',
           resourceType: 'DecisionLog',
           resourceId: decision.id,
           details: {
-            decisionTitle: decision.title,
-            previousStatus: 'PENDING',
-            newStatus: 'APPROVED',
-            approvalNotes: approvedDecision.approvalNotes,
+            decisionStatement: decision.statement.substring(0, 100),
+            previousStatus: 'DRAFT',
+            newStatus: 'LOCKED',
           },
           ipAddress: '192.168.1.100',
           userAgent: 'Admin Dashboard v1.0',
         },
       });
 
-      expect(auditEntry.action).toBe('APPROVE_DECISION');
-      expect((auditEntry.details).newStatus).toBe('APPROVED');
-
-      // Step 5: Notification sent to decision requester
-      const approvalNotification = {
-        to: `user-${Date.now()}@test.com`,
-        subject: 'Decision Approved: Policy Lock for Production Deployment',
-        template: 'decision-approved',
-        variables: {
-          decisionId: decision.id,
-          title: decision.title,
-          approvedBy: testAdminUserId,
-          approvalNotes: approvedDecision.approvalNotes,
-          viewLink: `https://app.quiz2biz.com/decisions/${decision.id}`,
-        },
-      };
-
-      expect(approvalNotification.template).toBe('decision-approved');
-      expect(approvalNotification.variables.approvedBy).toBe(testAdminUserId);
+      expect(auditEntry.action).toBe('LOCK_DECISION');
+      expect((auditEntry.details as { newStatus: string }).newStatus).toBe('LOCKED');
 
       // Clean up audit log
       await prisma.auditLog.delete({ where: { id: auditEntry.id } });
