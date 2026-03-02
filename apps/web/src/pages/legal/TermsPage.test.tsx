@@ -92,13 +92,13 @@ describe('TermsPage', () => {
 
       // Section 9: Disclaimer of Warranties
       expect(screen.getByText('9. Disclaimer of Warranties')).toBeInTheDocument();
-      // Text may be split across elements, use regex
-      expect(screen.getByText(/THE SERVICE IS PROVIDED.*AS IS.*AND.*AS AVAILABLE/)).toBeInTheDocument();
+      // Text may be split across elements, use regex with specific pattern
+      expect(screen.getByText(/THE SERVICE IS PROVIDED\s+"AS IS"\s+AND\s+"AS AVAILABLE"/)).toBeInTheDocument();
 
       // Section 10: Limitation of Liability
       expect(screen.getByText('10. Limitation of Liability')).toBeInTheDocument();
-      // Text may be split across elements, use regex
-      expect(screen.getByText(/TO THE MAXIMUM EXTENT PERMITTED BY LAW.*SHALL NOT BE LIABLE/)).toBeInTheDocument();
+      // Text may be split across elements, use regex with specific pattern
+      expect(screen.getByText(/TO THE MAXIMUM EXTENT PERMITTED BY LAW[,\s]+.*SHALL NOT BE LIABLE/)).toBeInTheDocument();
 
       // Section 11: Indemnification
       expect(screen.getByText('11. Indemnification')).toBeInTheDocument();
@@ -273,7 +273,7 @@ describe('TermsPage', () => {
     it('renders content with proper formatting', () => {
       renderTermsPage();
 
-      // Should render strong text
+      // Should render strong text (Quiz2Biz Legal Team is wrapped in <strong>)
       expect(screen.getByText('Quiz2Biz Legal Team')).toBeInTheDocument();
 
       // Should render lists properly
@@ -328,7 +328,7 @@ describe('TermsPage', () => {
       // Should include disclaimer of warranties in all caps (using regex for flexibility)
       expect(screen.getByText(/THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE"/)).toBeInTheDocument();
 
-      // Should include limitation of liability in all caps (using regex for flexibility)
+      // Should include limitation of liability in all caps (exact phrase match)
       expect(screen.getByText(/TO THE MAXIMUM EXTENT PERMITTED BY LAW.*SHALL NOT BE LIABLE/)).toBeInTheDocument();
 
       // Should mention governing law (use regex for flexibility)
