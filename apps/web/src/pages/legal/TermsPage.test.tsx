@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { TermsPage } from './TermsPage';
 
@@ -54,7 +54,11 @@ describe('TermsPage', () => {
 
       // Section 1: Acceptance of Terms
       expect(screen.getByText('1. Acceptance of Terms')).toBeInTheDocument();
-      expect(screen.getByText(/By accessing or using Quiz2Biz \(\"the Service\"\), you agree to be bound by these Terms/)).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /By accessing or using Quiz2Biz \("the Service"\), you agree to be bound by these Terms/,
+        ),
+      ).toBeInTheDocument();
 
       // Section 2: Description of Service
       expect(screen.getByText('2. Description of Service')).toBeInTheDocument();

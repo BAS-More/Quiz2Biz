@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { PrivacyPage } from './PrivacyPage';
 
@@ -54,7 +54,11 @@ describe('PrivacyPage', () => {
 
       // Section 1: Introduction
       expect(screen.getByText('1. Introduction')).toBeInTheDocument();
-      expect(screen.getByText(/Quiz2Biz \(\"we\", \"our\", or \"us\"\) is committed to protecting your privacy/)).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /Quiz2Biz \("we", "our", or "us"\) is committed to protecting your privacy/,
+        ),
+      ).toBeInTheDocument();
 
       // Section 2: Information We Collect
       expect(screen.getByText('2. Information We Collect')).toBeInTheDocument();
