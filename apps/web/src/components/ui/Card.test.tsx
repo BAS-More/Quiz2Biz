@@ -164,7 +164,8 @@ describe('CardHeader', () => {
 
     // Check layout structure by examining the parent container
     // Navigate from title -> wrapper div -> inner flex div -> outer flex div (justify-between)
-    const outerContainer = screen.getByText('Complete Header').closest('div')?.parentElement?.parentElement;
+    const outerContainer = screen.getByText('Complete Header').closest('div')
+      ?.parentElement?.parentElement;
     expect(outerContainer).toHaveClass('flex');
     expect(outerContainer).toHaveClass('items-center');
     expect(outerContainer).toHaveClass('justify-between');

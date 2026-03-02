@@ -96,7 +96,9 @@ describe('JiraConfluenceAdapter', () => {
 
     jest.clearAllMocks();
     mockConfigService.get.mockImplementation((key: string) => {
-      if (key === 'JIRA_DOMAIN') {return 'test.atlassian.net';}
+      if (key === 'JIRA_DOMAIN') {
+        return 'test.atlassian.net';
+      }
       return undefined;
     });
   });

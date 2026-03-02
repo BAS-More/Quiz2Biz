@@ -219,7 +219,9 @@ describe('TermsPage', () => {
       const privacyLinks = screen.getAllByText('Privacy Policy');
       expect(privacyLinks.length).toBeGreaterThanOrEqual(1);
       // At least one should have the correct href
-      const privacyLinkWithHref = privacyLinks.find((el) => el.closest('a')?.getAttribute('href') === '/privacy');
+      const privacyLinkWithHref = privacyLinks.find(
+        (el) => el.closest('a')?.getAttribute('href') === '/privacy',
+      );
       expect(privacyLinkWithHref).toBeTruthy();
 
       // Should show Sign In link
@@ -243,7 +245,9 @@ describe('TermsPage', () => {
       // Privacy Policy link appears multiple times, get all and check at least one has href
       const privacyLinks = screen.getAllByText('Privacy Policy');
       expect(privacyLinks.length).toBeGreaterThanOrEqual(1);
-      const linkWithHref = privacyLinks.find((el) => el.closest('a')?.getAttribute('href') === '/privacy');
+      const linkWithHref = privacyLinks.find(
+        (el) => el.closest('a')?.getAttribute('href') === '/privacy',
+      );
       expect(linkWithHref).toBeTruthy();
     });
   });
