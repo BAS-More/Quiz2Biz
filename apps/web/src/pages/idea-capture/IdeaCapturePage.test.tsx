@@ -265,7 +265,9 @@ describe('IdeaCapturePage', () => {
 
       const textarea = screen.getByLabelText('Describe Your Idea');
       fireEvent.change(textarea, {
-        target: { value: 'This is a detailed business idea description that meets minimum length.' },
+        target: {
+          value: 'This is a detailed business idea description that meets minimum length.',
+        },
       });
 
       const submitButton = screen.getByText('Analyze My Idea');
@@ -286,7 +288,9 @@ describe('IdeaCapturePage', () => {
 
       const textarea = screen.getByLabelText('Describe Your Idea');
       fireEvent.change(textarea, {
-        target: { value: 'This is a detailed business idea description that meets minimum length.' },
+        target: {
+          value: 'This is a detailed business idea description that meets minimum length.',
+        },
       });
 
       const submitButton = screen.getByText('Analyze My Idea');
@@ -494,7 +498,9 @@ describe('IdeaCapturePage', () => {
       renderIdeaCapturePage();
 
       const textarea = screen.getByLabelText('Describe Your Idea');
-      fireEvent.change(textarea, { target: { value: 'This is a detailed business idea that meets minimum.' } });
+      fireEvent.change(textarea, {
+        target: { value: 'This is a detailed business idea that meets minimum.' },
+      });
 
       const submitButton = screen.getByText('Analyze My Idea');
       fireEvent.click(submitButton);

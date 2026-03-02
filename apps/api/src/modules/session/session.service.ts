@@ -820,7 +820,7 @@ export class SessionService {
 
         name: session.currentSection.name,
 
-        description: (session.currentSection).description ?? undefined,
+        description: session.currentSection.description ?? undefined,
 
         progress:
           sectionQuestions.length > 0
