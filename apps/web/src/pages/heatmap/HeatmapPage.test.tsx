@@ -2,7 +2,7 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { HeatmapPage } from './HeatmapPage';
-import * as questionnaireApi from '../../api/questionnaire';
+import { questionnaireApi } from '../../api/questionnaire';
 
 // Mock the API
 vi.mock('../../api/questionnaire', () => ({
@@ -10,19 +10,17 @@ vi.mock('../../api/questionnaire', () => ({
     getHeatmap: vi.fn(),
     getHeatmapDrilldown: vi.fn(),
   },
-  type: {
-    HeatmapResult: 'object',
-  },
 }));
 
 // Mock useNavigate and useParams
 const mockNavigate = vi.fn();
+let mockSessionId: string | undefined = 'session-123';
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
     useNavigate: () => mockNavigate,
-    useParams: () => ({ sessionId: 'session-123' }),
+    useParams: () => ({ sessionId: mockSessionId }),
   };
 });
 
@@ -91,6 +89,7 @@ describe('HeatmapPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockNavigate.mockClear();
+    mockSessionId = 'session-123';
     vi.mocked(questionnaireApi.getHeatmap).mockResolvedValue(mockHeatmapData);
     vi.mocked(questionnaireApi.getHeatmapDrilldown).mockResolvedValue(mockDrilldownData);
   });
@@ -379,13 +378,7 @@ describe('HeatmapPage', () => {
 
   describe('Edge Cases', () => {
     it('handles missing session ID gracefully', () => {
-      vi.mock('react-router-dom', async () => {
-        const actual = await vi.importActual('react-router-dom');
-        return {
-          ...actual,
-          useParams: () => ({ sessionId: undefined }),
-        };
-      });
+      mockSessionId = undefined;
 
       renderHeatmapPage();
 
@@ -416,7 +409,8 @@ describe('HeatmapPage', () => {
       });
 
       // Should show zero values
-      expect(screen.getByText('0')).toBeInTheDocument(); // Total Cells
+      const zeros = screen.getAllByText('0');
+      expect(zeros.length).toBe(5); // All summary cards show 0
       expect(screen.getByText('Overall Risk Score:')).toBeInTheDocument();
       expect(screen.getByText('0.00')).toBeInTheDocument();
     });
