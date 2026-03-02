@@ -97,8 +97,8 @@ describe('TermsPage', () => {
 
       // Section 10: Limitation of Liability
       expect(screen.getByText('10. Limitation of Liability')).toBeInTheDocument();
-      // Text may be split across elements, use regex with specific pattern
-      expect(screen.getByText(/TO THE MAXIMUM EXTENT PERMITTED BY LAW[,\s]+.*SHALL NOT BE LIABLE/)).toBeInTheDocument();
+      // Text may be split across elements, use specific pattern
+      expect(screen.getByText(/TO THE MAXIMUM EXTENT PERMITTED BY LAW[,\s]+QUIZ2BIZ SHALL NOT BE LIABLE/)).toBeInTheDocument();
 
       // Section 11: Indemnification
       expect(screen.getByText('11. Indemnification')).toBeInTheDocument();
@@ -328,8 +328,8 @@ describe('TermsPage', () => {
       // Should include disclaimer of warranties in all caps (using regex for flexibility)
       expect(screen.getByText(/THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE"/)).toBeInTheDocument();
 
-      // Should include limitation of liability in all caps (exact phrase match)
-      expect(screen.getByText(/TO THE MAXIMUM EXTENT PERMITTED BY LAW.*SHALL NOT BE LIABLE/)).toBeInTheDocument();
+      // Should include limitation of liability in all caps with specific pattern
+      expect(screen.getByText(/TO THE MAXIMUM EXTENT PERMITTED BY LAW[,\s]+QUIZ2BIZ SHALL NOT BE LIABLE/)).toBeInTheDocument();
 
       // Should mention governing law (use regex for flexibility)
       expect(screen.getByText(/State of Delaware/)).toBeInTheDocument();
