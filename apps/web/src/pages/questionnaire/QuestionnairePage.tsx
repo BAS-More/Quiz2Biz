@@ -339,6 +339,10 @@ export function QuestionnairePage() {
             <div
               className="bg-blue-600 h-2 rounded-full transition-all duration-300"
               style={{ width: `${progress.percentage}%` }}
+              role="progressbar"
+              aria-valuenow={progress.percentage}
+              aria-valuemin={0}
+              aria-valuemax={100}
             />
           </div>
           {currentSection && (

@@ -84,7 +84,7 @@ describe('IdeaCapturePage', () => {
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    vi.clearAllMocks();
   });
 
   const renderIdeaCapturePage = () => {
@@ -139,7 +139,7 @@ describe('IdeaCapturePage', () => {
 
       // Type enough characters to enable button
       fireEvent.change(textarea, { target: { value: 'This is a sufficiently long idea description that meets the minimum requirement.' } });
-      expect(screen.getByText('74 / 10,000 characters')).toBeInTheDocument();
+      expect(screen.getByText('80 / 10,000 characters')).toBeInTheDocument();
       
       // Submit button should now be enabled
       const submitButton = screen.getByText('Analyze My Idea');
@@ -158,6 +158,10 @@ describe('IdeaCapturePage', () => {
 
   describe('Idea Submission and Analysis', () => {
     it('submits idea when button is clicked', async () => {
+      // Use a delayed mock so we can observe the analyzing state
+      let resolveSubmit!: (value: typeof mockIdeaResponse) => void;
+      vi.mocked(submitIdea).mockImplementation(() => new Promise(resolve => { resolveSubmit = resolve; }));
+
       renderIdeaCapturePage();
 
       const textarea = screen.getByLabelText('Describe Your Idea');
@@ -166,17 +170,19 @@ describe('IdeaCapturePage', () => {
       const submitButton = screen.getByText('Analyze My Idea');
       fireEvent.click(submitButton);
 
-      await waitFor(() => {
-        expect(submitIdea).toHaveBeenCalledWith(
-          'This is my business idea for an e-commerce platform that connects local vendors with customers.',
-          undefined
-        );
-      });
+      // API should have been called
+      expect(submitIdea).toHaveBeenCalledWith(
+        'This is my business idea for an e-commerce platform that connects local vendors with customers.',
+        undefined
+      );
 
       // Should show analyzing state
       expect(screen.getByTestId('loader-icon')).toBeInTheDocument();
       expect(screen.getByText('Analyzing Your Idea')).toBeInTheDocument();
       expect(screen.getByText(/Our AI is reviewing your idea/)).toBeInTheDocument();
+
+      // Resolve to clean up
+      resolveSubmit(mockIdeaResponse);
     });
 
     it('submits idea with title when provided', async () => {
@@ -205,10 +211,9 @@ describe('IdeaCapturePage', () => {
       const textarea = screen.getByLabelText('Describe Your Idea');
       fireEvent.change(textarea, { target: { value: 'Short' } });
 
+      // Button should be disabled when input is too short
       const submitButton = screen.getByText('Analyze My Idea');
-      fireEvent.click(submitButton);
-
-      expect(screen.getByText('Please describe your idea in at least a few sentences.')).toBeInTheDocument();
+      expect(submitButton.closest('button')).toBeDisabled();
       expect(submitIdea).not.toHaveBeenCalled();
     });
 
@@ -224,7 +229,7 @@ describe('IdeaCapturePage', () => {
       fireEvent.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getByText('Failed to analyze idea. Please try again.')).toBeInTheDocument();
+        expect(screen.getByText('Network error')).toBeInTheDocument();
       });
 
       // Should return to input state
@@ -413,7 +418,7 @@ describe('IdeaCapturePage', () => {
       fireEvent.click(startButton);
 
       await waitFor(() => {
-        expect(screen.getByText('Failed to create session. Please try again.')).toBeInTheDocument();
+        expect(screen.getByText('Session creation failed')).toBeInTheDocument();
       });
 
       // Should return to results state

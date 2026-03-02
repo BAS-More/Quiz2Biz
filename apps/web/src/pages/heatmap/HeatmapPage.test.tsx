@@ -2,7 +2,7 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { HeatmapPage } from './HeatmapPage';
-import * as questionnaireApi from '../../api/questionnaire';
+import { questionnaireApi } from '../../api/questionnaire';
 
 // Mock the API
 vi.mock('../../api/questionnaire', () => ({
@@ -17,12 +17,13 @@ vi.mock('../../api/questionnaire', () => ({
 
 // Mock useNavigate and useParams
 const mockNavigate = vi.fn();
+const mockUseParams = vi.fn(() => ({ sessionId: 'session-123' }));
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
     useNavigate: () => mockNavigate,
-    useParams: () => ({ sessionId: 'session-123' }),
+    useParams: () => mockUseParams(),
   };
 });
 
@@ -93,10 +94,6 @@ describe('HeatmapPage', () => {
     mockNavigate.mockClear();
     vi.mocked(questionnaireApi.getHeatmap).mockResolvedValue(mockHeatmapData);
     vi.mocked(questionnaireApi.getHeatmapDrilldown).mockResolvedValue(mockDrilldownData);
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
   });
 
   const renderHeatmapPage = (sessionId: string = 'session-123') => {
@@ -379,13 +376,7 @@ describe('HeatmapPage', () => {
 
   describe('Edge Cases', () => {
     it('handles missing session ID gracefully', () => {
-      vi.mock('react-router-dom', async () => {
-        const actual = await vi.importActual('react-router-dom');
-        return {
-          ...actual,
-          useParams: () => ({ sessionId: undefined }),
-        };
-      });
+      mockUseParams.mockReturnValueOnce({ sessionId: undefined });
 
       renderHeatmapPage();
 
@@ -416,7 +407,8 @@ describe('HeatmapPage', () => {
       });
 
       // Should show zero values
-      expect(screen.getByText('0')).toBeInTheDocument(); // Total Cells
+      const zeroElements = screen.getAllByText('0');
+      expect(zeroElements.length).toBeGreaterThanOrEqual(1);
       expect(screen.getByText('Overall Risk Score:')).toBeInTheDocument();
       expect(screen.getByText('0.00')).toBeInTheDocument();
     });

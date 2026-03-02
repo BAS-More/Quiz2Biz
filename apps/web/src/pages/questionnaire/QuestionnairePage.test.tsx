@@ -2,7 +2,7 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { QuestionnairePage } from './QuestionnairePage';
-import * as questionnaireApi from '../../api/questionnaire';
+import { questionnaireApi } from '../../api/questionnaire';
 import * as conversationApi from '../../api/conversation';
 import { useQuestionnaireStore } from '../../stores/questionnaire';
 
@@ -57,13 +57,15 @@ vi.mock('lucide-react', () => ({
 
 // Mock useNavigate
 const mockNavigate = vi.fn();
+let mockAction = 'new';
+let mockSearchParamsString = '';
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
     useNavigate: () => mockNavigate,
-    useParams: () => ({ action: 'new' }),
-    useSearchParams: () => [new URLSearchParams(), vi.fn()],
+    useParams: () => ({ action: mockAction }),
+    useSearchParams: () => [new URLSearchParams(mockSearchParamsString), vi.fn()],
   };
 });
 
@@ -88,19 +90,19 @@ describe('QuestionnairePage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockNavigate.mockClear();
+    mockAction = 'new';
+    mockSearchParamsString = '';
     mockStoreValues.createSession.mockResolvedValue(undefined);
     mockStoreValues.continueSession.mockResolvedValue(undefined);
     mockStoreValues.submitResponse.mockResolvedValue(undefined);
     mockStoreValues.completeSession.mockResolvedValue(undefined);
+    // Default mock for listQuestionnaires to prevent .then() on undefined
+    vi.mocked(questionnaireApi.listQuestionnaires).mockResolvedValue([]);
     
     // Mock the store implementation
     vi.mocked(useQuestionnaireStore).mockImplementation(() => ({
       ...mockStoreValues,
     }));
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
   });
 
   const renderQuestionnairePage = (initialEntries: string[] = ['/questionnaire/new']) => {
@@ -246,6 +248,8 @@ describe('QuestionnairePage', () => {
 
   describe('Loading Session State', () => {
     it('shows loading spinner when loading session', () => {
+      mockAction = 'continue';
+      mockSearchParamsString = 'sessionId=123';
       const loadingStoreValues = {
         ...mockStoreValues,
         isLoading: true,
@@ -262,6 +266,8 @@ describe('QuestionnairePage', () => {
 
   describe('Completed Session State', () => {
     it('shows completion screen with score', () => {
+      mockAction = 'continue';
+      mockSearchParamsString = 'sessionId=123';
       const completedStoreValues = {
         ...mockStoreValues,
         isComplete: true,
@@ -291,6 +297,11 @@ describe('QuestionnairePage', () => {
   });
 
   describe('Active Session State', () => {
+    beforeEach(() => {
+      mockAction = 'continue';
+      mockSearchParamsString = 'sessionId=123';
+    });
+
     const activeSessionStoreValues = {
       ...mockStoreValues,
       session: { id: '123', progress: { answeredQuestions: 5, totalQuestions: 20, percentage: 25 } },
@@ -464,6 +475,11 @@ describe('QuestionnairePage', () => {
   });
 
   describe('AI Follow-up Functionality', () => {
+    beforeEach(() => {
+      mockAction = 'continue';
+      mockSearchParamsString = 'sessionId=123';
+    });
+
     const followUpStoreValues = {
       ...mockStoreValues,
       session: { id: '123', progress: { answeredQuestions: 5, totalQuestions: 20, percentage: 25 } },
@@ -508,17 +524,17 @@ describe('QuestionnairePage', () => {
     });
 
     it('handles follow-up submission', async () => {
-      const followUpWithAnswerStoreValues = {
-        ...followUpStoreValues,
+      vi.mocked(useQuestionnaireStore).mockImplementation(() => followUpStoreValues);
+      vi.mocked(conversationApi.submitAnswerWithAi).mockResolvedValue({
         followUp: {
           shouldFollowUp: true,
           followUpQuestion: 'Can you elaborate?',
           missingAreas: [],
         },
-        conversationMessages: [],
-      };
-      
-      vi.mocked(useQuestionnaireStore).mockImplementation(() => followUpWithAnswerStoreValues);
+        conversationMessages: [
+          { id: '1', role: 'user', content: 'Initial answer' },
+        ],
+      });
       vi.mocked(conversationApi.submitFollowUp).mockResolvedValue({
         id: '3',
         role: 'user',
@@ -527,7 +543,17 @@ describe('QuestionnairePage', () => {
 
       renderQuestionnairePage(['/questionnaire/continue?sessionId=123']);
 
-      // The follow-up should already be visible
+      // First trigger the follow-up by submitting an answer
+      const textarea = screen.getByPlaceholderText('Type your answer...');
+      fireEvent.change(textarea, { target: { value: 'We have basic security measures in place.' } });
+      const submitButton = screen.getByText('Submit Answer');
+      fireEvent.click(submitButton);
+
+      // Wait for follow-up to appear
+      await waitFor(() => {
+        expect(screen.getByPlaceholderText('Add more details...')).toBeInTheDocument();
+      });
+
       const followUpTextarea = screen.getByPlaceholderText('Add more details...');
       fireEvent.change(followUpTextarea, { target: { value: 'This is my detailed follow-up answer' } });
 
@@ -543,29 +569,48 @@ describe('QuestionnairePage', () => {
       });
     });
 
-    it('allows skipping follow-up', () => {
-      const followUpWithAnswerStoreValues = {
-        ...followUpStoreValues,
+    it('allows skipping follow-up', async () => {
+      vi.mocked(useQuestionnaireStore).mockImplementation(() => followUpStoreValues);
+      vi.mocked(conversationApi.submitAnswerWithAi).mockResolvedValue({
         followUp: {
           shouldFollowUp: true,
           followUpQuestion: 'Can you elaborate?',
           missingAreas: [],
         },
-        conversationMessages: [],
-      };
-      
-      vi.mocked(useQuestionnaireStore).mockImplementation(() => followUpWithAnswerStoreValues);
+        conversationMessages: [
+          { id: '1', role: 'user', content: 'Initial answer' },
+        ],
+      });
 
       renderQuestionnairePage(['/questionnaire/continue?sessionId=123']);
+
+      // First trigger the follow-up by submitting an answer
+      const textarea = screen.getByPlaceholderText('Type your answer...');
+      fireEvent.change(textarea, { target: { value: 'We have basic security measures in place.' } });
+      const submitButton = screen.getByText('Submit Answer');
+      fireEvent.click(submitButton);
+
+      // Wait for follow-up to appear
+      await waitFor(() => {
+        expect(screen.getByText('Skip')).toBeInTheDocument();
+      });
 
       const skipButton = screen.getByText('Skip');
       fireEvent.click(skipButton);
 
-      // Follow-up should be dismissed (in real implementation, this would be handled by the store)
+      // Follow-up should be dismissed
+      await waitFor(() => {
+        expect(screen.queryByText('Can you elaborate?')).not.toBeInTheDocument();
+      });
     });
   });
 
   describe('Completion Threshold States', () => {
+    beforeEach(() => {
+      mockAction = 'continue';
+      mockSearchParamsString = 'sessionId=123';
+    });
+
     it('shows ready to complete screen when threshold is met', () => {
       const readyToCompleteStoreValues = {
         ...mockStoreValues,
@@ -608,6 +653,11 @@ describe('QuestionnairePage', () => {
   });
 
   describe('Session Resumption', () => {
+    beforeEach(() => {
+      mockAction = 'continue';
+      mockSearchParamsString = 'sessionId=123';
+    });
+
     it('resumes session when sessionId parameter is present', () => {
       const sessionStoreValues = {
         ...mockStoreValues,
