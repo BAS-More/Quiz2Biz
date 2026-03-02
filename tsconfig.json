@@ -60,6 +60,9 @@
     "node_modules",
     "dist",
     "coverage",
-    "apps/web"
+    "apps/web",
+    "e2e",
+    "test/regression",
+    "prisma/prisma.config.ts"
   ]
 }
