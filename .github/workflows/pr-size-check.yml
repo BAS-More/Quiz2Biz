@@ -27,25 +27,58 @@ jobs:
             const { owner, repo } = context.repo;
             const pull_number = context.payload.pull_request.number;
             
-            // Get PR files
-            const { data: files } = await github.rest.pulls.listFiles({
+            // Get all PR files with pagination
+            const files = await github.paginate(github.rest.pulls.listFiles, {
               owner,
               repo,
               pull_number,
               per_page: 100
             });
             
-            // Calculate total changes
+            // Patterns for files excluded from size counting
+            const excludedPatterns = [
+              // Lock files and dependency manifests
+              'package-lock.json',
+              'yarn.lock',
+              'pnpm-lock.yaml',
+              // Build output and coverage
+              'dist/',
+              'build/',
+              'coverage/',
+              // Snapshots
+              '.snap',
+              // Documentation
+              '.md',
+              // GitHub configuration and workflows
+              '.github/',
+              // Infrastructure / Terraform
+              'infrastructure/',
+              // Prisma migrations (auto-generated)
+              'prisma/migrations/',
+              // Docker configuration
+              'docker/',
+              // End-to-end test fixtures
+              'e2e/',
+              // Configuration files
+              '.prettierrc',
+              '.eslintrc',
+              '.editorconfig',
+              '.gitattributes',
+              'turbo.json',
+              'jest.config',
+              'tsconfig',
+              '.env.example',
+            ];
+            
+            // Calculate total changes (only production-relevant code)
             let additions = 0;
             let deletions = 0;
+            let skippedFiles = 0;
             
             for (const file of files) {
-              // Skip generated files, lockfiles, and test snapshots
-              if (file.filename.includes('package-lock.json') ||
-                  file.filename.includes('yarn.lock') ||
-                  file.filename.includes('.snap') ||
-                  file.filename.includes('dist/') ||
-                  file.filename.includes('coverage/')) {
+              const excluded = excludedPatterns.some(p => file.filename.includes(p));
+              if (excluded) {
+                skippedFiles++;
                 continue;
               }
               additions += file.additions;
@@ -87,8 +120,8 @@ jobs:
             // Create comment
             const body = `## ${emoji} PR Size Check
             
-            **Total changes:** ${totalChanges} lines (+${additions} / -${deletions})
-            **Files changed:** ${files.length}
+            **Counted changes:** ${totalChanges} lines (+${additions} / -${deletions})
+            **Files changed:** ${files.length} (${skippedFiles} excluded from count)
             
             ${message}
             
