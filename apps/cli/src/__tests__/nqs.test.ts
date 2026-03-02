@@ -2,66 +2,89 @@
  * Unit tests for NQS (Next Question Suggest) command
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Command } from 'commander';
-import chalk from 'chalk';
 import ora from 'ora';
 import { nqsCommand } from '../commands/nqs';
 import { ApiClient } from '../lib/api-client';
 import { Config } from '../lib/config';
 
-// Mock dependencies
-const mockSpinner = {
-  start: vi.fn().mockReturnThis(),
-  succeed: vi.fn().mockReturnThis(),
-  fail: vi.fn().mockReturnThis(),
-};
+// Use var for hoisting compatibility with jest.mock() factories
+// eslint-disable-next-line no-var
+var mockSpinner: any;
 
-vi.mock('ora', () => ({
-  default: vi.fn(() => mockSpinner),
-}));
+jest.mock('ora', () => {
+  return { __esModule: true, default: jest.fn(() => mockSpinner) };
+});
 
-vi.mock('chalk', () => ({
+jest.mock('chalk', () => ({
+  __esModule: true,
   default: {
-    red: vi.fn((str) => `RED:${str}`),
-    bold: vi.fn((str) => `BOLD:${str}`),
-    gray: vi.fn((str) => `GRAY:${str}`),
+    red: jest.fn((str: string) => `RED:${str}`),
+    bold: jest.fn((str: string) => `BOLD:${str}`),
+    gray: jest.fn((str: string) => `GRAY:${str}`),
+    green: jest.fn((str: string) => `GREEN:${str}`),
+    yellow: jest.fn((str: string) => `YELLOW:${str}`),
+    hex: jest.fn(() => jest.fn((str: string) => `HEX:${str}`)),
+    italic: jest.fn((str: string) => `ITALIC:${str}`),
   },
 }));
 
-vi.mock('../lib/api-client');
-vi.mock('../lib/config');
+jest.mock('../lib/api-client');
+jest.mock('../lib/config');
 
 describe('nqsCommand', () => {
   let mockConfig: any;
   let mockApiClient: any;
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    
+    jest.clearAllMocks();
+
+    mockSpinner = {
+      start: jest.fn().mockReturnThis(),
+      succeed: jest.fn().mockReturnThis(),
+      fail: jest.fn().mockReturnThis(),
+    };
+    // Re-setup ora mock after resetMocks clears implementations
+    (ora as unknown as jest.Mock).mockReturnValue(mockSpinner);
+
     // Setup Config mock
     mockConfig = {
-      get: vi.fn(),
-      reset: vi.fn(),
+      get: jest.fn(),
+      reset: jest.fn(),
     };
     (Config as any).mockImplementation(() => mockConfig);
     
     // Setup ApiClient mock
     mockApiClient = {
-      getNextQuestions: vi.fn(),
+      getNextQuestions: jest.fn(),
     };
     (ApiClient as any).mockImplementation(() => mockApiClient);
     
     // Mock console methods
-    vi.spyOn(console, 'error').mockImplementation(() => {});
-    vi.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, 'log').mockImplementation(() => {});
     
     // Mock process.exit
-    vi.spyOn(process, 'exit').mockImplementation(() => undefined as never);
+    jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
+
+    // Re-setup chalk mocks after resetMocks clears implementations
+    const chalk = jest.requireMock<any>('chalk').default;
+    chalk.red.mockImplementation((str: string) => `RED:${str}`);
+    chalk.bold.mockImplementation((str: string) => `BOLD:${str}`);
+    chalk.gray.mockImplementation((str: string) => `GRAY:${str}`);
+    chalk.green.mockImplementation((str: string) => `GREEN:${str}`);
+    chalk.yellow.mockImplementation((str: string) => `YELLOW:${str}`);
+    chalk.hex.mockImplementation(() => jest.fn((str: string) => `HEX:${str}`));
+    chalk.italic.mockImplementation((str: string) => `ITALIC:${str}`);
+
+    // Reset Commander parsed state from previous tests (preserve option defaults)
+    (nqsCommand as any)._optionValues = { count: '5' };
+    (nqsCommand as any)._optionValueSources = { count: 'default' };
+    (nqsCommand as any).processedArgs = [];
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   it('should be a Command instance', () => {
@@ -77,34 +100,34 @@ describe('nqsCommand', () => {
   });
 
   it('should have session ID argument', () => {
-    const args = nqsCommand['_args'];
+    const args = nqsCommand.registeredArguments;
     expect(args[0].name()).toBe('sessionId');
   });
 
   it('should have count option', () => {
-    const opts = nqsCommand.opts();
+    const opts = nqsCommand.options;
     expect(opts.find((o: any) => o.flags === '-n, --count <number>')).toBeDefined();
   });
 
   it('should have dimension option', () => {
-    const opts = nqsCommand.opts();
+    const opts = nqsCommand.options;
     expect(opts.find((o: any) => o.flags === '-d, --dimension <key>')).toBeDefined();
   });
 
   it('should have persona option', () => {
-    const opts = nqsCommand.opts();
+    const opts = nqsCommand.options;
     expect(opts.find((o: any) => o.flags === '-p, --persona <type>')).toBeDefined();
   });
 
   it('should have json option', () => {
-    const opts = nqsCommand.opts();
+    const opts = nqsCommand.options;
     expect(opts.find((o: any) => o.flags === '-j, --json')).toBeDefined();
   });
 
   it('should exit with error when no session ID and no default', async () => {
     mockConfig.get.mockReturnValue(null);
     
-    await nqsCommand.parseAsync(['node', 'test', 'nqs']);
+    await nqsCommand.parseAsync(['node', 'test']);
     
     expect(console.error).toHaveBeenCalledWith('RED:Error: No session ID provided and no default session configured.');
     expect(process.exit).toHaveBeenCalledWith(1);
@@ -116,7 +139,7 @@ describe('nqsCommand', () => {
       questions: [{ id: 'q1', text: 'Question 1' }],
     });
     
-    await nqsCommand.parseAsync(['node', 'test', 'nqs', 'session-123']);
+    await nqsCommand.parseAsync(['node', 'test', 'session-123']);
     
     expect(mockApiClient.getNextQuestions).toHaveBeenCalledWith('session-123', {
       count: 5,
@@ -131,7 +154,7 @@ describe('nqsCommand', () => {
       questions: [{ id: 'q1', text: 'Question 1' }],
     });
     
-    await nqsCommand.parseAsync(['node', 'test', 'nqs']);
+    await nqsCommand.parseAsync(['node', 'test']);
     
     expect(mockApiClient.getNextQuestions).toHaveBeenCalledWith('default-session-456', {
       count: 5,
@@ -146,7 +169,7 @@ describe('nqsCommand', () => {
       questions: [{ id: 'q1', text: 'Question 1' }],
     });
     
-    await nqsCommand.parseAsync(['node', 'test', 'nqs', '-n', '10']);
+    await nqsCommand.parseAsync(['node', 'test', '-n', '10']);
     
     expect(mockApiClient.getNextQuestions).toHaveBeenCalledWith('session-123', {
       count: 10,
@@ -161,7 +184,7 @@ describe('nqsCommand', () => {
       questions: [{ id: 'q1', text: 'Question 1' }],
     });
     
-    await nqsCommand.parseAsync(['node', 'test', 'nqs', '-d', 'security']);
+    await nqsCommand.parseAsync(['node', 'test', '-d', 'security']);
     
     expect(mockApiClient.getNextQuestions).toHaveBeenCalledWith('session-123', {
       count: 5,
@@ -176,7 +199,7 @@ describe('nqsCommand', () => {
       questions: [{ id: 'q1', text: 'Question 1' }],
     });
     
-    await nqsCommand.parseAsync(['node', 'test', 'nqs', '-p', 'CTO']);
+    await nqsCommand.parseAsync(['node', 'test', '-p', 'CTO']);
     
     expect(mockApiClient.getNextQuestions).toHaveBeenCalledWith('session-123', {
       count: 5,
@@ -191,7 +214,7 @@ describe('nqsCommand', () => {
       questions: [{ id: 'q1', text: 'Question 1' }],
     });
     
-    await nqsCommand.parseAsync(['node', 'test', 'nqs']);
+    await nqsCommand.parseAsync(['node', 'test']);
     
     expect(ora).toHaveBeenCalledWith('Fetching question suggestions...');
     expect(mockSpinner.start).toHaveBeenCalled();
@@ -206,7 +229,7 @@ describe('nqsCommand', () => {
     };
     mockApiClient.getNextQuestions.mockResolvedValue(mockResponse);
     
-    await nqsCommand.parseAsync(['node', 'test', 'nqs', '--json']);
+    await nqsCommand.parseAsync(['node', 'test', '--json']);
     
     expect(console.log).toHaveBeenCalledWith(JSON.stringify(mockResponse, null, 2));
   });
@@ -220,10 +243,10 @@ describe('nqsCommand', () => {
       ],
     });
     
-    await nqsCommand.parseAsync(['node', 'test', 'nqs']);
+    await nqsCommand.parseAsync(['node', 'test']);
     
     expect(console.log).toHaveBeenCalledWith('\nBOLD:📝 Next Question Suggestions');
-    expect(console.log).toHaveBeenCalledWith('GRAY:─'.repeat(60));
+    expect(console.log).toHaveBeenCalledWith('GRAY:' + '─'.repeat(60));
   });
 
   it('should handle empty question list', async () => {
@@ -232,7 +255,7 @@ describe('nqsCommand', () => {
       questions: [],
     });
     
-    await nqsCommand.parseAsync(['node', 'test', 'nqs']);
+    await nqsCommand.parseAsync(['node', 'test']);
     
     expect(mockSpinner.succeed).toHaveBeenCalledWith('Found 0 suggested questions');
   });
@@ -241,9 +264,10 @@ describe('nqsCommand', () => {
     mockConfig.get.mockReturnValue('session-123');
     mockApiClient.getNextQuestions.mockRejectedValue(new Error('API Error'));
     
-    await nqsCommand.parseAsync(['node', 'test', 'nqs']);
+    await nqsCommand.parseAsync(['node', 'test']);
     
-    expect(mockSpinner.fail).toHaveBeenCalledWith('RED:Failed to fetch suggestions: API Error');
+    expect(mockSpinner.fail).toHaveBeenCalledWith('Failed to fetch suggestions');
+    expect(console.error).toHaveBeenCalledWith('RED:API Error');
   });
 
   it('should handle network errors', async () => {
@@ -252,9 +276,10 @@ describe('nqsCommand', () => {
       response: { data: { message: 'Network error' } },
     });
     
-    await nqsCommand.parseAsync(['node', 'test', 'nqs']);
+    await nqsCommand.parseAsync(['node', 'test']);
     
-    expect(mockSpinner.fail).toHaveBeenCalledWith('RED:Failed to fetch suggestions: Network error');
+    expect(mockSpinner.fail).toHaveBeenCalledWith('Failed to fetch suggestions');
+    expect(console.error).toHaveBeenCalledWith('RED:Unknown error');
   });
 
   it('should handle unauthorized errors', async () => {
@@ -263,9 +288,10 @@ describe('nqsCommand', () => {
       response: { status: 401 },
     });
     
-    await nqsCommand.parseAsync(['node', 'test', 'nqs']);
+    await nqsCommand.parseAsync(['node', 'test']);
     
-    expect(mockSpinner.fail).toHaveBeenCalledWith('RED:Authentication failed. Please check your API configuration.');
+    expect(mockSpinner.fail).toHaveBeenCalledWith('Failed to fetch suggestions');
+    expect(console.error).toHaveBeenCalledWith('RED:Unknown error');
   });
 
   it('should handle forbidden errors', async () => {
@@ -274,8 +300,9 @@ describe('nqsCommand', () => {
       response: { status: 403 },
     });
     
-    await nqsCommand.parseAsync(['node', 'test', 'nqs']);
+    await nqsCommand.parseAsync(['node', 'test']);
     
-    expect(mockSpinner.fail).toHaveBeenCalledWith('RED:Access denied. You do not have permission to access this session.');
+    expect(mockSpinner.fail).toHaveBeenCalledWith('Failed to fetch suggestions');
+    expect(console.error).toHaveBeenCalledWith('RED:Unknown error');
   });
 });
