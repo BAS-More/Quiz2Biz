@@ -88,10 +88,11 @@ describe('DashboardPage', () => {
   it('displays active sessions count', () => {
     renderDashboardPage();
 
-    expect(screen.getByText('Active Sessions')).toBeInTheDocument();
-    // Multiple elements may show this value (stat card, progress ring, etc.)
-    const activeElements = screen.getAllByText('1');
-    expect(activeElements.length).toBeGreaterThanOrEqual(1);
+    // Find the Active Sessions label and verify its parent container has the correct value
+    const activeSessionsLabel = screen.getByText('Active Sessions');
+    const statCard = activeSessionsLabel.closest('.group'); // StatCard has group class
+    expect(statCard).toBeInTheDocument();
+    expect(statCard).toHaveTextContent('1');
   });
 
   it('displays completed sessions count', () => {
@@ -103,10 +104,11 @@ describe('DashboardPage', () => {
   it('displays highest score', () => {
     renderDashboardPage();
 
-    expect(screen.getByText('Highest Score')).toBeInTheDocument();
-    // Multiple elements may show this value (stat card, progress ring, etc.)
-    const scoreElements = screen.getAllByText('92%');
-    expect(scoreElements.length).toBeGreaterThanOrEqual(1);
+    // Find the Highest Score label and verify its parent container has the correct value
+    const highestScoreLabel = screen.getByText('Highest Score');
+    const statCard = highestScoreLabel.closest('.group'); // StatCard has group class
+    expect(statCard).toBeInTheDocument();
+    expect(statCard).toHaveTextContent('92%');
   });
 
   it('navigates to idea capture on New Project click', async () => {
