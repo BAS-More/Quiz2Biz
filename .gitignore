@@ -71,6 +71,9 @@ override.tf.json
 
 actionlint
 
+# TypeScript build info
+*.tsbuildinfo
+
 # Jest cache
 .jest-cache/
 **/.jest-cache/
