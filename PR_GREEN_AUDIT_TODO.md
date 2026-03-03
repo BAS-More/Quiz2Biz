@@ -26,7 +26,7 @@ Repository: `Avi-Bendetsky/Quiz-to-build`
 4. **Security summary hard-fails after upstream scan failures**
    - Evidence: run `22577428226`, job `65403216380`
    - Error: `One or more security scans failed`
-   - Root cause: summary gate correctly fails due failed container/dependency jobs; this is a downstream symptom.
+   - Root cause: summary gate correctly fails due to failed container/dependency jobs; this is a downstream symptom.
 
 5. **CodeQL conflict with default setup in custom security workflow**
    - Evidence: run `22600100431`, job `65479744743`
