@@ -2,11 +2,21 @@
 
 ## Problem Statement
 
-GitHub Actions workflow runs are sometimes cancelled by automated systems (e.g., `@copilot-swe-agent[bot]`), resulting in runs with `action_required` status. This can lead to:
+GitHub Actions workflow runs are sometimes cancelled by automated systems (e.g., `@copilot-swe-agent[bot]`), or may complete with `action_required` conclusion. This can lead to:
 
 - Cluttered workflow run history
 - Confusion about which runs actually need attention
 - Manual cleanup overhead
+
+### Important: Understanding Status vs Conclusion
+
+⚠️ **CRITICAL LIMITATION**: GitHub Actions has two separate concepts:
+- **Status**: The current state of a run (`queued`, `in_progress`, `completed`)
+- **Conclusion**: The final result once completed (`success`, `failure`, `cancelled`, `action_required`, etc.)
+
+**You can only cancel runs with status `in_progress` or `queued`. Runs with status `completed` (regardless of their conclusion) CANNOT be cancelled.**
+
+Runs with `conclusion: action_required` have already finished executing and cannot be cancelled through the API. The `gh run cancel` command will fail with permission errors for these runs.
 
 ### Example Error Message
 
@@ -19,7 +29,9 @@ The run was canceled by @copilot-swe-agent[bot].
 
 ## Solution
 
-We've implemented a batch cancellation script that allows repository maintainers to efficiently clean up all workflow runs with `action_required` status.
+We've implemented a batch cancellation script that attempts to cancel workflow runs filtered by `--status action_required`.
+
+⚠️ **Important Note**: Due to the GitHub Actions API limitation explained above, this script will typically fail to cancel most runs because they have already completed (`status: completed, conclusion: action_required`). The script is provided as a reference implementation and for the rare case where runs might be in progress with this status.
 
 ### Script Location
 
@@ -147,14 +159,61 @@ To prevent excessive action_required runs in the future:
 
 ## Troubleshooting
 
+### Understanding the Test Results
+
+When running this script, you will likely see **all cancellation attempts fail** with errors. This is expected behavior because:
+
+1. The `gh run list --status action_required` command actually lists runs where `conclusion` (not status) is `action_required`
+2. These runs have already completed (`status: completed`)
+3. Completed runs cannot be cancelled via the API
+4. This is a GitHub Actions API limitation, not a script bug
+
+**Test Output Example:**
+```
+✗ Failed to cancel run 22623308939
+✗ Failed to cancel run 22623308894
+...
+Total runs: 50
+Cancelled: 0
+Failed: 50
+```
+
+This is the expected result when targeting completed runs.
+
+### What CAN Be Cancelled
+
+You can only cancel runs with these statuses:
+- `in_progress` - Currently running
+- `queued` - Waiting to start
+
+**Example - Cancel In-Progress Runs:**
+```bash
+# List in-progress runs
+gh run list --status in_progress
+
+# Cancel a specific in-progress run
+gh run cancel <run-id>
+
+# Cancel all in-progress runs (dangerous!)
+gh run list --status in_progress --json databaseId --jq '.[].databaseId' | xargs -I{} gh run cancel {}
+```
+
+### What CANNOT Be Cancelled
+
+Runs with these statuses cannot be cancelled:
+- `completed` - Already finished (regardless of conclusion: success, failure, cancelled, action_required, etc.)
+
+These runs will remain in your workflow history permanently.
+
 ### "HTTP 403: Resource not accessible by integration"
 
 This error occurs when:
 - The GitHub token doesn't have sufficient permissions
 - You're trying to cancel runs from a fork
 - You don't have write access to the repository
+- **Most commonly**: You're trying to cancel a run that has already completed
 
-**Solution**: Ensure you're authenticated with a personal access token that has the `workflow` scope, or that you have write access to the repository.
+**Solution**: You cannot cancel completed runs. Only in-progress or queued runs can be cancelled. For completed runs with `conclusion: action_required`, they will remain in the workflow history.
 
 ### "No workflow runs found with status 'action_required'"
 
