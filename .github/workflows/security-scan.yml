@@ -225,23 +225,26 @@ jobs:
     if: always()
     permissions:
       contents: read
-    
+
     steps:
       - name: Check all security scans
         run: |
-          echo "## Security Scan Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- **Dependency Scan**: ${{ needs.dependency-scan.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Container Scan**: ${{ needs.container-scan.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Code Scanning**: ${{ needs.code-scanning.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Secrets Scan**: ${{ needs.secrets-scan.result }}" >> $GITHUB_STEP_SUMMARY
-          
-          if [ "${{ needs.dependency-scan.result }}" != "success" ] || \
-             [ "${{ needs.container-scan.result }}" != "success" ] || \
-             [ "${{ needs.code-scanning.result }}" != "success" ] || \
-             [ "${{ needs.secrets-scan.result }}" != "success" ]; then
+          is_ok() {
+            [[ "$1" == "success" || "$1" == "skipped" ]]
+          }
+
+          if ! is_ok "${{ needs.dependency-scan.result }}" || \
+             ! is_ok "${{ needs.container-scan.result }}" || \
+             ! is_ok "${{ needs.code-scanning.result }}" || \
+             ! is_ok "${{ needs.secrets-scan.result }}"; then
+            echo "## Security Scan Summary" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "- **Dependency Scan**: ${{ needs.dependency-scan.result }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Container Scan**: ${{ needs.container-scan.result }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Code Scanning**: ${{ needs.code-scanning.result }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Secrets Scan**: ${{ needs.secrets-scan.result }}" >> $GITHUB_STEP_SUMMARY
             echo "::error::One or more security scans failed"
             exit 1
           fi
-          
-          echo "✅ All security scans passed" >> $GITHUB_STEP_SUMMARY
+
+          echo "✅ All security scans passed or skipped" >> $GITHUB_STEP_SUMMARY

@@ -36,3 +36,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  sonar-status:
+    name: SonarCloud Status
+    runs-on: ubuntu-latest
+    needs: [sonarcloud]
+    if: always()
+
+    steps:
+      - name: Check SonarCloud status
+        run: |
+          if [[ "${{ needs.sonarcloud.result }}" == "success" || "${{ needs.sonarcloud.result }}" == "skipped" ]]; then
+            echo "✅ SonarCloud scan passed or skipped"
+            exit 0
+          else
+            echo "::error::SonarCloud scan failed with status: ${{ needs.sonarcloud.result }}"
+            exit 1
+          fi
