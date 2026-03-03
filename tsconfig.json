@@ -59,6 +59,10 @@
   "exclude": [
     "node_modules",
     "dist",
-    "coverage"
+    "coverage",
+    "apps/web",
+    "e2e",
+    "test/regression",
+    "prisma/prisma.config.ts"
   ]
 }

@@ -2,7 +2,7 @@
  * OAuth callback page that handles the redirect from OAuth providers.
  * This page runs in a popup window, extracts the token from the URL,
  * exchanges it with the backend, and handles the authentication.
- * 
+ *
  * If window.opener exists (normal popup flow), sends message to parent and closes.
  * If window.opener is null (browser cleared it), completes login and redirects to dashboard.
  */
@@ -46,7 +46,7 @@ export function OAuthCallbackPage() {
                 type: `${provider}-oauth-callback`,
                 error: errorDescription || error,
               },
-              window.location.origin
+              window.location.origin,
             );
             setTimeout(() => window.close(), 2000);
           }
@@ -66,7 +66,7 @@ export function OAuthCallbackPage() {
                 type: `${provider}-oauth-callback`,
                 error: 'No access token received from provider',
               },
-              window.location.origin
+              window.location.origin,
             );
             setTimeout(() => window.close(), 2000);
           }
@@ -108,7 +108,7 @@ export function OAuthCallbackPage() {
               accessToken: data.accessToken,
               success: true,
             },
-            window.location.origin
+            window.location.origin,
           );
 
           // Close popup after brief delay
@@ -132,7 +132,7 @@ export function OAuthCallbackPage() {
               type: `${provider}-oauth-callback`,
               error: errorMsg,
             },
-            window.location.origin
+            window.location.origin,
           );
           setTimeout(() => window.close(), 2000);
         }
@@ -151,27 +151,33 @@ export function OAuthCallbackPage() {
               <div className="h-12 w-12 rounded-full border-2 border-brand-200" />
               <div className="absolute inset-0 h-12 w-12 rounded-full border-2 border-brand-600 border-t-transparent animate-spin" />
             </div>
-            <h2 className="text-lg font-semibold text-surface-900">
-              Completing sign in...
-            </h2>
-            <p className="text-surface-500 mt-2">
-              Please wait while we verify your credentials.
-            </p>
+            <h2 className="text-lg font-semibold text-surface-900">Completing sign in...</h2>
+            <p className="text-surface-500 mt-2">Please wait while we verify your credentials.</p>
           </>
         )}
 
         {status === 'success' && (
           <>
             <div className="mx-auto mb-4 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <svg
+                className="w-6 h-6 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             </div>
-            <h2 className="text-lg font-semibold text-surface-900">
-              Sign in successful!
-            </h2>
+            <h2 className="text-lg font-semibold text-surface-900">Sign in successful!</h2>
             <p className="text-surface-500 mt-2">
-              {window.opener ? 'This window will close automatically.' : 'Redirecting to dashboard...'}
+              {window.opener
+                ? 'This window will close automatically.'
+                : 'Redirecting to dashboard...'}
             </p>
           </>
         )}
@@ -179,16 +185,22 @@ export function OAuthCallbackPage() {
         {status === 'error' && (
           <>
             <div className="mx-auto mb-4 w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-6 h-6 text-red-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </div>
-            <h2 className="text-lg font-semibold text-surface-900">
-              Sign in failed
-            </h2>
-            <p className="text-red-600 mt-2">
-              {errorMessage}
-            </p>
+            <h2 className="text-lg font-semibold text-surface-900">Sign in failed</h2>
+            <p className="text-red-600 mt-2">{errorMessage}</p>
             {!window.opener && (
               <button
                 onClick={() => navigate('/auth/login', { replace: true })}
@@ -198,9 +210,7 @@ export function OAuthCallbackPage() {
               </button>
             )}
             {window.opener && (
-              <p className="text-surface-500 mt-2 text-sm">
-                This window will close automatically.
-              </p>
+              <p className="text-surface-500 mt-2 text-sm">This window will close automatically.</p>
             )}
           </>
         )}

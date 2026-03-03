@@ -96,7 +96,7 @@ main
 - ❌ (Optional - enable if your org requires GPG signatures)
 
 **5. Require linear history**
-- ✅ Require merge commits or squash merging (prevents rebase)
+- ✅ Disallow merge commits to enforce a linear history (rebase and squash merges are still allowed; separate from merge-method settings)
 
 **6. Require deployments to succeed before merging**
 - ❌ (Not needed for main branch)

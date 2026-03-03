@@ -69,7 +69,7 @@ export class PolicyPackService {
     const scoreAtGeneration = session?.readinessScore
       ? typeof session.readinessScore === 'number'
         ? session.readinessScore
-        : ((session.readinessScore as any).toNumber?.() ?? Number(session.readinessScore))
+        : (session.readinessScore.toNumber?.() ?? Number(session.readinessScore))
       : 0;
 
     const bundle: PolicyPackBundle = {

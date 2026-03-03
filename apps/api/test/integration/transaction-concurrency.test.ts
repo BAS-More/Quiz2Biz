@@ -5,11 +5,11 @@ import configuration from '../../src/config/configuration';
 
 /**
  * Integration tests for Transaction & Concurrency patterns
- * 
+ *
  * SKIP REASON: Requires running PostgreSQL database at 127.0.0.1:5432.
  * These tests perform actual database operations and need a live DB connection.
  * TODO: Set up test database or use Docker container for test isolation.
- * 
+ *
  * Schema updates completed:
  * - User: USER -> CLIENT role
  * - Session: updatedAt -> lastActivityAt, added questionnaireVersion
@@ -24,7 +24,7 @@ describe.skip('Transaction & Concurrency Tests', () => {
   let testQuestionnaireId: string;
   let testSessionId: string;
   let testQuestionId: string;
-  let testDimensionId: string;
+  let testSectionId: string;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
@@ -43,7 +43,7 @@ describe.skip('Transaction & Concurrency Tests', () => {
     const user = await prisma.user.create({
       data: {
         email: `transaction-test-${Date.now()}@test.com`,
-        hashedPassword: 'hashed_password',
+        passwordHash: 'hashed_password',
         role: 'CLIENT',
       },
     });
@@ -52,28 +52,29 @@ describe.skip('Transaction & Concurrency Tests', () => {
     // Create test questionnaire
     const questionnaire = await prisma.questionnaire.create({
       data: {
-        title: `Transaction Test Questionnaire ${Date.now()}`,
+        name: `Transaction Test Questionnaire ${Date.now()}`,
         description: 'Test questionnaire for transactions',
       },
     });
     testQuestionnaireId = questionnaire.id;
 
-    // Create test dimension
-    const dimension = await prisma.dimension.create({
+    // Create test section
+    const section = await prisma.section.create({
       data: {
-        name: `Transaction Test Dimension ${Date.now()}`,
-        weight: 1.0,
+        name: `Transaction Test Section ${Date.now()}`,
         questionnaireId: testQuestionnaireId,
+        orderIndex: 0,
       },
     });
-    testDimensionId = dimension.id;
+    testSectionId = section.id;
 
     // Create test question
     const question = await prisma.question.create({
       data: {
         text: 'Test transaction question',
         type: 'TEXT',
-        dimensionId: testDimensionId,
+        sectionId: testSectionId,
+        orderIndex: 0,
         severity: 0.7,
       },
     });
@@ -95,8 +96,8 @@ describe.skip('Transaction & Concurrency Tests', () => {
     // Clean up in reverse dependency order
     await prisma.response.deleteMany({ where: { sessionId: testSessionId } });
     await prisma.session.deleteMany({ where: { id: testSessionId } });
-    await prisma.question.deleteMany({ where: { dimensionId: testDimensionId } });
-    await prisma.dimension.deleteMany({ where: { id: testDimensionId } });
+    await prisma.question.deleteMany({ where: { sectionId: testSectionId } });
+    await prisma.section.deleteMany({ where: { id: testSectionId } });
     await prisma.questionnaire.deleteMany({ where: { id: testQuestionnaireId } });
     await prisma.user.deleteMany({ where: { id: testUserId } });
 
@@ -443,7 +444,9 @@ describe.skip('Transaction & Concurrency Tests', () => {
 
       if (current!.lastActivityAt.getTime() !== user2Read.lastActivityAt!.getTime()) {
         // Conflict detected - user2's read is stale
-        expect(current!.lastActivityAt.getTime()).toBeGreaterThan(user2Read.lastActivityAt!.getTime());
+        expect(current!.lastActivityAt.getTime()).toBeGreaterThan(
+          user2Read.lastActivityAt!.getTime(),
+        );
 
         // User 2 should re-read and retry
         const refreshed = await prisma.session.findUnique({ where: { id: testSessionId } });

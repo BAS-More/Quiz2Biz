@@ -34,10 +34,7 @@ describe('ClaudeAiService', () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        ClaudeAiService,
-        { provide: ConfigService, useValue: mockConfigService },
-      ],
+      providers: [ClaudeAiService, { provide: ConfigService, useValue: mockConfigService }],
     }).compile();
 
     service = module.get<ClaudeAiService>(ClaudeAiService);
@@ -59,16 +56,15 @@ describe('ClaudeAiService', () => {
     it('should not initialize client when API key is missing', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') {return undefined;}
+          if (key === 'claude.apiKey') {
+            return undefined;
+          }
           return mockConfigService.get(key, defaultValue);
         }),
       };
 
       const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          ClaudeAiService,
-          { provide: ConfigService, useValue: mockConfigNoKey },
-        ],
+        providers: [ClaudeAiService, { provide: ConfigService, useValue: mockConfigNoKey }],
       }).compile();
 
       const serviceNoKey = module.get<ClaudeAiService>(ClaudeAiService);
@@ -89,16 +85,15 @@ describe('ClaudeAiService', () => {
     it('should return fallback analysis when client is not initialized', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') {return undefined;}
+          if (key === 'claude.apiKey') {
+            return undefined;
+          }
           return mockConfigService.get(key, defaultValue);
         }),
       };
 
       const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          ClaudeAiService,
-          { provide: ConfigService, useValue: mockConfigNoKey },
-        ],
+        providers: [ClaudeAiService, { provide: ConfigService, useValue: mockConfigNoKey }],
       }).compile();
 
       const serviceNoClient = module.get<ClaudeAiService>(ClaudeAiService);
@@ -120,16 +115,15 @@ describe('ClaudeAiService', () => {
     it('should extract themes from keywords in fallback mode', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') {return undefined;}
+          if (key === 'claude.apiKey') {
+            return undefined;
+          }
           return mockConfigService.get(key, defaultValue);
         }),
       };
 
       const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          ClaudeAiService,
-          { provide: ConfigService, useValue: mockConfigNoKey },
-        ],
+        providers: [ClaudeAiService, { provide: ConfigService, useValue: mockConfigNoKey }],
       }).compile();
 
       const serviceNoClient = module.get<ClaudeAiService>(ClaudeAiService);
@@ -148,16 +142,15 @@ describe('ClaudeAiService', () => {
     it('should return general business idea when no keywords match', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') {return undefined;}
+          if (key === 'claude.apiKey') {
+            return undefined;
+          }
           return mockConfigService.get(key, defaultValue);
         }),
       };
 
       const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          ClaudeAiService,
-          { provide: ConfigService, useValue: mockConfigNoKey },
-        ],
+        providers: [ClaudeAiService, { provide: ConfigService, useValue: mockConfigNoKey }],
       }).compile();
 
       const serviceNoClient = module.get<ClaudeAiService>(ClaudeAiService);
@@ -174,16 +167,15 @@ describe('ClaudeAiService', () => {
     it('should score project types based on keyword matching', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') {return undefined;}
+          if (key === 'claude.apiKey') {
+            return undefined;
+          }
           return mockConfigService.get(key, defaultValue);
         }),
       };
 
       const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          ClaudeAiService,
-          { provide: ConfigService, useValue: mockConfigNoKey },
-        ],
+        providers: [ClaudeAiService, { provide: ConfigService, useValue: mockConfigNoKey }],
       }).compile();
 
       const serviceNoClient = module.get<ClaudeAiService>(ClaudeAiService);
@@ -200,16 +192,15 @@ describe('ClaudeAiService', () => {
     it('should include strengths based on theme count', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') {return undefined;}
+          if (key === 'claude.apiKey') {
+            return undefined;
+          }
           return mockConfigService.get(key, defaultValue);
         }),
       };
 
       const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          ClaudeAiService,
-          { provide: ConfigService, useValue: mockConfigNoKey },
-        ],
+        providers: [ClaudeAiService, { provide: ConfigService, useValue: mockConfigNoKey }],
       }).compile();
 
       const serviceNoClient = module.get<ClaudeAiService>(ClaudeAiService);
@@ -228,16 +219,15 @@ describe('ClaudeAiService', () => {
     it('should return default follow-up when client is not initialized', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') {return undefined;}
+          if (key === 'claude.apiKey') {
+            return undefined;
+          }
           return mockConfigService.get(key, defaultValue);
         }),
       };
 
       const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          ClaudeAiService,
-          { provide: ConfigService, useValue: mockConfigNoKey },
-        ],
+        providers: [ClaudeAiService, { provide: ConfigService, useValue: mockConfigNoKey }],
       }).compile();
 
       const serviceNoClient = module.get<ClaudeAiService>(ClaudeAiService);
@@ -257,7 +247,9 @@ describe('ClaudeAiService', () => {
     });
 
     it('should call Claude API and parse response when client is initialized', async () => {
-      if (!mockAnthropicCreate) {return;}
+      if (!mockAnthropicCreate) {
+        return;
+      }
 
       const mockResponse = {
         content: [
@@ -288,12 +280,12 @@ describe('ClaudeAiService', () => {
     });
 
     it('should return default when Claude returns empty text block', async () => {
-      if (!mockAnthropicCreate) {return;}
+      if (!mockAnthropicCreate) {
+        return;
+      }
 
       const mockResponse = {
-        content: [
-          { type: 'thinking', thinking: 'some thoughts' },
-        ],
+        content: [{ type: 'thinking', thinking: 'some thoughts' }],
       };
 
       mockAnthropicCreate.mockResolvedValue(mockResponse);
@@ -309,7 +301,9 @@ describe('ClaudeAiService', () => {
     });
 
     it('should return default on API error', async () => {
-      if (!mockAnthropicCreate) {return;}
+      if (!mockAnthropicCreate) {
+        return;
+      }
 
       mockAnthropicCreate.mockRejectedValue(new Error('API rate limit'));
 
@@ -333,7 +327,9 @@ describe('ClaudeAiService', () => {
     ];
 
     it('should call Claude API and return parsed result when client exists', async () => {
-      if (!mockAnthropicCreate) {return;}
+      if (!mockAnthropicCreate) {
+        return;
+      }
 
       const mockAnalysis: IdeaAnalysisResult = {
         themes: ['SaaS platform', 'artificial intelligence'],
@@ -370,12 +366,12 @@ describe('ClaudeAiService', () => {
     });
 
     it('should fall back when Claude returns empty text block', async () => {
-      if (!mockAnthropicCreate) {return;}
+      if (!mockAnthropicCreate) {
+        return;
+      }
 
       const mockResponse = {
-        content: [
-          { type: 'thinking', thinking: 'some thoughts' },
-        ],
+        content: [{ type: 'thinking', thinking: 'some thoughts' }],
       };
 
       mockAnthropicCreate.mockResolvedValue(mockResponse);
@@ -392,7 +388,9 @@ describe('ClaudeAiService', () => {
     });
 
     it('should fall back on Claude API error', async () => {
-      if (!mockAnthropicCreate) {return;}
+      if (!mockAnthropicCreate) {
+        return;
+      }
 
       mockAnthropicCreate.mockRejectedValue(new Error('API key invalid'));
 
@@ -412,23 +410,26 @@ describe('ClaudeAiService', () => {
     const availableProjectTypes = [
       { slug: 'business-plan', name: 'Business Plan', description: 'Create a business plan' },
       { slug: 'marketing-strategy', name: 'Marketing Strategy', description: 'Define marketing' },
-      { slug: 'financial-projections', name: 'Financial Projections', description: 'Financial plan' },
+      {
+        slug: 'financial-projections',
+        name: 'Financial Projections',
+        description: 'Financial plan',
+      },
       { slug: 'tech-assessment', name: 'Tech Assessment', description: 'Technical review' },
     ];
 
     it('should handle technology keyword matching for tech-assessment', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') {return undefined;}
+          if (key === 'claude.apiKey') {
+            return undefined;
+          }
           return mockConfigService.get(key, defaultValue);
         }),
       };
 
       const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          ClaudeAiService,
-          { provide: ConfigService, useValue: mockConfigNoKey },
-        ],
+        providers: [ClaudeAiService, { provide: ConfigService, useValue: mockConfigNoKey }],
       }).compile();
 
       const serviceNoClient = module.get<ClaudeAiService>(ClaudeAiService);
@@ -445,16 +446,15 @@ describe('ClaudeAiService', () => {
     it('should handle financial keyword matching', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') {return undefined;}
+          if (key === 'claude.apiKey') {
+            return undefined;
+          }
           return mockConfigService.get(key, defaultValue);
         }),
       };
 
       const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          ClaudeAiService,
-          { provide: ConfigService, useValue: mockConfigNoKey },
-        ],
+        providers: [ClaudeAiService, { provide: ConfigService, useValue: mockConfigNoKey }],
       }).compile();
 
       const serviceNoClient = module.get<ClaudeAiService>(ClaudeAiService);
@@ -471,16 +471,15 @@ describe('ClaudeAiService', () => {
     it('should return focused concept when fewer than 3 themes', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') {return undefined;}
+          if (key === 'claude.apiKey') {
+            return undefined;
+          }
           return mockConfigService.get(key, defaultValue);
         }),
       };
 
       const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          ClaudeAiService,
-          { provide: ConfigService, useValue: mockConfigNoKey },
-        ],
+        providers: [ClaudeAiService, { provide: ConfigService, useValue: mockConfigNoKey }],
       }).compile();
 
       const serviceNoClient = module.get<ClaudeAiService>(ClaudeAiService);
@@ -497,7 +496,9 @@ describe('ClaudeAiService', () => {
     it('should use first available project type when no keyword slug matches', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') {return undefined;}
+          if (key === 'claude.apiKey') {
+            return undefined;
+          }
           return mockConfigService.get(key, defaultValue);
         }),
       };
@@ -507,10 +508,7 @@ describe('ClaudeAiService', () => {
       ];
 
       const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          ClaudeAiService,
-          { provide: ConfigService, useValue: mockConfigNoKey },
-        ],
+        providers: [ClaudeAiService, { provide: ConfigService, useValue: mockConfigNoKey }],
       }).compile();
 
       const serviceNoClient = module.get<ClaudeAiService>(ClaudeAiService);
@@ -528,39 +526,36 @@ describe('ClaudeAiService', () => {
     it('should fallback to business-plan slug when availableProjectTypes is empty', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') {return undefined;}
+          if (key === 'claude.apiKey') {
+            return undefined;
+          }
           return mockConfigService.get(key, defaultValue);
         }),
       };
 
       const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          ClaudeAiService,
-          { provide: ConfigService, useValue: mockConfigNoKey },
-        ],
+        providers: [ClaudeAiService, { provide: ConfigService, useValue: mockConfigNoKey }],
       }).compile();
 
       const serviceNoClient = module.get<ClaudeAiService>(ClaudeAiService);
       serviceNoClient.onModuleInit();
 
-      const result = await serviceNoClient.analyzeIdea(
-        'random text',
-        [],
-      );
+      const result = await serviceNoClient.analyzeIdea('random text', []);
 
       // bestType is undefined, so slug falls back to 'business-plan'
       expect(result.recommendedProjectType.slug).toBe('business-plan');
     });
 
     it('should handle non-Error exception in analyzeIdea catch', async () => {
-      if (!mockAnthropicCreate) {return;}
+      if (!mockAnthropicCreate) {
+        return;
+      }
 
       mockAnthropicCreate.mockRejectedValue('string error not an Error object');
 
-      const result = await service.analyzeIdea(
-        'test idea',
-        [{ slug: 'business-plan', name: 'Business Plan', description: 'BP' }],
-      );
+      const result = await service.analyzeIdea('test idea', [
+        { slug: 'business-plan', name: 'Business Plan', description: 'BP' },
+      ]);
 
       // Should use fallback
       expect(result).toBeDefined();
@@ -568,15 +563,13 @@ describe('ClaudeAiService', () => {
     });
 
     it('should handle non-Error exception in evaluateAnswerCompleteness catch', async () => {
-      if (!mockAnthropicCreate) {return;}
+      if (!mockAnthropicCreate) {
+        return;
+      }
 
       mockAnthropicCreate.mockRejectedValue({ status: 500 });
 
-      const result = await service.evaluateAnswerCompleteness(
-        'Question?',
-        'Answer',
-        'Context',
-      );
+      const result = await service.evaluateAnswerCompleteness('Question?', 'Answer', 'Context');
 
       expect(result.shouldFollowUp).toBe(false);
       expect(result.completenessScore).toBe(0.7);
@@ -585,25 +578,21 @@ describe('ClaudeAiService', () => {
     it('should fallback to "Business Plan" name when bestType is undefined', async () => {
       const mockConfigNoKey = {
         get: jest.fn((key: string, defaultValue?: unknown) => {
-          if (key === 'claude.apiKey') {return undefined;}
+          if (key === 'claude.apiKey') {
+            return undefined;
+          }
           return mockConfigService.get(key, defaultValue);
         }),
       };
 
       const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          ClaudeAiService,
-          { provide: ConfigService, useValue: mockConfigNoKey },
-        ],
+        providers: [ClaudeAiService, { provide: ConfigService, useValue: mockConfigNoKey }],
       }).compile();
 
       const serviceNoClient = module.get<ClaudeAiService>(ClaudeAiService);
       serviceNoClient.onModuleInit();
 
-      const result = await serviceNoClient.analyzeIdea(
-        'random text with no keyword matches',
-        [],
-      );
+      const result = await serviceNoClient.analyzeIdea('random text with no keyword matches', []);
 
       // summary should use fallback name 'Business Plan'
       expect(result.summary).toContain('Business Plan');

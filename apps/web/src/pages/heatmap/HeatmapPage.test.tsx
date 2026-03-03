@@ -2,29 +2,29 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { HeatmapPage } from './HeatmapPage';
-import * as questionnaireApi from '../../api/questionnaire';
+import * as questionnaireModule from '../../api/questionnaire';
 
-// Mock the API
+// Mock the API module
 vi.mock('../../api/questionnaire', () => ({
   questionnaireApi: {
     getHeatmap: vi.fn(),
     getHeatmapDrilldown: vi.fn(),
   },
-  type: {
-    HeatmapResult: 'object',
-  },
 }));
 
-// Mock useNavigate and useParams
+// Mock react-router-dom hooks
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
     useNavigate: () => mockNavigate,
-    useParams: () => ({ sessionId: 'session-123' }),
   };
 });
+
+// Get typed mock references
+const mockGetHeatmap = vi.mocked(questionnaireModule.questionnaireApi.getHeatmap);
+const mockGetHeatmapDrilldown = vi.mocked(questionnaireModule.questionnaireApi.getHeatmapDrilldown);
 
 describe('HeatmapPage', () => {
   const mockHeatmapData = {
@@ -40,25 +40,115 @@ describe('HeatmapPage', () => {
     severityBuckets: ['Low', 'Medium', 'High'],
     cells: [
       // Security dimension
-      { dimensionKey: 'security', severityBucket: 'Low', cellValue: 1.5, colorCode: '#28A745', questionCount: 5 },
-      { dimensionKey: 'security', severityBucket: 'Medium', cellValue: 3.2, colorCode: '#FFC107', questionCount: 3 },
-      { dimensionKey: 'security', severityBucket: 'High', cellValue: 8.7, colorCode: '#DC3545', questionCount: 2 },
+      {
+        dimensionKey: 'security',
+        severityBucket: 'Low',
+        cellValue: 1.5,
+        colorCode: '#28A745',
+        questionCount: 5,
+      },
+      {
+        dimensionKey: 'security',
+        severityBucket: 'Medium',
+        cellValue: 3.2,
+        colorCode: '#FFC107',
+        questionCount: 3,
+      },
+      {
+        dimensionKey: 'security',
+        severityBucket: 'High',
+        cellValue: 8.7,
+        colorCode: '#DC3545',
+        questionCount: 2,
+      },
       // Architecture dimension
-      { dimensionKey: 'architecture', severityBucket: 'Low', cellValue: 0.8, colorCode: '#28A745', questionCount: 4 },
-      { dimensionKey: 'architecture', severityBucket: 'Medium', cellValue: 2.1, colorCode: '#28A745', questionCount: 3 },
-      { dimensionKey: 'architecture', severityBucket: 'High', cellValue: 5.4, colorCode: '#FFC107', questionCount: 2 },
+      {
+        dimensionKey: 'architecture',
+        severityBucket: 'Low',
+        cellValue: 0.8,
+        colorCode: '#28A745',
+        questionCount: 4,
+      },
+      {
+        dimensionKey: 'architecture',
+        severityBucket: 'Medium',
+        cellValue: 2.1,
+        colorCode: '#28A745',
+        questionCount: 3,
+      },
+      {
+        dimensionKey: 'architecture',
+        severityBucket: 'High',
+        cellValue: 5.4,
+        colorCode: '#FFC107',
+        questionCount: 2,
+      },
       // Compliance dimension
-      { dimensionKey: 'compliance', severityBucket: 'Low', cellValue: 2.3, colorCode: '#FFC107', questionCount: 3 },
-      { dimensionKey: 'compliance', severityBucket: 'Medium', cellValue: 4.1, colorCode: '#DC3545', questionCount: 2 },
-      { dimensionKey: 'compliance', severityBucket: 'High', cellValue: 7.8, colorCode: '#DC3545', questionCount: 1 },
+      {
+        dimensionKey: 'compliance',
+        severityBucket: 'Low',
+        cellValue: 2.3,
+        colorCode: '#FFC107',
+        questionCount: 3,
+      },
+      {
+        dimensionKey: 'compliance',
+        severityBucket: 'Medium',
+        cellValue: 4.1,
+        colorCode: '#DC3545',
+        questionCount: 2,
+      },
+      {
+        dimensionKey: 'compliance',
+        severityBucket: 'High',
+        cellValue: 7.8,
+        colorCode: '#DC3545',
+        questionCount: 1,
+      },
       // Operations dimension
-      { dimensionKey: 'operations', severityBucket: 'Low', cellValue: 1.1, colorCode: '#28A745', questionCount: 4 },
-      { dimensionKey: 'operations', severityBucket: 'Medium', cellValue: 2.8, colorCode: '#FFC107', questionCount: 2 },
-      { dimensionKey: 'operations', severityBucket: 'High', cellValue: 6.2, colorCode: '#DC3545', questionCount: 1 },
+      {
+        dimensionKey: 'operations',
+        severityBucket: 'Low',
+        cellValue: 1.1,
+        colorCode: '#28A745',
+        questionCount: 4,
+      },
+      {
+        dimensionKey: 'operations',
+        severityBucket: 'Medium',
+        cellValue: 2.8,
+        colorCode: '#FFC107',
+        questionCount: 2,
+      },
+      {
+        dimensionKey: 'operations',
+        severityBucket: 'High',
+        cellValue: 6.2,
+        colorCode: '#DC3545',
+        questionCount: 1,
+      },
       // Data dimension
-      { dimensionKey: 'data', severityBucket: 'Low', cellValue: 0.5, colorCode: '#28A745', questionCount: 3 },
-      { dimensionKey: 'data', severityBucket: 'Medium', cellValue: 1.9, colorCode: '#28A745', questionCount: 2 },
-      { dimensionKey: 'data', severityBucket: 'High', cellValue: 4.5, colorCode: '#FFC107', questionCount: 1 },
+      {
+        dimensionKey: 'data',
+        severityBucket: 'Low',
+        cellValue: 0.5,
+        colorCode: '#28A745',
+        questionCount: 3,
+      },
+      {
+        dimensionKey: 'data',
+        severityBucket: 'Medium',
+        cellValue: 1.9,
+        colorCode: '#28A745',
+        questionCount: 2,
+      },
+      {
+        dimensionKey: 'data',
+        severityBucket: 'High',
+        cellValue: 4.5,
+        colorCode: '#FFC107',
+        questionCount: 1,
+      },
     ],
   };
 
@@ -91,8 +181,10 @@ describe('HeatmapPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockNavigate.mockClear();
-    vi.mocked(questionnaireApi.getHeatmap).mockResolvedValue(mockHeatmapData);
-    vi.mocked(questionnaireApi.getHeatmapDrilldown).mockResolvedValue(mockDrilldownData);
+    mockGetHeatmap.mockReset();
+    mockGetHeatmapDrilldown.mockReset();
+    mockGetHeatmap.mockResolvedValue(mockHeatmapData);
+    mockGetHeatmapDrilldown.mockResolvedValue(mockDrilldownData);
   });
 
   afterEach(() => {
@@ -106,14 +198,14 @@ describe('HeatmapPage', () => {
           <Route path="/heatmap/:sessionId" element={<HeatmapPage />} />
           <Route path="/dashboard" element={<div>Dashboard</div>} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
   };
 
   describe('Loading State', () => {
     it('shows loading state initially', () => {
       // Make the API call pending
-      vi.mocked(questionnaireApi.getHeatmap).mockImplementation(() => new Promise(() => {}));
+      mockGetHeatmap.mockImplementation(() => new Promise(() => {}));
 
       renderHeatmapPage();
 
@@ -121,7 +213,7 @@ describe('HeatmapPage', () => {
     });
 
     it('shows error state when API fails', async () => {
-      vi.mocked(questionnaireApi.getHeatmap).mockRejectedValue(new Error('Failed to load heatmap'));
+      mockGetHeatmap.mockRejectedValue(new Error('Failed to load heatmap'));
 
       renderHeatmapPage();
 
@@ -138,7 +230,7 @@ describe('HeatmapPage', () => {
           },
         },
       };
-      vi.mocked(questionnaireApi.getHeatmap).mockRejectedValue(apiError);
+      mockGetHeatmap.mockRejectedValue(apiError);
 
       renderHeatmapPage();
 
@@ -242,7 +334,7 @@ describe('HeatmapPage', () => {
           overallRiskScore: 6.8,
         },
       };
-      vi.mocked(questionnaireApi.getHeatmap).mockResolvedValue(highRiskData);
+      mockGetHeatmap.mockResolvedValue(highRiskData);
 
       renderHeatmapPage();
 
@@ -269,7 +361,7 @@ describe('HeatmapPage', () => {
       fireEvent.click(securityHighCell);
 
       await waitFor(() => {
-        expect(questionnaireApi.getHeatmapDrilldown).toHaveBeenCalledWith('session-123', 'security', 'High');
+        expect(mockGetHeatmapDrilldown).toHaveBeenCalledWith('session-123', 'security', 'High');
       });
     });
 
@@ -290,14 +382,22 @@ describe('HeatmapPage', () => {
       });
 
       // Should show drilldown summary
-      expect(screen.getByText('2 questions | Cell value: 8.7000 | Potential improvement: 3.4500')).toBeInTheDocument();
+      expect(
+        screen.getByText('2 questions | Cell value: 8.7000 | Potential improvement: 3.4500'),
+      ).toBeInTheDocument();
 
       // Should show individual questions
-      expect(screen.getByText('Do you have a security incident response plan?')).toBeInTheDocument();
-      expect(screen.getByText('Severity: 9.50 | Coverage: 30% | Residual: 6.6500')).toBeInTheDocument();
-      
+      expect(
+        screen.getByText('Do you have a security incident response plan?'),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText('Severity: 9.50 | Coverage: 30% | Residual: 6.6500'),
+      ).toBeInTheDocument();
+
       expect(screen.getByText('Are all data transmissions encrypted?')).toBeInTheDocument();
-      expect(screen.getByText('Severity: 8.80 | Coverage: 40% | Residual: 5.2800')).toBeInTheDocument();
+      expect(
+        screen.getByText('Severity: 8.80 | Coverage: 40% | Residual: 5.2800'),
+      ).toBeInTheDocument();
     });
 
     it('allows closing drilldown panel', async () => {
@@ -323,7 +423,7 @@ describe('HeatmapPage', () => {
     });
 
     it('handles drilldown API error gracefully', async () => {
-      vi.mocked(questionnaireApi.getHeatmapDrilldown).mockRejectedValue(new Error('Drilldown failed'));
+      mockGetHeatmapDrilldown.mockRejectedValue(new Error('Drilldown failed'));
 
       renderHeatmapPage();
 
@@ -371,7 +471,7 @@ describe('HeatmapPage', () => {
       const securityHighCell = screen.getByText('8.70').closest('button');
       expect(securityHighCell).toHaveAttribute(
         'aria-label',
-        'Security, severity High: 2 questions, residual score 8.70'
+        'Security, severity High: 2 questions, residual score 8.70',
       );
       expect(securityHighCell).toHaveAttribute('title', '2 questions, residual: 8.7');
     });
@@ -379,18 +479,19 @@ describe('HeatmapPage', () => {
 
   describe('Edge Cases', () => {
     it('handles missing session ID gracefully', () => {
-      vi.mock('react-router-dom', async () => {
-        const actual = await vi.importActual('react-router-dom');
-        return {
-          ...actual,
-          useParams: () => ({ sessionId: undefined }),
-        };
-      });
-
-      renderHeatmapPage();
+      // Render without sessionId in route
+      render(
+        <MemoryRouter initialEntries={['/heatmap/']}>
+          <Routes>
+            <Route path="/heatmap/" element={<HeatmapPage />} />
+            <Route path="/heatmap/:sessionId" element={<HeatmapPage />} />
+            <Route path="/dashboard" element={<div>Dashboard</div>} />
+          </Routes>
+        </MemoryRouter>,
+      );
 
       // Should not make API call and should not crash
-      expect(questionnaireApi.getHeatmap).not.toHaveBeenCalled();
+      expect(mockGetHeatmap).not.toHaveBeenCalled();
     });
 
     it('handles empty heatmap data', async () => {
@@ -407,7 +508,7 @@ describe('HeatmapPage', () => {
         severityBuckets: [],
         cells: [],
       };
-      vi.mocked(questionnaireApi.getHeatmap).mockResolvedValue(emptyHeatmapData);
+      mockGetHeatmap.mockResolvedValue(emptyHeatmapData);
 
       renderHeatmapPage();
 
@@ -415,8 +516,9 @@ describe('HeatmapPage', () => {
         expect(screen.getByText('Gap Heatmap')).toBeInTheDocument();
       });
 
-      // Should show zero values
-      expect(screen.getByText('0')).toBeInTheDocument(); // Total Cells
+      // Should show zero values - use getAllByText since there are multiple 0s (totalCells, green, amber, red, critical)
+      const zeros = screen.getAllByText('0');
+      expect(zeros.length).toBeGreaterThan(0);
       expect(screen.getByText('Overall Risk Score:')).toBeInTheDocument();
       expect(screen.getByText('0.00')).toBeInTheDocument();
     });

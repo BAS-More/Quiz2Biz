@@ -19,8 +19,12 @@ import { execSync } from 'child_process';
 
 describe('Dependency Health Validation', () => {
   const rootDir = path.join(__dirname, '../../../../../../');
-  const apiPackageJson = JSON.parse(fs.readFileSync(path.join(rootDir, 'apps/api/package.json'), 'utf-8'));
-  const webPackageJson = JSON.parse(fs.readFileSync(path.join(rootDir, 'apps/web/package.json'), 'utf-8'));
+  const apiPackageJson = JSON.parse(
+    fs.readFileSync(path.join(rootDir, 'apps/api/package.json'), 'utf-8'),
+  );
+  const webPackageJson = JSON.parse(
+    fs.readFileSync(path.join(rootDir, 'apps/web/package.json'), 'utf-8'),
+  );
   const rootPackageJson = JSON.parse(fs.readFileSync(path.join(rootDir, 'package.json'), 'utf-8'));
 
   describe('Package.json Consistency', () => {
@@ -63,7 +67,13 @@ describe('Dependency Health Validation', () => {
       // Check versions are compatible (same major.minor)
       const versions = Object.values(tsVersions);
       if (versions.length > 1) {
-        const majorMinors = versions.map((v) => v.replace(/[^0-9.]/g, '').split('.').slice(0, 2).join('.'));
+        const majorMinors = versions.map((v) =>
+          v
+            .replace(/[^0-9.]/g, '')
+            .split('.')
+            .slice(0, 2)
+            .join('.'),
+        );
         const unique = [...new Set(majorMinors)];
         expect(unique.length).toBe(1);
       }
@@ -121,8 +131,8 @@ describe('Dependency Health Validation', () => {
       let hasVersionRanges = false;
       for (const { pkg } of packages) {
         const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
-        for (const version of Object.values(allDeps) as string[]) {
-          if (version.startsWith('^') || version.startsWith('~')) {
+        for (const version of Object.values(allDeps)) {
+          if (typeof version === 'string' && (version.startsWith('^') || version.startsWith('~'))) {
             hasVersionRanges = true;
             break;
           }
@@ -187,7 +197,9 @@ describe('Dependency Health Validation', () => {
           if (installedVersion && versionConstraint) {
             // Basic version check (not semver-complete)
             const installedMajor = parseInt(installedVersion.replace(/[^0-9.]/g, '').split('.')[0]);
-            const constraintMajor = parseInt(versionConstraint.replace(/[^0-9.]/g, '').split('.')[0]);
+            const constraintMajor = parseInt(
+              versionConstraint.replace(/[^0-9.]/g, '').split('.')[0],
+            );
 
             if (installedMajor < constraintMajor) {
               violations.push(`${name}: ${pkgName}@${installedVersion} is vulnerable`);
@@ -202,7 +214,15 @@ describe('Dependency Health Validation', () => {
 
   describe('License Compliance', () => {
     it('should use compatible licenses', () => {
-      const allowedLicenses = ['MIT', 'ISC', 'BSD-2-Clause', 'BSD-3-Clause', 'Apache-2.0', 'Unlicense', '0BSD'];
+      const allowedLicenses = [
+        'MIT',
+        'ISC',
+        'BSD-2-Clause',
+        'BSD-3-Clause',
+        'Apache-2.0',
+        'Unlicense',
+        '0BSD',
+      ];
 
       const packages = [
         { name: 'root', pkg: rootPackageJson },
@@ -248,7 +268,9 @@ describe('Dependency Health Validation', () => {
           if (version) {
             const major = parseInt(version.replace(/[^0-9.]/g, '').split('.')[0]);
             if (major < check.minMajor) {
-              violations.push(`${name}: ${check.pkg}@${version} is outdated (min major: ${check.minMajor})`);
+              violations.push(
+                `${name}: ${check.pkg}@${version} is outdated (min major: ${check.minMajor})`,
+              );
             }
           }
         }
@@ -335,7 +357,9 @@ describe('Dependency Health Validation', () => {
       const srcDir = path.join(rootDir, 'apps/api/src');
 
       function getAllTsFiles(dir: string, files: string[] = []): string[] {
-        if (!fs.existsSync(dir)) {return files;}
+        if (!fs.existsSync(dir)) {
+          return files;
+        }
         const entries = fs.readdirSync(dir, { withFileTypes: true });
         for (const entry of entries) {
           const fullPath = path.join(dir, entry.name);
@@ -374,7 +398,8 @@ describe('Dependency Health Validation', () => {
       const violations: string[] = [];
       for (const [file, fileImports] of imports) {
         for (const imp of fileImports) {
-          const impImports = imports.get(imp + '.ts') || imports.get(imp + '/index.ts') || new Set();
+          const impImports =
+            imports.get(imp + '.ts') || imports.get(imp + '/index.ts') || new Set();
           if (impImports.has(file.replace('.ts', ''))) {
             violations.push(`Potential circular: ${file} <-> ${imp}`);
           }

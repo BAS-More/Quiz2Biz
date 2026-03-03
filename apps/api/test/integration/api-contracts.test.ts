@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { PrismaService } from '@libs/database';
 import { AppModule } from '../../src/app.module';
 import { HttpExceptionFilter } from '../../src/common/filters/http-exception.filter';
 
 /**
  * API Contract Tests for Sessions Endpoints
- * 
+ *
  * SKIP REASON: Requires full AppModule context with running database.
  * These tests validate HTTP endpoint contracts using supertest.
  * TODO: Set up test database or use in-memory alternatives.
- * 
+ *
  * Schema updates completed:
  * - User: USER -> CLIENT role
  * - Session: createdAt -> startedAt, added questionnaireVersion
@@ -48,7 +48,7 @@ describe.skip('API Contract Tests - Sessions Endpoints', () => {
     const user = await prisma.user.create({
       data: {
         email: `contract-test-${Date.now()}@test.com`,
-        hashedPassword: 'hashed_password',
+        passwordHash: 'hashed_password',
         role: 'CLIENT',
       },
     });
@@ -60,7 +60,7 @@ describe.skip('API Contract Tests - Sessions Endpoints', () => {
     // Create test questionnaire
     const questionnaire = await prisma.questionnaire.create({
       data: {
-        title: 'Contract Test Questionnaire',
+        name: 'Contract Test Questionnaire',
         description: 'Test questionnaire for API contracts',
       },
     });

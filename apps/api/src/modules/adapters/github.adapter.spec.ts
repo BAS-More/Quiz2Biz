@@ -550,7 +550,8 @@ describe('GitHubAdapter', () => {
           content_type: 'application/zip',
           size: 100000,
           download_count: 42,
-          browser_download_url: 'https://github.com/test-owner/test-repo/releases/download/v2.0.0/app.zip',
+          browser_download_url:
+            'https://github.com/test-owner/test-repo/releases/download/v2.0.0/app.zip',
         },
       ],
     };
@@ -686,9 +687,7 @@ describe('GitHubAdapter', () => {
 
       const result = await adapter.fetchDependencyGraphSbom(config);
 
-      const expectedHash = createHash('sha256')
-        .update(JSON.stringify(sampleSbom))
-        .digest('hex');
+      const expectedHash = createHash('sha256').update(JSON.stringify(sampleSbom)).digest('hex');
       expect(result!.hash).toBe(expectedHash);
     });
 
@@ -977,12 +976,12 @@ describe('GitHubAdapter', () => {
      * in order: PRs, workflow runs, check runs (for sha-wf), releases, SBOM, advisories.
      */
     function setupAllSuccess() {
-      mockOk(prResponse);                // 1. fetchPullRequests
-      mockOk(workflowRunsResponse);      // 2. fetchWorkflowRuns
-      mockOk(checkRunsResponse);         // 3. fetchCheckRuns (for head_sha from workflow run)
-      mockOk(releasesResponse);          // 4. fetchReleases
-      mockOk(sbomResponse);             // 5. fetchDependencyGraphSbom
-      mockOk(advisoriesResponse);       // 6. fetchSecurityAdvisories
+      mockOk(prResponse); // 1. fetchPullRequests
+      mockOk(workflowRunsResponse); // 2. fetchWorkflowRuns
+      mockOk(checkRunsResponse); // 3. fetchCheckRuns (for head_sha from workflow run)
+      mockOk(releasesResponse); // 4. fetchReleases
+      mockOk(sbomResponse); // 5. fetchDependencyGraphSbom
+      mockOk(advisoriesResponse); // 6. fetchSecurityAdvisories
     }
 
     it('should aggregate results from all sub-fetchers on success', async () => {
@@ -1004,7 +1003,7 @@ describe('GitHubAdapter', () => {
     });
 
     it('should continue when pull requests fetch fails', async () => {
-      mockApiError(500, 'Server Error');  // PRs fail
+      mockApiError(500, 'Server Error'); // PRs fail
       mockOk(workflowRunsResponse);
       mockOk(checkRunsResponse);
       mockOk(releasesResponse);
@@ -1021,11 +1020,11 @@ describe('GitHubAdapter', () => {
     });
 
     it('should continue when workflow runs fetch fails', async () => {
-      mockOk(prResponse);                // PRs succeed
-      mockApiError(500, 'Server Error');  // Workflow runs fail
-      mockOk(releasesResponse);           // Releases
-      mockOk(sbomResponse);              // SBOM
-      mockOk(advisoriesResponse);        // Advisories
+      mockOk(prResponse); // PRs succeed
+      mockApiError(500, 'Server Error'); // Workflow runs fail
+      mockOk(releasesResponse); // Releases
+      mockOk(sbomResponse); // SBOM
+      mockOk(advisoriesResponse); // Advisories
 
       const result = await adapter.ingestAllEvidence(config, sessionId);
 
@@ -1041,7 +1040,7 @@ describe('GitHubAdapter', () => {
       mockOk(prResponse);
       mockOk(workflowRunsResponse);
       mockOk(checkRunsResponse);
-      mockApiError(404, 'Not Found');     // Releases fail
+      mockApiError(404, 'Not Found'); // Releases fail
       mockOk(sbomResponse);
       mockOk(advisoriesResponse);
 
@@ -1058,7 +1057,7 @@ describe('GitHubAdapter', () => {
       mockOk(workflowRunsResponse);
       mockOk(checkRunsResponse);
       mockOk(releasesResponse);
-      mockApiError(404, 'Not Found');     // SBOM fails — but fetchDependencyGraphSbom catches and returns null
+      mockApiError(404, 'Not Found'); // SBOM fails — but fetchDependencyGraphSbom catches and returns null
       mockOk(advisoriesResponse);
 
       const result = await adapter.ingestAllEvidence(config, sessionId);
@@ -1076,7 +1075,7 @@ describe('GitHubAdapter', () => {
       mockOk(checkRunsResponse);
       mockOk(releasesResponse);
       mockOk(sbomResponse);
-      mockApiError(403, 'Forbidden');     // Advisories fail — but fetchSecurityAdvisories catches and returns []
+      mockApiError(403, 'Forbidden'); // Advisories fail — but fetchSecurityAdvisories catches and returns []
 
       const result = await adapter.ingestAllEvidence(config, sessionId);
 
@@ -1089,7 +1088,7 @@ describe('GitHubAdapter', () => {
     it('should handle check run failures for individual commits without stopping other fetchers', async () => {
       mockOk(prResponse);
       mockOk(workflowRunsResponse);
-      mockApiError(404, 'Not Found');     // Check runs for sha-wf fail
+      mockApiError(404, 'Not Found'); // Check runs for sha-wf fail
       mockOk(releasesResponse);
       mockOk(sbomResponse);
       mockOk(advisoriesResponse);
@@ -1104,11 +1103,11 @@ describe('GitHubAdapter', () => {
     });
 
     it('should return correct structure when everything fails', async () => {
-      mockApiError(500, 'fail');   // PRs
-      mockApiError(500, 'fail');   // Workflow runs (also prevents check runs)
-      mockApiError(500, 'fail');   // Releases
-      mockApiError(500, 'fail');   // SBOM — caught internally, returns null
-      mockApiError(500, 'fail');   // Advisories — caught internally, returns []
+      mockApiError(500, 'fail'); // PRs
+      mockApiError(500, 'fail'); // Workflow runs (also prevents check runs)
+      mockApiError(500, 'fail'); // Releases
+      mockApiError(500, 'fail'); // SBOM — caught internally, returns null
+      mockApiError(500, 'fail'); // Advisories — caught internally, returns []
 
       const result = await adapter.ingestAllEvidence(config, sessionId);
 
@@ -1136,7 +1135,7 @@ describe('GitHubAdapter', () => {
 
       mockOk(prResponse);
       mockOk(dupeWorkflowRuns);
-      mockOk(checkRunsResponse);          // Only one check runs call should be made
+      mockOk(checkRunsResponse); // Only one check runs call should be made
       mockOk(releasesResponse);
       mockOk(sbomResponse);
       mockOk(advisoriesResponse);
@@ -1144,8 +1143,8 @@ describe('GitHubAdapter', () => {
       const result = await adapter.ingestAllEvidence(config, sessionId);
 
       // Count how many times check-runs endpoint was called
-      const checkRunCalls = mockFetch.mock.calls.filter(
-        (call) => (call[0] as string).includes('/check-runs'),
+      const checkRunCalls = mockFetch.mock.calls.filter((call) =>
+        (call[0] as string).includes('/check-runs'),
       );
       expect(checkRunCalls).toHaveLength(1); // Deduplicated to 1 unique SHA
 
@@ -1174,8 +1173,8 @@ describe('GitHubAdapter', () => {
 
       const result = await adapter.ingestAllEvidence(config, sessionId);
 
-      const checkRunCalls = mockFetch.mock.calls.filter(
-        (call) => (call[0] as string).includes('/check-runs'),
+      const checkRunCalls = mockFetch.mock.calls.filter((call) =>
+        (call[0] as string).includes('/check-runs'),
       );
       expect(checkRunCalls).toHaveLength(5);
 
