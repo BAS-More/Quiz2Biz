@@ -55,7 +55,7 @@ RUN_COUNT=$(echo "$RUN_IDS" | wc -l | tr -d ' ')
 echo -e "${YELLOW}Found ${RUN_COUNT} workflow run(s) with status 'action_required':${NC}"
 
 # Display the runs with details
-gh run list --status action_required --limit 50 --json databaseId,name,displayTitle,createdAt \
+gh run list --status action_required --limit 50 --json databaseId,name,displayTitle \
     --jq '.[] | "  - [\(.databaseId)] \(.name): \(.displayTitle)"'
 
 echo ""
