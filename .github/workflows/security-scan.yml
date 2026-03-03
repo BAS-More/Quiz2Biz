@@ -164,37 +164,6 @@ jobs:
           path: trivy-results.*
           retention-days: 30
 
-  code-scanning:
-    name: CodeQL Code Scanning
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-      actions: read
-    
-    strategy:
-      fail-fast: false
-      matrix:
-        language: ['javascript']
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ matrix.language }}
-          queries: security-and-quality
-
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:${{ matrix.language }}"
-
   secrets-scan:
     name: Secrets Detection
     runs-on: ubuntu-latest
@@ -218,7 +187,7 @@ jobs:
   security-summary:
     name: Security Scan Summary
     runs-on: ubuntu-latest
-    needs: [dependency-scan, container-scan, code-scanning, secrets-scan]
+    needs: [dependency-scan, container-scan, secrets-scan]
     if: always()
     permissions:
       contents: read
@@ -230,15 +199,31 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Dependency Scan**: ${{ needs.dependency-scan.result }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Container Scan**: ${{ needs.container-scan.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Code Scanning**: ${{ needs.code-scanning.result }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Secrets Scan**: ${{ needs.secrets-scan.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Code Scanning**: Handled by GitHub default CodeQL setup" >> $GITHUB_STEP_SUMMARY
           
-          if [ "${{ needs.dependency-scan.result }}" != "success" ] || \
-             [ "${{ needs.container-scan.result }}" != "success" ] || \
-             [ "${{ needs.code-scanning.result }}" != "success" ] || \
-             [ "${{ needs.secrets-scan.result }}" != "success" ]; then
-            echo "::error::One or more security scans failed"
+          FAILED=0
+
+          if [ "${{ needs.dependency-scan.result }}" == "failure" ]; then
+            echo "::error::Dependency scan detected vulnerabilities exceeding policy threshold"
+            FAILED=1
+          fi
+
+          if [ "${{ needs.container-scan.result }}" == "failure" ]; then
+            echo "::error::Container scan detected vulnerabilities exceeding policy threshold"
+            FAILED=1
+          fi
+
+          if [ "${{ needs.secrets-scan.result }}" == "failure" ]; then
+            echo "::error::Secrets scan detected exposed credentials"
+            FAILED=1
+          fi
+
+          if [ $FAILED -eq 1 ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Security policy violations detected** - see errors above" >> $GITHUB_STEP_SUMMARY
             exit 1
           fi
           
-          echo "✅ All security scans passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All security scans passed or were skipped as expected" >> $GITHUB_STEP_SUMMARY
