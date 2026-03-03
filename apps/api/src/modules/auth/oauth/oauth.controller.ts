@@ -6,12 +6,13 @@ import {
   Delete,
   Param,
   UseGuards,
-  Req,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { OAuthService, OAuthProvider } from './oauth.service';
+import { CurrentUser } from '../decorators/user.decorator';
+import { AuthenticatedUser } from '../auth.service';
 
 /**
  * DTOs for OAuth operations
@@ -67,8 +68,8 @@ export class OAuthController {
    */
   @Get('accounts')
   @UseGuards(JwtAuthGuard)
-  async getLinkedAccounts(@Req() req: any) {
-    return this.oauthService.getLinkedAccounts(req.user.sub);
+  async getLinkedAccounts(@CurrentUser() user: AuthenticatedUser) {
+    return this.oauthService.getLinkedAccounts(user.id);
   }
 
   /**
@@ -77,7 +78,7 @@ export class OAuthController {
   @Post('link')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  async linkAccount(@Req() req: any, @Body() dto: LinkAccountDto) {
+  async linkAccount(@CurrentUser() user: AuthenticatedUser, @Body() dto: LinkAccountDto) {
     // First verify the token with the provider
     let profile;
 
@@ -108,7 +109,7 @@ export class OAuthController {
     }
 
     // Link the account
-    await this.oauthService.linkOAuthAccount(req.user.sub, profile);
+    await this.oauthService.linkOAuthAccount(user.id, profile);
 
     return { success: true, provider: dto.provider };
   }
@@ -119,8 +120,8 @@ export class OAuthController {
   @Delete('unlink/:provider')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  async unlinkAccount(@Req() req: any, @Param('provider') provider: OAuthProvider) {
-    await this.oauthService.unlinkOAuthAccount(req.user.sub, provider);
+  async unlinkAccount(@CurrentUser() user: AuthenticatedUser, @Param('provider') provider: OAuthProvider) {
+    await this.oauthService.unlinkOAuthAccount(user.id, provider);
     return { success: true, provider };
   }
 }

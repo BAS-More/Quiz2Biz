@@ -5,10 +5,12 @@ import {
   Body,
   Headers,
   Req,
+  Param,
   Query,
   HttpCode,
   HttpStatus,
   BadRequestException,
+  ForbiddenException,
   Logger,
   RawBodyRequest,
   UseGuards,
@@ -27,6 +29,10 @@ import {
   InvoiceResponseDto,
 } from './dto/payment.dto';
 import Stripe from 'stripe';
+import { UserRole } from '@prisma/client';
+import { CurrentUser } from '../auth/decorators/user.decorator';
+import { AuthenticatedUser } from '../auth/auth.service';
+import { SkipCsrf } from '../../common/guards/csrf.guard';
 
 /**
  * PaymentController - API endpoints for payment and subscription management
@@ -46,6 +52,36 @@ export class PaymentController {
     this.webhookSecret = this.configService.get<string>('STRIPE_WEBHOOK_SECRET') || '';
   }
 
+  private isAdmin(user: AuthenticatedUser): boolean {
+    return user.role === UserRole.ADMIN || user.role === UserRole.SUPER_ADMIN;
+  }
+
+  private assertOrganizationOwnership(user: AuthenticatedUser, organizationId: string): void {
+    if (this.isAdmin(user)) {
+      return;
+    }
+    if (!user.organizationId) {
+      throw new ForbiddenException('User does not belong to an organization');
+    }
+    if (user.organizationId !== organizationId) {
+      throw new ForbiddenException('Forbidden organization access');
+    }
+  }
+
+  private async assertCustomerOwnership(user: AuthenticatedUser, customerId: string): Promise<void> {
+    if (this.isAdmin(user)) {
+      return;
+    }
+    if (!user.organizationId) {
+      throw new ForbiddenException('User does not belong to an organization');
+    }
+
+    const subscription = await this.subscriptionService.getOrganizationSubscription(user.organizationId);
+    if (!subscription.stripeCustomerId || subscription.stripeCustomerId !== customerId) {
+      throw new ForbiddenException('Forbidden customer access');
+    }
+  }
+
   /**
    * Get available subscription tiers
    */
@@ -58,9 +94,14 @@ export class PaymentController {
    * Create checkout session for subscription
    */
   @Post('checkout')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   async createCheckout(
     @Body() dto: CreateCheckoutDto,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<{ sessionId: string; url: string }> {
+    this.assertOrganizationOwnership(user, dto.organizationId);
+
     return this.paymentService.createCheckoutSession({
       organizationId: dto.organizationId,
       tier: dto.tier as SubscriptionTier,
@@ -74,7 +115,14 @@ export class PaymentController {
    * Create customer portal session
    */
   @Post('portal')
-  async createPortalSession(@Body() dto: CreatePortalSessionDto): Promise<{ url: string }> {
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  async createPortalSession(
+    @Body() dto: CreatePortalSessionDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<{ url: string }> {
+    await this.assertCustomerOwnership(user, dto.customerId);
+
     const url = await this.paymentService.createPortalSession(dto.customerId, dto.returnUrl);
     return { url };
   }
@@ -86,11 +134,11 @@ export class PaymentController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   async getSubscription(
-    @Req() req: Request & { params: { organizationId: string } },
+    @Param('organizationId') organizationId: string,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<SubscriptionResponseDto> {
-    const subscription = await this.subscriptionService.getOrganizationSubscription(
-      req.params.organizationId,
-    );
+    this.assertOrganizationOwnership(user, organizationId);
+    const subscription = await this.subscriptionService.getOrganizationSubscription(organizationId);
     return subscription;
   }
 
@@ -101,12 +149,16 @@ export class PaymentController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   async getInvoices(
-    @Req() req: Request & { params: { customerId: string } },
+    @Param('customerId') customerId: string,
     @Query('limit') limit?: string,
+    @CurrentUser() user?: AuthenticatedUser,
   ): Promise<InvoiceResponseDto[]> {
+    if (user) {
+      await this.assertCustomerOwnership(user, customerId);
+    }
     const parsedLimit = limit ? parseInt(limit, 10) : undefined;
     const safeLimit = Number.isFinite(parsedLimit) ? parsedLimit : undefined;
-    return this.billingService.getInvoices(req.params.customerId, safeLimit);
+    return this.billingService.getInvoices(customerId, safeLimit);
   }
 
   /**
@@ -116,14 +168,15 @@ export class PaymentController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   async getUsage(
-    @Req() req: Request & { params: { organizationId: string } },
+    @Param('organizationId') organizationId: string,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<{
     questionnaires: { used: number; limit: number };
     responses: { used: number; limit: number };
     documents: { used: number; limit: number };
     apiCalls: { used: number; limit: number };
   }> {
-    const organizationId = req.params.organizationId;
+    this.assertOrganizationOwnership(user, organizationId);
 
     const [usage, subscription] = await Promise.all([
       this.billingService.getUsageStats(organizationId),
@@ -159,9 +212,10 @@ export class PaymentController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   async cancelSubscription(
-    @Req() req: Request & { params: { organizationId: string } },
+    @Param('organizationId') organizationId: string,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<{ message: string }> {
-    const organizationId = req.params.organizationId;
+    this.assertOrganizationOwnership(user, organizationId);
     const subscription = await this.subscriptionService.getOrganizationSubscription(organizationId);
 
     if (!subscription.stripeSubscriptionId) {
@@ -180,9 +234,10 @@ export class PaymentController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   async resumeSubscription(
-    @Req() req: Request & { params: { organizationId: string } },
+    @Param('organizationId') organizationId: string,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<{ message: string }> {
-    const organizationId = req.params.organizationId;
+    this.assertOrganizationOwnership(user, organizationId);
     const subscription = await this.subscriptionService.getOrganizationSubscription(organizationId);
 
     if (!subscription.stripeSubscriptionId) {
@@ -198,6 +253,7 @@ export class PaymentController {
    * Stripe webhook handler
    */
   @Post('webhook')
+  @SkipCsrf()
   @HttpCode(HttpStatus.OK)
   async handleWebhook(
     @Req() req: RawBodyRequest<Request>,

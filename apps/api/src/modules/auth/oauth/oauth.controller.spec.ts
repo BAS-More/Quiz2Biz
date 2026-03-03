@@ -74,8 +74,8 @@ describe('OAuthController', () => {
       ];
       oauthService.getLinkedAccounts.mockResolvedValue(mockAccounts);
 
-      const mockReq = { user: { sub: 'user-1' } };
-      const result = await controller.getLinkedAccounts(mockReq);
+      const mockUser = { id: 'user-1', email: 'test@example.com', role: 'CLIENT' as any };
+      const result = await controller.getLinkedAccounts(mockUser);
 
       expect(oauthService.getLinkedAccounts).toHaveBeenCalledWith('user-1');
       expect(result).toEqual(mockAccounts);
@@ -87,8 +87,8 @@ describe('OAuthController', () => {
       oauthService.authenticateWithGoogle.mockResolvedValue(mockAuthResponse);
       oauthService.linkOAuthAccount.mockResolvedValue(undefined);
 
-      const mockReq = { user: { sub: 'user-1' } };
-      const result = await controller.linkAccount(mockReq, {
+      const mockUser = { id: 'user-1', email: 'test@example.com', role: 'CLIENT' as any };
+      const result = await controller.linkAccount(mockUser, {
         provider: 'google',
         idToken: 'google-id-token',
       });
@@ -101,8 +101,8 @@ describe('OAuthController', () => {
       oauthService.authenticateWithMicrosoft.mockResolvedValue(mockAuthResponse);
       oauthService.linkOAuthAccount.mockResolvedValue(undefined);
 
-      const mockReq = { user: { sub: 'user-1' } };
-      const result = await controller.linkAccount(mockReq, {
+      const mockUser = { id: 'user-1', email: 'test@example.com', role: 'CLIENT' as any };
+      const result = await controller.linkAccount(mockUser, {
         provider: 'microsoft',
         accessToken: 'ms-access-token',
       });
@@ -112,10 +112,10 @@ describe('OAuthController', () => {
     });
 
     it('should throw error for invalid provider', async () => {
-      const mockReq = { user: { sub: 'user-1' } };
+      const mockUser = { id: 'user-1', email: 'test@example.com', role: 'CLIENT' as any };
 
       await expect(
-        controller.linkAccount(mockReq, {
+        controller.linkAccount(mockUser, {
           provider: 'github' as any,
         }),
       ).rejects.toThrow('Invalid provider or missing token');
@@ -126,8 +126,8 @@ describe('OAuthController', () => {
     it('should unlink OAuth account', async () => {
       oauthService.unlinkOAuthAccount.mockResolvedValue(undefined);
 
-      const mockReq = { user: { sub: 'user-1' } };
-      const result = await controller.unlinkAccount(mockReq, 'google');
+      const mockUser = { id: 'user-1', email: 'test@example.com', role: 'CLIENT' as any };
+      const result = await controller.unlinkAccount(mockUser, 'google');
 
       expect(oauthService.unlinkOAuthAccount).toHaveBeenCalledWith('user-1', 'google');
       expect(result).toEqual({ success: true, provider: 'google' });

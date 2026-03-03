@@ -31,6 +31,7 @@ export interface AuthenticatedUser {
   id: string;
   email: string;
   role: UserRole;
+  organizationId?: string | null;
   name?: string;
 }
 
@@ -193,6 +194,7 @@ export class AuthService {
         id: true,
         email: true,
         role: true,
+        organizationId: true,
         profile: true,
         deletedAt: true,
       },
@@ -208,6 +210,7 @@ export class AuthService {
       id: user.id,
       email: user.email,
       role: user.role,
+      organizationId: user.organizationId,
       name: (profile?.name as string) || undefined,
     };
   }
