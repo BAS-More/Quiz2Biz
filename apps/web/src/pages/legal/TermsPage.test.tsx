@@ -279,7 +279,8 @@ describe('TermsPage', () => {
       renderTermsPage();
 
       // Should render strong text
-      expect(screen.getByText('Quiz2Biz Legal Team')).toBeInTheDocument();
+      const strongElement = screen.getByText('Quiz2Biz Legal Team');
+      expect(strongElement.tagName).toBe('STRONG');
 
       // Should render lists properly
       const listItems = screen.getAllByRole('listitem');
