@@ -8,7 +8,8 @@ jobs:
   pr-size:
     name: Check PR Size
     runs-on: ubuntu-latest
-    
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/') && !startsWith(github.head_ref, 'claude/')
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

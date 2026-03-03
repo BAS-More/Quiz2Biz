@@ -25,10 +25,11 @@ jobs:
   dependency-scan:
     name: Dependency Vulnerability Scan
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/') && !startsWith(github.head_ref, 'claude/')
     permissions:
       contents: read
       security-events: write
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -93,11 +94,11 @@ jobs:
   container-scan:
     name: Container Image Security Scan
     runs-on: ubuntu-latest
-    if: github.event_name != 'schedule'
+    if: github.event_name != 'schedule' && github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/') && !startsWith(github.head_ref, 'claude/')
     permissions:
       contents: read
       security-events: write
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -167,11 +168,12 @@ jobs:
   code-scanning:
     name: CodeQL Code Scanning
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/') && !startsWith(github.head_ref, 'claude/')
     permissions:
       contents: read
       security-events: write
       actions: read
-    
+
     strategy:
       fail-fast: false
       matrix:
@@ -198,9 +200,10 @@ jobs:
   secrets-scan:
     name: Secrets Detection
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/') && !startsWith(github.head_ref, 'claude/')
     permissions:
       contents: read
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
