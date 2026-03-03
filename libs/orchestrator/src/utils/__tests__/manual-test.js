@@ -15,7 +15,7 @@ console.log('📦 Compiling TypeScript...');
 try {
   execSync('npx tsc --noEmit', {
     cwd: path.join(__dirname, '../../..'),
-    stdio: 'inherit'
+    stdio: 'inherit',
   });
   console.log('✅ TypeScript compilation successful\n');
 } catch (error) {
@@ -31,14 +31,14 @@ try {
   const fs = require('fs');
   const tokenEstimatorPath = path.join(__dirname, '../token-estimator.ts');
   const indexPath = path.join(__dirname, '../../index.ts');
-  
+
   if (!fs.existsSync(tokenEstimatorPath)) {
     throw new Error('token-estimator.ts not found');
   }
-  
+
   const tokenEstimatorContent = fs.readFileSync(tokenEstimatorPath, 'utf8');
   const indexContent = fs.readFileSync(indexPath, 'utf8');
-  
+
   // Verify exports exist
   const expectedExports = [
     'export function estimateTokens',
@@ -49,12 +49,12 @@ try {
     'export interface TokenEstimationOptions',
     'export { CHARS_PER_TOKEN }',
   ];
-  
-  const missingExports = expectedExports.filter(exp => !tokenEstimatorContent.includes(exp));
+
+  const missingExports = expectedExports.filter((exp) => !tokenEstimatorContent.includes(exp));
   if (missingExports.length > 0) {
     throw new Error(`Missing exports: ${missingExports.join(', ')}`);
   }
-  
+
   // Verify index.ts re-exports
   if (!indexContent.includes('estimateTokens')) {
     throw new Error('index.ts missing estimateTokens export');
@@ -65,39 +65,33 @@ try {
   if (!indexContent.includes('TokenProvider')) {
     throw new Error('index.ts missing TokenProvider export');
   }
-  
+
   console.log('✅ All expected exports present\n');
-  
+
   // Verify imports
   console.log('📥 Verifying dependencies...');
-  const requiredImports = [
-    'tiktoken',
-    '@anthropic-ai/tokenizer',
-  ];
-  
-  const missingImports = requiredImports.filter(imp => !tokenEstimatorContent.includes(`from '${imp}'`));
+  const requiredImports = ['tiktoken', '@anthropic-ai/tokenizer'];
+
+  const missingImports = requiredImports.filter(
+    (imp) => !tokenEstimatorContent.includes(`from '${imp}'`),
+  );
   if (missingImports.length > 0) {
     throw new Error(`Missing imports: ${missingImports.join(', ')}`);
   }
-  
+
   console.log('✅ All required dependencies imported\n');
-  
+
   // Verify documentation
   console.log('📝 Verifying documentation...');
-  const docRequirements = [
-    'ACCURACY LIMITATIONS',
-    'safetyMargin',
-    'provider:',
-    '@example',
-  ];
-  
-  const missingDocs = docRequirements.filter(doc => !tokenEstimatorContent.includes(doc));
+  const docRequirements = ['ACCURACY LIMITATIONS', 'safetyMargin', 'provider:', '@example'];
+
+  const missingDocs = docRequirements.filter((doc) => !tokenEstimatorContent.includes(doc));
   if (missingDocs.length > 0) {
     console.warn(`⚠️  Missing documentation elements: ${missingDocs.join(', ')}`);
   } else {
     console.log('✅ Documentation complete\n');
   }
-  
+
   // Summary
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('✅ All manual tests passed!');
@@ -111,7 +105,6 @@ try {
   console.log('  6. ✅ Added comprehensive documentation');
   console.log('  7. ✅ Exported new types and cleanup function');
   console.log('  8. ✅ Maintained backward compatibility (heuristic is default)');
-  
 } catch (error) {
   console.error('❌ Test failed:', error.message);
   process.exit(1);

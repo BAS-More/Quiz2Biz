@@ -1147,8 +1147,8 @@ end_of_record
       // First call succeeds, second throws a non-Error
       mockPrismaService.evidenceRegistry.create
         .mockResolvedValueOnce(mockEvidence as any)
-        // eslint-disable-next-line @typescript-eslint/only-throw-error
         .mockImplementationOnce(() => {
+          // eslint-disable-next-line @typescript-eslint/only-throw-error
           throw 'string error';
         });
 

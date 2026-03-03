@@ -21,14 +21,14 @@ describe('Document Types', () => {
 
     it('should have unique slugs', () => {
       const schemas = listDocumentSchemas();
-      const slugs = schemas.map(dt => dt.slug);
+      const slugs = schemas.map((dt) => dt.slug);
       const uniqueSlugs = new Set(slugs);
       expect(uniqueSlugs.size).toBe(slugs.length);
     });
 
     it('should have valid price constraints', () => {
       const schemas = listDocumentSchemas();
-      schemas.forEach(docType => {
+      schemas.forEach((docType) => {
         expect(docType.basePrice).toBeGreaterThan(0);
         expect(docType.formats).toBeDefined();
       });

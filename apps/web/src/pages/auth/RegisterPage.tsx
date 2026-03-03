@@ -72,7 +72,13 @@ export function RegisterPage() {
     if (/[a-z]/.test(password)) score += 1;
     if (/[0-9]/.test(password)) score += 1;
     if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score += 1;
-    if (password.length >= 12 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password)) score += 1;
+    if (
+      password.length >= 12 &&
+      /[A-Z]/.test(password) &&
+      /[a-z]/.test(password) &&
+      /[0-9]/.test(password)
+    )
+      score += 1;
 
     if (score <= 2) return { score: 25, label: 'Weak', color: 'bg-danger-500' };
     if (score <= 4) return { score: 50, label: 'Fair', color: 'bg-warning-500' };
@@ -105,17 +111,29 @@ export function RegisterPage() {
 
   return (
     <div className="animate-fade-in">
-      <h2 className="text-xl font-semibold text-surface-900 text-center mb-1">Create your account</h2>
-      <p className="text-sm text-surface-500 text-center mb-6">Start your readiness assessment journey</p>
+      <h2 className="text-xl font-semibold text-surface-900 text-center mb-1">
+        Create your account
+      </h2>
+      <p className="text-sm text-surface-500 text-center mb-6">
+        Start your readiness assessment journey
+      </p>
 
       <div aria-live="polite" aria-atomic="true" className="sr-only">
         {isSubmitting && 'Creating your account, please wait...'}
       </div>
 
       {error && (
-        <div className="mb-5 p-3 bg-danger-50 border border-danger-200 text-danger-700 rounded-xl text-sm flex items-center gap-2" role="alert" aria-live="assertive">
+        <div
+          className="mb-5 p-3 bg-danger-50 border border-danger-200 text-danger-700 rounded-xl text-sm flex items-center gap-2"
+          role="alert"
+          aria-live="assertive"
+        >
           <svg className="h-4 w-4 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
+            <path
+              fillRule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
+              clipRule="evenodd"
+            />
           </svg>
           {error}
         </div>
@@ -124,7 +142,9 @@ export function RegisterPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Name */}
         <div className="space-y-1.5">
-          <label htmlFor="name" className="block text-sm font-medium text-surface-700">Full name</label>
+          <label htmlFor="name" className="block text-sm font-medium text-surface-700">
+            Full name
+          </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-surface-400">
               <User className="h-4 w-4" />
@@ -142,12 +162,18 @@ export function RegisterPage() {
               placeholder="John Doe"
             />
           </div>
-          {errors.name && <p id="name-error" className="text-sm text-danger-600" role="alert">{errors.name.message}</p>}
+          {errors.name && (
+            <p id="name-error" className="text-sm text-danger-600" role="alert">
+              {errors.name.message}
+            </p>
+          )}
         </div>
 
         {/* Email */}
         <div className="space-y-1.5">
-          <label htmlFor="email" className="block text-sm font-medium text-surface-700">Email address</label>
+          <label htmlFor="email" className="block text-sm font-medium text-surface-700">
+            Email address
+          </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-surface-400">
               <Mail className="h-4 w-4" />
@@ -165,12 +191,18 @@ export function RegisterPage() {
               placeholder="you@example.com"
             />
           </div>
-          {errors.email && <p id="email-error" className="text-sm text-danger-600" role="alert">{errors.email.message}</p>}
+          {errors.email && (
+            <p id="email-error" className="text-sm text-danger-600" role="alert">
+              {errors.email.message}
+            </p>
+          )}
         </div>
 
         {/* Password */}
         <div className="space-y-1.5">
-          <label htmlFor="password" className="block text-sm font-medium text-surface-700">Password</label>
+          <label htmlFor="password" className="block text-sm font-medium text-surface-700">
+            Password
+          </label>
           <div className="relative">
             <input
               {...register('password')}
@@ -200,37 +232,68 @@ export function RegisterPage() {
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-surface-500">Password strength</span>
-                  <span className={`font-semibold ${
-                    passwordStrength.label === 'Weak' ? 'text-danger-600'
-                      : passwordStrength.label === 'Fair' ? 'text-warning-600'
-                        : passwordStrength.label === 'Good' ? 'text-brand-600'
-                          : 'text-success-600'
-                  }`} aria-live="polite">
+                  <span
+                    className={`font-semibold ${
+                      passwordStrength.label === 'Weak'
+                        ? 'text-danger-600'
+                        : passwordStrength.label === 'Fair'
+                          ? 'text-warning-600'
+                          : passwordStrength.label === 'Good'
+                            ? 'text-brand-600'
+                            : 'text-success-600'
+                    }`}
+                    aria-live="polite"
+                  >
                     {passwordStrength.label}
                   </span>
                 </div>
-                <div className="h-1.5 bg-surface-100 rounded-full overflow-hidden" role="progressbar" aria-valuenow={passwordStrength.score} aria-valuemin={0} aria-valuemax={100} aria-label={`Password strength: ${passwordStrength.label}`}>
-                  <div className={`h-full transition-all duration-300 ease-out rounded-full ${passwordStrength.color}`} style={{ width: `${passwordStrength.score}%` }} />
+                <div
+                  className="h-1.5 bg-surface-100 rounded-full overflow-hidden"
+                  role="progressbar"
+                  aria-valuenow={passwordStrength.score}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label={`Password strength: ${passwordStrength.label}`}
+                >
+                  <div
+                    className={`h-full transition-all duration-300 ease-out rounded-full ${passwordStrength.color}`}
+                    style={{ width: `${passwordStrength.score}%` }}
+                  />
                 </div>
               </div>
 
               {/* Requirements checklist */}
-              <div id="password-requirements" className="grid grid-cols-2 gap-x-2 gap-y-1" aria-label="Password requirements">
+              <div
+                id="password-requirements"
+                className="grid grid-cols-2 gap-x-2 gap-y-1"
+                aria-label="Password requirements"
+              >
                 {passwordRequirements.map((req) => (
-                  <div key={req.label} className={`flex items-center text-xs gap-1.5 ${req.met ? 'text-success-600' : 'text-surface-400'}`}>
-                    <CheckCircle className={`h-3 w-3 shrink-0 ${req.met ? 'text-success-500' : 'text-surface-300'}`} />
+                  <div
+                    key={req.label}
+                    className={`flex items-center text-xs gap-1.5 ${req.met ? 'text-success-600' : 'text-surface-400'}`}
+                  >
+                    <CheckCircle
+                      className={`h-3 w-3 shrink-0 ${req.met ? 'text-success-500' : 'text-surface-300'}`}
+                    />
                     <span>{req.label}</span>
                   </div>
                 ))}
               </div>
             </div>
           )}
-          {errors.password && <p className="text-sm text-danger-600" role="alert">{errors.password.message}</p>}
+          {errors.password && (
+            <p className="text-sm text-danger-600" role="alert">
+              {errors.password.message}
+            </p>
+          )}
         </div>
 
         {/* Confirm Password */}
         <div className="space-y-1.5">
-          <label htmlFor="confirmPassword" className="block text-sm font-medium text-surface-700">Confirm password</label>
+          <label htmlFor="confirmPassword" className="block text-sm font-medium text-surface-700">
+            Confirm password
+          </label>
           <input
             {...register('confirmPassword')}
             type="password"
@@ -239,17 +302,25 @@ export function RegisterPage() {
             required
             aria-required="true"
             aria-invalid={errors.confirmPassword || showPasswordMismatch ? 'true' : 'false'}
-            aria-describedby={errors.confirmPassword || showPasswordMismatch ? 'confirmPassword-error' : undefined}
+            aria-describedby={
+              errors.confirmPassword || showPasswordMismatch ? 'confirmPassword-error' : undefined
+            }
             className={inputClass(!!errors.confirmPassword || showPasswordMismatch)}
             placeholder="Confirm your password"
           />
           {showPasswordMismatch && !errors.confirmPassword && (
-            <p id="confirmPassword-error" className="text-sm text-danger-600 flex items-center gap-1" role="alert">
+            <p
+              id="confirmPassword-error"
+              className="text-sm text-danger-600 flex items-center gap-1"
+              role="alert"
+            >
               Passwords do not match
             </p>
           )}
           {errors.confirmPassword && (
-            <p id="confirmPassword-error" className="text-sm text-danger-600" role="alert">{errors.confirmPassword.message}</p>
+            <p id="confirmPassword-error" className="text-sm text-danger-600" role="alert">
+              {errors.confirmPassword.message}
+            </p>
           )}
           {confirmPassword.length > 0 && passwordsMatch && (
             <p className="text-sm text-success-600 flex items-center gap-1">
@@ -271,7 +342,9 @@ export function RegisterPage() {
             <div className="w-full border-t border-surface-200" />
           </div>
           <div className="relative flex justify-center text-xs">
-            <span className="px-3 bg-white text-surface-400 uppercase tracking-wide">or continue with</span>
+            <span className="px-3 bg-white text-surface-400 uppercase tracking-wide">
+              or continue with
+            </span>
           </div>
         </div>
       </div>
@@ -282,7 +355,10 @@ export function RegisterPage() {
 
       <p className="mt-6 text-center text-sm text-surface-500">
         Already have an account?{' '}
-        <Link to="/auth/login" className="font-medium text-brand-600 hover:text-brand-700 transition-colors">
+        <Link
+          to="/auth/login"
+          className="font-medium text-brand-600 hover:text-brand-700 transition-colors"
+        >
           Sign in
         </Link>
       </p>

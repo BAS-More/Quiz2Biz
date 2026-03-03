@@ -25,9 +25,7 @@ describe('TeamsWebhookController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TeamsWebhookController],
-      providers: [
-        { provide: AdaptiveCardService, useValue: mockAdaptiveCardService },
-      ],
+      providers: [{ provide: AdaptiveCardService, useValue: mockAdaptiveCardService }],
     }).compile();
 
     controller = module.get<TeamsWebhookController>(TeamsWebhookController);
@@ -43,9 +41,7 @@ describe('TeamsWebhookController', () => {
     const mockHeatmapData: HeatmapCardData = {
       sessionName: 'Test Session',
       overallScore: 0.85,
-      dimensions: [
-        { name: 'Security', score: 0.9, questionsAnswered: 9, totalQuestions: 10 },
-      ],
+      dimensions: [{ name: 'Security', score: 0.9, questionsAnswered: 9, totalQuestions: 10 }],
       progress: {
         sectionsLeft: 2,
         questionsLeft: 10,
@@ -66,7 +62,10 @@ describe('TeamsWebhookController', () => {
     it('should send to Teams when webhookUrl provided', async () => {
       const bodyWithWebhook = { ...mockHeatmapData, webhookUrl: 'https://teams.webhook.url' };
       await controller.sendHeatmapCard(bodyWithWebhook);
-      expect(mockAdaptiveCardService.sendToTeams).toHaveBeenCalledWith('https://teams.webhook.url', mockCard);
+      expect(mockAdaptiveCardService.sendToTeams).toHaveBeenCalledWith(
+        'https://teams.webhook.url',
+        mockCard,
+      );
     });
 
     it('should not send to Teams when no webhookUrl', async () => {
@@ -81,7 +80,13 @@ describe('TeamsWebhookController', () => {
       criticalGaps: 2,
       highGaps: 2,
       gaps: [
-        { question: 'Gap 1', dimension: 'Security', severity: 0.9, coverage: 0.1, questionId: 'q1' },
+        {
+          question: 'Gap 1',
+          dimension: 'Security',
+          severity: 0.9,
+          coverage: 0.1,
+          questionId: 'q1',
+        },
       ],
       gapsUrl: 'https://example.com/gaps',
       promptsUrl: 'https://example.com/prompts',
@@ -117,7 +122,9 @@ describe('TeamsWebhookController', () => {
       const result = await controller.sendApprovalRequestCard(mockApprovalData);
       expect(result.success).toBe(true);
       expect(result.card).toEqual(mockCard);
-      expect(mockAdaptiveCardService.generateApprovalRequestCard).toHaveBeenCalledWith(mockApprovalData);
+      expect(mockAdaptiveCardService.generateApprovalRequestCard).toHaveBeenCalledWith(
+        mockApprovalData,
+      );
     });
 
     it('should send to Teams when webhookUrl provided', async () => {

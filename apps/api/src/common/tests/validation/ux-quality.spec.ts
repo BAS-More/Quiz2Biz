@@ -24,7 +24,9 @@ describe('UX Quality Validation', () => {
   const apiSrcDir = path.join(__dirname, '../../../../');
 
   function getReactFiles(dir: string, files: string[] = []): string[] {
-    if (!fs.existsSync(dir)) {return files;}
+    if (!fs.existsSync(dir)) {
+      return files;
+    }
 
     const entries = fs.readdirSync(dir, { withFileTypes: true });
     for (const entry of entries) {
@@ -506,7 +508,11 @@ describe('UX Quality Validation', () => {
       for (const file of files) {
         const content = fs.readFileSync(file, 'utf-8');
 
-        if (content.includes('debounce') || content.includes('Debounce') || content.includes('useDebounce')) {
+        if (
+          content.includes('debounce') ||
+          content.includes('Debounce') ||
+          content.includes('useDebounce')
+        ) {
           hasDebouncing = true;
           break;
         }
