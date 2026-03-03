@@ -3,10 +3,14 @@ import { describe, it, expect } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { PrivacyPage } from './PrivacyPage';
 
-// Mock Lucide React icons
+// Mock Lucide React icons with aria-hidden passthrough
 vi.mock('lucide-react', () => ({
-  ArrowLeft: () => <div data-testid="arrow-left-icon" />,
-  Shield: () => <div data-testid="shield-icon" />,
+  ArrowLeft: (props: Record<string, unknown>) => (
+    <div data-testid="arrow-left-icon" aria-hidden={props['aria-hidden'] as string} />
+  ),
+  Shield: (props: Record<string, unknown>) => (
+    <div data-testid="shield-icon" aria-hidden={props['aria-hidden'] as string} />
+  ),
 }));
 
 describe('PrivacyPage', () => {
@@ -146,12 +150,13 @@ describe('PrivacyPage', () => {
         screen.getByText('Access controls and authentication requirements'),
       ).toBeInTheDocument();
 
-      // Your Rights list
-      expect(screen.getByText('Access: Request a copy of your personal data')).toBeInTheDocument();
-      expect(
-        screen.getByText('Correction: Request correction of inaccurate data'),
-      ).toBeInTheDocument();
-      expect(screen.getByText('Deletion: Request deletion of your data')).toBeInTheDocument();
+      // Your Rights list — text split across <strong> and text node
+      const accessItem = screen.getByText('Access:').closest('li');
+      expect(accessItem?.textContent).toContain('Request a copy of your personal data');
+      const correctionItem = screen.getByText('Correction:').closest('li');
+      expect(correctionItem?.textContent).toContain('Request correction of inaccurate data');
+      const deletionItem = screen.getByText('Deletion:').closest('li');
+      expect(deletionItem?.textContent).toContain('Request deletion of your data');
     });
   });
 
@@ -162,9 +167,12 @@ describe('PrivacyPage', () => {
       // Should show contact section
       expect(screen.getByText('Quiz2Biz Privacy Team')).toBeInTheDocument();
       expect(screen.getByText('privacy@quiz2biz.com')).toBeInTheDocument();
-      expect(screen.getByText('123 Business Park, Suite 100')).toBeInTheDocument();
-      expect(screen.getByText('Technology City, TC 12345')).toBeInTheDocument();
-      expect(screen.getByText('United States')).toBeInTheDocument();
+      // Address text nodes are within the <address> element, not standalone elements
+      const address = screen.getByText('Quiz2Biz Privacy Team').closest('address');
+      expect(address).toBeInTheDocument();
+      expect(address?.textContent).toContain('123 Business Park, Suite 100');
+      expect(address?.textContent).toContain('Technology City, TC 12345');
+      expect(address?.textContent).toContain('United States');
 
       // Email should be a link
       const emailLink = screen.getByText('privacy@quiz2biz.com').closest('a');
@@ -280,7 +288,7 @@ describe('PrivacyPage', () => {
 
       // Should have proper heading structure
       expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
-      expect(screen.getByRole('heading', { level: 2 })).toBeInTheDocument();
+      expect(screen.getAllByRole('heading', { level: 2 }).length).toBeGreaterThan(0);
 
       // Should have sufficient color contrast (visual check)
       // This would be tested with axe or similar tools in practice
