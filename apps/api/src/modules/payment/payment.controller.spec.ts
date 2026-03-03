@@ -649,7 +649,7 @@ describe('PaymentController', () => {
 
     it('should handle non-Error thrown in webhook signature verification', async () => {
       mockPaymentService.constructWebhookEvent.mockImplementation(() => {
-        throw 'string error thrown';
+        throw new Error('string error thrown');
       });
 
       const mockRequest = createMockRequest2(Buffer.from('{}'));

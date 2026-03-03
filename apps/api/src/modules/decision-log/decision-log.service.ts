@@ -40,6 +40,20 @@ export class DecisionLogService {
 
   constructor(private readonly prisma: PrismaService) {}
 
+  private async assertSessionOwnership(sessionId: string, userId: string): Promise<void> {
+    const session = await this.prisma.session.findUnique({
+      where: { id: sessionId },
+      select: { id: true, userId: true },
+    });
+
+    if (!session) {
+      throw new NotFoundException(`Session not found: ${sessionId}`);
+    }
+    if (session.userId !== userId) {
+      throw new ForbiddenException(`Forbidden session access: ${sessionId}`);
+    }
+  }
+
   /**
    * Create a new decision
    *
@@ -47,14 +61,7 @@ export class DecisionLogService {
    * @param ownerId - ID of user creating the decision
    */
   async createDecision(dto: CreateDecisionDto, ownerId: string): Promise<DecisionResponse> {
-    // Validate session exists
-    const session = await this.prisma.session.findUnique({
-      where: { id: dto.sessionId },
-    });
-
-    if (!session) {
-      throw new NotFoundException(`Session not found: ${dto.sessionId}`);
-    }
+    await this.assertSessionOwnership(dto.sessionId, ownerId);
 
     // Create decision with DRAFT status
     const decision = await this.prisma.decisionLog.create({
@@ -94,6 +101,9 @@ export class DecisionLogService {
 
     if (!decision) {
       throw new NotFoundException(`Decision not found: ${dto.decisionId}`);
+    }
+    if (decision.ownerId !== userId) {
+      throw new ForbiddenException(`Forbidden decision access: ${dto.decisionId}`);
     }
 
     // APPEND-ONLY GUARD: Prevent modification of locked decisions
@@ -139,6 +149,9 @@ export class DecisionLogService {
 
     if (!originalDecision) {
       throw new NotFoundException(`Original decision not found: ${dto.supersedesDecisionId}`);
+    }
+    if (originalDecision.ownerId !== ownerId) {
+      throw new ForbiddenException(`Forbidden decision access: ${dto.supersedesDecisionId}`);
     }
 
     // Can only supersede LOCKED decisions
@@ -190,13 +203,16 @@ export class DecisionLogService {
   /**
    * Get a single decision by ID
    */
-  async getDecision(decisionId: string): Promise<DecisionResponse> {
+  async getDecision(decisionId: string, userId: string): Promise<DecisionResponse> {
     const decision = await this.prisma.decisionLog.findUnique({
       where: { id: decisionId },
     });
 
     if (!decision) {
       throw new NotFoundException(`Decision not found: ${decisionId}`);
+    }
+    if (decision.ownerId !== userId) {
+      throw new ForbiddenException(`Forbidden decision access: ${decisionId}`);
     }
 
     return this.mapToResponse(decision);
@@ -205,14 +221,12 @@ export class DecisionLogService {
   /**
    * List decisions with filters
    */
-  async listDecisions(filters: ListDecisionsDto): Promise<DecisionResponse[]> {
+  async listDecisions(filters: ListDecisionsDto, userId: string): Promise<DecisionResponse[]> {
     const where: Prisma.DecisionLogWhereInput = {};
+    where.ownerId = userId;
 
     if (filters.sessionId) {
       where.sessionId = filters.sessionId;
-    }
-    if (filters.ownerId) {
-      where.ownerId = filters.ownerId;
     }
     if (filters.status) {
       where.status = filters.status;
@@ -231,14 +245,8 @@ export class DecisionLogService {
    *
    * Returns all decisions for a session with supersession chain.
    */
-  async exportForAudit(sessionId: string): Promise<DecisionAuditExport> {
-    const session = await this.prisma.session.findUnique({
-      where: { id: sessionId },
-    });
-
-    if (!session) {
-      throw new NotFoundException(`Session not found: ${sessionId}`);
-    }
+  async exportForAudit(sessionId: string, userId: string): Promise<DecisionAuditExport> {
+    await this.assertSessionOwnership(sessionId, userId);
 
     const decisions = await this.prisma.decisionLog.findMany({
       where: { sessionId },
@@ -271,7 +279,18 @@ export class DecisionLogService {
    *
    * Returns the full history of a decision including all supersessions.
    */
-  async getSupersessionChain(decisionId: string): Promise<DecisionResponse[]> {
+  async getSupersessionChain(decisionId: string, userId: string): Promise<DecisionResponse[]> {
+    const rootDecision = await this.prisma.decisionLog.findUnique({
+      where: { id: decisionId },
+      select: { id: true, ownerId: true },
+    });
+    if (!rootDecision) {
+      throw new NotFoundException(`Decision not found: ${decisionId}`);
+    }
+    if (rootDecision.ownerId !== userId) {
+      throw new ForbiddenException(`Forbidden decision access: ${decisionId}`);
+    }
+
     const chain: DecisionResponse[] = [];
     let currentId: string | null = decisionId;
 
@@ -326,6 +345,9 @@ export class DecisionLogService {
 
     if (!decision) {
       throw new NotFoundException(`Decision not found: ${decisionId}`);
+    }
+    if (decision.ownerId !== userId) {
+      throw new ForbiddenException(`Forbidden decision access: ${decisionId}`);
     }
 
     // APPEND-ONLY GUARD: Only drafts can be deleted

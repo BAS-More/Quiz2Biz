@@ -165,13 +165,13 @@ export class EvidenceRegistryService {
   async uploadEvidence(
     file: MulterFile,
     dto: UploadEvidenceDto,
-    _userId: string,
+    userId: string,
   ): Promise<EvidenceItemResponse> {
     // Validate file
     this.validateFile(file);
 
     // Verify session and question exist
-    await this.validateSessionAndQuestion(dto.sessionId, dto.questionId);
+    await this.validateSessionAndQuestion(dto.sessionId, dto.questionId, userId);
 
     // Compute SHA-256 hash
     const hashSignature = this.computeSHA256(file.buffer);
@@ -221,6 +221,7 @@ export class EvidenceRegistryService {
     if (!evidence) {
       throw new NotFoundException(`Evidence not found: ${dto.evidenceId}`);
     }
+    await this.assertSessionOwnership(evidence.sessionId, verifierId);
 
     // Update evidence verification status
     const updatedEvidence = await this.prisma.evidenceRegistry.update({
@@ -247,7 +248,7 @@ export class EvidenceRegistryService {
   /**
    * Get evidence by ID
    */
-  async getEvidence(evidenceId: string): Promise<EvidenceItemResponse> {
+  async getEvidence(evidenceId: string, userId: string): Promise<EvidenceItemResponse> {
     const evidence = await this.prisma.evidenceRegistry.findUnique({
       where: { id: evidenceId },
     });
@@ -255,6 +256,7 @@ export class EvidenceRegistryService {
     if (!evidence) {
       throw new NotFoundException(`Evidence not found: ${evidenceId}`);
     }
+    await this.assertSessionOwnership(evidence.sessionId, userId);
 
     return this.mapToResponse(evidence);
   }
@@ -262,8 +264,9 @@ export class EvidenceRegistryService {
   /**
    * List evidence with filters
    */
-  async listEvidence(filters: ListEvidenceDto): Promise<EvidenceItemResponse[]> {
+  async listEvidence(filters: ListEvidenceDto, userId: string): Promise<EvidenceItemResponse[]> {
     const where: Prisma.EvidenceRegistryWhereInput = {};
+    where.session = { userId };
 
     if (filters.sessionId) {
       where.sessionId = filters.sessionId;
@@ -289,12 +292,14 @@ export class EvidenceRegistryService {
   /**
    * Get evidence statistics for a session
    */
-  async getEvidenceStats(sessionId: string): Promise<{
+  async getEvidenceStats(sessionId: string, userId: string): Promise<{
     total: number;
     verified: number;
     pending: number;
     byType: Record<string, number>;
   }> {
+    await this.assertSessionOwnership(sessionId, userId);
+
     const evidence = await this.prisma.evidenceRegistry.findMany({
       where: { sessionId },
       select: { verified: true, artifactType: true },
@@ -332,6 +337,7 @@ export class EvidenceRegistryService {
     if (!evidence) {
       throw new NotFoundException(`Evidence not found: ${evidenceId}`);
     }
+    await this.assertSessionOwnership(evidence.sessionId, userId);
 
     // Only allow deletion of unverified evidence
     if (evidence.verified) {
@@ -434,13 +440,20 @@ export class EvidenceRegistryService {
   /**
    * Validate session and question exist
    */
-  private async validateSessionAndQuestion(sessionId: string, questionId: string): Promise<void> {
+  private async validateSessionAndQuestion(
+    sessionId: string,
+    questionId: string,
+    userId: string,
+  ): Promise<void> {
     const session = await this.prisma.session.findUnique({
       where: { id: sessionId },
     });
 
     if (!session) {
       throw new NotFoundException(`Session not found: ${sessionId}`);
+    }
+    if (session.userId !== userId) {
+      throw new ForbiddenException(`Forbidden session access: ${sessionId}`);
     }
 
     const question = await this.prisma.question.findUnique({
@@ -818,6 +831,20 @@ export class EvidenceRegistryService {
     } catch (error) {
       this.logger.error(`Failed to generate signed URL for ${evidenceId}`, error);
       throw new BadRequestException('Failed to generate download URL');
+    }
+  }
+
+  async assertSessionOwnership(sessionId: string, userId: string): Promise<void> {
+    const session = await this.prisma.session.findUnique({
+      where: { id: sessionId },
+      select: { id: true, userId: true },
+    });
+
+    if (!session) {
+      throw new NotFoundException(`Session not found: ${sessionId}`);
+    }
+    if (session.userId !== userId) {
+      throw new ForbiddenException(`Forbidden session access: ${sessionId}`);
     }
   }
 }

@@ -1,6 +1,7 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 import { RedisService } from '@libs/redis';
+import { UserRole } from '@prisma/client';
 import {
   HeatmapResultDto,
   HeatmapCellDto,
@@ -11,6 +12,7 @@ import {
   HeatmapColor,
   HeatmapColors,
 } from './dto';
+import { AuthenticatedUser } from '../auth/auth.service';
 
 /**
  * Gap Heatmap Generator Service
@@ -34,11 +36,39 @@ export class HeatmapService {
     private readonly redis: RedisService,
   ) {}
 
+  private canBypassSessionOwnership(user?: AuthenticatedUser): boolean {
+    return !!user && (user.role === UserRole.ADMIN || user.role === UserRole.SUPER_ADMIN);
+  }
+
+  private async assertSessionOwnership(
+    sessionId: string,
+    currentUser?: AuthenticatedUser,
+  ): Promise<void> {
+    if (!currentUser || this.canBypassSessionOwnership(currentUser)) {
+      return;
+    }
+
+    const session = await this.prisma.session.findUnique({
+      where: { id: sessionId },
+      select: { id: true, userId: true },
+    });
+    if (!session) {
+      throw new NotFoundException(`Session not found: ${sessionId}`);
+    }
+    if (session.userId !== currentUser.id) {
+      throw new ForbiddenException(`Forbidden session access: ${sessionId}`);
+    }
+  }
+
   /**
    * Generate complete heatmap for a session.
    */
-  async generateHeatmap(sessionId: string): Promise<HeatmapResultDto> {
+  async generateHeatmap(
+    sessionId: string,
+    currentUser?: AuthenticatedUser,
+  ): Promise<HeatmapResultDto> {
     const startTime = Date.now();
+    await this.assertSessionOwnership(sessionId, currentUser);
 
     // Check cache first
     const cached = await this.getCachedHeatmap(sessionId);
@@ -48,7 +78,7 @@ export class HeatmapService {
     }
 
     // Load data
-    const { dimensions, questions, responses } = await this.loadData(sessionId);
+    const { dimensions, questions, responses } = await this.loadData(sessionId, currentUser);
 
     // Generate cells
     const cells = this.generateCells(dimensions, questions, responses);
@@ -77,8 +107,8 @@ export class HeatmapService {
   /**
    * Export heatmap to CSV format.
    */
-  async exportToCsv(sessionId: string): Promise<string> {
-    const result = await this.generateHeatmap(sessionId);
+  async exportToCsv(sessionId: string, currentUser?: AuthenticatedUser): Promise<string> {
+    const result = await this.generateHeatmap(sessionId, currentUser);
     const lines: string[] = [];
 
     // Header row
@@ -112,8 +142,8 @@ export class HeatmapService {
   /**
    * Export heatmap to Markdown format.
    */
-  async exportToMarkdown(sessionId: string): Promise<string> {
-    const result = await this.generateHeatmap(sessionId);
+  async exportToMarkdown(sessionId: string, currentUser?: AuthenticatedUser): Promise<string> {
+    const result = await this.generateHeatmap(sessionId, currentUser);
     const lines: string[] = [];
 
     lines.push('# Gap Heatmap Report');
@@ -182,8 +212,8 @@ export class HeatmapService {
   /**
    * Get heatmap summary statistics only.
    */
-  async getSummary(sessionId: string): Promise<HeatmapSummaryDto> {
-    const result = await this.generateHeatmap(sessionId);
+  async getSummary(sessionId: string, currentUser?: AuthenticatedUser): Promise<HeatmapSummaryDto> {
+    const result = await this.generateHeatmap(sessionId, currentUser);
     return result.summary;
   }
 
@@ -194,8 +224,9 @@ export class HeatmapService {
     sessionId: string,
     dimension?: string,
     severity?: string,
+    currentUser?: AuthenticatedUser,
   ): Promise<HeatmapCellDto[]> {
-    const result = await this.generateHeatmap(sessionId);
+    const result = await this.generateHeatmap(sessionId, currentUser);
     let cells = result.cells;
 
     if (dimension) {
@@ -215,11 +246,12 @@ export class HeatmapService {
     sessionId: string,
     dimensionKey: string,
     severityBucket: string,
+    currentUser?: AuthenticatedUser,
   ): Promise<HeatmapDrilldownDto> {
-    const { dimensions, questions, responses } = await this.loadData(sessionId);
+    const { dimensions, questions, responses } = await this.loadData(sessionId, currentUser);
 
     // Find matching cell
-    const result = await this.generateHeatmap(sessionId);
+    const result = await this.generateHeatmap(sessionId, currentUser);
     const cell = result.cells.find(
       (c) =>
         c.dimensionKey.toLowerCase() === dimensionKey.toLowerCase() &&
@@ -279,7 +311,8 @@ export class HeatmapService {
   /**
    * Invalidate heatmap cache for a session.
    */
-  async invalidateCache(sessionId: string): Promise<void> {
+  async invalidateCache(sessionId: string, currentUser?: AuthenticatedUser): Promise<void> {
+    await this.assertSessionOwnership(sessionId, currentUser);
     const cacheKey = `heatmap:${sessionId}`;
     await this.redis.del(cacheKey);
     this.logger.debug(`Heatmap cache invalidated for session ${sessionId}`);
@@ -289,7 +322,7 @@ export class HeatmapService {
   // Private helpers
   // ========================================
 
-  private async loadData(sessionId: string) {
+  private async loadData(sessionId: string, currentUser?: AuthenticatedUser) {
     const session = await this.prisma.session.findUnique({
       where: { id: sessionId },
       include: { questionnaire: true },
@@ -297,6 +330,9 @@ export class HeatmapService {
 
     if (!session) {
       throw new NotFoundException(`Session not found: ${sessionId}`);
+    }
+    if (!this.canBypassSessionOwnership(currentUser) && currentUser && session.userId !== currentUser.id) {
+      throw new ForbiddenException(`Forbidden session access: ${sessionId}`);
     }
 
     // Filter dimensions by project type if session has one set
@@ -446,10 +482,14 @@ export class HeatmapService {
    * Compare heatmaps between two sessions
    * Useful for tracking progress over time
    */
-  async compareHeatmaps(sessionId1: string, sessionId2: string): Promise<HeatmapComparisonResult> {
+  async compareHeatmaps(
+    sessionId1: string,
+    sessionId2: string,
+    currentUser?: AuthenticatedUser,
+  ): Promise<HeatmapComparisonResult> {
     const [heatmap1, heatmap2] = await Promise.all([
-      this.generateHeatmap(sessionId1),
-      this.generateHeatmap(sessionId2),
+      this.generateHeatmap(sessionId1, currentUser),
+      this.generateHeatmap(sessionId2, currentUser),
     ]);
 
     const comparisons: CellComparison[] = [];
@@ -516,9 +556,13 @@ export class HeatmapService {
    * Get priority-ranked gaps for action planning
    * Returns cells sorted by impact potential
    */
-  async getPriorityGaps(sessionId: string, limit: number = 10): Promise<PriorityGap[]> {
-    const result = await this.generateHeatmap(sessionId);
-    const { dimensions, questions, responses } = await this.loadData(sessionId);
+  async getPriorityGaps(
+    sessionId: string,
+    limit: number = 10,
+    currentUser?: AuthenticatedUser,
+  ): Promise<PriorityGap[]> {
+    const result = await this.generateHeatmap(sessionId, currentUser);
+    const { dimensions, questions, responses } = await this.loadData(sessionId, currentUser);
 
     // Get dimension weights
     const dimensionWeights = new Map(
@@ -588,9 +632,9 @@ export class HeatmapService {
    * Generate action plan from heatmap
    * Returns structured improvement recommendations
    */
-  async generateActionPlan(sessionId: string): Promise<ActionPlan> {
-    const priorityGaps = await this.getPriorityGaps(sessionId, 20);
-    const result = await this.generateHeatmap(sessionId);
+  async generateActionPlan(sessionId: string, currentUser?: AuthenticatedUser): Promise<ActionPlan> {
+    const priorityGaps = await this.getPriorityGaps(sessionId, 20, currentUser);
+    const result = await this.generateHeatmap(sessionId, currentUser);
 
     const phases: ActionPhase[] = [];
 
@@ -660,9 +704,12 @@ export class HeatmapService {
   /**
    * Export heatmap as JSON for visualization tools
    */
-  async exportToVisualizationFormat(sessionId: string): Promise<VisualizationData> {
-    const result = await this.generateHeatmap(sessionId);
-    const { dimensions } = await this.loadData(sessionId);
+  async exportToVisualizationFormat(
+    sessionId: string,
+    currentUser?: AuthenticatedUser,
+  ): Promise<VisualizationData> {
+    const result = await this.generateHeatmap(sessionId, currentUser);
+    const { dimensions } = await this.loadData(sessionId, currentUser);
 
     // Transform for D3.js / Chart.js compatible format
     const matrix: number[][] = [];

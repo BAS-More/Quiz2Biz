@@ -1,8 +1,16 @@
-import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  BadRequestException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { PrismaService } from '@libs/database';
+import { UserRole } from '@prisma/client';
 import { ClaudeAiService } from './claude-ai.service';
 import { CreateIdeaDto } from '../dto/create-idea.dto';
 import { IdeaCaptureResponseDto, IdeaAnalysisDto, ProjectTypeRecommendationDto } from '../dto/idea-response.dto';
+import { AuthenticatedUser } from '../../auth/auth.service';
 
 @Injectable()
 export class IdeaCaptureService {
@@ -12,6 +20,23 @@ export class IdeaCaptureService {
     private readonly prisma: PrismaService,
     private readonly claudeAi: ClaudeAiService,
   ) {}
+
+  private canBypassIdeaOwnership(user: AuthenticatedUser): boolean {
+    return user.role === UserRole.ADMIN || user.role === UserRole.SUPER_ADMIN;
+  }
+
+  private assertIdeaOwnership(
+    ideaCaptureId: string,
+    ownerUserId: string | null,
+    currentUser: AuthenticatedUser,
+  ): void {
+    if (this.canBypassIdeaOwnership(currentUser)) {
+      return;
+    }
+    if (!ownerUserId || ownerUserId !== currentUser.id) {
+      throw new ForbiddenException(`Forbidden idea access: ${ideaCaptureId}`);
+    }
+  }
 
   async captureAndAnalyze(
     dto: CreateIdeaDto,
@@ -70,7 +95,7 @@ export class IdeaCaptureService {
     })));
   }
 
-  async getById(id: string): Promise<IdeaCaptureResponseDto> {
+  async getById(id: string, currentUser: AuthenticatedUser): Promise<IdeaCaptureResponseDto> {
     const ideaCapture = await this.prisma.ideaCapture.findUnique({
       where: { id },
       include: {
@@ -81,6 +106,7 @@ export class IdeaCaptureService {
     if (!ideaCapture) {
       throw new NotFoundException(`Idea capture ${id} not found`);
     }
+    this.assertIdeaOwnership(id, ideaCapture.userId, currentUser);
 
     const availableProjectTypes = await this.prisma.projectType.findMany({
       where: { isActive: true },
@@ -105,7 +131,17 @@ export class IdeaCaptureService {
   async confirmProjectType(
     ideaCaptureId: string,
     projectTypeId: string,
+    currentUser: AuthenticatedUser,
   ): Promise<IdeaCaptureResponseDto> {
+    const ideaCapture = await this.prisma.ideaCapture.findUnique({
+      where: { id: ideaCaptureId },
+      select: { id: true, userId: true },
+    });
+    if (!ideaCapture) {
+      throw new NotFoundException(`Idea capture ${ideaCaptureId} not found`);
+    }
+    this.assertIdeaOwnership(ideaCaptureId, ideaCapture.userId, currentUser);
+
     const projectType = await this.prisma.projectType.findUnique({
       where: { id: projectTypeId },
     });
@@ -133,12 +169,12 @@ export class IdeaCaptureService {
       `Project type confirmed for idea ${ideaCaptureId}: ${projectType.slug}`,
     );
 
-    return this.getById(ideaCaptureId);
+    return this.getById(ideaCaptureId, currentUser);
   }
 
   async createSessionFromIdea(
     ideaCaptureId: string,
-    userId: string,
+    currentUser: AuthenticatedUser,
   ): Promise<{ sessionId: string }> {
     const ideaCapture = await this.prisma.ideaCapture.findUnique({
       where: { id: ideaCaptureId },
@@ -150,6 +186,7 @@ export class IdeaCaptureService {
     if (!ideaCapture) {
       throw new NotFoundException(`Idea capture ${ideaCaptureId} not found`);
     }
+    this.assertIdeaOwnership(ideaCaptureId, ideaCapture.userId, currentUser);
 
     if (!ideaCapture.projectTypeId) {
       throw new BadRequestException(
@@ -173,7 +210,7 @@ export class IdeaCaptureService {
 
     const session = await this.prisma.session.create({
       data: {
-        userId,
+        userId: currentUser.id,
         questionnaireId: questionnaire.id,
         questionnaireVersion: questionnaire.version,
         projectTypeId: ideaCapture.projectTypeId,

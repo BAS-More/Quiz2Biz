@@ -11,7 +11,6 @@ import {
   UseInterceptors,
   HttpCode,
   HttpStatus,
-  Request,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
@@ -32,6 +31,8 @@ import {
 } from './ci-artifact-ingestion.service';
 import { UploadEvidenceDto, VerifyEvidenceDto, EvidenceItemResponse, ListEvidenceDto } from './dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/user.decorator';
+import { AuthenticatedUser } from '../auth/auth.service';
 
 /** File upload type for multer */
 interface UploadedFileType {
@@ -134,9 +135,9 @@ The file will be stored in Azure Blob Storage with a SHA-256 hash computed for i
   async uploadEvidence(
     @UploadedFile() file: UploadedFileType,
     @Body() dto: UploadEvidenceDto,
-    @Request() req: { user: { userId: string } },
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<EvidenceItemResponse> {
-    return this.evidenceService.uploadEvidence(file, dto, req.user.userId);
+    return this.evidenceService.uploadEvidence(file, dto, user.id);
   }
 
   /**
@@ -164,9 +165,9 @@ Only users with Verifier role should be allowed to verify evidence.
   })
   async verifyEvidence(
     @Body() dto: VerifyEvidenceDto,
-    @Request() req: { user: { userId: string } },
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<EvidenceItemResponse> {
-    return this.evidenceService.verifyEvidence(dto, req.user.userId);
+    return this.evidenceService.verifyEvidence(dto, user.id);
   }
 
   /**
@@ -190,8 +191,11 @@ Only users with Verifier role should be allowed to verify evidence.
     status: 404,
     description: 'Evidence not found',
   })
-  async getEvidence(@Param('evidenceId') evidenceId: string): Promise<EvidenceItemResponse> {
-    return this.evidenceService.getEvidence(evidenceId);
+  async getEvidence(
+    @Param('evidenceId') evidenceId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<EvidenceItemResponse> {
+    return this.evidenceService.getEvidence(evidenceId, user.id);
   }
 
   /**
@@ -208,8 +212,11 @@ Only users with Verifier role should be allowed to verify evidence.
     description: 'List of evidence items',
     type: [EvidenceItemResponse],
   })
-  async listEvidence(@Query() filters: ListEvidenceDto): Promise<EvidenceItemResponse[]> {
-    return this.evidenceService.listEvidence(filters);
+  async listEvidence(
+    @Query() filters: ListEvidenceDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<EvidenceItemResponse[]> {
+    return this.evidenceService.listEvidence(filters, user.id);
   }
 
   /**
@@ -240,8 +247,11 @@ Only users with Verifier role should be allowed to verify evidence.
       },
     },
   })
-  async getEvidenceStats(@Param('sessionId') sessionId: string) {
-    return this.evidenceService.getEvidenceStats(sessionId);
+  async getEvidenceStats(
+    @Param('sessionId') sessionId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.evidenceService.getEvidenceStats(sessionId, user.id);
   }
 
   /**
@@ -271,9 +281,9 @@ Only users with Verifier role should be allowed to verify evidence.
   })
   async deleteEvidence(
     @Param('evidenceId') evidenceId: string,
-    @Request() req: { user: { userId: string } },
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<void> {
-    await this.evidenceService.deleteEvidence(evidenceId, req.user.userId);
+    await this.evidenceService.deleteEvidence(evidenceId, user.id);
   }
 
   // ================================================================
@@ -299,7 +309,9 @@ Optionally requests a timestamp token from RFC 3161 TSA.
   async chainEvidence(
     @Param('evidenceId') evidenceId: string,
     @Body() body: { sessionId: string },
+    @CurrentUser() user: AuthenticatedUser,
   ) {
+    await this.evidenceService.assertSessionOwnership(body.sessionId, user.id);
     return this.integrityService.chainEvidence(evidenceId, body.sessionId);
   }
 
@@ -313,7 +325,11 @@ Optionally requests a timestamp token from RFC 3161 TSA.
   })
   @ApiParam({ name: 'sessionId', description: 'Session UUID' })
   @ApiResponse({ status: 200, description: 'Evidence chain entries' })
-  async getEvidenceChain(@Param('sessionId') sessionId: string) {
+  async getEvidenceChain(
+    @Param('sessionId') sessionId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    await this.evidenceService.assertSessionOwnership(sessionId, user.id);
     return this.integrityService.getEvidenceChain(sessionId);
   }
 
@@ -330,7 +346,11 @@ Checks: hash chain links, computed hashes match stored hashes, evidence not modi
   })
   @ApiParam({ name: 'sessionId', description: 'Session UUID' })
   @ApiResponse({ status: 200, description: 'Chain verification result' })
-  async verifyChain(@Param('sessionId') sessionId: string) {
+  async verifyChain(
+    @Param('sessionId') sessionId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    await this.evidenceService.assertSessionOwnership(sessionId, user.id);
     return this.integrityService.verifyChain(sessionId);
   }
 
@@ -345,7 +365,11 @@ Checks: hash chain links, computed hashes match stored hashes, evidence not modi
   @ApiParam({ name: 'evidenceId', description: 'Evidence UUID' })
   @ApiResponse({ status: 200, description: 'Integrity verification result' })
   @ApiResponse({ status: 404, description: 'Evidence not found' })
-  async verifyEvidenceIntegrity(@Param('evidenceId') evidenceId: string) {
+  async verifyEvidenceIntegrity(
+    @Param('evidenceId') evidenceId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    await this.evidenceService.getEvidence(evidenceId, user.id);
     return this.integrityService.verifyEvidenceIntegrity(evidenceId);
   }
 
@@ -359,7 +383,11 @@ Checks: hash chain links, computed hashes match stored hashes, evidence not modi
   })
   @ApiParam({ name: 'sessionId', description: 'Session UUID' })
   @ApiResponse({ status: 200, description: 'Session integrity report' })
-  async generateIntegrityReport(@Param('sessionId') sessionId: string) {
+  async generateIntegrityReport(
+    @Param('sessionId') sessionId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    await this.evidenceService.assertSessionOwnership(sessionId, user.id);
     return this.integrityService.generateIntegrityReport(sessionId);
   }
 
@@ -408,7 +436,11 @@ Parses artifacts and extracts relevant metrics.
   })
   @ApiResponse({ status: 201, description: 'Artifact ingested successfully' })
   @ApiResponse({ status: 400, description: 'Invalid artifact format or type' })
-  async ingestCIArtifact(@Body() dto: IngestArtifactDto) {
+  async ingestCIArtifact(
+    @Body() dto: IngestArtifactDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    await this.evidenceService.assertSessionOwnership(dto.sessionId, user.id);
     return this.ciIngestionService.ingestArtifact(dto);
   }
 
@@ -422,7 +454,11 @@ Parses artifacts and extracts relevant metrics.
     description: 'Ingest multiple CI artifacts from a single build in one request.',
   })
   @ApiResponse({ status: 201, description: 'Bulk ingestion result' })
-  async bulkIngestCIArtifacts(@Body() dto: BulkIngestDto) {
+  async bulkIngestCIArtifacts(
+    @Body() dto: BulkIngestDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    await this.evidenceService.assertSessionOwnership(dto.sessionId, user.id);
     return this.ciIngestionService.bulkIngestArtifacts(dto);
   }
 
@@ -436,7 +472,11 @@ Parses artifacts and extracts relevant metrics.
   })
   @ApiParam({ name: 'sessionId', description: 'Session UUID' })
   @ApiResponse({ status: 200, description: 'List of CI artifacts' })
-  async getSessionCIArtifacts(@Param('sessionId') sessionId: string) {
+  async getSessionCIArtifacts(
+    @Param('sessionId') sessionId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    await this.evidenceService.assertSessionOwnership(sessionId, user.id);
     return this.ciIngestionService.getSessionArtifacts(sessionId);
   }
 
@@ -455,7 +495,9 @@ Parses artifacts and extracts relevant metrics.
   async getCIBuildSummary(
     @Param('sessionId') sessionId: string,
     @Param('buildId') buildId: string,
+    @CurrentUser() user: AuthenticatedUser,
   ) {
+    await this.evidenceService.assertSessionOwnership(sessionId, user.id);
     return this.ciIngestionService.getBuildSummary(sessionId, buildId);
   }
 }

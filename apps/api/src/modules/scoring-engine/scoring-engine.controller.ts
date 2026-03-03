@@ -30,6 +30,8 @@ import {
   NextQuestionsResult,
 } from './dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/user.decorator';
+import { AuthenticatedUser } from '../auth/auth.service';
 
 /**
  * Scoring Engine Controller
@@ -77,8 +79,11 @@ Returns per-dimension breakdown and score trend.
     status: 404,
     description: 'Session not found',
   })
-  async calculateScore(@Body() dto: CalculateScoreDto): Promise<ReadinessScoreResult> {
-    return this.scoringService.calculateScore(dto);
+  async calculateScore(
+    @Body() dto: CalculateScoreDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<ReadinessScoreResult> {
+    return this.scoringService.calculateScore(dto, user);
   }
 
   /**
@@ -105,8 +110,11 @@ Questions are ranked by expected score lift with rationale explaining the priori
     description: 'Priority questions retrieved successfully',
     type: NextQuestionsResult,
   })
-  async getNextQuestions(@Body() dto: NextQuestionsDto): Promise<NextQuestionsResult> {
-    return this.scoringService.getNextQuestions(dto);
+  async getNextQuestions(
+    @Body() dto: NextQuestionsDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<NextQuestionsResult> {
+    return this.scoringService.getNextQuestions(dto, user);
   }
 
   /**
@@ -130,8 +138,11 @@ Questions are ranked by expected score lift with rationale explaining the priori
     status: 404,
     description: 'Session not found',
   })
-  async getScore(@Param('sessionId') sessionId: string): Promise<ReadinessScoreResult> {
-    return this.scoringService.calculateScore({ sessionId });
+  async getScore(
+    @Param('sessionId') sessionId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<ReadinessScoreResult> {
+    return this.scoringService.calculateScore({ sessionId }, user);
   }
 
   /**
@@ -152,8 +163,11 @@ Questions are ranked by expected score lift with rationale explaining the priori
     status: 204,
     description: 'Cache invalidated successfully',
   })
-  async invalidateCache(@Param('sessionId') sessionId: string): Promise<void> {
-    await this.scoringService.invalidateScoreCache(sessionId);
+  async invalidateCache(
+    @Param('sessionId') sessionId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<void> {
+    await this.scoringService.invalidateScoreCache(sessionId, user);
   }
 
   /**
@@ -185,8 +199,9 @@ Questions are ranked by expected score lift with rationale explaining the priori
   async getScoreHistory(
     @Param('sessionId') sessionId: string,
     @Query('limit') limit?: number,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<ScoreHistoryResult> {
-    return this.scoringService.getScoreHistory(sessionId, limit);
+    return this.scoringService.getScoreHistory(sessionId, limit, user);
   }
 
   /**
@@ -226,8 +241,9 @@ Returns:
   async getIndustryBenchmark(
     @Param('sessionId') sessionId: string,
     @Query('industry') industry?: string,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<BenchmarkResult> {
-    return this.scoringService.getIndustryBenchmark(sessionId, industry);
+    return this.scoringService.getIndustryBenchmark(sessionId, industry, user);
   }
 
   /**
@@ -261,7 +277,8 @@ Returns per-dimension:
   })
   async getDimensionBenchmarks(
     @Param('sessionId') sessionId: string,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<DimensionBenchmarkResult[]> {
-    return this.scoringService.getDimensionBenchmarks(sessionId);
+    return this.scoringService.getDimensionBenchmarks(sessionId, user);
   }
 }

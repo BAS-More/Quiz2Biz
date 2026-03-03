@@ -9,7 +9,6 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
-  Request,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { DecisionLogService } from './decision-log.service';
@@ -22,6 +21,8 @@ import {
   DecisionAuditExport,
 } from './dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/user.decorator';
+import { AuthenticatedUser } from '../auth/auth.service';
 
 /**
  * Decision Log Controller
@@ -59,9 +60,9 @@ Once locked, decisions cannot be changed - use supersession to amend.
   })
   async createDecision(
     @Body() dto: CreateDecisionDto,
-    @Request() req: { user: { userId: string } },
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<DecisionResponse> {
-    return this.decisionService.createDecision(dto, req.user.userId);
+    return this.decisionService.createDecision(dto, user.id);
   }
 
   /**
@@ -91,9 +92,9 @@ Lock a DRAFT decision, making it permanent.
   })
   async lockDecision(
     @Body() dto: UpdateDecisionStatusDto,
-    @Request() req: { user: { userId: string } },
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<DecisionResponse> {
-    return this.decisionService.updateDecisionStatus(dto, req.user.userId);
+    return this.decisionService.updateDecisionStatus(dto, user.id);
   }
 
   /**
@@ -125,9 +126,9 @@ The original decision is marked as SUPERSEDED and linked to the new one.
   })
   async supersedeDecision(
     @Body() dto: SupersedeDecisionDto,
-    @Request() req: { user: { userId: string } },
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<DecisionResponse> {
-    return this.decisionService.supersedeDecision(dto, req.user.userId);
+    return this.decisionService.supersedeDecision(dto, user.id);
   }
 
   /**
@@ -151,8 +152,11 @@ The original decision is marked as SUPERSEDED and linked to the new one.
     status: 404,
     description: 'Decision not found',
   })
-  async getDecision(@Param('decisionId') decisionId: string): Promise<DecisionResponse> {
-    return this.decisionService.getDecision(decisionId);
+  async getDecision(
+    @Param('decisionId') decisionId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<DecisionResponse> {
+    return this.decisionService.getDecision(decisionId, user.id);
   }
 
   /**
@@ -168,8 +172,11 @@ The original decision is marked as SUPERSEDED and linked to the new one.
     description: 'List of decisions',
     type: [DecisionResponse],
   })
-  async listDecisions(@Query() filters: ListDecisionsDto): Promise<DecisionResponse[]> {
-    return this.decisionService.listDecisions(filters);
+  async listDecisions(
+    @Query() filters: ListDecisionsDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<DecisionResponse[]> {
+    return this.decisionService.listDecisions(filters, user.id);
   }
 
   /**
@@ -189,8 +196,11 @@ The original decision is marked as SUPERSEDED and linked to the new one.
     description: 'Supersession chain',
     type: [DecisionResponse],
   })
-  async getSupersessionChain(@Param('decisionId') decisionId: string): Promise<DecisionResponse[]> {
-    return this.decisionService.getSupersessionChain(decisionId);
+  async getSupersessionChain(
+    @Param('decisionId') decisionId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<DecisionResponse[]> {
+    return this.decisionService.getSupersessionChain(decisionId, user.id);
   }
 
   /**
@@ -213,8 +223,11 @@ Includes supersession chain mapping for compliance review.
     description: 'Audit export',
     type: DecisionAuditExport,
   })
-  async exportForAudit(@Param('sessionId') sessionId: string): Promise<DecisionAuditExport> {
-    return this.decisionService.exportForAudit(sessionId);
+  async exportForAudit(
+    @Param('sessionId') sessionId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<DecisionAuditExport> {
+    return this.decisionService.exportForAudit(sessionId, user.id);
   }
 
   /**
@@ -246,8 +259,8 @@ Delete a DRAFT decision.
   })
   async deleteDecision(
     @Param('decisionId') decisionId: string,
-    @Request() req: { user: { userId: string } },
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<void> {
-    await this.decisionService.deleteDecision(decisionId, req.user.userId);
+    await this.decisionService.deleteDecision(decisionId, user.id);
   }
 }

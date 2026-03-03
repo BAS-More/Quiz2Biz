@@ -41,6 +41,7 @@ export class ConversationController {
   async submitAnswerWithAi(
     @Param('sessionId', ParseUUIDPipe) sessionId: string,
     @Body() dto: SubmitAnswerDto,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<AnswerWithFollowUpResult> {
     return this.conversationService.processAnswerWithAi({
       sessionId,
@@ -48,7 +49,7 @@ export class ConversationController {
       questionText: dto.questionText,
       answerText: dto.answerText,
       dimensionContext: dto.dimensionContext,
-    });
+    }, user);
   }
 
   @Post('follow-up')
@@ -60,11 +61,13 @@ export class ConversationController {
   async submitFollowUp(
     @Param('sessionId', ParseUUIDPipe) sessionId: string,
     @Body() dto: FollowUpAnswerDto,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<ConversationMessageDto> {
     return this.conversationService.storeFollowUpAnswer(
       sessionId,
       dto.questionId,
       dto.content,
+      user,
     );
   }
 
@@ -73,8 +76,9 @@ export class ConversationController {
   @ApiResponse({ status: 200, description: 'Conversation messages' })
   async getConversation(
     @Param('sessionId', ParseUUIDPipe) sessionId: string,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<ConversationMessageDto[]> {
-    return this.conversationService.getSessionConversation(sessionId);
+    return this.conversationService.getSessionConversation(sessionId, user);
   }
 
   @Get('question/:questionId')
@@ -83,7 +87,8 @@ export class ConversationController {
   async getQuestionConversation(
     @Param('sessionId', ParseUUIDPipe) sessionId: string,
     @Param('questionId', ParseUUIDPipe) questionId: string,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<ConversationMessageDto[]> {
-    return this.conversationService.getQuestionConversation(sessionId, questionId);
+    return this.conversationService.getQuestionConversation(sessionId, questionId, user);
   }
 }

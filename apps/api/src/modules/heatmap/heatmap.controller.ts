@@ -17,6 +17,8 @@ import {
   HeatmapCellsQueryDto,
 } from './dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/user.decorator';
+import { AuthenticatedUser } from '../auth/auth.service';
 
 /**
  * Gap Heatmap Controller
@@ -63,8 +65,11 @@ export class HeatmapController {
     type: HeatmapResultDto,
   })
   @ApiResponse({ status: 404, description: 'Session not found' })
-  async getHeatmap(@Param('sessionId') sessionId: string): Promise<HeatmapResultDto> {
-    return this.heatmapService.generateHeatmap(sessionId);
+  async getHeatmap(
+    @Param('sessionId') sessionId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<HeatmapResultDto> {
+    return this.heatmapService.generateHeatmap(sessionId, user);
   }
 
   /**
@@ -82,8 +87,11 @@ export class HeatmapController {
     type: HeatmapSummaryDto,
   })
   @ApiResponse({ status: 404, description: 'Session not found' })
-  async getSummary(@Param('sessionId') sessionId: string): Promise<HeatmapSummaryDto> {
-    return this.heatmapService.getSummary(sessionId);
+  async getSummary(
+    @Param('sessionId') sessionId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<HeatmapSummaryDto> {
+    return this.heatmapService.getSummary(sessionId, user);
   }
 
   /**
@@ -97,8 +105,12 @@ export class HeatmapController {
   @ApiParam({ name: 'sessionId', description: 'Session UUID' })
   @ApiResponse({ status: 200, description: 'CSV file generated' })
   @ApiResponse({ status: 404, description: 'Session not found' })
-  async exportToCsv(@Param('sessionId') sessionId: string, @Res() res: Response): Promise<void> {
-    const csv = await this.heatmapService.exportToCsv(sessionId);
+  async exportToCsv(
+    @Param('sessionId') sessionId: string,
+    @CurrentUser() user: AuthenticatedUser,
+    @Res() res: Response,
+  ): Promise<void> {
+    const csv = await this.heatmapService.exportToCsv(sessionId, user);
     const safeSessionId = this.sanitizeFilenameSegment(sessionId);
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', `attachment; filename="heatmap-${safeSessionId}.csv"`);
@@ -118,9 +130,10 @@ export class HeatmapController {
   @ApiResponse({ status: 404, description: 'Session not found' })
   async exportToMarkdown(
     @Param('sessionId') sessionId: string,
+    @CurrentUser() user: AuthenticatedUser,
     @Res() res: Response,
   ): Promise<void> {
-    const markdown = await this.heatmapService.exportToMarkdown(sessionId);
+    const markdown = await this.heatmapService.exportToMarkdown(sessionId, user);
     const safeSessionId = this.sanitizeFilenameSegment(sessionId);
     const sanitizedMarkdown = this.sanitizeMarkdownForResponse(markdown);
 
@@ -151,8 +164,9 @@ export class HeatmapController {
   async getCells(
     @Param('sessionId') sessionId: string,
     @Query() query: HeatmapCellsQueryDto,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<HeatmapCellDto[]> {
-    return this.heatmapService.getCells(sessionId, query.dimension, query.severity);
+    return this.heatmapService.getCells(sessionId, query.dimension, query.severity, user);
   }
 
   /**
@@ -179,7 +193,8 @@ export class HeatmapController {
     @Param('sessionId') sessionId: string,
     @Param('dimensionKey') dimensionKey: string,
     @Param('severityBucket') severityBucket: string,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<HeatmapDrilldownDto> {
-    return this.heatmapService.drilldown(sessionId, dimensionKey, severityBucket);
+    return this.heatmapService.drilldown(sessionId, dimensionKey, severityBucket, user);
   }
 }

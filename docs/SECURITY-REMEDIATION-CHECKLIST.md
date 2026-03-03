@@ -7,10 +7,10 @@
 - [x] P0-A: Enforce organization/customer ownership checks in payment controller routes
 - [x] P0-A: Exempt Stripe webhook from CSRF validation
 - [x] P0-A: Enable raw request body in Nest bootstrap for Stripe signature verification
-- [ ] P0-B: Enforce session ownership checks in scoring, heatmap, and conversation services
-- [ ] P0-B: Guard idea-capture retrieval/confirm/session creation by owner
-- [ ] P0-C: Fix `req.user.userId` legacy usage in evidence and decision modules
-- [ ] P0-C: Add ownership enforcement in evidence and decision services
+- [x] P0-B: Enforce session ownership checks in scoring, heatmap, and conversation services
+- [x] P0-B: Guard idea-capture retrieval/confirm/session creation by owner
+- [x] P0-C: Fix `req.user.userId` legacy usage in evidence and decision modules
+- [x] P0-C: Add ownership enforcement in evidence and decision services
 
 ## Phase P1 (pending)
 

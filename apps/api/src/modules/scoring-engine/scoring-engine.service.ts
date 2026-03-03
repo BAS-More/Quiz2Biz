@@ -1,6 +1,7 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 import { RedisService } from '@libs/redis';
+import { UserRole } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import { CoverageLevel } from '@prisma/client';
 import {
@@ -13,6 +14,7 @@ import {
   QuestionCoverageInput,
   CoverageLevelDto,
 } from './dto';
+import { AuthenticatedUser } from '../auth/auth.service';
 
 /**
  * Coverage Level mapping to decimal values
@@ -101,11 +103,31 @@ export class ScoringEngineService {
     private readonly redis: RedisService,
   ) {}
 
+  private canBypassSessionOwnership(user?: AuthenticatedUser): boolean {
+    return !!user && (user.role === UserRole.ADMIN || user.role === UserRole.SUPER_ADMIN);
+  }
+
+  private assertSessionOwnership(
+    sessionId: string,
+    sessionUserId: string,
+    currentUser?: AuthenticatedUser,
+  ): void {
+    if (!currentUser || this.canBypassSessionOwnership(currentUser)) {
+      return;
+    }
+    if (sessionUserId !== currentUser.id) {
+      throw new ForbiddenException(`Forbidden session access: ${sessionId}`);
+    }
+  }
+
   /**
    * Calculate the complete readiness score for a session
    * Uses parameterized queries throughout for security
    */
-  async calculateScore(dto: CalculateScoreDto): Promise<ReadinessScoreResult> {
+  async calculateScore(
+    dto: CalculateScoreDto,
+    currentUser?: AuthenticatedUser,
+  ): Promise<ReadinessScoreResult> {
     const startTime = Date.now();
     const { sessionId, coverageOverrides } = dto;
 
@@ -120,6 +142,7 @@ export class ScoringEngineService {
     if (!session) {
       throw new NotFoundException(`Session not found: ${sessionId}`);
     }
+    this.assertSessionOwnership(sessionId, session.userId, currentUser);
 
     // Get previous score for trend calculation
     const previousScore = session.readinessScore ? Number(session.readinessScore) : null;
@@ -226,20 +249,27 @@ export class ScoringEngineService {
    *
    * Returns questions ranked by their potential score improvement
    */
-  async getNextQuestions(dto: NextQuestionsDto): Promise<NextQuestionsResult> {
+  async getNextQuestions(
+    dto: NextQuestionsDto,
+    currentUser?: AuthenticatedUser,
+  ): Promise<NextQuestionsResult> {
     const { sessionId, limit = 5 } = dto;
 
     // Get current score or calculate it
     let currentResult = await this.getCachedScore(sessionId);
     if (!currentResult) {
-      currentResult = await this.calculateScore({ sessionId });
+      currentResult = await this.calculateScore({ sessionId }, currentUser);
     }
 
     // Look up session persona for filtering
     const session = await this.prisma.session.findUnique({
       where: { id: sessionId },
-      select: { persona: true },
+      select: { persona: true, userId: true },
     });
+    if (!session) {
+      throw new NotFoundException(`Session not found: ${sessionId}`);
+    }
+    this.assertSessionOwnership(sessionId, session.userId, currentUser);
 
     // Fetch questions filtered by session persona
     const questions = await this.prisma.question.findMany({
@@ -537,7 +567,18 @@ export class ScoringEngineService {
   /**
    * Invalidate cached score for a session
    */
-  async invalidateScoreCache(sessionId: string): Promise<void> {
+  async invalidateScoreCache(sessionId: string, currentUser?: AuthenticatedUser): Promise<void> {
+    if (currentUser) {
+      const session = await this.prisma.session.findUnique({
+        where: { id: sessionId },
+        select: { id: true, userId: true },
+      });
+      if (!session) {
+        throw new NotFoundException(`Session not found: ${sessionId}`);
+      }
+      this.assertSessionOwnership(sessionId, session.userId, currentUser);
+    }
+
     try {
       const cacheKey = `score:${sessionId}`;
       await this.redis.del(cacheKey);
@@ -579,11 +620,16 @@ export class ScoringEngineService {
    * Get score history for a session
    * Returns historical score snapshots for trend analysis
    */
-  async getScoreHistory(sessionId: string, limit: number = 10): Promise<ScoreHistoryResult> {
+  async getScoreHistory(
+    sessionId: string,
+    limit: number = 10,
+    currentUser?: AuthenticatedUser,
+  ): Promise<ScoreHistoryResult> {
     const session = await this.prisma.session.findUnique({
       where: { id: sessionId },
       select: {
         id: true,
+        userId: true,
         readinessScore: true,
         startedAt: true,
         lastScoreCalculation: true,
@@ -593,6 +639,7 @@ export class ScoringEngineService {
     if (!session) {
       throw new NotFoundException(`Session not found: ${sessionId}`);
     }
+    this.assertSessionOwnership(sessionId, session.userId, currentUser);
 
     const currentScore = session.readinessScore ? Number(session.readinessScore) : 0;
 
@@ -632,7 +679,11 @@ export class ScoringEngineService {
    * Get industry benchmark comparison
    * Compares session score against industry averages
    */
-  async getIndustryBenchmark(sessionId: string, industryCode?: string): Promise<BenchmarkResult> {
+  async getIndustryBenchmark(
+    sessionId: string,
+    industryCode?: string,
+    currentUser?: AuthenticatedUser,
+  ): Promise<BenchmarkResult> {
     const session = await this.prisma.session.findUnique({
       where: { id: sessionId },
       include: {
@@ -643,6 +694,7 @@ export class ScoringEngineService {
     if (!session) {
       throw new NotFoundException(`Session not found: ${sessionId}`);
     }
+    this.assertSessionOwnership(sessionId, session.userId, currentUser);
 
     const currentScore = session.readinessScore ? Number(session.readinessScore) : 0;
 
@@ -811,9 +863,12 @@ export class ScoringEngineService {
   /**
    * Get dimension-level benchmark comparison
    */
-  async getDimensionBenchmarks(sessionId: string): Promise<DimensionBenchmarkResult[]> {
+  async getDimensionBenchmarks(
+    sessionId: string,
+    currentUser?: AuthenticatedUser,
+  ): Promise<DimensionBenchmarkResult[]> {
     // First calculate current score to get dimension residuals
-    const currentResult = await this.calculateScore({ sessionId });
+    const currentResult = await this.calculateScore({ sessionId }, currentUser);
 
     // Get industry averages per dimension from completed sessions' response data
     const dimensionAverages = await this.prisma.$queryRaw<
