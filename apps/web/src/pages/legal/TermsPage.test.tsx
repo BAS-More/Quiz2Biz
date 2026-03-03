@@ -182,7 +182,7 @@ describe('TermsPage', () => {
   });
 
   describe('Navigation Links', () => {
-    it('renders navigation links in footer', () => {
+    it('renders navigation links in main content area', () => {
       renderTermsPage();
 
       // "Privacy Policy" appears in both section content and link list.
