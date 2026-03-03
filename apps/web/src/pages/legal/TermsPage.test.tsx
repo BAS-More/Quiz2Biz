@@ -169,6 +169,10 @@ describe('TermsPage', () => {
       expect(screen.getByText(/Address:\s*123 Business Park,\s*Suite 100/)).toBeInTheDocument();
       expect(screen.getByText(/Technology City,\s*TC 12345/)).toBeInTheDocument();
       const addressBlock = screen.getByText('Quiz2Biz Legal Team').closest('address');
+      expect(addressBlock).not.toBeNull();
+      if (!addressBlock) {
+        throw new Error('Expected contact address block to exist');
+      }
       expect(addressBlock).toHaveTextContent(/United States/);
 
       // Email should be a link
