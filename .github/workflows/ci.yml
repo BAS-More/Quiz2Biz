@@ -9,6 +9,10 @@ on:
     branches:
       - develop
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -18,7 +22,7 @@ env:
 jobs:
   lint-and-format:
     name: Lint and Format Check
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/') && !startsWith(github.head_ref, 'claude/') && !startsWith(github.head_ref, 'cursor/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -53,7 +57,7 @@ jobs:
 
   test-api:
     name: API Tests
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/') && !startsWith(github.head_ref, 'claude/') && !startsWith(github.head_ref, 'cursor/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -133,7 +137,7 @@ jobs:
 
   test-web:
     name: Web Tests
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/') && !startsWith(github.head_ref, 'claude/') && !startsWith(github.head_ref, 'cursor/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -173,7 +177,7 @@ jobs:
 
   test-regression:
     name: Regression Tests
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/') && !startsWith(github.head_ref, 'claude/') && !startsWith(github.head_ref, 'cursor/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -236,7 +240,7 @@ jobs:
 
   test-e2e:
     name: E2E Tests
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/') && !startsWith(github.head_ref, 'claude/') && !startsWith(github.head_ref, 'cursor/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -322,7 +326,7 @@ jobs:
 
   build:
     name: Build Application
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/') && !startsWith(github.head_ref, 'claude/') && !startsWith(github.head_ref, 'cursor/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -370,7 +374,7 @@ jobs:
 
   docker-build-test:
     name: Docker Build Test
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/') && !startsWith(github.head_ref, 'claude/') && !startsWith(github.head_ref, 'cursor/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -404,7 +408,7 @@ jobs:
 
   security-scan:
     name: Security Scan
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/') && !startsWith(github.head_ref, 'claude/') && !startsWith(github.head_ref, 'cursor/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -447,7 +451,7 @@ jobs:
 
   automation-smoke:
     name: Automation Branch Smoke Check
-    if: github.actor == 'dependabot[bot]' || startsWith(github.head_ref, 'dependabot/') || startsWith(github.head_ref, 'alert-autofix-') || startsWith(github.head_ref, 'copilot/') || startsWith(github.head_ref, 'qoder/')
+    if: github.actor == 'dependabot[bot]' || startsWith(github.head_ref, 'dependabot/') || startsWith(github.head_ref, 'alert-autofix-') || startsWith(github.head_ref, 'copilot/') || startsWith(github.head_ref, 'qoder/') || startsWith(github.head_ref, 'claude/') || startsWith(github.head_ref, 'cursor/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
