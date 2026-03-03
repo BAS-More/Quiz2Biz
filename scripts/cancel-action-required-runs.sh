@@ -79,10 +79,10 @@ while IFS= read -r RUN_ID; do
     if [ -n "$RUN_ID" ]; then
         if gh run cancel "$RUN_ID" 2>/dev/null; then
             echo -e "${GREEN}✓ Cancelled run $RUN_ID${NC}"
-            ((CANCELLED_COUNT++))
+            ((++CANCELLED_COUNT))
         else
             echo -e "${RED}✗ Failed to cancel run $RUN_ID${NC}"
-            ((FAILED_COUNT++))
+            ((++FAILED_COUNT))
         fi
     fi
 done <<< "$RUN_IDS"
