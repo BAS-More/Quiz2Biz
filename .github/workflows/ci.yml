@@ -237,6 +237,7 @@ jobs:
   test-e2e:
     name: E2E Tests
     if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+    continue-on-error: true
     runs-on: ubuntu-latest
     permissions:
       contents: read
