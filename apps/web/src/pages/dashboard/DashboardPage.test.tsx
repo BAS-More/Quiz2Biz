@@ -108,7 +108,8 @@ describe('DashboardPage', () => {
     const highestScoreCard = highestScoreLabel.closest('.group');
 
     expect(highestScoreLabel).toBeInTheDocument();
-    expect(highestScoreCard).toHaveTextContent('92%');
+    expect(highestScoreCard).not.toBeNull();
+    expect(highestScoreCard as HTMLElement).toHaveTextContent('92%');
   });
 
   it('navigates to idea capture on New Project click', async () => {
