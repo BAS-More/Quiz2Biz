@@ -358,8 +358,8 @@ jobs:
       - name: Check build artifacts
         run: |
           echo "Checking build artifacts..."
-          if [ ! -d "apps/api/dist" ]; then
-            echo "❌ API build failed - apps/api/dist not found"
+          if [ ! -d "dist/apps/api" ] && [ ! -d "apps/api/dist" ]; then
+            echo "❌ API build failed - no dist output found"
             exit 1
           fi
           if [ ! -d "apps/web/dist" ]; then
