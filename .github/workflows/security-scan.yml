@@ -178,31 +178,70 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      security-events: write
-      actions: read
-
-    strategy:
-      fail-fast: false
-      matrix:
-        language: ['javascript']
+      checks: read
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+      - name: Verify default CodeQL checks
+        uses: actions/github-script@v7
         with:
-          languages: ${{ matrix.language }}
-          queries: security-and-quality
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const ref = context.payload.pull_request?.head?.sha || context.sha;
+            const timeoutSeconds = 15 * 60;
+            const intervalMs = 15000;
+            const start = Date.now();
+            const okConclusions = new Set(["success", "neutral", "skipped"]);
+            const matchesCodeqlCheck = (name) => /^Analyze \(/.test(name) || name === "CodeQL";
 
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+            while ((Date.now() - start) / 1000 < timeoutSeconds) {
+              const allRuns = await github.paginate(github.rest.checks.listForRef, {
+                owner,
+                repo,
+                ref,
+                per_page: 100,
+              });
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-        with:
-          category: '/language:${{ matrix.language }}'
+              const codeqlRuns = allRuns.filter((run) => matchesCodeqlCheck(run.name));
+              if (codeqlRuns.length === 0) {
+                core.info("No default CodeQL checks found yet. Waiting...");
+                await new Promise((resolve) => setTimeout(resolve, intervalMs));
+                continue;
+              }
+
+              const failing = codeqlRuns.filter(
+                (run) => run.status === "completed" && !okConclusions.has(run.conclusion || ""),
+              );
+              if (failing.length > 0) {
+                core.setFailed(
+                  `Default CodeQL checks failed: ${failing
+                    .map((run) => `${run.name}=${run.conclusion}`)
+                    .join(", ")}`,
+                );
+                return;
+              }
+
+              const pending = codeqlRuns.filter((run) => run.status !== "completed");
+              if (pending.length === 0) {
+                core.info(
+                  `Default CodeQL checks completed successfully: ${codeqlRuns
+                    .map((run) => `${run.name}=${run.conclusion}`)
+                    .join(", ")}`,
+                );
+                return;
+              }
+
+              core.info(
+                `Waiting for default CodeQL checks to complete: ${pending
+                  .map((run) => run.name)
+                  .join(", ")}`,
+              );
+              await new Promise((resolve) => setTimeout(resolve, intervalMs));
+            }
+
+            core.setFailed(
+              "Timed out waiting for default CodeQL checks. Ensure default setup is enabled and running.",
+            );
   secrets-scan:
     name: secrets-scan
     runs-on: ubuntu-latest
