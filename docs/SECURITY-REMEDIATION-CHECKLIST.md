@@ -1,6 +1,6 @@
 # Security and Reliability Remediation Checklist
 
-## Phase P0 (in progress)
+## Phase P0 (completed)
 
 - [x] P0-A: Standardize authenticated user identity usage in OAuth controller (`user.id` instead of mixed `sub/userId`)
 - [x] P0-A: Protect payment checkout and portal endpoints with JWT auth
