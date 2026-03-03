@@ -1,5 +1,8 @@
 name: Code Coverage Gate
 
+# Code coverage validation for pull requests
+# Ensures minimum coverage thresholds are met before merging
+
 on:
   pull_request:
     branches:
