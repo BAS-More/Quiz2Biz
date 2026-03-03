@@ -1,0 +1,29 @@
+# Dependencies and build artifacts
+node_modules/
+**/node_modules/
+dist/
+build/
+coverage/
+.turbo/
+.next/
+
+# Test and generated reports
+playwright-report/
+e2e/reports/
+test-results/
+*.lcov
+
+# Large local snapshots and wiki exports
+.snapshots/
+.qoder/repowiki/
+
+# Secrets and local environment files
+.env
+.env.*
+azure-credentials*.txt
+
+# Logs and temporary files
+logs/
+*.log
+tmp/
+temp/

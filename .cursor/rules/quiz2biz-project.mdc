@@ -1,0 +1,43 @@
+---
+description: Quiz2Biz repository standards and workflow guardrails.
+alwaysApply: true
+---
+
+# Quiz2Biz project rule
+
+Use these guardrails for all edits in this repository.
+
+## Core workflow
+
+- Read and follow:
+  - `CLAUDE.md`
+  - `.avi-os-SKILL.md`
+  - `.avi-os-coding-quality-SKILL.md`
+- Prefer complete dependency and failure-point review before making changes.
+- Implement and validate in one coherent pass (not trial-and-error patching).
+
+## Architecture and contracts
+
+- API routes must stay under `/api/v1/...`.
+- Keep frontend/backend request and response contracts in parity.
+- Apply project-type-aware data behavior where required by specs.
+- Keep deferred legacy modules hidden from default V1 flow:
+  - Evidence Registry
+  - Decision Log
+  - Policy Pack
+  - QPG prompt generation
+  - 95 percent readiness gate
+
+## Quality and security
+
+- TypeScript strict mode; avoid `any`.
+- No hardcoded secrets, keys, passwords, or tokens.
+- Validate and sanitize all external input.
+- Use parameterized database access only.
+- Include structured error handling and avoid leaking internals.
+
+## Delivery expectations
+
+- Update code, tests, and docs together when scope requires it.
+- Prefer small, focused changes with clear validation evidence.
+- Keep shell scripts LF-only line endings.
