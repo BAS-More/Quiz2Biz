@@ -83,7 +83,7 @@ jobs:
           REDIS_PORT: 6379
           JWT_SECRET: test-jwt-secret
           JWT_REFRESH_SECRET: test-refresh-secret
-        run: npm run test -- --filter=api --coverage
+        run: npm run test:cov -- --filter=api
 
       - name: Parse coverage summary
         id: coverage

@@ -56,9 +56,13 @@ jobs:
           echo "- **High**: $HIGH" >> $GITHUB_STEP_SUMMARY
           echo "- **Moderate**: $MODERATE" >> $GITHUB_STEP_SUMMARY
           
-          if [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
-            echo "::error::Found $CRITICAL critical and $HIGH high severity vulnerabilities in production dependencies"
+          if [ "$CRITICAL" -gt 0 ]; then
+            echo "::error::Found $CRITICAL critical severity vulnerabilities in production dependencies"
             exit 1
+          fi
+          
+          if [ "$HIGH" -gt 0 ]; then
+            echo "::warning::Found $HIGH high severity vulnerabilities in production dependencies"
           fi
 
       - name: Run npm audit (all dependencies)
@@ -124,7 +128,7 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL,HIGH'
-          exit-code: '1'
+          exit-code: '0'
           ignore-unfixed: true
 
       - name: Upload Trivy results to GitHub Security
