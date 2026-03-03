@@ -37,7 +37,11 @@ echo -e "${YELLOW}Checking for workflow runs with status 'action_required'...${N
 echo ""
 
 # Get the list of action_required run IDs
-RUN_IDS=$(gh run list --status action_required --limit 50 --json databaseId --jq '.[].databaseId')
+if ! RUN_IDS=$(gh run list --status action_required --limit 50 --json databaseId --jq '.[].databaseId'); then
+    echo -e "${RED}Error: Failed to list workflow runs with status 'action_required'.${NC}"
+    echo -e "${YELLOW}Ensure you are in a Git repository with GitHub Actions enabled and that you have sufficient permissions, then try again.${NC}"
+    exit 1
+fi
 
 # Check if there are any runs to cancel
 if [ -z "$RUN_IDS" ]; then
