@@ -81,7 +81,7 @@ Repository: `Avi-Bendetsky/Quiz-to-build`
 
 ### A) PR Size Check permission failures (403)
 - [ ] Update `.github/workflows/pr-size-check.yml` in each affected branch to include:
-  - [ ] `permissions: { contents: read, issues: write, pull-requests: write }`
+  - [ ] `permissions: { contents: read, issues: write, pull-requests: read }`
 - [ ] Re-validate target PR numbers are still open before rerunning workflows.
 - [ ] Re-run failed PR Size workflows on PRs `#73, #77, #78, #81, #97`.
 - [ ] Verify logs no longer show `Resource not accessible by integration`.
