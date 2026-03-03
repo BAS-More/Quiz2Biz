@@ -15,7 +15,7 @@ Repository: `Avi-Bendetsky/Quiz-to-build`
 
 2. **Lockfile mismatch blocks installs in CI**
    - Evidence: run `22613405221`, job `65520423044`; run `22600100431`, job `65479744838`
-   - Error: `npm ci` fails (`minimatch@9.0.8` vs `9.0.9`, missing `brace-expansion@2.0.2`, `balanced-match@1.0.2`).
+   - Error: `npm ci` fails (`minimatch@9.0.8` vs `9.0.9`, missing `brace-expansion`, `balanced-match@1.0.2`).
    - Root cause: `package-lock.json` not synchronized with `package.json` in affected PR branches.
 
 3. **Security scan container job configuration failure**
