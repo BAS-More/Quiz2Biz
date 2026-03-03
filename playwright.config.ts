@@ -115,7 +115,7 @@ export default defineConfig({
             command: process.env.CI
               ? 'node dist/apps/api/main.js'
               : 'cd apps/api && npm run start:dev',
-            url: 'http://localhost:3000/health',
+            url: 'http://localhost:3000/api/v1/health/live',
             reuseExistingServer: !process.env.CI,
             timeout: 120000,
             env: {
