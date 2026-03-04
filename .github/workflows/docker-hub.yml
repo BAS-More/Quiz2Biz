@@ -51,8 +51,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           target: production
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=docker-${{ github.ref }}
+          cache-to: type=gha,mode=max,scope=docker-${{ github.ref }}
           provenance: true
           sbom: true
 

@@ -116,8 +116,8 @@ jobs:
           load: true
           tags: quiz-api:scan
           target: production
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=docker-${{ github.ref }}
+          cache-to: type=gha,mode=max,scope=docker-${{ github.ref }}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
