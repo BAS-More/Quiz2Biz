@@ -7,7 +7,7 @@ Use this guide to add and use this repository in Cursor quickly.
 ### Option A: repository already cloned locally
 1. Open Cursor.
 2. Select **File -> Open Folder...**
-3. Choose your local `Quiz-to-build` repository directory.
+3. Choose your local repository directory (the folder where you cloned this repo).
 
 ### Option B: clone directly from Cursor
 1. Open Cursor.
