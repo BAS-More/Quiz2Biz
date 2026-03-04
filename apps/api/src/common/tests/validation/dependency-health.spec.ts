@@ -132,7 +132,7 @@ describe('Dependency Health Validation', () => {
       for (const { pkg } of packages) {
         const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
         for (const version of Object.values(allDeps)) {
-          if (typeof version === 'string' && (version.startsWith('^') || version.startsWith('~'))) {
+          if (version.startsWith('^') || version.startsWith('~')) {
             hasVersionRanges = true;
             break;
           }

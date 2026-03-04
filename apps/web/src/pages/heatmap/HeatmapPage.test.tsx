@@ -2,29 +2,15 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { HeatmapPage } from './HeatmapPage';
-import * as questionnaireModule from '../../api/questionnaire';
+import { questionnaireApi } from '../../api/questionnaire';
 
-// Mock the API module
+// Mock the API
 vi.mock('../../api/questionnaire', () => ({
   questionnaireApi: {
     getHeatmap: vi.fn(),
     getHeatmapDrilldown: vi.fn(),
   },
 }));
-
-// Mock react-router-dom hooks
-const mockNavigate = vi.fn();
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate,
-  };
-});
-
-// Get typed mock references
-const mockGetHeatmap = vi.mocked(questionnaireModule.questionnaireApi.getHeatmap);
-const mockGetHeatmapDrilldown = vi.mocked(questionnaireModule.questionnaireApi.getHeatmapDrilldown);
 
 describe('HeatmapPage', () => {
   const mockHeatmapData = {
@@ -180,11 +166,8 @@ describe('HeatmapPage', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockNavigate.mockClear();
-    mockGetHeatmap.mockReset();
-    mockGetHeatmapDrilldown.mockReset();
-    mockGetHeatmap.mockResolvedValue(mockHeatmapData);
-    mockGetHeatmapDrilldown.mockResolvedValue(mockDrilldownData);
+    vi.mocked(questionnaireApi.getHeatmap).mockResolvedValue(mockHeatmapData);
+    vi.mocked(questionnaireApi.getHeatmapDrilldown).mockResolvedValue(mockDrilldownData);
   });
 
   afterEach(() => {
@@ -205,7 +188,7 @@ describe('HeatmapPage', () => {
   describe('Loading State', () => {
     it('shows loading state initially', () => {
       // Make the API call pending
-      mockGetHeatmap.mockImplementation(() => new Promise(() => {}));
+      vi.mocked(questionnaireApi.getHeatmap).mockImplementation(() => new Promise(() => {}));
 
       renderHeatmapPage();
 
@@ -213,7 +196,7 @@ describe('HeatmapPage', () => {
     });
 
     it('shows error state when API fails', async () => {
-      mockGetHeatmap.mockRejectedValue(new Error('Failed to load heatmap'));
+      vi.mocked(questionnaireApi.getHeatmap).mockRejectedValue(new Error('Failed to load heatmap'));
 
       renderHeatmapPage();
 
@@ -230,7 +213,7 @@ describe('HeatmapPage', () => {
           },
         },
       };
-      mockGetHeatmap.mockRejectedValue(apiError);
+      vi.mocked(questionnaireApi.getHeatmap).mockRejectedValue(apiError);
 
       renderHeatmapPage();
 
@@ -334,7 +317,7 @@ describe('HeatmapPage', () => {
           overallRiskScore: 6.8,
         },
       };
-      mockGetHeatmap.mockResolvedValue(highRiskData);
+      vi.mocked(questionnaireApi.getHeatmap).mockResolvedValue(highRiskData);
 
       renderHeatmapPage();
 
@@ -361,7 +344,11 @@ describe('HeatmapPage', () => {
       fireEvent.click(securityHighCell);
 
       await waitFor(() => {
-        expect(mockGetHeatmapDrilldown).toHaveBeenCalledWith('session-123', 'security', 'High');
+        expect(questionnaireApi.getHeatmapDrilldown).toHaveBeenCalledWith(
+          'session-123',
+          'security',
+          'High',
+        );
       });
     });
 
@@ -423,7 +410,9 @@ describe('HeatmapPage', () => {
     });
 
     it('handles drilldown API error gracefully', async () => {
-      mockGetHeatmapDrilldown.mockRejectedValue(new Error('Drilldown failed'));
+      vi.mocked(questionnaireApi.getHeatmapDrilldown).mockRejectedValue(
+        new Error('Drilldown failed'),
+      );
 
       renderHeatmapPage();
 
@@ -479,19 +468,15 @@ describe('HeatmapPage', () => {
 
   describe('Edge Cases', () => {
     it('handles missing session ID gracefully', () => {
-      // Render without sessionId in route
       render(
-        <MemoryRouter initialEntries={['/heatmap/']}>
+        <MemoryRouter initialEntries={['/heatmap']}>
           <Routes>
-            <Route path="/heatmap/" element={<HeatmapPage />} />
-            <Route path="/heatmap/:sessionId" element={<HeatmapPage />} />
-            <Route path="/dashboard" element={<div>Dashboard</div>} />
+            <Route path="/heatmap" element={<HeatmapPage />} />
           </Routes>
         </MemoryRouter>,
       );
 
-      // Should not make API call and should not crash
-      expect(mockGetHeatmap).not.toHaveBeenCalled();
+      expect(questionnaireApi.getHeatmap).not.toHaveBeenCalled();
     });
 
     it('handles empty heatmap data', async () => {
@@ -508,7 +493,7 @@ describe('HeatmapPage', () => {
         severityBuckets: [],
         cells: [],
       };
-      mockGetHeatmap.mockResolvedValue(emptyHeatmapData);
+      vi.mocked(questionnaireApi.getHeatmap).mockResolvedValue(emptyHeatmapData);
 
       renderHeatmapPage();
 
@@ -516,9 +501,9 @@ describe('HeatmapPage', () => {
         expect(screen.getByText('Gap Heatmap')).toBeInTheDocument();
       });
 
-      // Should show zero values - use getAllByText since there are multiple 0s (totalCells, green, amber, red, critical)
-      const zeros = screen.getAllByText('0');
-      expect(zeros.length).toBeGreaterThan(0);
+      // Should show zero values in summary cards
+      const zeroCells = screen.getAllByText('0');
+      expect(zeroCells.length).toBeGreaterThanOrEqual(1);
       expect(screen.getByText('Overall Risk Score:')).toBeInTheDocument();
       expect(screen.getByText('0.00')).toBeInTheDocument();
     });

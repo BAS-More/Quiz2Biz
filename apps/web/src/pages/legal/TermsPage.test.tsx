@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { TermsPage } from './TermsPage';
 
@@ -91,9 +91,8 @@ describe('TermsPage', () => {
 
       // Section 7: Data and Privacy
       expect(screen.getByText('7. Data and Privacy')).toBeInTheDocument();
-      // Privacy Policy appears multiple times (in section 7 and footer)
-      const privacyPolicyLinks = screen.getAllByText('Privacy Policy');
-      expect(privacyPolicyLinks.length).toBeGreaterThanOrEqual(1);
+      // "Privacy Policy" appears in both the section 7 content link and footer link
+      expect(screen.getAllByText('Privacy Policy').length).toBeGreaterThanOrEqual(2);
 
       // Section 8: Service Availability
       expect(screen.getByText('8. Service Availability')).toBeInTheDocument();
@@ -198,12 +197,12 @@ describe('TermsPage', () => {
       // Should show contact section
       expect(screen.getByText('Quiz2Biz Legal Team')).toBeInTheDocument();
       expect(screen.getByText('legal@quiz2biz.com')).toBeInTheDocument();
-      // Address is rendered with br tags splitting the text
-      expect(screen.getByText(/123 Business Park, Suite 100/)).toBeInTheDocument();
-      expect(screen.getByText(/Technology City, TC 12345/)).toBeInTheDocument();
-      // "United States" appears multiple times (in address and potentially in legal text)
-      const usElements = screen.getAllByText(/United States/);
-      expect(usElements.length).toBeGreaterThanOrEqual(1);
+      // Address text nodes are within the <address> element, not standalone elements
+      const address = screen.getByText('Quiz2Biz Legal Team').closest('address');
+      expect(address).toBeInTheDocument();
+      expect(address?.textContent).toContain('123 Business Park, Suite 100');
+      expect(address?.textContent).toContain('Technology City, TC 12345');
+      expect(address?.textContent).toContain('United States');
 
       // Email should be a link
       const emailLink = screen.getByText('legal@quiz2biz.com').closest('a');
@@ -215,24 +214,21 @@ describe('TermsPage', () => {
     it('renders navigation links in footer', () => {
       renderTermsPage();
 
-      // Should show Privacy Policy link - multiple exist, get footer one via getAllByText
+      // Should show Privacy Policy link (multiple exist: content link + footer link)
       const privacyLinks = screen.getAllByText('Privacy Policy');
       expect(privacyLinks.length).toBeGreaterThanOrEqual(1);
-      // At least one should have the correct href
-      const privacyLinkWithHref = privacyLinks.find(
-        (el) => el.closest('a')?.getAttribute('href') === '/privacy',
-      );
-      expect(privacyLinkWithHref).toBeTruthy();
+      const footerPrivacyLink = privacyLinks[privacyLinks.length - 1];
+      expect(footerPrivacyLink.closest('a')).toHaveAttribute('href', '/privacy');
 
       // Should show Sign In link
       const signInLink = screen.getByText('Sign In');
       expect(signInLink).toBeInTheDocument();
-      expect(signInLink.closest('a')).toHaveAttribute('href', '/auth/login');
+      expect(signInLink).toHaveAttribute('href', '/auth/login');
 
       // Should show Create Account link
       const registerLink = screen.getByText('Create Account');
       expect(registerLink).toBeInTheDocument();
-      expect(registerLink.closest('a')).toHaveAttribute('href', '/auth/register');
+      expect(registerLink).toHaveAttribute('href', '/auth/register');
 
       // Should show separator pipes
       const separators = screen.getAllByText('|', { selector: 'span' });
@@ -242,13 +238,10 @@ describe('TermsPage', () => {
     it('renders link to Privacy Policy within content', () => {
       renderTermsPage();
 
-      // Privacy Policy link appears multiple times, get all and check at least one has href
-      const privacyLinks = screen.getAllByText('Privacy Policy');
+      // Multiple "Privacy Policy" text elements exist; the first is the inline content link
+      const privacyLinks = screen.getAllByRole('link', { name: 'Privacy Policy' });
       expect(privacyLinks.length).toBeGreaterThanOrEqual(1);
-      const linkWithHref = privacyLinks.find(
-        (el) => el.closest('a')?.getAttribute('href') === '/privacy',
-      );
-      expect(linkWithHref).toBeTruthy();
+      expect(privacyLinks[0]).toHaveAttribute('href', '/privacy');
     });
   });
 
@@ -291,8 +284,8 @@ describe('TermsPage', () => {
       renderTermsPage();
 
       // Should use proper heading hierarchy
-      const h1 = screen.getByRole('heading', { level: 1 });
-      expect(h1).toHaveTextContent('Terms of Service');
+      const h1 = screen.getByText('Terms of Service');
+      expect(h1.tagName).toBe('H1');
 
       // Section headings should be H2
       const h2Elements = screen.getAllByRole('heading', { level: 2 });
@@ -312,16 +305,16 @@ describe('TermsPage', () => {
     it('renders content with proper formatting', () => {
       renderTermsPage();
 
-      // Should render strong text (Quiz2Biz Legal Team is in strong tag)
+      // Should render strong text (actual TermsPage content)
       expect(screen.getByText('Quiz2Biz Legal Team')).toBeInTheDocument();
 
       // Should render lists properly
       const listItems = screen.getAllByRole('listitem');
-      expect(listItems.length).toBeGreaterThan(30); // Should have many list items
+      expect(listItems.length).toBeGreaterThan(30);
 
-      // Lists exist and have content
-      const lists = screen.getAllByRole('list');
-      expect(lists.length).toBeGreaterThan(5); // Should have multiple lists
+      // Should render paragraphs
+      const paragraphs = screen.getAllByRole('paragraph');
+      expect(paragraphs.length).toBeGreaterThan(20);
     });
   });
 
@@ -334,16 +327,14 @@ describe('TermsPage', () => {
 
       // Should have proper heading structure
       expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
-      // Multiple h2 elements exist
-      const h2Elements = screen.getAllByRole('heading', { level: 2 });
-      expect(h2Elements.length).toBeGreaterThan(0);
+      expect(screen.getAllByRole('heading', { level: 2 }).length).toBeGreaterThan(0);
 
       // Should have sufficient color contrast (visual check)
       // This would be tested with axe or similar tools in practice
 
-      // Should have focusable elements (at least 5 links for navigation)
+      // Should have focusable elements
       const links = screen.getAllByRole('link');
-      expect(links.length).toBeGreaterThanOrEqual(5);
+      expect(links.length).toBeGreaterThan(5);
 
       // Should have proper landmark roles
       expect(screen.getByRole('main')).toBeInTheDocument();
@@ -366,12 +357,12 @@ describe('TermsPage', () => {
     it('includes key legal clauses', () => {
       renderTermsPage();
 
-      // Should include disclaimer of warranties in all caps (partial match for longer text)
+      // Should include disclaimer of warranties in all caps
       expect(
         screen.getByText(/THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE"/),
       ).toBeInTheDocument();
 
-      // Should include limitation of liability in all caps (partial match)
+      // Should include limitation of liability in all caps
       expect(
         screen.getByText(/TO THE MAXIMUM EXTENT PERMITTED BY LAW, QUIZ2BIZ SHALL NOT BE LIABLE/),
       ).toBeInTheDocument();

@@ -162,13 +162,12 @@ describe('CardHeader', () => {
     expect(screen.getByTestId('star-icon')).toBeInTheDocument();
     expect(screen.getByText('Click Me')).toBeInTheDocument();
 
-    // Check layout structure by examining the parent container
-    // Navigate from title -> wrapper div -> inner flex div -> outer flex div (justify-between)
-    const outerContainer = screen.getByText('Complete Header').closest('div')
+    // Check layout structure: h3 -> text wrapper div -> left-side div -> root flex container
+    const container = screen.getByText('Complete Header').closest('div')
       ?.parentElement?.parentElement;
-    expect(outerContainer).toHaveClass('flex');
-    expect(outerContainer).toHaveClass('items-center');
-    expect(outerContainer).toHaveClass('justify-between');
-    expect(outerContainer).toHaveClass('mb-4');
+    expect(container).toHaveClass('flex');
+    expect(container).toHaveClass('items-center');
+    expect(container).toHaveClass('justify-between');
+    expect(container).toHaveClass('mb-4');
   });
 });

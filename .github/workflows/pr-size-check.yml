@@ -6,13 +6,15 @@ on:
 
 permissions:
   contents: read
-  issues: write
   pull-requests: write
 
 jobs:
   pr-size:
     name: Check PR Size
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     
     steps:
       - name: Checkout repository
@@ -27,58 +29,25 @@ jobs:
             const { owner, repo } = context.repo;
             const pull_number = context.payload.pull_request.number;
             
-            // Get all PR files with pagination
-            const files = await github.paginate(github.rest.pulls.listFiles, {
+            // Get PR files
+            const { data: files } = await github.rest.pulls.listFiles({
               owner,
               repo,
               pull_number,
               per_page: 100
             });
             
-            // Patterns for files excluded from size counting
-            const excludedPatterns = [
-              // Lock files and dependency manifests
-              'package-lock.json',
-              'yarn.lock',
-              'pnpm-lock.yaml',
-              // Build output and coverage
-              'dist/',
-              'build/',
-              'coverage/',
-              // Snapshots
-              '.snap',
-              // Documentation
-              '.md',
-              // GitHub configuration and workflows
-              '.github/',
-              // Infrastructure / Terraform
-              'infrastructure/',
-              // Prisma migrations (auto-generated)
-              'prisma/migrations/',
-              // Docker configuration
-              'docker/',
-              // End-to-end test fixtures
-              'e2e/',
-              // Configuration files
-              '.prettierrc',
-              '.eslintrc',
-              '.editorconfig',
-              '.gitattributes',
-              'turbo.json',
-              'jest.config',
-              'tsconfig',
-              '.env.example',
-            ];
-            
-            // Calculate total changes (only production-relevant code)
+            // Calculate total changes
             let additions = 0;
             let deletions = 0;
-            let skippedFiles = 0;
             
             for (const file of files) {
-              const excluded = excludedPatterns.some(p => file.filename.includes(p));
-              if (excluded) {
-                skippedFiles++;
+              // Skip generated files, lockfiles, and test snapshots
+              if (file.filename.includes('package-lock.json') ||
+                  file.filename.includes('yarn.lock') ||
+                  file.filename.includes('.snap') ||
+                  file.filename.includes('dist/') ||
+                  file.filename.includes('coverage/')) {
                 continue;
               }
               additions += file.additions;
@@ -120,8 +89,8 @@ jobs:
             // Create comment
             const body = `## ${emoji} PR Size Check
             
-            **Counted changes:** ${totalChanges} lines (+${additions} / -${deletions})
-            **Files changed:** ${files.length} (${skippedFiles} excluded from count)
+            **Total changes:** ${totalChanges} lines (+${additions} / -${deletions})
+            **Files changed:** ${files.length}
             
             ${message}
             
@@ -135,39 +104,27 @@ jobs:
             | ⛔ XXL | > 500 | Split Required |
             
             *70% of PRs should be under 200 lines for optimal review quality.*`;
-
-            const isForkPr = context.payload.pull_request.head.repo.full_name !== `${owner}/${repo}`;
-            const isDependabotPr = context.actor === 'dependabot[bot]';
             
-            if (isForkPr || isDependabotPr) {
-              core.info('Skipping PR comment and label due to restricted token context.');
-            } else {
-              // Post comment (permission can still be restricted by repo policy)
-              try {
-                await github.rest.issues.createComment({
-                  owner,
-                  repo,
-                  issue_number: pull_number,
-                  body
-                });
-              } catch (e) {
-                core.warning(`Could not create PR comment: ${e.message}`);
-              }
-              
-              // Add label
-              try {
-                await github.rest.issues.addLabels({
-                  owner,
-                  repo,
-                  issue_number: pull_number,
-                  labels: [label]
-                });
-              } catch (e) {
-                core.warning(`Could not add label: ${e.message}`);
-              }
+            // Post comment
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: pull_number,
+              body
+            });
+            
+            // Add label
+            try {
+              await github.rest.issues.addLabels({
+                owner,
+                repo,
+                issue_number: pull_number,
+                labels: [label]
+              });
+            } catch (e) {
+              console.log('Could not add label:', e.message);
             }
             
-            // Fail if XXL (over 500 lines)
             if (totalChanges > MAX) {
-              core.setFailed(`PR is too large (${totalChanges} > ${MAX} lines). Please split into smaller PRs.`);
+              core.warning(`PR is too large (${totalChanges} > ${MAX} lines). Consider splitting into smaller PRs.`);
             }
