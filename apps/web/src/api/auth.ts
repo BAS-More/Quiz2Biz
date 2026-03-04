@@ -35,7 +35,9 @@ export const authApi = {
    * Logout and invalidate refresh token
    */
   logout: async (refreshToken: string): Promise<MessageResponse> => {
-    const { data } = await apiClient.post<MessageResponse>(`${AUTH_PREFIX}/logout`, { refreshToken });
+    const { data } = await apiClient.post<MessageResponse>(`${AUTH_PREFIX}/logout`, {
+      refreshToken,
+    });
     return data;
   },
 
@@ -43,7 +45,9 @@ export const authApi = {
    * Verify email with token
    */
   verifyEmail: async (token: string): Promise<VerifyEmailResponse> => {
-    const { data } = await apiClient.post<VerifyEmailResponse>(`${AUTH_PREFIX}/verify-email`, { token });
+    const { data } = await apiClient.post<VerifyEmailResponse>(`${AUTH_PREFIX}/verify-email`, {
+      token,
+    });
     return data;
   },
 
@@ -51,7 +55,9 @@ export const authApi = {
    * Resend verification email
    */
   resendVerification: async (email: string): Promise<MessageResponse> => {
-    const { data } = await apiClient.post<MessageResponse>(`${AUTH_PREFIX}/resend-verification`, { email });
+    const { data } = await apiClient.post<MessageResponse>(`${AUTH_PREFIX}/resend-verification`, {
+      email,
+    });
     return data;
   },
 
@@ -59,7 +65,9 @@ export const authApi = {
    * Request password reset email
    */
   forgotPassword: async (email: string): Promise<MessageResponse> => {
-    const { data } = await apiClient.post<MessageResponse>(`${AUTH_PREFIX}/forgot-password`, { email });
+    const { data } = await apiClient.post<MessageResponse>(`${AUTH_PREFIX}/forgot-password`, {
+      email,
+    });
     return data;
   },
 
@@ -67,7 +75,10 @@ export const authApi = {
    * Reset password with token
    */
   resetPassword: async (payload: PasswordResetPayload): Promise<MessageResponse> => {
-    const { data } = await apiClient.post<MessageResponse>(`${AUTH_PREFIX}/reset-password`, payload);
+    const { data } = await apiClient.post<MessageResponse>(
+      `${AUTH_PREFIX}/reset-password`,
+      payload,
+    );
     return data;
   },
 

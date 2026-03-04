@@ -168,7 +168,7 @@ export class ScoringEngineService {
 
     // Calculate statistics
     const totalQuestions = questions.length;
-    const answeredQuestions = questions.filter((q: { responses: unknown[] }) => q.responses.length > 0).length;
+    const answeredQuestions = questions.filter((q) => q.responses.length > 0).length;
     const completionPercentage =
       totalQuestions > 0 ? (answeredQuestions / totalQuestions) * 100 : 0;
 
@@ -267,14 +267,17 @@ export class ScoringEngineService {
     const dimensions = await this.prisma.dimensionCatalog.findMany({
       where: { isActive: true },
     });
-    const dimensionWeightMap = new Map(dimensions.map((d: { key: string; weight: unknown }) => [d.key, Number(d.weight)]));
+    const dimensionWeightMap = new Map(dimensions.map((d) => [d.key, Number(d.weight)]));
 
     // Calculate total severity per dimension for normalization
     const dimensionSeveritySum = new Map<string, number>();
-    questions.forEach((q: { dimensionKey: string | null; severity: unknown }) => {
+    questions.forEach((q) => {
       if (q.dimensionKey) {
         const current = dimensionSeveritySum.get(q.dimensionKey) || 0;
-        dimensionSeveritySum.set(q.dimensionKey, current + (q.severity ? Number(q.severity) : this.DEFAULT_SEVERITY));
+        dimensionSeveritySum.set(
+          q.dimensionKey,
+          current + (q.severity ? Number(q.severity) : this.DEFAULT_SEVERITY),
+        );
       }
     });
 
@@ -290,7 +293,9 @@ export class ScoringEngineService {
         continue;
       }
 
-      const severity: number = question.severity ? Number(question.severity) : this.DEFAULT_SEVERITY;
+      const severity: number = question.severity
+        ? Number(question.severity)
+        : this.DEFAULT_SEVERITY;
       const dimensionKey: string = question.dimensionKey || 'unknown';
       const dimensionWeight: number = Number(dimensionWeightMap.get(dimensionKey) ?? 0);
       const severitySum: number = Number(dimensionSeveritySum.get(dimensionKey) ?? 1);
@@ -603,19 +608,22 @@ export class ScoringEngineService {
       take: limit,
     });
 
-    const history: ScoreSnapshot[] = snapshots.length > 0
-      ? snapshots.map((s: { createdAt: Date; score: unknown; portfolioResidual: unknown; completionPercentage: unknown }) => ({
-          timestamp: s.createdAt,
-          score: Number(s.score),
-          portfolioResidual: Number(s.portfolioResidual),
-          completionPercentage: Number(s.completionPercentage),
-        }))
-      : [{
-          timestamp: session.lastScoreCalculation || session.startedAt,
-          score: currentScore,
-          portfolioResidual: 0,
-          completionPercentage: 0,
-        }];
+    const history: ScoreSnapshot[] =
+      snapshots.length > 0
+        ? snapshots.map((s) => ({
+            timestamp: s.createdAt,
+            score: Number(s.score),
+            portfolioResidual: Number(s.portfolioResidual),
+            completionPercentage: Number(s.completionPercentage),
+          }))
+        : [
+            {
+              timestamp: session.lastScoreCalculation || session.startedAt,
+              score: currentScore,
+              portfolioResidual: 0,
+              completionPercentage: 0,
+            },
+          ];
 
     // Calculate trend metrics
     const trendAnalysis = this.calculateTrendAnalysis(history);

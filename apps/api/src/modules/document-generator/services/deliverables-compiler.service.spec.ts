@@ -585,9 +585,7 @@ describe('DeliverablesCompilerService', () => {
 
   describe('branch coverage - weakDimensions.length === 0 in recommendations', () => {
     it('should generate generic recommendations when no weak dimensions', async () => {
-      const okDimensions = [
-        { key: 'dim-a', displayName: 'Dim A', weight: 1.0, score: 75 },
-      ];
+      const okDimensions = [{ key: 'dim-a', displayName: 'Dim A', weight: 1.0, score: 75 }];
 
       mockPrisma.session.findUnique.mockResolvedValue(mockSession);
       mockPrisma.response.findMany.mockResolvedValue(mockResponses);

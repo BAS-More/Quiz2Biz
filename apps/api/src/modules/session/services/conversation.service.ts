@@ -1,7 +1,9 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
-import { ConversationMessage } from '@prisma/client';
-import { ClaudeAiService, ConversationFollowUp } from '../../idea-capture/services/claude-ai.service';
+import {
+  ClaudeAiService,
+  ConversationFollowUp,
+} from '../../idea-capture/services/claude-ai.service';
 
 export interface ConversationMessageDto {
   id: string;
@@ -37,9 +39,7 @@ export class ConversationService {
   /**
    * Store a user answer and evaluate whether AI follow-up is needed.
    */
-  async processAnswerWithAi(
-    params: SubmitAnswerWithAiParams,
-  ): Promise<AnswerWithFollowUpResult> {
+  async processAnswerWithAi(params: SubmitAnswerWithAiParams): Promise<AnswerWithFollowUpResult> {
     // Store the user's answer as a conversation message
     await this.prisma.conversationMessage.create({
       data: {
@@ -76,10 +76,7 @@ export class ConversationService {
     }
 
     // Return recent conversation for this question
-    const messages = await this.getQuestionConversation(
-      params.sessionId,
-      params.questionId,
-    );
+    const messages = await this.getQuestionConversation(params.sessionId, params.questionId);
 
     return { followUp, conversationMessages: messages };
   }
@@ -114,7 +111,7 @@ export class ConversationService {
       orderBy: { createdAt: 'asc' },
     });
 
-    return messages.map((m: ConversationMessage) => this.toDto(m));
+    return messages.map((m) => this.toDto(m));
   }
 
   /**
@@ -129,7 +126,7 @@ export class ConversationService {
       orderBy: { createdAt: 'asc' },
     });
 
-    return messages.map((m: ConversationMessage) => this.toDto(m));
+    return messages.map((m) => this.toDto(m));
   }
 
   private toDto(message: {

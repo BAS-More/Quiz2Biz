@@ -369,10 +369,14 @@ export const DATA_PROTECTION_POLICY_TEMPLATE = {
    * Default values for optional fields
    */
   defaults: {
-    'individualRights.access': 'Individuals may submit a subject access request to obtain a copy of their personal data',
-    'individualRights.rectification': 'Individuals may request correction of inaccurate personal data',
-    'individualRights.erasure': 'Individuals may request deletion of personal data where no legitimate basis for retention exists',
-    'individualRights.portability': 'Individuals may request their data in a structured, machine-readable format',
+    'individualRights.access':
+      'Individuals may submit a subject access request to obtain a copy of their personal data',
+    'individualRights.rectification':
+      'Individuals may request correction of inaccurate personal data',
+    'individualRights.erasure':
+      'Individuals may request deletion of personal data where no legitimate basis for retention exists',
+    'individualRights.portability':
+      'Individuals may request their data in a structured, machine-readable format',
     'trainingAndAwareness.frequency': 'Annual mandatory training with quarterly awareness updates',
   },
 };

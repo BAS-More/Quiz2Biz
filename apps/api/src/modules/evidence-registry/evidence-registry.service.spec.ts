@@ -658,24 +658,48 @@ describe('EvidenceRegistryService', () => {
 
   describe('isValidCoverageTransition', () => {
     it('allows same-level transitions', () => {
-      expect(isValidCoverageTransition('NONE' as CoverageLevel, 'NONE' as CoverageLevel)).toBe(true);
-      expect(isValidCoverageTransition('FULL' as CoverageLevel, 'FULL' as CoverageLevel)).toBe(true);
+      expect(isValidCoverageTransition('NONE' as CoverageLevel, 'NONE' as CoverageLevel)).toBe(
+        true,
+      );
+      expect(isValidCoverageTransition('FULL' as CoverageLevel, 'FULL' as CoverageLevel)).toBe(
+        true,
+      );
     });
 
     it('allows upward transitions', () => {
-      expect(isValidCoverageTransition('NONE' as CoverageLevel, 'PARTIAL' as CoverageLevel)).toBe(true);
-      expect(isValidCoverageTransition('NONE' as CoverageLevel, 'FULL' as CoverageLevel)).toBe(true);
-      expect(isValidCoverageTransition('PARTIAL' as CoverageLevel, 'HALF' as CoverageLevel)).toBe(true);
-      expect(isValidCoverageTransition('HALF' as CoverageLevel, 'SUBSTANTIAL' as CoverageLevel)).toBe(true);
-      expect(isValidCoverageTransition('SUBSTANTIAL' as CoverageLevel, 'FULL' as CoverageLevel)).toBe(true);
+      expect(isValidCoverageTransition('NONE' as CoverageLevel, 'PARTIAL' as CoverageLevel)).toBe(
+        true,
+      );
+      expect(isValidCoverageTransition('NONE' as CoverageLevel, 'FULL' as CoverageLevel)).toBe(
+        true,
+      );
+      expect(isValidCoverageTransition('PARTIAL' as CoverageLevel, 'HALF' as CoverageLevel)).toBe(
+        true,
+      );
+      expect(
+        isValidCoverageTransition('HALF' as CoverageLevel, 'SUBSTANTIAL' as CoverageLevel),
+      ).toBe(true);
+      expect(
+        isValidCoverageTransition('SUBSTANTIAL' as CoverageLevel, 'FULL' as CoverageLevel),
+      ).toBe(true);
     });
 
     it('rejects downward transitions', () => {
-      expect(isValidCoverageTransition('FULL' as CoverageLevel, 'NONE' as CoverageLevel)).toBe(false);
-      expect(isValidCoverageTransition('FULL' as CoverageLevel, 'SUBSTANTIAL' as CoverageLevel)).toBe(false);
-      expect(isValidCoverageTransition('SUBSTANTIAL' as CoverageLevel, 'HALF' as CoverageLevel)).toBe(false);
-      expect(isValidCoverageTransition('HALF' as CoverageLevel, 'PARTIAL' as CoverageLevel)).toBe(false);
-      expect(isValidCoverageTransition('PARTIAL' as CoverageLevel, 'NONE' as CoverageLevel)).toBe(false);
+      expect(isValidCoverageTransition('FULL' as CoverageLevel, 'NONE' as CoverageLevel)).toBe(
+        false,
+      );
+      expect(
+        isValidCoverageTransition('FULL' as CoverageLevel, 'SUBSTANTIAL' as CoverageLevel),
+      ).toBe(false);
+      expect(
+        isValidCoverageTransition('SUBSTANTIAL' as CoverageLevel, 'HALF' as CoverageLevel),
+      ).toBe(false);
+      expect(isValidCoverageTransition('HALF' as CoverageLevel, 'PARTIAL' as CoverageLevel)).toBe(
+        false,
+      );
+      expect(isValidCoverageTransition('PARTIAL' as CoverageLevel, 'NONE' as CoverageLevel)).toBe(
+        false,
+      );
     });
   });
 
@@ -876,10 +900,7 @@ describe('EvidenceRegistryService', () => {
       mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
       mockPrisma.evidenceRegistry.update.mockResolvedValue({ ...mockEvidence, verified: true });
 
-      await service.verifyEvidence(
-        { evidenceId: 'evidence-123', verified: true },
-        'verifier-999',
-      );
+      await service.verifyEvidence({ evidenceId: 'evidence-123', verified: true }, 'verifier-999');
 
       // response.findFirst should NOT be called because coverageValue is undefined
       expect(mockPrisma.response.findFirst).not.toHaveBeenCalled();
@@ -1039,10 +1060,7 @@ describe('EvidenceRegistryService', () => {
 
       mockPrisma.evidenceRegistry.update.mockResolvedValue({ ...mockEvidence2, verified: true });
 
-      const result = await service.bulkVerifyEvidence(
-        ['evidence-1', 'evidence-2'],
-        'verifier-999',
-      );
+      const result = await service.bulkVerifyEvidence(['evidence-1', 'evidence-2'], 'verifier-999');
 
       expect(result.successful).toEqual(['evidence-2']);
       expect(result.failed).toHaveLength(1);
@@ -1227,9 +1245,7 @@ describe('EvidenceRegistryService', () => {
       });
 
       // containerClient is null because storage is not configured in tests
-      await expect(service.generateSignedUrl('evidence-123')).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(service.generateSignedUrl('evidence-123')).rejects.toThrow(BadRequestException);
     });
 
     it('throws BadRequestException with custom expiration', async () => {

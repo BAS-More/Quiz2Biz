@@ -322,9 +322,7 @@ describe('getDefaultGameDayConfig', () => {
   it('should have recovery time criteria', () => {
     const config = getDefaultGameDayConfig();
 
-    const recoveryTime = config.successCriteria.find(
-      (c) => c.metric === 'recovery_time_minutes',
-    );
+    const recoveryTime = config.successCriteria.find((c) => c.metric === 'recovery_time_minutes');
     expect(recoveryTime).toBeDefined();
     expect(recoveryTime?.operator).toBe('lt');
     expect(recoveryTime?.threshold).toBe(5);
@@ -378,9 +376,7 @@ describe('getSteadyStateHypotheses', () => {
 
   it('should have azure-monitor as metric provider', () => {
     const hypotheses = getSteadyStateHypotheses();
-    const metricProbes = hypotheses
-      .flatMap((h) => h.probes)
-      .filter((p) => p.type === 'metric');
+    const metricProbes = hypotheses.flatMap((h) => h.probes).filter((p) => p.type === 'metric');
 
     metricProbes.forEach((probe) => {
       expect(probe.provider.type).toBe('azure-monitor');
