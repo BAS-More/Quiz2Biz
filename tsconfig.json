@@ -28,22 +28,22 @@
         "apps/api/src/*"
       ],
       "@libs/database": [
-        "libs/database"
+        "libs/database/src"
       ],
       "@libs/database/*": [
-        "libs/database/*"
+        "libs/database/src/*"
       ],
       "@libs/redis": [
-        "libs/redis"
+        "libs/redis/src"
       ],
       "@libs/redis/*": [
-        "libs/redis/*"
+        "libs/redis/src/*"
       ],
       "@libs/shared": [
-        "libs/shared"
+        "libs/shared/src"
       ],
       "@libs/shared/*": [
-        "libs/shared/*"
+        "libs/shared/src/*"
       ],
       "@libs/orchestrator": [
         "libs/orchestrator/src/index.ts"
