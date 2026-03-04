@@ -323,7 +323,7 @@ export const DISASTER_RECOVERY_PLAN_TEMPLATE = {
     'organization-size': 'organization.size',
     'threat-analysis': 'riskAssessment.threatAnalysis',
     'impact-assessment': 'riskAssessment.impactAssessment',
-    'vulnerabilities': 'riskAssessment.vulnerabilities',
+    vulnerabilities: 'riskAssessment.vulnerabilities',
     'critical-systems': 'businessImpact.criticalSystems',
     'rto-rpo-targets': 'businessImpact.rtoRpo',
     'system-dependencies': 'businessImpact.dependencies',
@@ -345,8 +345,20 @@ export const DISASTER_RECOVERY_PLAN_TEMPLATE = {
    * Default values for optional fields
    */
   defaults: {
-    'testingAndMaintenance.testTypes': ['Tabletop exercise', 'Walkthrough test', 'Simulation test', 'Full interruption test'],
-    'testingAndMaintenance.planUpdates': ['Review and update annually', 'Update after any major incident', 'Update after significant infrastructure changes'],
-    'communication.media': ['All media inquiries directed to designated spokesperson', 'No unauthorized public statements'],
+    'testingAndMaintenance.testTypes': [
+      'Tabletop exercise',
+      'Walkthrough test',
+      'Simulation test',
+      'Full interruption test',
+    ],
+    'testingAndMaintenance.planUpdates': [
+      'Review and update annually',
+      'Update after any major incident',
+      'Update after significant infrastructure changes',
+    ],
+    'communication.media': [
+      'All media inquiries directed to designated spokesperson',
+      'No unauthorized public statements',
+    ],
   },
 };

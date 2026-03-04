@@ -522,10 +522,7 @@ describe('AuthService', () => {
 
       await service.verifyEmail('valid-token');
 
-      expect(notificationService.sendWelcomeEmail).toHaveBeenCalledWith(
-        'john@example.com',
-        'john',
-      );
+      expect(notificationService.sendWelcomeEmail).toHaveBeenCalledWith('john@example.com', 'john');
     });
   });
 
@@ -631,9 +628,7 @@ describe('AuthService', () => {
         profile: null,
       });
       redisService.set.mockResolvedValue(undefined);
-      notificationService.sendPasswordResetEmail.mockRejectedValue(
-        new Error('Email service down'),
-      );
+      notificationService.sendPasswordResetEmail.mockRejectedValue(new Error('Email service down'));
 
       const result = await service.requestPasswordReset('test@example.com');
 
@@ -720,9 +715,9 @@ describe('AuthService', () => {
       redisService.get.mockResolvedValue('non-existent-user');
       prismaService.user.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.resetPassword('valid-token', 'LongEnoughPass123!'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.resetPassword('valid-token', 'LongEnoughPass123!')).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should invalidate all existing refresh tokens after password reset', async () => {
@@ -767,9 +762,9 @@ describe('AuthService', () => {
     it('should reject password with 11 characters', async () => {
       redisService.get.mockResolvedValue('user-123');
 
-      await expect(
-        service.resetPassword('valid-token', '12345678901'),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.resetPassword('valid-token', '12345678901')).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 
@@ -780,9 +775,9 @@ describe('AuthService', () => {
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
       prismaService.user.update.mockResolvedValue(userWith3Attempts);
 
-      await expect(
-        service.login({ email: 'test@example.com', password: 'wrong' }),
-      ).rejects.toThrow(UnauthorizedException);
+      await expect(service.login({ email: 'test@example.com', password: 'wrong' })).rejects.toThrow(
+        UnauthorizedException,
+      );
 
       expect(prismaService.user.update).toHaveBeenCalledWith({
         where: { id: mockUser.id },
@@ -796,9 +791,9 @@ describe('AuthService', () => {
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
       prismaService.user.update.mockResolvedValue(userWith4Attempts);
 
-      await expect(
-        service.login({ email: 'test@example.com', password: 'wrong' }),
-      ).rejects.toThrow(UnauthorizedException);
+      await expect(service.login({ email: 'test@example.com', password: 'wrong' })).rejects.toThrow(
+        UnauthorizedException,
+      );
 
       const updateCall = prismaService.user.update.mock.calls[0][0];
       expect(updateCall.data.failedLoginAttempts).toBe(5);
@@ -815,9 +810,9 @@ describe('AuthService', () => {
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
       prismaService.user.update.mockResolvedValue(userWith6Attempts);
 
-      await expect(
-        service.login({ email: 'test@example.com', password: 'wrong' }),
-      ).rejects.toThrow(UnauthorizedException);
+      await expect(service.login({ email: 'test@example.com', password: 'wrong' })).rejects.toThrow(
+        UnauthorizedException,
+      );
 
       const updateCall = prismaService.user.update.mock.calls[0][0];
       expect(updateCall.data.failedLoginAttempts).toBe(7);

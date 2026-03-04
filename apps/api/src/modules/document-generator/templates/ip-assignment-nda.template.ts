@@ -279,7 +279,7 @@ export const IP_ASSIGNMENT_NDA_TEMPLATE = {
   questionMappings: {
     'organization-name': 'organization.name',
     'organization-industry': 'organization.industry',
-    'jurisdiction': 'organization.jurisdiction',
+    jurisdiction: 'organization.jurisdiction',
     'agreement-purpose': 'overview.purpose',
     'agreement-scope': 'overview.scope',
     'effective-date': 'overview.effectiveDate',
@@ -303,20 +303,30 @@ export const IP_ASSIGNMENT_NDA_TEMPLATE = {
     'injunctive-relief': 'enforcement.injunctiveRelief',
     'attorney-fees': 'enforcement.attorneyFees',
     'governing-law': 'generalProvisions.governingLaw',
-    'severability': 'generalProvisions.severability',
-    'amendments': 'generalProvisions.amendments',
+    severability: 'generalProvisions.severability',
+    amendments: 'generalProvisions.amendments',
   },
 
   /**
    * Default values for optional fields
    */
   defaults: {
-    'confidentiality.duration': 'Obligations survive for a period of 3 years following termination of the agreement',
-    'confidentiality.exclusions': ['Information that is or becomes publicly available through no fault of the receiving party', 'Information independently developed by the receiving party', 'Information lawfully obtained from a third party without restriction'],
-    'nonDisclosure.returnOfMaterials': 'All confidential materials must be returned or destroyed within 30 days of agreement termination',
-    'enforcement.injunctiveRelief': 'The parties acknowledge that breach may cause irreparable harm and that injunctive relief may be sought without bond',
-    'enforcement.attorneyFees': 'The prevailing party shall be entitled to recover reasonable attorney fees and costs',
-    'generalProvisions.severability': 'If any provision is found unenforceable, the remaining provisions shall continue in full force and effect',
-    'generalProvisions.amendments': 'This agreement may only be amended by written instrument signed by both parties',
+    'confidentiality.duration':
+      'Obligations survive for a period of 3 years following termination of the agreement',
+    'confidentiality.exclusions': [
+      'Information that is or becomes publicly available through no fault of the receiving party',
+      'Information independently developed by the receiving party',
+      'Information lawfully obtained from a third party without restriction',
+    ],
+    'nonDisclosure.returnOfMaterials':
+      'All confidential materials must be returned or destroyed within 30 days of agreement termination',
+    'enforcement.injunctiveRelief':
+      'The parties acknowledge that breach may cause irreparable harm and that injunctive relief may be sought without bond',
+    'enforcement.attorneyFees':
+      'The prevailing party shall be entitled to recover reasonable attorney fees and costs',
+    'generalProvisions.severability':
+      'If any provision is found unenforceable, the remaining provisions shall continue in full force and effect',
+    'generalProvisions.amendments':
+      'This agreement may only be amended by written instrument signed by both parties',
   },
 };

@@ -148,9 +148,7 @@ describe('PolicyPackController', () => {
 
   describe('downloadPolicyPack', () => {
     it('should create ZIP archive and pipe to response', async () => {
-      const mockGaps = [
-        { dimensionKey: 'arch_sec', questionId: 'q-1', coverage: 0.3 },
-      ];
+      const mockGaps = [{ dimensionKey: 'arch_sec', questionId: 'q-1', coverage: 0.3 }];
 
       const mockBundle = {
         id: 'bundle-123',
@@ -191,7 +189,10 @@ describe('PolicyPackController', () => {
       await controller.downloadPolicyPack('session-123', mockRes as any);
 
       expect(mockContextBuilder.buildGapContexts).toHaveBeenCalledWith('session-123');
-      expect(mockPolicyPackService.generatePolicyPack).toHaveBeenCalledWith('session-123', mockGaps);
+      expect(mockPolicyPackService.generatePolicyPack).toHaveBeenCalledWith(
+        'session-123',
+        mockGaps,
+      );
       expect(mockPolicyPackService.getExportStructure).toHaveBeenCalledWith(mockBundle);
     });
   });

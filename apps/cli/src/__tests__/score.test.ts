@@ -48,7 +48,7 @@ describe('scoreCommand', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    
+
     // Setup Config mock
     mockConfig = {
       get: vi.fn(),
@@ -56,17 +56,17 @@ describe('scoreCommand', () => {
       reset: vi.fn(),
     };
     (Config as any).mockImplementation(() => mockConfig);
-    
+
     // Setup ApiClient mock
     mockApiClient = {
       getScore: vi.fn(),
     };
     (ApiClient as any).mockImplementation(() => mockApiClient);
-    
+
     // Mock console methods
     vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.spyOn(console, 'log').mockImplementation(() => {});
-    
+
     // Mock process.exit
     vi.spyOn(process, 'exit').mockImplementation(() => undefined as never);
   });
@@ -109,11 +109,15 @@ describe('scoreCommand', () => {
 
   it('should exit with error when no session ID and no default', async () => {
     mockConfig.get.mockReturnValue(null);
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score']);
-    
-    expect(console.error).toHaveBeenCalledWith('RED:Error: No session ID provided and no default session configured.');
-    expect(console.log).toHaveBeenCalledWith('GRAY:Use: quiz2biz config set defaultSession <sessionId>');
+
+    expect(console.error).toHaveBeenCalledWith(
+      'RED:Error: No session ID provided and no default session configured.',
+    );
+    expect(console.log).toHaveBeenCalledWith(
+      'GRAY:Use: quiz2biz config set defaultSession <sessionId>',
+    );
     expect(process.exit).toHaveBeenCalledWith(1);
   });
 
@@ -121,9 +125,9 @@ describe('scoreCommand', () => {
     mockConfig.get.mockReturnValue(null);
     const mockScoreData = { overall: 85, dimensions: [] };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score', 'session-123']);
-    
+
     expect(mockApiClient.getScore).toHaveBeenCalledWith('session-123');
   });
 
@@ -131,18 +135,18 @@ describe('scoreCommand', () => {
     mockConfig.get.mockReturnValue('default-session-456');
     const mockScoreData = { overall: 85, dimensions: [] };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score']);
-    
+
     expect(mockApiClient.getScore).toHaveBeenCalledWith('default-session-456');
   });
 
   it('should show spinner during API call', async () => {
     mockConfig.get.mockReturnValue('session-123');
     mockApiClient.getScore.mockResolvedValue({ overall: 85 });
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score']);
-    
+
     expect(ora).toHaveBeenCalledWith('Fetching readiness score...');
     expect(mockSpinner.start).toHaveBeenCalled();
     expect(mockSpinner.succeed).toHaveBeenCalledWith('Score retrieved');
@@ -152,9 +156,9 @@ describe('scoreCommand', () => {
     mockConfig.get.mockReturnValue('session-123');
     const mockScoreData = { overall: 85, dimensions: [] };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score', '--json']);
-    
+
     expect(console.log).toHaveBeenCalledWith(JSON.stringify(mockScoreData, null, 2));
   });
 
@@ -162,9 +166,9 @@ describe('scoreCommand', () => {
     mockConfig.get.mockReturnValue('session-123');
     const mockScoreData = { overall: 85, dimensions: [] };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score']);
-    
+
     expect(console.log).toHaveBeenCalledWith('\nBOLD:📊 Readiness Score: 85%');
   });
 
@@ -172,9 +176,9 @@ describe('scoreCommand', () => {
     mockConfig.get.mockReturnValue('session-123');
     const mockScoreData = { overall: 95, dimensions: [] };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score']);
-    
+
     expect(console.log).toHaveBeenCalledWith('\nBOLD:📊 Readiness Score: GREEN:95%');
   });
 
@@ -182,9 +186,9 @@ describe('scoreCommand', () => {
     mockConfig.get.mockReturnValue('session-123');
     const mockScoreData = { overall: 75, dimensions: [] };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score']);
-    
+
     expect(console.log).toHaveBeenCalledWith('\nBOLD:📊 Readiness Score: YELLOW:75%');
   });
 
@@ -192,9 +196,9 @@ describe('scoreCommand', () => {
     mockConfig.get.mockReturnValue('session-123');
     const mockScoreData = { overall: 35, dimensions: [] };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score']);
-    
+
     expect(console.log).toHaveBeenCalledWith('\nBOLD:📊 Readiness Score: RED:35%');
   });
 
@@ -208,9 +212,9 @@ describe('scoreCommand', () => {
       ],
     };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score', '--detailed']);
-    
+
     expect(mockTable).toHaveBeenCalled();
     expect(console.log).toHaveBeenCalledWith('BOLD:Dimension Breakdown:');
   });
@@ -221,9 +225,9 @@ describe('scoreCommand', () => {
       score: { overall: 78, dimensions: [] },
     };
     mockConfig.getOfflineData.mockReturnValue(mockOfflineData);
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score', '--offline']);
-    
+
     expect(mockConfig.getOfflineData).toHaveBeenCalledWith('session-123');
     expect(console.log).toHaveBeenCalledWith('\nBOLD:📊 Readiness Score: YELLOW:78%');
   });
@@ -231,9 +235,9 @@ describe('scoreCommand', () => {
   it('should exit with error when no offline data found', async () => {
     mockConfig.get.mockReturnValue('session-123');
     mockConfig.getOfflineData.mockReturnValue(null);
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score', '--offline']);
-    
+
     expect(mockSpinner.fail).toHaveBeenCalledWith('No offline data found for this session');
     expect(process.exit).toHaveBeenCalledWith(1);
   });
@@ -241,9 +245,9 @@ describe('scoreCommand', () => {
   it('should handle API errors gracefully', async () => {
     mockConfig.get.mockReturnValue('session-123');
     mockApiClient.getScore.mockRejectedValue(new Error('API Error'));
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score']);
-    
+
     expect(mockSpinner.fail).toHaveBeenCalledWith('RED:Failed to fetch score: API Error');
   });
 
@@ -252,9 +256,9 @@ describe('scoreCommand', () => {
     mockApiClient.getScore.mockRejectedValue({
       response: { data: { message: 'Network error' } },
     });
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score']);
-    
+
     expect(mockSpinner.fail).toHaveBeenCalledWith('RED:Failed to fetch score: Network error');
   });
 
@@ -263,10 +267,12 @@ describe('scoreCommand', () => {
     mockApiClient.getScore.mockRejectedValue({
       response: { status: 401 },
     });
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score']);
-    
-    expect(mockSpinner.fail).toHaveBeenCalledWith('RED:Authentication failed. Please check your API configuration.');
+
+    expect(mockSpinner.fail).toHaveBeenCalledWith(
+      'RED:Authentication failed. Please check your API configuration.',
+    );
   });
 
   it('should handle forbidden errors', async () => {
@@ -274,41 +280,43 @@ describe('scoreCommand', () => {
     mockApiClient.getScore.mockRejectedValue({
       response: { status: 403 },
     });
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score']);
-    
-    expect(mockSpinner.fail).toHaveBeenCalledWith('RED:Access denied. You do not have permission to access this session.');
+
+    expect(mockSpinner.fail).toHaveBeenCalledWith(
+      'RED:Access denied. You do not have permission to access this session.',
+    );
   });
 
   it('should display completion status', async () => {
     mockConfig.get.mockReturnValue('session-123');
-    const mockScoreData = { 
-      overall: 85, 
+    const mockScoreData = {
+      overall: 85,
       dimensions: [],
       completed: true,
       totalQuestions: 50,
       answeredQuestions: 45,
     };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score']);
-    
+
     expect(console.log).toHaveBeenCalledWith('BOLD:Status: GREEN:Completed (45/50 questions)');
   });
 
   it('should display in-progress status', async () => {
     mockConfig.get.mockReturnValue('session-123');
-    const mockScoreData = { 
-      overall: 85, 
+    const mockScoreData = {
+      overall: 85,
       dimensions: [],
       completed: false,
       totalQuestions: 50,
       answeredQuestions: 30,
     };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
+
     await scoreCommand.parseAsync(['node', 'test', 'score']);
-    
+
     expect(console.log).toHaveBeenCalledWith('BOLD:Status: BLUE:In Progress (30/50 questions)');
   });
 });

@@ -29,9 +29,24 @@ describe('PolicyExportService', () => {
     scope: 'All applications',
     tags: ['security', 'mandatory'],
     statements: [
-      { id: 'stmt-1', requirement: RequirementLevel.SHALL, text: 'Use HTTPS', evidenceRequired: true },
-      { id: 'stmt-2', requirement: RequirementLevel.SHOULD, text: 'Implement MFA', evidenceRequired: false },
-      { id: 'stmt-3', requirement: RequirementLevel.MAY, text: 'Use biometrics', evidenceRequired: false },
+      {
+        id: 'stmt-1',
+        requirement: RequirementLevel.SHALL,
+        text: 'Use HTTPS',
+        evidenceRequired: true,
+      },
+      {
+        id: 'stmt-2',
+        requirement: RequirementLevel.SHOULD,
+        text: 'Implement MFA',
+        evidenceRequired: false,
+      },
+      {
+        id: 'stmt-3',
+        requirement: RequirementLevel.MAY,
+        text: 'Use biometrics',
+        evidenceRequired: false,
+      },
     ],
     standards: [
       {
@@ -66,8 +81,18 @@ describe('PolicyExportService', () => {
       },
     ],
     controlMappings: [
-      { framework: ComplianceFramework.ISO_27001, controlId: 'A.9.2', controlDescription: 'User access management', mappingStrength: MappingStrength.FULL },
-      { framework: ComplianceFramework.NIST_CSF, controlId: 'PR.AC-1', controlDescription: 'Identities managed', mappingStrength: MappingStrength.FULL },
+      {
+        framework: ComplianceFramework.ISO_27001,
+        controlId: 'A.9.2',
+        controlDescription: 'User access management',
+        mappingStrength: MappingStrength.FULL,
+      },
+      {
+        framework: ComplianceFramework.NIST_CSF,
+        controlId: 'PR.AC-1',
+        controlDescription: 'Identities managed',
+        mappingStrength: MappingStrength.FULL,
+      },
     ],
   };
 
@@ -274,15 +299,15 @@ describe('PolicyExportService', () => {
     it('should include README and manifest', () => {
       const files = service.getExportStructure(mockBundle);
 
-      expect(files.find(f => f.path === 'README.md')).toBeDefined();
-      expect(files.find(f => f.path === 'manifest.json')).toBeDefined();
+      expect(files.find((f) => f.path === 'README.md')).toBeDefined();
+      expect(files.find((f) => f.path === 'manifest.json')).toBeDefined();
     });
 
     it('should include policy files in correct directories', () => {
       const files = service.getExportStructure(mockBundle);
 
-      const policyMd = files.find(f => f.path.includes('policies/arch_sec/policy-1.md'));
-      const policyJson = files.find(f => f.path.includes('policies/arch_sec/policy-1.json'));
+      const policyMd = files.find((f) => f.path.includes('policies/arch_sec/policy-1.md'));
+      const policyJson = files.find((f) => f.path.includes('policies/arch_sec/policy-1.json'));
 
       expect(policyMd).toBeDefined();
       expect(policyJson).toBeDefined();
@@ -291,7 +316,7 @@ describe('PolicyExportService', () => {
     it('should include OPA policy files', () => {
       const files = service.getExportStructure(mockBundle);
 
-      const opaFile = files.find(f => f.path === 'opa-policies/require_https.rego');
+      const opaFile = files.find((f) => f.path === 'opa-policies/require_https.rego');
       expect(opaFile).toBeDefined();
       expect(opaFile?.content).toContain('package quiz2biz.security');
     });
@@ -299,14 +324,14 @@ describe('PolicyExportService', () => {
     it('should include combined OPA policy file', () => {
       const files = service.getExportStructure(mockBundle);
 
-      const combinedOpa = files.find(f => f.path === 'opa-policies/combined.rego');
+      const combinedOpa = files.find((f) => f.path === 'opa-policies/combined.rego');
       expect(combinedOpa).toBeDefined();
     });
 
     it('should include terraform rules when present', () => {
       const files = service.getExportStructure(mockBundle);
 
-      const tfFile = files.find(f => f.path === 'terraform/features/quiz2biz.feature');
+      const tfFile = files.find((f) => f.path === 'terraform/features/quiz2biz.feature');
       expect(tfFile).toBeDefined();
       expect(tfFile?.content).toContain('Feature: Test');
     });
@@ -315,7 +340,7 @@ describe('PolicyExportService', () => {
       const bundleNoTf = { ...mockBundle, terraformRules: '' } as PolicyPackBundle;
       const files = service.getExportStructure(bundleNoTf);
 
-      const tfFile = files.find(f => f.path.includes('terraform/'));
+      const tfFile = files.find((f) => f.path.includes('terraform/'));
       expect(tfFile).toBeUndefined();
     });
 
@@ -323,7 +348,7 @@ describe('PolicyExportService', () => {
       const bundleNoOpa = { ...mockBundle, opaPolicies: [] };
       const files = service.getExportStructure(bundleNoOpa);
 
-      const combinedOpa = files.find(f => f.path === 'opa-policies/combined.rego');
+      const combinedOpa = files.find((f) => f.path === 'opa-policies/combined.rego');
       expect(combinedOpa).toBeUndefined();
     });
   });

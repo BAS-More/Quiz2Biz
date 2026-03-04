@@ -115,7 +115,8 @@ describe('Input Validation Security Tests', () => {
       expect(isValid).toBe(true);
 
       const maliciousPath = '/uploads/user-files/../../etc/passwd';
-      const isMalicious = maliciousPath.startsWith(allowedBasePath) && !maliciousPath.includes('..');
+      const isMalicious =
+        maliciousPath.startsWith(allowedBasePath) && !maliciousPath.includes('..');
       expect(isMalicious).toBe(false);
     });
   });

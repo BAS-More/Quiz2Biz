@@ -73,9 +73,7 @@ describe('StandardsController', () => {
 
   describe('getStandardsForDocument', () => {
     it('should return standards for document type', async () => {
-      const mockStandards = [
-        { id: '1', name: 'ISO 27001', category: 'SECURITY' },
-      ];
+      const mockStandards = [{ id: '1', name: 'ISO 27001', category: 'SECURITY' }];
       mockStandardsService.getStandardsForDocument.mockResolvedValue(mockStandards);
 
       const result = await controller.getStandardsForDocument('doc-123');

@@ -476,7 +476,9 @@ describe('TemplateEngineService', () => {
       ]);
 
       const result = await service.assembleTemplateData('session-1', 'business-plan');
-      expect(result.content).toEqual({ attachments: { document: 'https://storage.example.com/file.pdf' } });
+      expect(result.content).toEqual({
+        attachments: { document: 'https://storage.example.com/file.pdf' },
+      });
     });
 
     it('should extract MATRIX value', async () => {
@@ -936,7 +938,10 @@ describe('TemplateEngineService', () => {
             text: 'Test1',
             type: 'MULTIPLE_CHOICE',
             documentMappings: { 'business-plan': 'items' },
-            options: [{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }],
+            options: [
+              { value: 'a', label: 'A' },
+              { value: 'b', label: 'B' },
+            ],
           },
         },
         {

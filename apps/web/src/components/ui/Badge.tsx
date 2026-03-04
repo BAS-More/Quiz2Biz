@@ -40,7 +40,13 @@ const sizeStyles: Record<BadgeSize, string> = {
   md: 'text-xs px-2.5 py-1',
 };
 
-export function Badge({ variant = 'default', size = 'sm', dot = false, className, children }: BadgeProps) {
+export function Badge({
+  variant = 'default',
+  size = 'sm',
+  dot = false,
+  className,
+  children,
+}: BadgeProps) {
   return (
     <span
       className={clsx(
@@ -50,9 +56,7 @@ export function Badge({ variant = 'default', size = 'sm', dot = false, className
         className,
       )}
     >
-      {dot && (
-        <span className={clsx('w-1.5 h-1.5 rounded-full mr-1.5', dotColors[variant])} />
-      )}
+      {dot && <span className={clsx('w-1.5 h-1.5 rounded-full mr-1.5', dotColors[variant])} />}
       {children}
     </span>
   );
