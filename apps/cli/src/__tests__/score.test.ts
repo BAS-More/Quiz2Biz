@@ -2,7 +2,7 @@
  * Unit tests for Score command
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+// Using Jest globals
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
@@ -12,67 +12,65 @@ import { ApiClient } from '../lib/api-client';
 import { Config } from '../lib/config';
 
 // Mock dependencies
-const mockSpinner = {
-  start: vi.fn().mockReturnThis(),
-  succeed: vi.fn().mockReturnThis(),
-  fail: vi.fn().mockReturnThis(),
-};
+const mockTable = jest.fn((data: any) => `TABLE:${JSON.stringify(data)}`);
 
-const mockTable = vi.fn((data) => `TABLE:${JSON.stringify(data)}`);
-
-vi.mock('ora', () => ({
-  default: vi.fn(() => mockSpinner),
+jest.mock('ora', () => ({
+  default: jest.fn(() => ({
+    start: jest.fn().mockReturnThis(),
+    succeed: jest.fn().mockReturnThis(),
+    fail: jest.fn().mockReturnThis(),
+  })),
 }));
 
-vi.mock('table', () => ({
-  table: mockTable,
+jest.mock('table', () => ({
+  table: jest.fn((data: any) => `TABLE:${JSON.stringify(data)}`),
 }));
 
-vi.mock('chalk', () => ({
+jest.mock('chalk', () => ({
   default: {
-    red: vi.fn((str) => `RED:${str}`),
-    gray: vi.fn((str) => `GRAY:${str}`),
-    bold: vi.fn((str) => `BOLD:${str}`),
-    green: vi.fn((str) => `GREEN:${str}`),
-    yellow: vi.fn((str) => `YELLOW:${str}`),
-    blue: vi.fn((str) => `BLUE:${str}`),
+    red: jest.fn((str: string) => `RED:${str}`),
+    gray: jest.fn((str: string) => `GRAY:${str}`),
+    bold: jest.fn((str: string) => `BOLD:${str}`),
+    green: jest.fn((str: string) => `GREEN:${str}`),
+    yellow: jest.fn((str: string) => `YELLOW:${str}`),
+    blue: jest.fn((str: string) => `BLUE:${str}`),
   },
 }));
 
-vi.mock('../lib/api-client');
-vi.mock('../lib/config');
+jest.mock('../lib/api-client');
+jest.mock('../lib/config');
 
 describe('scoreCommand', () => {
   let mockConfig: any;
   let mockApiClient: any;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
 
     // Setup Config mock
     mockConfig = {
-      get: vi.fn(),
-      getOfflineData: vi.fn(),
-      reset: vi.fn(),
+      get: jest.fn(),
+      getOfflineData: jest.fn(),
+      reset: jest.fn(),
     };
     (Config as any).mockImplementation(() => mockConfig);
 
     // Setup ApiClient mock
     mockApiClient = {
-      getScore: vi.fn(),
+      getScore: jest.fn(),
     };
     (ApiClient as any).mockImplementation(() => mockApiClient);
 
     // Mock console methods
-    vi.spyOn(console, 'error').mockImplementation(() => {});
-    vi.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, 'log').mockImplementation(() => {});
 
     // Mock process.exit
-    vi.spyOn(process, 'exit').mockImplementation(() => undefined as never);
+    jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   it('should be a Command instance', () => {
