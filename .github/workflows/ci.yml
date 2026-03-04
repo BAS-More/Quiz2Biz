@@ -399,8 +399,8 @@ jobs:
           push: false
           tags: questionnaire-api:test
           target: production
-          cache-from: type=gha,scope=docker-${{ github.ref }}
-          cache-to: type=gha,mode=max,scope=docker-${{ github.ref }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   security-scan:
     name: security-scan
