@@ -21,28 +21,28 @@ describe('TerraformRulesService', () => {
       const rules = service.getRulesForDimension('arch_sec');
 
       expect(rules.length).toBeGreaterThan(0);
-      expect(rules.every(r => r.dimensionKey === 'arch_sec')).toBe(true);
+      expect(rules.every((r) => r.dimensionKey === 'arch_sec')).toBe(true);
     });
 
     it('should return rules for devops_iac dimension', () => {
       const rules = service.getRulesForDimension('devops_iac');
 
       expect(rules.length).toBeGreaterThan(0);
-      expect(rules.some(r => r.name === 'resource_tagging')).toBe(true);
+      expect(rules.some((r) => r.name === 'resource_tagging')).toBe(true);
     });
 
     it('should return rules for compliance_policy dimension', () => {
       const rules = service.getRulesForDimension('compliance_policy');
 
       expect(rules.length).toBeGreaterThan(0);
-      expect(rules.some(r => r.name === 'audit_retention')).toBe(true);
+      expect(rules.some((r) => r.name === 'audit_retention')).toBe(true);
     });
 
     it('should return rules for privacy_legal dimension', () => {
       const rules = service.getRulesForDimension('privacy_legal');
 
       expect(rules.length).toBeGreaterThan(0);
-      expect(rules.some(r => r.name === 'data_residency')).toBe(true);
+      expect(rules.some((r) => r.name === 'data_residency')).toBe(true);
     });
 
     it('should return empty array for unknown dimension', () => {
@@ -73,7 +73,7 @@ describe('TerraformRulesService', () => {
 
     it('should include rules from multiple dimensions', () => {
       const rules = service.getAllRules();
-      const dimensions = new Set(rules.map(r => r.dimensionKey));
+      const dimensions = new Set(rules.map((r) => r.dimensionKey));
 
       expect(dimensions.size).toBeGreaterThanOrEqual(3);
       expect(dimensions.has('arch_sec')).toBe(true);
@@ -115,7 +115,7 @@ describe('TerraformRulesService', () => {
       const featureFile = service.generateFeatureFile([]);
 
       expect(featureFile).toContain('# Quiz2Biz Auto-Generated');
-      expect(featureFile.split('\n').filter(l => l.includes('# Rule:')).length).toBe(0);
+      expect(featureFile.split('\n').filter((l) => l.includes('# Rule:')).length).toBe(0);
     });
   });
 
@@ -161,8 +161,8 @@ describe('TerraformRulesService', () => {
       const rules = service.getAllRules();
 
       for (const rule of rules) {
-        const hasScenario = rule.ruleCode.includes('Scenario:') ||
-                          rule.ruleCode.includes('Scenario Outline:');
+        const hasScenario =
+          rule.ruleCode.includes('Scenario:') || rule.ruleCode.includes('Scenario Outline:');
         expect(hasScenario).toBe(true);
       }
     });
@@ -178,8 +178,8 @@ describe('TerraformRulesService', () => {
 
     it('should reference Azure resource types', () => {
       const rules = service.getAllRules();
-      const azureRules = rules.filter(r =>
-        r.resourceTypes.some(rt => rt.startsWith('azurerm_') || rt === '*')
+      const azureRules = rules.filter((r) =>
+        r.resourceTypes.some((rt) => rt.startsWith('azurerm_') || rt === '*'),
       );
 
       expect(azureRules.length).toBeGreaterThan(0);
@@ -189,7 +189,7 @@ describe('TerraformRulesService', () => {
   describe('specific rules', () => {
     it('ensure_https_only rule should validate HTTPS settings', () => {
       const rules = service.getAllRules();
-      const httpsRule = rules.find(r => r.name === 'ensure_https_only');
+      const httpsRule = rules.find((r) => r.name === 'ensure_https_only');
 
       expect(httpsRule).toBeDefined();
       expect(httpsRule?.ruleCode).toContain('https_only');
@@ -198,7 +198,7 @@ describe('TerraformRulesService', () => {
 
     it('encryption_at_rest rule should validate encryption', () => {
       const rules = service.getAllRules();
-      const encRule = rules.find(r => r.name === 'encryption_at_rest');
+      const encRule = rules.find((r) => r.name === 'encryption_at_rest');
 
       expect(encRule).toBeDefined();
       expect(encRule?.ruleCode).toContain('TLS1_2');
@@ -207,7 +207,7 @@ describe('TerraformRulesService', () => {
 
     it('resource_tagging rule should check required tags', () => {
       const rules = service.getAllRules();
-      const tagRule = rules.find(r => r.name === 'resource_tagging');
+      const tagRule = rules.find((r) => r.name === 'resource_tagging');
 
       expect(tagRule).toBeDefined();
       expect(tagRule?.ruleCode).toContain('environment');
@@ -217,7 +217,7 @@ describe('TerraformRulesService', () => {
 
     it('data_residency rule should check regions', () => {
       const rules = service.getAllRules();
-      const residencyRule = rules.find(r => r.name === 'data_residency');
+      const residencyRule = rules.find((r) => r.name === 'data_residency');
 
       expect(residencyRule).toBeDefined();
       expect(residencyRule?.ruleCode).toContain('location');

@@ -447,49 +447,45 @@ describe('PaymentService', () => {
     });
 
     it('should throw when getSubscription called without config', async () => {
-      await expect(
-        unconfiguredService.getSubscription('sub_123'),
-      ).rejects.toThrow('Payment service not configured');
+      await expect(unconfiguredService.getSubscription('sub_123')).rejects.toThrow(
+        'Payment service not configured',
+      );
     });
 
     it('should throw when cancelSubscription called without config', async () => {
-      await expect(
-        unconfiguredService.cancelSubscription('sub_123'),
-      ).rejects.toThrow('Payment service not configured');
+      await expect(unconfiguredService.cancelSubscription('sub_123')).rejects.toThrow(
+        'Payment service not configured',
+      );
     });
 
     it('should throw when resumeSubscription called without config', async () => {
-      await expect(
-        unconfiguredService.resumeSubscription('sub_123'),
-      ).rejects.toThrow('Payment service not configured');
+      await expect(unconfiguredService.resumeSubscription('sub_123')).rejects.toThrow(
+        'Payment service not configured',
+      );
     });
 
     it('should throw when updateSubscription called without config', async () => {
-      await expect(
-        unconfiguredService.updateSubscription('sub_123', 'ENTERPRISE'),
-      ).rejects.toThrow('Payment service not configured');
+      await expect(unconfiguredService.updateSubscription('sub_123', 'ENTERPRISE')).rejects.toThrow(
+        'Payment service not configured',
+      );
     });
 
     it('should throw when constructWebhookEvent called without config', () => {
       expect(() =>
-        unconfiguredService.constructWebhookEvent(
-          Buffer.from('test'),
-          'sig',
-          'secret',
-        ),
+        unconfiguredService.constructWebhookEvent(Buffer.from('test'), 'sig', 'secret'),
       ).toThrow('Payment service not configured');
     });
 
     it('should throw when getInvoices called without config', async () => {
-      await expect(
-        unconfiguredService.getInvoices('cus_123'),
-      ).rejects.toThrow('Payment service not configured');
+      await expect(unconfiguredService.getInvoices('cus_123')).rejects.toThrow(
+        'Payment service not configured',
+      );
     });
 
     it('should throw when getUpcomingInvoice called without config', async () => {
-      await expect(
-        unconfiguredService.getUpcomingInvoice('cus_123'),
-      ).rejects.toThrow('Payment service not configured');
+      await expect(unconfiguredService.getUpcomingInvoice('cus_123')).rejects.toThrow(
+        'Payment service not configured',
+      );
     });
   });
 
@@ -556,9 +552,15 @@ describe('PaymentService', () => {
             provide: ConfigService,
             useValue: {
               get: jest.fn((key: string, defaultValue?: string) => {
-                if (key === 'STRIPE_SECRET_KEY') {return 'sk_test_123';}
-                if (key === 'STRIPE_PRICE_PROFESSIONAL') {return defaultValue;}
-                if (key === 'STRIPE_PRICE_ENTERPRISE') {return defaultValue;}
+                if (key === 'STRIPE_SECRET_KEY') {
+                  return 'sk_test_123';
+                }
+                if (key === 'STRIPE_PRICE_PROFESSIONAL') {
+                  return defaultValue;
+                }
+                if (key === 'STRIPE_PRICE_ENTERPRISE') {
+                  return defaultValue;
+                }
                 return defaultValue ?? undefined;
               }),
             },
@@ -568,7 +570,8 @@ describe('PaymentService', () => {
 
       const svc = noEnvModule.get<PaymentService>(PaymentService);
       (mockStripe.checkout.sessions.create as jest.Mock).mockResolvedValue({
-        id: 'cs_test', url: 'https://checkout.stripe.com/cs_test',
+        id: 'cs_test',
+        url: 'https://checkout.stripe.com/cs_test',
       } as any);
 
       const result = await svc.createCheckoutSession({
@@ -611,9 +614,9 @@ describe('PaymentService', () => {
 
   describe('branch coverage - updateSubscription FREE tier guard', () => {
     it('should throw for FREE tier in updateSubscription', async () => {
-      await expect(
-        service.updateSubscription('sub_123', 'FREE'),
-      ).rejects.toThrow('Invalid tier for upgrade');
+      await expect(service.updateSubscription('sub_123', 'FREE')).rejects.toThrow(
+        'Invalid tier for upgrade',
+      );
     });
   });
 });

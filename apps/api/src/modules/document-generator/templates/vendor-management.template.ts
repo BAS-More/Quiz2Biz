@@ -337,9 +337,13 @@ export const VENDOR_MANAGEMENT_TEMPLATE = {
    * Default values for optional fields
    */
   defaults: {
-    'performanceMonitoring.reviewSchedule': 'Quarterly performance reviews with annual strategic assessment',
-    'riskManagement.concentration': 'Avoid single-vendor dependency for critical services. Maintain alternative vendor relationships.',
-    'offboarding.transitionPlanning': 'Minimum 90-day transition period with documented knowledge transfer',
-    'compliance.auditRights': 'Organization retains the right to audit vendor operations with 30 days written notice',
+    'performanceMonitoring.reviewSchedule':
+      'Quarterly performance reviews with annual strategic assessment',
+    'riskManagement.concentration':
+      'Avoid single-vendor dependency for critical services. Maintain alternative vendor relationships.',
+    'offboarding.transitionPlanning':
+      'Minimum 90-day transition period with documented knowledge transfer',
+    'compliance.auditRights':
+      'Organization retains the right to audit vendor operations with 30 days written notice',
   },
 };

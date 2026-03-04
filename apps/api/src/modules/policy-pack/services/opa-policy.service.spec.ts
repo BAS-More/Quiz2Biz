@@ -30,14 +30,14 @@ describe('OpaPolicyService', () => {
       const policies = service.getPoliciesForDimension('devops_iac');
 
       expect(policies.length).toBeGreaterThan(0);
-      expect(policies.some(p => p.name === 'require_tags')).toBe(true);
+      expect(policies.some((p) => p.name === 'require_tags')).toBe(true);
     });
 
     it('should return policies for compliance_policy dimension', () => {
       const policies = service.getPoliciesForDimension('compliance_policy');
 
       expect(policies.length).toBeGreaterThan(0);
-      expect(policies.some(p => p.name === 'audit_logging_enabled')).toBe(true);
+      expect(policies.some((p) => p.name === 'audit_logging_enabled')).toBe(true);
     });
 
     it('should return empty array for unknown dimension', () => {
@@ -54,9 +54,9 @@ describe('OpaPolicyService', () => {
       expect(policies.length).toBeGreaterThan(0);
 
       // Should contain policies from multiple dimensions
-      const archSecPolicies = policies.filter(p => p.packageName.includes('security'));
-      const govPolicies = policies.filter(p => p.packageName.includes('governance'));
-      const compliancePolicies = policies.filter(p => p.packageName.includes('compliance'));
+      const archSecPolicies = policies.filter((p) => p.packageName.includes('security'));
+      const govPolicies = policies.filter((p) => p.packageName.includes('governance'));
+      const compliancePolicies = policies.filter((p) => p.packageName.includes('compliance'));
 
       expect(archSecPolicies.length).toBeGreaterThan(0);
       expect(govPolicies.length).toBeGreaterThan(0);
@@ -188,7 +188,7 @@ violation[msg] {
     it('should have correct severity levels', () => {
       const policies = service.getAllPolicies();
 
-      const severities = new Set(policies.map(p => p.severity));
+      const severities = new Set(policies.map((p) => p.severity));
       expect(severities.has(PolicySeverity.CRITICAL)).toBe(true);
       expect(severities.has(PolicySeverity.HIGH)).toBe(true);
       expect(severities.has(PolicySeverity.MEDIUM)).toBe(true);
@@ -196,12 +196,12 @@ violation[msg] {
 
     it('should have tests defined for critical policies', () => {
       const policies = service.getAllPolicies();
-      const criticalPolicies = policies.filter(p =>
-        p.severity === PolicySeverity.CRITICAL || p.severity === PolicySeverity.HIGH
+      const criticalPolicies = policies.filter(
+        (p) => p.severity === PolicySeverity.CRITICAL || p.severity === PolicySeverity.HIGH,
       );
 
       // At least some critical/high policies should have tests
-      const withTests = criticalPolicies.filter(p => p.tests && p.tests.length > 0);
+      const withTests = criticalPolicies.filter((p) => p.tests && p.tests.length > 0);
       expect(withTests.length).toBeGreaterThan(0);
     });
 

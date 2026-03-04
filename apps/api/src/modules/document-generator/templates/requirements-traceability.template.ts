@@ -265,7 +265,8 @@ export const REQUIREMENTS_TRACEABILITY_TEMPLATE = {
    * Default values for optional fields
    */
   defaults: {
-    'appendices.traceabilityTools': 'Requirements managed using organizational standard traceability tooling',
+    'appendices.traceabilityTools':
+      'Requirements managed using organizational standard traceability tooling',
     'appendices.auditTrail': 'Full audit trail maintained in requirements management system',
     'changeLog.changeRequests': '[]',
     'changeLog.impactAnalysis': '[]',

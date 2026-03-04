@@ -43,7 +43,8 @@ describe('StorageService', () => {
   const mockConfigService = {
     get: jest.fn((key: string, defaultValue?: string) => {
       const config: Record<string, string> = {
-        AZURE_STORAGE_CONNECTION_STRING: 'DefaultEndpointsProtocol=https;AccountName=testaccount;AccountKey=testkey123==;EndpointSuffix=core.windows.net',
+        AZURE_STORAGE_CONNECTION_STRING:
+          'DefaultEndpointsProtocol=https;AccountName=testaccount;AccountKey=testkey123==;EndpointSuffix=core.windows.net',
         AZURE_STORAGE_CONTAINER_NAME: 'documents',
       };
       return config[key] ?? defaultValue;
@@ -54,10 +55,7 @@ describe('StorageService', () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        StorageService,
-        { provide: ConfigService, useValue: mockConfigService },
-      ],
+      providers: [StorageService, { provide: ConfigService, useValue: mockConfigService }],
     }).compile();
 
     service = module.get<StorageService>(StorageService);
@@ -73,16 +71,15 @@ describe('StorageService', () => {
     it('should handle missing connection string', async () => {
       const noConnectionConfig = {
         get: jest.fn((key: string, defaultValue?: string) => {
-          if (key === 'AZURE_STORAGE_CONNECTION_STRING') {return undefined;}
+          if (key === 'AZURE_STORAGE_CONNECTION_STRING') {
+            return undefined;
+          }
           return defaultValue;
         }),
       };
 
       const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          StorageService,
-          { provide: ConfigService, useValue: noConnectionConfig },
-        ],
+        providers: [StorageService, { provide: ConfigService, useValue: noConnectionConfig }],
       }).compile();
 
       const serviceNoConnection = module.get<StorageService>(StorageService);
@@ -117,7 +114,8 @@ describe('StorageService', () => {
 
   describe('getDownloadUrl', () => {
     it('should generate SAS URL for download', async () => {
-      const storageUrl = 'https://testaccount.blob.core.windows.net/documents/reports/2024-01-01/file.docx';
+      const storageUrl =
+        'https://testaccount.blob.core.windows.net/documents/reports/2024-01-01/file.docx';
 
       const result = await service.getDownloadUrl(storageUrl, 30);
 
@@ -130,16 +128,15 @@ describe('StorageService', () => {
       };
 
       const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          StorageService,
-          { provide: ConfigService, useValue: noConnectionConfig },
-        ],
+        providers: [StorageService, { provide: ConfigService, useValue: noConnectionConfig }],
       }).compile();
 
       const serviceNoConnection = module.get<StorageService>(StorageService);
 
       await expect(
-        serviceNoConnection.getDownloadUrl('https://test.blob.core.windows.net/documents/file.docx'),
+        serviceNoConnection.getDownloadUrl(
+          'https://test.blob.core.windows.net/documents/file.docx',
+        ),
       ).rejects.toThrow('Azure Storage credentials not configured');
     });
   });
@@ -163,10 +160,7 @@ describe('StorageService', () => {
       };
 
       const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          StorageService,
-          { provide: ConfigService, useValue: noConnectionConfig },
-        ],
+        providers: [StorageService, { provide: ConfigService, useValue: noConnectionConfig }],
       }).compile();
 
       const serviceNoConnection = module.get<StorageService>(StorageService);
