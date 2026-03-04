@@ -68,7 +68,7 @@ describe.skip('Admin → Approval Workflow Flow Integration', () => {
     // Create test questionnaire
     const questionnaire = await prisma.questionnaire.create({
       data: {
-        title: `Approval Test Questionnaire ${Date.now()}`,
+        name: `Approval Test Questionnaire ${Date.now()}`,
         description: 'Test questionnaire for approval workflow',
       },
     });
