@@ -1,0 +1,250 @@
+{
+  "timestamp": "2026-03-02T07:24:42.158Z",
+  "config": {
+    "apiUrl": "https://api.quiz2biz.com/api/v1",
+    "duration": 10,
+    "connections": 50,
+    "pipelining": 10
+  },
+  "results": [
+    {
+      "scenario": "Health Check",
+      "url": "/health",
+      "duration": 10,
+      "connections": 50,
+      "requests": {
+        "total": 5678,
+        "average": 567.8,
+        "mean": 567.8,
+        "stddev": 131.6
+      },
+      "latency": {
+        "average": 855.14,
+        "mean": 855.14,
+        "stddev": 378.59,
+        "min": 222,
+        "max": 3912,
+        "p50": 799,
+        "p75": 951,
+        "p90": 1097,
+        "p99": 2731
+      },
+      "throughput": {
+        "average": 1246233.61,
+        "mean": 1246233.61,
+        "stddev": 286687.08
+      },
+      "errors": 0,
+      "timeouts": 0,
+      "status2xx": 40,
+      "status4xx": 5638,
+      "status5xx": 0,
+      "passed": false,
+      "thresholds": {
+        "targetRps": 1000,
+        "actualRps": 567.8,
+        "maxLatencyP95": 50
+      }
+    },
+    {
+      "scenario": "Authentication - Login",
+      "url": "/api/auth/login",
+      "duration": 10,
+      "connections": 50,
+      "requests": {
+        "total": 6547,
+        "average": 654.71,
+        "mean": 654.71,
+        "stddev": 80.06
+      },
+      "latency": {
+        "average": 743.75,
+        "mean": 743.75,
+        "stddev": 295.91,
+        "min": 118,
+        "max": 3487,
+        "p50": 685,
+        "p75": 830,
+        "p90": 991,
+        "p99": 2010
+      },
+      "throughput": {
+        "average": 1410150.4,
+        "mean": 1410150.4,
+        "stddev": 172454.62
+      },
+      "errors": 0,
+      "timeouts": 0,
+      "status2xx": 0,
+      "status4xx": 6547,
+      "status5xx": 0,
+      "passed": false,
+      "thresholds": {
+        "targetRps": 500,
+        "actualRps": 654.71,
+        "maxLatencyP95": 200
+      }
+    },
+    {
+      "scenario": "Questionnaire List",
+      "url": "/api/questionnaires",
+      "duration": 10,
+      "connections": 50,
+      "requests": {
+        "total": 7654,
+        "average": 765.4,
+        "mean": 765.4,
+        "stddev": 132.66
+      },
+      "latency": {
+        "average": 635.6,
+        "mean": 635.6,
+        "stddev": 226.07,
+        "min": 159,
+        "max": 2833,
+        "p50": 567,
+        "p75": 715,
+        "p90": 834,
+        "p99": 1612
+      },
+      "throughput": {
+        "average": 1650995.2,
+        "mean": 1650995.2,
+        "stddev": 286121.36
+      },
+      "errors": 0,
+      "timeouts": 0,
+      "status2xx": 0,
+      "status4xx": 7654,
+      "status5xx": 0,
+      "passed": false,
+      "thresholds": {
+        "targetRps": 800,
+        "actualRps": 765.4,
+        "maxLatencyP95": 150
+      }
+    },
+    {
+      "scenario": "Session List",
+      "url": "/api/sessions",
+      "duration": 10,
+      "connections": 50,
+      "requests": {
+        "total": 11431,
+        "average": 1143.1,
+        "mean": 1143.1,
+        "stddev": 81.42
+      },
+      "latency": {
+        "average": 428.02,
+        "mean": 428.02,
+        "stddev": 110.29,
+        "min": 93,
+        "max": 1127,
+        "p50": 422,
+        "p75": 497,
+        "p90": 557,
+        "p99": 751
+      },
+      "throughput": {
+        "average": 2458624,
+        "mean": 2458624,
+        "stddev": 175347.56
+      },
+      "errors": 0,
+      "timeouts": 0,
+      "status2xx": 0,
+      "status4xx": 11431,
+      "status5xx": 0,
+      "passed": false,
+      "thresholds": {
+        "targetRps": 600,
+        "actualRps": 1143.1,
+        "maxLatencyP95": 200
+      }
+    },
+    {
+      "scenario": "Heatmap Data",
+      "url": "/api/heatmap",
+      "duration": 10,
+      "connections": 50,
+      "requests": {
+        "total": 13270,
+        "average": 1327,
+        "mean": 1327,
+        "stddev": 193.14
+      },
+      "latency": {
+        "average": 370.58,
+        "mean": 370.58,
+        "stddev": 94.19,
+        "min": 59,
+        "max": 911,
+        "p50": 352,
+        "p75": 417,
+        "p90": 498,
+        "p99": 668
+      },
+      "throughput": {
+        "average": 2852454.4,
+        "mean": 2852454.4,
+        "stddev": 415100.91
+      },
+      "errors": 0,
+      "timeouts": 0,
+      "status2xx": 0,
+      "status4xx": 13270,
+      "status5xx": 0,
+      "passed": false,
+      "thresholds": {
+        "targetRps": 400,
+        "actualRps": 1327,
+        "maxLatencyP95": 300
+      }
+    },
+    {
+      "scenario": "Readiness Score",
+      "url": "/api/scoring/readiness",
+      "duration": 10,
+      "connections": 50,
+      "requests": {
+        "total": 13319,
+        "average": 1331.9,
+        "mean": 1331.9,
+        "stddev": 222.1
+      },
+      "latency": {
+        "average": 367.61,
+        "mean": 367.61,
+        "stddev": 99.38,
+        "min": 118,
+        "max": 970,
+        "p50": 351,
+        "p75": 416,
+        "p90": 499,
+        "p99": 689
+      },
+      "throughput": {
+        "average": 2877030.4,
+        "mean": 2877030.4,
+        "stddev": 479843.43
+      },
+      "errors": 0,
+      "timeouts": 0,
+      "status2xx": 0,
+      "status4xx": 13319,
+      "status5xx": 0,
+      "passed": false,
+      "thresholds": {
+        "targetRps": 500,
+        "actualRps": 1331.9,
+        "maxLatencyP95": 200
+      }
+    }
+  ],
+  "summary": {
+    "total": 6,
+    "passed": 0,
+    "failed": 6
+  }
+}
