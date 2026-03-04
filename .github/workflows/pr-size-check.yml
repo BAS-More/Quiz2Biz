@@ -105,36 +105,25 @@ jobs:
             | ⛔ XXL | > 500 | Split Required |
             
             *70% of PRs should be under 200 lines for optimal review quality.*`;
-
-            const isForkPr = context.payload.pull_request.head.repo.full_name !== `${owner}/${repo}`;
-            const isDependabotPr = context.actor === 'dependabot[bot]';
             
-            if (isForkPr || isDependabotPr) {
-              core.info('Skipping PR comment and label due to restricted token context.');
-            } else {
-              // Post comment (permission can still be restricted by repo policy)
-              try {
-                await github.rest.issues.createComment({
-                  owner,
-                  repo,
-                  issue_number: pull_number,
-                  body
-                });
-              } catch (e) {
-                core.warning(`Could not create PR comment: ${e.message}`);
-              }
-              
-              // Add label
-              try {
-                await github.rest.issues.addLabels({
-                  owner,
-                  repo,
-                  issue_number: pull_number,
-                  labels: [label]
-                });
-              } catch (e) {
-                core.warning(`Could not add label: ${e.message}`);
-              }
+            // Post comment
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: pull_number,
+              body
+            });
+            
+            // Add label
+            try {
+              await github.rest.issues.addLabels({
+                owner,
+                repo,
+                issue_number: pull_number,
+                labels: [label]
+              });
+            } catch (e) {
+              console.log('Could not add label:', e.message);
             }
             
             if (totalChanges > MAX) {
