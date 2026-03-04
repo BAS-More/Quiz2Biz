@@ -12,6 +12,8 @@ describe('EvidenceRegistryController', () => {
   let ciIngestionService: CIArtifactIngestionService;
   let module: TestingModule;
 
+  const mockUser = { id: 'user-123', email: 'test@test.com', role: 'admin' };
+
   const mockEvidenceService = {
     uploadEvidence: jest.fn(),
     verifyEvidence: jest.fn(),
@@ -19,6 +21,7 @@ describe('EvidenceRegistryController', () => {
     listEvidence: jest.fn(),
     getEvidenceStats: jest.fn(),
     deleteEvidence: jest.fn(),
+    assertSessionOwnership: jest.fn(),
   };
 
   const mockIntegrityService = {
@@ -34,10 +37,6 @@ describe('EvidenceRegistryController', () => {
     bulkIngestArtifacts: jest.fn(),
     getSessionArtifacts: jest.fn(),
     getBuildSummary: jest.fn(),
-  };
-
-  const mockRequest = {
-    user: { userId: 'user-123' },
   };
 
   beforeEach(async () => {
@@ -108,7 +107,7 @@ describe('EvidenceRegistryController', () => {
 
       mockEvidenceService.uploadEvidence.mockResolvedValue(mockResponse);
 
-      const result = await controller.uploadEvidence(mockFile, dto, mockRequest as any);
+      const result = await controller.uploadEvidence(mockFile, dto, mockUser as any);
 
       expect(result).toEqual(mockResponse);
       expect(mockEvidenceService.uploadEvidence).toHaveBeenCalledWith(mockFile, dto, 'user-123');
@@ -132,7 +131,7 @@ describe('EvidenceRegistryController', () => {
 
       mockEvidenceService.verifyEvidence.mockResolvedValue(mockResponse);
 
-      const result = await controller.verifyEvidence(dto, mockRequest as any);
+      const result = await controller.verifyEvidence(dto, mockUser as any);
 
       expect(result.verified).toBe(true);
       expect(mockEvidenceService.verifyEvidence).toHaveBeenCalledWith(dto, 'user-123');
@@ -150,10 +149,10 @@ describe('EvidenceRegistryController', () => {
 
       mockEvidenceService.getEvidence.mockResolvedValue(mockEvidence);
 
-      const result = await controller.getEvidence('evidence-123');
+      const result = await controller.getEvidence('evidence-123', mockUser as any);
 
       expect(result).toEqual(mockEvidence);
-      expect(mockEvidenceService.getEvidence).toHaveBeenCalledWith('evidence-123');
+      expect(mockEvidenceService.getEvidence).toHaveBeenCalledWith('evidence-123', 'user-123');
     });
   });
 
@@ -171,10 +170,10 @@ describe('EvidenceRegistryController', () => {
 
       mockEvidenceService.listEvidence.mockResolvedValue(mockList);
 
-      const result = await controller.listEvidence(filters);
+      const result = await controller.listEvidence(filters, mockUser as any);
 
       expect(result).toEqual(mockList);
-      expect(mockEvidenceService.listEvidence).toHaveBeenCalledWith(filters);
+      expect(mockEvidenceService.listEvidence).toHaveBeenCalledWith(filters, 'user-123');
     });
   });
 
@@ -193,10 +192,10 @@ describe('EvidenceRegistryController', () => {
 
       mockEvidenceService.getEvidenceStats.mockResolvedValue(mockStats);
 
-      const result = await controller.getEvidenceStats('session-123');
+      const result = await controller.getEvidenceStats('session-123', mockUser as any);
 
       expect(result).toEqual(mockStats);
-      expect(mockEvidenceService.getEvidenceStats).toHaveBeenCalledWith('session-123');
+      expect(mockEvidenceService.getEvidenceStats).toHaveBeenCalledWith('session-123', 'user-123');
     });
   });
 
@@ -204,7 +203,7 @@ describe('EvidenceRegistryController', () => {
     it('deletes evidence', async () => {
       mockEvidenceService.deleteEvidence.mockResolvedValue(undefined);
 
-      await controller.deleteEvidence('evidence-123', mockRequest as any);
+      await controller.deleteEvidence('evidence-123', mockUser as any);
 
       expect(mockEvidenceService.deleteEvidence).toHaveBeenCalledWith('evidence-123', 'user-123');
     });
@@ -227,7 +226,11 @@ describe('EvidenceRegistryController', () => {
 
       mockIntegrityService.chainEvidence.mockResolvedValue(mockChainEntry);
 
-      const result = await controller.chainEvidence('evidence-456', { sessionId: 'session-789' });
+      const result = await controller.chainEvidence(
+        'evidence-456',
+        { sessionId: 'session-789' },
+        mockUser as any,
+      );
 
       expect(result).toEqual(mockChainEntry);
       expect(mockIntegrityService.chainEvidence).toHaveBeenCalledWith(
@@ -254,7 +257,7 @@ describe('EvidenceRegistryController', () => {
 
       mockIntegrityService.getEvidenceChain.mockResolvedValue(mockChain);
 
-      const result = await controller.getEvidenceChain('session-123');
+      const result = await controller.getEvidenceChain('session-123', mockUser as any);
 
       expect(result).toEqual(mockChain);
       expect(mockIntegrityService.getEvidenceChain).toHaveBeenCalledWith('session-123');
@@ -274,7 +277,7 @@ describe('EvidenceRegistryController', () => {
 
       mockIntegrityService.verifyChain.mockResolvedValue(mockVerification);
 
-      const result = await controller.verifyChain('session-123');
+      const result = await controller.verifyChain('session-123', mockUser as any);
 
       expect(result).toEqual(mockVerification);
       expect(result.isValid).toBe(true);
@@ -308,7 +311,7 @@ describe('EvidenceRegistryController', () => {
 
       mockIntegrityService.verifyEvidenceIntegrity.mockResolvedValue(mockIntegrityResult);
 
-      const result = await controller.verifyEvidenceIntegrity('evidence-123');
+      const result = await controller.verifyEvidenceIntegrity('evidence-123', mockUser as any);
 
       expect(result.overallStatus).toBe('FULLY_VERIFIED');
       expect(result.checks.hashStored).toBe(true);
@@ -351,7 +354,7 @@ describe('EvidenceRegistryController', () => {
 
       mockIntegrityService.generateIntegrityReport.mockResolvedValue(mockReport);
 
-      const result = await controller.generateIntegrityReport('session-123');
+      const result = await controller.generateIntegrityReport('session-123', mockUser as any);
 
       expect(result.summary.totalEvidence).toBe(10);
       expect(result.summary.chainIntegrity).toBe('VALID');
@@ -388,7 +391,7 @@ describe('EvidenceRegistryController', () => {
 
       mockCIIngestionService.ingestArtifact.mockResolvedValue(mockResult);
 
-      const result = await controller.ingestCIArtifact(dto);
+      const result = await controller.ingestCIArtifact(dto, mockUser as any);
 
       expect(result).toEqual(mockResult);
       expect(mockCIIngestionService.ingestArtifact).toHaveBeenCalledWith(dto);
@@ -423,7 +426,7 @@ describe('EvidenceRegistryController', () => {
 
       mockCIIngestionService.bulkIngestArtifacts.mockResolvedValue(mockResult);
 
-      const result = await controller.bulkIngestCIArtifacts(dto);
+      const result = await controller.bulkIngestCIArtifacts(dto, mockUser as any);
 
       expect(result.totalArtifacts).toBe(2);
       expect(result.errorCount).toBe(0);
@@ -450,7 +453,7 @@ describe('EvidenceRegistryController', () => {
 
       mockCIIngestionService.getSessionArtifacts.mockResolvedValue(mockArtifacts);
 
-      const result = await controller.getSessionCIArtifacts('session-123');
+      const result = await controller.getSessionCIArtifacts('session-123', mockUser as any);
 
       expect(result).toEqual(mockArtifacts);
       expect(mockCIIngestionService.getSessionArtifacts).toHaveBeenCalledWith('session-123');
@@ -479,7 +482,11 @@ describe('EvidenceRegistryController', () => {
 
       mockCIIngestionService.getBuildSummary.mockResolvedValue(mockSummary);
 
-      const result = await controller.getCIBuildSummary('session-123', 'build-456');
+      const result = await controller.getCIBuildSummary(
+        'session-123',
+        'build-456',
+        mockUser as any,
+      );
 
       expect(result.buildId).toBe('build-456');
       expect((result.metrics as any).totalTests).toBe(100);

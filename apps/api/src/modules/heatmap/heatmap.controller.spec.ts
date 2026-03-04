@@ -9,6 +9,8 @@ describe('HeatmapController', () => {
   let heatmapService: HeatmapService;
   let module: TestingModule;
 
+  const mockUser = { id: 'user-123', email: 'test@test.com', role: 'admin' };
+
   const mockHeatmapService = {
     generateHeatmap: jest.fn(),
     getSummary: jest.fn(),
@@ -69,10 +71,10 @@ describe('HeatmapController', () => {
 
       mockHeatmapService.generateHeatmap.mockResolvedValue(mockHeatmap);
 
-      const result = await controller.getHeatmap('session-123');
+      const result = await controller.getHeatmap('session-123', mockUser as any);
 
       expect(result).toEqual(mockHeatmap);
-      expect(mockHeatmapService.generateHeatmap).toHaveBeenCalledWith('session-123');
+      expect(mockHeatmapService.generateHeatmap).toHaveBeenCalledWith('session-123', mockUser);
     });
 
     it('returns cached heatmap when available', async () => {
@@ -94,7 +96,7 @@ describe('HeatmapController', () => {
 
       mockHeatmapService.generateHeatmap.mockResolvedValue(cachedHeatmap);
 
-      const result = await controller.getHeatmap('session-123');
+      const result = await controller.getHeatmap('session-123', mockUser as any);
 
       expect(result.sessionId).toBe('session-123');
     });
@@ -113,12 +115,12 @@ describe('HeatmapController', () => {
 
       mockHeatmapService.getSummary.mockResolvedValue(mockSummary);
 
-      const result = await controller.getSummary('session-123');
+      const result = await controller.getSummary('session-123', mockUser as any);
 
       expect(result).toEqual(mockSummary);
       expect(result.totalCells).toBe(12);
       expect(result.overallRiskScore).toBe(18.3);
-      expect(mockHeatmapService.getSummary).toHaveBeenCalledWith('session-123');
+      expect(mockHeatmapService.getSummary).toHaveBeenCalledWith('session-123', mockUser);
     });
 
     it('calculates risk distribution correctly', async () => {
@@ -133,7 +135,7 @@ describe('HeatmapController', () => {
 
       mockHeatmapService.getSummary.mockResolvedValue(mockSummary);
 
-      const result = await controller.getSummary('session-456');
+      const result = await controller.getSummary('session-456', mockUser as any);
 
       expect(result.greenCells + result.amberCells + result.redCells).toBe(result.totalCells);
     });
@@ -159,9 +161,9 @@ Red (>0.15),2`;
         send: jest.fn(),
       } as unknown as Response;
 
-      await controller.exportToCsv('session-123', mockResponse);
+      await controller.exportToCsv('session-123', mockUser as any, mockResponse);
 
-      expect(mockHeatmapService.exportToCsv).toHaveBeenCalledWith('session-123');
+      expect(mockHeatmapService.exportToCsv).toHaveBeenCalledWith('session-123', mockUser);
       expect(mockResponse.setHeader).toHaveBeenCalledWith('Content-Type', 'text/csv');
       expect(mockResponse.setHeader).toHaveBeenCalledWith(
         'Content-Disposition',
@@ -215,9 +217,9 @@ Red (>0.15),2`;
         send: jest.fn(),
       } as unknown as Response;
 
-      await controller.exportToMarkdown('session-123', mockResponse);
+      await controller.exportToMarkdown('session-123', mockUser as any, mockResponse);
 
-      expect(mockHeatmapService.exportToMarkdown).toHaveBeenCalledWith('session-123');
+      expect(mockHeatmapService.exportToMarkdown).toHaveBeenCalledWith('session-123', mockUser);
       expect(mockResponse.setHeader).toHaveBeenCalledWith(
         'Content-Type',
         'text/plain; charset=utf-8',
@@ -252,11 +254,16 @@ Red (>0.15),2`;
 
       mockHeatmapService.getCells.mockResolvedValue(mockCells);
 
-      const result = await controller.getCells('session-123', {});
+      const result = await controller.getCells('session-123', {}, mockUser as any);
 
       expect(result).toEqual(mockCells);
       expect(result.length).toBe(2);
-      expect(mockHeatmapService.getCells).toHaveBeenCalledWith('session-123', undefined, undefined);
+      expect(mockHeatmapService.getCells).toHaveBeenCalledWith(
+        'session-123',
+        undefined,
+        undefined,
+        mockUser,
+      );
     });
 
     it('filters cells by dimension', async () => {
@@ -279,13 +286,18 @@ Red (>0.15),2`;
 
       mockHeatmapService.getCells.mockResolvedValue(mockCells);
 
-      const result = await controller.getCells('session-123', { dimension: 'security' });
+      const result = await controller.getCells(
+        'session-123',
+        { dimension: 'security' },
+        mockUser as any,
+      );
 
       expect(result.every((c) => c.dimensionKey === 'security')).toBe(true);
       expect(mockHeatmapService.getCells).toHaveBeenCalledWith(
         'session-123',
         'security',
         undefined,
+        mockUser,
       );
     });
 
@@ -309,10 +321,19 @@ Red (>0.15),2`;
 
       mockHeatmapService.getCells.mockResolvedValue(mockCells);
 
-      const result = await controller.getCells('session-123', { severity: 'High' });
+      const result = await controller.getCells(
+        'session-123',
+        { severity: 'High' },
+        mockUser as any,
+      );
 
       expect(result.every((c) => c.severityBucket === 'High')).toBe(true);
-      expect(mockHeatmapService.getCells).toHaveBeenCalledWith('session-123', undefined, 'High');
+      expect(mockHeatmapService.getCells).toHaveBeenCalledWith(
+        'session-123',
+        undefined,
+        'High',
+        mockUser,
+      );
     });
 
     it('filters cells by both dimension and severity', async () => {
@@ -328,10 +349,14 @@ Red (>0.15),2`;
 
       mockHeatmapService.getCells.mockResolvedValue(mockCells);
 
-      const result = await controller.getCells('session-123', {
-        dimension: 'security',
-        severity: 'Critical',
-      });
+      const result = await controller.getCells(
+        'session-123',
+        {
+          dimension: 'security',
+          severity: 'Critical',
+        },
+        mockUser as any,
+      );
 
       expect(result.length).toBe(1);
       expect(result[0].dimensionKey).toBe('security');
@@ -340,6 +365,7 @@ Red (>0.15),2`;
         'session-123',
         'security',
         'Critical',
+        mockUser,
       );
     });
   });
@@ -383,13 +409,18 @@ Red (>0.15),2`;
 
       mockHeatmapService.drilldown.mockResolvedValue(mockDrilldown);
 
-      const result = await controller.drilldown('session-123', 'security', 'High');
+      const result = await controller.drilldown('session-123', 'security', 'High', mockUser as any);
 
       expect(result).toEqual(mockDrilldown);
       expect(result.dimensionKey).toBe('security');
       expect(result.severityBucket).toBe('High');
       expect(result.questions.length).toBe(3);
-      expect(mockHeatmapService.drilldown).toHaveBeenCalledWith('session-123', 'security', 'High');
+      expect(mockHeatmapService.drilldown).toHaveBeenCalledWith(
+        'session-123',
+        'security',
+        'High',
+        mockUser,
+      );
     });
 
     it('includes question details with residual risk', async () => {
@@ -422,7 +453,12 @@ Red (>0.15),2`;
 
       mockHeatmapService.drilldown.mockResolvedValue(mockDrilldown);
 
-      const result = await controller.drilldown('session-456', 'architecture', 'Medium');
+      const result = await controller.drilldown(
+        'session-456',
+        'architecture',
+        'Medium',
+        mockUser as any,
+      );
 
       expect(result.questions[0].residualRisk).toBeDefined();
       expect(result.questions[1].residualRisk).toBeDefined();
@@ -442,7 +478,7 @@ Red (>0.15),2`;
 
       mockHeatmapService.drilldown.mockResolvedValue(mockDrilldown);
 
-      const result = await controller.drilldown('session-123', 'security', 'Low');
+      const result = await controller.drilldown('session-123', 'security', 'Low', mockUser as any);
 
       expect(result.questions).toEqual([]);
       expect(result.questionCount).toBe(0);
@@ -491,7 +527,7 @@ Red (>0.15),2`;
 
       mockHeatmapService.generateHeatmap.mockResolvedValue(mockHeatmap);
 
-      const result = await controller.getHeatmap('session-123');
+      const result = await controller.getHeatmap('session-123', mockUser as any);
 
       const greenCell = result.cells.find((c) => c.cellValue <= 0.05);
       const amberCell = result.cells.find((c) => c.cellValue > 0.05 && c.cellValue <= 0.15);

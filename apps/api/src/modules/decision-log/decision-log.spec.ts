@@ -16,6 +16,7 @@ describe('DecisionLogService', () => {
   const mockSession = {
     id: 'session-1',
     tenantId: 'tenant-1',
+    userId: 'user-1',
     status: 'active',
   };
 
@@ -235,7 +236,7 @@ describe('DecisionLogService', () => {
     it('should return decision by ID', async () => {
       prismaService.decisionLog.findUnique = jest.fn().mockResolvedValue(mockDecision);
 
-      const result = await service.getDecision('decision-1');
+      const result = await service.getDecision('decision-1', 'user-1');
 
       expect(result.id).toBe('decision-1');
       expect(prismaService.decisionLog.findUnique).toHaveBeenCalledWith({
@@ -246,7 +247,7 @@ describe('DecisionLogService', () => {
     it('should throw NotFoundException when decision not found', async () => {
       prismaService.decisionLog.findUnique = jest.fn().mockResolvedValue(null);
 
-      await expect(service.getDecision('nonexistent')).rejects.toThrow(NotFoundException);
+      await expect(service.getDecision('nonexistent', 'user-1')).rejects.toThrow(NotFoundException);
     });
   });
 });
@@ -303,11 +304,12 @@ describe('DecisionLogController', () => {
     approvalWorkflowService = module.get(ApprovalWorkflowService);
   });
 
+  const mockUser = { id: 'user-1', email: 'test@test.com', role: 'admin' };
+
   describe('createDecision', () => {
     it('should create a decision', async () => {
       decisionLogService.createDecision = jest.fn().mockResolvedValue(mockDecisionResponse);
 
-      const mockRequest = { user: { userId: 'user-1' } };
       const dto = {
         sessionId: 'session-1',
         statement: 'Test decision',
@@ -315,7 +317,7 @@ describe('DecisionLogController', () => {
         references: 'Test',
       };
 
-      const result = await controller.createDecision(dto, mockRequest as any);
+      const result = await controller.createDecision(dto, mockUser as any);
 
       expect(result.id).toBe('decision-1');
       expect(decisionLogService.createDecision).toHaveBeenCalledWith(dto, 'user-1');
@@ -326,10 +328,10 @@ describe('DecisionLogController', () => {
     it('should return decision by ID', async () => {
       decisionLogService.getDecision = jest.fn().mockResolvedValue(mockDecisionResponse);
 
-      const result = await controller.getDecision('decision-1');
+      const result = await controller.getDecision('decision-1', mockUser as any);
 
       expect(result.id).toBe('decision-1');
-      expect(decisionLogService.getDecision).toHaveBeenCalledWith('decision-1');
+      expect(decisionLogService.getDecision).toHaveBeenCalledWith('decision-1', 'user-1');
     });
   });
 
@@ -340,9 +342,8 @@ describe('DecisionLogController', () => {
         status: DecisionStatus.LOCKED,
       });
 
-      const mockRequest = { user: { userId: 'user-1' } };
       const dto = { decisionId: 'decision-1', status: DecisionStatus.LOCKED };
-      const result = await controller.lockDecision(dto, mockRequest as any);
+      const result = await controller.lockDecision(dto, mockUser as any);
 
       expect(result.status).toBe(DecisionStatus.LOCKED);
       expect(decisionLogService.updateDecisionStatus).toHaveBeenCalledWith(dto, 'user-1');
@@ -360,7 +361,6 @@ describe('DecisionLogController', () => {
 
       decisionLogService.supersedeDecision = jest.fn().mockResolvedValue(supersededResponse);
 
-      const mockRequest = { user: { userId: 'user-1' } };
       const dto = {
         supersedesDecisionId: 'decision-1',
         statement: 'Updated decision',
@@ -368,7 +368,7 @@ describe('DecisionLogController', () => {
         references: 'ADR-002',
       };
 
-      const result = await controller.supersedeDecision(dto, mockRequest as any);
+      const result = await controller.supersedeDecision(dto, mockUser as any);
 
       expect(result.id).toBe('decision-2');
       expect(result.supersedesDecisionId).toBe('decision-1');

@@ -137,7 +137,7 @@ describe('EvidenceRegistryService', () => {
     });
 
     it('throws error when Azure Storage not configured', async () => {
-      mockPrisma.session.findUnique.mockResolvedValue({ id: 'session-123' });
+      mockPrisma.session.findUnique.mockResolvedValue({ id: 'session-123', userId: 'user-789' });
       mockPrisma.question.findUnique.mockResolvedValue({ id: 'question-456' });
 
       await expect(
@@ -179,6 +179,10 @@ describe('EvidenceRegistryService', () => {
         verifiedAt: new Date(),
       };
 
+      mockPrisma.session.findUnique.mockResolvedValue({
+        id: 'session-456',
+        userId: 'verifier-999',
+      });
       mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
       mockPrisma.evidenceRegistry.update.mockResolvedValue(updatedEvidence);
 
@@ -219,6 +223,10 @@ describe('EvidenceRegistryService', () => {
         verifiedAt: null,
       };
 
+      mockPrisma.session.findUnique.mockResolvedValue({
+        id: 'session-456',
+        userId: 'verifier-999',
+      });
       mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
       mockPrisma.evidenceRegistry.update.mockResolvedValue(updatedEvidence);
 
@@ -256,6 +264,10 @@ describe('EvidenceRegistryService', () => {
         verified: false,
       } as any;
 
+      mockPrisma.session.findUnique.mockResolvedValue({
+        id: 'session-456',
+        userId: 'verifier-999',
+      });
       mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
       mockPrisma.evidenceRegistry.update.mockResolvedValue({ ...mockEvidence, verified: true });
       mockPrisma.response.findFirst.mockResolvedValue({ coverageLevel: 'NONE' });
@@ -287,6 +299,10 @@ describe('EvidenceRegistryService', () => {
         verified: false,
       } as any;
 
+      mockPrisma.session.findUnique.mockResolvedValue({
+        id: 'session-456',
+        userId: 'verifier-999',
+      });
       mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
       mockPrisma.evidenceRegistry.update.mockResolvedValue({ ...mockEvidence, verified: true });
       mockPrisma.response.findFirst.mockResolvedValue({ coverageLevel: 'FULL' });
@@ -325,11 +341,11 @@ describe('EvidenceRegistryService', () => {
 
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue(mockEvidenceList);
 
-      const result = await service.listEvidence({});
+      const result = await service.listEvidence({}, 'user-123');
 
       expect(result).toHaveLength(2);
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
-        where: {},
+        where: { session: { userId: 'user-123' } },
         orderBy: { createdAt: 'desc' },
       });
     });
@@ -337,10 +353,10 @@ describe('EvidenceRegistryService', () => {
     it('filters by sessionId', async () => {
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([]);
 
-      await service.listEvidence({ sessionId: 'session-123' });
+      await service.listEvidence({ sessionId: 'session-123' }, 'user-123');
 
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
-        where: { sessionId: 'session-123' },
+        where: { session: { userId: 'user-123' }, sessionId: 'session-123' },
         orderBy: { createdAt: 'desc' },
       });
     });
@@ -348,10 +364,10 @@ describe('EvidenceRegistryService', () => {
     it('filters by verified status', async () => {
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([]);
 
-      await service.listEvidence({ verified: true });
+      await service.listEvidence({ verified: true }, 'user-123');
 
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
-        where: { verified: true },
+        where: { session: { userId: 'user-123' }, verified: true },
         orderBy: { createdAt: 'desc' },
       });
     });
@@ -359,15 +375,19 @@ describe('EvidenceRegistryService', () => {
     it('filters by multiple criteria', async () => {
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([]);
 
-      await service.listEvidence({
-        sessionId: 'session-123',
-        questionId: 'question-456',
-        artifactType: 'FILE' as EvidenceType,
-        verified: false,
-      });
+      await service.listEvidence(
+        {
+          sessionId: 'session-123',
+          questionId: 'question-456',
+          artifactType: 'FILE' as EvidenceType,
+          verified: false,
+        },
+        'user-123',
+      );
 
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
         where: {
+          session: { userId: 'user-123' },
           sessionId: 'session-123',
           questionId: 'question-456',
           artifactType: 'FILE',
@@ -387,9 +407,10 @@ describe('EvidenceRegistryService', () => {
         { verified: false, artifactType: 'SBOM' as EvidenceType },
       ];
 
+      mockPrisma.session.findUnique.mockResolvedValue({ id: 'session-123', userId: 'user-123' });
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue(mockEvidence);
 
-      const result = await service.getEvidenceStats('session-123');
+      const result = await service.getEvidenceStats('session-123', 'user-123');
 
       expect(result).toEqual({
         total: 4,
@@ -404,9 +425,10 @@ describe('EvidenceRegistryService', () => {
     });
 
     it('returns zeros for empty session', async () => {
+      mockPrisma.session.findUnique.mockResolvedValue({ id: 'session-123', userId: 'user-123' });
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([]);
 
-      const result = await service.getEvidenceStats('session-123');
+      const result = await service.getEvidenceStats('session-123', 'user-123');
 
       expect(result).toEqual({
         total: 0,
@@ -427,6 +449,7 @@ describe('EvidenceRegistryService', () => {
         artifactUrl: 'https://storage.blob/file.pdf',
       } as any;
 
+      mockPrisma.session.findUnique.mockResolvedValue({ id: 'session-456', userId: 'user-999' });
       mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
       mockPrisma.evidenceRegistry.delete.mockResolvedValue(mockEvidence);
       mockPrisma.evidenceRegistry.count.mockResolvedValue(0);
@@ -447,9 +470,11 @@ describe('EvidenceRegistryService', () => {
     it('prevents deletion of verified evidence', async () => {
       const mockEvidence = {
         id: 'evidence-123',
+        sessionId: 'session-456',
         verified: true,
       } as any;
 
+      mockPrisma.session.findUnique.mockResolvedValue({ id: 'session-456', userId: 'user-999' });
       mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
 
       await expect(service.deleteEvidence('evidence-123', 'user-999')).rejects.toThrow(
@@ -483,6 +508,7 @@ describe('EvidenceRegistryService', () => {
         verified: false,
       } as any;
 
+      mockPrisma.session.findUnique.mockResolvedValue({ id: 's1', userId: 'verifier-999' });
       mockPrisma.evidenceRegistry.findUnique
         .mockResolvedValueOnce(mockEvidence1)
         .mockResolvedValueOnce(mockEvidence2);
@@ -499,8 +525,9 @@ describe('EvidenceRegistryService', () => {
     });
 
     it('handles partial failures gracefully', async () => {
+      mockPrisma.session.findUnique.mockResolvedValue({ id: 's1', userId: 'verifier-999' });
       mockPrisma.evidenceRegistry.findUnique
-        .mockResolvedValueOnce({ id: 'evidence-1' } as any)
+        .mockResolvedValueOnce({ id: 'evidence-1', sessionId: 's1', questionId: 'q1' } as any)
         .mockResolvedValueOnce(null); // Second evidence not found
 
       mockPrisma.evidenceRegistry.update.mockResolvedValue({
@@ -754,9 +781,10 @@ describe('EvidenceRegistryService', () => {
         createdAt: new Date(),
       };
 
+      mockPrisma.session.findUnique.mockResolvedValue({ id: 'session-456', userId: 'user-123' });
       mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
 
-      const result = await service.getEvidence('evidence-123');
+      const result = await service.getEvidence('evidence-123', 'user-123');
 
       expect(result.id).toBe('evidence-123');
       expect(result.fileName).toBe('test.pdf');
@@ -769,8 +797,10 @@ describe('EvidenceRegistryService', () => {
     it('throws NotFoundException for non-existent evidence', async () => {
       mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(null);
 
-      await expect(service.getEvidence('non-existent-id')).rejects.toThrow(NotFoundException);
-      await expect(service.getEvidence('non-existent-id')).rejects.toThrow(
+      await expect(service.getEvidence('non-existent-id', 'user-123')).rejects.toThrow(
+        NotFoundException,
+      );
+      await expect(service.getEvidence('non-existent-id', 'user-123')).rejects.toThrow(
         'Evidence not found: non-existent-id',
       );
     });
@@ -808,7 +838,7 @@ describe('EvidenceRegistryService', () => {
     });
 
     it('validates question existence after session validation', async () => {
-      mockPrisma.session.findUnique.mockResolvedValue({ id: 'session-123' });
+      mockPrisma.session.findUnique.mockResolvedValue({ id: 'session-123', userId: 'user-789' });
       mockPrisma.question.findUnique.mockResolvedValue(null);
 
       await expect(
@@ -840,7 +870,7 @@ describe('EvidenceRegistryService', () => {
       ];
 
       for (const mimeType of allowedTypes) {
-        mockPrisma.session.findUnique.mockResolvedValue({ id: 'session-123' });
+        mockPrisma.session.findUnique.mockResolvedValue({ id: 'session-123', userId: 'user-789' });
         mockPrisma.question.findUnique.mockResolvedValue({ id: 'question-456' });
 
         const testFile = { ...mockFile, mimetype: mimeType };
@@ -897,6 +927,10 @@ describe('EvidenceRegistryService', () => {
         createdAt: new Date(),
       };
 
+      mockPrisma.session.findUnique.mockResolvedValue({
+        id: 'session-456',
+        userId: 'verifier-999',
+      });
       mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
       mockPrisma.evidenceRegistry.update.mockResolvedValue({ ...mockEvidence, verified: true });
 
@@ -916,6 +950,10 @@ describe('EvidenceRegistryService', () => {
         verifiedAt: new Date(),
       } as any;
 
+      mockPrisma.session.findUnique.mockResolvedValue({
+        id: 'session-456',
+        userId: 'verifier-999',
+      });
       mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
       mockPrisma.evidenceRegistry.update.mockResolvedValue({
         ...mockEvidence,
@@ -940,6 +978,10 @@ describe('EvidenceRegistryService', () => {
         verified: false,
       } as any;
 
+      mockPrisma.session.findUnique.mockResolvedValue({
+        id: 'session-456',
+        userId: 'verifier-999',
+      });
       mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
       mockPrisma.evidenceRegistry.update.mockResolvedValue({ ...mockEvidence, verified: true });
       mockPrisma.response.findFirst.mockResolvedValue(null); // No existing response
@@ -967,6 +1009,10 @@ describe('EvidenceRegistryService', () => {
         verified: false,
       } as any;
 
+      mockPrisma.session.findUnique.mockResolvedValue({
+        id: 'session-456',
+        userId: 'verifier-999',
+      });
       mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
       mockPrisma.evidenceRegistry.update.mockResolvedValue({ ...mockEvidence, verified: true });
       mockPrisma.response.findFirst.mockResolvedValue({ coverageLevel: 'NONE' });
@@ -994,6 +1040,10 @@ describe('EvidenceRegistryService', () => {
         verified: false,
       } as any;
 
+      mockPrisma.session.findUnique.mockResolvedValue({
+        id: 'session-456',
+        userId: 'verifier-999',
+      });
       mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
       mockPrisma.evidenceRegistry.update.mockResolvedValue({ ...mockEvidence, verified: true });
       mockPrisma.response.findFirst.mockResolvedValue({ coverageLevel: 'SUBSTANTIAL' });
@@ -1026,6 +1076,7 @@ describe('EvidenceRegistryService', () => {
         verified: false,
       } as any;
 
+      mockPrisma.session.findUnique.mockResolvedValue({ id: 's1', userId: 'verifier-999' });
       mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence1);
       mockPrisma.evidenceRegistry.update.mockResolvedValue({ ...mockEvidence1, verified: true });
       mockPrisma.response.findFirst.mockResolvedValue({ coverageLevel: 'NONE' });
@@ -1054,6 +1105,7 @@ describe('EvidenceRegistryService', () => {
         verified: false,
       } as any;
 
+      mockPrisma.session.findUnique.mockResolvedValue({ id: 's1', userId: 'verifier-999' });
       mockPrisma.evidenceRegistry.findUnique
         .mockResolvedValueOnce(null) // First one fails (not found)
         .mockResolvedValueOnce(mockEvidence2); // Second one succeeds
@@ -1267,10 +1319,10 @@ describe('EvidenceRegistryService', () => {
     it('correctly handles verified=false (falsy but defined)', async () => {
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([]);
 
-      await service.listEvidence({ verified: false });
+      await service.listEvidence({ verified: false }, 'user-123');
 
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
-        where: { verified: false },
+        where: { session: { userId: 'user-123' }, verified: false },
         orderBy: { createdAt: 'desc' },
       });
     });
@@ -1288,6 +1340,7 @@ describe('EvidenceRegistryService', () => {
         artifactUrl: 'https://storage.blob/file.pdf',
       } as any;
 
+      mockPrisma.session.findUnique.mockResolvedValue({ id: 'session-456', userId: 'user-999' });
       mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
       mockPrisma.evidenceRegistry.delete.mockResolvedValue(mockEvidence);
       mockPrisma.evidenceRegistry.count.mockResolvedValue(3);
@@ -1315,9 +1368,10 @@ describe('EvidenceRegistryService', () => {
         { verified: true, artifactType: 'FILE' as EvidenceType },
       ];
 
+      mockPrisma.session.findUnique.mockResolvedValue({ id: 'session-123', userId: 'user-123' });
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue(mockEvidence);
 
-      const result = await service.getEvidenceStats('session-123');
+      const result = await service.getEvidenceStats('session-123', 'user-123');
 
       expect(result).toEqual({
         total: 3,
@@ -1336,10 +1390,10 @@ describe('EvidenceRegistryService', () => {
     it('should build empty where clause when no filters are provided', async () => {
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([]);
 
-      await service.listEvidence({});
+      await service.listEvidence({}, 'user-123');
 
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
-        where: {},
+        where: { session: { userId: 'user-123' } },
         orderBy: { createdAt: 'desc' },
       });
     });
@@ -1347,10 +1401,10 @@ describe('EvidenceRegistryService', () => {
     it('should include only sessionId when only sessionId filter is set', async () => {
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([]);
 
-      await service.listEvidence({ sessionId: 'sess-1' });
+      await service.listEvidence({ sessionId: 'sess-1' }, 'user-123');
 
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
-        where: { sessionId: 'sess-1' },
+        where: { session: { userId: 'user-123' }, sessionId: 'sess-1' },
         orderBy: { createdAt: 'desc' },
       });
     });
@@ -1358,10 +1412,10 @@ describe('EvidenceRegistryService', () => {
     it('should include only questionId when only questionId filter is set', async () => {
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([]);
 
-      await service.listEvidence({ questionId: 'q-1' });
+      await service.listEvidence({ questionId: 'q-1' }, 'user-123');
 
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
-        where: { questionId: 'q-1' },
+        where: { session: { userId: 'user-123' }, questionId: 'q-1' },
         orderBy: { createdAt: 'desc' },
       });
     });
@@ -1369,10 +1423,10 @@ describe('EvidenceRegistryService', () => {
     it('should include only artifactType when only artifactType filter is set', async () => {
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([]);
 
-      await service.listEvidence({ artifactType: 'FILE' as EvidenceType });
+      await service.listEvidence({ artifactType: 'FILE' as EvidenceType }, 'user-123');
 
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
-        where: { artifactType: 'FILE' },
+        where: { session: { userId: 'user-123' }, artifactType: 'FILE' },
         orderBy: { createdAt: 'desc' },
       });
     });
@@ -1380,15 +1434,19 @@ describe('EvidenceRegistryService', () => {
     it('should include all filters when all are provided', async () => {
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([]);
 
-      await service.listEvidence({
-        sessionId: 'sess-1',
-        questionId: 'q-1',
-        artifactType: 'FILE' as EvidenceType,
-        verified: true,
-      });
+      await service.listEvidence(
+        {
+          sessionId: 'sess-1',
+          questionId: 'q-1',
+          artifactType: 'FILE' as EvidenceType,
+          verified: true,
+        },
+        'user-123',
+      );
 
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
         where: {
+          session: { userId: 'user-123' },
           sessionId: 'sess-1',
           questionId: 'q-1',
           artifactType: 'FILE',
@@ -1495,6 +1553,7 @@ describe('EvidenceRegistryService', () => {
 
   describe('branch coverage - getEvidenceStats mixed verified/pending', () => {
     it('should correctly partition verified and pending evidence', async () => {
+      mockPrisma.session.findUnique.mockResolvedValue({ id: 'sess-1', userId: 'user-123' });
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([
         { verified: true, artifactType: 'FILE' as EvidenceType },
         { verified: false, artifactType: 'FILE' as EvidenceType },
@@ -1502,7 +1561,7 @@ describe('EvidenceRegistryService', () => {
         { verified: true, artifactType: 'SCREENSHOT' as EvidenceType },
       ]);
 
-      const result = await service.getEvidenceStats('sess-1');
+      const result = await service.getEvidenceStats('sess-1', 'user-123');
 
       expect(result.total).toBe(4);
       expect(result.verified).toBe(2);
@@ -1513,8 +1572,10 @@ describe('EvidenceRegistryService', () => {
 
   describe('branch coverage - deleteEvidence verified evidence forbidden', () => {
     it('should throw ForbiddenException when deleting verified evidence', async () => {
+      mockPrisma.session.findUnique.mockResolvedValue({ id: 'sess-1', userId: 'user-1' });
       mockPrisma.evidenceRegistry.findUnique.mockResolvedValue({
         id: 'ev-1',
+        sessionId: 'sess-1',
         verified: true,
       });
 
@@ -1524,7 +1585,7 @@ describe('EvidenceRegistryService', () => {
 
   describe('branch coverage - uploadEvidence dto.fileName fallback', () => {
     it('should use file.originalname when dto.fileName is not provided', async () => {
-      mockPrisma.session.findUnique.mockResolvedValue({ id: 'sess-1' });
+      mockPrisma.session.findUnique.mockResolvedValue({ id: 'sess-1', userId: 'user-1' });
       mockPrisma.question.findUnique.mockResolvedValue({ id: 'q-1' });
 
       // This will throw because containerClient is null, but file validation and

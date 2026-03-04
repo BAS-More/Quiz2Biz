@@ -21,8 +21,7 @@ describe('DecisionLogController', () => {
     deleteDecision: jest.fn(),
   };
 
-  const mockUser = { userId: 'user-123' };
-  const mockReq = { user: mockUser };
+  const mockUser = { id: 'user-123', email: 'test@test.com', role: 'admin' };
 
   const mockDecision = {
     id: 'dec-1',
@@ -64,7 +63,7 @@ describe('DecisionLogController', () => {
         rationale: 'Best fit for relational data',
       };
 
-      const result = await controller.createDecision(dto as any, mockReq as any);
+      const result = await controller.createDecision(dto as any, mockUser as any);
 
       expect(result.id).toBe('dec-1');
       expect(result.status).toBe('DRAFT');
@@ -79,7 +78,7 @@ describe('DecisionLogController', () => {
 
       const dto = { decisionId: 'dec-1', status: 'LOCKED' };
 
-      const result = await controller.lockDecision(dto as any, mockReq as any);
+      const result = await controller.lockDecision(dto as any, mockUser as any);
 
       expect(result.status).toBe('LOCKED');
       expect(mockDecisionService.updateDecisionStatus).toHaveBeenCalledWith(dto, 'user-123');
@@ -102,7 +101,7 @@ describe('DecisionLogController', () => {
         rationale: 'Need read scaling',
       };
 
-      const result = await controller.supersedeDecision(dto as any, mockReq as any);
+      const result = await controller.supersedeDecision(dto as any, mockUser as any);
 
       expect(result.id).toBe('dec-2');
       expect(mockDecisionService.supersedeDecision).toHaveBeenCalledWith(dto, 'user-123');
@@ -113,10 +112,10 @@ describe('DecisionLogController', () => {
     it('should return a decision by ID', async () => {
       mockDecisionService.getDecision.mockResolvedValue(mockDecision);
 
-      const result = await controller.getDecision('dec-1');
+      const result = await controller.getDecision('dec-1', mockUser as any);
 
       expect(result.id).toBe('dec-1');
-      expect(mockDecisionService.getDecision).toHaveBeenCalledWith('dec-1');
+      expect(mockDecisionService.getDecision).toHaveBeenCalledWith('dec-1', 'user-123');
     });
   });
 
@@ -126,16 +125,16 @@ describe('DecisionLogController', () => {
 
       const filters = { sessionId: 'session-1' };
 
-      const result = await controller.listDecisions(filters as any);
+      const result = await controller.listDecisions(filters as any, mockUser as any);
 
       expect(result).toHaveLength(1);
-      expect(mockDecisionService.listDecisions).toHaveBeenCalledWith(filters);
+      expect(mockDecisionService.listDecisions).toHaveBeenCalledWith(filters, 'user-123');
     });
 
     it('should return empty array when no decisions match', async () => {
       mockDecisionService.listDecisions.mockResolvedValue([]);
 
-      const result = await controller.listDecisions({} as any);
+      const result = await controller.listDecisions({} as any, mockUser as any);
 
       expect(result).toHaveLength(0);
     });
@@ -149,10 +148,10 @@ describe('DecisionLogController', () => {
       ];
       mockDecisionService.getSupersessionChain.mockResolvedValue(chain);
 
-      const result = await controller.getSupersessionChain('dec-1');
+      const result = await controller.getSupersessionChain('dec-1', mockUser as any);
 
       expect(result).toHaveLength(2);
-      expect(mockDecisionService.getSupersessionChain).toHaveBeenCalledWith('dec-1');
+      expect(mockDecisionService.getSupersessionChain).toHaveBeenCalledWith('dec-1', 'user-123');
     });
   });
 
@@ -166,11 +165,11 @@ describe('DecisionLogController', () => {
       };
       mockDecisionService.exportForAudit.mockResolvedValue(auditExport);
 
-      const result = await controller.exportForAudit('session-1');
+      const result = await controller.exportForAudit('session-1', mockUser as any);
 
       expect(result.sessionId).toBe('session-1');
       expect(result.decisions).toHaveLength(1);
-      expect(mockDecisionService.exportForAudit).toHaveBeenCalledWith('session-1');
+      expect(mockDecisionService.exportForAudit).toHaveBeenCalledWith('session-1', 'user-123');
     });
   });
 
@@ -178,7 +177,7 @@ describe('DecisionLogController', () => {
     it('should delete a draft decision', async () => {
       mockDecisionService.deleteDecision.mockResolvedValue(undefined);
 
-      await controller.deleteDecision('dec-1', mockReq as any);
+      await controller.deleteDecision('dec-1', mockUser as any);
 
       expect(mockDecisionService.deleteDecision).toHaveBeenCalledWith('dec-1', 'user-123');
     });

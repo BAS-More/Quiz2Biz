@@ -204,7 +204,7 @@ describe('DecisionLogService', () => {
     it('should return decision by ID', async () => {
       mockPrismaService.decisionLog.findUnique.mockResolvedValue(mockDecision);
 
-      const result = await service.getDecision('decision-1');
+      const result = await service.getDecision('decision-1', 'user-1');
 
       expect(result.id).toBe('decision-1');
       expect(result.statement).toBe('We will use PostgreSQL for the database');
@@ -213,7 +213,9 @@ describe('DecisionLogService', () => {
     it('should throw NotFoundException if decision not found', async () => {
       mockPrismaService.decisionLog.findUnique.mockResolvedValue(null);
 
-      await expect(service.getDecision('non-existent')).rejects.toThrow(NotFoundException);
+      await expect(service.getDecision('non-existent', 'user-1')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -221,7 +223,7 @@ describe('DecisionLogService', () => {
     it('should list all decisions', async () => {
       mockPrismaService.decisionLog.findMany.mockResolvedValue([mockDecision, mockLockedDecision]);
 
-      const result = await service.listDecisions({});
+      const result = await service.listDecisions({}, 'user-1');
 
       expect(result).toHaveLength(2);
     });
@@ -229,10 +231,10 @@ describe('DecisionLogService', () => {
     it('should filter by sessionId', async () => {
       mockPrismaService.decisionLog.findMany.mockResolvedValue([mockDecision]);
 
-      await service.listDecisions({ sessionId: 'session-1' });
+      await service.listDecisions({ sessionId: 'session-1' }, 'user-1');
 
       expect(mockPrismaService.decisionLog.findMany).toHaveBeenCalledWith({
-        where: { sessionId: 'session-1' },
+        where: { ownerId: 'user-1', sessionId: 'session-1' },
         orderBy: { createdAt: 'desc' },
       });
     });
@@ -240,7 +242,7 @@ describe('DecisionLogService', () => {
     it('should filter by ownerId', async () => {
       mockPrismaService.decisionLog.findMany.mockResolvedValue([mockDecision]);
 
-      await service.listDecisions({ ownerId: 'user-1' });
+      await service.listDecisions({ ownerId: 'user-1' }, 'user-1');
 
       expect(mockPrismaService.decisionLog.findMany).toHaveBeenCalledWith({
         where: { ownerId: 'user-1' },
@@ -251,10 +253,10 @@ describe('DecisionLogService', () => {
     it('should filter by status', async () => {
       mockPrismaService.decisionLog.findMany.mockResolvedValue([mockDecision]);
 
-      await service.listDecisions({ status: DecisionStatus.DRAFT });
+      await service.listDecisions({ status: DecisionStatus.DRAFT }, 'user-1');
 
       expect(mockPrismaService.decisionLog.findMany).toHaveBeenCalledWith({
-        where: { status: DecisionStatus.DRAFT },
+        where: { ownerId: 'user-1', status: DecisionStatus.DRAFT },
         orderBy: { createdAt: 'desc' },
       });
     });
@@ -262,16 +264,19 @@ describe('DecisionLogService', () => {
     it('should apply multiple filters', async () => {
       mockPrismaService.decisionLog.findMany.mockResolvedValue([mockDecision]);
 
-      await service.listDecisions({
-        sessionId: 'session-1',
-        ownerId: 'user-1',
-        status: DecisionStatus.DRAFT,
-      });
+      await service.listDecisions(
+        {
+          sessionId: 'session-1',
+          ownerId: 'user-1',
+          status: DecisionStatus.DRAFT,
+        },
+        'user-1',
+      );
 
       expect(mockPrismaService.decisionLog.findMany).toHaveBeenCalledWith({
         where: {
-          sessionId: 'session-1',
           ownerId: 'user-1',
+          sessionId: 'session-1',
           status: DecisionStatus.DRAFT,
         },
         orderBy: { createdAt: 'desc' },
@@ -284,7 +289,7 @@ describe('DecisionLogService', () => {
       mockPrismaService.session.findUnique.mockResolvedValue(mockSession);
       mockPrismaService.decisionLog.findMany.mockResolvedValue([mockDecision, mockLockedDecision]);
 
-      const result = await service.exportForAudit('session-1');
+      const result = await service.exportForAudit('session-1', 'user-1');
 
       expect(result.sessionId).toBe('session-1');
       expect(result.totalDecisions).toBe(2);
@@ -305,7 +310,7 @@ describe('DecisionLogService', () => {
         supersedingDecision,
       ]);
 
-      const result = await service.exportForAudit('session-1');
+      const result = await service.exportForAudit('session-1', 'user-1');
 
       expect(result.supersessionChain).toHaveProperty('decision-2');
       expect(result.supersessionChain['decision-2']).toContain('decision-3');
@@ -314,7 +319,9 @@ describe('DecisionLogService', () => {
     it('should throw NotFoundException if session not found', async () => {
       mockPrismaService.session.findUnique.mockResolvedValue(null);
 
-      await expect(service.exportForAudit('non-existent')).rejects.toThrow(NotFoundException);
+      await expect(service.exportForAudit('non-existent', 'user-1')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -332,12 +339,12 @@ describe('DecisionLogService', () => {
       };
 
       mockPrismaService.decisionLog.findUnique
+        .mockResolvedValueOnce({ id: 'decision-1', ownerId: 'user-1' })
         .mockResolvedValueOnce(currentDecision)
-        .mockResolvedValueOnce(supersededDecision)
-        .mockResolvedValueOnce(null);
+        .mockResolvedValueOnce(supersededDecision);
       mockPrismaService.decisionLog.findMany.mockResolvedValue([]);
 
-      const result = await service.getSupersessionChain('decision-1');
+      const result = await service.getSupersessionChain('decision-1', 'user-1');
 
       expect(result).toHaveLength(2);
     });
@@ -355,12 +362,13 @@ describe('DecisionLogService', () => {
         supersedesDecisionId: 'decision-original',
       };
 
-      // Mock backward walk - returns original decision, then on next iteration returns null
-      mockPrismaService.decisionLog.findUnique.mockReset().mockResolvedValueOnce(originalDecision);
-      // Forward query returns newerDecision (the one that supersedes original)
+      mockPrismaService.decisionLog.findUnique
+        .mockReset()
+        .mockResolvedValueOnce({ id: 'decision-original', ownerId: 'user-1' })
+        .mockResolvedValueOnce(originalDecision);
       mockPrismaService.decisionLog.findMany.mockReset().mockResolvedValue([newerDecision]);
 
-      const result = await service.getSupersessionChain('decision-original');
+      const result = await service.getSupersessionChain('decision-original', 'user-1');
 
       // Should have the original decision plus the forward supersession
       expect(result).toHaveLength(2);
@@ -414,7 +422,7 @@ describe('DecisionLogService', () => {
     it('should map decision to response DTO', async () => {
       mockPrismaService.decisionLog.findUnique.mockResolvedValue(mockDecision);
 
-      const result = await service.getDecision('decision-1');
+      const result = await service.getDecision('decision-1', 'user-1');
 
       expect(result).toMatchObject({
         id: 'decision-1',

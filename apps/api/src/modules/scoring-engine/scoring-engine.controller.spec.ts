@@ -7,6 +7,8 @@ describe('ScoringEngineController', () => {
   let scoringService: ScoringEngineService;
   let module: TestingModule;
 
+  const mockUser = { id: 'user-123', email: 'test@test.com', role: 'admin' };
+
   const mockScoringService = {
     calculateScore: jest.fn(),
     getNextQuestions: jest.fn(),
@@ -59,11 +61,11 @@ describe('ScoringEngineController', () => {
 
       mockScoringService.calculateScore.mockResolvedValue(mockResult);
 
-      const result = await controller.calculateScore(dto);
+      const result = await controller.calculateScore(dto, mockUser as any);
 
       expect(result.score).toBe(75.5);
       expect(result.portfolioResidual).toBeCloseTo(0.245, 3);
-      expect(mockScoringService.calculateScore).toHaveBeenCalledWith(dto);
+      expect(mockScoringService.calculateScore).toHaveBeenCalledWith(dto, mockUser);
     });
 
     it('should support coverage overrides', async () => {
@@ -77,10 +79,10 @@ describe('ScoringEngineController', () => {
         score: 85,
       });
 
-      const result = await controller.calculateScore(dto);
+      const result = await controller.calculateScore(dto, mockUser as any);
 
       expect(result.score).toBe(85);
-      expect(mockScoringService.calculateScore).toHaveBeenCalledWith(dto);
+      expect(mockScoringService.calculateScore).toHaveBeenCalledWith(dto, mockUser);
     });
   });
 
@@ -99,12 +101,12 @@ describe('ScoringEngineController', () => {
 
       mockScoringService.getNextQuestions.mockResolvedValue(mockResult);
 
-      const result = await controller.getNextQuestions(dto);
+      const result = await controller.getNextQuestions(dto, mockUser as any);
 
       expect(result.questions).toHaveLength(2);
       expect(result.questions[0].rank).toBe(1);
       expect(result.maxPotentialScore).toBe(79);
-      expect(mockScoringService.getNextQuestions).toHaveBeenCalledWith(dto);
+      expect(mockScoringService.getNextQuestions).toHaveBeenCalledWith(dto, mockUser);
     });
   });
 
@@ -118,10 +120,13 @@ describe('ScoringEngineController', () => {
 
       mockScoringService.calculateScore.mockResolvedValue(mockResult);
 
-      const result = await controller.getScore('session-123');
+      const result = await controller.getScore('session-123', mockUser as any);
 
       expect(result.score).toBe(82);
-      expect(mockScoringService.calculateScore).toHaveBeenCalledWith({ sessionId: 'session-123' });
+      expect(mockScoringService.calculateScore).toHaveBeenCalledWith(
+        { sessionId: 'session-123' },
+        mockUser,
+      );
     });
   });
 
@@ -129,9 +134,9 @@ describe('ScoringEngineController', () => {
     it('should invalidate score cache', async () => {
       mockScoringService.invalidateScoreCache.mockResolvedValue(undefined);
 
-      await controller.invalidateCache('session-123');
+      await controller.invalidateCache('session-123', mockUser as any);
 
-      expect(mockScoringService.invalidateScoreCache).toHaveBeenCalledWith('session-123');
+      expect(mockScoringService.invalidateScoreCache).toHaveBeenCalledWith('session-123', mockUser);
     });
   });
 
@@ -149,11 +154,11 @@ describe('ScoringEngineController', () => {
 
       mockScoringService.getScoreHistory.mockResolvedValue(mockHistory);
 
-      const result = await controller.getScoreHistory('session-123', 10);
+      const result = await controller.getScoreHistory('session-123', 10, mockUser as any);
 
       expect(result.history).toHaveLength(3);
       expect(result.trend.direction).toBe('UP');
-      expect(mockScoringService.getScoreHistory).toHaveBeenCalledWith('session-123', 10);
+      expect(mockScoringService.getScoreHistory).toHaveBeenCalledWith('session-123', 10, mockUser);
     });
   });
 
@@ -177,13 +182,18 @@ describe('ScoringEngineController', () => {
 
       mockScoringService.getIndustryBenchmark.mockResolvedValue(mockBenchmark);
 
-      const result = await controller.getIndustryBenchmark('session-123', 'technology');
+      const result = await controller.getIndustryBenchmark(
+        'session-123',
+        'technology',
+        mockUser as any,
+      );
 
       expect(result.currentScore).toBe(80);
       expect(result.performanceCategory).toBe('ABOVE_AVERAGE');
       expect(mockScoringService.getIndustryBenchmark).toHaveBeenCalledWith(
         'session-123',
         'technology',
+        mockUser,
       );
     });
   });
@@ -213,12 +223,15 @@ describe('ScoringEngineController', () => {
 
       mockScoringService.getDimensionBenchmarks.mockResolvedValue(mockDimBenchmarks);
 
-      const result = await controller.getDimensionBenchmarks('session-123');
+      const result = await controller.getDimensionBenchmarks('session-123', mockUser as any);
 
       expect(result).toHaveLength(2);
       expect(result[0].performance).toBe('ABOVE');
       expect(result[1].performance).toBe('BELOW');
-      expect(mockScoringService.getDimensionBenchmarks).toHaveBeenCalledWith('session-123');
+      expect(mockScoringService.getDimensionBenchmarks).toHaveBeenCalledWith(
+        'session-123',
+        mockUser,
+      );
     });
   });
 });
