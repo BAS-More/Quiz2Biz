@@ -17,7 +17,7 @@ describe('Message Validation', () => {
       };
 
       const result = messageSchema.validateMessage(msg);
-      
+
       expect(result.valid).toBe(false);
       expect(result.errors).toHaveLength(1);
       expect(result.errors[0].field).toBe('payload.instruction');
@@ -35,7 +35,7 @@ describe('Message Validation', () => {
       };
 
       const result = messageSchema.validateMessage(msg);
-      
+
       expect(result.valid).toBe(false);
       expect(result.errors).toHaveLength(1);
       expect(result.errors[0].field).toBe('predecessor_summary');
@@ -53,7 +53,7 @@ describe('Message Validation', () => {
       };
 
       const result = messageSchema.validateMessage(msg);
-      
+
       expect(result.valid).toBe(true);
       expect(result.errors).toHaveLength(0);
     });
@@ -69,7 +69,7 @@ describe('Message Validation', () => {
       };
 
       const result = messageSchema.validateMessage(msg);
-      
+
       expect(result.valid).toBe(false);
       expect(result.errors).toHaveLength(1);
       expect(result.errors[0].field).toBe('validation_summary');
@@ -86,7 +86,7 @@ describe('Message Validation', () => {
       };
 
       const result = messageSchema.validateMessage(msg);
-      
+
       expect(result.valid).toBe(false);
       expect(result.errors).toHaveLength(1);
       expect(result.errors[0].field).toBe('payload.reason');
@@ -103,9 +103,9 @@ describe('Message Validation', () => {
       };
 
       const result = messageSchema.validateMessage(msg);
-      
+
       expect(result.valid).toBe(false);
-      expect(result.errors.some(e => e.field === 'message_type')).toBe(true);
+      expect(result.errors.some((e) => e.field === 'message_type')).toBe(true);
     });
 
     it('should reject message without required fields', () => {
@@ -115,12 +115,12 @@ describe('Message Validation', () => {
       };
 
       const result = messageSchema.validateMessage(msg);
-      
+
       expect(result.valid).toBe(false);
       expect(result.errors.length).toBeGreaterThan(0);
-      expect(result.errors.some(e => e.field === 'task_id')).toBe(true);
-      expect(result.errors.some(e => e.field === 'from_agent')).toBe(true);
-      expect(result.errors.some(e => e.field === 'to_agent')).toBe(true);
+      expect(result.errors.some((e) => e.field === 'task_id')).toBe(true);
+      expect(result.errors.some((e) => e.field === 'from_agent')).toBe(true);
+      expect(result.errors.some((e) => e.field === 'to_agent')).toBe(true);
     });
   });
 
@@ -138,7 +138,7 @@ describe('Message Validation', () => {
 
     it('buildReportMessage should create valid message structure', () => {
       const validationSummary = messageSchema.buildEmptyValidationSummary();
-      
+
       const msg = messageSchema.buildReportMessage(
         { taskId: 1, fromAgent: 'cto', toAgent: 'coo' },
         { result: 'success' },

@@ -305,6 +305,10 @@ export const TECHNICAL_DEBT_REGISTER_TEMPLATE = {
   defaults: {
     'trackingMetrics.debtRatio': 'To be calculated after initial inventory assessment',
     'trackingMetrics.velocityImpact': 'Velocity impact analysis pending baseline measurement',
-    'governance.preventionPolicies': ['Code review requirements', 'Definition of done includes debt assessment', 'Quarterly debt review meetings'],
+    'governance.preventionPolicies': [
+      'Code review requirements',
+      'Definition of done includes debt assessment',
+      'Quarterly debt review meetings',
+    ],
   },
 };

@@ -85,17 +85,17 @@ export class PaymentService {
   private getPriceIdForTier(tier: SubscriptionTier): string {
     const tierConfig = SUBSCRIPTION_TIERS[tier];
     let priceId: string | undefined = 'priceId' in tierConfig ? tierConfig.priceId : undefined;
-    
+
     if (tier === 'PROFESSIONAL') {
       priceId = this.configService.get<string>('STRIPE_PRICE_PROFESSIONAL', priceId || '');
     } else if (tier === 'ENTERPRISE') {
       priceId = this.configService.get<string>('STRIPE_PRICE_ENTERPRISE', priceId || '');
     }
-    
+
     if (!priceId) {
       throw new BadRequestException(`Price ID not configured for tier: ${tier}`);
     }
-    
+
     return priceId;
   }
 

@@ -39,9 +39,7 @@ describe('DecisionLogController', () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       controllers: [DecisionLogController],
-      providers: [
-        { provide: DecisionLogService, useValue: mockDecisionService },
-      ],
+      providers: [{ provide: DecisionLogService, useValue: mockDecisionService }],
     }).compile();
 
     controller = module.get<DecisionLogController>(DecisionLogController);

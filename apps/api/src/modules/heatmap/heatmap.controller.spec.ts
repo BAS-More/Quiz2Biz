@@ -218,7 +218,10 @@ Red (>0.15),2`;
       await controller.exportToMarkdown('session-123', mockResponse);
 
       expect(mockHeatmapService.exportToMarkdown).toHaveBeenCalledWith('session-123');
-      expect(mockResponse.setHeader).toHaveBeenCalledWith('Content-Type', 'text/plain; charset=utf-8');
+      expect(mockResponse.setHeader).toHaveBeenCalledWith(
+        'Content-Type',
+        'text/plain; charset=utf-8',
+      );
       expect(mockResponse.setHeader).toHaveBeenCalledWith(
         'Content-Disposition',
         'attachment; filename="heatmap-session-123.md"',

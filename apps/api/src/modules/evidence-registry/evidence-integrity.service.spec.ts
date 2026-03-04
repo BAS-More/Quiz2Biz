@@ -712,7 +712,13 @@ describe('EvidenceIntegrityService', () => {
   describe('Branch coverage - generateIntegrityReport determineEvidenceStatus all branches', () => {
     it('should return UNVERIFIED for evidence with no hashSignature', async () => {
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([
-        { id: 'ev-1', hashSignature: null, fileName: 'f.pdf', sessionId: 's-1', createdAt: new Date() },
+        {
+          id: 'ev-1',
+          hashSignature: null,
+          fileName: 'f.pdf',
+          sessionId: 's-1',
+          createdAt: new Date(),
+        },
       ]);
       mockPrisma.$queryRaw
         .mockResolvedValueOnce([]) // verifyChain
@@ -724,7 +730,13 @@ describe('EvidenceIntegrityService', () => {
 
     it('should return HASH_ONLY for evidence with hash but no chain entry', async () => {
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([
-        { id: 'ev-1', hashSignature: 'hash1', fileName: 'f.pdf', sessionId: 's-1', createdAt: new Date() },
+        {
+          id: 'ev-1',
+          hashSignature: 'hash1',
+          fileName: 'f.pdf',
+          sessionId: 's-1',
+          createdAt: new Date(),
+        },
       ]);
       mockPrisma.$queryRaw
         .mockResolvedValueOnce([]) // verifyChain
@@ -736,16 +748,30 @@ describe('EvidenceIntegrityService', () => {
 
     it('should return CHAIN_VERIFIED for hash+chain but no timestamp', async () => {
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([
-        { id: 'ev-1', hashSignature: 'hash1', fileName: 'f.pdf', sessionId: 's-1', createdAt: new Date() },
+        {
+          id: 'ev-1',
+          hashSignature: 'hash1',
+          fileName: 'f.pdf',
+          sessionId: 's-1',
+          createdAt: new Date(),
+        },
       ]);
       mockPrisma.$queryRaw
         .mockResolvedValueOnce([]) // verifyChain
-        .mockResolvedValueOnce([{
-          id: 'c1', evidence_id: 'ev-1', session_id: 's-1',
-          sequence_number: 0, previous_hash: '0'.repeat(64),
-          chain_hash: 'ch', evidence_hash: 'hash1',
-          timestamp_token: null, tsa_url: null, created_at: new Date(),
-        }]);
+        .mockResolvedValueOnce([
+          {
+            id: 'c1',
+            evidence_id: 'ev-1',
+            session_id: 's-1',
+            sequence_number: 0,
+            previous_hash: '0'.repeat(64),
+            chain_hash: 'ch',
+            evidence_hash: 'hash1',
+            timestamp_token: null,
+            tsa_url: null,
+            created_at: new Date(),
+          },
+        ]);
 
       const report = await service.generateIntegrityReport('s-1');
       expect(report.evidenceItems[0].status).toBe('CHAIN_VERIFIED');
@@ -753,16 +779,30 @@ describe('EvidenceIntegrityService', () => {
 
     it('should return FULLY_VERIFIED for hash+chain+timestamp', async () => {
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([
-        { id: 'ev-1', hashSignature: 'hash1', fileName: 'f.pdf', sessionId: 's-1', createdAt: new Date() },
+        {
+          id: 'ev-1',
+          hashSignature: 'hash1',
+          fileName: 'f.pdf',
+          sessionId: 's-1',
+          createdAt: new Date(),
+        },
       ]);
       mockPrisma.$queryRaw
         .mockResolvedValueOnce([]) // verifyChain
-        .mockResolvedValueOnce([{
-          id: 'c1', evidence_id: 'ev-1', session_id: 's-1',
-          sequence_number: 0, previous_hash: '0'.repeat(64),
-          chain_hash: 'ch', evidence_hash: 'hash1',
-          timestamp_token: 'tok', tsa_url: 'https://tsa.com', created_at: new Date(),
-        }]);
+        .mockResolvedValueOnce([
+          {
+            id: 'c1',
+            evidence_id: 'ev-1',
+            session_id: 's-1',
+            sequence_number: 0,
+            previous_hash: '0'.repeat(64),
+            chain_hash: 'ch',
+            evidence_hash: 'hash1',
+            timestamp_token: 'tok',
+            tsa_url: 'https://tsa.com',
+            created_at: new Date(),
+          },
+        ]);
 
       const report = await service.generateIntegrityReport('s-1');
       expect(report.evidenceItems[0].status).toBe('FULLY_VERIFIED');
@@ -770,7 +810,13 @@ describe('EvidenceIntegrityService', () => {
 
     it('should use "unknown" for fileName when evidence.fileName is null in report', async () => {
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([
-        { id: 'ev-1', hashSignature: null, fileName: null, sessionId: 's-1', createdAt: new Date() },
+        {
+          id: 'ev-1',
+          hashSignature: null,
+          fileName: null,
+          sessionId: 's-1',
+          createdAt: new Date(),
+        },
       ]);
       mockPrisma.$queryRaw
         .mockResolvedValueOnce([]) // verifyChain
@@ -824,14 +870,26 @@ describe('EvidenceIntegrityService', () => {
     it('should not add EVIDENCE_MODIFIED error when evidence hash matches', async () => {
       const chainHash = require('crypto')
         .createHash('sha256')
-        .update(JSON.stringify({
-          evidenceHash: 'correct-hash',
-          evidenceId: 'ev-1',
-          previousHash: '0'.repeat(64),
-          sequenceNumber: 0,
-          sessionId: 'session-1',
-          timestamp: new Date('2026-01-01T00:00:00.000Z').toISOString(),
-        }, ['evidenceHash', 'evidenceId', 'previousHash', 'sequenceNumber', 'sessionId', 'timestamp'].sort()))
+        .update(
+          JSON.stringify(
+            {
+              evidenceHash: 'correct-hash',
+              evidenceId: 'ev-1',
+              previousHash: '0'.repeat(64),
+              sequenceNumber: 0,
+              sessionId: 'session-1',
+              timestamp: new Date('2026-01-01T00:00:00.000Z').toISOString(),
+            },
+            [
+              'evidenceHash',
+              'evidenceId',
+              'previousHash',
+              'sequenceNumber',
+              'sessionId',
+              'timestamp',
+            ].sort(),
+          ),
+        )
         .digest('hex');
 
       mockPrisma.$queryRaw.mockResolvedValue([
@@ -930,18 +988,20 @@ describe('EvidenceIntegrityService', () => {
         fileName: 'test.pdf',
         hashSignature: 'hash123',
       });
-      mockPrisma.$queryRaw.mockResolvedValue([{
-        id: 'c1',
-        evidence_id: 'ev-1',
-        session_id: 's-1',
-        sequence_number: 3,
-        previous_hash: '0'.repeat(64),
-        chain_hash: 'chainhash',
-        evidence_hash: 'hash123',
-        timestamp_token: null,
-        tsa_url: null,
-        created_at: new Date('2026-01-15'),
-      }]);
+      mockPrisma.$queryRaw.mockResolvedValue([
+        {
+          id: 'c1',
+          evidence_id: 'ev-1',
+          session_id: 's-1',
+          sequence_number: 3,
+          previous_hash: '0'.repeat(64),
+          chain_hash: 'chainhash',
+          evidence_hash: 'hash123',
+          timestamp_token: null,
+          tsa_url: null,
+          created_at: new Date('2026-01-15'),
+        },
+      ]);
 
       const result = await service.verifyEvidenceIntegrity('ev-1');
 
@@ -970,7 +1030,13 @@ describe('EvidenceIntegrityService', () => {
   describe('Branch coverage - generateIntegrityReport hash field fallback', () => {
     it('should use empty string for hash when evidence.hashSignature is null in report item', async () => {
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([
-        { id: 'ev-1', hashSignature: null, fileName: 'f.pdf', sessionId: 's-1', createdAt: new Date() },
+        {
+          id: 'ev-1',
+          hashSignature: null,
+          fileName: 'f.pdf',
+          sessionId: 's-1',
+          createdAt: new Date(),
+        },
       ]);
       mockPrisma.$queryRaw
         .mockResolvedValueOnce([]) // verifyChain
@@ -984,7 +1050,13 @@ describe('EvidenceIntegrityService', () => {
   describe('Branch coverage - generateIntegrityReport sequenceNumber null when no chain', () => {
     it('should set sequenceNumber to null when no chain entry exists', async () => {
       mockPrisma.evidenceRegistry.findMany.mockResolvedValue([
-        { id: 'ev-1', hashSignature: 'h', fileName: 'f.pdf', sessionId: 's-1', createdAt: new Date() },
+        {
+          id: 'ev-1',
+          hashSignature: 'h',
+          fileName: 'f.pdf',
+          sessionId: 's-1',
+          createdAt: new Date(),
+        },
       ]);
       mockPrisma.$queryRaw
         .mockResolvedValueOnce([]) // verifyChain
