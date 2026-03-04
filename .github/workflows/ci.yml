@@ -19,7 +19,6 @@ env:
 jobs:
   lint-and-format:
     name: lint-and-format
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -54,7 +53,6 @@ jobs:
 
   test-api:
     name: test-api
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -134,7 +132,6 @@ jobs:
 
   test-web:
     name: test-web
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -174,7 +171,6 @@ jobs:
 
   test-regression:
     name: test-regression
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -237,7 +233,6 @@ jobs:
 
   test-e2e:
     name: test-e2e
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/')
     continue-on-error: true
     runs-on: ubuntu-latest
     permissions:
@@ -329,7 +324,6 @@ jobs:
 
   build:
     name: build
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -377,7 +371,6 @@ jobs:
 
   docker-build-test:
     name: docker-build-test
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -411,7 +404,6 @@ jobs:
 
   security-scan:
     name: security-scan
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -452,32 +444,6 @@ jobs:
           fi
         continue-on-error: true
 
-  automation-smoke:
-    name: automation-smoke
-    if: github.actor == 'dependabot[bot]' || startsWith(github.head_ref, 'dependabot/')
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
-
-      - name: Generate Prisma Client
-        run: npm run db:generate
-
-      - name: Smoke build
-        run: npx turbo run build --filter=api --filter=database --filter=redis --filter=shared
-
   all-checks-passed:
     name: all-checks-passed
     runs-on: ubuntu-latest
@@ -491,7 +457,6 @@ jobs:
         build,
         docker-build-test,
         security-scan,
-        automation-smoke,
       ]
     if: always()
     permissions:
@@ -511,8 +476,7 @@ jobs:
              ! is_ok "${{ needs.test-e2e.result }}" || \
              ! is_ok "${{ needs.build.result }}" || \
              ! is_ok "${{ needs.docker-build-test.result }}" || \
-             ! is_ok "${{ needs.security-scan.result }}" || \
-             ! is_ok "${{ needs.automation-smoke.result }}"; then
+             ! is_ok "${{ needs.security-scan.result }}"; then
             echo "❌ Some required checks failed"
             exit 1
           fi
