@@ -46,7 +46,9 @@ describe('FileUploadInput', () => {
       preview: 'mock-url',
     };
 
-    render(<FileUploadInput question={mockQuestion} value={[fileWithPreview]} onChange={mockOnChange} />);
+    render(
+      <FileUploadInput question={mockQuestion} value={[fileWithPreview]} onChange={mockOnChange} />,
+    );
 
     expect(screen.getByAltText('test.png')).toBeInTheDocument();
     expect(screen.getByText('test.png')).toBeInTheDocument();
@@ -60,7 +62,9 @@ describe('FileUploadInput', () => {
       preview: undefined, // Non-image files don't have preview
     };
 
-    render(<FileUploadInput question={mockQuestion} value={[fileWithPreview]} onChange={mockOnChange} />);
+    render(
+      <FileUploadInput question={mockQuestion} value={[fileWithPreview]} onChange={mockOnChange} />,
+    );
 
     expect(screen.getByText('document.pdf')).toBeInTheDocument();
   });
@@ -74,7 +78,9 @@ describe('FileUploadInput', () => {
       preview: undefined,
     };
 
-    render(<FileUploadInput question={mockQuestion} value={[fileWithPreview]} onChange={mockOnChange} />);
+    render(
+      <FileUploadInput question={mockQuestion} value={[fileWithPreview]} onChange={mockOnChange} />,
+    );
 
     // Get the remove button (it's the one inside the file preview, not the dropzone)
     const buttons = screen.getAllByRole('button');
@@ -98,7 +104,14 @@ describe('FileUploadInput', () => {
   });
 
   it('disables upload when disabled prop is true', () => {
-    render(<FileUploadInput question={mockQuestion} value={[]} onChange={mockOnChange} disabled={true} />);
+    render(
+      <FileUploadInput
+        question={mockQuestion}
+        value={[]}
+        onChange={mockOnChange}
+        disabled={true}
+      />,
+    );
 
     const dropzone = screen.getByRole('button', { name: /upload files/i });
     expect(dropzone).toHaveAttribute('aria-disabled', 'true');
@@ -118,7 +131,14 @@ describe('FileUploadInput', () => {
   });
 
   it('displays error message when error prop is provided', () => {
-    render(<FileUploadInput question={mockQuestion} value={[]} onChange={mockOnChange} error="File too large" />);
+    render(
+      <FileUploadInput
+        question={mockQuestion}
+        value={[]}
+        onChange={mockOnChange}
+        error="File too large"
+      />,
+    );
 
     expect(screen.getByText('File too large')).toBeInTheDocument();
   });

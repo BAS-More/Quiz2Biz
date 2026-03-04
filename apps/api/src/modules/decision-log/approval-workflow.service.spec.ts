@@ -1,9 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  NotFoundException,
-  ForbiddenException,
-  BadRequestException,
-} from '@nestjs/common';
+import { NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 import { DecisionStatus } from '@prisma/client';
 import {
@@ -56,10 +52,7 @@ describe('ApprovalWorkflowService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        ApprovalWorkflowService,
-        { provide: PrismaService, useValue: mockPrismaService },
-      ],
+      providers: [ApprovalWorkflowService, { provide: PrismaService, useValue: mockPrismaService }],
     }).compile();
 
     service = module.get<ApprovalWorkflowService>(ApprovalWorkflowService);
@@ -98,17 +91,17 @@ describe('ApprovalWorkflowService', () => {
       mockPrismaService.decisionLog.findUnique.mockResolvedValue(mockDecision);
       mockPrismaService.user.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.createApprovalRequest(dto, 'non-existent-user'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.createApprovalRequest(dto, 'non-existent-user')).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should throw NotFoundException if DecisionLog resource not found', async () => {
       mockPrismaService.decisionLog.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.createApprovalRequest(dto, mockUser.id),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.createApprovalRequest(dto, mockUser.id)).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should throw NotFoundException if Session resource not found', async () => {
@@ -120,9 +113,9 @@ describe('ApprovalWorkflowService', () => {
         resourceId: 'session-1',
       };
 
-      await expect(
-        service.createApprovalRequest(sessionDto, mockUser.id),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.createApprovalRequest(sessionDto, mockUser.id)).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should allow Policy resource type without DB check', async () => {
@@ -164,7 +157,7 @@ describe('ApprovalWorkflowService', () => {
 
       const expectedExpiration = new Date();
       expectedExpiration.setHours(expectedExpiration.getHours() + 24);
-      
+
       expect(result.expiresAt.getTime()).toBeCloseTo(expectedExpiration.getTime(), -4);
     });
 
@@ -254,10 +247,7 @@ describe('ApprovalWorkflowService', () => {
 
     it('should throw NotFoundException if approval not found', async () => {
       await expect(
-        service.respondToApproval(
-          { approvalId: 'non-existent', approved: true },
-          mockAdmin.id,
-        ),
+        service.respondToApproval({ approvalId: 'non-existent', approved: true }, mockAdmin.id),
       ).rejects.toThrow(NotFoundException);
     });
 
@@ -266,16 +256,10 @@ describe('ApprovalWorkflowService', () => {
       mockPrismaService.decisionLog.update.mockResolvedValue({});
       mockPrismaService.auditLog.create.mockResolvedValue({});
 
-      await service.respondToApproval(
-        { approvalId, approved: true },
-        mockAdmin.id,
-      );
+      await service.respondToApproval({ approvalId, approved: true }, mockAdmin.id);
 
       await expect(
-        service.respondToApproval(
-          { approvalId, approved: false },
-          'another-admin',
-        ),
+        service.respondToApproval({ approvalId, approved: false }, 'another-admin'),
       ).rejects.toThrow(BadRequestException);
     });
 
@@ -313,10 +297,7 @@ describe('ApprovalWorkflowService', () => {
       mockPrismaService.user.findUnique.mockResolvedValue(developer);
 
       await expect(
-        service.respondToApproval(
-          { approvalId: policyApproval.id, approved: true },
-          developer.id,
-        ),
+        service.respondToApproval({ approvalId: policyApproval.id, approved: true }, developer.id),
       ).rejects.toThrow(ForbiddenException);
     });
 
@@ -404,8 +385,8 @@ describe('ApprovalWorkflowService', () => {
 
       const pending = await service.getPendingApprovals('another-user');
       const expiredApproval = await service.getApprovalById(approval.id);
-      
-      expect(pending.find(p => p.id === approval.id)).toBeUndefined();
+
+      expect(pending.find((p) => p.id === approval.id)).toBeUndefined();
       expect(expiredApproval.status).toBe(ApprovalStatus.EXPIRED);
     });
 
@@ -420,7 +401,7 @@ describe('ApprovalWorkflowService', () => {
         mockUser.id,
       );
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       await service.createApprovalRequest(
         {
@@ -472,7 +453,7 @@ describe('ApprovalWorkflowService', () => {
         mockUser.id,
       );
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       await service.createApprovalRequest(
         {
@@ -509,9 +490,7 @@ describe('ApprovalWorkflowService', () => {
     });
 
     it('should throw NotFoundException if not found', async () => {
-      await expect(
-        service.getApprovalById('non-existent-id'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.getApprovalById('non-existent-id')).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -548,11 +527,7 @@ describe('ApprovalWorkflowService', () => {
         mockUser.id,
       );
 
-      const result = await service.hasApproval(
-        'Policy',
-        'policy-1',
-        ApprovalCategory.ADR_APPROVAL,
-      );
+      const result = await service.hasApproval('Policy', 'policy-1', ApprovalCategory.ADR_APPROVAL);
       expect(result.hasPending).toBe(false);
     });
 
@@ -570,10 +545,7 @@ describe('ApprovalWorkflowService', () => {
       mockPrismaService.user.findUnique.mockResolvedValue(mockAdmin);
       mockPrismaService.auditLog.create.mockResolvedValue({});
 
-      await service.respondToApproval(
-        { approvalId: approval.id, approved: true },
-        mockAdmin.id,
-      );
+      await service.respondToApproval({ approvalId: approval.id, approved: true }, mockAdmin.id);
 
       const result = await service.hasApproval('ADR', 'adr-1');
       expect(result.hasApproved).toBe(true);
@@ -638,12 +610,9 @@ describe('ApprovalWorkflowService', () => {
       mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
       mockPrismaService.auditLog.create.mockResolvedValue({});
 
-      const result = await service.requestADRApproval(
-        'adr-1',
-        mockUser.id,
-        'Approve this ADR',
-        { adrTitle: 'Use microservices' },
-      );
+      const result = await service.requestADRApproval('adr-1', mockUser.id, 'Approve this ADR', {
+        adrTitle: 'Use microservices',
+      });
 
       expect(result.category).toBe(ApprovalCategory.ADR_APPROVAL);
       expect(result.resourceType).toBe('ADR');
@@ -695,10 +664,7 @@ describe('ApprovalWorkflowService', () => {
 
       // Update status
       mockPrismaService.user.findUnique.mockResolvedValue(mockAdmin);
-      await service.respondToApproval(
-        { approvalId: approval.id, approved: true },
-        mockAdmin.id,
-      );
+      await service.respondToApproval({ approvalId: approval.id, approved: true }, mockAdmin.id);
 
       mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
       const updatedApproval = await service.getApprovalById(approval.id);
@@ -728,9 +694,7 @@ describe('ApprovalWorkflowService', () => {
       );
 
       // Should not throw
-      await expect(
-        service.notifyRequesterOfResponse(approval),
-      ).resolves.toBeUndefined();
+      await expect(service.notifyRequesterOfResponse(approval)).resolves.toBeUndefined();
     });
   });
 
@@ -797,10 +761,7 @@ describe('ApprovalWorkflowService', () => {
       mockPrismaService.user.findUnique.mockResolvedValue(mockAdmin);
 
       await expect(
-        service.respondToApproval(
-          { approvalId: approval.id, approved: true },
-          mockAdmin.id,
-        ),
+        service.respondToApproval({ approvalId: approval.id, approved: true }, mockAdmin.id),
       ).rejects.toThrow(BadRequestException);
     });
   });
@@ -954,10 +915,7 @@ describe('ApprovalWorkflowService', () => {
       mockPrismaService.user.findUnique.mockResolvedValue(mockAdmin);
       mockPrismaService.auditLog.create.mockResolvedValue({});
 
-      await service.respondToApproval(
-        { approvalId: approval.id, approved: true },
-        mockAdmin.id,
-      );
+      await service.respondToApproval({ approvalId: approval.id, approved: true }, mockAdmin.id);
 
       expect(mockPrismaService.decisionLog.update).not.toHaveBeenCalled();
     });
@@ -984,10 +942,7 @@ describe('ApprovalWorkflowService', () => {
       mockPrismaService.user.findUnique.mockResolvedValue(developer);
 
       await expect(
-        service.respondToApproval(
-          { approvalId: approval.id, approved: true },
-          developer.id,
-        ),
+        service.respondToApproval({ approvalId: approval.id, approved: true }, developer.id),
       ).rejects.toThrow(ForbiddenException);
     });
 
@@ -1006,10 +961,7 @@ describe('ApprovalWorkflowService', () => {
       mockPrismaService.user.findUnique.mockResolvedValue(client);
 
       await expect(
-        service.respondToApproval(
-          { approvalId: approval.id, approved: true },
-          client.id,
-        ),
+        service.respondToApproval({ approvalId: approval.id, approved: true }, client.id),
       ).rejects.toThrow(ForbiddenException);
     });
 

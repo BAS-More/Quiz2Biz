@@ -25,37 +25,84 @@ import { StatCardSkeleton, ListItemSkeleton } from '../../components/ui/Skeleton
 import { clsx } from 'clsx';
 
 /** Circular progress ring SVG */
-function ProgressRing({ value, size = 80, strokeWidth = 6 }: { value: number; size?: number; strokeWidth?: number }) {
+function ProgressRing({
+  value,
+  size = 80,
+  strokeWidth = 6,
+}: {
+  value: number;
+  size?: number;
+  strokeWidth?: number;
+}) {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (value / 100) * circumference;
-  const color = value >= 95 ? 'text-success-500' : value >= 70 ? 'text-warning-500' : value >= 40 ? 'text-brand-500' : 'text-danger-500';
+  const color =
+    value >= 95
+      ? 'text-success-500'
+      : value >= 70
+        ? 'text-warning-500'
+        : value >= 40
+          ? 'text-brand-500'
+          : 'text-danger-500';
 
   return (
     <div className="relative inline-flex items-center justify-center">
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="currentColor" strokeWidth={strokeWidth} className="text-surface-100" />
         <circle
-          cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="currentColor" strokeWidth={strokeWidth}
-          strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round"
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          className="text-surface-100"
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
           className={clsx(color, 'transition-all duration-1000 ease-out')}
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-lg font-bold text-surface-900">{value > 0 ? `${value.toFixed(0)}%` : '--'}</span>
+        <span className="text-lg font-bold text-surface-900">
+          {value > 0 ? `${value.toFixed(0)}%` : '--'}
+        </span>
       </div>
     </div>
   );
 }
 
 /** Stat card with gradient icon background */
-function StatCard({ name, value, icon: Icon, gradient, subtitle }: {
-  name: string; value: string; icon: typeof Target; gradient: string; subtitle?: string;
+function StatCard({
+  name,
+  value,
+  icon: Icon,
+  gradient,
+  subtitle,
+}: {
+  name: string;
+  value: string;
+  icon: typeof Target;
+  gradient: string;
+  subtitle?: string;
 }) {
   return (
     <Card hover className="group">
       <div className="flex items-center gap-4">
-        <div className={clsx('flex items-center justify-center w-11 h-11 rounded-xl shadow-xs transition-shadow group-hover:shadow-elevated', gradient)}>
+        <div
+          className={clsx(
+            'flex items-center justify-center w-11 h-11 rounded-xl shadow-xs transition-shadow group-hover:shadow-elevated',
+            gradient,
+          )}
+        >
           <Icon className="h-5 w-5 text-white" />
         </div>
         <div className="min-w-0">
@@ -79,7 +126,9 @@ export function DashboardPage() {
 
   const activeSessions = sessions.filter((s) => s.status === 'IN_PROGRESS');
   const completedSessions = sessions.filter((s) => s.status === 'COMPLETED');
-  const scores = completedSessions.filter((s) => s.readinessScore != null).map((s) => s.readinessScore!);
+  const scores = completedSessions
+    .filter((s) => s.readinessScore != null)
+    .map((s) => s.readinessScore!);
   const highestScore = scores.length > 0 ? Math.max(...scores) : 0;
   const avgScore = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
 
@@ -90,7 +139,11 @@ export function DashboardPage() {
     return 'Good evening';
   };
 
-  const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  const today = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  });
 
   return (
     <div className="space-y-6">
@@ -118,21 +171,51 @@ export function DashboardPage() {
       {error && (
         <div className="p-4 bg-danger-50 border border-danger-200 rounded-xl text-danger-700 flex items-center justify-between animate-slide-up">
           <span className="text-sm">{error}</span>
-          <button onClick={clearError} className="ml-2 text-sm font-medium underline hover:no-underline">Dismiss</button>
+          <button
+            onClick={clearError}
+            className="ml-2 text-sm font-medium underline hover:no-underline"
+          >
+            Dismiss
+          </button>
         </div>
       )}
 
       {/* Stats grid */}
       {isLoading ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[1, 2, 3, 4].map((i) => <StatCardSkeleton key={i} />)}
+          {[1, 2, 3, 4].map((i) => (
+            <StatCardSkeleton key={i} />
+          ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-          <StatCard name="Active Sessions" value={String(activeSessions.length)} icon={ClipboardList} gradient="bg-gradient-to-br from-brand-500 to-brand-600" />
-          <StatCard name="Completed" value={String(completedSessions.length)} icon={CheckCircle} gradient="bg-gradient-to-br from-success-500 to-success-600" />
-          <StatCard name="Highest Score" value={highestScore > 0 ? `${highestScore.toFixed(0)}%` : '--'} icon={Target} gradient="bg-gradient-to-br from-accent-500 to-accent-600" />
-          <StatCard name="Avg Score" value={avgScore > 0 ? `${avgScore.toFixed(0)}%` : '--'} icon={TrendingUp} gradient="bg-gradient-to-br from-warning-500 to-warning-600" />
+        <div
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 animate-slide-up"
+          style={{ animationDelay: '0.1s' }}
+        >
+          <StatCard
+            name="Active Sessions"
+            value={String(activeSessions.length)}
+            icon={ClipboardList}
+            gradient="bg-gradient-to-br from-brand-500 to-brand-600"
+          />
+          <StatCard
+            name="Completed"
+            value={String(completedSessions.length)}
+            icon={CheckCircle}
+            gradient="bg-gradient-to-br from-success-500 to-success-600"
+          />
+          <StatCard
+            name="Highest Score"
+            value={highestScore > 0 ? `${highestScore.toFixed(0)}%` : '--'}
+            icon={Target}
+            gradient="bg-gradient-to-br from-accent-500 to-accent-600"
+          />
+          <StatCard
+            name="Avg Score"
+            value={avgScore > 0 ? `${avgScore.toFixed(0)}%` : '--'}
+            icon={TrendingUp}
+            gradient="bg-gradient-to-br from-warning-500 to-warning-600"
+          />
         </div>
       )}
 
@@ -158,7 +241,9 @@ export function DashboardPage() {
             <div className="p-4">
               {isLoading ? (
                 <div className="space-y-3">
-                  {[1, 2].map((i) => <ListItemSkeleton key={i} />)}
+                  {[1, 2].map((i) => (
+                    <ListItemSkeleton key={i} />
+                  ))}
                 </div>
               ) : activeSessions.length === 0 ? (
                 <div className="text-center py-10 px-4">
@@ -166,7 +251,9 @@ export function DashboardPage() {
                     <ClipboardList className="h-8 w-8 text-surface-300" />
                   </div>
                   <p className="text-sm font-medium text-surface-700">No active projects</p>
-                  <p className="text-sm text-surface-400 mt-1 max-w-sm mx-auto">Describe your idea to get started with AI-powered analysis.</p>
+                  <p className="text-sm text-surface-400 mt-1 max-w-sm mx-auto">
+                    Describe your idea to get started with AI-powered analysis.
+                  </p>
                   <button
                     onClick={() => navigate('/idea')}
                     className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors cursor-pointer"
@@ -184,7 +271,9 @@ export function DashboardPage() {
                       onClick={() => navigate(`/questionnaire?sessionId=${s.id}`)}
                       role="button"
                       tabIndex={0}
-                      onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/questionnaire?sessionId=${s.id}`); }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') navigate(`/questionnaire?sessionId=${s.id}`);
+                      }}
                     >
                       <div className="flex items-center gap-4 flex-1 min-w-0">
                         {/* Project type avatar */}
@@ -197,12 +286,16 @@ export function DashboardPage() {
                               {s.projectTypeName ?? s.persona ?? 'Project'}
                             </span>
                             {s.readinessScore != null && (
-                              <span className={clsx(
-                                'text-xs font-semibold px-2 py-0.5 rounded-full',
-                                s.readinessScore >= 95 ? 'bg-success-50 text-success-700'
-                                  : s.readinessScore >= 70 ? 'bg-warning-50 text-warning-700'
-                                    : 'bg-danger-50 text-danger-700',
-                              )}>
+                              <span
+                                className={clsx(
+                                  'text-xs font-semibold px-2 py-0.5 rounded-full',
+                                  s.readinessScore >= 95
+                                    ? 'bg-success-50 text-success-700'
+                                    : s.readinessScore >= 70
+                                      ? 'bg-warning-50 text-warning-700'
+                                      : 'bg-danger-50 text-danger-700',
+                                )}
+                              >
                                 {s.readinessScore.toFixed(0)}%
                               </span>
                             )}
@@ -266,7 +359,10 @@ export function DashboardPage() {
                       </div>
                     </div>
                     <span className="text-xs text-surface-400 shrink-0">
-                      {new Date(s.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                      {new Date(s.createdAt).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                      })}
                     </span>
                   </div>
                 ))}
@@ -285,8 +381,10 @@ export function DashboardPage() {
             </div>
             <ProgressRing value={avgScore} size={120} strokeWidth={8} />
             <p className="text-xs text-surface-400 mt-3">
-              {avgScore >= 95 ? 'Excellent! Your project scores are outstanding.'
-                : avgScore > 0 ? `Average score across ${completedSessions.length} project${completedSessions.length !== 1 ? 's' : ''}`
+              {avgScore >= 95
+                ? 'Excellent! Your project scores are outstanding.'
+                : avgScore > 0
+                  ? `Average score across ${completedSessions.length} project${completedSessions.length !== 1 ? 's' : ''}`
                   : 'Complete a project questionnaire to see your score'}
             </p>
           </Card>
@@ -306,7 +404,9 @@ export function DashboardPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-surface-900">New Project</p>
-                  <p className="text-xs text-surface-400">Capture your idea and generate documents</p>
+                  <p className="text-xs text-surface-400">
+                    Capture your idea and generate documents
+                  </p>
                 </div>
                 <ArrowRight className="h-4 w-4 text-surface-300 group-hover:text-brand-500 transition-colors" />
               </button>

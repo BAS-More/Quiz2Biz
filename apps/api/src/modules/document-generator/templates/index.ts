@@ -44,14 +44,15 @@ export const TEMPLATE_REGISTRY = {
     import('./product-architecture.template').then((m) => m.PRODUCT_ARCHITECTURE_TEMPLATE),
   ['api-documentation']: () =>
     import('./api-documentation.template').then((m) => m.API_DOCUMENTATION_TEMPLATE),
-  ['data-models']: () =>
-    import('./data-models.template').then((m) => m.DATA_MODELS_TEMPLATE),
+  ['data-models']: () => import('./data-models.template').then((m) => m.DATA_MODELS_TEMPLATE),
   ['user-flow-maps']: () =>
     import('./user-flow-maps.template').then((m) => m.USER_FLOW_MAPS_TEMPLATE),
   ['technical-debt-register']: () =>
     import('./technical-debt-register.template').then((m) => m.TECHNICAL_DEBT_REGISTER_TEMPLATE),
   ['information-security-policy']: () =>
-    import('./information-security-policy.template').then((m) => m.INFORMATION_SECURITY_POLICY_TEMPLATE),
+    import('./information-security-policy.template').then(
+      (m) => m.INFORMATION_SECURITY_POLICY_TEMPLATE,
+    ),
   ['incident-response-plan']: () =>
     import('./incident-response-plan.template').then((m) => m.INCIDENT_RESPONSE_PLAN_TEMPLATE),
   ['data-protection-policy']: () =>
@@ -70,16 +71,15 @@ export const TEMPLATE_REGISTRY = {
     import('./business-requirements.template').then((m) => m.BUSINESS_REQUIREMENTS_TEMPLATE),
   ['functional-requirements']: () =>
     import('./functional-requirements.template').then((m) => m.FUNCTIONAL_REQUIREMENTS_TEMPLATE),
-  ['process-maps']: () =>
-    import('./process-maps.template').then((m) => m.PROCESS_MAPS_TEMPLATE),
-  ['user-stories']: () =>
-    import('./user-stories.template').then((m) => m.USER_STORIES_TEMPLATE),
+  ['process-maps']: () => import('./process-maps.template').then((m) => m.PROCESS_MAPS_TEMPLATE),
+  ['user-stories']: () => import('./user-stories.template').then((m) => m.USER_STORIES_TEMPLATE),
   ['requirements-traceability']: () =>
-    import('./requirements-traceability.template').then((m) => m.REQUIREMENTS_TRACEABILITY_TEMPLATE),
+    import('./requirements-traceability.template').then(
+      (m) => m.REQUIREMENTS_TRACEABILITY_TEMPLATE,
+    ),
   ['stakeholder-analysis']: () =>
     import('./stakeholder-analysis.template').then((m) => m.STAKEHOLDER_ANALYSIS_TEMPLATE),
-  ['business-case']: () =>
-    import('./business-case.template').then((m) => m.BUSINESS_CASE_TEMPLATE),
+  ['business-case']: () => import('./business-case.template').then((m) => m.BUSINESS_CASE_TEMPLATE),
   ['wireframes-mockups']: () =>
     import('./wireframes-mockups.template').then((m) => m.WIREFRAMES_MOCKUPS_TEMPLATE),
   ['change-request']: () =>

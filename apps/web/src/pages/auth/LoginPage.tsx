@@ -50,7 +50,9 @@ export function LoginPage() {
   return (
     <div className="animate-fade-in">
       <h2 className="text-xl font-semibold text-surface-900 text-center mb-1">Welcome back</h2>
-      <p className="text-sm text-surface-500 text-center mb-6">Sign in to continue to your dashboard</p>
+      <p className="text-sm text-surface-500 text-center mb-6">
+        Sign in to continue to your dashboard
+      </p>
 
       {/* Status announcements for screen readers */}
       <div aria-live="polite" aria-atomic="true" className="sr-only">
@@ -64,7 +66,11 @@ export function LoginPage() {
           aria-live="assertive"
         >
           <svg className="h-4 w-4 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
+            <path
+              fillRule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
+              clipRule="evenodd"
+            />
           </svg>
           {error}
         </div>
@@ -130,11 +136,7 @@ export function LoginPage() {
               onClick={() => setShowPassword(!showPassword)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
-              {showPassword ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
           {errors.password && (
@@ -144,13 +146,7 @@ export function LoginPage() {
           )}
         </div>
 
-        <Button
-          type="submit"
-          loading={isSubmitting}
-          fullWidth
-          size="lg"
-          className="mt-2"
-        >
+        <Button type="submit" loading={isSubmitting} fullWidth size="lg" className="mt-2">
           {isSubmitting ? 'Signing in...' : 'Sign in'}
         </Button>
       </form>
@@ -162,7 +158,9 @@ export function LoginPage() {
             <div className="w-full border-t border-surface-200" />
           </div>
           <div className="relative flex justify-center text-xs">
-            <span className="px-3 bg-white text-surface-400 uppercase tracking-wide">or continue with</span>
+            <span className="px-3 bg-white text-surface-400 uppercase tracking-wide">
+              or continue with
+            </span>
           </div>
         </div>
       </div>
