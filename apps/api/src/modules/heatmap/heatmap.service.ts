@@ -262,7 +262,10 @@ export class HeatmapService {
         };
       });
 
-    const potentialImprovement = cellQuestions.reduce((sum: number, q: { residualRisk: number }) => sum + q.residualRisk, 0);
+    const potentialImprovement = cellQuestions.reduce(
+      (sum: number, q: { residualRisk: number }) => sum + q.residualRisk,
+      0,
+    );
 
     return {
       dimensionKey: cell.dimensionKey,

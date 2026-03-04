@@ -84,13 +84,19 @@ export class StandardsService {
 
       return {
         ...this.mapToResponse(standard),
-        documentTypes: standard.documentMappings.map((mapping: { documentType: { id: string; name: string; slug: string }; sectionTitle: string | null; priority: number }) => ({
-          id: mapping.documentType.id,
-          name: mapping.documentType.name,
-          slug: mapping.documentType.slug,
-          sectionTitle: mapping.sectionTitle ?? undefined,
-          priority: mapping.priority,
-        })),
+        documentTypes: standard.documentMappings.map(
+          (mapping: {
+            documentType: { id: string; name: string; slug: string };
+            sectionTitle: string | null;
+            priority: number;
+          }) => ({
+            id: mapping.documentType.id,
+            name: mapping.documentType.name,
+            slug: mapping.documentType.slug,
+            sectionTitle: mapping.sectionTitle ?? undefined,
+            priority: mapping.priority,
+          }),
+        ),
       };
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -129,7 +135,9 @@ export class StandardsService {
         throw new NotFoundException(`Document type ${documentTypeIdOrSlug} not found`);
       }
 
-      return documentType.standardMappings.map((mapping: { standard: EngineeringStandard }) => this.mapToResponse(mapping.standard));
+      return documentType.standardMappings.map((mapping: { standard: EngineeringStandard }) =>
+        this.mapToResponse(mapping.standard),
+      );
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
@@ -173,11 +181,15 @@ export class StandardsService {
         };
       }
 
-      const standards = documentType.standardMappings.map((mapping: { standard: EngineeringStandard; sectionTitle: string | null }) => ({
-        category: mapping.standard.category,
-        title: mapping.sectionTitle || STANDARD_CATEGORY_TITLES[mapping.standard.category as StandardCategory],
-        principles: mapping.standard.principles as unknown as Principle[],
-      }));
+      const standards = documentType.standardMappings.map(
+        (mapping: { standard: EngineeringStandard; sectionTitle: string | null }) => ({
+          category: mapping.standard.category,
+          title:
+            mapping.sectionTitle ||
+            STANDARD_CATEGORY_TITLES[mapping.standard.category as StandardCategory],
+          principles: mapping.standard.principles as unknown as Principle[],
+        }),
+      );
 
       const markdown = this.generateMarkdown(standards);
 

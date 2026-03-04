@@ -85,8 +85,12 @@ export class DocumentGeneratorService {
         select: { questionId: true },
       });
 
-      const answeredIds = new Set(answeredQuestions.map((r: { questionId: string }) => r.questionId));
-      const missingQuestions = documentType.requiredQuestions.filter((id: string) => !answeredIds.has(id));
+      const answeredIds = new Set(
+        answeredQuestions.map((r: { questionId: string }) => r.questionId),
+      );
+      const missingQuestions = documentType.requiredQuestions.filter(
+        (id: string) => !answeredIds.has(id),
+      );
 
       if (missingQuestions.length > 0) {
         throw new BadRequestException(
