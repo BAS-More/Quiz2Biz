@@ -102,13 +102,15 @@ Line 3`;
       const result = truncateToTokens(longText, 50, { provider: 'openai', openaiModel: 'gpt-4o' });
       expect(result).toContain('... [truncated]');
       expect(result.length).toBeLessThan(longText.length);
-      expect(estimateTokens(result, { provider: 'openai', openaiModel: 'gpt-4o' })).toBeLessThanOrEqual(50);
+      expect(
+        estimateTokens(result, { provider: 'openai', openaiModel: 'gpt-4o' }),
+      ).toBeLessThanOrEqual(50);
     });
 
     test('should cut at whitespace boundary', () => {
       const text = 'word1 word2 word3 word4 word5';
       const result = truncateToTokens(text, 3, { provider: 'heuristic' });
-      
+
       if (result !== '... [truncated]') {
         const truncatedPart = result.replace('... [truncated]', '').trim();
         // Should not have partial words
@@ -120,7 +122,7 @@ Line 3`;
       const maxTokens = 100;
       const safetyMargin = 0.2; // 20% safety margin
       const result = truncateToTokens(longText, maxTokens, { safetyMargin });
-      
+
       const resultTokens = estimateTokens(result);
       // With 20% margin, effective budget is 80 tokens
       expect(resultTokens).toBeLessThanOrEqual(maxTokens * (1 - safetyMargin));
@@ -167,10 +169,10 @@ Line 3`;
     test('should respect safety margin', () => {
       const text = 'a'.repeat(380); // Approximately 100 tokens with heuristic
       const maxTokens = 100;
-      
+
       // Without margin, should fit
       expect(fitsWithinBudget(text, maxTokens)).toBe(true);
-      
+
       // With 10% margin, effective budget is 90 tokens, should not fit
       expect(fitsWithinBudget(text, maxTokens, { safetyMargin: 0.1 })).toBe(false);
     });
@@ -217,7 +219,7 @@ Line 3`;
         const minTokens = Math.min(heuristic, anthropic, openai);
         const maxTokens = Math.max(heuristic, anthropic, openai);
         const variance = (maxTokens - minTokens) / minTokens;
-        
+
         expect(variance).toBeLessThan(2); // Within 200% (generous for short texts)
       });
     });

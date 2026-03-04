@@ -28,22 +28,22 @@
         "apps/api/src/*"
       ],
       "@libs/database": [
-        "libs/database"
+        "libs/database/src"
       ],
       "@libs/database/*": [
-        "libs/database/*"
+        "libs/database/src/*"
       ],
       "@libs/redis": [
-        "libs/redis"
+        "libs/redis/src"
       ],
       "@libs/redis/*": [
-        "libs/redis/*"
+        "libs/redis/src/*"
       ],
       "@libs/shared": [
-        "libs/shared"
+        "libs/shared/src"
       ],
       "@libs/shared/*": [
-        "libs/shared/*"
+        "libs/shared/src/*"
       ],
       "@libs/orchestrator": [
         "libs/orchestrator/src/index.ts"
@@ -59,6 +59,10 @@
   "exclude": [
     "node_modules",
     "dist",
-    "coverage"
+    "coverage",
+    "apps/web",
+    "e2e",
+    "test/regression",
+    "prisma/prisma.config.ts"
   ]
 }

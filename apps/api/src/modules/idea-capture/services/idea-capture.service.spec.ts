@@ -34,7 +34,12 @@ describe('IdeaCaptureService', () => {
 
   const mockProjectTypes = [
     { id: 'pt-1', slug: 'business-plan', name: 'Business Plan', description: 'Business planning' },
-    { id: 'pt-2', slug: 'marketing-strategy', name: 'Marketing Strategy', description: 'Marketing' },
+    {
+      id: 'pt-2',
+      slug: 'marketing-strategy',
+      name: 'Marketing Strategy',
+      description: 'Marketing',
+    },
   ];
 
   const mockAnalysisResult = {
@@ -42,7 +47,9 @@ describe('IdeaCaptureService', () => {
     gaps: ['market research needed'],
     strengths: ['clear value proposition'],
     recommendedProjectType: { slug: 'business-plan', confidence: 0.85, reasoning: 'Best fit' },
-    alternativeProjectTypes: [{ slug: 'marketing-strategy', confidence: 0.6, reasoning: 'Also viable' }],
+    alternativeProjectTypes: [
+      { slug: 'marketing-strategy', confidence: 0.6, reasoning: 'Also viable' },
+    ],
     summary: 'Great idea for a business plan',
   };
 
@@ -77,10 +84,13 @@ describe('IdeaCaptureService', () => {
         projectType: { id: 'pt-1', slug: 'business-plan', name: 'Business Plan' },
       });
 
-      const result = await service.captureAndAnalyze({
-        rawInput: 'Build a SaaS app',
-        title: 'My Startup',
-      }, 'user-1');
+      const result = await service.captureAndAnalyze(
+        {
+          rawInput: 'Build a SaaS app',
+          title: 'My Startup',
+        },
+        'user-1',
+      );
 
       expect(result.id).toBe('idea-1');
       expect(result.analysis.themes).toEqual(['SaaS', 'technology']);
@@ -90,9 +100,9 @@ describe('IdeaCaptureService', () => {
     it('should throw BadRequestException when no project types available', async () => {
       mockPrismaService.projectType.findMany.mockResolvedValue([]);
 
-      await expect(
-        service.captureAndAnalyze({ rawInput: 'Test idea' }, 'user-1'),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.captureAndAnalyze({ rawInput: 'Test idea' }, 'user-1')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should use provided projectTypeId over recommended', async () => {
@@ -109,10 +119,13 @@ describe('IdeaCaptureService', () => {
         projectType: { id: 'pt-2', slug: 'marketing-strategy', name: 'Marketing Strategy' },
       });
 
-      await service.captureAndAnalyze({
-        rawInput: 'Test',
-        projectTypeId: 'pt-2',
-      }, 'user-1');
+      await service.captureAndAnalyze(
+        {
+          rawInput: 'Test',
+          projectTypeId: 'pt-2',
+        },
+        'user-1',
+      );
 
       expect(mockPrismaService.ideaCapture.create).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -210,9 +223,9 @@ describe('IdeaCaptureService', () => {
     it('should throw NotFoundException when project type not found', async () => {
       mockPrismaService.projectType.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.confirmProjectType('idea-1', 'non-existent'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.confirmProjectType('idea-1', 'non-existent')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -256,9 +269,9 @@ describe('IdeaCaptureService', () => {
     it('should throw NotFoundException when idea not found', async () => {
       mockPrismaService.ideaCapture.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.createSessionFromIdea('non-existent', 'user-1'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.createSessionFromIdea('non-existent', 'user-1')).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should throw BadRequestException when project type not confirmed', async () => {
@@ -267,18 +280,18 @@ describe('IdeaCaptureService', () => {
         projectTypeId: null,
       });
 
-      await expect(
-        service.createSessionFromIdea('idea-1', 'user-1'),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.createSessionFromIdea('idea-1', 'user-1')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw BadRequestException when no questionnaire available', async () => {
       mockPrismaService.ideaCapture.findUnique.mockResolvedValue(mockIdeaCapture);
       mockPrismaService.questionnaire.findFirst.mockResolvedValue(null);
 
-      await expect(
-        service.createSessionFromIdea('idea-1', 'user-1'),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.createSessionFromIdea('idea-1', 'user-1')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should use unknown when projectType name is not available in error message', async () => {
@@ -288,9 +301,7 @@ describe('IdeaCaptureService', () => {
       });
       mockPrismaService.questionnaire.findFirst.mockResolvedValue(null);
 
-      await expect(
-        service.createSessionFromIdea('idea-1', 'user-1'),
-      ).rejects.toThrow(/unknown/);
+      await expect(service.createSessionFromIdea('idea-1', 'user-1')).rejects.toThrow(/unknown/);
     });
   });
 

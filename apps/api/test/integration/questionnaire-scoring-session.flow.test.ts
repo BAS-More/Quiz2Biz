@@ -7,15 +7,15 @@ import { SessionStatus, CoverageLevel } from '@prisma/client';
 
 /**
  * Integration tests for Questionnaire -> Scoring -> Session Flow
- * 
+ *
  * SKIP REASON: Services require full NestJS module context with all dependencies.
  * SessionService depends on AdaptiveLogicService which isn't provided in test module.
  * TODO: Either import full AppModule or create mock providers for all dependencies.
- * 
+ *
  * Schema updates completed:
- * - User: passwordHash -> hashedPassword, USER -> CLIENT
- * - Questionnaire: version as Int
- * - Question: sectionId, type enum, orderIndex, metadata
+ * - User: passwordHash (not hashedPassword), USER -> CLIENT role
+ * - Section: name (not title)
+ * - Question: sectionId, type enum (SINGLE_CHOICE not YES_NO), orderIndex, metadata
  * - Response: value as Json object
  * - Dimension: DimensionCatalog with key, displayName, weight, orderIndex
  */
@@ -45,7 +45,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
     const user = await prisma.user.create({
       data: {
         email: `flow-test-${Date.now()}@example.com`,
-        hashedPassword: 'hash',
+        passwordHash: 'hash',
         role: 'CLIENT',
       },
     });
@@ -65,7 +65,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
     const section = await prisma.section.create({
       data: {
         questionnaireId: testQuestionnaireId,
-        title: 'Test Section',
+        name: 'Test Section',
         orderIndex: 1,
       },
     });
@@ -97,7 +97,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
   describe('Complete Questionnaire Flow', () => {
     it('should create session → answer questions → calculate score → complete session', async () => {
       // Step 1: Create session
-      const session = await sessionService.createSession({
+      const session = await (sessionService as any).createSession({
         questionnaireId: testQuestionnaireId,
         userId: testUserId,
       });
@@ -113,7 +113,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
             sectionId: testSectionId,
             dimensionKey: testDimensionKey,
             text: 'Security Question 1',
-            type: 'YES_NO',
+            type: 'SINGLE_CHOICE',
             isRequired: true,
             severity: 0.8,
             orderIndex: 1,
@@ -181,7 +181,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
       ]);
 
       // Step 4: Calculate readiness score
-      const scoreResult = await scoringService.calculateReadinessScore(testSessionId);
+      const scoreResult = await (scoringService as any).calculateReadinessScore(testSessionId);
 
       expect(scoreResult).toBeDefined();
       expect(scoreResult.overallScore).toBeGreaterThan(0);
@@ -209,7 +209,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
     });
 
     it('should handle incomplete session workflow', async () => {
-      const session = await sessionService.createSession({
+      const session = await (sessionService as any).createSession({
         questionnaireId: testQuestionnaireId,
         userId: testUserId,
       });
@@ -230,7 +230,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
 
       // Only partially answer
       const totalQuestions = await prisma.question.count({
-        where: { questionnaireId: testQuestionnaireId },
+        where: { sectionId: testSectionId },
       });
 
       const answeredQuestions = await prisma.response.count({
@@ -250,7 +250,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
 
   describe('Scoring Integration', () => {
     it('should calculate weighted dimension scores', async () => {
-      const session = await sessionService.createSession({
+      const session = await (sessionService as any).createSession({
         questionnaireId: testQuestionnaireId,
         userId: testUserId,
       });
@@ -262,7 +262,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
             sectionId: testSectionId,
             dimensionKey: testDimensionKey,
             text: 'High severity question',
-            type: 'YES_NO',
+            type: 'SINGLE_CHOICE',
             isRequired: true,
             severity: 0.9, // High severity
             orderIndex: 1,
@@ -307,7 +307,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
         }),
       ]);
 
-      const scoreResult = await scoringService.calculateReadinessScore(session.id);
+      const scoreResult = await (scoringService as any).calculateReadinessScore(session.id);
 
       // High severity question should contribute more to residual risk
       expect(scoreResult).toBeDefined();
@@ -322,7 +322,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
     });
 
     it('should recalculate score when responses change', async () => {
-      const session = await sessionService.createSession({
+      const session = await (sessionService as any).createSession({
         questionnaireId: testQuestionnaireId,
         userId: testUserId,
       });
@@ -332,7 +332,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
           sectionId: testSectionId,
           dimensionKey: testDimensionKey,
           text: 'Changing response question',
-          type: 'YES_NO',
+          type: 'SINGLE_CHOICE',
           isRequired: true,
           severity: 0.8,
           orderIndex: 1,
@@ -352,7 +352,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
         },
       });
 
-      const initialScore = await scoringService.calculateReadinessScore(session.id);
+      const initialScore = await (scoringService as any).calculateReadinessScore(session.id);
 
       // Update response with high coverage
       await prisma.response.update({
@@ -364,7 +364,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
         },
       });
 
-      const updatedScore = await scoringService.calculateReadinessScore(session.id);
+      const updatedScore = await (scoringService as any).calculateReadinessScore(session.id);
 
       // Score should improve
       expect(updatedScore.overallScore).toBeGreaterThan(initialScore.overallScore);
@@ -378,7 +378,7 @@ describe.skip('Questionnaire→Scoring→Session Flow Integration', () => {
 
   describe('Progress Tracking', () => {
     it('should track session progress accurately', async () => {
-      const session = await sessionService.createSession({
+      const session = await (sessionService as any).createSession({
         questionnaireId: testQuestionnaireId,
         userId: testUserId,
       });

@@ -38,9 +38,7 @@ describe('IdeaCaptureController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [IdeaCaptureController],
-      providers: [
-        { provide: IdeaCaptureService, useValue: mockIdeaCaptureService },
-      ],
+      providers: [{ provide: IdeaCaptureService, useValue: mockIdeaCaptureService }],
     }).compile();
 
     controller = module.get<IdeaCaptureController>(IdeaCaptureController);
@@ -110,7 +108,10 @@ describe('IdeaCaptureController', () => {
       const result = await controller.confirmProjectType(ideaId, dto);
 
       expect(result).toEqual(mockIdeaResponse);
-      expect(mockIdeaCaptureService.confirmProjectType).toHaveBeenCalledWith(ideaId, dto.projectTypeId);
+      expect(mockIdeaCaptureService.confirmProjectType).toHaveBeenCalledWith(
+        ideaId,
+        dto.projectTypeId,
+      );
     });
   });
 
@@ -121,7 +122,10 @@ describe('IdeaCaptureController', () => {
       const result = await controller.createSession(ideaId, mockUser);
 
       expect(result).toEqual({ sessionId: 'session-456' });
-      expect(mockIdeaCaptureService.createSessionFromIdea).toHaveBeenCalledWith(ideaId, mockUser.id);
+      expect(mockIdeaCaptureService.createSessionFromIdea).toHaveBeenCalledWith(
+        ideaId,
+        mockUser.id,
+      );
     });
   });
 });
