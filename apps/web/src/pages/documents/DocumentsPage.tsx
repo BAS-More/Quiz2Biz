@@ -82,29 +82,38 @@ export function DocumentsPage() {
     loadTypes();
   }, [selectedSessionId]);
 
-  const handleSelectSession = useCallback((id: string) => {
-    setSelectedSessionId(id);
-    setSearchParams({ sessionId: id });
-    setGenerationError(null);
-  }, [setSearchParams]);
+  const handleSelectSession = useCallback(
+    (id: string) => {
+      setSelectedSessionId(id);
+      setSearchParams({ sessionId: id });
+      setGenerationError(null);
+    },
+    [setSearchParams],
+  );
 
-  const handleGenerate = useCallback(async (docType: DocumentType) => {
-    if (!selectedSessionId) {
-      setGenerationError('Please select a session first.');
-      return;
-    }
-    setGeneratingSlug(docType.slug);
-    setGenerationError(null);
-    try {
-      await requestDocumentGeneration(selectedSessionId, docType.id, 'DOCX');
-    } catch (err: unknown) {
-      const message = (err as { response?: { data?: { message?: string } }; message?: string })
-        ?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Generation failed';
-      setGenerationError(message);
-    } finally {
-      setGeneratingSlug(null);
-    }
-  }, [selectedSessionId]);
+  const handleGenerate = useCallback(
+    async (docType: DocumentType) => {
+      if (!selectedSessionId) {
+        setGenerationError('Please select a session first.');
+        return;
+      }
+      setGeneratingSlug(docType.slug);
+      setGenerationError(null);
+      try {
+        await requestDocumentGeneration(selectedSessionId, docType.id, 'DOCX');
+      } catch (err: unknown) {
+        const message =
+          (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data
+            ?.message ??
+          (err as { message?: string })?.message ??
+          'Generation failed';
+        setGenerationError(message);
+      } finally {
+        setGeneratingSlug(null);
+      }
+    },
+    [selectedSessionId],
+  );
 
   const selectedSession = completedSessions.find((s) => s.id === selectedSessionId);
 
@@ -144,10 +153,7 @@ export function DocumentsPage() {
             <p className="text-sm font-medium text-warning-800">No completed projects</p>
             <p className="text-xs text-warning-600 mt-0.5">
               Complete a questionnaire to unlock document generation.{' '}
-              <button
-                onClick={() => navigate('/idea')}
-                className="underline font-medium"
-              >
+              <button onClick={() => navigate('/idea')} className="underline font-medium">
                 Start a new project
               </button>
             </p>
@@ -156,9 +162,7 @@ export function DocumentsPage() {
       ) : (
         <Card padding="none">
           <div className="px-6 py-4 border-b border-surface-100">
-            <h2 className="text-base font-semibold text-surface-900">
-              Select a Project
-            </h2>
+            <h2 className="text-base font-semibold text-surface-900">Select a Project</h2>
             <p className="text-xs text-surface-400 mt-0.5">
               Choose which project to generate documents from.
             </p>
@@ -177,10 +181,14 @@ export function DocumentsPage() {
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                      isSelected ? 'bg-brand-100' : 'bg-success-50'
-                    }`}>
-                      <CheckCircle2 className={`w-4 h-4 ${isSelected ? 'text-brand-600' : 'text-success-600'}`} />
+                    <div
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                        isSelected ? 'bg-brand-100' : 'bg-success-50'
+                      }`}
+                    >
+                      <CheckCircle2
+                        className={`w-4 h-4 ${isSelected ? 'text-brand-600' : 'text-success-600'}`}
+                      />
                     </div>
                     <div className="min-w-0">
                       <span className="text-sm font-medium text-surface-900 truncate block">

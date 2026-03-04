@@ -7,11 +7,11 @@ import { HttpExceptionFilter } from '../../src/common/filters/http-exception.fil
 
 /**
  * API Contract Tests for Sessions Endpoints
- * 
+ *
  * SKIP REASON: Requires full AppModule context with running database.
  * These tests validate HTTP endpoint contracts using supertest.
  * TODO: Set up test database or use in-memory alternatives.
- * 
+ *
  * Schema updates completed:
  * - User: USER -> CLIENT role
  * - Session: createdAt -> startedAt, added questionnaireVersion

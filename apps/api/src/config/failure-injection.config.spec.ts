@@ -445,9 +445,7 @@ describe('Failure Injection Config', () => {
           recoveryTimeSeconds: 10,
         },
         validation: { healthCheck: true, dataIntegrity: true },
-        rollbackTriggers: [
-          { metric: 'rate', threshold: 0, operator: 'gte', action: 'stop' },
-        ],
+        rollbackTriggers: [{ metric: 'rate', threshold: 0, operator: 'gte', action: 'stop' }],
       };
 
       const result = await runner.executeScenario(scenario);
@@ -473,9 +471,7 @@ describe('Failure Injection Config', () => {
           recoveryTimeSeconds: 10,
         },
         validation: { healthCheck: true, dataIntegrity: true },
-        rollbackTriggers: [
-          { metric: 'rate', threshold: 10, operator: 'lte', action: 'stop' },
-        ],
+        rollbackTriggers: [{ metric: 'rate', threshold: 10, operator: 'lte', action: 'stop' }],
       };
 
       const result = await runner.executeScenario(scenario);
@@ -501,9 +497,7 @@ describe('Failure Injection Config', () => {
           recoveryTimeSeconds: 10,
         },
         validation: { healthCheck: true, dataIntegrity: true },
-        rollbackTriggers: [
-          { metric: 'rate', threshold: 0, operator: 'eq', action: 'stop' },
-        ],
+        rollbackTriggers: [{ metric: 'rate', threshold: 0, operator: 'eq', action: 'stop' }],
       };
 
       const result = await runner.executeScenario(scenario);
@@ -529,9 +523,7 @@ describe('Failure Injection Config', () => {
           recoveryTimeSeconds: 10,
         },
         validation: { healthCheck: true, dataIntegrity: true },
-        rollbackTriggers: [
-          { metric: 'rate', threshold: 100, operator: 'gt', action: 'stop' },
-        ],
+        rollbackTriggers: [{ metric: 'rate', threshold: 100, operator: 'gt', action: 'stop' }],
       };
 
       const result = await runner.executeScenario(scenario);
@@ -571,9 +563,7 @@ describe('Failure Injection Config', () => {
           circuitBreakerActivation: true,
           fallbackActivation: true,
         },
-        rollbackTriggers: [
-          { metric: 'error_rate', threshold: 0, operator: 'gte', action: 'stop' },
-        ],
+        rollbackTriggers: [{ metric: 'error_rate', threshold: 0, operator: 'gte', action: 'stop' }],
       };
 
       const result = await runner.executeScenario(scenario);
@@ -588,9 +578,7 @@ describe('Failure Injection Config', () => {
       expect(result.recommendations).toContain(
         'Verify circuit breaker configuration and thresholds',
       );
-      expect(result.recommendations).toContain(
-        'Ensure fallback mechanisms are properly tested',
-      );
+      expect(result.recommendations).toContain('Ensure fallback mechanisms are properly tested');
     });
 
     it('should generate circuit breaker recommendation without rollback', async () => {
@@ -615,9 +603,7 @@ describe('Failure Injection Config', () => {
           dataIntegrity: true,
           circuitBreakerActivation: true,
         },
-        rollbackTriggers: [
-          { metric: 'rate', threshold: 100, operator: 'gt', action: 'stop' },
-        ],
+        rollbackTriggers: [{ metric: 'rate', threshold: 100, operator: 'gt', action: 'stop' }],
       };
 
       const result = await runner.executeScenario(scenario);
@@ -650,26 +636,20 @@ describe('Failure Injection Config', () => {
           dataIntegrity: true,
           fallbackActivation: true,
         },
-        rollbackTriggers: [
-          { metric: 'rate', threshold: 100, operator: 'gt', action: 'stop' },
-        ],
+        rollbackTriggers: [{ metric: 'rate', threshold: 100, operator: 'gt', action: 'stop' }],
       };
 
       const result = await runner.executeScenario(scenario);
 
       expect(result.status).toBe('success');
-      expect(result.recommendations).toContain(
-        'Ensure fallback mechanisms are properly tested',
-      );
+      expect(result.recommendations).toContain('Ensure fallback mechanisms are properly tested');
     });
   });
 
   describe('Branch coverage - getChaosMeshSpecFromScenario branches', () => {
     it('should generate partition spec', () => {
       const experiments = generateChaosMeshExperiments();
-      const partition = experiments.find(
-        (e) => e.metadata.name === 'network-partition',
-      );
+      const partition = experiments.find((e) => e.metadata.name === 'network-partition');
       expect(partition).toBeDefined();
       // Partition maps to NetworkChaos
       expect(partition?.kind).toBe('NetworkChaos');
@@ -686,9 +666,7 @@ describe('Failure Injection Config', () => {
     it('should generate resource-exhaustion spec for non-compute category', () => {
       const experiments = generateChaosMeshExperiments();
       // disk-pressure-95 is storage category with resource-exhaustion injection type
-      const disk = experiments.find(
-        (e) => e.metadata.name === 'disk-pressure-95',
-      );
+      const disk = experiments.find((e) => e.metadata.name === 'disk-pressure-95');
       expect(disk).toBeDefined();
       expect(disk?.kind).toBe('StressChaos');
       // Non-compute resource-exhaustion returns empty spec extras
@@ -696,9 +674,7 @@ describe('Failure Injection Config', () => {
 
     it('should generate resource-exhaustion spec for compute category with stressors', () => {
       const experiments = generateChaosMeshExperiments();
-      const cpu = experiments.find(
-        (e) => e.metadata.name === 'cpu-pressure-80',
-      );
+      const cpu = experiments.find((e) => e.metadata.name === 'cpu-pressure-80');
       expect(cpu).toBeDefined();
       expect(cpu?.kind).toBe('StressChaos');
       expect(cpu?.spec).toHaveProperty('stressors');
@@ -706,9 +682,7 @@ describe('Failure Injection Config', () => {
 
     it('should generate connection-failure spec with loss action', () => {
       const experiments = generateChaosMeshExperiments();
-      const packetLoss = experiments.find(
-        (e) => e.metadata.name === 'packet-loss',
-      );
+      const packetLoss = experiments.find((e) => e.metadata.name === 'packet-loss');
       expect(packetLoss).toBeDefined();
       expect(packetLoss?.kind).toBe('NetworkChaos');
       expect(packetLoss?.spec).toHaveProperty('action', 'loss');
@@ -716,9 +690,7 @@ describe('Failure Injection Config', () => {
 
     it('should generate crash spec with pod-kill action', () => {
       const experiments = generateChaosMeshExperiments();
-      const podKill = experiments.find(
-        (e) => e.metadata.name === 'pod-kill-single',
-      );
+      const podKill = experiments.find((e) => e.metadata.name === 'pod-kill-single');
       expect(podKill).toBeDefined();
       expect(podKill?.kind).toBe('PodChaos');
       expect(podKill?.spec).toHaveProperty('action', 'pod-kill');

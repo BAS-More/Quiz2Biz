@@ -63,7 +63,7 @@ let tiktokenCache: Tiktoken | null = null;
 /**
  * Get or initialize the tiktoken encoder for OpenAI models.
  * Caches the encoder to avoid repeated initialization.
- * 
+ *
  * @param model - OpenAI model name (e.g., 'gpt-4o', 'gpt-4').
  * @returns The tiktoken encoder instance.
  */
@@ -89,7 +89,7 @@ export function cleanupTokenizer(): void {
 
 /**
  * Count tokens using the appropriate tokenizer based on provider.
- * 
+ *
  * @param text - The text to tokenize.
  * @param options - Tokenization options (provider, model, etc.).
  * @returns The exact or estimated token count.
@@ -127,29 +127,29 @@ function countTokensInternal(text: string, options: TokenEstimationOptions = {})
 
 /**
  * Estimate the token count for a string.
- * 
+ *
  * **Accuracy:**
  * - `provider: 'anthropic'` — Uses Anthropic's official tokenizer (most accurate for Claude)
  * - `provider: 'openai'` — Uses tiktoken (most accurate for GPT models)
  * - `provider: 'heuristic'` (default) — Character-based estimation (~±15% accuracy)
- * 
+ *
  * **Limitations:**
  * - Heuristic mode does not account for content type (code vs prose)
  * - Different models within the same provider may have slightly different tokenization
  * - Tokenizer libraries add ~5-10ms latency per call
- * 
+ *
  * @param text - The input text to estimate.
  * @param options - Tokenization options (provider, model, safety margin).
  * @returns Estimated or exact token count (rounded up).
- * 
+ *
  * @example
  * ```ts
  * // Fast heuristic (default)
  * const tokens = estimateTokens(prompt);
- * 
+ *
  * // Accurate for Claude
  * const tokens = estimateTokens(prompt, { provider: 'anthropic' });
- * 
+ *
  * // Accurate for GPT-4
  * const tokens = estimateTokens(prompt, { provider: 'openai', openaiModel: 'gpt-4o' });
  * ```
@@ -160,21 +160,21 @@ export function estimateTokens(text: string, options?: TokenEstimationOptions): 
 
 /**
  * Truncate text to fit within a token budget.
- * 
+ *
  * Iteratively removes content from the end of the text until it fits within
  * the specified token budget. Cuts at the last whitespace boundary to avoid
  * splitting words. Appends "... [truncated]" if truncation occurred.
- * 
+ *
  * **Safety Margin:**
  * Use `safetyMargin` (0-1) to reserve buffer space. For example:
  * - `safetyMargin: 0.1` reserves 10% of the budget as a safety buffer
  * - Effective budget = `maxTokens * (1 - safetyMargin)`
- * 
+ *
  * @param text - The input text to truncate.
  * @param maxTokens - Maximum token budget.
  * @param options - Tokenization options (provider, model, safety margin).
  * @returns The truncated text, or the original if it fits.
- * 
+ *
  * @example
  * ```ts
  * // Truncate with 10% safety margin for Claude
@@ -187,12 +187,12 @@ export function estimateTokens(text: string, options?: TokenEstimationOptions): 
 export function truncateToTokens(
   text: string,
   maxTokens: number,
-  options?: TokenEstimationOptions
+  options?: TokenEstimationOptions,
 ): string {
   if (!text) return '';
 
   const { safetyMargin = 0 } = options || {};
-  
+
   // Apply safety margin to reduce effective budget
   const effectiveMaxTokens = Math.floor(maxTokens * (1 - Math.max(0, Math.min(1, safetyMargin))));
 
@@ -209,8 +209,9 @@ export function truncateToTokens(
   // Binary search for the optimal cut point
   // Start with a character-based estimate, then refine
   const { provider = 'heuristic' } = options || {};
-  const avgCharsPerToken = provider === 'heuristic' ? CHARS_PER_TOKEN.default : CHARS_PER_TOKEN.prose;
-  
+  const avgCharsPerToken =
+    provider === 'heuristic' ? CHARS_PER_TOKEN.default : CHARS_PER_TOKEN.prose;
+
   let estimatedChars = Math.floor(targetTokens * avgCharsPerToken);
   let low = 0;
   let high = Math.min(text.length, estimatedChars * 2);
@@ -248,12 +249,12 @@ export function truncateToTokens(
 
 /**
  * Check whether text fits within a token budget.
- * 
+ *
  * @param text - The input text to check.
  * @param maxTokens - Maximum token budget.
  * @param options - Tokenization options (provider, model, safety margin).
  * @returns True if the estimated token count is within budget.
- * 
+ *
  * @example
  * ```ts
  * if (fitsWithinBudget(prompt, 4000, { provider: 'anthropic', safetyMargin: 0.1 })) {
@@ -264,7 +265,7 @@ export function truncateToTokens(
 export function fitsWithinBudget(
   text: string,
   maxTokens: number,
-  options?: TokenEstimationOptions
+  options?: TokenEstimationOptions,
 ): boolean {
   const { safetyMargin = 0 } = options || {};
   const effectiveMaxTokens = Math.floor(maxTokens * (1 - Math.max(0, Math.min(1, safetyMargin))));

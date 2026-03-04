@@ -101,7 +101,10 @@ describe('DocumentController', () => {
 
       expect(result).toHaveLength(1);
       expect(result[0].status).toBe('COMPLETED');
-      expect(mockDocumentService.getSessionDocuments).toHaveBeenCalledWith('session-123', 'user-123');
+      expect(mockDocumentService.getSessionDocuments).toHaveBeenCalledWith(
+        'session-123',
+        'user-123',
+      );
     });
   });
 
@@ -206,12 +209,16 @@ describe('DocumentController', () => {
         },
       ];
 
-      (mockDocumentService as any).getDocumentTypesForSession = jest.fn().mockResolvedValue(mockTypes);
+      (mockDocumentService as any).getDocumentTypesForSession = jest
+        .fn()
+        .mockResolvedValue(mockTypes);
 
       const result = await controller.getSessionDocumentTypes('session-123');
 
       expect(result).toHaveLength(1);
-      expect((mockDocumentService as any).getDocumentTypesForSession).toHaveBeenCalledWith('session-123');
+      expect((mockDocumentService as any).getDocumentTypesForSession).toHaveBeenCalledWith(
+        'session-123',
+      );
     });
   });
 

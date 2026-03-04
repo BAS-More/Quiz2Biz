@@ -345,10 +345,7 @@ describe('DecisionLogController', () => {
       const result = await controller.lockDecision(dto, mockRequest as any);
 
       expect(result.status).toBe(DecisionStatus.LOCKED);
-      expect(decisionLogService.updateDecisionStatus).toHaveBeenCalledWith(
-        dto,
-        'user-1',
-      );
+      expect(decisionLogService.updateDecisionStatus).toHaveBeenCalledWith(dto, 'user-1');
     });
   });
 

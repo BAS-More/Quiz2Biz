@@ -48,19 +48,34 @@ export interface IAgentConfig {
   /** List of scope items this agent is responsible for. */
   scope_inclusions: string[];
   /** Scope items explicitly excluded, with the responsible agent identified. */
-  scope_exclusions: Array<{ /** Description of the excluded scope. */ exclusion: string; /** Agent responsible for this scope instead. */ responsible_agent: string }>;
+  scope_exclusions: Array<{
+    /** Description of the excluded scope. */ exclusion: string;
+    /** Agent responsible for this scope instead. */ responsible_agent: string;
+  }>;
   /** Operational rules — plain strings or structured rules with applicability. */
-  rules: Array<string | { /** Rule text. */ text: string; /** Scope this rule applies to. */ applies_to: string }>;
+  rules: Array<
+    | string
+    | { /** Rule text. */ text: string; /** Scope this rule applies to. */ applies_to: string }
+  >;
   /** Slash-commands or special actions this agent can invoke. */
   commands: string[];
   /** Conditions that trigger escalation to a higher-level agent. */
-  escalation_triggers: Array<string | { /** Condition description. */ condition: string; /** Agent to escalate to. */ escalate_to: string }>;
+  escalation_triggers: Array<
+    | string
+    | {
+        /** Condition description. */ condition: string;
+        /** Agent to escalate to. */ escalate_to: string;
+      }
+  >;
   /** Actions this agent is explicitly forbidden from performing. */
   prohibited_behaviours: string[];
   /** Decision domains this agent has authority over. */
   decision_domains: string[];
   /** Decisions this agent must NOT make, with escalation targets. */
-  excluded_decisions: Array<{ /** Decision description. */ decision: string; /** Agent to escalate to. */ escalate_to: string }>;
+  excluded_decisions: Array<{
+    /** Decision description. */ decision: string;
+    /** Agent to escalate to. */ escalate_to: string;
+  }>;
 }
 
 // ── Task ────────────────────────────────────────────────────────────────────

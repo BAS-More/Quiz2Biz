@@ -29,7 +29,11 @@ describe('PromptGeneratorService', () => {
     taskTemplates: [
       { order: 1, template: 'Review current state of {{questionText}}' },
       { order: 2, template: 'Document requirements based on {{standardRefs}}' },
-      { order: 3, template: 'Implement improvements to reach {{currentCoverage}} target', condition: { field: 'severity', operator: 'gt', value: 0.5 } },
+      {
+        order: 3,
+        template: 'Implement improvements to reach {{currentCoverage}} target',
+        condition: { field: 'severity', operator: 'gt', value: 0.5 },
+      },
     ],
     defaultAcceptanceCriteria: ['Coverage reaches 100%', 'All {{standardRefs}} requirements met'],
     defaultConstraints: ['Must be completed within 30 days', 'Minimal disruption to operations'],
@@ -62,7 +66,7 @@ describe('PromptGeneratorService', () => {
       const result = await service.generate(mockGapContext, mockTemplate);
 
       expect(result.goal).toContain('Security & Privacy');
-      expect(result.tasks.some(t => t.description.includes('password policy'))).toBe(true);
+      expect(result.tasks.some((t) => t.description.includes('password policy'))).toBe(true);
     });
 
     it('should calculate priority based on residual risk', async () => {
@@ -105,7 +109,7 @@ describe('PromptGeneratorService', () => {
       expect(result.tags).toContain('document');
       expect(result.tags).toContain('critical');
       // Check for standard ref tags
-      expect(result.tags.some(t => t.includes('iso'))).toBe(true);
+      expect(result.tags.some((t) => t.includes('iso'))).toBe(true);
     });
 
     it('should include acceptance criteria and constraints', async () => {
@@ -144,7 +148,11 @@ describe('PromptGeneratorService', () => {
       const templateWithEq: PromptTemplate = {
         ...mockTemplate,
         taskTemplates: [
-          { order: 1, template: 'Task 1', condition: { field: 'dimensionKey', operator: 'eq', value: 'SECURITY' } },
+          {
+            order: 1,
+            template: 'Task 1',
+            condition: { field: 'dimensionKey', operator: 'eq', value: 'SECURITY' },
+          },
         ],
       };
       const result = await service.generate(mockGapContext, templateWithEq);
@@ -155,7 +163,11 @@ describe('PromptGeneratorService', () => {
       const templateWithNe: PromptTemplate = {
         ...mockTemplate,
         taskTemplates: [
-          { order: 1, template: 'Task 1', condition: { field: 'dimensionKey', operator: 'ne', value: 'COMPLIANCE' } },
+          {
+            order: 1,
+            template: 'Task 1',
+            condition: { field: 'dimensionKey', operator: 'ne', value: 'COMPLIANCE' },
+          },
         ],
       };
       const result = await service.generate(mockGapContext, templateWithNe);
@@ -166,7 +178,11 @@ describe('PromptGeneratorService', () => {
       const templateWithLt: PromptTemplate = {
         ...mockTemplate,
         taskTemplates: [
-          { order: 1, template: 'Task 1', condition: { field: 'currentCoverage', operator: 'lt', value: 0.5 } },
+          {
+            order: 1,
+            template: 'Task 1',
+            condition: { field: 'currentCoverage', operator: 'lt', value: 0.5 },
+          },
         ],
       };
       const result = await service.generate(mockGapContext, templateWithLt);
@@ -177,7 +193,11 @@ describe('PromptGeneratorService', () => {
       const templateWithContains: PromptTemplate = {
         ...mockTemplate,
         taskTemplates: [
-          { order: 1, template: 'Task 1', condition: { field: 'userAnswer', operator: 'contains', value: 'basic' } },
+          {
+            order: 1,
+            template: 'Task 1',
+            condition: { field: 'userAnswer', operator: 'contains', value: 'basic' },
+          },
         ],
       };
       const result = await service.generate(mockGapContext, templateWithContains);
@@ -188,7 +208,11 @@ describe('PromptGeneratorService', () => {
       const templateWithUnknown: PromptTemplate = {
         ...mockTemplate,
         taskTemplates: [
-          { order: 1, template: 'Task 1', condition: { field: 'unknownField' as any, operator: 'eq', value: 'test' } },
+          {
+            order: 1,
+            template: 'Task 1',
+            condition: { field: 'unknownField' as any, operator: 'eq', value: 'test' },
+          },
         ],
       };
       const result = await service.generate(mockGapContext, templateWithUnknown);
@@ -282,7 +306,11 @@ describe('PromptGeneratorService', () => {
       const templateWithContains: PromptTemplate = {
         ...mockTemplate,
         taskTemplates: [
-          { order: 1, template: 'Task 1', condition: { field: 'userAnswer', operator: 'contains', value: 'nonexistent' } },
+          {
+            order: 1,
+            template: 'Task 1',
+            condition: { field: 'userAnswer', operator: 'contains', value: 'nonexistent' },
+          },
         ],
       };
       const result = await service.generate(mockGapContext, templateWithContains);
@@ -293,7 +321,11 @@ describe('PromptGeneratorService', () => {
       const templateWithContains: PromptTemplate = {
         ...mockTemplate,
         taskTemplates: [
-          { order: 1, template: 'Task 1', condition: { field: 'severity', operator: 'contains', value: '0.8' } },
+          {
+            order: 1,
+            template: 'Task 1',
+            condition: { field: 'severity', operator: 'contains', value: '0.8' },
+          },
         ],
       };
       const result = await service.generate(mockGapContext, templateWithContains);
@@ -304,7 +336,11 @@ describe('PromptGeneratorService', () => {
       const templateWithGt: PromptTemplate = {
         ...mockTemplate,
         taskTemplates: [
-          { order: 1, template: 'Task 1', condition: { field: 'userAnswer', operator: 'gt', value: 0 } },
+          {
+            order: 1,
+            template: 'Task 1',
+            condition: { field: 'userAnswer', operator: 'gt', value: 0 },
+          },
         ],
       };
       const result = await service.generate(mockGapContext, templateWithGt);
@@ -315,7 +351,11 @@ describe('PromptGeneratorService', () => {
       const templateWithLt: PromptTemplate = {
         ...mockTemplate,
         taskTemplates: [
-          { order: 1, template: 'Task 1', condition: { field: 'userAnswer', operator: 'lt', value: 100 } },
+          {
+            order: 1,
+            template: 'Task 1',
+            condition: { field: 'userAnswer', operator: 'lt', value: 100 },
+          },
         ],
       };
       const result = await service.generate(mockGapContext, templateWithLt);
@@ -326,7 +366,11 @@ describe('PromptGeneratorService', () => {
       const templateWithUnknown: PromptTemplate = {
         ...mockTemplate,
         taskTemplates: [
-          { order: 1, template: 'Task 1', condition: { field: 'severity', operator: 'gte' as any, value: 0.5 } },
+          {
+            order: 1,
+            template: 'Task 1',
+            condition: { field: 'severity', operator: 'gte' as any, value: 0.5 },
+          },
         ],
       };
       const result = await service.generate(mockGapContext, templateWithUnknown);
