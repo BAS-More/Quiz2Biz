@@ -38,10 +38,12 @@ export async function submitAnswerWithAi(
   answerText: string,
   dimensionContext: string,
 ): Promise<AnswerWithFollowUpResult> {
-  const { data } = await apiClient.post(
-    `${API_PREFIX}/sessions/${sessionId}/conversation/answer`,
-    { questionId, questionText, answerText, dimensionContext },
-  );
+  const { data } = await apiClient.post(`${API_PREFIX}/sessions/${sessionId}/conversation/answer`, {
+    questionId,
+    questionText,
+    answerText,
+    dimensionContext,
+  });
   return data.data ?? data;
 }
 
@@ -63,12 +65,8 @@ export async function submitFollowUp(
 /**
  * Get the full conversation for a session.
  */
-export async function getSessionConversation(
-  sessionId: string,
-): Promise<ConversationMessage[]> {
-  const { data } = await apiClient.get(
-    `${API_PREFIX}/sessions/${sessionId}/conversation`,
-  );
+export async function getSessionConversation(sessionId: string): Promise<ConversationMessage[]> {
+  const { data } = await apiClient.get(`${API_PREFIX}/sessions/${sessionId}/conversation`);
   return data.data ?? data;
 }
 

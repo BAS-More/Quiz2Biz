@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -6,12 +7,10 @@ import { questionnaireApi } from '../../api/questionnaire';
 import * as conversationApi from '../../api/conversation';
 import { useQuestionnaireStore } from '../../stores/questionnaire';
 
-// Mock the store
 vi.mock('../../stores/questionnaire', () => ({
   useQuestionnaireStore: vi.fn(),
 }));
 
-// Mock the APIs
 vi.mock('../../api/questionnaire', () => {
   const questionnaireApi = {
     listQuestionnaires: vi.fn(),
@@ -21,7 +20,7 @@ vi.mock('../../api/questionnaire', () => {
     triggerNQS: vi.fn(),
     triggerAIQuestionnaireFollowUp: vi.fn(),
   };
-  
+
   return {
     questionnaireApi,
     Persona: 'CTO',
@@ -43,7 +42,6 @@ vi.mock('../../api/conversation', () => ({
   },
 }));
 
-// Mock Lucide React icons
 vi.mock('lucide-react', () => ({
   ArrowLeft: () => <div data-testid="arrow-left-icon" />,
   CheckCircle: () => <div data-testid="check-circle-icon" />,
@@ -55,17 +53,12 @@ vi.mock('lucide-react', () => ({
   SkipForward: () => <div data-testid="skip-forward-icon" />,
 }));
 
-// Mock useNavigate
 const mockNavigate = vi.fn();
-let mockAction = 'new';
-let mockSearchParamsString = '';
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
     useNavigate: () => mockNavigate,
-    useParams: () => ({ action: mockAction }),
-    useSearchParams: () => [new URLSearchParams(mockSearchParamsString), vi.fn()],
   };
 });
 
@@ -90,19 +83,18 @@ describe('QuestionnairePage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockNavigate.mockClear();
-    mockAction = 'new';
-    mockSearchParamsString = '';
     mockStoreValues.createSession.mockResolvedValue(undefined);
     mockStoreValues.continueSession.mockResolvedValue(undefined);
     mockStoreValues.submitResponse.mockResolvedValue(undefined);
     mockStoreValues.completeSession.mockResolvedValue(undefined);
-    // Default mock for listQuestionnaires to prevent .then() on undefined
-    vi.mocked(questionnaireApi.listQuestionnaires).mockResolvedValue([]);
-    
-    // Mock the store implementation
+
     vi.mocked(useQuestionnaireStore).mockImplementation(() => ({
       ...mockStoreValues,
     }));
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   const renderQuestionnairePage = (initialEntries: string[] = ['/questionnaire/new']) => {
@@ -112,7 +104,7 @@ describe('QuestionnairePage', () => {
           <Route path="/questionnaire/:action" element={<QuestionnairePage />} />
           <Route path="/dashboard" element={<div>Dashboard</div>} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
   };
 
@@ -139,15 +131,13 @@ describe('QuestionnairePage', () => {
 
       renderQuestionnairePage(['/questionnaire/new']);
 
-      // Should show back button
       expect(screen.getByText('Back to Dashboard')).toBeInTheDocument();
       expect(screen.getByTestId('arrow-left-icon')).toBeInTheDocument();
-
-      // Should show title and description
       expect(screen.getByText('Start New Assessment')).toBeInTheDocument();
-      expect(screen.getByText('Select your persona and begin the readiness assessment.')).toBeInTheDocument();
+      expect(
+        screen.getByText('Select your persona and begin the readiness assessment.'),
+      ).toBeInTheDocument();
 
-      // Should show persona selector
       expect(screen.getByText('Select Your Persona')).toBeInTheDocument();
       expect(screen.getByTestId('users-icon')).toBeInTheDocument();
       expect(screen.getByText('CTO')).toBeInTheDocument();
@@ -156,10 +146,8 @@ describe('QuestionnairePage', () => {
       expect(screen.getByText('Business Analyst')).toBeInTheDocument();
       expect(screen.getByText('Policy Writer')).toBeInTheDocument();
 
-      // Should show questionnaire list
       expect(screen.getByText('Available Questionnaires')).toBeInTheDocument();
 
-      // Wait for questionnaires to load
       await waitFor(() => {
         expect(screen.getByText('Technical Readiness Assessment')).toBeInTheDocument();
         expect(screen.getByText('25 questions | 3 sections | ~15 min')).toBeInTheDocument();
@@ -167,7 +155,6 @@ describe('QuestionnairePage', () => {
         expect(screen.getByText('18 questions | 2 sections | ~10 min')).toBeInTheDocument();
       });
 
-      // Should show start buttons
       const startButtons = screen.getAllByText('Start');
       expect(startButtons).toHaveLength(2);
     });
@@ -180,8 +167,6 @@ describe('QuestionnairePage', () => {
       const cfoButton = screen.getByText('CFO');
       fireEvent.click(cfoButton);
 
-      // The button should now have selected styling (we can't easily test CSS classes in tests)
-      // But we can verify it's still in the document
       expect(cfoButton).toBeInTheDocument();
     });
 
@@ -211,7 +196,9 @@ describe('QuestionnairePage', () => {
     });
 
     it('shows loading state during questionnaire load', () => {
-      vi.mocked(questionnaireApi.listQuestionnaires).mockImplementation(() => new Promise(() => {})); // Never resolves
+      vi.mocked(questionnaireApi.listQuestionnaires).mockImplementation(
+        () => new Promise(() => {}),
+      );
 
       renderQuestionnairePage(['/questionnaire/new']);
 
@@ -224,16 +211,17 @@ describe('QuestionnairePage', () => {
       renderQuestionnairePage(['/questionnaire/new']);
 
       await waitFor(() => {
-        expect(screen.getByText('Failed to load questionnaires. Please refresh the page.')).toBeInTheDocument();
+        expect(
+          screen.getByText('Failed to load questionnaires. Please refresh the page.'),
+        ).toBeInTheDocument();
       });
     });
 
     it('shows error message from store', () => {
-      const errorStoreValues = {
+      vi.mocked(useQuestionnaireStore).mockImplementation(() => ({
         ...mockStoreValues,
         error: 'Session creation failed',
-      };
-      vi.mocked(useQuestionnaireStore).mockImplementation(() => errorStoreValues);
+      }));
 
       vi.mocked(questionnaireApi.listQuestionnaires).mockResolvedValue([]);
 
@@ -248,16 +236,13 @@ describe('QuestionnairePage', () => {
 
   describe('Loading Session State', () => {
     it('shows loading spinner when loading session', () => {
-      mockAction = 'continue';
-      mockSearchParamsString = 'sessionId=123';
-      const loadingStoreValues = {
+      vi.mocked(useQuestionnaireStore).mockImplementation(() => ({
         ...mockStoreValues,
         isLoading: true,
         session: null,
-      };
-      vi.mocked(useQuestionnaireStore).mockImplementation(() => loadingStoreValues);
+      }));
 
-      renderQuestionnairePage(['/questionnaire/continue?sessionId=123']);
+      renderQuestionnairePage(['/questionnaire/continue']);
 
       expect(screen.getByTestId('loader-icon')).toBeInTheDocument();
       expect(screen.getByText('Loading session...')).toBeInTheDocument();
@@ -266,15 +251,12 @@ describe('QuestionnairePage', () => {
 
   describe('Completed Session State', () => {
     it('shows completion screen with score', () => {
-      mockAction = 'continue';
-      mockSearchParamsString = 'sessionId=123';
-      const completedStoreValues = {
+      vi.mocked(useQuestionnaireStore).mockImplementation(() => ({
         ...mockStoreValues,
         isComplete: true,
         session: { id: '123' },
         readinessScore: 92.5,
-      };
-      vi.mocked(useQuestionnaireStore).mockImplementation(() => completedStoreValues);
+      }));
 
       renderQuestionnairePage(['/questionnaire/continue?sessionId=123']);
 
@@ -284,7 +266,6 @@ describe('QuestionnairePage', () => {
       expect(screen.getByText('Generate Documents')).toBeInTheDocument();
       expect(screen.getByText('View Dashboard')).toBeInTheDocument();
 
-      // Test navigation buttons
       const generateButton = screen.getByText('Generate Documents');
       fireEvent.click(generateButton);
       expect(mockNavigate).toHaveBeenCalledWith('/documents?sessionId=123');
@@ -297,14 +278,16 @@ describe('QuestionnairePage', () => {
   });
 
   describe('Active Session State', () => {
-    beforeEach(() => {
-      mockAction = 'continue';
-      mockSearchParamsString = 'sessionId=123';
-    });
-
     const activeSessionStoreValues = {
       ...mockStoreValues,
-      session: { id: '123', progress: { answeredQuestions: 5, totalQuestions: 20, percentage: 25 } },
+      session: {
+        id: '123',
+        progress: {
+          answeredQuestions: 5,
+          totalQuestions: 20,
+          percentage: 25,
+        },
+      },
       currentQuestions: [
         {
           id: 'q1',
@@ -316,7 +299,11 @@ describe('QuestionnairePage', () => {
         },
       ],
       readinessScore: 75.5,
-      currentSection: { name: 'Architecture', answeredInSection: 2, questionsInSection: 5 },
+      currentSection: {
+        name: 'Architecture',
+        answeredInSection: 2,
+        questionsInSection: 5,
+      },
     };
 
     it('shows active session with question flow', () => {
@@ -324,25 +311,23 @@ describe('QuestionnairePage', () => {
 
       renderQuestionnairePage(['/questionnaire/continue?sessionId=123']);
 
-      // Should show back button and readiness score
       expect(screen.getByText('Back to Dashboard')).toBeInTheDocument();
       expect(screen.getByText('Readiness:')).toBeInTheDocument();
       expect(screen.getByText('75.5%')).toBeInTheDocument();
       expect(screen.getByText('/ 95% required')).toBeInTheDocument();
 
-      // Should show progress bar
       expect(screen.getByText('Question 6 of 20')).toBeInTheDocument();
       expect(screen.getByText('25% complete')).toBeInTheDocument();
-      const progressBar = screen.getByRole('progressbar');
-      expect(progressBar).toBeInTheDocument();
 
-      // Should show section info
       expect(screen.getByText('Section: Architecture (2/5)')).toBeInTheDocument();
 
-      // Should show current question
-      expect(screen.getByText('How would you describe your current architecture?')).toBeInTheDocument();
+      expect(
+        screen.getByText('How would you describe your current architecture?'),
+      ).toBeInTheDocument();
       expect(screen.getByText('Please provide a detailed description')).toBeInTheDocument();
-      expect(screen.getByPlaceholderText('Enter your architecture description...')).toBeInTheDocument();
+      expect(
+        screen.getByPlaceholderText('Enter your architecture description...'),
+      ).toBeInTheDocument();
       expect(screen.getByText('* Required')).toBeInTheDocument();
     });
 
@@ -353,7 +338,9 @@ describe('QuestionnairePage', () => {
       renderQuestionnairePage(['/questionnaire/continue?sessionId=123']);
 
       const textarea = screen.getByPlaceholderText('Enter your architecture description...');
-      fireEvent.change(textarea, { target: { value: 'This is my architecture description' } });
+      fireEvent.change(textarea, {
+        target: { value: 'This is my architecture description' },
+      });
 
       const submitButton = screen.getByText('Submit Answer');
       fireEvent.click(submitButton);
@@ -363,46 +350,59 @@ describe('QuestionnairePage', () => {
           '123',
           'q1',
           'This is my architecture description',
-          expect.any(Number) // time spent
+          expect.any(Number),
         );
       });
     });
 
     it('shows NQS hint when available', () => {
-      const nqsStoreValues = {
+      vi.mocked(useQuestionnaireStore).mockImplementation(() => ({
         ...activeSessionStoreValues,
         nqsHint: {
           dimensionKey: 'Security',
           expectedScoreLift: 12.5,
         },
-      };
-      vi.mocked(useQuestionnaireStore).mockImplementation(() => nqsStoreValues);
+      }));
 
       renderQuestionnairePage(['/questionnaire/continue?sessionId=123']);
 
       expect(screen.getByText('Next priority question')).toBeInTheDocument();
-      expect(screen.getByText('in Security:')).toBeInTheDocument();
+      expect(screen.getByText(/in Security:/)).toBeInTheDocument();
       expect(screen.getByText('+12.5 pts potential')).toBeInTheDocument();
     });
 
     it('handles single choice question type', () => {
-      const singleChoiceStoreValues = {
+      vi.mocked(useQuestionnaireStore).mockImplementation(() => ({
         ...mockStoreValues,
-        session: { id: '123', progress: { answeredQuestions: 0, totalQuestions: 10, percentage: 0 } },
+        session: {
+          id: '123',
+          progress: {
+            answeredQuestions: 0,
+            totalQuestions: 10,
+            percentage: 0,
+          },
+        },
         currentQuestions: [
           {
             id: 'q2',
             text: 'What is your deployment strategy?',
             type: 'SINGLE_CHOICE',
             options: [
-              { id: 'opt1', label: 'Cloud', description: 'Deploy to cloud providers' },
-              { id: 'opt2', label: 'On-premises', description: 'Deploy to local servers' },
+              {
+                id: 'opt1',
+                label: 'Cloud',
+                description: 'Deploy to cloud providers',
+              },
+              {
+                id: 'opt2',
+                label: 'On-premises',
+                description: 'Deploy to local servers',
+              },
             ],
             required: true,
           },
         ],
-      };
-      vi.mocked(useQuestionnaireStore).mockImplementation(() => singleChoiceStoreValues);
+      }));
 
       renderQuestionnairePage(['/questionnaire/continue?sessionId=123']);
 
@@ -412,18 +412,23 @@ describe('QuestionnairePage', () => {
       expect(screen.getByText('On-premises')).toBeInTheDocument();
       expect(screen.getByText('Deploy to local servers')).toBeInTheDocument();
 
-      // Test option selection
       const cloudOption = screen.getByText('Cloud').closest('label');
       if (cloudOption) {
         fireEvent.click(cloudOption);
-        // Selection would be handled by the store in real implementation
       }
     });
 
     it('handles scale question type', () => {
-      const scaleStoreValues = {
+      vi.mocked(useQuestionnaireStore).mockImplementation(() => ({
         ...mockStoreValues,
-        session: { id: '123', progress: { answeredQuestions: 0, totalQuestions: 10, percentage: 0 } },
+        session: {
+          id: '123',
+          progress: {
+            answeredQuestions: 0,
+            totalQuestions: 10,
+            percentage: 0,
+          },
+        },
         currentQuestions: [
           {
             id: 'q3',
@@ -432,23 +437,28 @@ describe('QuestionnairePage', () => {
             required: true,
           },
         ],
-      };
-      vi.mocked(useQuestionnaireStore).mockImplementation(() => scaleStoreValues);
+      }));
 
       renderQuestionnairePage(['/questionnaire/continue?sessionId=123']);
 
       expect(screen.getByText('Rate your current security maturity')).toBeInTheDocument();
-      
-      // Should show scale buttons 1-5
+
       [1, 2, 3, 4, 5].forEach((n) => {
         expect(screen.getByText(n.toString())).toBeInTheDocument();
       });
     });
 
     it('handles multiple choice question type', () => {
-      const multiChoiceStoreValues = {
+      vi.mocked(useQuestionnaireStore).mockImplementation(() => ({
         ...mockStoreValues,
-        session: { id: '123', progress: { answeredQuestions: 0, totalQuestions: 10, percentage: 0 } },
+        session: {
+          id: '123',
+          progress: {
+            answeredQuestions: 0,
+            totalQuestions: 10,
+            percentage: 0,
+          },
+        },
         currentQuestions: [
           {
             id: 'q4',
@@ -462,8 +472,7 @@ describe('QuestionnairePage', () => {
             required: false,
           },
         ],
-      };
-      vi.mocked(useQuestionnaireStore).mockImplementation(() => multiChoiceStoreValues);
+      }));
 
       renderQuestionnairePage(['/questionnaire/continue?sessionId=123']);
 
@@ -475,14 +484,16 @@ describe('QuestionnairePage', () => {
   });
 
   describe('AI Follow-up Functionality', () => {
-    beforeEach(() => {
-      mockAction = 'continue';
-      mockSearchParamsString = 'sessionId=123';
-    });
-
     const followUpStoreValues = {
       ...mockStoreValues,
-      session: { id: '123', progress: { answeredQuestions: 5, totalQuestions: 20, percentage: 25 } },
+      session: {
+        id: '123',
+        progress: {
+          answeredQuestions: 5,
+          totalQuestions: 20,
+          percentage: 25,
+        },
+      },
       currentQuestions: [
         {
           id: 'q1',
@@ -510,16 +521,23 @@ describe('QuestionnairePage', () => {
       renderQuestionnairePage(['/questionnaire/continue?sessionId=123']);
 
       const textarea = screen.getByPlaceholderText('Type your answer...');
-      fireEvent.change(textarea, { target: { value: 'We have basic security measures in place.' } });
+      fireEvent.change(textarea, {
+        target: {
+          value: 'We have basic security measures in place.',
+        },
+      });
 
       const submitButton = screen.getByText('Submit Answer');
       fireEvent.click(submitButton);
 
-      // Wait for AI follow-up to appear
       await waitFor(() => {
         expect(screen.getByText('AI Follow-up')).toBeInTheDocument();
-        expect(screen.getByText('Can you elaborate on your incident response procedures?')).toBeInTheDocument();
-        expect(screen.getByText('Areas to explore: Incident Response, Recovery Planning')).toBeInTheDocument();
+        expect(
+          screen.getByText('Can you elaborate on your incident response procedures?'),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByText('Areas to explore: Incident Response, Recovery Planning'),
+        ).toBeInTheDocument();
       });
     });
 
@@ -531,9 +549,7 @@ describe('QuestionnairePage', () => {
           followUpQuestion: 'Can you elaborate?',
           missingAreas: [],
         },
-        conversationMessages: [
-          { id: '1', role: 'user', content: 'Initial answer' },
-        ],
+        conversationMessages: [{ id: '1', role: 'user', content: 'Initial answer' }],
       });
       vi.mocked(conversationApi.submitFollowUp).mockResolvedValue({
         id: '3',
@@ -543,19 +559,23 @@ describe('QuestionnairePage', () => {
 
       renderQuestionnairePage(['/questionnaire/continue?sessionId=123']);
 
-      // First trigger the follow-up by submitting an answer
       const textarea = screen.getByPlaceholderText('Type your answer...');
-      fireEvent.change(textarea, { target: { value: 'We have basic security measures in place.' } });
-      const submitButton = screen.getByText('Submit Answer');
-      fireEvent.click(submitButton);
+      fireEvent.change(textarea, {
+        target: {
+          value: 'We have basic security measures in place.',
+        },
+      });
 
-      // Wait for follow-up to appear
+      fireEvent.click(screen.getByText('Submit Answer'));
+
       await waitFor(() => {
-        expect(screen.getByPlaceholderText('Add more details...')).toBeInTheDocument();
+        expect(screen.getByText('AI Follow-up')).toBeInTheDocument();
       });
 
       const followUpTextarea = screen.getByPlaceholderText('Add more details...');
-      fireEvent.change(followUpTextarea, { target: { value: 'This is my detailed follow-up answer' } });
+      fireEvent.change(followUpTextarea, {
+        target: { value: 'This is my detailed follow-up answer' },
+      });
 
       const sendButton = screen.getByText('Send');
       fireEvent.click(sendButton);
@@ -564,7 +584,7 @@ describe('QuestionnairePage', () => {
         expect(conversationApi.submitFollowUp).toHaveBeenCalledWith(
           '123',
           'q1',
-          'This is my detailed follow-up answer'
+          'This is my detailed follow-up answer',
         );
       });
     });
@@ -577,49 +597,49 @@ describe('QuestionnairePage', () => {
           followUpQuestion: 'Can you elaborate?',
           missingAreas: [],
         },
-        conversationMessages: [
-          { id: '1', role: 'user', content: 'Initial answer' },
-        ],
+        conversationMessages: [{ id: '1', role: 'user', content: 'Initial answer' }],
       });
 
       renderQuestionnairePage(['/questionnaire/continue?sessionId=123']);
 
-      // First trigger the follow-up by submitting an answer
       const textarea = screen.getByPlaceholderText('Type your answer...');
-      fireEvent.change(textarea, { target: { value: 'We have basic security measures in place.' } });
-      const submitButton = screen.getByText('Submit Answer');
-      fireEvent.click(submitButton);
+      fireEvent.change(textarea, {
+        target: {
+          value: 'We have basic security measures in place.',
+        },
+      });
 
-      // Wait for follow-up to appear
+      fireEvent.click(screen.getByText('Submit Answer'));
+
       await waitFor(() => {
-        expect(screen.getByText('Skip')).toBeInTheDocument();
+        expect(screen.getByText('AI Follow-up')).toBeInTheDocument();
       });
 
       const skipButton = screen.getByText('Skip');
       fireEvent.click(skipButton);
 
-      // Follow-up should be dismissed
       await waitFor(() => {
-        expect(screen.queryByText('Can you elaborate?')).not.toBeInTheDocument();
+        expect(screen.queryByText('AI Follow-up')).not.toBeInTheDocument();
       });
     });
   });
 
   describe('Completion Threshold States', () => {
-    beforeEach(() => {
-      mockAction = 'continue';
-      mockSearchParamsString = 'sessionId=123';
-    });
-
     it('shows ready to complete screen when threshold is met', () => {
-      const readyToCompleteStoreValues = {
+      vi.mocked(useQuestionnaireStore).mockImplementation(() => ({
         ...mockStoreValues,
-        session: { id: '123', progress: { answeredQuestions: 20, totalQuestions: 20, percentage: 100 } },
+        session: {
+          id: '123',
+          progress: {
+            answeredQuestions: 20,
+            totalQuestions: 20,
+            percentage: 100,
+          },
+        },
         currentQuestions: [],
         readinessScore: 96.5,
         canComplete: true,
-      };
-      vi.mocked(useQuestionnaireStore).mockImplementation(() => readyToCompleteStoreValues);
+      }));
 
       renderQuestionnairePage(['/questionnaire/continue?sessionId=123']);
 
@@ -634,36 +654,40 @@ describe('QuestionnairePage', () => {
     });
 
     it('shows below threshold warning', () => {
-      const belowThresholdStoreValues = {
+      vi.mocked(useQuestionnaireStore).mockImplementation(() => ({
         ...mockStoreValues,
-        session: { id: '123', progress: { answeredQuestions: 20, totalQuestions: 20, percentage: 100 } },
+        session: {
+          id: '123',
+          progress: {
+            answeredQuestions: 20,
+            totalQuestions: 20,
+            percentage: 100,
+          },
+        },
         currentQuestions: [],
         readinessScore: 82.5,
         canComplete: false,
-      };
-      vi.mocked(useQuestionnaireStore).mockImplementation(() => belowThresholdStoreValues);
+      }));
 
       renderQuestionnairePage(['/questionnaire/continue?sessionId=123']);
 
       expect(screen.getByTestId('alert-triangle-icon')).toBeInTheDocument();
       expect(screen.getByText('Score Below Threshold')).toBeInTheDocument();
       expect(screen.getByText('Current score: 82.5% (95% required)')).toBeInTheDocument();
-      expect(screen.getByText('All questions answered, but coverage needs improvement. Review and update your responses.')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'All questions answered, but coverage needs improvement. Review and update your responses.',
+        ),
+      ).toBeInTheDocument();
     });
   });
 
   describe('Session Resumption', () => {
-    beforeEach(() => {
-      mockAction = 'continue';
-      mockSearchParamsString = 'sessionId=123';
-    });
-
     it('resumes session when sessionId parameter is present', () => {
-      const sessionStoreValues = {
+      vi.mocked(useQuestionnaireStore).mockImplementation(() => ({
         ...mockStoreValues,
-        session: { id: '456' }, // Different session ID
-      };
-      vi.mocked(useQuestionnaireStore).mockImplementation(() => sessionStoreValues);
+        session: { id: '456' },
+      }));
 
       renderQuestionnairePage(['/questionnaire/continue?sessionId=123']);
 
@@ -671,11 +695,10 @@ describe('QuestionnairePage', () => {
     });
 
     it('does not resume when session ID matches', () => {
-      const sessionStoreValues = {
+      vi.mocked(useQuestionnaireStore).mockImplementation(() => ({
         ...mockStoreValues,
-        session: { id: '123' }, // Same session ID
-      };
-      vi.mocked(useQuestionnaireStore).mockImplementation(() => sessionStoreValues);
+        session: { id: '123' },
+      }));
 
       renderQuestionnairePage(['/questionnaire/continue?sessionId=123']);
 

@@ -180,7 +180,9 @@ export class NotificationService {
       this.logger.log('Email provider initialized: SendGrid (legacy fallback)');
     } else {
       this.provider = new ConsoleProvider();
-      this.logger.warn('No BREVO_API_KEY or SENDGRID_API_KEY configured - using console email provider');
+      this.logger.warn(
+        'No BREVO_API_KEY or SENDGRID_API_KEY configured - using console email provider',
+      );
     }
   }
 

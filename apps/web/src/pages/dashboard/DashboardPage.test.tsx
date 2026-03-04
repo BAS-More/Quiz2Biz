@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { DashboardPage } from './DashboardPage';
@@ -88,11 +88,10 @@ describe('DashboardPage', () => {
   it('displays active sessions count', () => {
     renderDashboardPage();
 
-    // Find the Active Sessions label and verify its parent container has the correct value
-    const activeSessionsLabel = screen.getByText('Active Sessions');
-    const statCard = activeSessionsLabel.closest('.group'); // StatCard has group class
-    expect(statCard).toBeInTheDocument();
-    expect(statCard).toHaveTextContent('1');
+    const activeLabel = screen.getByText('Active Sessions');
+    expect(activeLabel).toBeInTheDocument();
+    const statContainer = activeLabel.closest('.min-w-0')!;
+    expect(within(statContainer).getByText('1')).toBeInTheDocument();
   });
 
   it('displays completed sessions count', () => {
@@ -104,18 +103,16 @@ describe('DashboardPage', () => {
   it('displays highest score', () => {
     renderDashboardPage();
 
-    // Find the Highest Score label and verify its parent container has the correct value
-    const highestScoreLabel = screen.getByText('Highest Score');
-    const statCard = highestScoreLabel.closest('.group'); // StatCard has group class
-    expect(statCard).toBeInTheDocument();
-    expect(statCard).toHaveTextContent('92%');
+    const highestLabel = screen.getByText('Highest Score');
+    expect(highestLabel).toBeInTheDocument();
+    const statContainer = highestLabel.closest('.min-w-0')!;
+    expect(within(statContainer).getByText('92%')).toBeInTheDocument();
   });
 
   it('navigates to idea capture on New Project click', async () => {
     const user = userEvent.setup();
     renderDashboardPage();
 
-    // Multiple "New Project" buttons may exist (header and quick actions)
     const newProjectButtons = screen.getAllByRole('button', { name: /new project/i });
     await user.click(newProjectButtons[0]);
 

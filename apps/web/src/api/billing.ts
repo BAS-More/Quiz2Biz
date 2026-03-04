@@ -117,7 +117,9 @@ export const billingApi = {
    * Get available tiers
    */
   async getTiers(): Promise<SubscriptionTier[]> {
-    const response = await apiClient.get<Record<string, SubscriptionTier>>(`${PAYMENT_PREFIX}/tiers`);
+    const response = await apiClient.get<Record<string, SubscriptionTier>>(
+      `${PAYMENT_PREFIX}/tiers`,
+    );
     return Object.values(response.data);
   },
 

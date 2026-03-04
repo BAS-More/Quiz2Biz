@@ -169,7 +169,12 @@ function makeVulnerability(overrides: Record<string, unknown> = {}) {
     project: { id: 123, name: 'test', full_path: 'group/test' },
     scanner: { external_id: 'semgrep', name: 'Semgrep', vendor: 'Semgrep' },
     identifiers: [
-      { external_type: 'cve', external_id: 'CVE-2025-0001', name: 'CVE-2025-0001', url: 'https://cve.org/0001' },
+      {
+        external_type: 'cve',
+        external_id: 'CVE-2025-0001',
+        name: 'CVE-2025-0001',
+        url: 'https://cve.org/0001',
+      },
     ],
     location: { file: 'src/app.ts', start_line: 10 },
     solution: null,
@@ -306,7 +311,9 @@ describe('GitLabAdapter', () => {
     it('should throw on path traversal (../)', () => {
       expect(() => sanitize('../etc/passwd')).toThrow('Invalid GitLab API endpoint format');
       expect(() => sanitize('projects/../secrets')).toThrow('Invalid GitLab API endpoint format');
-      expect(() => sanitize('projects/123/../../admin')).toThrow('Invalid GitLab API endpoint format');
+      expect(() => sanitize('projects/123/../../admin')).toThrow(
+        'Invalid GitLab API endpoint format',
+      );
     });
 
     it('should throw on protocol injection', () => {
@@ -319,11 +326,15 @@ describe('GitLabAdapter', () => {
     });
 
     it('should throw on backslashes', () => {
-      expect(() => sanitize('projects\\123\\pipelines')).toThrow('Invalid GitLab API endpoint format');
+      expect(() => sanitize('projects\\123\\pipelines')).toThrow(
+        'Invalid GitLab API endpoint format',
+      );
     });
 
     it('should throw on @ symbol (credential injection)', () => {
-      expect(() => sanitize('user:pass@evil.com/api')).toThrow('Invalid GitLab API endpoint format');
+      expect(() => sanitize('user:pass@evil.com/api')).toThrow(
+        'Invalid GitLab API endpoint format',
+      );
     });
   });
 
@@ -373,9 +384,7 @@ describe('GitLabAdapter', () => {
     it('should reject HTTP (non-HTTPS) URL', async () => {
       mockConfigService.get.mockReturnValue('http://gitlab.com/api/v4');
 
-      await expect(adapter.fetchPipelines(config)).rejects.toThrow(
-        'GitLab API URL must use HTTPS',
-      );
+      await expect(adapter.fetchPipelines(config)).rejects.toThrow('GitLab API URL must use HTTPS');
     });
 
     it('should reject URL with credentials embedded', async () => {
@@ -431,9 +440,7 @@ describe('GitLabAdapter', () => {
     it('should reject invalid URL', async () => {
       mockConfigService.get.mockReturnValue('not-a-valid-url');
 
-      await expect(adapter.fetchPipelines(config)).rejects.toThrow(
-        'Invalid GitLab API URL',
-      );
+      await expect(adapter.fetchPipelines(config)).rejects.toThrow('Invalid GitLab API URL');
     });
 
     it('should strip trailing slash from base URL', async () => {
@@ -861,9 +868,7 @@ describe('GitLabAdapter', () => {
         assets: {
           count: 3,
           sources: [{ format: 'zip', url: 'https://example.com/zip' }],
-          links: [
-            { id: 1, name: 'Binary', url: 'https://example.com/bin', link_type: 'other' },
-          ],
+          links: [{ id: 1, name: 'Binary', url: 'https://example.com/bin', link_type: 'other' }],
         },
       });
       mockOkFetch([release]);
@@ -1144,9 +1149,7 @@ describe('GitLabAdapter', () => {
 
       const result = await adapter.ingestAllEvidence(config, sessionId);
 
-      expect(result.errors).toEqual(
-        expect.arrayContaining([expect.stringContaining('Pipelines')]),
-      );
+      expect(result.errors).toEqual(expect.arrayContaining([expect.stringContaining('Pipelines')]));
       expect(result.results.pipelines).toBe(0);
       expect(result.results.merge_requests).toBe(1);
     });
@@ -1194,9 +1197,7 @@ describe('GitLabAdapter', () => {
 
       const result = await adapter.ingestAllEvidence(config, sessionId);
 
-      expect(result.errors).toEqual(
-        expect.arrayContaining([expect.stringContaining('Releases')]),
-      );
+      expect(result.errors).toEqual(expect.arrayContaining([expect.stringContaining('Releases')]));
       expect(result.results.releases).toBe(0);
     });
 

@@ -303,9 +303,7 @@ describe('initializeSentry - Sentry.init options', () => {
 
     initializeSentry();
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('production'),
-    );
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('production'));
   });
 
   it('should include beforeSend in init options', () => {
@@ -418,9 +416,7 @@ describe('initializeSentry - Sentry.init options', () => {
 
     it('should redact token in breadcrumbs', () => {
       const event = {
-        breadcrumbs: [
-          { data: { token: 'jwt-abc123', action: 'login' } },
-        ],
+        breadcrumbs: [{ data: { token: 'jwt-abc123', action: 'login' } }],
       };
 
       const result = beforeSend(event);
@@ -430,9 +426,7 @@ describe('initializeSentry - Sentry.init options', () => {
 
     it('should handle breadcrumbs without data', () => {
       const event = {
-        breadcrumbs: [
-          { category: 'http', message: 'request' },
-        ],
+        breadcrumbs: [{ category: 'http', message: 'request' }],
       };
 
       const result = beforeSend(event);

@@ -58,7 +58,11 @@ describe('Card', () => {
   });
 
   it('passes through HTML attributes', () => {
-    render(<Card id="test-card" data-testid="card">Content</Card>);
+    render(
+      <Card id="test-card" data-testid="card">
+        Content
+      </Card>,
+    );
     const card = screen.getByTestId('card');
     expect(card).toHaveAttribute('id', 'test-card');
   });
@@ -67,20 +71,20 @@ describe('Card', () => {
     render(
       <Card padding="lg" hover className="my-custom-class" id="combined-card">
         Combined Content
-      </Card>
+      </Card>,
     );
     const card = screen.getByText('Combined Content').closest('div');
-    
+
     // Check padding
     expect(card).toHaveClass('p-8');
-    
+
     // Check hover effects
     expect(card).toHaveClass('hover:shadow-elevated');
     expect(card).toHaveClass('hover:border-surface-300/60');
-    
+
     // Check custom class
     expect(card).toHaveClass('my-custom-class');
-    
+
     // Check HTML attribute
     expect(card).toHaveAttribute('id', 'combined-card');
   });
@@ -142,24 +146,25 @@ describe('CardHeader', () => {
   it('renders all elements together correctly', () => {
     const icon = <Star data-testid="star-icon" />;
     const action = <button>Click Me</button>;
-    
+
     render(
-      <CardHeader 
-        title="Complete Header" 
-        subtitle="With all elements" 
-        icon={icon} 
-        action={action} 
-      />
+      <CardHeader
+        title="Complete Header"
+        subtitle="With all elements"
+        icon={icon}
+        action={action}
+      />,
     );
-    
+
     // Check all elements are present
     expect(screen.getByText('Complete Header')).toBeInTheDocument();
     expect(screen.getByText('With all elements')).toBeInTheDocument();
     expect(screen.getByTestId('star-icon')).toBeInTheDocument();
     expect(screen.getByText('Click Me')).toBeInTheDocument();
-    
-    // Check layout structure by examining the outermost container
-    const container = screen.getByText('Complete Header').closest('div')?.parentElement?.parentElement;
+
+    // Check layout structure: h3 -> text wrapper div -> left-side div -> root flex container
+    const container = screen.getByText('Complete Header').closest('div')
+      ?.parentElement?.parentElement;
     expect(container).toHaveClass('flex');
     expect(container).toHaveClass('items-center');
     expect(container).toHaveClass('justify-between');

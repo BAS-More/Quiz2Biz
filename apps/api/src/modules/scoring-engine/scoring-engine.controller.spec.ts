@@ -42,7 +42,12 @@ describe('ScoringEngineController', () => {
         score: 75.5,
         portfolioResidual: 0.245,
         dimensions: [
-          { dimensionKey: 'arch_sec', displayName: 'Architecture', residualRisk: 0.2, weight: 0.15 },
+          {
+            dimensionKey: 'arch_sec',
+            displayName: 'Architecture',
+            residualRisk: 0.2,
+            weight: 0.15,
+          },
           { dimensionKey: 'devops', displayName: 'DevOps', residualRisk: 0.3, weight: 0.12 },
         ],
         totalQuestions: 50,
@@ -176,7 +181,10 @@ describe('ScoringEngineController', () => {
 
       expect(result.currentScore).toBe(80);
       expect(result.performanceCategory).toBe('ABOVE_AVERAGE');
-      expect(mockScoringService.getIndustryBenchmark).toHaveBeenCalledWith('session-123', 'technology');
+      expect(mockScoringService.getIndustryBenchmark).toHaveBeenCalledWith(
+        'session-123',
+        'technology',
+      );
     });
   });
 

@@ -223,9 +223,7 @@ Generate professional content for each section using the questionnaire responses
 
     const blocks: string[] = [];
     for (const [dimensionKey, answers] of grouped) {
-      const answerLines = answers
-        .map((a) => `Q: ${a.question}\nA: ${a.answer}`)
-        .join('\n\n');
+      const answerLines = answers.map((a) => `Q: ${a.question}\nA: ${a.answer}`).join('\n\n');
       blocks.push(`### Dimension: ${dimensionKey}\n\n${answerLines}`);
     }
 
@@ -297,18 +295,12 @@ Generate professional content for each section using the questionnaire responses
    * Provides a useful structure so document generation can proceed
    * even without AI-powered content.
    */
-  private buildPlaceholderContent(
-    params: GenerateDocumentContentParams,
-  ): GeneratedDocumentContent {
+  private buildPlaceholderContent(params: GenerateDocumentContentParams): GeneratedDocumentContent {
     const { projectTypeName, documentTypeName, sessionAnswers, documentTemplateSections } = params;
 
     const sections: GeneratedSection[] = documentTemplateSections.map((template) => ({
       heading: template.heading,
-      content: this.buildPlaceholderSectionContent(
-        template,
-        sessionAnswers,
-        projectTypeName,
-      ),
+      content: this.buildPlaceholderSectionContent(template, sessionAnswers, projectTypeName),
     }));
 
     return {

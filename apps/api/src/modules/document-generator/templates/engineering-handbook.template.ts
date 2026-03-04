@@ -397,7 +397,7 @@ export const ENGINEERING_HANDBOOK_TEMPLATE = {
     'deployment-process': 'devopsCiCd.deployment',
     'monitoring-setup': 'devopsCiCd.monitoring',
     'on-call-rotation': 'onCallAndSupport.rotation',
-    'runbooks': 'onCallAndSupport.runbooks',
+    runbooks: 'onCallAndSupport.runbooks',
     'escalation-procedures': 'onCallAndSupport.escalation',
     'secure-coding': 'securityPractices.secureCoding',
     'dependency-management': 'securityPractices.dependencyManagement',
@@ -411,9 +411,13 @@ export const ENGINEERING_HANDBOOK_TEMPLATE = {
    * Default values for optional fields
    */
   defaults: {
-    'introduction.howToUse': 'This handbook serves as the definitive reference for engineering practices. Review relevant sections during onboarding and refer back as needed.',
-    'securityPractices.dependencyManagement': 'All dependencies must be reviewed for known vulnerabilities before adoption. Automated scanning is required.',
-    'securityPractices.secretsHandling': 'Secrets must never be committed to source control. Use a secrets management service for all credentials.',
-    'onboardingGuide.firstPr': 'New engineers should submit their first pull request within the first week, ideally a small bug fix or documentation improvement.',
+    'introduction.howToUse':
+      'This handbook serves as the definitive reference for engineering practices. Review relevant sections during onboarding and refer back as needed.',
+    'securityPractices.dependencyManagement':
+      'All dependencies must be reviewed for known vulnerabilities before adoption. Automated scanning is required.',
+    'securityPractices.secretsHandling':
+      'Secrets must never be committed to source control. Use a secrets management service for all credentials.',
+    'onboardingGuide.firstPr':
+      'New engineers should submit their first pull request within the first week, ideally a small bug fix or documentation improvement.',
   },
 };

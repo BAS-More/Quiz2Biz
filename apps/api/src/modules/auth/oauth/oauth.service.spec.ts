@@ -123,9 +123,7 @@ describe('OAuthService', () => {
 
   describe('getLinkedAccounts', () => {
     it('should return linked accounts for user', async () => {
-      const mockAccounts = [
-        { provider: 'google', email: 'test@gmail.com', createdAt: new Date() },
-      ];
+      const mockAccounts = [{ provider: 'google', email: 'test@gmail.com', createdAt: new Date() }];
       prismaService.oAuthAccount.findMany.mockResolvedValue(mockAccounts);
 
       const result = await service.getLinkedAccounts('user-1');

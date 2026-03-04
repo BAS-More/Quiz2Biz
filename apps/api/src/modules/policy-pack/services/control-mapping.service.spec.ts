@@ -30,7 +30,7 @@ describe('ControlMappingService', () => {
     it('should return mappings from multiple frameworks by default', () => {
       const mappings = service.getMappingsForDimension('arch_sec');
 
-      const frameworks = new Set(mappings.map(m => m.framework));
+      const frameworks = new Set(mappings.map((m) => m.framework));
       expect(frameworks.has(ComplianceFramework.ISO_27001)).toBe(true);
       expect(frameworks.has(ComplianceFramework.NIST_CSF)).toBe(true);
       expect(frameworks.has(ComplianceFramework.OWASP_ASVS)).toBe(true);
@@ -39,7 +39,7 @@ describe('ControlMappingService', () => {
     it('should filter by specific frameworks when provided', () => {
       const mappings = service.getMappingsForDimension('arch_sec', [ComplianceFramework.ISO_27001]);
 
-      const frameworks = new Set(mappings.map(m => m.framework));
+      const frameworks = new Set(mappings.map((m) => m.framework));
       expect(frameworks.size).toBe(1);
       expect(frameworks.has(ComplianceFramework.ISO_27001)).toBe(true);
     });
@@ -88,7 +88,7 @@ describe('ControlMappingService', () => {
       const controls = service.getFrameworkControls(ComplianceFramework.ISO_27001);
 
       expect(controls.length).toBeGreaterThan(0);
-      expect(controls.some(c => c.id.startsWith('A.'))).toBe(true);
+      expect(controls.some((c) => c.id.startsWith('A.'))).toBe(true);
     });
 
     it('should return NIST CSF controls', () => {
@@ -96,12 +96,13 @@ describe('ControlMappingService', () => {
 
       expect(controls.length).toBeGreaterThan(0);
       // NIST CSF has categories like ID, PR, DE, RS, RC
-      const hasNistFormat = controls.some(c =>
-        c.id.startsWith('ID.') ||
-        c.id.startsWith('PR.') ||
-        c.id.startsWith('DE.') ||
-        c.id.startsWith('RS.') ||
-        c.id.startsWith('RC.')
+      const hasNistFormat = controls.some(
+        (c) =>
+          c.id.startsWith('ID.') ||
+          c.id.startsWith('PR.') ||
+          c.id.startsWith('DE.') ||
+          c.id.startsWith('RS.') ||
+          c.id.startsWith('RC.'),
       );
       expect(hasNistFormat).toBe(true);
     });
@@ -110,7 +111,7 @@ describe('ControlMappingService', () => {
       const controls = service.getFrameworkControls(ComplianceFramework.OWASP_ASVS);
 
       expect(controls.length).toBeGreaterThan(0);
-      expect(controls.some(c => c.id.startsWith('V'))).toBe(true);
+      expect(controls.some((c) => c.id.startsWith('V'))).toBe(true);
     });
 
     it('should return empty array for frameworks without controls', () => {
@@ -169,7 +170,7 @@ describe('ControlMappingService', () => {
 
       // These dimensions should have different coverage patterns
       expect(archSecSummary[ComplianceFramework.ISO_27001]).not.toBe(
-        devopsSummary[ComplianceFramework.ISO_27001]
+        devopsSummary[ComplianceFramework.ISO_27001],
       );
     });
   });
@@ -179,15 +180,13 @@ describe('ControlMappingService', () => {
       const controls = service.getFrameworkControls(ComplianceFramework.ISO_27001);
 
       // ISO 27001 Annex A has controls A.5 through A.18
-      const annexAControls = controls.filter(c =>
-        c.id.match(/^A\.\d+\.\d+/)
-      );
+      const annexAControls = controls.filter((c) => c.id.match(/^A\.\d+\.\d+/));
       expect(annexAControls.length).toBeGreaterThan(20);
     });
 
     it('should cover access control domain (A.9)', () => {
       const controls = service.getFrameworkControls(ComplianceFramework.ISO_27001);
-      const accessControls = controls.filter(c => c.id.startsWith('A.9'));
+      const accessControls = controls.filter((c) => c.id.startsWith('A.9'));
 
       expect(accessControls.length).toBeGreaterThan(0);
     });
@@ -196,35 +195,35 @@ describe('ControlMappingService', () => {
   describe('NIST CSF controls', () => {
     it('should have Identify (ID) function controls', () => {
       const controls = service.getFrameworkControls(ComplianceFramework.NIST_CSF);
-      const identifyControls = controls.filter(c => c.id.startsWith('ID.'));
+      const identifyControls = controls.filter((c) => c.id.startsWith('ID.'));
 
       expect(identifyControls.length).toBeGreaterThan(0);
     });
 
     it('should have Protect (PR) function controls', () => {
       const controls = service.getFrameworkControls(ComplianceFramework.NIST_CSF);
-      const protectControls = controls.filter(c => c.id.startsWith('PR.'));
+      const protectControls = controls.filter((c) => c.id.startsWith('PR.'));
 
       expect(protectControls.length).toBeGreaterThan(0);
     });
 
     it('should have Detect (DE) function controls', () => {
       const controls = service.getFrameworkControls(ComplianceFramework.NIST_CSF);
-      const detectControls = controls.filter(c => c.id.startsWith('DE.'));
+      const detectControls = controls.filter((c) => c.id.startsWith('DE.'));
 
       expect(detectControls.length).toBeGreaterThan(0);
     });
 
     it('should have Respond (RS) function controls', () => {
       const controls = service.getFrameworkControls(ComplianceFramework.NIST_CSF);
-      const respondControls = controls.filter(c => c.id.startsWith('RS.'));
+      const respondControls = controls.filter((c) => c.id.startsWith('RS.'));
 
       expect(respondControls.length).toBeGreaterThan(0);
     });
 
     it('should have Recover (RC) function controls', () => {
       const controls = service.getFrameworkControls(ComplianceFramework.NIST_CSF);
-      const recoverControls = controls.filter(c => c.id.startsWith('RC.'));
+      const recoverControls = controls.filter((c) => c.id.startsWith('RC.'));
 
       expect(recoverControls.length).toBeGreaterThan(0);
     });
@@ -233,35 +232,35 @@ describe('ControlMappingService', () => {
   describe('OWASP ASVS controls', () => {
     it('should have Architecture (V1) controls', () => {
       const controls = service.getFrameworkControls(ComplianceFramework.OWASP_ASVS);
-      const archControls = controls.filter(c => c.id.startsWith('V1.'));
+      const archControls = controls.filter((c) => c.id.startsWith('V1.'));
 
       expect(archControls.length).toBeGreaterThan(0);
     });
 
     it('should have Authentication (V2) controls', () => {
       const controls = service.getFrameworkControls(ComplianceFramework.OWASP_ASVS);
-      const authControls = controls.filter(c => c.id.startsWith('V2.'));
+      const authControls = controls.filter((c) => c.id.startsWith('V2.'));
 
       expect(authControls.length).toBeGreaterThan(0);
     });
 
     it('should have Session Management (V3) controls', () => {
       const controls = service.getFrameworkControls(ComplianceFramework.OWASP_ASVS);
-      const sessionControls = controls.filter(c => c.id.startsWith('V3.'));
+      const sessionControls = controls.filter((c) => c.id.startsWith('V3.'));
 
       expect(sessionControls.length).toBeGreaterThan(0);
     });
 
     it('should have Data Protection (V8) controls', () => {
       const controls = service.getFrameworkControls(ComplianceFramework.OWASP_ASVS);
-      const dataControls = controls.filter(c => c.id.startsWith('V8.'));
+      const dataControls = controls.filter((c) => c.id.startsWith('V8.'));
 
       expect(dataControls.length).toBeGreaterThan(0);
     });
 
     it('should have API (V13) controls', () => {
       const controls = service.getFrameworkControls(ComplianceFramework.OWASP_ASVS);
-      const apiControls = controls.filter(c => c.id.startsWith('V13.'));
+      const apiControls = controls.filter((c) => c.id.startsWith('V13.'));
 
       expect(apiControls.length).toBeGreaterThan(0);
     });
@@ -269,7 +268,9 @@ describe('ControlMappingService', () => {
 
   describe('uncovered branches', () => {
     it('should return empty array for unknown framework in getMappingsForDimension', () => {
-      const mappings = service.getMappingsForDimension('arch_sec', ['UNKNOWN_FRAMEWORK' as ComplianceFramework]);
+      const mappings = service.getMappingsForDimension('arch_sec', [
+        'UNKNOWN_FRAMEWORK' as ComplianceFramework,
+      ]);
 
       expect(mappings).toEqual([]);
     });
