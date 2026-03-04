@@ -94,10 +94,10 @@ jobs:
         id: coverage
         run: |
           if [ ! -f "apps/api/coverage/coverage-summary.json" ]; then
-            echo "::warning::Coverage report not found - tests may have failed"
+            echo "::error::Coverage report not found - tests may have failed"
             echo "## Coverage Report" >> $GITHUB_STEP_SUMMARY
             echo "Coverage report was not generated. Check test results." >> $GITHUB_STEP_SUMMARY
-            exit 0
+            exit 1
           fi
 
           BRANCHES=$(jq '.total.branches.pct' apps/api/coverage/coverage-summary.json)

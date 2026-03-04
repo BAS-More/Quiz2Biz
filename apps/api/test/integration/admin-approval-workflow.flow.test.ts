@@ -109,8 +109,7 @@ describe.skip('Admin → Approval Workflow Flow Integration', () => {
           sessionId: testSessionId,
           statement:
             'Policy Lock for Production Deployment: Lock all security policies before audit',
-          assumptions:
-            'All stakeholders have been notified. Security team has completed review.',
+          assumptions: 'All stakeholders have been notified. Security team has completed review.',
           references: 'Security Policy v2.0, Audit Requirements Doc',
           status: 'DRAFT',
         },
