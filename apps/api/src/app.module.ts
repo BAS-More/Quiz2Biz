@@ -28,12 +28,13 @@ import configuration from './config/configuration';
  */
 function getLegacyModules(): Array<Type | DynamicModule> {
   if (process.env.ENABLE_LEGACY_MODULES === 'true') {
-     
-    const { EvidenceRegistryModule } = require('./modules/evidence-registry/evidence-registry.module');
+    const {
+      EvidenceRegistryModule,
+    } = require('./modules/evidence-registry/evidence-registry.module');
     const { DecisionLogModule } = require('./modules/decision-log/decision-log.module');
     const { QpgModule } = require('./modules/qpg/qpg.module');
     const { PolicyPackModule } = require('./modules/policy-pack/policy-pack.module');
-     
+
     return [EvidenceRegistryModule, DecisionLogModule, QpgModule, PolicyPackModule];
   }
   return [];

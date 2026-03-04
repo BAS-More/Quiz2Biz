@@ -46,9 +46,7 @@ export class IdeaCaptureController {
   @Get(':id')
   @ApiOperation({ summary: 'Get idea capture details by ID' })
   @ApiResponse({ status: 200, type: IdeaCaptureResponseDto })
-  async getIdea(
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<IdeaCaptureResponseDto> {
+  async getIdea(@Param('id', ParseUUIDPipe) id: string): Promise<IdeaCaptureResponseDto> {
     return this.ideaCaptureService.getById(id);
   }
 

@@ -7,10 +7,10 @@ import configuration from '../../src/config/configuration';
 
 /**
  * Integration tests for Admin Approval Workflow
- * 
+ *
  * SKIP REASON: NotificationService module doesn't exist in current codebase structure.
  * TODO: Create NotificationService or update tests to remove this dependency.
- * 
+ *
  * Schema updates completed: USER -> CLIENT role, Session.questionnaireVersion added
  */
 describe.skip('Admin → Approval Workflow Flow Integration', () => {

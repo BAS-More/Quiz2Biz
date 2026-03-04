@@ -12,7 +12,9 @@ describe('JwtAuthGuard', () => {
     getAllAndOverride: jest.fn(),
   };
 
-  const createMockExecutionContext = (overrides: Partial<ExecutionContext> = {}): ExecutionContext => {
+  const createMockExecutionContext = (
+    overrides: Partial<ExecutionContext> = {},
+  ): ExecutionContext => {
     return {
       getHandler: jest.fn(),
       getClass: jest.fn(),
@@ -34,10 +36,7 @@ describe('JwtAuthGuard', () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        JwtAuthGuard,
-        { provide: Reflector, useValue: mockReflector },
-      ],
+      providers: [JwtAuthGuard, { provide: Reflector, useValue: mockReflector }],
     }).compile();
 
     guard = module.get<JwtAuthGuard>(JwtAuthGuard);
@@ -67,7 +66,8 @@ describe('JwtAuthGuard', () => {
       mockReflector.getAllAndOverride.mockReturnValue(false);
 
       // Mock the parent's canActivate
-      const superCanActivate = jest.spyOn(Object.getPrototypeOf(Object.getPrototypeOf(guard)), 'canActivate')
+      const superCanActivate = jest
+        .spyOn(Object.getPrototypeOf(Object.getPrototypeOf(guard)), 'canActivate')
         .mockReturnValue(true);
 
       guard.canActivate(context);
@@ -104,7 +104,9 @@ describe('JwtAuthGuard', () => {
       const tokenExpiredError = new Error('Token expired');
       tokenExpiredError.name = 'TokenExpiredError';
 
-      expect(() => guard.handleRequest(null, null, tokenExpiredError)).toThrow(UnauthorizedException);
+      expect(() => guard.handleRequest(null, null, tokenExpiredError)).toThrow(
+        UnauthorizedException,
+      );
       expect(() => guard.handleRequest(null, null, tokenExpiredError)).toThrow('Token has expired');
     });
 
@@ -127,7 +129,9 @@ describe('JwtAuthGuard', () => {
       unknownError.name = 'UnknownError';
 
       expect(() => guard.handleRequest(null, null, unknownError)).toThrow(UnauthorizedException);
-      expect(() => guard.handleRequest(null, null, unknownError)).toThrow('Authentication required');
+      expect(() => guard.handleRequest(null, null, unknownError)).toThrow(
+        'Authentication required',
+      );
     });
 
     it('should handle user being undefined', () => {

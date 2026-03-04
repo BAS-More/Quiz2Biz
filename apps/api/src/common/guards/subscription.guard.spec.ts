@@ -125,7 +125,9 @@ describe('SubscriptionGuard', () => {
       });
 
       mockReflector.getAllAndOverride.mockImplementation((key) => {
-        if (key === REQUIRED_TIER_KEY) {return ['ENTERPRISE'];}
+        if (key === REQUIRED_TIER_KEY) {
+          return ['ENTERPRISE'];
+        }
         return null;
       });
 
@@ -143,7 +145,9 @@ describe('SubscriptionGuard', () => {
       });
 
       mockReflector.getAllAndOverride.mockImplementation((key) => {
-        if (key === REQUIRED_TIER_KEY) {return ['PROFESSIONAL', 'ENTERPRISE'];}
+        if (key === REQUIRED_TIER_KEY) {
+          return ['PROFESSIONAL', 'ENTERPRISE'];
+        }
         return null;
       });
 

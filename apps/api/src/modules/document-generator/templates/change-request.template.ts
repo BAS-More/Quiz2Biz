@@ -390,7 +390,8 @@ export const CHANGE_REQUEST_TEMPLATE = {
   defaults: {
     'approval.decision': 'PENDING',
     'approval.conditions': '[]',
-    'implementationPlan.rollbackPlan': '{"trigger": "To be defined", "steps": [], "estimatedDuration": "TBD", "dataRecovery": "TBD", "responsible": "TBD"}',
+    'implementationPlan.rollbackPlan':
+      '{"trigger": "To be defined", "steps": [], "estimatedDuration": "TBD", "dataRecovery": "TBD", "responsible": "TBD"}',
     'communication.training': '[]',
   },
 };
