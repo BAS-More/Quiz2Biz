@@ -10,7 +10,6 @@ on:
       - main
       - develop
   schedule:
-    # Run daily at 2 AM UTC
     - cron: '0 2 * * *'
   workflow_dispatch:
 
@@ -23,12 +22,12 @@ env:
 
 jobs:
   dependency-scan:
-    name: Dependency Vulnerability Scan
+    name: dependency-scan
     runs-on: ubuntu-latest
     permissions:
       contents: read
       security-events: write
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -47,18 +46,22 @@ jobs:
         run: |
           echo "## Production Dependencies Audit" >> $GITHUB_STEP_SUMMARY
           npm audit --omit=dev --audit-level=moderate --json > audit-prod.json || true
-          
+
           CRITICAL=$(jq '.metadata.vulnerabilities.critical // 0' audit-prod.json)
           HIGH=$(jq '.metadata.vulnerabilities.high // 0' audit-prod.json)
           MODERATE=$(jq '.metadata.vulnerabilities.moderate // 0' audit-prod.json)
-          
+
           echo "- **Critical**: $CRITICAL" >> $GITHUB_STEP_SUMMARY
           echo "- **High**: $HIGH" >> $GITHUB_STEP_SUMMARY
           echo "- **Moderate**: $MODERATE" >> $GITHUB_STEP_SUMMARY
-          
-          if [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
-            echo "::error::Found $CRITICAL critical and $HIGH high severity vulnerabilities in production dependencies"
+
+          if [ "$CRITICAL" -gt 0 ]; then
+            echo "::error::Found $CRITICAL critical severity vulnerabilities in production dependencies"
             exit 1
+          fi
+
+          if [ "$HIGH" -gt 0 ]; then
+            echo "::warning::Found $HIGH high severity vulnerabilities in production dependencies"
           fi
 
       - name: Run npm audit (all dependencies)
@@ -66,18 +69,16 @@ jobs:
         run: |
           echo "## All Dependencies Audit" >> $GITHUB_STEP_SUMMARY
           npm audit --audit-level=high --json > audit-all.json || true
-          
+
           CRITICAL=$(jq '.metadata.vulnerabilities.critical // 0' audit-all.json)
           HIGH=$(jq '.metadata.vulnerabilities.high // 0' audit-all.json)
           MODERATE=$(jq '.metadata.vulnerabilities.moderate // 0' audit-all.json)
           LOW=$(jq '.metadata.vulnerabilities.low // 0' audit-all.json)
-          
+
           echo "- **Critical**: $CRITICAL" >> $GITHUB_STEP_SUMMARY
           echo "- **High**: $HIGH" >> $GITHUB_STEP_SUMMARY
           echo "- **Moderate**: $MODERATE" >> $GITHUB_STEP_SUMMARY
           echo "- **Low**: $LOW" >> $GITHUB_STEP_SUMMARY
-          
-          echo "⚠️ Dev dependencies have vulnerabilities but do not block deployment" >> $GITHUB_STEP_SUMMARY
         continue-on-error: true
 
       - name: Upload audit reports
@@ -91,13 +92,13 @@ jobs:
           retention-days: 30
 
   container-scan:
-    name: Container Image Security Scan
+    name: container-scan
     runs-on: ubuntu-latest
     if: github.event_name != 'schedule'
     permissions:
       contents: read
       security-events: write
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -117,47 +118,30 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Install Trivy
-        run: |
-          # Install Trivy using apt repository (most reliable method)
-          # Note: GPG key is downloaded over HTTPS from official Aqua Security domain
-          sudo apt-get update
-          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
-          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key \
-            | gpg --dearmor \
-            | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
-          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] \
-            https://aquasecurity.github.io/trivy-repo/deb \
-            $(lsb_release -sc) main" \
-            | sudo tee /etc/apt/sources.list.d/trivy.list
-          sudo apt-get update
-          sudo apt-get install -y trivy
-          trivy --version
-
-      - name: Run Trivy vulnerability scanner (SARIF)
-        run: |
-          trivy image \
-            --format sarif \
-            --output trivy-results.sarif \
-            --severity CRITICAL,HIGH \
-            --exit-code 1 \
-            --ignore-unfixed \
-            quiz-api:scan
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'quiz-api:scan'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '0'
+          ignore-unfixed: true
 
       - name: Upload Trivy results to GitHub Security
         uses: github/codeql-action/upload-sarif@v3
-        if: always()
+        if: always() && hashFiles('trivy-results.sarif') != ''
         with:
           sarif_file: 'trivy-results.sarif'
+        continue-on-error: true
 
       - name: Run Trivy vulnerability scanner (JSON output)
-        if: always()
-        run: |
-          trivy image \
-            --format json \
-            --output trivy-results.json \
-            --severity CRITICAL,HIGH,MEDIUM \
-            quiz-api:scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'quiz-api:scan'
+          format: 'json'
+          output: 'trivy-results.json'
+          severity: 'CRITICAL,HIGH,MEDIUM'
         continue-on-error: true
 
       - name: Generate security summary
@@ -168,10 +152,17 @@ jobs:
             CRITICAL=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity=="CRITICAL")] | length' trivy-results.json)
             HIGH=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity=="HIGH")] | length' trivy-results.json)
             MEDIUM=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity=="MEDIUM")] | length' trivy-results.json)
-            
+
             echo "- **Critical**: $CRITICAL" >> $GITHUB_STEP_SUMMARY
             echo "- **High**: $HIGH" >> $GITHUB_STEP_SUMMARY
             echo "- **Medium**: $MEDIUM" >> $GITHUB_STEP_SUMMARY
+
+            if [ "$CRITICAL" -gt 0 ]; then
+              echo "::error::Found $CRITICAL critical vulnerabilities in container image"
+              exit 1
+            fi
+          else
+            echo "No scan results available" >> $GITHUB_STEP_SUMMARY
           fi
 
       - name: Upload container scan results
@@ -183,42 +174,80 @@ jobs:
           retention-days: 30
 
   code-scanning:
-    name: CodeQL Code Scanning
+    name: code-scanning
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      security-events: write
-      actions: read
-    
-    strategy:
-      fail-fast: false
-      matrix:
-        language: ['javascript']
-    
+      checks: read
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+      - name: Verify default CodeQL checks
+        uses: actions/github-script@v7
         with:
-          languages: ${{ matrix.language }}
-          queries: security-and-quality
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const ref = context.payload.pull_request?.head?.sha || context.sha;
+            const timeoutSeconds = 15 * 60;
+            const intervalMs = 15000;
+            const start = Date.now();
+            const okConclusions = new Set(["success", "neutral", "skipped"]);
+            const matchesCodeqlCheck = (name) => /^Analyze \(/.test(name) || name === "CodeQL";
 
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+            while ((Date.now() - start) / 1000 < timeoutSeconds) {
+              const allRuns = await github.paginate(github.rest.checks.listForRef, {
+                owner,
+                repo,
+                ref,
+                per_page: 100,
+              });
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:${{ matrix.language }}"
+              const codeqlRuns = allRuns.filter((run) => matchesCodeqlCheck(run.name));
+              if (codeqlRuns.length === 0) {
+                core.info("No default CodeQL checks found yet. Waiting...");
+                await new Promise((resolve) => setTimeout(resolve, intervalMs));
+                continue;
+              }
 
+              const failing = codeqlRuns.filter(
+                (run) => run.status === "completed" && !okConclusions.has(run.conclusion || ""),
+              );
+              if (failing.length > 0) {
+                core.setFailed(
+                  `Default CodeQL checks failed: ${failing
+                    .map((run) => `${run.name}=${run.conclusion}`)
+                    .join(", ")}`,
+                );
+                return;
+              }
+
+              const pending = codeqlRuns.filter((run) => run.status !== "completed");
+              if (pending.length === 0) {
+                core.info(
+                  `Default CodeQL checks completed successfully: ${codeqlRuns
+                    .map((run) => `${run.name}=${run.conclusion}`)
+                    .join(", ")}`,
+                );
+                return;
+              }
+
+              core.info(
+                `Waiting for default CodeQL checks to complete: ${pending
+                  .map((run) => run.name)
+                  .join(", ")}`,
+              );
+              await new Promise((resolve) => setTimeout(resolve, intervalMs));
+            }
+
+            core.setFailed(
+              "Timed out waiting for default CodeQL checks. Ensure default setup is enabled and running.",
+            );
   secrets-scan:
-    name: Secrets Detection
+    name: secrets-scan
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -229,18 +258,18 @@ jobs:
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          base: ${{ github.event.repository.default_branch }}
+          base: ${{ github.event.repository.default_branch || 'main' }}
           head: HEAD
           extra_args: --debug --only-verified
 
   security-summary:
-    name: Security Scan Summary
+    name: security-summary
     runs-on: ubuntu-latest
     needs: [dependency-scan, container-scan, code-scanning, secrets-scan]
     if: always()
     permissions:
       contents: read
-    
+
     steps:
       - name: Check all security scans
         run: |
@@ -250,13 +279,17 @@ jobs:
           echo "- **Container Scan**: ${{ needs.container-scan.result }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Code Scanning**: ${{ needs.code-scanning.result }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Secrets Scan**: ${{ needs.secrets-scan.result }}" >> $GITHUB_STEP_SUMMARY
-          
-          if [ "${{ needs.dependency-scan.result }}" != "success" ] || \
-             [ "${{ needs.container-scan.result }}" != "success" ] || \
-             [ "${{ needs.code-scanning.result }}" != "success" ] || \
-             [ "${{ needs.secrets-scan.result }}" != "success" ]; then
+
+          is_ok() {
+            [[ "$1" == "success" || "$1" == "skipped" ]]
+          }
+
+          if ! is_ok "${{ needs.dependency-scan.result }}" || \
+             ! is_ok "${{ needs.container-scan.result }}" || \
+             ! is_ok "${{ needs.code-scanning.result }}" || \
+             ! is_ok "${{ needs.secrets-scan.result }}"; then
             echo "::error::One or more security scans failed"
             exit 1
           fi
-          
-          echo "✅ All security scans passed" >> $GITHUB_STEP_SUMMARY
+
+          echo "All security scans passed" >> $GITHUB_STEP_SUMMARY

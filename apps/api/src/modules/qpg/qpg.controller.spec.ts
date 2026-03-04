@@ -178,9 +178,7 @@ describe('QpgController', () => {
       const mockBatch = {
         sessionId: 'session-123',
         generatedAt: new Date(),
-        prompts: [
-          { id: 'p-1', dimensionKey: 'arch_sec' },
-        ],
+        prompts: [{ id: 'p-1', dimensionKey: 'arch_sec' }],
       };
 
       mockQpgService.generatePromptsForSession.mockResolvedValue(mockBatch);
@@ -195,8 +193,20 @@ describe('QpgController', () => {
   describe('getTemplates', () => {
     it('should return available prompt templates', async () => {
       const mockTemplates = [
-        { id: 't-1', dimensionKey: 'arch_sec', version: '1.0', evidenceType: 'CODE', baseEffortHours: 8 },
-        { id: 't-2', dimensionKey: 'devops', version: '1.0', evidenceType: 'CONFIG', baseEffortHours: 4 },
+        {
+          id: 't-1',
+          dimensionKey: 'arch_sec',
+          version: '1.0',
+          evidenceType: 'CODE',
+          baseEffortHours: 8,
+        },
+        {
+          id: 't-2',
+          dimensionKey: 'devops',
+          version: '1.0',
+          evidenceType: 'CONFIG',
+          baseEffortHours: 4,
+        },
       ];
 
       mockQpgService.getAvailableTemplates.mockResolvedValue(mockTemplates);
@@ -251,7 +261,7 @@ describe('QpgController', () => {
 
       mockQpgService.generatePromptsForSession.mockResolvedValue(mockBatch);
 
-      const result = await controller.exportPrompts('session-123', 'json') as any;
+      const result = (await controller.exportPrompts('session-123', 'json')) as any;
 
       expect(result.sessionId).toBe('session-123');
       expect(result.prompts).toHaveLength(1);
@@ -270,7 +280,7 @@ describe('QpgController', () => {
       mockQpgService.generatePromptsForSession.mockResolvedValue(mockBatch);
       mockPromptGenerator.formatAsMarkdown.mockReturnValue('# Security Prompt\n...');
 
-      const result = await controller.exportPrompts('session-123', 'markdown') as any;
+      const result = (await controller.exportPrompts('session-123', 'markdown')) as any;
 
       expect(result.format).toBe('markdown');
       expect(result.content).toContain('Quiz2Biz');

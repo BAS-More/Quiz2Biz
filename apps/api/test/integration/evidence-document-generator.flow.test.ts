@@ -8,13 +8,13 @@ import configuration from '../../src/config/configuration';
 
 /**
  * Integration tests for Evidence -> Document Generator Flow
- * 
+ *
  * SKIP REASON: Services require full NestJS module context with all dependencies.
  * DocumentGeneratorService depends on TemplateEngineService, NotificationService, etc.
  * TODO: Either import full AppModule or create mock providers for all dependencies.
- * 
+ *
  * Schema updates completed:
- * - User: USER -> CLIENT role  
+ * - User: USER -> CLIENT role
  * - Evidence -> EvidenceRegistry with sessionId, questionId, artifactUrl, artifactType, verified, hashSignature
  * - Response: value as Json object
  */

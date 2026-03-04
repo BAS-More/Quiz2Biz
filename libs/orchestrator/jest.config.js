@@ -14,8 +14,5 @@ module.exports = {
   },
   testTimeout: 30000,
   // Skip tests that require external dependencies not installed
-  testPathIgnorePatterns: [
-    '/node_modules/',
-    'manual-test.js',
-  ],
+  testPathIgnorePatterns: ['/node_modules/', 'manual-test.js'],
 };

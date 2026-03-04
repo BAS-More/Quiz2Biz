@@ -399,9 +399,7 @@ describe('CanaryDeploymentManager', () => {
 
     it('should set status to in_progress', async () => {
       // Mock monitorDeployment to prevent infinite loop
-      jest
-        .spyOn(manager as any, 'monitorDeployment')
-        .mockResolvedValue(undefined);
+      jest.spyOn(manager as any, 'monitorDeployment').mockResolvedValue(undefined);
 
       await manager.startDeployment('rev-abc123');
 
@@ -410,66 +408,44 @@ describe('CanaryDeploymentManager', () => {
     });
 
     it('should set stageStartTime to a recent timestamp', async () => {
-      jest
-        .spyOn(manager as any, 'monitorDeployment')
-        .mockResolvedValue(undefined);
+      jest.spyOn(manager as any, 'monitorDeployment').mockResolvedValue(undefined);
 
       const before = new Date();
       await manager.startDeployment('rev-abc123');
       const after = new Date();
 
       const state = manager.getState();
-      expect(state.stageStartTime.getTime()).toBeGreaterThanOrEqual(
-        before.getTime(),
-      );
-      expect(state.stageStartTime.getTime()).toBeLessThanOrEqual(
-        after.getTime(),
-      );
+      expect(state.stageStartTime.getTime()).toBeGreaterThanOrEqual(before.getTime());
+      expect(state.stageStartTime.getTime()).toBeLessThanOrEqual(after.getTime());
     });
 
     it('should log deployment info including revision name', async () => {
-      jest
-        .spyOn(manager as any, 'monitorDeployment')
-        .mockResolvedValue(undefined);
+      jest.spyOn(manager as any, 'monitorDeployment').mockResolvedValue(undefined);
 
       await manager.startDeployment('rev-test-deploy');
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('rev-test-deploy'),
-      );
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('rev-test-deploy'));
     });
 
     it('should log stage 1 info', async () => {
-      jest
-        .spyOn(manager as any, 'monitorDeployment')
-        .mockResolvedValue(undefined);
+      jest.spyOn(manager as any, 'monitorDeployment').mockResolvedValue(undefined);
 
       await manager.startDeployment('rev-xyz');
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Stage 1/'),
-      );
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Stage 1/'));
     });
 
     it('should log initial traffic weight percentage', async () => {
-      jest
-        .spyOn(manager as any, 'monitorDeployment')
-        .mockResolvedValue(undefined);
+      jest.spyOn(manager as any, 'monitorDeployment').mockResolvedValue(undefined);
 
       await manager.startDeployment('rev-xyz');
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('5%'),
-      );
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('5%'));
     });
 
     it('should call notifyEvent with deployment_started', async () => {
-      jest
-        .spyOn(manager as any, 'monitorDeployment')
-        .mockResolvedValue(undefined);
-      const notifySpy = jest
-        .spyOn(manager as any, 'notifyEvent')
-        .mockResolvedValue(undefined);
+      jest.spyOn(manager as any, 'monitorDeployment').mockResolvedValue(undefined);
+      const notifySpy = jest.spyOn(manager as any, 'notifyEvent').mockResolvedValue(undefined);
 
       await manager.startDeployment('rev-notify');
 
@@ -531,12 +507,8 @@ describe('CanaryDeploymentManager', () => {
       const after = new Date();
 
       const state = manager.getState();
-      expect(state.stageStartTime.getTime()).toBeGreaterThanOrEqual(
-        before.getTime(),
-      );
-      expect(state.stageStartTime.getTime()).toBeLessThanOrEqual(
-        after.getTime(),
-      );
+      expect(state.stageStartTime.getTime()).toBeGreaterThanOrEqual(before.getTime());
+      expect(state.stageStartTime.getTime()).toBeLessThanOrEqual(after.getTime());
     });
 
     it('should log promotion with stage number and traffic percentage', async () => {
@@ -544,18 +516,12 @@ describe('CanaryDeploymentManager', () => {
 
       await manager.promoteToNextStage();
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Promoting to stage 2/'),
-      );
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('canary-expanded'),
-      );
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Promoting to stage 2/'));
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('canary-expanded'));
     });
 
     it('should call notifyEvent with stage_promoted', async () => {
-      const notifySpy = jest
-        .spyOn(manager as any, 'notifyEvent')
-        .mockResolvedValue(undefined);
+      const notifySpy = jest.spyOn(manager as any, 'notifyEvent').mockResolvedValue(undefined);
       (manager as any).state.currentStage = 0;
 
       await manager.promoteToNextStage();
@@ -611,9 +577,7 @@ describe('CanaryDeploymentManager', () => {
     });
 
     it('should call notifyEvent with deployment_completed when at last stage', async () => {
-      const notifySpy = jest
-        .spyOn(manager as any, 'notifyEvent')
-        .mockResolvedValue(undefined);
+      const notifySpy = jest.spyOn(manager as any, 'notifyEvent').mockResolvedValue(undefined);
       (manager as any).state.currentStage = 3;
 
       await manager.promoteToNextStage();
@@ -673,15 +637,11 @@ describe('CanaryDeploymentManager', () => {
     it('should log rollback completed', async () => {
       await manager.initiateRollback('some error');
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Rollback completed'),
-      );
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Rollback completed'));
     });
 
     it('should call notifyEvent with rollback_initiated', async () => {
-      const notifySpy = jest
-        .spyOn(manager as any, 'notifyEvent')
-        .mockResolvedValue(undefined);
+      const notifySpy = jest.spyOn(manager as any, 'notifyEvent').mockResolvedValue(undefined);
 
       await manager.initiateRollback('test reason');
 
@@ -691,9 +651,7 @@ describe('CanaryDeploymentManager', () => {
     });
 
     it('should call notifyEvent with rollback_completed', async () => {
-      const notifySpy = jest
-        .spyOn(manager as any, 'notifyEvent')
-        .mockResolvedValue(undefined);
+      const notifySpy = jest.spyOn(manager as any, 'notifyEvent').mockResolvedValue(undefined);
 
       await manager.initiateRollback('test reason');
 
@@ -716,12 +674,10 @@ describe('CanaryDeploymentManager', () => {
       const statusCaptures: string[] = [];
       const originalUpdateTrafficWeight = (manager as any).updateTrafficWeight.bind(manager);
 
-      jest
-        .spyOn(manager as any, 'updateTrafficWeight')
-        .mockImplementation(async () => {
-          // Capture status during the traffic weight update (mid-rollback)
-          statusCaptures.push(manager.getState().status);
-        });
+      jest.spyOn(manager as any, 'updateTrafficWeight').mockImplementation(async () => {
+        // Capture status during the traffic weight update (mid-rollback)
+        statusCaptures.push(manager.getState().status);
+      });
 
       await manager.initiateRollback('testing status transition');
 
@@ -1065,30 +1021,24 @@ describe('CanaryDeploymentManager', () => {
       };
 
       // Only 3 successful health checks (need 10)
-      (manager as any).state.healthCheckResults = Array.from(
-        { length: 3 },
-        () => ({
-          timestamp: new Date(),
-          endpoint: '/api/v1/health',
-          success: true,
-          responseTimeMs: 50,
-          statusCode: 200,
-        }),
-      );
+      (manager as any).state.healthCheckResults = Array.from({ length: 3 }, () => ({
+        timestamp: new Date(),
+        endpoint: '/api/v1/health',
+        success: true,
+        responseTimeMs: 50,
+        statusCode: 200,
+      }));
 
-      (manager as any).state.metricsHistory = Array.from(
-        { length: 5 },
-        () => ({
-          timestamp: new Date(),
-          errorRate: 0.1,
-          latencyP50Ms: 50,
-          latencyP95Ms: 100,
-          latencyP99Ms: 200,
-          requestCount: 500,
-          cpuUsage: 30,
-          memoryUsage: 50,
-        }),
-      );
+      (manager as any).state.metricsHistory = Array.from({ length: 5 }, () => ({
+        timestamp: new Date(),
+        errorRate: 0.1,
+        latencyP50Ms: 50,
+        latencyP95Ms: 100,
+        latencyP99Ms: 200,
+        requestCount: 500,
+        cpuUsage: 30,
+        memoryUsage: 50,
+      }));
 
       const result = (manager as any).checkPromotionCriteria(criteria);
       expect(result).toBe(false);
@@ -1105,31 +1055,25 @@ describe('CanaryDeploymentManager', () => {
       };
 
       // 10 successful health checks (need 5)
-      (manager as any).state.healthCheckResults = Array.from(
-        { length: 10 },
-        () => ({
-          timestamp: new Date(),
-          endpoint: '/api/v1/health',
-          success: true,
-          responseTimeMs: 50,
-          statusCode: 200,
-        }),
-      );
+      (manager as any).state.healthCheckResults = Array.from({ length: 10 }, () => ({
+        timestamp: new Date(),
+        endpoint: '/api/v1/health',
+        success: true,
+        responseTimeMs: 50,
+        statusCode: 200,
+      }));
 
       // Metrics with low error rate, low latency, and enough requests
-      (manager as any).state.metricsHistory = Array.from(
-        { length: 5 },
-        () => ({
-          timestamp: new Date(),
-          errorRate: 0.1,
-          latencyP50Ms: 50,
-          latencyP95Ms: 100,
-          latencyP99Ms: 200,
-          requestCount: 500,
-          cpuUsage: 30,
-          memoryUsage: 50,
-        }),
-      );
+      (manager as any).state.metricsHistory = Array.from({ length: 5 }, () => ({
+        timestamp: new Date(),
+        errorRate: 0.1,
+        latencyP50Ms: 50,
+        latencyP95Ms: 100,
+        latencyP99Ms: 200,
+        requestCount: 500,
+        cpuUsage: 30,
+        memoryUsage: 50,
+      }));
 
       const result = (manager as any).checkPromotionCriteria(criteria);
       expect(result).toBe(true);
@@ -1145,31 +1089,25 @@ describe('CanaryDeploymentManager', () => {
         approvalTimeoutMinutes: 60,
       };
 
-      (manager as any).state.healthCheckResults = Array.from(
-        { length: 10 },
-        () => ({
-          timestamp: new Date(),
-          endpoint: '/api/v1/health',
-          success: true,
-          responseTimeMs: 50,
-          statusCode: 200,
-        }),
-      );
+      (manager as any).state.healthCheckResults = Array.from({ length: 10 }, () => ({
+        timestamp: new Date(),
+        endpoint: '/api/v1/health',
+        success: true,
+        responseTimeMs: 50,
+        statusCode: 200,
+      }));
 
       // High error rate (5.0 > 1.0)
-      (manager as any).state.metricsHistory = Array.from(
-        { length: 5 },
-        () => ({
-          timestamp: new Date(),
-          errorRate: 5.0,
-          latencyP50Ms: 50,
-          latencyP95Ms: 100,
-          latencyP99Ms: 200,
-          requestCount: 500,
-          cpuUsage: 30,
-          memoryUsage: 50,
-        }),
-      );
+      (manager as any).state.metricsHistory = Array.from({ length: 5 }, () => ({
+        timestamp: new Date(),
+        errorRate: 5.0,
+        latencyP50Ms: 50,
+        latencyP95Ms: 100,
+        latencyP99Ms: 200,
+        requestCount: 500,
+        cpuUsage: 30,
+        memoryUsage: 50,
+      }));
 
       const result = (manager as any).checkPromotionCriteria(criteria);
       expect(result).toBe(false);
@@ -1185,31 +1123,25 @@ describe('CanaryDeploymentManager', () => {
         approvalTimeoutMinutes: 60,
       };
 
-      (manager as any).state.healthCheckResults = Array.from(
-        { length: 10 },
-        () => ({
-          timestamp: new Date(),
-          endpoint: '/api/v1/health',
-          success: true,
-          responseTimeMs: 50,
-          statusCode: 200,
-        }),
-      );
+      (manager as any).state.healthCheckResults = Array.from({ length: 10 }, () => ({
+        timestamp: new Date(),
+        endpoint: '/api/v1/health',
+        success: true,
+        responseTimeMs: 50,
+        statusCode: 200,
+      }));
 
       // High latency (800 > 500)
-      (manager as any).state.metricsHistory = Array.from(
-        { length: 5 },
-        () => ({
-          timestamp: new Date(),
-          errorRate: 0.1,
-          latencyP50Ms: 50,
-          latencyP95Ms: 800,
-          latencyP99Ms: 1200,
-          requestCount: 500,
-          cpuUsage: 30,
-          memoryUsage: 50,
-        }),
-      );
+      (manager as any).state.metricsHistory = Array.from({ length: 5 }, () => ({
+        timestamp: new Date(),
+        errorRate: 0.1,
+        latencyP50Ms: 50,
+        latencyP95Ms: 800,
+        latencyP99Ms: 1200,
+        requestCount: 500,
+        cpuUsage: 30,
+        memoryUsage: 50,
+      }));
 
       const result = (manager as any).checkPromotionCriteria(criteria);
       expect(result).toBe(false);
@@ -1225,31 +1157,25 @@ describe('CanaryDeploymentManager', () => {
         approvalTimeoutMinutes: 60,
       };
 
-      (manager as any).state.healthCheckResults = Array.from(
-        { length: 10 },
-        () => ({
-          timestamp: new Date(),
-          endpoint: '/api/v1/health',
-          success: true,
-          responseTimeMs: 50,
-          statusCode: 200,
-        }),
-      );
+      (manager as any).state.healthCheckResults = Array.from({ length: 10 }, () => ({
+        timestamp: new Date(),
+        endpoint: '/api/v1/health',
+        success: true,
+        responseTimeMs: 50,
+        statusCode: 200,
+      }));
 
       // Low request count (10 * 50 = 500 total, need 5000)
-      (manager as any).state.metricsHistory = Array.from(
-        { length: 10 },
-        () => ({
-          timestamp: new Date(),
-          errorRate: 0.1,
-          latencyP50Ms: 50,
-          latencyP95Ms: 100,
-          latencyP99Ms: 200,
-          requestCount: 50,
-          cpuUsage: 30,
-          memoryUsage: 50,
-        }),
-      );
+      (manager as any).state.metricsHistory = Array.from({ length: 10 }, () => ({
+        timestamp: new Date(),
+        errorRate: 0.1,
+        latencyP50Ms: 50,
+        latencyP95Ms: 100,
+        latencyP99Ms: 200,
+        requestCount: 50,
+        cpuUsage: 30,
+        memoryUsage: 50,
+      }));
 
       const result = (manager as any).checkPromotionCriteria(criteria);
       expect(result).toBe(false);
@@ -1265,16 +1191,13 @@ describe('CanaryDeploymentManager', () => {
         approvalTimeoutMinutes: 60,
       };
 
-      (manager as any).state.healthCheckResults = Array.from(
-        { length: 10 },
-        () => ({
-          timestamp: new Date(),
-          endpoint: '/api/v1/health',
-          success: true,
-          responseTimeMs: 50,
-          statusCode: 200,
-        }),
-      );
+      (manager as any).state.healthCheckResults = Array.from({ length: 10 }, () => ({
+        timestamp: new Date(),
+        endpoint: '/api/v1/health',
+        success: true,
+        responseTimeMs: 50,
+        statusCode: 200,
+      }));
 
       (manager as any).state.metricsHistory = [];
 
@@ -1309,19 +1232,16 @@ describe('CanaryDeploymentManager', () => {
       }));
       (manager as any).state.healthCheckResults = [...failures, ...successes];
 
-      (manager as any).state.metricsHistory = Array.from(
-        { length: 5 },
-        () => ({
-          timestamp: new Date(),
-          errorRate: 0.1,
-          latencyP50Ms: 50,
-          latencyP95Ms: 100,
-          latencyP99Ms: 200,
-          requestCount: 500,
-          cpuUsage: 30,
-          memoryUsage: 50,
-        }),
-      );
+      (manager as any).state.metricsHistory = Array.from({ length: 5 }, () => ({
+        timestamp: new Date(),
+        errorRate: 0.1,
+        latencyP50Ms: 50,
+        latencyP95Ms: 100,
+        latencyP99Ms: 200,
+        requestCount: 500,
+        cpuUsage: 30,
+        memoryUsage: 50,
+      }));
 
       const result = (manager as any).checkPromotionCriteria(criteria);
       // Last 5 are all successes, so criteria should be met
@@ -1338,16 +1258,13 @@ describe('CanaryDeploymentManager', () => {
         approvalTimeoutMinutes: 60,
       };
 
-      (manager as any).state.healthCheckResults = Array.from(
-        { length: 10 },
-        () => ({
-          timestamp: new Date(),
-          endpoint: '/api/v1/health',
-          success: true,
-          responseTimeMs: 50,
-          statusCode: 200,
-        }),
-      );
+      (manager as any).state.healthCheckResults = Array.from({ length: 10 }, () => ({
+        timestamp: new Date(),
+        endpoint: '/api/v1/health',
+        success: true,
+        responseTimeMs: 50,
+        statusCode: 200,
+      }));
 
       // 10 old high-error metrics followed by 10 recent low-error metrics
       const oldBadMetrics = Array.from({ length: 10 }, () => ({
@@ -1370,10 +1287,7 @@ describe('CanaryDeploymentManager', () => {
         cpuUsage: 30,
         memoryUsage: 50,
       }));
-      (manager as any).state.metricsHistory = [
-        ...oldBadMetrics,
-        ...recentGoodMetrics,
-      ];
+      (manager as any).state.metricsHistory = [...oldBadMetrics, ...recentGoodMetrics];
 
       const result = (manager as any).checkPromotionCriteria(criteria);
       // Only last 10 (good) metrics should be considered
@@ -1814,7 +1728,9 @@ describe('CanaryDeploymentManager', () => {
       (manager as any).state.currentStage = 0;
 
       // Mock httpRequest to succeed
-      jest.spyOn(manager as any, 'httpRequest').mockResolvedValue({ status: 200, body: '{"status":"healthy"}' });
+      jest
+        .spyOn(manager as any, 'httpRequest')
+        .mockResolvedValue({ status: 200, body: '{"status":"healthy"}' });
 
       // Mock collectMetrics to return breaching metrics
       jest.spyOn(manager as any, 'collectMetrics').mockResolvedValue({
@@ -1857,7 +1773,9 @@ describe('CanaryDeploymentManager', () => {
       }));
 
       // Mock httpRequest and collectMetrics to return good data
-      jest.spyOn(manager as any, 'httpRequest').mockResolvedValue({ status: 200, body: '{"status":"healthy"}' });
+      jest
+        .spyOn(manager as any, 'httpRequest')
+        .mockResolvedValue({ status: 200, body: '{"status":"healthy"}' });
       jest.spyOn(manager as any, 'collectMetrics').mockResolvedValue({
         timestamp: new Date(),
         errorRate: 0.1,
@@ -2005,9 +1923,7 @@ describe('CanaryDeploymentManager', () => {
   describe('getCanaryMetricsConfig - additional validation', () => {
     it('should have canary_latency_p95 metric with percentile', () => {
       const config = getCanaryMetricsConfig();
-      const latencyMetric = config.customMetrics.find(
-        (m) => m.name === 'canary_latency_p95',
-      );
+      const latencyMetric = config.customMetrics.find((m) => m.name === 'canary_latency_p95');
       expect(latencyMetric).toBeDefined();
       expect(latencyMetric?.aggregation).toBe('percentile');
       expect(latencyMetric?.percentile).toBe(95);
@@ -2016,9 +1932,7 @@ describe('CanaryDeploymentManager', () => {
 
     it('should have canary_throughput metric', () => {
       const config = getCanaryMetricsConfig();
-      const throughput = config.customMetrics.find(
-        (m) => m.name === 'canary_throughput',
-      );
+      const throughput = config.customMetrics.find((m) => m.name === 'canary_throughput');
       expect(throughput).toBeDefined();
       expect(throughput?.unit).toBe('requests_per_second');
       expect(throughput?.aggregation).toBe('avg');

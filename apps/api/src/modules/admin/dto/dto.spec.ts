@@ -353,7 +353,7 @@ describe('Admin Module DTOs', () => {
       dto.condition = { type: 'equals', field: 'industry', value: 'technology' };
       dto.action = VisibilityAction.SHOW;
       dto.targetQuestionIds = ['123e4567-e89b-12d3-a456-426614174000'];
-      
+
       expect(dto.condition).toBeDefined();
       expect(dto.action).toBe(VisibilityAction.SHOW);
       expect(dto.targetQuestionIds).toHaveLength(1);
@@ -386,7 +386,7 @@ describe('Admin Module DTOs', () => {
       dto.targetQuestionIds = ['123e4567-e89b-12d3-a456-426614174000'];
       dto.priority = 10;
       dto.isActive = false;
-      
+
       expect(dto.priority).toBe(10);
       expect(dto.isActive).toBe(false);
     });

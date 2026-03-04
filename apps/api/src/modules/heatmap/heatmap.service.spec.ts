@@ -970,7 +970,12 @@ describe('HeatmapService', () => {
         { key: 'security', displayName: 'Security', weight: 1.0 },
       ]);
       mockPrisma.question.findMany.mockResolvedValue([
-        { id: 'q1', dimensionKey: 'security', severity: 0.8, text: 'Low coverage question with a very long text that exceeds fifty characters' },
+        {
+          id: 'q1',
+          dimensionKey: 'security',
+          severity: 0.8,
+          text: 'Low coverage question with a very long text that exceeds fifty characters',
+        },
       ]);
       mockPrisma.response.findMany.mockResolvedValue([
         { questionId: 'q1', coverage: 0.3, coverageLevel: 'PARTIAL' },
@@ -1240,9 +1245,7 @@ describe('HeatmapService', () => {
       mockPrisma.question.findMany.mockResolvedValue([
         { id: 'q1', dimensionKey: 'security', severity: 0.8, text: 'Q1' },
       ]);
-      mockPrisma.response.findMany.mockResolvedValue([
-        { questionId: 'q1', coverage: null },
-      ]);
+      mockPrisma.response.findMany.mockResolvedValue([{ questionId: 'q1', coverage: null }]);
 
       const result = await service.generateHeatmap('session-123');
       expect(result.cells.length).toBeGreaterThan(0);
@@ -1399,9 +1402,7 @@ describe('HeatmapService', () => {
           persona: null,
           questionnaireId: 'q-2',
         });
-      mockPrisma.response.findMany
-        .mockResolvedValueOnce(mockResponses)
-        .mockResolvedValueOnce([]);
+      mockPrisma.response.findMany.mockResolvedValueOnce(mockResponses).mockResolvedValueOnce([]);
       mockPrisma.dimensionCatalog.findMany
         .mockResolvedValueOnce(mockDimensions)
         .mockResolvedValueOnce([{ key: 'different', displayName: 'Different', weight: 1.0 }]);
@@ -1617,32 +1618,24 @@ describe('HeatmapService', () => {
           { key: 'security', displayName: 'Security', weight: 1.0 },
           { key: 'extra', displayName: 'Extra', weight: 1.0 },
         ])
-        .mockResolvedValueOnce([
-          { key: 'security', displayName: 'Security', weight: 1.0 },
-        ]);
+        .mockResolvedValueOnce([{ key: 'security', displayName: 'Security', weight: 1.0 }]);
       mockPrisma.question.findMany
         .mockResolvedValueOnce([
           { id: 'q1', dimensionKey: 'security', severity: 0.8, text: 'Q1' },
           { id: 'q2', dimensionKey: 'extra', severity: 0.9, text: 'Q2' },
         ])
-        .mockResolvedValueOnce([
-          { id: 'q1', dimensionKey: 'security', severity: 0.8, text: 'Q1' },
-        ]);
+        .mockResolvedValueOnce([{ id: 'q1', dimensionKey: 'security', severity: 0.8, text: 'Q1' }]);
       mockPrisma.response.findMany
         .mockResolvedValueOnce([
           { questionId: 'q1', coverage: 0.5 },
           { questionId: 'q2', coverage: 0.0 },
         ])
-        .mockResolvedValueOnce([
-          { questionId: 'q1', coverage: 0.5 },
-        ]);
+        .mockResolvedValueOnce([{ questionId: 'q1', coverage: 0.5 }]);
 
       const result = await service.compareHeatmaps('session-1', 'session-2');
 
       // Some cells from session-1 (extra dimension) won't exist in session-2
-      const extraComparisons = result.comparisons.filter(
-        (c) => c.dimensionKey === 'extra',
-      );
+      const extraComparisons = result.comparisons.filter((c) => c.dimensionKey === 'extra');
       extraComparisons.forEach((c) => {
         expect(c.session2Value).toBe(0);
         expect(c.percentageChange).toBe(0);
@@ -1718,9 +1711,7 @@ describe('HeatmapService', () => {
 
       const result = await service.compareHeatmaps('session-1', 'session-2');
 
-      const degradedCells = result.comparisons.filter(
-        (c) => c.trend === 'DEGRADED',
-      );
+      const degradedCells = result.comparisons.filter((c) => c.trend === 'DEGRADED');
       expect(degradedCells.length).toBeGreaterThan(0);
       expect(result.summary.degradedCells).toBeGreaterThan(0);
     });
@@ -1744,17 +1735,18 @@ describe('HeatmapService', () => {
       // AMBER cell: severity 0.3 (MEDIUM bucket), coverage 0.7 -> residual = 0.3*(1-0.7) = 0.09 (AMBER)
       // But we need ALL questions to have currentCoverage < 0.5 for the "moderate risk" recommendation
       mockPrisma.question.findMany.mockResolvedValue([
-        { id: 'q1', dimensionKey: 'security', severity: 0.3, text: 'A question with very low coverage for moderate risk test purposes only' },
+        {
+          id: 'q1',
+          dimensionKey: 'security',
+          severity: 0.3,
+          text: 'A question with very low coverage for moderate risk test purposes only',
+        },
       ]);
-      mockPrisma.response.findMany.mockResolvedValue([
-        { questionId: 'q1', coverage: 0.3 },
-      ]);
+      mockPrisma.response.findMany.mockResolvedValue([{ questionId: 'q1', coverage: 0.3 }]);
 
       const gaps = await service.getPriorityGaps('session-123', 20);
 
-      const amberGaps = gaps.filter(
-        (g) => g.colorCode === HeatmapColor.AMBER,
-      );
+      const amberGaps = gaps.filter((g) => g.colorCode === HeatmapColor.AMBER);
       if (amberGaps.length > 0) {
         // All questions have coverage < 0.5, so lowCoverageCount === topQuestions.length
         // This takes the branch: "Moderate risk: N questions..."
@@ -1775,7 +1767,12 @@ describe('HeatmapService', () => {
       // Mix of high and low coverage questions producing RED cell
       mockPrisma.question.findMany.mockResolvedValue([
         { id: 'q1', dimensionKey: 'security', severity: 0.8, text: 'High severity, low coverage' },
-        { id: 'q2', dimensionKey: 'security', severity: 0.85, text: 'High severity, high coverage' },
+        {
+          id: 'q2',
+          dimensionKey: 'security',
+          severity: 0.85,
+          text: 'High severity, high coverage',
+        },
       ]);
       mockPrisma.response.findMany.mockResolvedValue([
         { questionId: 'q1', coverage: 0.1 },
@@ -1815,16 +1812,10 @@ describe('HeatmapService', () => {
       ]);
 
       const result = await service.generateHeatmap('session-123');
-      const cell = result.cells.find(
-        (c) => c.dimensionKey === 'security' && c.questionCount > 0,
-      );
+      const cell = result.cells.find((c) => c.dimensionKey === 'security' && c.questionCount > 0);
       expect(cell).toBeDefined();
 
-      const drilldown = await service.drilldown(
-        'session-123',
-        'security',
-        cell!.severityBucket,
-      );
+      const drilldown = await service.drilldown('session-123', 'security', cell!.severityBucket);
 
       const q = drilldown.questions.find((q) => q.questionId === 'q1');
       expect(q).toBeDefined();
@@ -1844,21 +1835,13 @@ describe('HeatmapService', () => {
       mockPrisma.question.findMany.mockResolvedValue([
         { id: 'q1', dimensionKey: 'security', severity: 0.8, text: 'Q1' },
       ]);
-      mockPrisma.response.findMany.mockResolvedValue([
-        { questionId: 'q1', coverage: 0.5 },
-      ]);
+      mockPrisma.response.findMany.mockResolvedValue([{ questionId: 'q1', coverage: 0.5 }]);
 
       const result = await service.generateHeatmap('session-123');
-      const cell = result.cells.find(
-        (c) => c.dimensionKey === 'security' && c.questionCount > 0,
-      );
+      const cell = result.cells.find((c) => c.dimensionKey === 'security' && c.questionCount > 0);
       expect(cell).toBeDefined();
 
-      const drilldown = await service.drilldown(
-        'session-123',
-        'security',
-        cell!.severityBucket,
-      );
+      const drilldown = await service.drilldown('session-123', 'security', cell!.severityBucket);
 
       const q = drilldown.questions.find((q) => q.questionId === 'q1');
       expect(q).toBeDefined();
@@ -1933,16 +1916,12 @@ describe('HeatmapService', () => {
       mockPrisma.question.findMany.mockResolvedValue([
         { id: 'q1', dimensionKey: 'security', severity: 0.1, text: 'Low sev Q' },
       ]);
-      mockPrisma.response.findMany.mockResolvedValue([
-        { questionId: 'q1', coverage: 0.0 },
-      ]);
+      mockPrisma.response.findMany.mockResolvedValue([{ questionId: 'q1', coverage: 0.0 }]);
 
       const gaps = await service.getPriorityGaps('session-123', 20);
 
       // Low severity bucket gets 0.5 multiplier - cell should have a priority score
-      const lowGaps = gaps.filter(
-        (g) => g.severityBucket === SeverityBucket.LOW,
-      );
+      const lowGaps = gaps.filter((g) => g.severityBucket === SeverityBucket.LOW);
       // These may be green and skipped, but the test exercises the code path
       expect(gaps).toBeDefined();
     });
@@ -1990,22 +1969,20 @@ describe('HeatmapService', () => {
       mockPrisma.question.findMany.mockResolvedValueOnce([
         { id: 'q1', dimensionKey: 'security', severity: 0.8, text: 'Q1' },
       ]);
-      mockPrisma.response.findMany.mockResolvedValueOnce([
-        { questionId: 'q1', coverage: 0.5 },
-      ]);
+      mockPrisma.response.findMany.mockResolvedValueOnce([{ questionId: 'q1', coverage: 0.5 }]);
       mockRedis.set.mockResolvedValue('OK');
 
       const heatmap = await service.generateHeatmap('session-123');
-      const cell = heatmap.cells.find(
-        (c) => c.dimensionKey === 'security' && c.questionCount > 0,
-      );
+      const cell = heatmap.cells.find((c) => c.dimensionKey === 'security' && c.questionCount > 0);
       expect(cell).toBeDefined();
 
       // For drilldown: loadData returns NO matching dimension, but generateHeatmap returns cached
-      mockRedis.get.mockResolvedValueOnce(JSON.stringify({
-        ...heatmap,
-        generatedAt: heatmap.generatedAt.toISOString(),
-      }));
+      mockRedis.get.mockResolvedValueOnce(
+        JSON.stringify({
+          ...heatmap,
+          generatedAt: heatmap.generatedAt.toISOString(),
+        }),
+      );
       // loadData for drilldown: session found, but dimensions have different key
       mockPrisma.dimensionCatalog.findMany.mockResolvedValueOnce([
         { key: 'other-key', displayName: 'Other', weight: 1.0 },
@@ -2013,15 +1990,9 @@ describe('HeatmapService', () => {
       mockPrisma.question.findMany.mockResolvedValueOnce([
         { id: 'q1', dimensionKey: 'security', severity: 0.8, text: 'Q1' },
       ]);
-      mockPrisma.response.findMany.mockResolvedValueOnce([
-        { questionId: 'q1', coverage: 0.5 },
-      ]);
+      mockPrisma.response.findMany.mockResolvedValueOnce([{ questionId: 'q1', coverage: 0.5 }]);
 
-      const drilldown = await service.drilldown(
-        'session-123',
-        'security',
-        cell!.severityBucket,
-      );
+      const drilldown = await service.drilldown('session-123', 'security', cell!.severityBucket);
 
       // dim is undefined, so dimensionName falls back to cell.dimensionKey
       expect(drilldown.dimensionName).toBe('security');
