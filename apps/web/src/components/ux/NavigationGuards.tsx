@@ -7,7 +7,15 @@
  * Nielsen Heuristic #5: Error Prevention
  */
 
-import React, { useState, useEffect, useCallback, createContext, useContext, useRef, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  createContext,
+  useContext,
+  useRef,
+  useMemo,
+} from 'react';
 
 // ============================================================================
 // Types & Interfaces
@@ -519,8 +527,7 @@ export const GuardedForm: React.FC<GuardedFormProps> = ({
   onSubmit,
   ...props
 }) => {
-  const { registerDirtyForm, unregisterDirtyForm, markFormClean } =
-    useNavigationGuard();
+  const { registerDirtyForm, unregisterDirtyForm, markFormClean } = useNavigationGuard();
   const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
@@ -550,9 +557,9 @@ export const GuardedForm: React.FC<GuardedFormProps> = ({
   );
 
   return (
-    <form 
-      onChange={handleChange as React.FormEventHandler<HTMLFormElement>} 
-      onSubmit={handleSubmit as React.FormEventHandler<HTMLFormElement>} 
+    <form
+      onChange={handleChange as React.FormEventHandler<HTMLFormElement>}
+      onSubmit={handleSubmit as React.FormEventHandler<HTMLFormElement>}
       {...props}
     >
       {children}

@@ -138,7 +138,9 @@ export class JiraConfluenceAdapter {
   ) {}
 
   private getTrustedJiraDomain(): string {
-    const trustedDomain = (this.configService.get<string>('JIRA_DOMAIN') || '').trim().toLowerCase();
+    const trustedDomain = (this.configService.get<string>('JIRA_DOMAIN') || '')
+      .trim()
+      .toLowerCase();
 
     if (!trustedDomain) {
       throw new HttpException('JIRA_DOMAIN is not configured', HttpStatus.SERVICE_UNAVAILABLE);

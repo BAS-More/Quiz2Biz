@@ -296,12 +296,21 @@ describe('AdminQuestionnaireController', () => {
 
   describe('createVisibilityRule', () => {
     it('should create a visibility rule for a question', async () => {
-      const mockRule = { id: 'rule-1', questionId: 'question-1', condition: 'equals', value: 'yes' };
+      const mockRule = {
+        id: 'rule-1',
+        questionId: 'question-1',
+        condition: 'equals',
+        value: 'yes',
+      };
       service.createVisibilityRule.mockResolvedValue(mockRule as any);
 
       const dto = { condition: 'equals', value: 'yes' };
 
-      const result = await controller.createVisibilityRule('question-1', dto as any, mockUser as any);
+      const result = await controller.createVisibilityRule(
+        'question-1',
+        dto as any,
+        mockUser as any,
+      );
 
       expect(result.id).toBe('rule-1');
       expect(service.createVisibilityRule).toHaveBeenCalledWith('question-1', dto, 'user-1');
@@ -310,7 +319,12 @@ describe('AdminQuestionnaireController', () => {
 
   describe('updateVisibilityRule', () => {
     it('should update a visibility rule', async () => {
-      const mockRule = { id: 'rule-1', questionId: 'question-1', condition: 'contains', value: 'updated' };
+      const mockRule = {
+        id: 'rule-1',
+        questionId: 'question-1',
+        condition: 'contains',
+        value: 'updated',
+      };
       service.updateVisibilityRule.mockResolvedValue(mockRule as any);
 
       const dto = { condition: 'contains', value: 'updated' };

@@ -30,9 +30,7 @@ describe('DeliverablesCompilerController', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [DeliverablesCompilerController],
-      providers: [
-        { provide: DeliverablesCompilerService, useValue: mockCompilerService },
-      ],
+      providers: [{ provide: DeliverablesCompilerService, useValue: mockCompilerService }],
     }).compile();
 
     controller = module.get<DeliverablesCompilerController>(DeliverablesCompilerController);

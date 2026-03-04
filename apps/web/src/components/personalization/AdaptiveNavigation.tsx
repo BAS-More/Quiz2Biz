@@ -12,13 +12,7 @@
  * - Contextual menu adaptation
  */
 
-import React, {
-  createContext,
-  useContext,
-  useReducer,
-  useEffect,
-  useCallback,
-} from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
 import type { ReactNode } from 'react';
 
 // =============================================================================

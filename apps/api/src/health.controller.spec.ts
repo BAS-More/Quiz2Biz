@@ -23,7 +23,7 @@ describe('HealthController', () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
-    
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [HealthController],
       providers: [
@@ -55,7 +55,7 @@ describe('HealthController', () => {
     it('should return degraded status when database is slow', async () => {
       // Simulate slow database response
       mockPrismaService.$queryRaw.mockImplementation(async () => {
-        await new Promise(resolve => setTimeout(resolve, 10));
+        await new Promise((resolve) => setTimeout(resolve, 10));
         return [{ '?column?': 1 }];
       });
       mockRedisClient.ping.mockResolvedValue('PONG');
@@ -70,7 +70,7 @@ describe('HealthController', () => {
       mockRedisClient.ping.mockResolvedValue('PONG');
 
       await expect(controller.check()).rejects.toThrow(HttpException);
-      
+
       try {
         await controller.check();
       } catch (error) {
@@ -86,7 +86,7 @@ describe('HealthController', () => {
       const result = await controller.check();
 
       expect(result.status).toBe('degraded');
-      const redisCheck = result.checks.find(c => c.name === 'redis');
+      const redisCheck = result.checks.find((c) => c.name === 'redis');
       expect(redisCheck?.status).toBe('unhealthy');
     });
 
@@ -235,7 +235,9 @@ describe('HealthController', () => {
       jest.spyOn(Date, 'now').mockImplementation(() => {
         callCount++;
         // First call: startTime, second call: after query (simulate 1500ms delay)
-        if (callCount <= 1) return 1000;
+        if (callCount <= 1) {
+          return 1000;
+        }
         return 2500; // 1500ms later
       });
 
@@ -263,10 +265,18 @@ describe('HealthController', () => {
         // DB calls: first pair for database check, then redis check
         // DB startTime=1000, DB endTime=1010 (fast)
         // Redis startTime=1020, Redis endTime=2530 (1510ms, slow)
-        if (callCount === 1) return 1000;  // DB startTime
-        if (callCount === 2) return 1010;  // DB responseTime
-        if (callCount === 3) return 1020;  // Redis startTime
-        if (callCount === 4) return 2530;  // Redis endTime (slow)
+        if (callCount === 1) {
+          return 1000;
+        } // DB startTime
+        if (callCount === 2) {
+          return 1010;
+        } // DB responseTime
+        if (callCount === 3) {
+          return 1020;
+        } // Redis startTime
+        if (callCount === 4) {
+          return 2530;
+        } // Redis endTime (slow)
         return 3000;
       });
 
@@ -379,8 +389,12 @@ describe('HealthController', () => {
       let callCount = 0;
       jest.spyOn(Date, 'now').mockImplementation(() => {
         callCount++;
-        if (callCount === 1) return 1000;
-        if (callCount === 2) return 2500; // 1500ms - slow DB
+        if (callCount === 1) {
+          return 1000;
+        }
+        if (callCount === 2) {
+          return 2500;
+        } // 1500ms - slow DB
         return 3000;
       });
 
@@ -424,8 +438,12 @@ describe('HealthController', () => {
       expect(result.environment).toBe('development');
       expect(result.version).toBe('1.0.0');
 
-      if (origEnv !== undefined) process.env.NODE_ENV = origEnv;
-      if (origVer !== undefined) process.env.APP_VERSION = origVer;
+      if (origEnv !== undefined) {
+        process.env.NODE_ENV = origEnv;
+      }
+      if (origVer !== undefined) {
+        process.env.APP_VERSION = origVer;
+      }
     });
   });
 });

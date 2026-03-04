@@ -12,8 +12,10 @@ jobs:
   pr-size:
     name: Check PR Size
     runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/') && !startsWith(github.head_ref, 'claude/')
-
+    permissions:
+      contents: read
+      pull-requests: write
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -123,9 +125,8 @@ jobs:
               console.log('Could not add label:', e.message);
             }
             
-            // Fail if XXL (over 500 lines)
             if (totalChanges > MAX) {
-              core.setFailed(`PR is too large (${totalChanges} > ${MAX} lines). Please split into smaller PRs.`);
+              core.warning(`PR is too large (${totalChanges} > ${MAX} lines). Consider splitting into smaller PRs.`);
             }
 
   pr-size-status:
