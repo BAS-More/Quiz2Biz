@@ -32,9 +32,7 @@ describe('OAuthController', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [OAuthController],
-      providers: [
-        { provide: OAuthService, useValue: mockOAuthService },
-      ],
+      providers: [{ provide: OAuthService, useValue: mockOAuthService }],
     }).compile();
 
     controller = module.get<OAuthController>(OAuthController);
@@ -69,9 +67,7 @@ describe('OAuthController', () => {
 
   describe('getLinkedAccounts', () => {
     it('should return linked accounts for user', async () => {
-      const mockAccounts = [
-        { provider: 'google', email: 'test@gmail.com', linkedAt: new Date() },
-      ];
+      const mockAccounts = [{ provider: 'google', email: 'test@gmail.com', linkedAt: new Date() }];
       oauthService.getLinkedAccounts.mockResolvedValue(mockAccounts);
 
       const mockUser = { id: 'user-1', email: 'test@example.com', role: 'CLIENT' as any };

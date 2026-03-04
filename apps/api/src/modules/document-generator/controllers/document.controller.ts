@@ -62,12 +62,18 @@ export class DocumentController {
 
   @Get('session/:sessionId/types')
   @ApiOperation({ summary: 'List document types available for a session (project-type-scoped)' })
-  @ApiResponse({ status: 200, description: 'List of document types for this session', type: [DocumentTypeResponseDto] })
+  @ApiResponse({
+    status: 200,
+    description: 'List of document types for this session',
+    type: [DocumentTypeResponseDto],
+  })
   @ApiResponse({ status: 404, description: 'Session not found' })
   async getSessionDocumentTypes(
     @Param('sessionId', ParseUUIDPipe) sessionId: string,
   ): Promise<DocumentTypeResponseDto[]> {
-    return this.documentGeneratorService.getDocumentTypesForSession(sessionId) as unknown as DocumentTypeResponseDto[];
+    return this.documentGeneratorService.getDocumentTypesForSession(
+      sessionId,
+    ) as unknown as DocumentTypeResponseDto[];
   }
 
   @Get('session/:sessionId')

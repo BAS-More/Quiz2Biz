@@ -349,7 +349,8 @@ export const BUSINESS_REQUIREMENTS_TEMPLATE = {
    * Default values for optional fields
    */
   defaults: {
-    'stakeholderAnalysis.communicationPlan': 'Communication plan to be defined during project initiation',
+    'stakeholderAnalysis.communicationPlan':
+      'Communication plan to be defined during project initiation',
     'appendices.glossary': 'Glossary of terms to be maintained throughout the project lifecycle',
     'appendices.references': 'References to be compiled as requirements are gathered',
   },

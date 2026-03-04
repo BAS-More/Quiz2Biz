@@ -308,8 +308,10 @@ export const DATA_MODELS_TEMPLATE = {
    * Default values for optional fields
    */
   defaults: {
-    'physicalModel.partitioning': 'Partitioning strategy to be determined based on data volume analysis',
+    'physicalModel.partitioning':
+      'Partitioning strategy to be determined based on data volume analysis',
     'dataFlow.sync': 'Data synchronization requirements under review',
-    'performance.cachingStrategy': 'Application-level caching with Redis for frequently accessed queries',
+    'performance.cachingStrategy':
+      'Application-level caching with Redis for frequently accessed queries',
   },
 };

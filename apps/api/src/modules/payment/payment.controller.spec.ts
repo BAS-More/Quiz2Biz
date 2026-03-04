@@ -11,12 +11,6 @@ describe('PaymentController', () => {
   let subscriptionService: SubscriptionService;
   let billingService: BillingService;
   let module: TestingModule;
-  const mockCurrentUser = {
-    id: 'user-123',
-    email: 'user@example.com',
-    role: 'CLIENT',
-    organizationId: 'org-123',
-  } as any;
 
   const mockPaymentService = {
     createCheckoutSession: jest.fn(),
@@ -95,7 +89,7 @@ describe('PaymentController', () => {
         url: 'https://checkout.stripe.com/session',
       });
 
-      const result = await controller.createCheckout(dto, mockCurrentUser);
+      const result = await controller.createCheckout(dto);
 
       expect(result.sessionId).toBe('cs_123');
       expect(result.url).toContain('stripe.com');
@@ -115,15 +109,12 @@ describe('PaymentController', () => {
         customerId: 'cus_123',
         returnUrl: 'https://example.com/dashboard',
       };
-      mockSubscriptionService.getOrganizationSubscription.mockResolvedValue({
-        stripeCustomerId: 'cus_123',
-      });
 
       mockPaymentService.createPortalSession.mockResolvedValue(
         'https://billing.stripe.com/session',
       );
 
-      const result = await controller.createPortalSession(dto, mockCurrentUser);
+      const result = await controller.createPortalSession(dto);
 
       expect(result.url).toContain('stripe.com');
       expect(mockPaymentService.createPortalSession).toHaveBeenCalledWith(
@@ -137,7 +128,7 @@ describe('PaymentController', () => {
     it('should return subscription for organization', async () => {
       const mockSubscription = {
         id: 'sub-123',
-        organizationId: 'org-123',
+        organizationId: 'org-456',
         tier: 'PROFESSIONAL',
         status: 'active',
         features: {
@@ -150,10 +141,11 @@ describe('PaymentController', () => {
 
       mockSubscriptionService.getOrganizationSubscription.mockResolvedValue(mockSubscription);
 
-      const result = await controller.getSubscription('org-123', mockCurrentUser);
+      const mockRequest = { params: { organizationId: 'org-456' } };
+      const result = await controller.getSubscription(mockRequest as any);
 
       expect(result.tier).toBe('PROFESSIONAL');
-      expect(mockSubscriptionService.getOrganizationSubscription).toHaveBeenCalledWith('org-123');
+      expect(mockSubscriptionService.getOrganizationSubscription).toHaveBeenCalledWith('org-456');
     });
   });
 
@@ -165,11 +157,9 @@ describe('PaymentController', () => {
       ];
 
       mockBillingService.getInvoices.mockResolvedValue(mockInvoices);
-      mockSubscriptionService.getOrganizationSubscription.mockResolvedValue({
-        stripeCustomerId: 'cus_123',
-      });
 
-      const result = await controller.getInvoices('cus_123', '10', mockCurrentUser);
+      const mockRequest = { params: { customerId: 'cus_123' } };
+      const result = await controller.getInvoices(mockRequest as any, '10');
 
       expect(result).toHaveLength(2);
       expect(mockBillingService.getInvoices).toHaveBeenCalledWith('cus_123', 10);
@@ -194,7 +184,8 @@ describe('PaymentController', () => {
         },
       });
 
-      const result = await controller.getUsage('org-123', mockCurrentUser);
+      const mockRequest = { params: { organizationId: 'org-123' } };
+      const result = await controller.getUsage(mockRequest as any);
 
       expect(result.questionnaires.used).toBe(25);
       expect(result.questionnaires.limit).toBe(100);
@@ -209,7 +200,8 @@ describe('PaymentController', () => {
       });
       mockPaymentService.cancelSubscription.mockResolvedValue(undefined);
 
-      const result = await controller.cancelSubscription('org-123', mockCurrentUser);
+      const mockRequest = { params: { organizationId: 'org-123' } };
+      const result = await controller.cancelSubscription(mockRequest as any);
 
       expect(result.message).toContain('cancellation scheduled');
       expect(mockPaymentService.cancelSubscription).toHaveBeenCalledWith('sub_123', true);
@@ -223,7 +215,8 @@ describe('PaymentController', () => {
       });
       mockPaymentService.resumeSubscription.mockResolvedValue(undefined);
 
-      const result = await controller.resumeSubscription('org-123', mockCurrentUser);
+      const mockRequest = { params: { organizationId: 'org-123' } };
+      const result = await controller.resumeSubscription(mockRequest as any);
 
       expect(result.message).toContain('resumed');
       expect(mockPaymentService.resumeSubscription).toHaveBeenCalledWith('sub_123');
@@ -236,7 +229,9 @@ describe('PaymentController', () => {
         stripeSubscriptionId: null,
       });
 
-      await expect(controller.cancelSubscription('org-123', mockCurrentUser)).rejects.toThrow(
+      const mockRequest = { params: { organizationId: 'org-123' } };
+
+      await expect(controller.cancelSubscription(mockRequest as any)).rejects.toThrow(
         'No active Stripe subscription found',
       );
     });
@@ -248,7 +243,9 @@ describe('PaymentController', () => {
         stripeSubscriptionId: null,
       });
 
-      await expect(controller.resumeSubscription('org-123', mockCurrentUser)).rejects.toThrow(
+      const mockRequest = { params: { organizationId: 'org-123' } };
+
+      await expect(controller.resumeSubscription(mockRequest as any)).rejects.toThrow(
         'No active Stripe subscription found',
       );
     });
@@ -257,22 +254,18 @@ describe('PaymentController', () => {
   describe('getInvoices - edge cases', () => {
     it('should handle undefined limit', async () => {
       mockBillingService.getInvoices.mockResolvedValue([]);
-      mockSubscriptionService.getOrganizationSubscription.mockResolvedValue({
-        stripeCustomerId: 'cus_123',
-      });
 
-      await controller.getInvoices('cus_123', undefined, mockCurrentUser);
+      const mockRequest = { params: { customerId: 'cus_123' } };
+      await controller.getInvoices(mockRequest as any, undefined);
 
       expect(mockBillingService.getInvoices).toHaveBeenCalledWith('cus_123', undefined);
     });
 
     it('should handle non-numeric limit gracefully', async () => {
       mockBillingService.getInvoices.mockResolvedValue([]);
-      mockSubscriptionService.getOrganizationSubscription.mockResolvedValue({
-        stripeCustomerId: 'cus_123',
-      });
 
-      await controller.getInvoices('cus_123', 'not-a-number', mockCurrentUser);
+      const mockRequest = { params: { customerId: 'cus_123' } };
+      await controller.getInvoices(mockRequest as any, 'not-a-number');
 
       expect(mockBillingService.getInvoices).toHaveBeenCalledWith('cus_123', undefined);
     });
@@ -337,9 +330,9 @@ describe('PaymentController', () => {
     it('should throw BadRequestException if raw body is missing', async () => {
       const mockRequest = createMockRequest(undefined);
 
-      await expect(
-        webhookController.handleWebhook(mockRequest as any, 'sig_test'),
-      ).rejects.toThrow('Missing raw body for webhook verification');
+      await expect(webhookController.handleWebhook(mockRequest as any, 'sig_test')).rejects.toThrow(
+        'Missing raw body for webhook verification',
+      );
     });
 
     it('should throw BadRequestException on invalid signature', async () => {
@@ -554,7 +547,8 @@ describe('PaymentController', () => {
         },
       });
 
-      const result = await controller.getUsage('org-123', mockCurrentUser);
+      const mockRequest = { params: { organizationId: 'org-123' } };
+      const result = await controller.getUsage(mockRequest as any);
 
       expect(result.questionnaires.limit).toBe(0);
       expect(result.responses.limit).toBe(0);
@@ -649,7 +643,8 @@ describe('PaymentController', () => {
 
     it('should handle non-Error thrown in webhook signature verification', async () => {
       mockPaymentService.constructWebhookEvent.mockImplementation(() => {
-        throw new Error('string error thrown');
+        // eslint-disable-next-line @typescript-eslint/only-throw-error
+        throw 'string error thrown';
       });
 
       const mockRequest = createMockRequest2(Buffer.from('{}'));

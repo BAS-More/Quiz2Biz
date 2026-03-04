@@ -1,11 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@libs/database';
-import {
-  AdapterConfigService,
-  AdapterConfig,
-  AdapterType,
-} from './adapter-config.service';
+import { AdapterConfigService, AdapterConfig, AdapterType } from './adapter-config.service';
 
 describe('AdapterConfigService', () => {
   let service: AdapterConfigService;
@@ -867,9 +863,9 @@ describe('AdapterConfigService', () => {
       mockConfigService.get.mockReturnValue(undefined);
       mockPrismaService.$executeRaw.mockRejectedValueOnce(new Error('Delete failed'));
 
-      await expect(
-        service.deleteAdapterConfig(TENANT_ID, 'some-id'),
-      ).rejects.toThrow('Delete failed');
+      await expect(service.deleteAdapterConfig(TENANT_ID, 'some-id')).rejects.toThrow(
+        'Delete failed',
+      );
     });
   });
 
@@ -889,8 +885,12 @@ describe('AdapterConfigService', () => {
     it('should skip GitHub default when GITHUB_TOKEN is not set', async () => {
       mockPrismaService.$queryRaw.mockRejectedValueOnce(new Error('DB down'));
       mockConfigService.get.mockImplementation((key: string) => {
-        if (key === 'GITLAB_TOKEN') return 'gl-tok';
-        if (key === 'GITLAB_PROJECT_ID') return '99';
+        if (key === 'GITLAB_TOKEN') {
+          return 'gl-tok';
+        }
+        if (key === 'GITLAB_PROJECT_ID') {
+          return '99';
+        }
         return undefined;
       });
 
@@ -903,9 +903,15 @@ describe('AdapterConfigService', () => {
     it('should skip GitLab default when GITLAB_TOKEN is not set', async () => {
       mockPrismaService.$queryRaw.mockRejectedValueOnce(new Error('DB down'));
       mockConfigService.get.mockImplementation((key: string) => {
-        if (key === 'GITHUB_TOKEN') return 'gh-tok';
-        if (key === 'GITHUB_OWNER') return 'owner';
-        if (key === 'GITHUB_REPO') return 'repo';
+        if (key === 'GITHUB_TOKEN') {
+          return 'gh-tok';
+        }
+        if (key === 'GITHUB_OWNER') {
+          return 'owner';
+        }
+        if (key === 'GITHUB_REPO') {
+          return 'repo';
+        }
         return undefined;
       });
 
@@ -1017,9 +1023,7 @@ describe('AdapterConfigService', () => {
       mockConfigService.get.mockReturnValue(undefined);
       mockPrismaService.$executeRaw.mockRejectedValueOnce(42);
 
-      await expect(
-        service.deleteAdapterConfig(TENANT_ID, 'some-id'),
-      ).rejects.toBe(42);
+      await expect(service.deleteAdapterConfig(TENANT_ID, 'some-id')).rejects.toBe(42);
     });
   });
 });

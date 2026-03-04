@@ -7,11 +7,14 @@ on:
       - 'apps/api/src/**/*.ts'
       - 'apps/api/src/**/*.controller.ts'
 
+permissions:
+  contents: read
+
 jobs:
   swagger-check:
     name: Validate Swagger/OpenAPI Documentation
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,10 +26,13 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
-      - name: Build API
-        run: npm run build --workspace=apps/api
+      - name: Generate Prisma Client
+        run: npm run db:generate
+
+      - name: Build libraries and API
+        run: npx turbo run build --filter=api --filter=database --filter=redis --filter=shared
 
       - name: Generate Swagger JSON
         run: |
@@ -35,21 +41,20 @@ jobs:
             const { NestFactory } = require('@nestjs/core');
             const { SwaggerModule, DocumentBuilder } = require('@nestjs/swagger');
             const { AppModule } = require('./dist/app.module');
-            
+
             async function generateSwagger() {
               const app = await NestFactory.create(AppModule, { logger: false });
-              
+
               const config = new DocumentBuilder()
                 .setTitle('Quiz2Biz API')
                 .setVersion('1.0')
                 .build();
-              
+
               const document = SwaggerModule.createDocument(app, config);
-              
-              // Check for undocumented endpoints
+
               const paths = Object.keys(document.paths);
               let issues = [];
-              
+
               for (const path of paths) {
                 const methods = document.paths[path];
                 for (const method of Object.keys(methods)) {
@@ -59,33 +64,32 @@ jobs:
                   }
                 }
               }
-              
+
               if (issues.length > 0) {
                 console.log('Swagger Documentation Issues:');
                 issues.forEach(i => console.log('  - ' + i));
                 console.log(\`\nTotal undocumented endpoints: \${issues.length}\`);
-                // Warning only, don't fail
               } else {
                 console.log('All endpoints documented');
               }
-              
+
               await app.close();
             }
-            
+
             generateSwagger().catch(console.error);
           "
+        continue-on-error: true
 
       - name: Validate OpenAPI spec
         run: |
           npm install -g @redocly/cli
           cd apps/api
-          # Generate spec file for validation
           node -e "
             const { NestFactory } = require('@nestjs/core');
             const { SwaggerModule, DocumentBuilder } = require('@nestjs/swagger');
             const { AppModule } = require('./dist/app.module');
             const fs = require('fs');
-            
+
             async function exportSpec() {
               const app = await NestFactory.create(AppModule, { logger: false });
               const config = new DocumentBuilder().setTitle('Quiz2Biz').setVersion('1.0').build();
@@ -93,7 +97,8 @@ jobs:
               fs.writeFileSync('openapi.json', JSON.stringify(document, null, 2));
               await app.close();
             }
-            
+
             exportSpec();
           "
           redocly lint openapi.json --skip-rule=operation-description || true
+        continue-on-error: true

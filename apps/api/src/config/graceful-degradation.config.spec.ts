@@ -407,10 +407,7 @@ describe('RetryExecutor', () => {
   it('should extract Prisma error codes', async () => {
     const error = new Error('DB error');
     (error as any).code = 'P1001';
-    const operation = jest
-      .fn()
-      .mockRejectedValueOnce(error)
-      .mockResolvedValue('recovered');
+    const operation = jest.fn().mockRejectedValueOnce(error).mockResolvedValue('recovered');
 
     const config = {
       maxRetries: 3,
@@ -568,7 +565,7 @@ describe('GracefulDegradationService', () => {
         avgResponseTimeMs: 3000,
         cpuUsage: 90,
         memoryUsage: 90,
-      openCircuitBreakers: 2,
+        openCircuitBreakers: 2,
       }),
     ).toBe(1);
 

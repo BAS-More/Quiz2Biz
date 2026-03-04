@@ -287,6 +287,9 @@ export const TECHNOLOGY_STRATEGY_TEMPLATE = {
   defaults: {
     'investmentStrategy.roiAnalysis': 'ROI analysis to be completed during planning phase',
     'governance.vendorManagement': 'Vendor management policies under development',
-    'riskAssessment.mitigationStrategies': ['Regular strategy reviews', 'Technology radar monitoring'],
+    'riskAssessment.mitigationStrategies': [
+      'Regular strategy reviews',
+      'Technology radar monitoring',
+    ],
   },
 };

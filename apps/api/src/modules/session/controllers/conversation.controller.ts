@@ -1,17 +1,13 @@
-import {
-  Controller,
-  Post,
-  Get,
-  Body,
-  Param,
-  ParseUUIDPipe,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, ParseUUIDPipe, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
 import { AuthenticatedUser } from '../../auth/auth.service';
-import { ConversationService, AnswerWithFollowUpResult, ConversationMessageDto } from '../services/conversation.service';
+import {
+  ConversationService,
+  AnswerWithFollowUpResult,
+  ConversationMessageDto,
+} from '../services/conversation.service';
 
 class SubmitAnswerDto {
   questionId: string;
@@ -35,13 +31,13 @@ export class ConversationController {
   @Post('answer')
   @ApiOperation({
     summary: 'Submit an answer with AI evaluation',
-    description: 'Stores the answer and evaluates completeness. Returns follow-up question if needed.',
+    description:
+      'Stores the answer and evaluates completeness. Returns follow-up question if needed.',
   })
   @ApiResponse({ status: 201, description: 'Answer processed with AI evaluation' })
   async submitAnswerWithAi(
     @Param('sessionId', ParseUUIDPipe) sessionId: string,
     @Body() dto: SubmitAnswerDto,
-    @CurrentUser() user: AuthenticatedUser,
   ): Promise<AnswerWithFollowUpResult> {
     return this.conversationService.processAnswerWithAi({
       sessionId,
@@ -49,7 +45,7 @@ export class ConversationController {
       questionText: dto.questionText,
       answerText: dto.answerText,
       dimensionContext: dto.dimensionContext,
-    }, user);
+    });
   }
 
   @Post('follow-up')
@@ -61,14 +57,8 @@ export class ConversationController {
   async submitFollowUp(
     @Param('sessionId', ParseUUIDPipe) sessionId: string,
     @Body() dto: FollowUpAnswerDto,
-    @CurrentUser() user: AuthenticatedUser,
   ): Promise<ConversationMessageDto> {
-    return this.conversationService.storeFollowUpAnswer(
-      sessionId,
-      dto.questionId,
-      dto.content,
-      user,
-    );
+    return this.conversationService.storeFollowUpAnswer(sessionId, dto.questionId, dto.content);
   }
 
   @Get()
@@ -76,9 +66,8 @@ export class ConversationController {
   @ApiResponse({ status: 200, description: 'Conversation messages' })
   async getConversation(
     @Param('sessionId', ParseUUIDPipe) sessionId: string,
-    @CurrentUser() user: AuthenticatedUser,
   ): Promise<ConversationMessageDto[]> {
-    return this.conversationService.getSessionConversation(sessionId, user);
+    return this.conversationService.getSessionConversation(sessionId);
   }
 
   @Get('question/:questionId')
@@ -87,8 +76,7 @@ export class ConversationController {
   async getQuestionConversation(
     @Param('sessionId', ParseUUIDPipe) sessionId: string,
     @Param('questionId', ParseUUIDPipe) questionId: string,
-    @CurrentUser() user: AuthenticatedUser,
   ): Promise<ConversationMessageDto[]> {
-    return this.conversationService.getQuestionConversation(sessionId, questionId, user);
+    return this.conversationService.getQuestionConversation(sessionId, questionId);
   }
 }

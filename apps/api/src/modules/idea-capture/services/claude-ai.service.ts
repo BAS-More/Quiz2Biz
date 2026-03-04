@@ -188,10 +188,45 @@ Respond ONLY with valid JSON (no markdown, no code fences):
     const words = rawInput.toLowerCase().split(/\s+/);
     const themes = this.extractBasicThemes(words);
 
-    const businessKeywords = ['business', 'startup', 'company', 'venture', 'plan', 'launch', 'product', 'service'];
-    const marketingKeywords = ['marketing', 'brand', 'audience', 'channel', 'campaign', 'social', 'content', 'seo'];
-    const financeKeywords = ['financial', 'revenue', 'profit', 'investment', 'funding', 'budget', 'cash', 'cost'];
-    const techKeywords = ['technology', 'software', 'architecture', 'security', 'devops', 'compliance', 'infrastructure'];
+    const businessKeywords = [
+      'business',
+      'startup',
+      'company',
+      'venture',
+      'plan',
+      'launch',
+      'product',
+      'service',
+    ];
+    const marketingKeywords = [
+      'marketing',
+      'brand',
+      'audience',
+      'channel',
+      'campaign',
+      'social',
+      'content',
+      'seo',
+    ];
+    const financeKeywords = [
+      'financial',
+      'revenue',
+      'profit',
+      'investment',
+      'funding',
+      'budget',
+      'cash',
+      'cost',
+    ];
+    const techKeywords = [
+      'technology',
+      'software',
+      'architecture',
+      'security',
+      'devops',
+      'compliance',
+      'infrastructure',
+    ];
 
     const scores: Record<string, number> = {
       'business-plan': words.filter((w) => businessKeywords.includes(w)).length,
@@ -202,17 +237,16 @@ Respond ONLY with valid JSON (no markdown, no code fences):
 
     const sorted = Object.entries(scores).sort(([, a], [, b]) => b - a);
     const bestSlug = sorted[0]?.[0] || 'business-plan';
-    const bestType = availableProjectTypes.find((pt) => pt.slug === bestSlug)
-      || availableProjectTypes[0];
+    const bestType =
+      availableProjectTypes.find((pt) => pt.slug === bestSlug) || availableProjectTypes[0];
 
     return {
       themes,
       gaps: [
         'AI analysis unavailable — detailed gap analysis will be available once the Claude API key is configured.',
       ],
-      strengths: themes.length > 2
-        ? ['Multiple themes identified in your idea']
-        : ['Focused concept'],
+      strengths:
+        themes.length > 2 ? ['Multiple themes identified in your idea'] : ['Focused concept'],
       recommendedProjectType: {
         slug: bestType?.slug || 'business-plan',
         confidence: 0.5,
@@ -252,7 +286,9 @@ Respond ONLY with valid JSON (no markdown, no code fences):
     const found = new Set<string>();
     for (const word of words) {
       const theme = themeKeywords[word];
-      if (theme) {found.add(theme);}
+      if (theme) {
+        found.add(theme);
+      }
     }
 
     return found.size > 0 ? Array.from(found) : ['general business idea'];

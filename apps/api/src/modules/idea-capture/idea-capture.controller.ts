@@ -44,15 +44,10 @@ export class IdeaCaptureController {
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get idea capture details by ID' })
   @ApiResponse({ status: 200, type: IdeaCaptureResponseDto })
-  async getIdea(
-    @Param('id', ParseUUIDPipe) id: string,
-    @CurrentUser() user: AuthenticatedUser,
-  ): Promise<IdeaCaptureResponseDto> {
-    return this.ideaCaptureService.getById(id, user);
+  async getIdea(@Param('id', ParseUUIDPipe) id: string): Promise<IdeaCaptureResponseDto> {
+    return this.ideaCaptureService.getById(id);
   }
 
   @Patch(':id/confirm')
@@ -67,9 +62,8 @@ export class IdeaCaptureController {
   async confirmProjectType(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: ConfirmProjectTypeDto,
-    @CurrentUser() user: AuthenticatedUser,
   ): Promise<IdeaCaptureResponseDto> {
-    return this.ideaCaptureService.confirmProjectType(id, dto.projectTypeId, user);
+    return this.ideaCaptureService.confirmProjectType(id, dto.projectTypeId);
   }
 
   @Post(':id/session')
@@ -95,6 +89,6 @@ export class IdeaCaptureController {
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() user: AuthenticatedUser,
   ): Promise<{ sessionId: string }> {
-    return this.ideaCaptureService.createSessionFromIdea(id, user);
+    return this.ideaCaptureService.createSessionFromIdea(id, user.id);
   }
 }

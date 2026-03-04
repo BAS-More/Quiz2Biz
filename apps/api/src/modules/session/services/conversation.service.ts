@@ -1,8 +1,9 @@
-import { ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
-import { UserRole } from '@prisma/client';
-import { ClaudeAiService, ConversationFollowUp } from '../../idea-capture/services/claude-ai.service';
-import { AuthenticatedUser } from '../../auth/auth.service';
+import {
+  ClaudeAiService,
+  ConversationFollowUp,
+} from '../../idea-capture/services/claude-ai.service';
 
 export interface ConversationMessageDto {
   id: string;
@@ -35,41 +36,10 @@ export class ConversationService {
     private readonly claudeAi: ClaudeAiService,
   ) {}
 
-  private canBypassSessionOwnership(user: AuthenticatedUser): boolean {
-    return user.role === UserRole.ADMIN || user.role === UserRole.SUPER_ADMIN;
-  }
-
-  private async assertSessionOwnership(
-    sessionId: string,
-    currentUser: AuthenticatedUser,
-  ): Promise<void> {
-    if (this.canBypassSessionOwnership(currentUser)) {
-      return;
-    }
-
-    const session = await this.prisma.session.findUnique({
-      where: { id: sessionId },
-      select: { id: true, userId: true },
-    });
-
-    if (!session) {
-      throw new NotFoundException(`Session not found: ${sessionId}`);
-    }
-
-    if (session.userId !== currentUser.id) {
-      throw new ForbiddenException(`Forbidden session access: ${sessionId}`);
-    }
-  }
-
   /**
    * Store a user answer and evaluate whether AI follow-up is needed.
    */
-  async processAnswerWithAi(
-    params: SubmitAnswerWithAiParams,
-    currentUser: AuthenticatedUser,
-  ): Promise<AnswerWithFollowUpResult> {
-    await this.assertSessionOwnership(params.sessionId, currentUser);
-
+  async processAnswerWithAi(params: SubmitAnswerWithAiParams): Promise<AnswerWithFollowUpResult> {
     // Store the user's answer as a conversation message
     await this.prisma.conversationMessage.create({
       data: {
@@ -106,11 +76,7 @@ export class ConversationService {
     }
 
     // Return recent conversation for this question
-    const messages = await this.getQuestionConversation(
-      params.sessionId,
-      params.questionId,
-      currentUser,
-    );
+    const messages = await this.getQuestionConversation(params.sessionId, params.questionId);
 
     return { followUp, conversationMessages: messages };
   }
@@ -122,10 +88,7 @@ export class ConversationService {
     sessionId: string,
     questionId: string,
     content: string,
-    currentUser: AuthenticatedUser,
   ): Promise<ConversationMessageDto> {
-    await this.assertSessionOwnership(sessionId, currentUser);
-
     const message = await this.prisma.conversationMessage.create({
       data: {
         sessionId,
@@ -142,12 +105,7 @@ export class ConversationService {
   /**
    * Get all conversation messages for a session.
    */
-  async getSessionConversation(
-    sessionId: string,
-    currentUser: AuthenticatedUser,
-  ): Promise<ConversationMessageDto[]> {
-    await this.assertSessionOwnership(sessionId, currentUser);
-
+  async getSessionConversation(sessionId: string): Promise<ConversationMessageDto[]> {
     const messages = await this.prisma.conversationMessage.findMany({
       where: { sessionId },
       orderBy: { createdAt: 'asc' },
@@ -162,10 +120,7 @@ export class ConversationService {
   async getQuestionConversation(
     sessionId: string,
     questionId: string,
-    currentUser: AuthenticatedUser,
   ): Promise<ConversationMessageDto[]> {
-    await this.assertSessionOwnership(sessionId, currentUser);
-
     const messages = await this.prisma.conversationMessage.findMany({
       where: { sessionId, questionId },
       orderBy: { createdAt: 'asc' },

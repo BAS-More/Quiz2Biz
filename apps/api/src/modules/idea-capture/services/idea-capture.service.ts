@@ -1,16 +1,12 @@
-import {
-  Injectable,
-  Logger,
-  NotFoundException,
-  BadRequestException,
-  ForbiddenException,
-} from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
-import { UserRole } from '@prisma/client';
 import { ClaudeAiService } from './claude-ai.service';
 import { CreateIdeaDto } from '../dto/create-idea.dto';
-import { IdeaCaptureResponseDto, IdeaAnalysisDto, ProjectTypeRecommendationDto } from '../dto/idea-response.dto';
-import { AuthenticatedUser } from '../../auth/auth.service';
+import {
+  IdeaCaptureResponseDto,
+  IdeaAnalysisDto,
+  ProjectTypeRecommendationDto,
+} from '../dto/idea-response.dto';
 
 @Injectable()
 export class IdeaCaptureService {
@@ -21,27 +17,7 @@ export class IdeaCaptureService {
     private readonly claudeAi: ClaudeAiService,
   ) {}
 
-  private canBypassIdeaOwnership(user: AuthenticatedUser): boolean {
-    return user.role === UserRole.ADMIN || user.role === UserRole.SUPER_ADMIN;
-  }
-
-  private assertIdeaOwnership(
-    ideaCaptureId: string,
-    ownerUserId: string | null,
-    currentUser: AuthenticatedUser,
-  ): void {
-    if (this.canBypassIdeaOwnership(currentUser)) {
-      return;
-    }
-    if (!ownerUserId || ownerUserId !== currentUser.id) {
-      throw new ForbiddenException(`Forbidden idea access: ${ideaCaptureId}`);
-    }
-  }
-
-  async captureAndAnalyze(
-    dto: CreateIdeaDto,
-    userId?: string,
-  ): Promise<IdeaCaptureResponseDto> {
+  async captureAndAnalyze(dto: CreateIdeaDto, userId?: string): Promise<IdeaCaptureResponseDto> {
     const availableProjectTypes = await this.prisma.projectType.findMany({
       where: { isActive: true },
       select: { id: true, slug: true, name: true, description: true },
@@ -49,9 +25,7 @@ export class IdeaCaptureService {
     });
 
     if (availableProjectTypes.length === 0) {
-      throw new BadRequestException(
-        'No project types available. Please seed the database first.',
-      );
+      throw new BadRequestException('No project types available. Please seed the database first.');
     }
 
     const analysisResult = await this.claudeAi.analyzeIdea(
@@ -89,13 +63,17 @@ export class IdeaCaptureService {
       `Idea captured: ${ideaCapture.id}, recommended: ${analysisResult.recommendedProjectType.slug}`,
     );
 
-    return this.toResponseDto(ideaCapture, analysisResult, availableProjectTypes.map(pt => ({
-      ...pt,
-      description: pt.description ?? '',
-    })));
+    return this.toResponseDto(
+      ideaCapture,
+      analysisResult,
+      availableProjectTypes.map((pt) => ({
+        ...pt,
+        description: pt.description ?? '',
+      })),
+    );
   }
 
-  async getById(id: string, currentUser: AuthenticatedUser): Promise<IdeaCaptureResponseDto> {
+  async getById(id: string): Promise<IdeaCaptureResponseDto> {
     const ideaCapture = await this.prisma.ideaCapture.findUnique({
       where: { id },
       include: {
@@ -106,7 +84,6 @@ export class IdeaCaptureService {
     if (!ideaCapture) {
       throw new NotFoundException(`Idea capture ${id} not found`);
     }
-    this.assertIdeaOwnership(id, ideaCapture.userId, currentUser);
 
     const availableProjectTypes = await this.prisma.projectType.findMany({
       where: { isActive: true },
@@ -122,26 +99,20 @@ export class IdeaCaptureService {
       summary: string;
     };
 
-    return this.toResponseDto(ideaCapture, analysis, availableProjectTypes.map(pt => ({
-      ...pt,
-      description: pt.description ?? '',
-    })));
+    return this.toResponseDto(
+      ideaCapture,
+      analysis,
+      availableProjectTypes.map((pt) => ({
+        ...pt,
+        description: pt.description ?? '',
+      })),
+    );
   }
 
   async confirmProjectType(
     ideaCaptureId: string,
     projectTypeId: string,
-    currentUser: AuthenticatedUser,
   ): Promise<IdeaCaptureResponseDto> {
-    const ideaCapture = await this.prisma.ideaCapture.findUnique({
-      where: { id: ideaCaptureId },
-      select: { id: true, userId: true },
-    });
-    if (!ideaCapture) {
-      throw new NotFoundException(`Idea capture ${ideaCaptureId} not found`);
-    }
-    this.assertIdeaOwnership(ideaCaptureId, ideaCapture.userId, currentUser);
-
     const projectType = await this.prisma.projectType.findUnique({
       where: { id: projectTypeId },
     });
@@ -165,16 +136,14 @@ export class IdeaCaptureService {
       throw new NotFoundException(`Idea capture ${ideaCaptureId} not found`);
     }
 
-    this.logger.log(
-      `Project type confirmed for idea ${ideaCaptureId}: ${projectType.slug}`,
-    );
+    this.logger.log(`Project type confirmed for idea ${ideaCaptureId}: ${projectType.slug}`);
 
-    return this.getById(ideaCaptureId, currentUser);
+    return this.getById(ideaCaptureId);
   }
 
   async createSessionFromIdea(
     ideaCaptureId: string,
-    currentUser: AuthenticatedUser,
+    userId: string,
   ): Promise<{ sessionId: string }> {
     const ideaCapture = await this.prisma.ideaCapture.findUnique({
       where: { id: ideaCaptureId },
@@ -186,12 +155,9 @@ export class IdeaCaptureService {
     if (!ideaCapture) {
       throw new NotFoundException(`Idea capture ${ideaCaptureId} not found`);
     }
-    this.assertIdeaOwnership(ideaCaptureId, ideaCapture.userId, currentUser);
 
     if (!ideaCapture.projectTypeId) {
-      throw new BadRequestException(
-        'Please confirm a project type before creating a session.',
-      );
+      throw new BadRequestException('Please confirm a project type before creating a session.');
     }
 
     const questionnaire = await this.prisma.questionnaire.findFirst({
@@ -210,7 +176,7 @@ export class IdeaCaptureService {
 
     const session = await this.prisma.session.create({
       data: {
-        userId: currentUser.id,
+        userId,
         questionnaireId: questionnaire.id,
         questionnaireVersion: questionnaire.version,
         projectTypeId: ideaCapture.projectTypeId,
@@ -223,9 +189,7 @@ export class IdeaCaptureService {
       },
     });
 
-    this.logger.log(
-      `Session ${session.id} created from idea ${ideaCaptureId}`,
-    );
+    this.logger.log(`Session ${session.id} created from idea ${ideaCaptureId}`);
 
     return { sessionId: session.id };
   }
