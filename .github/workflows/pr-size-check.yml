@@ -128,3 +128,21 @@ jobs:
             if (totalChanges > MAX) {
               core.warning(`PR is too large (${totalChanges} > ${MAX} lines). Consider splitting into smaller PRs.`);
             }
+
+  pr-size-status:
+    name: PR Size Status
+    permissions: {}
+    runs-on: ubuntu-latest
+    needs: [pr-size]
+    if: always()
+
+    steps:
+      - name: Check PR size status
+        run: |
+          if [[ "${{ needs.pr-size.result }}" == "success" || "${{ needs.pr-size.result }}" == "skipped" ]]; then
+            echo "✅ PR size check passed or skipped"
+            exit 0
+          else
+            echo "::error::PR size check failed with status: ${{ needs.pr-size.result }}"
+            exit 1
+          fi
