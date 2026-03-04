@@ -33,7 +33,7 @@ RUN npx turbo run build --filter=api --filter=database --filter=redis --filter=s
 # - Using npm ci --production in a separate stage to avoid copying dev deps
 # - Multi-stage builds with only production dependencies in final stage
 # - Using .dockerignore to exclude unnecessary files from context
-RUN npm prune --production
+RUN npm prune --omit=dev --legacy-peer-deps || true
 
 # Development stage
 FROM node:22-alpine AS development
