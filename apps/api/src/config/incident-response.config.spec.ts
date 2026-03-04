@@ -292,12 +292,9 @@ describe('Incident Response Config', () => {
 
     describe('createIncident', () => {
       it('should create an incident', () => {
-        const incident = manager.createIncident(
-          'Test Incident',
-          'Test description',
-          'SEV1',
-          ['api'],
-        );
+        const incident = manager.createIncident('Test Incident', 'Test description', 'SEV1', [
+          'api',
+        ]);
 
         expect(incident).toHaveProperty('id');
         expect(incident.title).toBe('Test Incident');
@@ -499,9 +496,7 @@ describe('Incident Response Config', () => {
         // SEV4 has only level 1 with autoEscalate=false, so this tests a direct call
         // The auto-escalation timer check should find no next level
         manager.triggerEscalation(incident, 1);
-        const escalationEntries = incident.timeline.filter(
-          (e) => e.type === 'escalation',
-        );
+        const escalationEntries = incident.timeline.filter((e) => e.type === 'escalation');
         // At least one escalation from createIncident + the explicit triggerEscalation call
         expect(escalationEntries.length).toBeGreaterThanOrEqual(1);
       });
@@ -515,18 +510,14 @@ describe('Incident Response Config', () => {
         // Fast-forward the timer
         jest.advanceTimersByTime(5 * 60 * 1000 + 1000);
 
-        const escalationEntries = incident.timeline.filter(
-          (e) => e.type === 'escalation',
-        );
+        const escalationEntries = incident.timeline.filter((e) => e.type === 'escalation');
         // Should have escalated beyond level 1
         expect(escalationEntries.length).toBeGreaterThan(1);
       });
 
       it('should NOT auto-escalate when incident is resolved before timeout', () => {
         const incident = manager.createIncident('Test', 'Desc', 'SEV2');
-        const initialEscalations = incident.timeline.filter(
-          (e) => e.type === 'escalation',
-        ).length;
+        const initialEscalations = incident.timeline.filter((e) => e.type === 'escalation').length;
 
         // Resolve before timeout fires
         manager.updateStatus(incident.id, 'resolved', 'user@test.com');
@@ -534,9 +525,7 @@ describe('Incident Response Config', () => {
         // Advance past all timeout periods
         jest.advanceTimersByTime(120 * 60 * 1000);
 
-        const finalEscalations = incident.timeline.filter(
-          (e) => e.type === 'escalation',
-        ).length;
+        const finalEscalations = incident.timeline.filter((e) => e.type === 'escalation').length;
 
         // No additional escalation should have happened after resolution
         expect(finalEscalations).toBe(initialEscalations);
@@ -586,9 +575,7 @@ describe('Incident Response Config', () => {
       it('should detect resolution SLA breach', () => {
         const incident = manager.createIncident('Test', 'Desc', 'SEV1');
         // SEV1 resolutionTargetMinutes = 60
-        incident.resolvedAt = new Date(
-          incident.createdAt.getTime() + 120 * 60 * 1000,
-        );
+        incident.resolvedAt = new Date(incident.createdAt.getTime() + 120 * 60 * 1000);
 
         const metrics = manager.calculateMetrics(incident);
 
@@ -599,9 +586,7 @@ describe('Incident Response Config', () => {
       it('should return false for response SLA when not acknowledged', () => {
         const incident = manager.createIncident('Test', 'Desc', 'SEV1');
         // Remove any acknowledgment entries
-        incident.timeline = incident.timeline.filter(
-          (e) => !e.message.includes('acknowledged'),
-        );
+        incident.timeline = incident.timeline.filter((e) => !e.message.includes('acknowledged'));
 
         const metrics = manager.calculateMetrics(incident);
 

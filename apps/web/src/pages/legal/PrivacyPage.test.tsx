@@ -3,10 +3,14 @@ import { describe, it, expect } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { PrivacyPage } from './PrivacyPage';
 
-// Mock Lucide React icons
+// Mock Lucide React icons with aria-hidden passthrough
 vi.mock('lucide-react', () => ({
-  ArrowLeft: () => <div data-testid="arrow-left-icon" aria-hidden="true" />,
-  Shield: () => <div data-testid="shield-icon" aria-hidden="true" />,
+  ArrowLeft: (props: Record<string, unknown>) => (
+    <div data-testid="arrow-left-icon" aria-hidden={props['aria-hidden'] as string} />
+  ),
+  Shield: (props: Record<string, unknown>) => (
+    <div data-testid="shield-icon" aria-hidden={props['aria-hidden'] as string} />
+  ),
 }));
 
 describe('PrivacyPage', () => {
@@ -19,7 +23,7 @@ describe('PrivacyPage', () => {
           <Route path="/auth/login" element={<div>Login Page</div>} />
           <Route path="/auth/register" element={<div>Register Page</div>} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
   };
 
@@ -54,7 +58,11 @@ describe('PrivacyPage', () => {
 
       // Section 1: Introduction
       expect(screen.getByText('1. Introduction')).toBeInTheDocument();
-      expect(screen.getByText(/Quiz2Biz \(\"we\", \"our\", or \"us\"\) is committed to protecting your privacy/)).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /Quiz2Biz \("we", "our", or "us"\) is committed to protecting your privacy/,
+        ),
+      ).toBeInTheDocument();
 
       // Section 2: Information We Collect
       expect(screen.getByText('2. Information We Collect')).toBeInTheDocument();
@@ -72,7 +80,9 @@ describe('PrivacyPage', () => {
 
       // Section 5: Data Security
       expect(screen.getByText('5. Data Security')).toBeInTheDocument();
-      expect(screen.getByText('Encryption of data in transit (TLS 1.3) and at rest (AES-256)')).toBeInTheDocument();
+      expect(
+        screen.getByText('Encryption of data in transit (TLS 1.3) and at rest (AES-256)'),
+      ).toBeInTheDocument();
 
       // Section 6: Data Retention
       expect(screen.getByText('6. Data Retention')).toBeInTheDocument();
@@ -90,7 +100,7 @@ describe('PrivacyPage', () => {
       expect(screen.getByText('9. International Transfers')).toBeInTheDocument();
 
       // Section 10: Children's Privacy
-      expect(screen.getByText('10. Children\'s Privacy')).toBeInTheDocument();
+      expect(screen.getByText("10. Children's Privacy")).toBeInTheDocument();
 
       // Section 11: Changes to This Policy
       expect(screen.getByText('11. Changes to This Policy')).toBeInTheDocument();
@@ -109,13 +119,17 @@ describe('PrivacyPage', () => {
       expect(screen.getByText('Company or organization information')).toBeInTheDocument();
 
       // Usage Information list
-      expect(screen.getByText('Device information (browser type, operating system)')).toBeInTheDocument();
+      expect(
+        screen.getByText('Device information (browser type, operating system)'),
+      ).toBeInTheDocument();
       expect(screen.getByText('IP address and general location')).toBeInTheDocument();
       expect(screen.getByText('Pages visited and features used')).toBeInTheDocument();
 
       // How We Use Your Information list
       expect(screen.getByText('Provide, maintain, and improve our services')).toBeInTheDocument();
-      expect(screen.getByText('Process your assessments and generate readiness scores')).toBeInTheDocument();
+      expect(
+        screen.getByText('Process your assessments and generate readiness scores'),
+      ).toBeInTheDocument();
       expect(screen.getByText('Create and manage your account')).toBeInTheDocument();
       expect(screen.getByText('Process payments and send billing information')).toBeInTheDocument();
 
@@ -126,18 +140,23 @@ describe('PrivacyPage', () => {
       expect(screen.getByText('With Your Consent:')).toBeInTheDocument();
 
       // Data Security list
-      expect(screen.getByText('Encryption of data in transit (TLS 1.3) and at rest (AES-256)')).toBeInTheDocument();
-      expect(screen.getByText('Regular security assessments and penetration testing')).toBeInTheDocument();
-      expect(screen.getByText('Access controls and authentication requirements')).toBeInTheDocument();
+      expect(
+        screen.getByText('Encryption of data in transit (TLS 1.3) and at rest (AES-256)'),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText('Regular security assessments and penetration testing'),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText('Access controls and authentication requirements'),
+      ).toBeInTheDocument();
 
-      // Your Rights list
-      // Text split across <strong> and text nodes requires checking li textContent
-      const allListItems = screen.getAllByRole('listitem');
-      const hasListItemWithText = (text: string) =>
-        allListItems.some(li => li.textContent?.replace(/\s+/g, ' ').trim().includes(text));
-      expect(hasListItemWithText('Access: Request a copy of your personal data')).toBe(true);
-      expect(hasListItemWithText('Correction: Request correction of inaccurate data')).toBe(true);
-      expect(hasListItemWithText('Deletion: Request deletion of your data')).toBe(true);
+      // Your Rights list — text split across <strong> and text node
+      const accessItem = screen.getByText('Access:').closest('li');
+      expect(accessItem?.textContent).toContain('Request a copy of your personal data');
+      const correctionItem = screen.getByText('Correction:').closest('li');
+      expect(correctionItem?.textContent).toContain('Request correction of inaccurate data');
+      const deletionItem = screen.getByText('Deletion:').closest('li');
+      expect(deletionItem?.textContent).toContain('Request deletion of your data');
     });
   });
 
@@ -148,8 +167,9 @@ describe('PrivacyPage', () => {
       // Should show contact section
       expect(screen.getByText('Quiz2Biz Privacy Team')).toBeInTheDocument();
       expect(screen.getByText('privacy@quiz2biz.com')).toBeInTheDocument();
-      // Address text is broken by <br /> tags; check via parent element's textContent
+      // Address text nodes are within the <address> element, not standalone elements
       const address = screen.getByText('Quiz2Biz Privacy Team').closest('address');
+      expect(address).toBeInTheDocument();
       expect(address?.textContent).toContain('123 Business Park, Suite 100');
       expect(address?.textContent).toContain('Technology City, TC 12345');
       expect(address?.textContent).toContain('United States');
@@ -190,10 +210,14 @@ describe('PrivacyPage', () => {
       renderPrivacyPage();
 
       const currentYear = new Date().getFullYear();
-      expect(screen.getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`)).toBeInTheDocument();
+      expect(
+        screen.getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`),
+      ).toBeInTheDocument();
 
       // Footer should have proper role
-      const footer = screen.getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`).closest('footer');
+      const footer = screen
+        .getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`)
+        .closest('footer');
       expect(footer).toHaveAttribute('role', 'contentinfo');
     });
   });
@@ -264,8 +288,7 @@ describe('PrivacyPage', () => {
 
       // Should have proper heading structure
       expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
-      const h2Elements = screen.getAllByRole('heading', { level: 2 });
-      expect(h2Elements.length).toBeGreaterThan(0);
+      expect(screen.getAllByRole('heading', { level: 2 }).length).toBeGreaterThan(0);
 
       // Should have sufficient color contrast (visual check)
       // This would be tested with axe or similar tools in practice
@@ -285,7 +308,9 @@ describe('PrivacyPage', () => {
       renderPrivacyPage();
 
       const currentYear = new Date().getFullYear();
-      expect(screen.getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`)).toBeInTheDocument();
+      expect(
+        screen.getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`),
+      ).toBeInTheDocument();
     });
   });
 });

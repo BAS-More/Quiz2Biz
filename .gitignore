@@ -77,3 +77,4 @@ actionlint
 # Jest cache
 .jest-cache/
 **/.jest-cache/
+*.tsbuildinfo

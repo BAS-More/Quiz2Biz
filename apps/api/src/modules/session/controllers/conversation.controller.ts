@@ -1,17 +1,13 @@
-import {
-  Controller,
-  Post,
-  Get,
-  Body,
-  Param,
-  ParseUUIDPipe,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, ParseUUIDPipe, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
 import { AuthenticatedUser } from '../../auth/auth.service';
-import { ConversationService, AnswerWithFollowUpResult, ConversationMessageDto } from '../services/conversation.service';
+import {
+  ConversationService,
+  AnswerWithFollowUpResult,
+  ConversationMessageDto,
+} from '../services/conversation.service';
 
 class SubmitAnswerDto {
   questionId: string;
@@ -35,7 +31,8 @@ export class ConversationController {
   @Post('answer')
   @ApiOperation({
     summary: 'Submit an answer with AI evaluation',
-    description: 'Stores the answer and evaluates completeness. Returns follow-up question if needed.',
+    description:
+      'Stores the answer and evaluates completeness. Returns follow-up question if needed.',
   })
   @ApiResponse({ status: 201, description: 'Answer processed with AI evaluation' })
   async submitAnswerWithAi(
@@ -61,11 +58,7 @@ export class ConversationController {
     @Param('sessionId', ParseUUIDPipe) sessionId: string,
     @Body() dto: FollowUpAnswerDto,
   ): Promise<ConversationMessageDto> {
-    return this.conversationService.storeFollowUpAnswer(
-      sessionId,
-      dto.questionId,
-      dto.content,
-    );
+    return this.conversationService.storeFollowUpAnswer(sessionId, dto.questionId, dto.content);
   }
 
   @Get()

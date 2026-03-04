@@ -359,7 +359,8 @@ export const BUSINESS_CASE_TEMPLATE = {
    */
   defaults: {
     'financialAnalysis.npv': 'NPV calculation to be completed with detailed financial modeling',
-    'financialAnalysis.paybackPeriod': 'Payback period to be determined based on final cost estimates',
+    'financialAnalysis.paybackPeriod':
+      'Payback period to be determined based on final cost estimates',
     'appendices.financialModels': 'Detailed financial models available in supporting spreadsheets',
     'appendices.marketResearch': 'Market research data to be compiled from industry sources',
   },

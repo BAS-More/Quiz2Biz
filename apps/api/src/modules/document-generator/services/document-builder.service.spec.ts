@@ -41,9 +41,7 @@ describe('DocumentBuilderService', () => {
       content: {
         projectName: 'Test Project',
         projectType: 'SaaS Application',
-        sections: [
-          { title: 'Executive Summary', content: 'Overview of the project' },
-        ],
+        sections: [{ title: 'Executive Summary', content: 'Overview of the project' }],
       },
       standards: [
         {
@@ -118,9 +116,7 @@ describe('DocumentBuilderService', () => {
             category: 'Quality',
             title: 'Quality Standards',
             description: 'Quality assurance requirements',
-            principles: [
-              { title: 'Testing', description: '80% coverage' },
-            ],
+            principles: [{ title: 'Testing', description: '80% coverage' }],
           },
         ],
       };
@@ -405,7 +401,8 @@ describe('DocumentBuilderService', () => {
         const data: TemplateData = {
           metadata: { ...baseMetadata, category: DocumentCategory.BA },
           content: {
-            process_flows: 'User registers -> Verifies email -> Completes profile -> Accesses dashboard',
+            process_flows:
+              'User registers -> Verifies email -> Completes profile -> Accesses dashboard',
           },
         };
 
@@ -448,7 +445,8 @@ describe('DocumentBuilderService', () => {
       sections: [
         {
           heading: 'System Architecture',
-          content: 'The system follows a microservices architecture.\n\nEach service is independently deployable.',
+          content:
+            'The system follows a microservices architecture.\n\nEach service is independently deployable.',
         },
         {
           heading: 'Technology Stack',
@@ -475,7 +473,10 @@ describe('DocumentBuilderService', () => {
         summary: '',
       };
 
-      const result = await service.buildDocumentFromAiContent(contentWithoutSummary, mockDocumentType);
+      const result = await service.buildDocumentFromAiContent(
+        contentWithoutSummary,
+        mockDocumentType,
+      );
 
       expect(result).toBeDefined();
       expect(Buffer.isBuffer(result)).toBe(true);
@@ -488,7 +489,10 @@ describe('DocumentBuilderService', () => {
         sections: [],
       };
 
-      const result = await service.buildDocumentFromAiContent(contentWithEmptySections, mockDocumentType);
+      const result = await service.buildDocumentFromAiContent(
+        contentWithEmptySections,
+        mockDocumentType,
+      );
 
       expect(result).toBeDefined();
       expect(Buffer.isBuffer(result)).toBe(true);
@@ -506,7 +510,10 @@ describe('DocumentBuilderService', () => {
         ],
       };
 
-      const result = await service.buildDocumentFromAiContent(contentWithMultiParagraph, mockDocumentType);
+      const result = await service.buildDocumentFromAiContent(
+        contentWithMultiParagraph,
+        mockDocumentType,
+      );
 
       expect(result).toBeDefined();
       expect(Buffer.isBuffer(result)).toBe(true);

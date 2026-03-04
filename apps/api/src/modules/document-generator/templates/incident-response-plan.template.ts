@@ -323,7 +323,10 @@ export const INCIDENT_RESPONSE_PLAN_TEMPLATE = {
    */
   defaults: {
     'eradication.rootCauseAnalysis': 'Root cause analysis to be conducted post-incident',
-    'lessonsLearned.postIncidentReview': 'Post-incident review to be scheduled within 5 business days',
-    'communicationPlan.regulatory': ['Regulatory notification procedures to be determined based on incident type'],
+    'lessonsLearned.postIncidentReview':
+      'Post-incident review to be scheduled within 5 business days',
+    'communicationPlan.regulatory': [
+      'Regulatory notification procedures to be determined based on incident type',
+    ],
   },
 };

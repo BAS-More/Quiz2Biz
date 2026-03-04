@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, within, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { DashboardPage } from './DashboardPage';
@@ -90,7 +90,8 @@ describe('DashboardPage', () => {
 
     const activeLabel = screen.getByText('Active Sessions');
     expect(activeLabel).toBeInTheDocument();
-    expect(within(activeLabel.parentElement!).getByText('1')).toBeInTheDocument();
+    const statContainer = activeLabel.closest('.min-w-0')!;
+    expect(within(statContainer).getByText('1')).toBeInTheDocument();
   });
 
   it('displays completed sessions count', () => {
@@ -102,9 +103,10 @@ describe('DashboardPage', () => {
   it('displays highest score', () => {
     renderDashboardPage();
 
-    const scoreLabel = screen.getByText('Highest Score');
-    expect(scoreLabel).toBeInTheDocument();
-    expect(within(scoreLabel.parentElement!).getByText('92%')).toBeInTheDocument();
+    const highestLabel = screen.getByText('Highest Score');
+    expect(highestLabel).toBeInTheDocument();
+    const statContainer = highestLabel.closest('.min-w-0')!;
+    expect(within(statContainer).getByText('92%')).toBeInTheDocument();
   });
 
   it('navigates to idea capture on New Project click', async () => {

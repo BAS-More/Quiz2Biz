@@ -12,21 +12,25 @@ describe('LoggingInterceptor', () => {
     interceptor = new LoggingInterceptor();
   });
 
-  const createMockContext = (overrides: Partial<{
-    method: string;
-    url: string;
-    ip: string;
-    userAgent: string;
-    requestId: string;
-    statusCode: number;
-  }> = {}): ExecutionContext => {
+  const createMockContext = (
+    overrides: Partial<{
+      method: string;
+      url: string;
+      ip: string;
+      userAgent: string;
+      requestId: string;
+      statusCode: number;
+    }> = {},
+  ): ExecutionContext => {
     const userAgent = overrides.userAgent !== undefined ? overrides.userAgent : 'jest-test';
     const mockRequest = {
       method: overrides.method || 'GET',
       url: overrides.url || '/api/test',
       ip: overrides.ip || '127.0.0.1',
       get: jest.fn((header: string) => {
-        if (header === 'user-agent') {return userAgent;}
+        if (header === 'user-agent') {
+          return userAgent;
+        }
         return '';
       }),
       headers: {
@@ -47,9 +51,7 @@ describe('LoggingInterceptor', () => {
   };
 
   const createMockCallHandler = (result: unknown, shouldError = false): CallHandler => ({
-    handle: () => (shouldError
-      ? throwError(() => new Error('Test error'))
-      : of(result)) as any,
+    handle: () => (shouldError ? throwError(() => new Error('Test error')) : of(result)) as any,
   });
 
   describe('intercept', () => {

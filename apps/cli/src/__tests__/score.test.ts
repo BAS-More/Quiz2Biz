@@ -2,95 +2,77 @@
  * Unit tests for Score command
  */
 
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Command } from 'commander';
+import chalk from 'chalk';
 import ora from 'ora';
+import { table } from 'table';
 import { scoreCommand } from '../commands/score';
 import { ApiClient } from '../lib/api-client';
 import { Config } from '../lib/config';
 
-// Use var for hoisting compatibility with jest.mock() factories
-// eslint-disable-next-line no-var
-var mockSpinner: any;
+// Mock dependencies
+const mockSpinner = {
+  start: vi.fn().mockReturnThis(),
+  succeed: vi.fn().mockReturnThis(),
+  fail: vi.fn().mockReturnThis(),
+};
 
-jest.mock('ora', () => ({
-  __esModule: true,
-  default: jest.fn(() => mockSpinner),
+const mockTable = vi.fn((data) => `TABLE:${JSON.stringify(data)}`);
+
+vi.mock('ora', () => ({
+  default: vi.fn(() => mockSpinner),
 }));
 
-jest.mock('table', () => ({
-  table: jest.fn((data: unknown) => `TABLE:${JSON.stringify(data)}`),
+vi.mock('table', () => ({
+  table: mockTable,
 }));
 
-jest.mock('chalk', () => ({
-  __esModule: true,
+vi.mock('chalk', () => ({
   default: {
-    red: jest.fn((str: string) => `RED:${str}`),
-    gray: jest.fn((str: string) => `GRAY:${str}`),
-    bold: jest.fn((str: string) => `BOLD:${str}`),
-    green: jest.fn((str: string) => `GREEN:${str}`),
-    yellow: jest.fn((str: string) => `YELLOW:${str}`),
-    blue: jest.fn((str: string) => `BLUE:${str}`),
-    hex: jest.fn(() => jest.fn((str: string) => `HEX:${str}`)),
+    red: vi.fn((str) => `RED:${str}`),
+    gray: vi.fn((str) => `GRAY:${str}`),
+    bold: vi.fn((str) => `BOLD:${str}`),
+    green: vi.fn((str) => `GREEN:${str}`),
+    yellow: vi.fn((str) => `YELLOW:${str}`),
+    blue: vi.fn((str) => `BLUE:${str}`),
   },
 }));
 
-jest.mock('../lib/api-client');
-jest.mock('../lib/config');
+vi.mock('../lib/api-client');
+vi.mock('../lib/config');
 
 describe('scoreCommand', () => {
   let mockConfig: any;
   let mockApiClient: any;
 
   beforeEach(() => {
-    jest.clearAllMocks();
-
-    mockSpinner = {
-      start: jest.fn().mockReturnThis(),
-      succeed: jest.fn().mockReturnThis(),
-      fail: jest.fn().mockReturnThis(),
-    };
-    // Re-setup ora mock after resetMocks clears implementations
-    (ora as unknown as jest.Mock).mockReturnValue(mockSpinner);
+    vi.clearAllMocks();
 
     // Setup Config mock
     mockConfig = {
-      get: jest.fn(),
-      getOfflineData: jest.fn(),
-      reset: jest.fn(),
+      get: vi.fn(),
+      getOfflineData: vi.fn(),
+      reset: vi.fn(),
     };
     (Config as any).mockImplementation(() => mockConfig);
-    
+
     // Setup ApiClient mock
     mockApiClient = {
-      getScore: jest.fn(),
+      getScore: vi.fn(),
     };
     (ApiClient as any).mockImplementation(() => mockApiClient);
-    
+
     // Mock console methods
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-    jest.spyOn(console, 'log').mockImplementation(() => {});
-    
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+
     // Mock process.exit
-    jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
-
-    // Re-setup chalk mocks after resetMocks clears implementations
-    const chalk = jest.requireMock<any>('chalk').default;
-    chalk.red.mockImplementation((str: string) => `RED:${str}`);
-    chalk.gray.mockImplementation((str: string) => `GRAY:${str}`);
-    chalk.bold.mockImplementation((str: string) => `BOLD:${str}`);
-    chalk.green.mockImplementation((str: string) => `GREEN:${str}`);
-    chalk.yellow.mockImplementation((str: string) => `YELLOW:${str}`);
-    chalk.blue.mockImplementation((str: string) => `BLUE:${str}`);
-    chalk.hex.mockImplementation(() => jest.fn((str: string) => `HEX:${str}`));
-
-    // Reset Commander parsed state from previous tests
-    (scoreCommand as any)._optionValues = {};
-    (scoreCommand as any)._optionValueSources = {};
-    (scoreCommand as any).processedArgs = [];
+    vi.spyOn(process, 'exit').mockImplementation(() => undefined as never);
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('should be a Command instance', () => {
@@ -106,61 +88,65 @@ describe('scoreCommand', () => {
   });
 
   it('should have session ID argument', () => {
-    const args = scoreCommand.registeredArguments;
+    const args = scoreCommand['_args'];
     expect(args[0].name()).toBe('sessionId');
   });
 
   it('should have detailed option', () => {
-    const opts = scoreCommand.options;
+    const opts = scoreCommand.opts();
     expect(opts.find((o: any) => o.flags === '-d, --detailed')).toBeDefined();
   });
 
   it('should have json option', () => {
-    const opts = scoreCommand.options;
+    const opts = scoreCommand.opts();
     expect(opts.find((o: any) => o.flags === '-j, --json')).toBeDefined();
   });
 
   it('should have offline option', () => {
-    const opts = scoreCommand.options;
+    const opts = scoreCommand.opts();
     expect(opts.find((o: any) => o.flags === '--offline')).toBeDefined();
   });
 
   it('should exit with error when no session ID and no default', async () => {
     mockConfig.get.mockReturnValue(null);
-    
-    await scoreCommand.parseAsync(['node', 'test']);
-    
-    expect(console.error).toHaveBeenCalledWith('RED:Error: No session ID provided and no default session configured.');
-    expect(console.log).toHaveBeenCalledWith('GRAY:Use: quiz2biz config set defaultSession <sessionId>');
+
+    await scoreCommand.parseAsync(['node', 'test', 'score']);
+
+    expect(console.error).toHaveBeenCalledWith(
+      'RED:Error: No session ID provided and no default session configured.',
+    );
+    expect(console.log).toHaveBeenCalledWith(
+      'GRAY:Use: quiz2biz config set defaultSession <sessionId>',
+    );
     expect(process.exit).toHaveBeenCalledWith(1);
   });
 
   it('should use provided session ID', async () => {
     mockConfig.get.mockReturnValue(null);
-    const mockScoreData = { overallScore: 0.85 };
+    const mockScoreData = { overall: 85, dimensions: [] };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
-    await scoreCommand.parseAsync(['node', 'test', 'session-123']);
-    
+
+    await scoreCommand.parseAsync(['node', 'test', 'score', 'session-123']);
+
     expect(mockApiClient.getScore).toHaveBeenCalledWith('session-123');
   });
 
   it('should use default session when none provided', async () => {
     mockConfig.get.mockReturnValue('default-session-456');
-    const mockScoreData = { overallScore: 0.85 };
+    const mockScoreData = { overall: 85, dimensions: [] };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
-    await scoreCommand.parseAsync(['node', 'test']);
-    
+
+    await scoreCommand.parseAsync(['node', 'test', 'score']);
+
     expect(mockApiClient.getScore).toHaveBeenCalledWith('default-session-456');
   });
 
   it('should show spinner during API call', async () => {
     mockConfig.get.mockReturnValue('session-123');
-    mockApiClient.getScore.mockResolvedValue({ overallScore: 0.85 });
-    
-    await scoreCommand.parseAsync(['node', 'test']);
-    
+    mockApiClient.getScore.mockResolvedValue({ overall: 85 });
+
+    await scoreCommand.parseAsync(['node', 'test', 'score']);
+
     expect(ora).toHaveBeenCalledWith('Fetching readiness score...');
     expect(mockSpinner.start).toHaveBeenCalled();
     expect(mockSpinner.succeed).toHaveBeenCalledWith('Score retrieved');
@@ -168,90 +154,90 @@ describe('scoreCommand', () => {
 
   it('should output JSON when --json flag is used', async () => {
     mockConfig.get.mockReturnValue('session-123');
-    const mockScoreData = { overallScore: 0.85 };
+    const mockScoreData = { overall: 85, dimensions: [] };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
-    await scoreCommand.parseAsync(['node', 'test', '--json']);
-    
+
+    await scoreCommand.parseAsync(['node', 'test', 'score', '--json']);
+
     expect(console.log).toHaveBeenCalledWith(JSON.stringify(mockScoreData, null, 2));
   });
 
   it('should display overall score', async () => {
     mockConfig.get.mockReturnValue('session-123');
-    const mockScoreData = { overallScore: 0.85 };
+    const mockScoreData = { overall: 85, dimensions: [] };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
-    await scoreCommand.parseAsync(['node', 'test']);
-    
-    expect(console.log).toHaveBeenCalledWith('\nBOLD:📊 Quiz2Biz Readiness Score');
+
+    await scoreCommand.parseAsync(['node', 'test', 'score']);
+
+    expect(console.log).toHaveBeenCalledWith('\nBOLD:📊 Readiness Score: 85%');
   });
 
   it('should display score with color coding (high score)', async () => {
     mockConfig.get.mockReturnValue('session-123');
-    const mockScoreData = { overallScore: 0.95 };
+    const mockScoreData = { overall: 95, dimensions: [] };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
-    await scoreCommand.parseAsync(['node', 'test']);
-    
-    expect(console.log).toHaveBeenCalledWith('\nBOLD:Overall Score: GREEN:95.0%');
+
+    await scoreCommand.parseAsync(['node', 'test', 'score']);
+
+    expect(console.log).toHaveBeenCalledWith('\nBOLD:📊 Readiness Score: GREEN:95%');
   });
 
   it('should display score with color coding (medium score)', async () => {
     mockConfig.get.mockReturnValue('session-123');
-    const mockScoreData = { overallScore: 0.75 };
+    const mockScoreData = { overall: 75, dimensions: [] };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
-    await scoreCommand.parseAsync(['node', 'test']);
-    
-    expect(console.log).toHaveBeenCalledWith('\nBOLD:Overall Score: YELLOW:75.0%');
+
+    await scoreCommand.parseAsync(['node', 'test', 'score']);
+
+    expect(console.log).toHaveBeenCalledWith('\nBOLD:📊 Readiness Score: YELLOW:75%');
   });
 
   it('should display score with color coding (low score)', async () => {
     mockConfig.get.mockReturnValue('session-123');
-    const mockScoreData = { overallScore: 0.35 };
+    const mockScoreData = { overall: 35, dimensions: [] };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
-    await scoreCommand.parseAsync(['node', 'test']);
-    
-    expect(console.log).toHaveBeenCalledWith('\nBOLD:Overall Score: RED:35.0%');
+
+    await scoreCommand.parseAsync(['node', 'test', 'score']);
+
+    expect(console.log).toHaveBeenCalledWith('\nBOLD:📊 Readiness Score: RED:35%');
   });
 
   it('should display detailed breakdown when --detailed flag is used', async () => {
     mockConfig.get.mockReturnValue('session-123');
     const mockScoreData = {
-      overallScore: 0.85,
+      overall: 85,
       dimensions: [
-        { name: 'Security', score: 0.9, questionsAnswered: 9, totalQuestions: 10 },
-        { name: 'Architecture', score: 0.8, questionsAnswered: 8, totalQuestions: 10 },
+        { name: 'Security', score: 90 },
+        { name: 'Architecture', score: 80 },
       ],
     };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
-    await scoreCommand.parseAsync(['node', 'test', '--detailed']);
-    
-    expect(jest.requireMock<any>('table').table).toHaveBeenCalled();
-    expect(console.log).toHaveBeenCalledWith('\nBOLD:Dimension Breakdown:');
+
+    await scoreCommand.parseAsync(['node', 'test', 'score', '--detailed']);
+
+    expect(mockTable).toHaveBeenCalled();
+    expect(console.log).toHaveBeenCalledWith('BOLD:Dimension Breakdown:');
   });
 
   it('should use offline data when --offline flag is used', async () => {
     mockConfig.get.mockReturnValue('session-123');
     const mockOfflineData = {
-      score: { overallScore: 0.78 },
+      score: { overall: 78, dimensions: [] },
     };
     mockConfig.getOfflineData.mockReturnValue(mockOfflineData);
-    
-    await scoreCommand.parseAsync(['node', 'test', '--offline']);
-    
+
+    await scoreCommand.parseAsync(['node', 'test', 'score', '--offline']);
+
     expect(mockConfig.getOfflineData).toHaveBeenCalledWith('session-123');
-    expect(console.log).toHaveBeenCalledWith('\nBOLD:📊 Quiz2Biz Readiness Score');
+    expect(console.log).toHaveBeenCalledWith('\nBOLD:📊 Readiness Score: YELLOW:78%');
   });
 
   it('should exit with error when no offline data found', async () => {
     mockConfig.get.mockReturnValue('session-123');
     mockConfig.getOfflineData.mockReturnValue(null);
-    
-    await scoreCommand.parseAsync(['node', 'test', '--offline']);
-    
+
+    await scoreCommand.parseAsync(['node', 'test', 'score', '--offline']);
+
     expect(mockSpinner.fail).toHaveBeenCalledWith('No offline data found for this session');
     expect(process.exit).toHaveBeenCalledWith(1);
   });
@@ -259,11 +245,10 @@ describe('scoreCommand', () => {
   it('should handle API errors gracefully', async () => {
     mockConfig.get.mockReturnValue('session-123');
     mockApiClient.getScore.mockRejectedValue(new Error('API Error'));
-    
-    await scoreCommand.parseAsync(['node', 'test']);
-    
-    expect(mockSpinner.fail).toHaveBeenCalledWith('Failed to fetch score');
-    expect(console.error).toHaveBeenCalledWith('RED:API Error');
+
+    await scoreCommand.parseAsync(['node', 'test', 'score']);
+
+    expect(mockSpinner.fail).toHaveBeenCalledWith('RED:Failed to fetch score: API Error');
   });
 
   it('should handle network errors', async () => {
@@ -271,11 +256,10 @@ describe('scoreCommand', () => {
     mockApiClient.getScore.mockRejectedValue({
       response: { data: { message: 'Network error' } },
     });
-    
-    await scoreCommand.parseAsync(['node', 'test']);
-    
-    expect(mockSpinner.fail).toHaveBeenCalledWith('Failed to fetch score');
-    expect(console.error).toHaveBeenCalledWith('RED:Unknown error');
+
+    await scoreCommand.parseAsync(['node', 'test', 'score']);
+
+    expect(mockSpinner.fail).toHaveBeenCalledWith('RED:Failed to fetch score: Network error');
   });
 
   it('should handle unauthorized errors', async () => {
@@ -283,11 +267,12 @@ describe('scoreCommand', () => {
     mockApiClient.getScore.mockRejectedValue({
       response: { status: 401 },
     });
-    
-    await scoreCommand.parseAsync(['node', 'test']);
-    
-    expect(mockSpinner.fail).toHaveBeenCalledWith('Failed to fetch score');
-    expect(console.error).toHaveBeenCalledWith('RED:Unknown error');
+
+    await scoreCommand.parseAsync(['node', 'test', 'score']);
+
+    expect(mockSpinner.fail).toHaveBeenCalledWith(
+      'RED:Authentication failed. Please check your API configuration.',
+    );
   });
 
   it('should handle forbidden errors', async () => {
@@ -295,51 +280,43 @@ describe('scoreCommand', () => {
     mockApiClient.getScore.mockRejectedValue({
       response: { status: 403 },
     });
-    
-    await scoreCommand.parseAsync(['node', 'test']);
-    
-    expect(mockSpinner.fail).toHaveBeenCalledWith('Failed to fetch score');
-    expect(console.error).toHaveBeenCalledWith('RED:Unknown error');
+
+    await scoreCommand.parseAsync(['node', 'test', 'score']);
+
+    expect(mockSpinner.fail).toHaveBeenCalledWith(
+      'RED:Access denied. You do not have permission to access this session.',
+    );
   });
 
   it('should display completion status', async () => {
     mockConfig.get.mockReturnValue('session-123');
-    const mockScoreData = { 
-      overallScore: 0.85, 
-      progress: {
-        sectionsLeft: 0,
-        questionsLeft: 5,
-        currentSectionProgress: 10,
-        currentSectionTotal: 10,
-      },
+    const mockScoreData = {
+      overall: 85,
+      dimensions: [],
+      completed: true,
+      totalQuestions: 50,
+      answeredQuestions: 45,
     };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
-    await scoreCommand.parseAsync(['node', 'test']);
-    
-    expect(console.log).toHaveBeenCalledWith('\nBOLD:Progress:');
-    expect(console.log).toHaveBeenCalledWith('  Sections left: 0');
-    expect(console.log).toHaveBeenCalledWith('  Questions left: 5');
+
+    await scoreCommand.parseAsync(['node', 'test', 'score']);
+
+    expect(console.log).toHaveBeenCalledWith('BOLD:Status: GREEN:Completed (45/50 questions)');
   });
 
   it('should display in-progress status', async () => {
     mockConfig.get.mockReturnValue('session-123');
-    const mockScoreData = { 
-      overallScore: 0.85, 
-      progress: {
-        sectionsLeft: 3,
-        questionsLeft: 20,
-        currentSectionProgress: 5,
-        currentSectionTotal: 10,
-      },
+    const mockScoreData = {
+      overall: 85,
+      dimensions: [],
+      completed: false,
+      totalQuestions: 50,
+      answeredQuestions: 30,
     };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
-    
-    await scoreCommand.parseAsync(['node', 'test']);
-    
-    expect(console.log).toHaveBeenCalledWith('\nBOLD:Progress:');
-    expect(console.log).toHaveBeenCalledWith('  Sections left: 3');
-    expect(console.log).toHaveBeenCalledWith('  Questions left: 20');
-    expect(console.log).toHaveBeenCalledWith('  Current section: 5/10');
+
+    await scoreCommand.parseAsync(['node', 'test', 'score']);
+
+    expect(console.log).toHaveBeenCalledWith('BOLD:Status: BLUE:In Progress (30/50 questions)');
   });
 });

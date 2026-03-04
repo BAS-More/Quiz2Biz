@@ -5,11 +5,11 @@ import configuration from '../../src/config/configuration';
 
 /**
  * Integration tests for Transaction & Concurrency patterns
- * 
+ *
  * SKIP REASON: Requires running PostgreSQL database at 127.0.0.1:5432.
  * These tests perform actual database operations and need a live DB connection.
  * TODO: Set up test database or use Docker container for test isolation.
- * 
+ *
  * Schema updates completed:
  * - User: USER -> CLIENT role
  * - Session: updatedAt -> lastActivityAt, added questionnaireVersion
@@ -443,7 +443,9 @@ describe.skip('Transaction & Concurrency Tests', () => {
 
       if (current!.lastActivityAt.getTime() !== user2Read.lastActivityAt!.getTime()) {
         // Conflict detected - user2's read is stale
-        expect(current!.lastActivityAt.getTime()).toBeGreaterThan(user2Read.lastActivityAt!.getTime());
+        expect(current!.lastActivityAt.getTime()).toBeGreaterThan(
+          user2Read.lastActivityAt!.getTime(),
+        );
 
         // User 2 should re-read and retry
         const refreshed = await prisma.session.findUnique({ where: { id: testSessionId } });

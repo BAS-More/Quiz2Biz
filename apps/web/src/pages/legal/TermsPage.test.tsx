@@ -19,7 +19,7 @@ describe('TermsPage', () => {
           <Route path="/auth/login" element={<div>Login Page</div>} />
           <Route path="/auth/register" element={<div>Register Page</div>} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
   };
 
@@ -54,15 +54,23 @@ describe('TermsPage', () => {
 
       // Section 1: Acceptance of Terms
       expect(screen.getByText('1. Acceptance of Terms')).toBeInTheDocument();
-      expect(screen.getByText(/By accessing or using Quiz2Biz \(\"the Service\"\), you agree to be bound by these Terms/)).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /By accessing or using Quiz2Biz \("the Service"\), you agree to be bound by these Terms/,
+        ),
+      ).toBeInTheDocument();
 
       // Section 2: Description of Service
       expect(screen.getByText('2. Description of Service')).toBeInTheDocument();
-      expect(screen.getByText('Complete structured questionnaires across multiple business dimensions')).toBeInTheDocument();
+      expect(
+        screen.getByText('Complete structured questionnaires across multiple business dimensions'),
+      ).toBeInTheDocument();
 
       // Section 3: Account Registration
       expect(screen.getByText('3. Account Registration')).toBeInTheDocument();
-      expect(screen.getByText('Provide accurate, current, and complete information during registration')).toBeInTheDocument();
+      expect(
+        screen.getByText('Provide accurate, current, and complete information during registration'),
+      ).toBeInTheDocument();
 
       // Section 4: Subscription and Payment
       expect(screen.getByText('4. Subscription and Payment')).toBeInTheDocument();
@@ -83,18 +91,23 @@ describe('TermsPage', () => {
 
       // Section 7: Data and Privacy
       expect(screen.getByText('7. Data and Privacy')).toBeInTheDocument();
-      expect(screen.getAllByText('Privacy Policy').length).toBeGreaterThanOrEqual(1);
+      // "Privacy Policy" appears in both the section 7 content link and footer link
+      expect(screen.getAllByText('Privacy Policy').length).toBeGreaterThanOrEqual(2);
 
       // Section 8: Service Availability
       expect(screen.getByText('8. Service Availability')).toBeInTheDocument();
 
       // Section 9: Disclaimer of Warranties
       expect(screen.getByText('9. Disclaimer of Warranties')).toBeInTheDocument();
-      expect(screen.getByText(/THE SERVICE IS PROVIDED .AS IS. AND .AS AVAILABLE./)).toBeInTheDocument();
+      expect(
+        screen.getByText(/THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE"/),
+      ).toBeInTheDocument();
 
       // Section 10: Limitation of Liability
       expect(screen.getByText('10. Limitation of Liability')).toBeInTheDocument();
-      expect(screen.getByText(/TO THE MAXIMUM EXTENT PERMITTED BY LAW, QUIZ2BIZ SHALL NOT BE LIABLE/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/TO THE MAXIMUM EXTENT PERMITTED BY LAW, QUIZ2BIZ SHALL NOT BE LIABLE/),
+      ).toBeInTheDocument();
 
       // Section 11: Indemnification
       expect(screen.getByText('11. Indemnification')).toBeInTheDocument();
@@ -120,25 +133,43 @@ describe('TermsPage', () => {
       renderTermsPage();
 
       // Description of Service list
-      expect(screen.getByText('Complete structured questionnaires across multiple business dimensions')).toBeInTheDocument();
+      expect(
+        screen.getByText('Complete structured questionnaires across multiple business dimensions'),
+      ).toBeInTheDocument();
       expect(screen.getByText('Upload and manage evidence documentation')).toBeInTheDocument();
       expect(screen.getByText('Receive readiness scores and gap analysis')).toBeInTheDocument();
 
       // Account Registration list
-      expect(screen.getByText('Provide accurate, current, and complete information during registration')).toBeInTheDocument();
-      expect(screen.getByText('Maintain and promptly update your account information')).toBeInTheDocument();
-      expect(screen.getByText('Maintain the security and confidentiality of your password')).toBeInTheDocument();
+      expect(
+        screen.getByText('Provide accurate, current, and complete information during registration'),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText('Maintain and promptly update your account information'),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText('Maintain the security and confidentiality of your password'),
+      ).toBeInTheDocument();
 
       // Acceptable Use list
-      expect(screen.getByText('Use the Service for any illegal or unauthorized purpose')).toBeInTheDocument();
+      expect(
+        screen.getByText('Use the Service for any illegal or unauthorized purpose'),
+      ).toBeInTheDocument();
       expect(screen.getByText('Violate any applicable laws or regulations')).toBeInTheDocument();
-      expect(screen.getByText('Infringe on intellectual property rights of others')).toBeInTheDocument();
-      expect(screen.getByText('Upload malicious code, viruses, or harmful content')).toBeInTheDocument();
+      expect(
+        screen.getByText('Infringe on intellectual property rights of others'),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText('Upload malicious code, viruses, or harmful content'),
+      ).toBeInTheDocument();
 
       // Service Availability list
-      expect(screen.getByText('Scheduled maintenance (with advance notice when possible)')).toBeInTheDocument();
+      expect(
+        screen.getByText('Scheduled maintenance (with advance notice when possible)'),
+      ).toBeInTheDocument();
       expect(screen.getByText('Emergency maintenance or security updates')).toBeInTheDocument();
-      expect(screen.getByText('Factors beyond our control (network outages, natural disasters)')).toBeInTheDocument();
+      expect(
+        screen.getByText('Factors beyond our control (network outages, natural disasters)'),
+      ).toBeInTheDocument();
 
       // Disclaimer of Warranties list
       expect(screen.getByText('MERCHANTABILITY')).toBeInTheDocument();
@@ -152,7 +183,9 @@ describe('TermsPage', () => {
 
       // Termination list
       expect(screen.getByText('Violation of these Terms')).toBeInTheDocument();
-      expect(screen.getByText('Conduct that we believe is harmful to other users or the Service')).toBeInTheDocument();
+      expect(
+        screen.getByText('Conduct that we believe is harmful to other users or the Service'),
+      ).toBeInTheDocument();
       expect(screen.getByText('Upon your request')).toBeInTheDocument();
     });
   });
@@ -164,9 +197,12 @@ describe('TermsPage', () => {
       // Should show contact section
       expect(screen.getByText('Quiz2Biz Legal Team')).toBeInTheDocument();
       expect(screen.getByText('legal@quiz2biz.com')).toBeInTheDocument();
-      expect(screen.getByText(/123 Business Park, Suite 100/)).toBeInTheDocument();
-      expect(screen.getByText(/Technology City, TC 12345/)).toBeInTheDocument();
-      expect(screen.getAllByText(/United States/).length).toBeGreaterThanOrEqual(1);
+      // Address text nodes are within the <address> element, not standalone elements
+      const address = screen.getByText('Quiz2Biz Legal Team').closest('address');
+      expect(address).toBeInTheDocument();
+      expect(address?.textContent).toContain('123 Business Park, Suite 100');
+      expect(address?.textContent).toContain('Technology City, TC 12345');
+      expect(address?.textContent).toContain('United States');
 
       // Email should be a link
       const emailLink = screen.getByText('legal@quiz2biz.com').closest('a');
@@ -178,13 +214,11 @@ describe('TermsPage', () => {
     it('renders navigation links in footer', () => {
       renderTermsPage();
 
-      // Should show Privacy Policy link
+      // Should show Privacy Policy link (multiple exist: content link + footer link)
       const privacyLinks = screen.getAllByText('Privacy Policy');
-      expect(privacyLinks.length).toBe(2);
-      // The second Privacy Policy link is the one in the footer nav
-      const privacyLink = privacyLinks[1];
-      expect(privacyLink).toBeInTheDocument();
-      expect(privacyLink).toHaveAttribute('href', '/privacy');
+      expect(privacyLinks.length).toBeGreaterThanOrEqual(1);
+      const footerPrivacyLink = privacyLinks[privacyLinks.length - 1];
+      expect(footerPrivacyLink.closest('a')).toHaveAttribute('href', '/privacy');
 
       // Should show Sign In link
       const signInLink = screen.getByText('Sign In');
@@ -204,10 +238,10 @@ describe('TermsPage', () => {
     it('renders link to Privacy Policy within content', () => {
       renderTermsPage();
 
-      const privacyLinks = screen.getAllByText('Privacy Policy');
-      const privacyLink = privacyLinks[0].closest('a');
-      expect(privacyLink).toBeInTheDocument();
-      expect(privacyLink).toHaveAttribute('href', '/privacy');
+      // Multiple "Privacy Policy" text elements exist; the first is the inline content link
+      const privacyLinks = screen.getAllByRole('link', { name: 'Privacy Policy' });
+      expect(privacyLinks.length).toBeGreaterThanOrEqual(1);
+      expect(privacyLinks[0]).toHaveAttribute('href', '/privacy');
     });
   });
 
@@ -216,10 +250,14 @@ describe('TermsPage', () => {
       renderTermsPage();
 
       const currentYear = new Date().getFullYear();
-      expect(screen.getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`)).toBeInTheDocument();
+      expect(
+        screen.getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`),
+      ).toBeInTheDocument();
 
       // Footer should have proper role
-      const footer = screen.getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`).closest('footer');
+      const footer = screen
+        .getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`)
+        .closest('footer');
       expect(footer).toHaveAttribute('role', 'contentinfo');
     });
   });
@@ -267,16 +305,16 @@ describe('TermsPage', () => {
     it('renders content with proper formatting', () => {
       renderTermsPage();
 
-      // Should render strong text
+      // Should render strong text (actual TermsPage content)
       expect(screen.getByText('Quiz2Biz Legal Team')).toBeInTheDocument();
 
       // Should render lists properly
       const listItems = screen.getAllByRole('listitem');
-      expect(listItems.length).toBeGreaterThan(30); // Should have many list items
+      expect(listItems.length).toBeGreaterThan(30);
 
       // Should render paragraphs
       const paragraphs = screen.getAllByRole('paragraph');
-      expect(paragraphs.length).toBeGreaterThan(20); // Should have many paragraphs
+      expect(paragraphs.length).toBeGreaterThan(20);
     });
   });
 
@@ -296,7 +334,7 @@ describe('TermsPage', () => {
 
       // Should have focusable elements
       const links = screen.getAllByRole('link');
-      expect(links.length).toBeGreaterThanOrEqual(5);
+      expect(links.length).toBeGreaterThan(5);
 
       // Should have proper landmark roles
       expect(screen.getByRole('main')).toBeInTheDocument();
@@ -309,7 +347,9 @@ describe('TermsPage', () => {
       renderTermsPage();
 
       const currentYear = new Date().getFullYear();
-      expect(screen.getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`)).toBeInTheDocument();
+      expect(
+        screen.getByText(`© ${currentYear} Quiz2Biz. All rights reserved.`),
+      ).toBeInTheDocument();
     });
   });
 
@@ -318,16 +358,22 @@ describe('TermsPage', () => {
       renderTermsPage();
 
       // Should include disclaimer of warranties in all caps
-      expect(screen.getByText(/THE SERVICE IS PROVIDED .AS IS. AND .AS AVAILABLE./)).toBeInTheDocument();
+      expect(
+        screen.getByText(/THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE"/),
+      ).toBeInTheDocument();
 
       // Should include limitation of liability in all caps
-      expect(screen.getByText(/TO THE MAXIMUM EXTENT PERMITTED BY LAW, QUIZ2BIZ SHALL NOT BE LIABLE/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/TO THE MAXIMUM EXTENT PERMITTED BY LAW, QUIZ2BIZ SHALL NOT BE LIABLE/),
+      ).toBeInTheDocument();
 
       // Should mention governing law
       expect(screen.getByText(/State of Delaware/)).toBeInTheDocument();
 
       // Should mention severability clause
-      expect(screen.getByText(/If any provision of these Terms is found to be unenforceable/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/If any provision of these Terms is found to be unenforceable/),
+      ).toBeInTheDocument();
     });
   });
 });

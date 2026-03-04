@@ -115,9 +115,7 @@ export class PaymentController {
   @Get('usage/:organizationId')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
-  async getUsage(
-    @Req() req: Request & { params: { organizationId: string } },
-  ): Promise<{
+  async getUsage(@Req() req: Request & { params: { organizationId: string } }): Promise<{
     questionnaires: { used: number; limit: number };
     responses: { used: number; limit: number };
     documents: { used: number; limit: number };

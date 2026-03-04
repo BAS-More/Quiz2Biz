@@ -123,22 +123,30 @@ export function createLogger(module: string, minLevel: LogLevel = 'info'): ILogg
   return {
     debug: (message: string, meta?: LogMeta): void => {
       // Early return before any expensive operations
-      if (!shouldLog('debug')) {return;}
+      if (!shouldLog('debug')) {
+        return;
+      }
       logger.debug(meta || {}, message);
     },
 
     info: (message: string, meta?: LogMeta): void => {
-      if (!shouldLog('info')) {return;}
+      if (!shouldLog('info')) {
+        return;
+      }
       logger.info(meta || {}, message);
     },
 
     warn: (message: string, meta?: LogMeta): void => {
-      if (!shouldLog('warn')) {return;}
+      if (!shouldLog('warn')) {
+        return;
+      }
       logger.warn(meta || {}, message);
     },
 
     error: (message: string, meta?: LogMeta): void => {
-      if (!shouldLog('error')) {return;}
+      if (!shouldLog('error')) {
+        return;
+      }
       logger.error(meta || {}, message);
     },
   };
