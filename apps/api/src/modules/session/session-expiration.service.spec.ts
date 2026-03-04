@@ -185,9 +185,7 @@ describe('SessionExpirationService', () => {
       ];
 
       mockPrismaService.session.findMany.mockResolvedValue(mockSessions);
-      mockNotificationService.sendSessionReminderEmail.mockRejectedValue(
-        new Error('Email failed'),
-      );
+      mockNotificationService.sendSessionReminderEmail.mockRejectedValue(new Error('Email failed'));
 
       // Should not throw
       await expect(service.sendExpirationReminders()).resolves.not.toThrow();

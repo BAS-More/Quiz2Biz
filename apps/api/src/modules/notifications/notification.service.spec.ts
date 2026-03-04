@@ -60,7 +60,9 @@ describe('NotificationService', () => {
     it('should initialize with Brevo provider when BREVO_API_KEY is set', async () => {
       const brevoConfig = {
         get: jest.fn((key: string, defaultValue?: string) => {
-          if (key === 'BREVO_API_KEY') {return 'brevo-api-key';}
+          if (key === 'BREVO_API_KEY') {
+            return 'brevo-api-key';
+          }
           return mockConfigService.get(key, defaultValue);
         }),
       };
@@ -80,7 +82,9 @@ describe('NotificationService', () => {
     it('should initialize with SendGrid provider when SENDGRID_API_KEY is set', async () => {
       const sendgridConfig = {
         get: jest.fn((key: string, defaultValue?: string) => {
-          if (key === 'SENDGRID_API_KEY') {return 'sendgrid-api-key';}
+          if (key === 'SENDGRID_API_KEY') {
+            return 'sendgrid-api-key';
+          }
           return mockConfigService.get(key, defaultValue);
         }),
       };
@@ -164,8 +168,18 @@ describe('NotificationService', () => {
     it('should send multiple emails', async () => {
       const results = await service.sendBulkEmails({
         emails: [
-          { to: 'user1@example.com', subject: 'Test 1', type: EmailType.CUSTOM, textContent: 'Test' },
-          { to: 'user2@example.com', subject: 'Test 2', type: EmailType.CUSTOM, textContent: 'Test' },
+          {
+            to: 'user1@example.com',
+            subject: 'Test 1',
+            type: EmailType.CUSTOM,
+            textContent: 'Test',
+          },
+          {
+            to: 'user2@example.com',
+            subject: 'Test 2',
+            type: EmailType.CUSTOM,
+            textContent: 'Test',
+          },
         ],
       });
 
@@ -208,10 +222,7 @@ describe('NotificationService', () => {
 
   describe('sendWelcomeEmail', () => {
     it('should send welcome email', async () => {
-      const result = await service.sendWelcomeEmail(
-        'user@example.com',
-        'John Doe',
-      );
+      const result = await service.sendWelcomeEmail('user@example.com', 'John Doe');
 
       expect(result.success).toBe(true);
     });
@@ -259,11 +270,10 @@ describe('NotificationService', () => {
 
   describe('sendReviewPendingEmail', () => {
     it('should send review pending email to admin', async () => {
-      const result = await service.sendReviewPendingEmail(
-        'admin@example.com',
-        'Admin User',
-        ['Document 1.docx', 'Document 2.docx'],
-      );
+      const result = await service.sendReviewPendingEmail('admin@example.com', 'Admin User', [
+        'Document 1.docx',
+        'Document 2.docx',
+      ]);
 
       expect(result.success).toBe(true);
       expect(result.to).toBe('admin@example.com');
@@ -276,10 +286,18 @@ describe('NotificationService', () => {
     beforeEach(async () => {
       const brevoConfig = {
         get: jest.fn((key: string, defaultValue?: string) => {
-          if (key === 'BREVO_API_KEY') {return 'brevo-api-key';}
-          if (key === 'EMAIL_FROM') {return 'test@quiz2biz.com';}
-          if (key === 'EMAIL_FROM_NAME') {return 'Quiz2Biz Test';}
-          if (key === 'FRONTEND_URL') {return 'http://localhost:3001';}
+          if (key === 'BREVO_API_KEY') {
+            return 'brevo-api-key';
+          }
+          if (key === 'EMAIL_FROM') {
+            return 'test@quiz2biz.com';
+          }
+          if (key === 'EMAIL_FROM_NAME') {
+            return 'Quiz2Biz Test';
+          }
+          if (key === 'FRONTEND_URL') {
+            return 'http://localhost:3001';
+          }
           return defaultValue;
         }),
       };
@@ -370,10 +388,18 @@ describe('NotificationService', () => {
     beforeEach(async () => {
       const sendgridConfig = {
         get: jest.fn((key: string, defaultValue?: string) => {
-          if (key === 'SENDGRID_API_KEY') {return 'sendgrid-api-key';}
-          if (key === 'EMAIL_FROM') {return 'test@quiz2biz.com';}
-          if (key === 'EMAIL_FROM_NAME') {return 'Quiz2Biz Test';}
-          if (key === 'FRONTEND_URL') {return 'http://localhost:3001';}
+          if (key === 'SENDGRID_API_KEY') {
+            return 'sendgrid-api-key';
+          }
+          if (key === 'EMAIL_FROM') {
+            return 'test@quiz2biz.com';
+          }
+          if (key === 'EMAIL_FROM_NAME') {
+            return 'Quiz2Biz Test';
+          }
+          if (key === 'FRONTEND_URL') {
+            return 'http://localhost:3001';
+          }
           return defaultValue;
         }),
       };
@@ -603,10 +629,18 @@ describe('NotificationService', () => {
     beforeEach(async () => {
       const brevoConfig = {
         get: jest.fn((key: string, defaultValue?: string) => {
-          if (key === 'BREVO_API_KEY') {return 'brevo-api-key';}
-          if (key === 'EMAIL_FROM') {return 'test@quiz2biz.com';}
-          if (key === 'EMAIL_FROM_NAME') {return 'Quiz2Biz Test';}
-          if (key === 'FRONTEND_URL') {return 'http://localhost:3001';}
+          if (key === 'BREVO_API_KEY') {
+            return 'brevo-api-key';
+          }
+          if (key === 'EMAIL_FROM') {
+            return 'test@quiz2biz.com';
+          }
+          if (key === 'EMAIL_FROM_NAME') {
+            return 'Quiz2Biz Test';
+          }
+          if (key === 'FRONTEND_URL') {
+            return 'http://localhost:3001';
+          }
           return defaultValue;
         }),
       };
@@ -730,10 +764,18 @@ describe('NotificationService', () => {
     beforeEach(async () => {
       const sendgridConfig = {
         get: jest.fn((key: string, defaultValue?: string) => {
-          if (key === 'SENDGRID_API_KEY') {return 'sendgrid-api-key';}
-          if (key === 'EMAIL_FROM') {return 'test@quiz2biz.com';}
-          if (key === 'EMAIL_FROM_NAME') {return 'Quiz2Biz Test';}
-          if (key === 'FRONTEND_URL') {return 'http://localhost:3001';}
+          if (key === 'SENDGRID_API_KEY') {
+            return 'sendgrid-api-key';
+          }
+          if (key === 'EMAIL_FROM') {
+            return 'test@quiz2biz.com';
+          }
+          if (key === 'EMAIL_FROM_NAME') {
+            return 'Quiz2Biz Test';
+          }
+          if (key === 'FRONTEND_URL') {
+            return 'http://localhost:3001';
+          }
           return defaultValue;
         }),
       };
@@ -774,10 +816,18 @@ describe('NotificationService', () => {
     beforeEach(async () => {
       const brevoConfig = {
         get: jest.fn((key: string, defaultValue?: string) => {
-          if (key === 'BREVO_API_KEY') {return 'brevo-api-key';}
-          if (key === 'EMAIL_FROM') {return 'test@quiz2biz.com';}
-          if (key === 'EMAIL_FROM_NAME') {return 'Quiz2Biz Test';}
-          if (key === 'FRONTEND_URL') {return 'http://localhost:3001';}
+          if (key === 'BREVO_API_KEY') {
+            return 'brevo-api-key';
+          }
+          if (key === 'EMAIL_FROM') {
+            return 'test@quiz2biz.com';
+          }
+          if (key === 'EMAIL_FROM_NAME') {
+            return 'Quiz2Biz Test';
+          }
+          if (key === 'FRONTEND_URL') {
+            return 'http://localhost:3001';
+          }
           return defaultValue;
         }),
       };

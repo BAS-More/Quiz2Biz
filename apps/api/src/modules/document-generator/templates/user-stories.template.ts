@@ -347,7 +347,8 @@ export const USER_STORIES_TEMPLATE = {
    * Default values for optional fields
    */
   defaults: {
-    'appendices.personaResearch': 'Persona research to be gathered through user interviews and surveys',
+    'appendices.personaResearch':
+      'Persona research to be gathered through user interviews and surveys',
     'appendices.prioritizationMatrix': 'MoSCoW prioritization method applied to all stories',
     'epicOverview.dependencies': '[]',
   },

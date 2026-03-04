@@ -14,7 +14,9 @@ jest.mock('../templates/document-templates', () => ({
   getDocumentTemplate: jest.fn(),
 }));
 import { getDocumentTemplate } from '../templates/document-templates';
-const mockGetDocumentTemplate = getDocumentTemplate as jest.MockedFunction<typeof getDocumentTemplate>;
+const mockGetDocumentTemplate = getDocumentTemplate as jest.MockedFunction<
+  typeof getDocumentTemplate
+>;
 
 describe('DocumentGeneratorService', () => {
   let service: DocumentGeneratorService;
@@ -235,10 +237,7 @@ describe('DocumentGeneratorService', () => {
         ...mockDocumentType,
         requiredQuestions: ['q1', 'q2'],
       });
-      mockPrisma.response.findMany.mockResolvedValue([
-        { questionId: 'q1' },
-        { questionId: 'q2' },
-      ]);
+      mockPrisma.response.findMany.mockResolvedValue([{ questionId: 'q1' }, { questionId: 'q2' }]);
       mockPrisma.document.create.mockResolvedValue(mockCreatedDocument);
       mockPrisma.document.update.mockResolvedValue({
         ...mockCreatedDocument,
@@ -522,9 +521,7 @@ describe('DocumentGeneratorService', () => {
         documentType: mockDocumentType,
       });
 
-      await expect(service.getDocument('doc-123', 'user-456')).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(service.getDocument('doc-123', 'user-456')).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -535,9 +532,9 @@ describe('DocumentGeneratorService', () => {
     it('should throw NotFoundException when session does not exist', async () => {
       mockPrisma.session.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.getSessionDocuments('non-existent', 'user-456'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.getSessionDocuments('non-existent', 'user-456')).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should throw BadRequestException when user does not own the session', async () => {
@@ -545,9 +542,9 @@ describe('DocumentGeneratorService', () => {
         userId: 'other-user',
       });
 
-      await expect(
-        service.getSessionDocuments('session-123', 'user-456'),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.getSessionDocuments('session-123', 'user-456')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should return documents for a valid session owned by user', async () => {
@@ -603,9 +600,9 @@ describe('DocumentGeneratorService', () => {
         documentType: mockDocumentType,
       });
 
-      await expect(
-        service.getDownloadUrl('doc-123', 'user-456'),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.getDownloadUrl('doc-123', 'user-456')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw BadRequestException when document status is FAILED', async () => {
@@ -617,9 +614,9 @@ describe('DocumentGeneratorService', () => {
         documentType: mockDocumentType,
       });
 
-      await expect(
-        service.getDownloadUrl('doc-123', 'user-456'),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.getDownloadUrl('doc-123', 'user-456')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw BadRequestException when storageUrl is null', async () => {
@@ -631,9 +628,9 @@ describe('DocumentGeneratorService', () => {
         documentType: mockDocumentType,
       });
 
-      await expect(
-        service.getDownloadUrl('doc-123', 'user-456'),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.getDownloadUrl('doc-123', 'user-456')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should return download URL for GENERATED document', async () => {
@@ -649,10 +646,7 @@ describe('DocumentGeneratorService', () => {
       const result = await service.getDownloadUrl('doc-123', 'user-456');
 
       expect(result).toBe('https://storage.blob/doc.docx?sas=token');
-      expect(mockStorage.getDownloadUrl).toHaveBeenCalledWith(
-        'https://storage.blob/doc.docx',
-        60,
-      );
+      expect(mockStorage.getDownloadUrl).toHaveBeenCalledWith('https://storage.blob/doc.docx', 60);
     });
 
     it('should return download URL for APPROVED document', async () => {
@@ -682,18 +676,15 @@ describe('DocumentGeneratorService', () => {
 
       await service.getDownloadUrl('doc-123', 'user-456', 120);
 
-      expect(mockStorage.getDownloadUrl).toHaveBeenCalledWith(
-        'https://storage.blob/doc.docx',
-        120,
-      );
+      expect(mockStorage.getDownloadUrl).toHaveBeenCalledWith('https://storage.blob/doc.docx', 120);
     });
 
     it('should throw NotFoundException when document is not found', async () => {
       mockPrisma.document.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.getDownloadUrl('non-existent', 'user-456'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.getDownloadUrl('non-existent', 'user-456')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -733,9 +724,9 @@ describe('DocumentGeneratorService', () => {
     it('should throw NotFoundException when session is not found', async () => {
       mockPrisma.session.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.getDocumentTypesForSession('non-existent'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.getDocumentTypesForSession('non-existent')).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should return project-type-scoped document types when session has projectTypeId', async () => {
@@ -785,9 +776,9 @@ describe('DocumentGeneratorService', () => {
     it('should throw NotFoundException when document is not found', async () => {
       mockPrisma.document.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.approveDocument('non-existent', 'admin-001'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.approveDocument('non-existent', 'admin-001')).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should throw BadRequestException when document status is not PENDING_REVIEW', async () => {
@@ -797,9 +788,9 @@ describe('DocumentGeneratorService', () => {
         sessionId: 'session-123',
       });
 
-      await expect(
-        service.approveDocument('doc-123', 'admin-001'),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.approveDocument('doc-123', 'admin-001')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw BadRequestException when document status is FAILED', async () => {
@@ -809,9 +800,9 @@ describe('DocumentGeneratorService', () => {
         sessionId: 'session-123',
       });
 
-      await expect(
-        service.approveDocument('doc-123', 'admin-001'),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.approveDocument('doc-123', 'admin-001')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should approve document with PENDING_REVIEW status and send notification', async () => {
@@ -921,9 +912,9 @@ describe('DocumentGeneratorService', () => {
         sessionId: 'session-123',
       });
 
-      await expect(
-        service.rejectDocument('doc-123', 'admin-001', 'Reason'),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.rejectDocument('doc-123', 'admin-001', 'Reason')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw BadRequestException when document status is GENERATED', async () => {
@@ -954,7 +945,11 @@ describe('DocumentGeneratorService', () => {
       };
       mockPrisma.document.update.mockResolvedValue(rejectedDoc);
 
-      const result = await service.rejectDocument('doc-123', 'admin-001', 'Content quality too low');
+      const result = await service.rejectDocument(
+        'doc-123',
+        'admin-001',
+        'Content quality too low',
+      );
 
       expect(result.status).toBe(DocumentStatus.REJECTED);
       expect(mockPrisma.document.update).toHaveBeenCalledWith({
@@ -1031,7 +1026,12 @@ describe('DocumentGeneratorService', () => {
   // =========================================================================
   describe('uncovered branches', () => {
     // Helper to set up common mocks for the AI generation path
-    const setupAiGenerationMocks = (responseValue: unknown, dimensionKey: string | null, projectTypeSession: unknown, notifySession: unknown) => {
+    const setupAiGenerationMocks = (
+      responseValue: unknown,
+      dimensionKey: string | null,
+      projectTypeSession: unknown,
+      notifySession: unknown,
+    ) => {
       mockPrisma.session.findUnique.mockResolvedValue(mockSession); // validation
       mockPrisma.documentType.findUnique.mockResolvedValue(mockDocumentType);
       mockPrisma.document.create.mockResolvedValue(mockCreatedDocument);
@@ -1051,9 +1051,9 @@ describe('DocumentGeneratorService', () => {
       ]);
 
       mockPrisma.session.findUnique
-        .mockResolvedValueOnce(mockSession)           // generateDocument validation
-        .mockResolvedValueOnce(projectTypeSession)     // getProjectTypeName
-        .mockResolvedValueOnce(notifySession);         // notifyDocumentOwner
+        .mockResolvedValueOnce(mockSession) // generateDocument validation
+        .mockResolvedValueOnce(projectTypeSession) // getProjectTypeName
+        .mockResolvedValueOnce(notifySession); // notifyDocumentOwner
 
       mockPrisma.document.update.mockResolvedValue({
         ...mockCreatedDocument,
@@ -1078,7 +1078,7 @@ describe('DocumentGeneratorService', () => {
 
     it('should handle string value in loadSessionAnswers (typeof value === "string")', async () => {
       setupAiGenerationMocks(
-        'plain string answer',                          // value is a string, not object
+        'plain string answer', // value is a string, not object
         'strategy',
         { projectType: { name: 'SaaS' } },
         { user: { email: 'u@t.com', name: 'U' } },
@@ -1102,7 +1102,7 @@ describe('DocumentGeneratorService', () => {
 
     it('should JSON.stringify value when value.text is undefined in loadSessionAnswers', async () => {
       setupAiGenerationMocks(
-        { score: 42 },                                  // object without .text
+        { score: 42 }, // object without .text
         'strategy',
         { projectType: { name: 'SaaS' } },
         { user: { email: 'u@t.com', name: 'U' } },
@@ -1127,7 +1127,7 @@ describe('DocumentGeneratorService', () => {
     it('should default dimensionKey to "general" when null', async () => {
       setupAiGenerationMocks(
         { text: 'answer' },
-        null,                                            // null dimensionKey
+        null, // null dimensionKey
         { projectType: { name: 'SaaS' } },
         { user: { email: 'u@t.com', name: 'U' } },
       );
@@ -1152,7 +1152,7 @@ describe('DocumentGeneratorService', () => {
       setupAiGenerationMocks(
         { text: 'answer' },
         'strategy',
-        { projectType: null },                           // null projectType
+        { projectType: null }, // null projectType
         { user: { email: 'u@t.com', name: 'U' } },
       );
 
@@ -1175,7 +1175,7 @@ describe('DocumentGeneratorService', () => {
         { text: 'answer' },
         'strategy',
         { projectType: { name: 'SaaS' } },
-        { user: { email: 'john@example.com', name: null } },  // null name
+        { user: { email: 'john@example.com', name: null } }, // null name
       );
 
       const result = await service.generateDocument({

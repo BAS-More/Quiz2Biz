@@ -30,7 +30,12 @@ describe('Code Hygiene Validation', () => {
         !entry.name.includes('coverage')
       ) {
         getAllTsFiles(fullPath, files);
-      } else if (entry.isFile() && entry.name.endsWith('.ts') && !entry.name.includes('.spec.') && !entry.name.includes('.test.')) {
+      } else if (
+        entry.isFile() &&
+        entry.name.endsWith('.ts') &&
+        !entry.name.includes('.spec.') &&
+        !entry.name.includes('.test.')
+      ) {
         files.push(fullPath);
       }
     }
@@ -77,14 +82,20 @@ describe('Code Hygiene Validation', () => {
           const line = lines[i];
 
           // Detect function start
-          const funcMatch = line.match(/(?:async\s+)?(?:function|(?:private|public|protected)?\s*(?:static)?\s*(?:async)?\s*\w+)\s*\([^)]*\)\s*(?::\s*[^{]+)?\s*\{/);
-          const arrowMatch = line.match(/(?:const|let|var)\s+(\w+)\s*=\s*(?:async\s*)?\([^)]*\)\s*(?::\s*[^=]+)?\s*=>\s*\{/);
+          const funcMatch = line.match(
+            /(?:async\s+)?(?:function|(?:private|public|protected)?\s*(?:static)?\s*(?:async)?\s*\w+)\s*\([^)]*\)\s*(?::\s*[^{]+)?\s*\{/,
+          );
+          const arrowMatch = line.match(
+            /(?:const|let|var)\s+(\w+)\s*=\s*(?:async\s*)?\([^)]*\)\s*(?::\s*[^=]+)?\s*=>\s*\{/,
+          );
 
           if (funcMatch || arrowMatch) {
             if (!inFunction) {
               inFunction = true;
               functionStart = i;
-              currentFunctionName = arrowMatch ? arrowMatch[1] : line.match(/(\w+)\s*\(/)?.[1] || 'anonymous';
+              currentFunctionName = arrowMatch
+                ? arrowMatch[1]
+                : line.match(/(\w+)\s*\(/)?.[1] || 'anonymous';
               braceCount = (line.match(/\{/g) || []).length - (line.match(/\}/g) || []).length;
             }
           }
@@ -96,7 +107,9 @@ describe('Code Hygiene Validation', () => {
             if (braceCount === 0) {
               const functionLength = i - functionStart + 1;
               if (functionLength > 30) {
-                violations.push(`${path.relative(srcDir, file)}:${functionStart + 1} ${currentFunctionName}(): ${functionLength} lines`);
+                violations.push(
+                  `${path.relative(srcDir, file)}:${functionStart + 1} ${currentFunctionName}(): ${functionLength} lines`,
+                );
               }
               inFunction = false;
             }
@@ -191,7 +204,10 @@ describe('Code Hygiene Validation', () => {
 
         // Check for 5+ line blocks that might be duplicated
         for (let i = 0; i < lines.length - 5; i++) {
-          const block = lines.slice(i, i + 5).join('\n').trim();
+          const block = lines
+            .slice(i, i + 5)
+            .join('\n')
+            .trim();
           if (block.length > 50) {
             const normalized = block.replace(/\s+/g, ' ');
             const existing = codeBlocks.get(normalized) || [];
@@ -204,7 +220,9 @@ describe('Code Hygiene Validation', () => {
       const duplicates: string[] = [];
       for (const [block, locations] of codeBlocks) {
         if (locations.length > 2) {
-          duplicates.push(`Block duplicated ${locations.length} times: ${locations.slice(0, 3).join(', ')}`);
+          duplicates.push(
+            `Block duplicated ${locations.length} times: ${locations.slice(0, 3).join(', ')}`,
+          );
         }
       }
 
@@ -254,7 +272,11 @@ describe('Code Hygiene Validation', () => {
         const importMatches = content.match(/import\s+\{([^}]+)\}/g);
         if (importMatches) {
           for (const match of importMatches) {
-            const imports = match.match(/\{([^}]+)\}/)?.[1].split(',').map((s) => s.trim().split(' ')[0]) || [];
+            const imports =
+              match
+                .match(/\{([^}]+)\}/)?.[1]
+                .split(',')
+                .map((s) => s.trim().split(' ')[0]) || [];
             for (const imp of imports) {
               if (imp && !imp.includes('type')) {
                 const usageCount = (content.match(new RegExp(`\\b${imp}\\b`, 'g')) || []).length;
@@ -327,7 +349,9 @@ describe('Code Hygiene Validation', () => {
 
         // If file uses promises, should prefer async/await
         if (thenCount > 5 && thenCount > asyncCount) {
-          violations.push(`${path.basename(file)}: ${thenCount} .then() calls (prefer async/await)`);
+          violations.push(
+            `${path.basename(file)}: ${thenCount} .then() calls (prefer async/await)`,
+          );
         }
       }
 
@@ -420,7 +444,9 @@ describe('Code Hygiene Validation', () => {
         return;
       }
 
-      const moduleDirs = fs.readdirSync(modulesDir, { withFileTypes: true }).filter((d) => d.isDirectory());
+      const moduleDirs = fs
+        .readdirSync(modulesDir, { withFileTypes: true })
+        .filter((d) => d.isDirectory());
 
       let hasBarrelFiles = 0;
       for (const dir of moduleDirs) {

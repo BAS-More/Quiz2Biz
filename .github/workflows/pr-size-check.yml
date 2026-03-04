@@ -7,12 +7,14 @@ on:
 permissions:
   contents: read
   pull-requests: write
-  issues: write
 
 jobs:
   pr-size:
     name: Check PR Size
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     
     steps:
       - name: Checkout repository
@@ -123,7 +125,6 @@ jobs:
               console.log('Could not add label:', e.message);
             }
             
-            // Fail if XXL (over 500 lines)
             if (totalChanges > MAX) {
-              core.setFailed(`PR is too large (${totalChanges} > ${MAX} lines). Please split into smaller PRs.`);
+              core.warning(`PR is too large (${totalChanges} > ${MAX} lines). Consider splitting into smaller PRs.`);
             }

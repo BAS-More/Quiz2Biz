@@ -48,10 +48,7 @@ describe('UsersService', () => {
     jest.clearAllMocks();
 
     module = await Test.createTestingModule({
-      providers: [
-        UsersService,
-        { provide: PrismaService, useValue: mockPrismaService },
-      ],
+      providers: [UsersService, { provide: PrismaService, useValue: mockPrismaService }],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
@@ -115,9 +112,7 @@ describe('UsersService', () => {
     it('should throw NotFoundException when user not found', async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.findById('non-existent')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.findById('non-existent')).rejects.toThrow(NotFoundException);
     });
 
     it('should handle user without organization', async () => {
@@ -156,17 +151,17 @@ describe('UsersService', () => {
     it('should throw NotFoundException when user not found', async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.update('non-existent', updateDto, 'user-123'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.update('non-existent', updateDto, 'user-123')).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should throw ForbiddenException when updating another user profile', async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
 
-      await expect(
-        service.update('user-123', updateDto, 'different-user'),
-      ).rejects.toThrow(ForbiddenException);
+      await expect(service.update('user-123', updateDto, 'different-user')).rejects.toThrow(
+        ForbiddenException,
+      );
     });
 
     it('should allow admin to update own profile', async () => {
@@ -228,10 +223,7 @@ describe('UsersService', () => {
       mockPrismaService.user.count.mockResolvedValue(1);
       mockPrismaService.document.count.mockResolvedValue(0);
 
-      const result = await service.findAll(
-        { page: 1, limit: 10, skip: 0 },
-        UserRole.CLIENT,
-      );
+      const result = await service.findAll({ page: 1, limit: 10, skip: 0 }, UserRole.CLIENT);
 
       expect(mockPrismaService.user.findMany).toHaveBeenCalledWith(
         expect.objectContaining({

@@ -6,33 +6,55 @@ on:
   pull_request:
     branches: [main, develop]
 
+permissions:
+  contents: read
+
 jobs:
   sonarcloud:
     name: SonarCloud Scan
     runs-on: ubuntu-latest
-    
+
     steps:
+      - name: Check for SONAR_TOKEN
+        id: check-token
+        run: |
+          if [ -z "${{ secrets.SONAR_TOKEN }}" ]; then
+            echo "available=false" >> $GITHUB_OUTPUT
+            echo "::warning::SONAR_TOKEN secret is not configured. Skipping SonarCloud analysis."
+            echo "To enable SonarCloud scanning:" >> $GITHUB_STEP_SUMMARY
+            echo "1. Create a project at https://sonarcloud.io" >> $GITHUB_STEP_SUMMARY
+            echo "2. Generate a token at https://sonarcloud.io/account/security" >> $GITHUB_STEP_SUMMARY
+            echo "3. Add it as a repository secret named SONAR_TOKEN" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "available=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Checkout repository
+        if: steps.check-token.outputs.available == 'true'
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history for better analysis
+          fetch-depth: 0
 
       - name: Setup Node.js
+        if: steps.check-token.outputs.available == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
+        if: steps.check-token.outputs.available == 'true'
         run: npm ci --legacy-peer-deps
 
       - name: Run tests with coverage
+        if: steps.check-token.outputs.available == 'true'
         run: npm run test:cov
-        continue-on-error: true  # Don't fail if coverage threshold not met
+        continue-on-error: true
 
       - name: SonarCloud Scan
+        if: steps.check-token.outputs.available == 'true'
         uses: SonarSource/sonarcloud-github-action@master
-        continue-on-error: true  # Don't fail CI if SonarCloud project is not yet configured
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
