@@ -4,6 +4,7 @@ node_modules/
 # Build output
 dist/
 build/
+*.tsbuildinfo
 
 # IDE
 .idea/
@@ -70,6 +71,9 @@ override.tf.json
 *_override.tf.json
 
 actionlint
+
+# TypeScript build info
+*.tsbuildinfo
 
 # Jest cache
 .jest-cache/

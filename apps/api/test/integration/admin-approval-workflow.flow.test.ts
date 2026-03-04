@@ -93,7 +93,9 @@ describe.skip('Admin → Approval Workflow Flow Integration', () => {
     }
     await prisma.session.deleteMany({ where: { id: testSessionId } });
     await prisma.questionnaire.deleteMany({ where: { id: testQuestionnaireId } });
-    await prisma.user.deleteMany({ where: { id: { in: [testAdminUserId, testRegularUserId] } } });
+    await prisma.user.deleteMany({
+      where: { id: { in: [testAdminUserId, testRegularUserId] } },
+    });
 
     await module.close();
   });
@@ -105,7 +107,8 @@ describe.skip('Admin → Approval Workflow Flow Integration', () => {
         data: {
           ownerId: testRegularUserId,
           sessionId: testSessionId,
-          statement: 'Policy Lock for Production Deployment: Lock all security policies before audit',
+          statement:
+            'Policy Lock for Production Deployment: Lock all security policies before audit',
           assumptions: 'All stakeholders have been notified. Security team has completed review.',
           references: 'Security Policy v2.0, Audit Requirements Doc',
           status: 'DRAFT',
