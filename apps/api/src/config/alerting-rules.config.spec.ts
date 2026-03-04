@@ -87,7 +87,9 @@ describe('AlertingConfiguration', () => {
     });
 
     it('should have RateLimitExceeded alert', () => {
-      const alert = AlertingConfiguration.securityAlerts.find((a) => a.name === 'RateLimitExceeded');
+      const alert = AlertingConfiguration.securityAlerts.find(
+        (a) => a.name === 'RateLimitExceeded',
+      );
       expect(alert).toBeDefined();
     });
   });

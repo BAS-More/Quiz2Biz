@@ -61,7 +61,8 @@ export class CsrfGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     // Check if CSRF is globally disabled via environment variable
-    const csrfDisabled = this.configService.get<string>('CSRF_DISABLED', 'false').toLowerCase() === 'true';
+    const csrfDisabled =
+      this.configService.get<string>('CSRF_DISABLED', 'false').toLowerCase() === 'true';
     if (csrfDisabled) {
       this.logger.warn('CSRF protection is DISABLED via CSRF_DISABLED environment variable');
       return true;

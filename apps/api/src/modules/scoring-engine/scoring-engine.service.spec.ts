@@ -1710,9 +1710,9 @@ describe('ScoringEngineService', () => {
       prismaService.question.findMany.mockResolvedValue(lowResidualQuestions);
 
       // Industry average residual is 0.5 (high), current is 0 (low) → gap = -0.5
-      prismaService.$queryRaw = jest.fn().mockResolvedValue([
-        { dimension_key: 'arch_sec', avg_residual: 0.5, count: BigInt(100) },
-      ]);
+      prismaService.$queryRaw = jest
+        .fn()
+        .mockResolvedValue([{ dimension_key: 'arch_sec', avg_residual: 0.5, count: BigInt(100) }]);
 
       const result = await service.getDimensionBenchmarks(mockSessionId);
       const archSec = result.find((d) => d.dimensionKey === 'arch_sec');
@@ -1743,9 +1743,9 @@ describe('ScoringEngineService', () => {
       prismaService.question.findMany.mockResolvedValue(highResidualQuestions);
 
       // Industry average is 0.3 (low), current residual will be ~1.0 → gap = 0.7
-      prismaService.$queryRaw = jest.fn().mockResolvedValue([
-        { dimension_key: 'arch_sec', avg_residual: 0.3, count: BigInt(100) },
-      ]);
+      prismaService.$queryRaw = jest
+        .fn()
+        .mockResolvedValue([{ dimension_key: 'arch_sec', avg_residual: 0.3, count: BigInt(100) }]);
 
       const result = await service.getDimensionBenchmarks(mockSessionId);
       const archSec = result.find((d) => d.dimensionKey === 'arch_sec');
@@ -1769,9 +1769,9 @@ describe('ScoringEngineService', () => {
       prismaService.question.findMany.mockResolvedValue(partialQuestions);
 
       // residual ≈ 0.6, set avg to 0.45, gap = 0.15
-      prismaService.$queryRaw = jest.fn().mockResolvedValue([
-        { dimension_key: 'arch_sec', avg_residual: 0.45, count: BigInt(100) },
-      ]);
+      prismaService.$queryRaw = jest
+        .fn()
+        .mockResolvedValue([{ dimension_key: 'arch_sec', avg_residual: 0.45, count: BigInt(100) }]);
 
       const result = await service.getDimensionBenchmarks(mockSessionId);
       const archSec = result.find((d) => d.dimensionKey === 'arch_sec');
@@ -1793,9 +1793,9 @@ describe('ScoringEngineService', () => {
       prismaService.question.findMany.mockResolvedValue(partialQuestions);
 
       // residual ≈ 0.5, avg ≈ 0.5, gap ≈ 0
-      prismaService.$queryRaw = jest.fn().mockResolvedValue([
-        { dimension_key: 'arch_sec', avg_residual: 0.5, count: BigInt(100) },
-      ]);
+      prismaService.$queryRaw = jest
+        .fn()
+        .mockResolvedValue([{ dimension_key: 'arch_sec', avg_residual: 0.5, count: BigInt(100) }]);
 
       const result = await service.getDimensionBenchmarks(mockSessionId);
       const archSec = result.find((d) => d.dimensionKey === 'arch_sec');

@@ -31,7 +31,12 @@ export function Skeleton({ className, variant = 'text', width, height, lines = 1
   if (height) style.height = typeof height === 'number' ? `${height}px` : height;
 
   if (variant === 'circular') {
-    return <SkeletonBase className={clsx('rounded-full', className)} style={{ ...style, aspectRatio: '1' }} />;
+    return (
+      <SkeletonBase
+        className={clsx('rounded-full', className)}
+        style={{ ...style, aspectRatio: '1' }}
+      />
+    );
   }
 
   if (lines > 1) {
