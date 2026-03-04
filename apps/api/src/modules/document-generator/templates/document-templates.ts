@@ -32,7 +32,8 @@ export const documentTemplates: Record<string, DocumentTemplate> = {
       },
       {
         heading: 'Product/Service Description',
-        description: 'Detailed description of the product or service, features, and value proposition.',
+        description:
+          'Detailed description of the product or service, features, and value proposition.',
         requiredFields: ['product description', 'unique value proposition'],
       },
       {
@@ -57,7 +58,8 @@ export const documentTemplates: Record<string, DocumentTemplate> = {
       },
       {
         heading: 'Financial Projections',
-        description: '3-5 year revenue projections, expense budgets, cash flow, and break-even analysis.',
+        description:
+          '3-5 year revenue projections, expense budgets, cash flow, and break-even analysis.',
         requiredFields: ['revenue projections', 'expense budget', 'break-even timeline'],
       },
       {

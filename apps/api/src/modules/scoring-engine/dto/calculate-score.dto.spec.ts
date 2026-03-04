@@ -190,7 +190,12 @@ describe('ReadinessScoreResult', () => {
 
   it('should support all trend values', () => {
     const result = new ReadinessScoreResult();
-    const validTrends: Array<'UP' | 'DOWN' | 'STABLE' | 'FIRST'> = ['UP', 'DOWN', 'STABLE', 'FIRST'];
+    const validTrends: Array<'UP' | 'DOWN' | 'STABLE' | 'FIRST'> = [
+      'UP',
+      'DOWN',
+      'STABLE',
+      'FIRST',
+    ];
 
     for (const trend of validTrends) {
       result.trend = trend;

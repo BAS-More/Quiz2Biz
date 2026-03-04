@@ -4,7 +4,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
-import { AdminQuestionnaireService, PaginatedResult, QuestionnaireWithDetails } from './admin-questionnaire.service';
+import {
+  AdminQuestionnaireService,
+  PaginatedResult,
+  QuestionnaireWithDetails,
+} from './admin-questionnaire.service';
 import { AdminAuditService } from './admin-audit.service';
 import { QuestionType } from '@prisma/client';
 
@@ -247,7 +251,9 @@ describe('AdminQuestionnaireService', () => {
     describe('deleteQuestionnaire', () => {
       it('should soft delete questionnaire', async () => {
         const questionnaireWithCount = { ...mockQuestionnaire, _count: { sessions: 5 } };
-        prismaService.questionnaire.findUnique = jest.fn().mockResolvedValue(questionnaireWithCount);
+        prismaService.questionnaire.findUnique = jest
+          .fn()
+          .mockResolvedValue(questionnaireWithCount);
         prismaService.questionnaire.update = jest.fn().mockResolvedValue({
           ...mockQuestionnaire,
           isActive: false,
@@ -286,8 +292,12 @@ describe('AdminQuestionnaireService', () => {
           sections: [{ orderIndex: 0 }, { orderIndex: 1 }],
         };
 
-        prismaService.questionnaire.findUnique = jest.fn().mockResolvedValue(questionnaireWithSections);
-        prismaService.section.create = jest.fn().mockResolvedValue({ ...mockSection, orderIndex: 2 });
+        prismaService.questionnaire.findUnique = jest
+          .fn()
+          .mockResolvedValue(questionnaireWithSections);
+        prismaService.section.create = jest
+          .fn()
+          .mockResolvedValue({ ...mockSection, orderIndex: 2 });
         auditService.log = jest.fn().mockResolvedValue(undefined);
 
         const result = await service.createSection(

@@ -15,7 +15,7 @@ export class CreateSessionDto {
   projectTypeId?: string;
 
   @ApiPropertyOptional({
-    description: 'Idea capture ID — links session to the user\'s initial idea input',
+    description: "Idea capture ID — links session to the user's initial idea input",
   })
   @IsOptional()
   @IsUUID()
@@ -24,7 +24,8 @@ export class CreateSessionDto {
   @ApiPropertyOptional({
     enum: Persona,
     example: 'CTO',
-    description: 'Persona filter: CTO, CFO, CEO, BA, or POLICY. Determines which questions are presented.',
+    description:
+      'Persona filter: CTO, CFO, CEO, BA, or POLICY. Determines which questions are presented.',
   })
   @IsOptional()
   @IsEnum(Persona)

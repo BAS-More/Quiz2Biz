@@ -8,10 +8,9 @@
 import * as Sentry from '@sentry/nestjs';
 
 // Profiling is optional - only load if available
- 
+
 let nodeProfilingIntegration: (() => any) | null = null;
 try {
-   
   nodeProfilingIntegration = require('@sentry/profiling-node').nodeProfilingIntegration;
 } catch {
   // Profiling not available
