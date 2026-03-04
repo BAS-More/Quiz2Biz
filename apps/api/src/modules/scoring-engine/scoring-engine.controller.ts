@@ -83,7 +83,7 @@ Returns per-dimension breakdown and score trend.
     @Body() dto: CalculateScoreDto,
     @CurrentUser() user: AuthenticatedUser,
   ): Promise<ReadinessScoreResult> {
-    return this.scoringService.calculateScore(dto, user);
+    return this.scoringService.calculateScore(dto);
   }
 
   /**
