@@ -9,7 +9,7 @@ describe('HttpExceptionFilter', () => {
 
   beforeEach(() => {
     filter = new HttpExceptionFilter();
-    
+
     mockResponse = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn().mockReturnThis(),
@@ -165,7 +165,7 @@ describe('HttpExceptionFilter', () => {
       statusCodes.forEach(({ status, code }) => {
         const exception = new HttpException('Test', status);
         filter.catch(exception, mockHost);
-        
+
         expect(mockResponse.json).toHaveBeenLastCalledWith(
           expect.objectContaining({
             error: expect.objectContaining({ code }),

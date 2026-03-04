@@ -380,7 +380,9 @@ export const STAKEHOLDER_ANALYSIS_TEMPLATE = {
    */
   defaults: {
     'appendices.interviewNotes': 'Stakeholder interview notes to be compiled during analysis phase',
-    'appendices.surveyResults': 'Stakeholder survey to be conducted as part of engagement activities',
-    'engagementStrategy.changeManagement': '{"approach": "To be defined", "phases": [], "keyActivities": [], "successMetrics": []}',
+    'appendices.surveyResults':
+      'Stakeholder survey to be conducted as part of engagement activities',
+    'engagementStrategy.changeManagement':
+      '{"approach": "To be defined", "phases": [], "keyActivities": [], "successMetrics": []}',
   },
 };

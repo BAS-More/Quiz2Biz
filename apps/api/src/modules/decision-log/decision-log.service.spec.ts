@@ -1,17 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  NotFoundException,
-  ForbiddenException,
-  BadRequestException,
-} from '@nestjs/common';
+import { NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 import { DecisionStatus } from '@prisma/client';
 import { DecisionLogService } from './decision-log.service';
-import {
-  CreateDecisionDto,
-  UpdateDecisionStatusDto,
-  SupersedeDecisionDto,
-} from './dto';
+import { CreateDecisionDto, UpdateDecisionStatusDto, SupersedeDecisionDto } from './dto';
 
 const mockPrismaService = {
   session: {
@@ -59,10 +51,7 @@ describe('DecisionLogService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        DecisionLogService,
-        { provide: PrismaService, useValue: mockPrismaService },
-      ],
+      providers: [DecisionLogService, { provide: PrismaService, useValue: mockPrismaService }],
     }).compile();
 
     service = module.get<DecisionLogService>(DecisionLogService);
@@ -104,9 +93,7 @@ describe('DecisionLogService', () => {
     it('should throw NotFoundException if session not found', async () => {
       mockPrismaService.session.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.createDecision(dto, 'user-1'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.createDecision(dto, 'user-1')).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -185,7 +172,9 @@ describe('DecisionLogService', () => {
         const mockTx = {
           decisionLog: {
             create: jest.fn().mockResolvedValue(newDecision),
-            update: jest.fn().mockResolvedValue({ ...mockLockedDecision, status: DecisionStatus.SUPERSEDED }),
+            update: jest
+              .fn()
+              .mockResolvedValue({ ...mockLockedDecision, status: DecisionStatus.SUPERSEDED }),
           },
         };
         return fn(mockTx);
@@ -201,17 +190,13 @@ describe('DecisionLogService', () => {
     it('should throw NotFoundException if original decision not found', async () => {
       mockPrismaService.decisionLog.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.supersedeDecision(dto, 'user-1'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.supersedeDecision(dto, 'user-1')).rejects.toThrow(NotFoundException);
     });
 
     it('should throw BadRequestException when superseding non-LOCKED decision', async () => {
       mockPrismaService.decisionLog.findUnique.mockResolvedValue(mockDecision);
 
-      await expect(
-        service.supersedeDecision(dto, 'user-1'),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.supersedeDecision(dto, 'user-1')).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -228,9 +213,7 @@ describe('DecisionLogService', () => {
     it('should throw NotFoundException if decision not found', async () => {
       mockPrismaService.decisionLog.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.getDecision('non-existent'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.getDecision('non-existent')).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -331,9 +314,7 @@ describe('DecisionLogService', () => {
     it('should throw NotFoundException if session not found', async () => {
       mockPrismaService.session.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.exportForAudit('non-existent'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.exportForAudit('non-existent')).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -367,7 +348,7 @@ describe('DecisionLogService', () => {
         id: 'decision-original',
         supersedesDecisionId: null,
       };
-      
+
       const newerDecision = {
         ...mockDecision,
         id: 'decision-new',
@@ -375,13 +356,9 @@ describe('DecisionLogService', () => {
       };
 
       // Mock backward walk - returns original decision, then on next iteration returns null
-      mockPrismaService.decisionLog.findUnique
-        .mockReset()
-        .mockResolvedValueOnce(originalDecision);
+      mockPrismaService.decisionLog.findUnique.mockReset().mockResolvedValueOnce(originalDecision);
       // Forward query returns newerDecision (the one that supersedes original)
-      mockPrismaService.decisionLog.findMany
-        .mockReset()
-        .mockResolvedValue([newerDecision]);
+      mockPrismaService.decisionLog.findMany.mockReset().mockResolvedValue([newerDecision]);
 
       const result = await service.getSupersessionChain('decision-original');
 
@@ -407,17 +384,17 @@ describe('DecisionLogService', () => {
     it('should throw NotFoundException if decision not found', async () => {
       mockPrismaService.decisionLog.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.deleteDecision('non-existent', 'user-1'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.deleteDecision('non-existent', 'user-1')).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should throw ForbiddenException when deleting LOCKED decision', async () => {
       mockPrismaService.decisionLog.findUnique.mockResolvedValue(mockLockedDecision);
 
-      await expect(
-        service.deleteDecision('decision-2', 'user-1'),
-      ).rejects.toThrow(ForbiddenException);
+      await expect(service.deleteDecision('decision-2', 'user-1')).rejects.toThrow(
+        ForbiddenException,
+      );
     });
 
     it('should throw ForbiddenException when deleting SUPERSEDED decision', async () => {
@@ -427,9 +404,9 @@ describe('DecisionLogService', () => {
       };
       mockPrismaService.decisionLog.findUnique.mockResolvedValue(supersededDecision);
 
-      await expect(
-        service.deleteDecision('decision-1', 'user-1'),
-      ).rejects.toThrow(ForbiddenException);
+      await expect(service.deleteDecision('decision-1', 'user-1')).rejects.toThrow(
+        ForbiddenException,
+      );
     });
   });
 

@@ -231,9 +231,8 @@ export class DocumentGeneratorService {
       .filter((r) => r.question)
       .map((r) => {
         const value = r.value as Record<string, unknown>;
-        const answerText = typeof value === 'string'
-          ? value
-          : (value?.text as string) ?? JSON.stringify(value);
+        const answerText =
+          typeof value === 'string' ? value : ((value?.text as string) ?? JSON.stringify(value));
         return {
           question: r.question.text,
           answer: answerText,
@@ -407,9 +406,11 @@ export class DocumentGeneratorService {
     });
 
     // Notify document owner (fire-and-forget)
-    this.notifyDocumentOwner(document.sessionId, [document.fileName || 'Document'], 'approved').catch(
-      (err) => this.logger.warn('Failed to send approval notification', err),
-    );
+    this.notifyDocumentOwner(
+      document.sessionId,
+      [document.fileName || 'Document'],
+      'approved',
+    ).catch((err) => this.logger.warn('Failed to send approval notification', err));
 
     return approved;
   }
@@ -459,7 +460,9 @@ export class DocumentGeneratorService {
       include: { user: { select: { email: true, name: true } } },
     });
 
-    if (!session?.user) {return;}
+    if (!session?.user) {
+      return;
+    }
 
     const userName = session.user.name || session.user.email.split('@')[0];
 
