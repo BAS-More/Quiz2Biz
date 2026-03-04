@@ -102,10 +102,16 @@ jobs:
             exit 0
           fi
 
-          BRANCHES=$(jq '.total.branches.pct' apps/api/coverage/coverage-summary.json)
-          LINES=$(jq '.total.lines.pct' apps/api/coverage/coverage-summary.json)
-          FUNCTIONS=$(jq '.total.functions.pct' apps/api/coverage/coverage-summary.json)
-          STATEMENTS=$(jq '.total.statements.pct' apps/api/coverage/coverage-summary.json)
+          BRANCHES=$(jq '.total.branches.pct // 0' apps/api/coverage/coverage-summary.json)
+          LINES=$(jq '.total.lines.pct // 0' apps/api/coverage/coverage-summary.json)
+          FUNCTIONS=$(jq '.total.functions.pct // 0' apps/api/coverage/coverage-summary.json)
+          STATEMENTS=$(jq '.total.statements.pct // 0' apps/api/coverage/coverage-summary.json)
+
+          # Guard against null/empty values from jq
+          BRANCHES=${BRANCHES:-0}
+          LINES=${LINES:-0}
+          FUNCTIONS=${FUNCTIONS:-0}
+          STATEMENTS=${STATEMENTS:-0}
 
           echo "branches=$BRANCHES" >> $GITHUB_OUTPUT
           echo "lines=$LINES" >> $GITHUB_OUTPUT
