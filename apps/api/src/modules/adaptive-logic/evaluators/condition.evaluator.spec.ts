@@ -509,14 +509,18 @@ describe('ConditionEvaluator', () => {
   describe('not_includes / not_contains operators', () => {
     it('should return true when array does not include value', () => {
       const condition: Condition = { field: 'q1', operator: 'not_includes', value: 'opt_d' };
-      const responses = new Map<string, unknown>([['q1', { selectedOptionIds: ['opt_a', 'opt_b'] }]]);
+      const responses = new Map<string, unknown>([
+        ['q1', { selectedOptionIds: ['opt_a', 'opt_b'] }],
+      ]);
 
       expect(evaluator.evaluate(condition, responses)).toBe(true);
     });
 
     it('should return false when array includes value', () => {
       const condition: Condition = { field: 'q1', operator: 'not_includes', value: 'opt_a' };
-      const responses = new Map<string, unknown>([['q1', { selectedOptionIds: ['opt_a', 'opt_b'] }]]);
+      const responses = new Map<string, unknown>([
+        ['q1', { selectedOptionIds: ['opt_a', 'opt_b'] }],
+      ]);
 
       expect(evaluator.evaluate(condition, responses)).toBe(false);
     });

@@ -323,9 +323,9 @@ describe('StandardsService', () => {
     it('findByCategory should re-throw NotFoundException (not wrap it)', async () => {
       prismaService.engineeringStandard.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.findByCategory('NONEXISTENT' as StandardCategory),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.findByCategory('NONEXISTENT' as StandardCategory)).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('findWithMappings should throw InternalServerErrorException on unexpected error', async () => {
@@ -339,25 +339,25 @@ describe('StandardsService', () => {
     it('findWithMappings should throw NotFoundException when standard not found', async () => {
       prismaService.engineeringStandard.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.findWithMappings('NONEXISTENT' as StandardCategory),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.findWithMappings('NONEXISTENT' as StandardCategory)).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('getStandardsForDocument should throw InternalServerErrorException on unexpected error', async () => {
       prismaService.documentType.findFirst.mockRejectedValue(new Error('Connection refused'));
 
-      await expect(
-        service.getStandardsForDocument('doc-type-1'),
-      ).rejects.toThrow(InternalServerErrorException);
+      await expect(service.getStandardsForDocument('doc-type-1')).rejects.toThrow(
+        InternalServerErrorException,
+      );
     });
 
     it('generateStandardsSection should throw InternalServerErrorException on unexpected error', async () => {
       prismaService.documentType.findFirst.mockRejectedValue(new Error('Timeout'));
 
-      await expect(
-        service.generateStandardsSection('doc-type-1'),
-      ).rejects.toThrow(InternalServerErrorException);
+      await expect(service.generateStandardsSection('doc-type-1')).rejects.toThrow(
+        InternalServerErrorException,
+      );
     });
 
     it('generateStandardsSection should use STANDARD_CATEGORY_TITLES when sectionTitle is null', async () => {

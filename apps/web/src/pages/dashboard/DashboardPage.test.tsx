@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { DashboardPage } from './DashboardPage';
@@ -88,11 +88,10 @@ describe('DashboardPage', () => {
   it('displays active sessions count', () => {
     renderDashboardPage();
 
-    const activeSessionsLabel = screen.getByText('Active Sessions');
-    const activeSessionsCard = activeSessionsLabel.closest('.group');
-
-    expect(activeSessionsLabel).toBeInTheDocument();
-    expect(activeSessionsCard).toHaveTextContent('1');
+    const activeLabel = screen.getByText('Active Sessions');
+    expect(activeLabel).toBeInTheDocument();
+    const statContainer = activeLabel.closest('.min-w-0')!;
+    expect(within(statContainer).getByText('1')).toBeInTheDocument();
   });
 
   it('displays completed sessions count', () => {
@@ -104,20 +103,18 @@ describe('DashboardPage', () => {
   it('displays highest score', () => {
     renderDashboardPage();
 
-    const highestScoreLabel = screen.getByText('Highest Score');
-    const highestScoreCard = highestScoreLabel.closest('.group');
-
-    expect(highestScoreLabel).toBeInTheDocument();
-    expect(highestScoreCard).not.toBeNull();
-    expect(highestScoreCard as HTMLElement).toHaveTextContent('92%');
+    const highestLabel = screen.getByText('Highest Score');
+    expect(highestLabel).toBeInTheDocument();
+    const statContainer = highestLabel.closest('.min-w-0')!;
+    expect(within(statContainer).getByText('92%')).toBeInTheDocument();
   });
 
   it('navigates to idea capture on New Project click', async () => {
     const user = userEvent.setup();
     renderDashboardPage();
 
-    const [newProjectButton] = screen.getAllByRole('button', { name: /new project/i });
-    await user.click(newProjectButton);
+    const newProjectButtons = screen.getAllByRole('button', { name: /new project/i });
+    await user.click(newProjectButtons[0]);
 
     expect(mockNavigate).toHaveBeenCalledWith('/idea');
   });

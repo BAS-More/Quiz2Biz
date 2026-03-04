@@ -67,13 +67,9 @@ describe('AdapterController', () => {
         {
           provide: AdapterConfigService,
           useValue: {
-            getSupportedAdapterTypes: jest.fn().mockReturnValue([
-              'github',
-              'gitlab',
-              'jira',
-              'confluence',
-              'azure_devops',
-            ]),
+            getSupportedAdapterTypes: jest
+              .fn()
+              .mockReturnValue(['github', 'gitlab', 'jira', 'confluence', 'azure_devops']),
             getAdapterTypeInfo: jest.fn(),
             getAdapterConfigs: jest.fn(),
             getAdapterConfig: jest.fn(),
@@ -370,9 +366,9 @@ describe('AdapterController - Branch Coverage', () => {
         {
           provide: AdapterConfigService,
           useValue: {
-            getSupportedAdapterTypes: jest.fn().mockReturnValue([
-              'github', 'gitlab', 'jira', 'confluence', 'azure_devops',
-            ]),
+            getSupportedAdapterTypes: jest
+              .fn()
+              .mockReturnValue(['github', 'gitlab', 'jira', 'confluence', 'azure_devops']),
             getAdapterTypeInfo: jest.fn(),
             getAdapterConfigs: jest.fn(),
             getAdapterConfig: jest.fn(),
@@ -417,7 +413,10 @@ describe('AdapterController - Branch Coverage', () => {
 
     it('should throw BadRequestException when config validation fails on update', async () => {
       adapterConfigService.getAdapterConfig.mockResolvedValue(mockAdapterConfig);
-      adapterConfigService.validateConfig.mockReturnValue({ valid: false, errors: ['Token invalid'] });
+      adapterConfigService.validateConfig.mockReturnValue({
+        valid: false,
+        errors: ['Token invalid'],
+      });
 
       const dto = { config: { token: '' } };
       await expect(controller.updateConfig('adapter-1', 'tenant-1', dto)).rejects.toThrow(
@@ -452,7 +451,12 @@ describe('AdapterController - Branch Coverage', () => {
 
       const result = await controller.testConnection({
         type: 'jira',
-        config: { domain: 'test.atlassian.net', email: 'e@e.com', apiToken: 'tok', projectKey: 'PK' },
+        config: {
+          domain: 'test.atlassian.net',
+          email: 'e@e.com',
+          apiToken: 'tok',
+          projectKey: 'PK',
+        },
       });
 
       expect(result.success).toBe(true);
@@ -519,7 +523,11 @@ describe('AdapterController - Branch Coverage', () => {
     });
 
     it('should sync gitlab adapter', async () => {
-      const gitlabConfig = { ...mockAdapterConfig, type: 'gitlab' as AdapterType, config: { token: 't', projectId: 'p', apiUrl: 'u' } };
+      const gitlabConfig = {
+        ...mockAdapterConfig,
+        type: 'gitlab' as AdapterType,
+        config: { token: 't', projectId: 'p', apiUrl: 'u' },
+      };
       adapterConfigService.getAdapterConfig.mockResolvedValue(gitlabConfig);
       gitlabAdapter.ingestAllEvidence.mockResolvedValue({ ingested: 3, errors: [], results: {} });
       adapterConfigService.updateSyncStatus.mockResolvedValue(undefined);
@@ -578,7 +586,10 @@ describe('AdapterController - Branch Coverage', () => {
     });
 
     it('should throw BadRequestException when adapter is disabled', async () => {
-      adapterConfigService.getAdapterConfig.mockResolvedValue({ ...mockAdapterConfig, enabled: false });
+      adapterConfigService.getAdapterConfig.mockResolvedValue({
+        ...mockAdapterConfig,
+        enabled: false,
+      });
 
       await expect(
         controller.syncAdapter('adapter-1', 'tenant-1', { sessionId: 'sess-1' }),
@@ -595,7 +606,10 @@ describe('AdapterController - Branch Coverage', () => {
       ).rejects.toThrow('Sync failed');
 
       expect(adapterConfigService.updateSyncStatus).toHaveBeenCalledWith(
-        'tenant-1', 'adapter-1', 'error', 'Sync failed',
+        'tenant-1',
+        'adapter-1',
+        'error',
+        'Sync failed',
       );
     });
   });
@@ -604,15 +618,26 @@ describe('AdapterController - Branch Coverage', () => {
     it('should return ignored when config is null', async () => {
       adapterConfigService.getAdapterConfig.mockResolvedValue(null);
 
-      const result = await controller.handleGitHubWebhook({ action: 'opened' }, 'adapter-1', 'tenant-1');
+      const result = await controller.handleGitHubWebhook(
+        { action: 'opened' },
+        'adapter-1',
+        'tenant-1',
+      );
 
       expect(result.status).toBe('ignored');
     });
 
     it('should return ignored when config is disabled', async () => {
-      adapterConfigService.getAdapterConfig.mockResolvedValue({ ...mockAdapterConfig, enabled: false });
+      adapterConfigService.getAdapterConfig.mockResolvedValue({
+        ...mockAdapterConfig,
+        enabled: false,
+      });
 
-      const result = await controller.handleGitHubWebhook({ action: 'opened' }, 'adapter-1', 'tenant-1');
+      const result = await controller.handleGitHubWebhook(
+        { action: 'opened' },
+        'adapter-1',
+        'tenant-1',
+      );
 
       expect(result.status).toBe('ignored');
     });
@@ -620,7 +645,11 @@ describe('AdapterController - Branch Coverage', () => {
     it('should return received when config exists and is enabled', async () => {
       adapterConfigService.getAdapterConfig.mockResolvedValue(mockAdapterConfig);
 
-      const result = await controller.handleGitHubWebhook({ action: 'opened' }, 'adapter-1', 'tenant-1');
+      const result = await controller.handleGitHubWebhook(
+        { action: 'opened' },
+        'adapter-1',
+        'tenant-1',
+      );
 
       expect(result.status).toBe('received');
       expect(result.event).toBe('opened');
@@ -639,7 +668,11 @@ describe('AdapterController - Branch Coverage', () => {
     it('should return ignored when config is null', async () => {
       adapterConfigService.getAdapterConfig.mockResolvedValue(null);
 
-      const result = await controller.handleGitLabWebhook({ object_kind: 'push' }, 'adapter-1', 'tenant-1');
+      const result = await controller.handleGitLabWebhook(
+        { object_kind: 'push' },
+        'adapter-1',
+        'tenant-1',
+      );
 
       expect(result.status).toBe('ignored');
     });
@@ -647,7 +680,11 @@ describe('AdapterController - Branch Coverage', () => {
     it('should return received with object_kind when config is valid', async () => {
       adapterConfigService.getAdapterConfig.mockResolvedValue(mockAdapterConfig);
 
-      const result = await controller.handleGitLabWebhook({ object_kind: 'push' }, 'adapter-1', 'tenant-1');
+      const result = await controller.handleGitLabWebhook(
+        { object_kind: 'push' },
+        'adapter-1',
+        'tenant-1',
+      );
 
       expect(result.status).toBe('received');
       expect(result.event).toBe('push');
@@ -666,11 +703,21 @@ describe('AdapterController - Branch Coverage', () => {
     it('should aggregate results from all enabled adapters', async () => {
       adapterConfigService.getEnabledAdapters.mockResolvedValue([
         mockAdapterConfig,
-        { ...mockAdapterConfig, id: 'adapter-2', type: 'gitlab' as AdapterType, config: { token: 't', projectId: 'p', apiUrl: 'u' } },
+        {
+          ...mockAdapterConfig,
+          id: 'adapter-2',
+          type: 'gitlab' as AdapterType,
+          config: { token: 't', projectId: 'p', apiUrl: 'u' },
+        },
       ]);
       adapterConfigService.getAdapterConfig
         .mockResolvedValueOnce(mockAdapterConfig)
-        .mockResolvedValueOnce({ ...mockAdapterConfig, id: 'adapter-2', type: 'gitlab' as AdapterType, config: { token: 't', projectId: 'p', apiUrl: 'u' } });
+        .mockResolvedValueOnce({
+          ...mockAdapterConfig,
+          id: 'adapter-2',
+          type: 'gitlab' as AdapterType,
+          config: { token: 't', projectId: 'p', apiUrl: 'u' },
+        });
       githubAdapter.ingestAllEvidence.mockResolvedValue({ ingested: 3, errors: [], results: {} });
       gitlabAdapter.ingestAllEvidence.mockResolvedValue({ ingested: 2, errors: [], results: {} });
       adapterConfigService.updateSyncStatus.mockResolvedValue(undefined);

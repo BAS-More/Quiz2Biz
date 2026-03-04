@@ -36,9 +36,7 @@ describe('ProjectTypesController', () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       controllers: [ProjectTypesController],
-      providers: [
-        { provide: PrismaService, useValue: mockPrisma },
-      ],
+      providers: [{ provide: PrismaService, useValue: mockPrisma }],
     }).compile();
 
     controller = module.get<ProjectTypesController>(ProjectTypesController);

@@ -39,7 +39,7 @@ describe('createLogger', () => {
 
   it('should not throw when logging at each level', () => {
     logger = createLogger('test-module', 'debug');
-    
+
     expect(() => logger.debug('debug message')).not.toThrow();
     expect(() => logger.info('info message')).not.toThrow();
     expect(() => logger.warn('warn message')).not.toThrow();
@@ -64,7 +64,7 @@ describe('createLogger', () => {
 
   it('should handle logs without metadata', () => {
     logger = createLogger('test-module', 'info');
-    
+
     // All log methods should work without metadata
     expect(() => logger.info('simple message')).not.toThrow();
     expect(() => logger.warn('simple warning')).not.toThrow();
@@ -92,7 +92,7 @@ describe('createLogger', () => {
 
   it('should handle special characters in messages', () => {
     logger = createLogger('test-module', 'info');
-    
+
     expect(() => logger.info('Message with "quotes" and \'apostrophes\'')).not.toThrow();
     expect(() => logger.info('Message with\nnewlines\tand\ttabs')).not.toThrow();
     expect(() => logger.info('Message with émojis 🎉 and üñicode')).not.toThrow();

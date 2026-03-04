@@ -80,7 +80,11 @@ describe('SessionController', () => {
 
       expect(result.items).toHaveLength(2);
       expect(result.pagination.totalItems).toBe(2);
-      expect(mockSessionService.findAllByUser).toHaveBeenCalledWith('user-123', pagination, undefined);
+      expect(mockSessionService.findAllByUser).toHaveBeenCalledWith(
+        'user-123',
+        pagination,
+        undefined,
+      );
     });
 
     it('should filter sessions by status', async () => {
@@ -126,11 +130,9 @@ describe('SessionController', () => {
 
       mockSessionService.continueSession.mockResolvedValue(mockResponse);
 
-      const result = await controller.continueSession(
-        mockUser as any,
-        'session-123',
-        { questionCount: 1 },
-      );
+      const result = await controller.continueSession(mockUser as any, 'session-123', {
+        questionCount: 1,
+      });
 
       expect(result.nextQuestions).toHaveLength(1);
       expect(mockSessionService.continueSession).toHaveBeenCalledWith('session-123', 'user-123', 1);
@@ -188,7 +190,11 @@ describe('SessionController', () => {
       const result = await controller.submitResponse(mockUser as any, 'session-123', submitDto);
 
       expect(result.responseId).toBe('response-789');
-      expect(mockSessionService.submitResponse).toHaveBeenCalledWith('session-123', 'user-123', submitDto);
+      expect(mockSessionService.submitResponse).toHaveBeenCalledWith(
+        'session-123',
+        'user-123',
+        submitDto,
+      );
     });
   });
 
