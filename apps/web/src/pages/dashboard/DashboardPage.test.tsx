@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { DashboardPage } from './DashboardPage';
@@ -88,10 +88,10 @@ describe('DashboardPage', () => {
   it('displays active sessions count', () => {
     renderDashboardPage();
 
-    expect(screen.getByText('Active Sessions')).toBeInTheDocument();
-    // The value is rendered alongside the label in StatCard
-    const statCards = screen.getAllByText(/^[0-9]+$/);
-    expect(statCards.length).toBeGreaterThanOrEqual(1);
+    const activeLabel = screen.getByText('Active Sessions');
+    expect(activeLabel).toBeInTheDocument();
+    const statContainer = activeLabel.closest('.min-w-0')!;
+    expect(within(statContainer).getByText('1')).toBeInTheDocument();
   });
 
   it('displays completed sessions count', () => {
@@ -103,20 +103,17 @@ describe('DashboardPage', () => {
   it('displays highest score', () => {
     renderDashboardPage();
 
-    expect(screen.getByText('Highest Score')).toBeInTheDocument();
-    // The component shows "92%" as the highest score from mockSessions
-    // Multiple elements may show this value (stat card, progress ring, etc.)
-    const scoreElements = screen.getAllByText('92%');
-    expect(scoreElements.length).toBeGreaterThanOrEqual(1);
+    const highestLabel = screen.getByText('Highest Score');
+    expect(highestLabel).toBeInTheDocument();
+    const statContainer = highestLabel.closest('.min-w-0')!;
+    expect(within(statContainer).getByText('92%')).toBeInTheDocument();
   });
 
   it('navigates to idea capture on New Project click', async () => {
     const user = userEvent.setup();
     renderDashboardPage();
 
-    // The header button has text "New Project" - find it by text content
-    const newProjectButtons = screen.getAllByText('New Project');
-    // Click the first one (header button)
+    const newProjectButtons = screen.getAllByRole('button', { name: /new project/i });
     await user.click(newProjectButtons[0]);
 
     expect(mockNavigate).toHaveBeenCalledWith('/idea');
