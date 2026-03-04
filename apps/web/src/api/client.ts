@@ -149,9 +149,13 @@ apiClient.interceptors.response.use(
       if (refreshToken) {
         try {
           // Try to refresh token
-          const { data } = await axios.post(`${API_BASE_URL}/api/v1/auth/refresh`, {
-            refreshToken,
-          }, { withCredentials: true });
+          const { data } = await axios.post(
+            `${API_BASE_URL}/api/v1/auth/refresh`,
+            {
+              refreshToken,
+            },
+            { withCredentials: true },
+          );
 
           // Update tokens in store
           useAuthStore.getState().setAccessToken(data.accessToken);

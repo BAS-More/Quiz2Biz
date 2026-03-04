@@ -322,7 +322,7 @@ export const NetworkBanner: React.FC<NetworkBannerProps> = ({
       networkInfo.status === 'offline' ||
       networkInfo.status === 'slow' ||
       networkInfo.status === 'reconnecting';
-    
+
     if (newHasProblems) {
       if (dismissed) setDismissed(false);
       if (isHiding) setIsHiding(false);

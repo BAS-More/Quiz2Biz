@@ -139,29 +139,29 @@ describe('Document Templates', () => {
     const template = documentTemplates['business-plan-doc'];
 
     it('should have Executive Summary section', () => {
-      const section = template.sections.find(s => s.heading === 'Executive Summary');
+      const section = template.sections.find((s) => s.heading === 'Executive Summary');
       expect(section).toBeDefined();
       expect(section?.requiredFields).toContain('business name');
     });
 
     it('should have Problem & Opportunity section', () => {
-      const section = template.sections.find(s => s.heading === 'Problem & Opportunity');
+      const section = template.sections.find((s) => s.heading === 'Problem & Opportunity');
       expect(section).toBeDefined();
     });
 
     it('should have Product/Service Description section', () => {
-      const section = template.sections.find(s => s.heading === 'Product/Service Description');
+      const section = template.sections.find((s) => s.heading === 'Product/Service Description');
       expect(section).toBeDefined();
     });
 
     it('should have Financial Projections section', () => {
-      const section = template.sections.find(s => s.heading === 'Financial Projections');
+      const section = template.sections.find((s) => s.heading === 'Financial Projections');
       expect(section).toBeDefined();
       expect(section?.requiredFields).toContain('revenue projections');
     });
 
     it('should have Risk Assessment section', () => {
-      const section = template.sections.find(s => s.heading === 'Risk Assessment & Mitigation');
+      const section = template.sections.find((s) => s.heading === 'Risk Assessment & Mitigation');
       expect(section).toBeDefined();
     });
   });
@@ -178,7 +178,7 @@ describe('Document Templates', () => {
 
     it('should have valid sections for all templates', () => {
       Object.values(documentTemplates).forEach((template: DocumentTemplate) => {
-        template.sections.forEach(section => {
+        template.sections.forEach((section) => {
           expect(section.heading).toBeDefined();
           expect(section.description).toBeDefined();
         });
@@ -214,7 +214,10 @@ describe('Individual Template Exports', () => {
     { name: 'DATA_MODELS_TEMPLATE', template: DATA_MODELS_TEMPLATE },
     { name: 'USER_FLOW_MAPS_TEMPLATE', template: USER_FLOW_MAPS_TEMPLATE },
     { name: 'TECHNICAL_DEBT_REGISTER_TEMPLATE', template: TECHNICAL_DEBT_REGISTER_TEMPLATE },
-    { name: 'INFORMATION_SECURITY_POLICY_TEMPLATE', template: INFORMATION_SECURITY_POLICY_TEMPLATE },
+    {
+      name: 'INFORMATION_SECURITY_POLICY_TEMPLATE',
+      template: INFORMATION_SECURITY_POLICY_TEMPLATE,
+    },
     { name: 'INCIDENT_RESPONSE_PLAN_TEMPLATE', template: INCIDENT_RESPONSE_PLAN_TEMPLATE },
     { name: 'DATA_PROTECTION_POLICY_TEMPLATE', template: DATA_PROTECTION_POLICY_TEMPLATE },
     { name: 'DISASTER_RECOVERY_PLAN_TEMPLATE', template: DISASTER_RECOVERY_PLAN_TEMPLATE },
@@ -248,7 +251,7 @@ describe('Individual Template Exports', () => {
 
   it.each(allTemplates)('$name should have valid sections', ({ template }) => {
     expect(template.sections.length).toBeGreaterThan(0);
-    template.sections.forEach(section => {
+    template.sections.forEach((section) => {
       expect(section.title).toBeDefined();
       expect(section.id).toBeDefined();
     });

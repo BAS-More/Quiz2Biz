@@ -23,7 +23,12 @@ export function PolicyPackPage() {
       const result = await questionnaireApi.generatePolicyPack(sessionId);
       setBundle(result);
     } catch (err: unknown) {
-      setError((err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error');
+      setError(
+        (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data
+          ?.message ??
+          (err as { message?: string })?.message ??
+          'Unknown error',
+      );
     } finally {
       setIsLoading(false);
     }
@@ -42,7 +47,16 @@ export function PolicyPackPage() {
       </p>
 
       {error && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '8px', padding: '12px', color: '#dc2626', marginBottom: '16px' }}>
+        <div
+          style={{
+            background: '#fef2f2',
+            border: '1px solid #fecaca',
+            borderRadius: '8px',
+            padding: '12px',
+            color: '#dc2626',
+            marginBottom: '16px',
+          }}
+        >
           {error}
         </div>
       )}
@@ -53,44 +67,109 @@ export function PolicyPackPage() {
             onClick={handleGenerate}
             disabled={isLoading}
             style={{
-              padding: '12px 32px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: '8px',
-              cursor: isLoading ? 'not-allowed' : 'pointer', fontSize: '16px', fontWeight: 600,
+              padding: '12px 32px',
+              background: '#3b82f6',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: isLoading ? 'not-allowed' : 'pointer',
+              fontSize: '16px',
+              fontWeight: 600,
             }}
           >
             {isLoading ? 'Generating...' : 'Generate Policy Pack'}
           </button>
           <p style={{ color: '#9ca3af', fontSize: '13px', marginTop: '12px' }}>
-            This will analyze session gaps and produce policy documents, OPA rules, and Terraform configs.
+            This will analyze session gaps and produce policy documents, OPA rules, and Terraform
+            configs.
           </p>
         </div>
       ) : (
         <div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px' }}>
-            <div style={{ background: '#dbeafe', borderRadius: '8px', padding: '16px', textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: 700 }}>{bundle.policies?.length ?? 0}</div>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '12px',
+              marginBottom: '24px',
+            }}
+          >
+            <div
+              style={{
+                background: '#dbeafe',
+                borderRadius: '8px',
+                padding: '16px',
+                textAlign: 'center',
+              }}
+            >
+              <div style={{ fontSize: '24px', fontWeight: 700 }}>
+                {bundle.policies?.length ?? 0}
+              </div>
               <div style={{ fontSize: '12px', color: '#6b7280' }}>Policies</div>
             </div>
-            <div style={{ background: '#f3e8ff', borderRadius: '8px', padding: '16px', textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: 700 }}>{bundle.opaPolicies?.length ?? 0}</div>
+            <div
+              style={{
+                background: '#f3e8ff',
+                borderRadius: '8px',
+                padding: '16px',
+                textAlign: 'center',
+              }}
+            >
+              <div style={{ fontSize: '24px', fontWeight: 700 }}>
+                {bundle.opaPolicies?.length ?? 0}
+              </div>
               <div style={{ fontSize: '12px', color: '#6b7280' }}>OPA Rules</div>
             </div>
-            <div style={{ background: '#dcfce7', borderRadius: '8px', padding: '16px', textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: 700 }}>{bundle.dimensionsCovered?.length ?? 0}</div>
+            <div
+              style={{
+                background: '#dcfce7',
+                borderRadius: '8px',
+                padding: '16px',
+                textAlign: 'center',
+              }}
+            >
+              <div style={{ fontSize: '24px', fontWeight: 700 }}>
+                {bundle.dimensionsCovered?.length ?? 0}
+              </div>
               <div style={{ fontSize: '12px', color: '#6b7280' }}>Dimensions</div>
             </div>
           </div>
 
           {bundle.policies?.map((p, idx: number) => (
-            <div key={idx} style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '16px', marginBottom: '12px' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '4px' }}>{p.title || `Policy ${idx + 1}`}</h3>
-              <p style={{ fontSize: '13px', color: '#6b7280', margin: 0 }}>{p.description || p.content?.substring(0, 200)}</p>
+            <div
+              key={idx}
+              style={{
+                border: '1px solid #e5e7eb',
+                borderRadius: '8px',
+                padding: '16px',
+                marginBottom: '12px',
+              }}
+            >
+              <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '4px' }}>
+                {p.title || `Policy ${idx + 1}`}
+              </h3>
+              <p style={{ fontSize: '13px', color: '#6b7280', margin: 0 }}>
+                {p.description || p.content?.substring(0, 200)}
+              </p>
             </div>
           ))}
 
           {bundle.terraformRules && (
             <div style={{ marginTop: '16px' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>Terraform Rules</h3>
-              <pre style={{ background: '#1f2937', color: '#e5e7eb', padding: '16px', borderRadius: '8px', overflow: 'auto', fontSize: '12px', maxHeight: '300px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>
+                Terraform Rules
+              </h3>
+              <pre
+                style={{
+                  background: '#1f2937',
+                  color: '#e5e7eb',
+                  padding: '16px',
+                  borderRadius: '8px',
+                  overflow: 'auto',
+                  fontSize: '12px',
+                  maxHeight: '300px',
+                }}
+              >
                 {bundle.terraformRules}
               </pre>
             </div>

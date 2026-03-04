@@ -7,11 +7,11 @@ import { SessionStatus, CoverageLevel } from '@prisma/client';
 
 /**
  * Integration tests for Questionnaire -> Scoring -> Session Flow
- * 
+ *
  * SKIP REASON: Services require full NestJS module context with all dependencies.
  * SessionService depends on AdaptiveLogicService which isn't provided in test module.
  * TODO: Either import full AppModule or create mock providers for all dependencies.
- * 
+ *
  * Schema updates completed:
  * - User: passwordHash -> hashedPassword, USER -> CLIENT
  * - Questionnaire: version as Int

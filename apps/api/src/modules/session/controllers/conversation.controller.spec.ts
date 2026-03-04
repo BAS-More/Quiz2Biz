@@ -35,7 +35,12 @@ describe('ConversationController', () => {
         dimensionContext: 'SECURITY',
       };
       const mockResult = {
-        followUp: { shouldFollowUp: true, followUpQuestion: 'Can you elaborate on the encryption type?', completenessScore: 0.5, missingAreas: ['details'] },
+        followUp: {
+          shouldFollowUp: true,
+          followUpQuestion: 'Can you elaborate on the encryption type?',
+          completenessScore: 0.5,
+          missingAreas: ['details'],
+        },
         conversationMessages: [{ id: 'm-1', content: 'We use encryption', role: 'user' }],
       };
 

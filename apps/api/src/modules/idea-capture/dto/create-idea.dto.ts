@@ -4,12 +4,15 @@ import { IsString, IsOptional, IsUUID, MinLength, MaxLength } from 'class-valida
 export class CreateIdeaDto {
   @ApiProperty({
     description: 'Free-form text describing the business idea or project',
-    example: 'I want to start a mobile app for pet owners that connects them with local vets and pet sitters. I am thinking subscription model with premium features.',
+    example:
+      'I want to start a mobile app for pet owners that connects them with local vets and pet sitters. I am thinking subscription model with premium features.',
     minLength: 10,
     maxLength: 10000,
   })
   @IsString()
-  @MinLength(10, { message: 'Please provide at least a brief description of your idea (10+ characters).' })
+  @MinLength(10, {
+    message: 'Please provide at least a brief description of your idea (10+ characters).',
+  })
   @MaxLength(10000)
   rawInput: string;
 

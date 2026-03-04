@@ -22,7 +22,9 @@ describe('Accessibility Validation', () => {
    * Recursively get all React component files
    */
   function getReactFiles(dir: string, files: string[] = []): string[] {
-    if (!fs.existsSync(dir)) {return files;}
+    if (!fs.existsSync(dir)) {
+      return files;
+    }
 
     const entries = fs.readdirSync(dir, { withFileTypes: true });
     for (const entry of entries) {
@@ -47,7 +49,8 @@ describe('Accessibility Validation', () => {
         const content = fs.readFileSync(file, 'utf-8');
 
         // Find buttons with only icons (no text children)
-        const iconButtonPattern = /<(?:button|Button)[^>]*>\s*<(?:Icon|svg|img)[^>]*\/?\s*>\s*<\/(?:button|Button)>/gi;
+        const iconButtonPattern =
+          /<(?:button|Button)[^>]*>\s*<(?:Icon|svg|img)[^>]*\/?\s*>\s*<\/(?:button|Button)>/gi;
         const matches = content.match(iconButtonPattern);
 
         if (matches) {
@@ -104,7 +107,11 @@ describe('Accessibility Validation', () => {
         const content = fs.readFileSync(file, 'utf-8');
 
         // Accordion/collapse patterns should have aria-expanded
-        if (content.includes('Accordion') || content.includes('Collapse') || content.includes('Expandable')) {
+        if (
+          content.includes('Accordion') ||
+          content.includes('Collapse') ||
+          content.includes('Expandable')
+        ) {
           if (!content.includes('aria-expanded')) {
             violations.push(`Collapsible without aria-expanded in ${path.basename(file)}`);
           }
@@ -120,13 +127,18 @@ describe('Accessibility Validation', () => {
     it('should have visible focus styles defined', () => {
       const cssFiles: string[] = [];
       const findCssFiles = (dir: string) => {
-        if (!fs.existsSync(dir)) {return;}
+        if (!fs.existsSync(dir)) {
+          return;
+        }
         const entries = fs.readdirSync(dir, { withFileTypes: true });
         for (const entry of entries) {
           const fullPath = path.join(dir, entry.name);
           if (entry.isDirectory() && !entry.name.includes('node_modules')) {
             findCssFiles(fullPath);
-          } else if (entry.isFile() && (entry.name.endsWith('.css') || entry.name.endsWith('.scss'))) {
+          } else if (
+            entry.isFile() &&
+            (entry.name.endsWith('.css') || entry.name.endsWith('.scss'))
+          ) {
             cssFiles.push(fullPath);
           }
         }
@@ -136,7 +148,11 @@ describe('Accessibility Validation', () => {
       let hasFocusStyles = false;
       for (const file of cssFiles) {
         const content = fs.readFileSync(file, 'utf-8');
-        if (content.includes(':focus') || content.includes(':focus-visible') || content.includes(':focus-within')) {
+        if (
+          content.includes(':focus') ||
+          content.includes(':focus-visible') ||
+          content.includes(':focus-within')
+        ) {
           hasFocusStyles = true;
           break;
         }
@@ -146,7 +162,11 @@ describe('Accessibility Validation', () => {
       const files = getReactFiles(webSrcDir);
       for (const file of files) {
         const content = fs.readFileSync(file, 'utf-8');
-        if (content.includes('focus:') || content.includes('focus-visible:') || content.includes('ring-')) {
+        if (
+          content.includes('focus:') ||
+          content.includes('focus-visible:') ||
+          content.includes('ring-')
+        ) {
           hasFocusStyles = true;
           break;
         }
@@ -163,7 +183,11 @@ describe('Accessibility Validation', () => {
         const content = fs.readFileSync(file, 'utf-8');
 
         // outline: none without focus-visible replacement
-        if (content.includes('outline: none') || content.includes('outline:none') || content.includes('outline: 0')) {
+        if (
+          content.includes('outline: none') ||
+          content.includes('outline:none') ||
+          content.includes('outline: 0')
+        ) {
           if (!content.includes('focus-visible') && !content.includes('focus:ring')) {
             violations.push(`Removed outline without replacement in ${path.basename(file)}`);
           }
@@ -196,9 +220,10 @@ describe('Accessibility Validation', () => {
       }
 
       // If modals exist, they should have focus trapping
-      expect(hasModalFocusTrap || !getReactFiles(webSrcDir).some((f) => fs.readFileSync(f, 'utf-8').includes('Modal'))).toBe(
-        true,
-      );
+      expect(
+        hasModalFocusTrap ||
+          !getReactFiles(webSrcDir).some((f) => fs.readFileSync(f, 'utf-8').includes('Modal')),
+      ).toBe(true);
     });
   });
 
@@ -240,7 +265,11 @@ describe('Accessibility Validation', () => {
         const content = fs.readFileSync(file, 'utf-8');
 
         if (content.includes('error') && content.includes('input')) {
-          if (content.includes('aria-describedby') || content.includes('aria-errormessage') || content.includes('FormError')) {
+          if (
+            content.includes('aria-describedby') ||
+            content.includes('aria-errormessage') ||
+            content.includes('FormError')
+          ) {
             hasErrorAssociation = true;
           }
         }
@@ -256,7 +285,10 @@ describe('Accessibility Validation', () => {
       for (const file of files) {
         const content = fs.readFileSync(file, 'utf-8');
 
-        if (content.includes('onBlur') && (content.includes('validate') || content.includes('error'))) {
+        if (
+          content.includes('onBlur') &&
+          (content.includes('validate') || content.includes('error'))
+        ) {
           hasBlurValidation = true;
           break;
         }

@@ -214,11 +214,15 @@ export class GitLabAdapter {
       ipAddr.split('.').reduce((acc, octet) => (acc << 8) + parseInt(octet, 10), 0);
 
     const longIp = toLong(ip);
-    return privateRanges.some((range) => longIp >= toLong(range.from) && longIp <= toLong(range.to));
+    return privateRanges.some(
+      (range) => longIp >= toLong(range.from) && longIp <= toLong(range.to),
+    );
   }
 
   private async validateAndGetBaseUrl(config: GitLabConfig): Promise<string> {
-    const trustedApiUrl = (this.configService.get<string>('GITLAB_API_URL') || this.defaultApiUrl).trim();
+    const trustedApiUrl = (
+      this.configService.get<string>('GITLAB_API_URL') || this.defaultApiUrl
+    ).trim();
     const providedApiUrl = config.apiUrl?.trim();
 
     if (providedApiUrl && providedApiUrl !== trustedApiUrl) {
@@ -240,7 +244,10 @@ export class GitLabAdapter {
     }
 
     if (parsed.username || parsed.password) {
-      throw new HttpException('GitLab API URL must not contain credentials', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'GitLab API URL must not contain credentials',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const hostname = parsed.hostname.toLowerCase();

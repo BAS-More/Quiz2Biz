@@ -24,7 +24,11 @@ describe('Security Scan Validation', () => {
     const entries = fs.readdirSync(dir, { withFileTypes: true });
     for (const entry of entries) {
       const fullPath = path.join(dir, entry.name);
-      if (entry.isDirectory() && !entry.name.includes('node_modules') && !entry.name.includes('dist')) {
+      if (
+        entry.isDirectory() &&
+        !entry.name.includes('node_modules') &&
+        !entry.name.includes('dist')
+      ) {
         getAllTsFiles(fullPath, files);
       } else if (entry.isFile() && (entry.name.endsWith('.ts') || entry.name.endsWith('.tsx'))) {
         files.push(fullPath);
@@ -35,9 +39,15 @@ describe('Security Scan Validation', () => {
 
   describe('Hardcoded Secrets Detection', () => {
     const secretPatterns = [
-      { name: 'API Key', pattern: /['"](?:api[_-]?key|apikey)['"]\s*[:=]\s*['"][a-zA-Z0-9]{20,}['"]/gi },
+      {
+        name: 'API Key',
+        pattern: /['"](?:api[_-]?key|apikey)['"]\s*[:=]\s*['"][a-zA-Z0-9]{20,}['"]/gi,
+      },
       { name: 'Password', pattern: /['"](?:password|passwd|pwd)['"]\s*[:=]\s*['"][^'"]{8,}['"]/gi },
-      { name: 'Secret', pattern: /['"](?:secret|private[_-]?key)['"]\s*[:=]\s*['"][a-zA-Z0-9+/=]{20,}['"]/gi },
+      {
+        name: 'Secret',
+        pattern: /['"](?:secret|private[_-]?key)['"]\s*[:=]\s*['"][a-zA-Z0-9+/=]{20,}['"]/gi,
+      },
       { name: 'AWS Key', pattern: /AKIA[0-9A-Z]{16}/g },
       { name: 'JWT Token', pattern: /eyJ[a-zA-Z0-9_-]*\.eyJ[a-zA-Z0-9_-]*\.[a-zA-Z0-9_-]*/g },
       { name: 'Connection String', pattern: /(?:mongodb|postgres|mysql|redis):\/\/[^:]+:[^@]+@/gi },
@@ -48,13 +58,17 @@ describe('Security Scan Validation', () => {
       const violations: string[] = [];
 
       for (const file of files) {
-        if (file.includes('.spec.') || file.includes('.test.') || file.includes('__mocks__')) {continue;}
+        if (file.includes('.spec.') || file.includes('.test.') || file.includes('__mocks__')) {
+          continue;
+        }
 
         const content = fs.readFileSync(file, 'utf-8');
         for (const { name, pattern } of secretPatterns) {
           const matches = content.match(pattern);
           if (matches) {
-            violations.push(`${name} found in ${path.relative(srcDir, file)}: ${matches[0].substring(0, 30)}...`);
+            violations.push(
+              `${name} found in ${path.relative(srcDir, file)}: ${matches[0].substring(0, 30)}...`,
+            );
           }
         }
       }
@@ -73,7 +87,11 @@ describe('Security Scan Validation', () => {
       for (const file of configFiles) {
         const content = fs.readFileSync(file, 'utf-8');
         // Check if file contains sensitive keywords
-        if (content.includes('secret') || content.includes('password') || content.includes('apiKey')) {
+        if (
+          content.includes('secret') ||
+          content.includes('password') ||
+          content.includes('apiKey')
+        ) {
           totalSensitiveConfigs++;
           // Should reference process.env somewhere for sensitive values
           if (content.includes('process.env.') || content.includes('process.env[')) {
@@ -91,7 +109,10 @@ describe('Security Scan Validation', () => {
 
   describe('SQL Injection Prevention', () => {
     const dangerousPatterns = [
-      { name: 'String concatenation in query', pattern: /\$\{.*\}.*(?:SELECT|INSERT|UPDATE|DELETE|FROM|WHERE)/gi },
+      {
+        name: 'String concatenation in query',
+        pattern: /\$\{.*\}.*(?:SELECT|INSERT|UPDATE|DELETE|FROM|WHERE)/gi,
+      },
       { name: 'Template literal SQL', pattern: /`[^`]*(?:SELECT|INSERT|UPDATE|DELETE)[^`]*\$\{/gi },
       { name: 'Raw query with variables', pattern: /\.query\s*\(\s*['"`].*\+/gi },
     ];
@@ -101,7 +122,9 @@ describe('Security Scan Validation', () => {
       const violations: string[] = [];
 
       for (const file of files) {
-        if (file.includes('.spec.') || file.includes('.test.') || file.includes('config')) {continue;}
+        if (file.includes('.spec.') || file.includes('.test.') || file.includes('config')) {
+          continue;
+        }
 
         const content = fs.readFileSync(file, 'utf-8');
         for (const { name, pattern } of dangerousPatterns) {
@@ -169,7 +192,9 @@ describe('Security Scan Validation', () => {
         if (content.includes('class ') && content.includes('export')) {
           totalDtos++;
           // Check for validation decorators OR partial type (inherits validation)
-          if (content.match(/class-validator|@Is\w+|@Min|@Max|@Length|PartialType|OmitType|PickType/)) {
+          if (
+            content.match(/class-validator|@Is\w+|@Min|@Max|@Length|PartialType|OmitType|PickType/)
+          ) {
             dtosWithValidation++;
           }
         }
@@ -231,10 +256,14 @@ describe('Security Scan Validation', () => {
       const violations: string[] = [];
 
       for (const file of files) {
-        if (file.includes('.spec.') || file.includes('.test.')) {continue;}
+        if (file.includes('.spec.') || file.includes('.test.')) {
+          continue;
+        }
 
         const content = fs.readFileSync(file, 'utf-8');
-        const logStatements = content.match(/console\.log\([^)]*(?:password|secret|token|apiKey|authorization)[^)]*\)/gi);
+        const logStatements = content.match(
+          /console\.log\([^)]*(?:password|secret|token|apiKey|authorization)[^)]*\)/gi,
+        );
         if (logStatements) {
           violations.push(`Sensitive data in logs: ${path.relative(srcDir, file)}`);
         }
@@ -271,7 +300,9 @@ describe('Security Scan Validation', () => {
       const violations: string[] = [];
 
       for (const file of files) {
-        if (file.includes('.spec.') || file.includes('.test.')) {continue;}
+        if (file.includes('.spec.') || file.includes('.test.')) {
+          continue;
+        }
 
         const content = fs.readFileSync(file, 'utf-8');
         for (const { name, pattern } of vulnerablePatterns) {

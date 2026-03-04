@@ -28,8 +28,19 @@ export function AuthLayout() {
         <Link to="/" className="flex items-center justify-center gap-2.5 group">
           <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-brand-600 shadow-elevated group-hover:shadow-float transition-shadow">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="text-white">
-              <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <path
+                d="M9 12l2 2 4-4"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
             </svg>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-surface-900">
@@ -42,7 +53,11 @@ export function AuthLayout() {
       </div>
 
       {/* Form card */}
-      <main id="main-content" className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10" tabIndex={-1}>
+      <main
+        id="main-content"
+        className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10"
+        tabIndex={-1}
+      >
         <div className="bg-white py-8 px-6 shadow-float rounded-2xl sm:px-10 border border-surface-200/50 animate-fade-in">
           <Outlet />
         </div>
@@ -54,9 +69,13 @@ export function AuthLayout() {
             <span>SSL Secured</span>
           </div>
           <span className="text-surface-300">|</span>
-          <Link to="/privacy" className="hover:text-surface-600 transition-colors">Privacy Policy</Link>
+          <Link to="/privacy" className="hover:text-surface-600 transition-colors">
+            Privacy Policy
+          </Link>
           <span className="text-surface-300">|</span>
-          <Link to="/terms" className="hover:text-surface-600 transition-colors">Terms</Link>
+          <Link to="/terms" className="hover:text-surface-600 transition-colors">
+            Terms
+          </Link>
         </div>
       </main>
 
