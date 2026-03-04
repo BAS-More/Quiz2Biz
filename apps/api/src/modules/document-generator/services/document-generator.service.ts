@@ -85,8 +85,12 @@ export class DocumentGeneratorService {
         select: { questionId: true },
       });
 
-      const answeredIds = new Set(answeredQuestions.map((r) => r.questionId));
-      const missingQuestions = documentType.requiredQuestions.filter((id) => !answeredIds.has(id));
+      const answeredIds = new Set(
+        answeredQuestions.map((r: { questionId: string }) => r.questionId),
+      );
+      const missingQuestions = documentType.requiredQuestions.filter(
+        (id: string) => !answeredIds.has(id),
+      );
 
       if (missingQuestions.length > 0) {
         throw new BadRequestException(
@@ -228,8 +232,8 @@ export class DocumentGeneratorService {
     });
 
     return responses
-      .filter((r) => r.question)
-      .map((r) => {
+      .filter((r: { question: { text: string; dimensionKey: string | null } | null }) => r.question)
+      .map((r: { question: { text: string; dimensionKey: string | null }; value: unknown }) => {
         const value = r.value as Record<string, unknown>;
         const answerText =
           typeof value === 'string' ? value : ((value?.text as string) ?? JSON.stringify(value));

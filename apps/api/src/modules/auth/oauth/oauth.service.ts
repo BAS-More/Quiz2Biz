@@ -321,7 +321,7 @@ export class OAuthService {
       },
     });
 
-    return accounts.map((a) => ({
+    return accounts.map((a: { provider: string; email: string | null; createdAt: Date }) => ({
       provider: a.provider,
       email: a.email || '',
       linkedAt: a.createdAt,
