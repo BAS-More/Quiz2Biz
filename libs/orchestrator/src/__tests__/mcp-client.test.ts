@@ -83,7 +83,7 @@ describe('updateTask', () => {
       } as any;
 
       await expect(updateTask(validTaskId, invalidUpdate)).rejects.toThrow(
-        /Invalid update fields: invalid_field/
+        /Invalid update fields: invalid_field/,
       );
     });
 
@@ -95,7 +95,7 @@ describe('updateTask', () => {
       } as any;
 
       await expect(updateTask(validTaskId, invalidUpdate)).rejects.toThrow(
-        /Invalid update fields: bad_field_1, bad_field_2/
+        /Invalid update fields: bad_field_1, bad_field_2/,
       );
     });
 
@@ -105,7 +105,7 @@ describe('updateTask', () => {
       } as any;
 
       await expect(updateTask(validTaskId, invalidUpdate)).rejects.toThrow(
-        /Allowed fields:.*tier.*task_type.*project.*module/
+        /Allowed fields:.*tier.*task_type.*project.*module/,
       );
     });
 
@@ -123,7 +123,7 @@ describe('updateTask', () => {
       } as any;
 
       await expect(updateTask(validTaskId, updateWithId)).rejects.toThrow(
-        /Invalid update fields: task_id/
+        /Invalid update fields: task_id/,
       );
     });
 
@@ -135,7 +135,7 @@ describe('updateTask', () => {
       } as any;
 
       await expect(updateTask(validTaskId, updateWithCreatedAt)).rejects.toThrow(
-        /Invalid update fields: created_at/
+        /Invalid update fields: created_at/,
       );
     });
 
@@ -167,7 +167,7 @@ describe('updateTask', () => {
       } as any;
 
       await expect(updateTask(validTaskId, sqlInjectionAttempt)).rejects.toThrow(
-        /Invalid update fields/
+        /Invalid update fields/,
       );
     });
 
@@ -177,7 +177,7 @@ describe('updateTask', () => {
       } as any;
 
       await expect(updateTask(validTaskId, obfuscationAttempt)).rejects.toThrow(
-        /Invalid update fields/
+        /Invalid update fields/,
       );
     });
   });

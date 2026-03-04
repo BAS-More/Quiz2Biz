@@ -384,9 +384,12 @@ export const INFORMATION_SECURITY_POLICY_TEMPLATE = {
    * Default values for optional fields
    */
   defaults: {
-    'accessControl.privilegeManagement': 'Principle of least privilege enforced with quarterly access reviews',
+    'accessControl.privilegeManagement':
+      'Principle of least privilege enforced with quarterly access reviews',
     'dataProtection.disposal': 'Secure data disposal following NIST 800-88 guidelines',
-    'incidentManagement.reporting': 'All security incidents must be reported within 24 hours to the security team',
-    'employeeResponsibilities.training': 'Annual security awareness training required for all employees',
+    'incidentManagement.reporting':
+      'All security incidents must be reported within 24 hours to the security team',
+    'employeeResponsibilities.training':
+      'Annual security awareness training required for all employees',
   },
 };

@@ -78,12 +78,14 @@ describe('ApprovalGuard', () => {
     hasApproval: jest.fn(),
   };
 
-  const createMockContext = (overrides: {
-    user?: any;
-    params?: any;
-    body?: any;
-    query?: any;
-  } = {}): ExecutionContext => {
+  const createMockContext = (
+    overrides: {
+      user?: any;
+      params?: any;
+      body?: any;
+      query?: any;
+    } = {},
+  ): ExecutionContext => {
     return {
       switchToHttp: () => ({
         getRequest: () => ({
@@ -177,7 +179,11 @@ describe('ApprovalGuard', () => {
     });
     const result = await guard.canActivate(context);
     expect(result).toBe(true);
-    expect(mockApprovalService.hasApproval).toHaveBeenCalledWith('Policy', 'policy-123', ApprovalCategory.POLICY_LOCK);
+    expect(mockApprovalService.hasApproval).toHaveBeenCalledWith(
+      'Policy',
+      'policy-123',
+      ApprovalCategory.POLICY_LOCK,
+    );
   });
 
   it('should extract resource ID from body when not in params', async () => {
@@ -194,7 +200,11 @@ describe('ApprovalGuard', () => {
     });
     const result = await guard.canActivate(context);
     expect(result).toBe(true);
-    expect(mockApprovalService.hasApproval).toHaveBeenCalledWith('Policy', 'policy-456', ApprovalCategory.POLICY_LOCK);
+    expect(mockApprovalService.hasApproval).toHaveBeenCalledWith(
+      'Policy',
+      'policy-456',
+      ApprovalCategory.POLICY_LOCK,
+    );
   });
 
   it('should extract resource ID from query when not in params or body', async () => {
@@ -211,7 +221,11 @@ describe('ApprovalGuard', () => {
     });
     const result = await guard.canActivate(context);
     expect(result).toBe(true);
-    expect(mockApprovalService.hasApproval).toHaveBeenCalledWith('Policy', 'policy-789', ApprovalCategory.POLICY_LOCK);
+    expect(mockApprovalService.hasApproval).toHaveBeenCalledWith(
+      'Policy',
+      'policy-789',
+      ApprovalCategory.POLICY_LOCK,
+    );
   });
 
   it('should use default "id" param name when resourceIdParam not specified', async () => {
@@ -227,7 +241,11 @@ describe('ApprovalGuard', () => {
     });
     const result = await guard.canActivate(context);
     expect(result).toBe(true);
-    expect(mockApprovalService.hasApproval).toHaveBeenCalledWith('Policy', 'resource-default', ApprovalCategory.POLICY_LOCK);
+    expect(mockApprovalService.hasApproval).toHaveBeenCalledWith(
+      'Policy',
+      'resource-default',
+      ApprovalCategory.POLICY_LOCK,
+    );
   });
 
   it('should throw when pending approval exists', async () => {
@@ -242,7 +260,9 @@ describe('ApprovalGuard', () => {
       user: { id: 'user-1' },
       params: { id: 'resource-1' },
     });
-    await expect(guard.canActivate(context)).rejects.toThrow('requires approval. A request is pending');
+    await expect(guard.canActivate(context)).rejects.toThrow(
+      'requires approval. A request is pending',
+    );
   });
 
   it('should throw with custom error message when pending', async () => {

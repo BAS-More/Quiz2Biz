@@ -438,8 +438,10 @@ export const WIREFRAMES_MOCKUPS_TEMPLATE = {
    * Default values for optional fields
    */
   defaults: {
-    'designSystem.spacing': '{"baseUnit": "8px", "scale": [], "gridColumns": 12, "gutterWidth": "16px"}',
-    'responsiveDesign.breakpoints': '[{"name": "mobile", "minWidth": "0", "maxWidth": "767px", "columns": 4, "gutterWidth": "16px"}, {"name": "tablet", "minWidth": "768px", "maxWidth": "1023px", "columns": 8, "gutterWidth": "24px"}, {"name": "desktop", "minWidth": "1024px", "maxWidth": "", "columns": 12, "gutterWidth": "24px"}]',
+    'designSystem.spacing':
+      '{"baseUnit": "8px", "scale": [], "gridColumns": 12, "gutterWidth": "16px"}',
+    'responsiveDesign.breakpoints':
+      '[{"name": "mobile", "minWidth": "0", "maxWidth": "767px", "columns": 4, "gutterWidth": "16px"}, {"name": "tablet", "minWidth": "768px", "maxWidth": "1023px", "columns": 8, "gutterWidth": "24px"}, {"name": "desktop", "minWidth": "1024px", "maxWidth": "", "columns": 12, "gutterWidth": "24px"}]',
     'appendices.designAssets': 'Design assets available in Figma project workspace',
     'appendices.styleGuide': 'Full style guide maintained alongside design system documentation',
   },

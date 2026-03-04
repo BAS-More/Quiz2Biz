@@ -40,7 +40,12 @@ interface QuestionnaireState {
   loadSession: (sessionId: string) => Promise<void>;
   loadSessions: () => Promise<void>;
   continueSession: (sessionId: string) => Promise<void>;
-  submitResponse: (sessionId: string, questionId: string, value: unknown, timeSpent?: number) => Promise<SubmitResponseResult>;
+  submitResponse: (
+    sessionId: string,
+    questionId: string,
+    value: unknown,
+    timeSpent?: number,
+  ) => Promise<SubmitResponseResult>;
   completeSession: (sessionId: string) => Promise<void>;
   loadScore: (sessionId: string) => Promise<void>;
   clearError: () => void;
@@ -73,7 +78,14 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
       // Auto-continue to get first question (keeps isLoading: true until done)
       await get().continueSession(session.id);
     } catch (err: unknown) {
-      set({ isLoading: false, error: (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error' });
+      set({
+        isLoading: false,
+        error:
+          (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data
+            ?.message ??
+          (err as { message?: string })?.message ??
+          'Unknown error',
+      });
     }
   },
 
@@ -83,7 +95,14 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
       const session = await questionnaireApi.getSession(sessionId);
       set({ session, isLoading: false });
     } catch (err: unknown) {
-      set({ isLoading: false, error: (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error' });
+      set({
+        isLoading: false,
+        error:
+          (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data
+            ?.message ??
+          (err as { message?: string })?.message ??
+          'Unknown error',
+      });
     }
   },
 
@@ -93,7 +112,14 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
       const result = await questionnaireApi.listSessions();
       set({ sessions: result.items, isLoading: false });
     } catch (err: unknown) {
-      set({ isLoading: false, error: (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error' });
+      set({
+        isLoading: false,
+        error:
+          (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data
+            ?.message ??
+          (err as { message?: string })?.message ??
+          'Unknown error',
+      });
     }
   },
 
@@ -111,7 +137,14 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
         isLoading: false,
       });
     } catch (err: unknown) {
-      set({ isLoading: false, error: (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error' });
+      set({
+        isLoading: false,
+        error:
+          (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data
+            ?.message ??
+          (err as { message?: string })?.message ??
+          'Unknown error',
+      });
     }
   },
 
@@ -132,7 +165,14 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
       await get().continueSession(sessionId);
       return result;
     } catch (err: unknown) {
-      set({ isLoading: false, error: (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error' });
+      set({
+        isLoading: false,
+        error:
+          (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data
+            ?.message ??
+          (err as { message?: string })?.message ??
+          'Unknown error',
+      });
       throw err;
     }
   },
@@ -143,7 +183,14 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
       const session = await questionnaireApi.completeSession(sessionId);
       set({ session, isComplete: true, isLoading: false });
     } catch (err: unknown) {
-      set({ isLoading: false, error: (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message ?? (err as { message?: string })?.message ?? 'Unknown error' });
+      set({
+        isLoading: false,
+        error:
+          (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data
+            ?.message ??
+          (err as { message?: string })?.message ??
+          'Unknown error',
+      });
     }
   },
 

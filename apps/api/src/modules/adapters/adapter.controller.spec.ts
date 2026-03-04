@@ -126,10 +126,7 @@ describe('AdapterController', () => {
     });
 
     it('should filter by enabled status when provided', async () => {
-      const configs = [
-        mockConfig,
-        { ...mockConfig, id: 'adapter-2', enabled: false },
-      ];
+      const configs = [mockConfig, { ...mockConfig, id: 'adapter-2', enabled: false }];
       mockAdapterConfigService.getAdapterConfigs.mockResolvedValue(configs);
 
       const result = await controller.listConfigs('tenant-1', undefined, true);
@@ -152,9 +149,9 @@ describe('AdapterController', () => {
     it('should throw NotFoundException if config not found', async () => {
       mockAdapterConfigService.getAdapterConfig.mockResolvedValue(null);
 
-      await expect(
-        controller.getConfig('non-existent', 'tenant-1'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(controller.getConfig('non-existent', 'tenant-1')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -187,9 +184,7 @@ describe('AdapterController', () => {
         errors: ['Missing token', 'Missing owner'],
       });
 
-      await expect(
-        controller.createConfig('tenant-1', dto),
-      ).rejects.toThrow(BadRequestException);
+      await expect(controller.createConfig('tenant-1', dto)).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -275,7 +270,12 @@ describe('AdapterController', () => {
 
       const result = await controller.testConnection({
         type: 'jira' as AdapterType,
-        config: { domain: 'acme.atlassian.net', email: 'user@example.com', apiToken: 'token', projectKey: 'PROJ' },
+        config: {
+          domain: 'acme.atlassian.net',
+          email: 'user@example.com',
+          apiToken: 'token',
+          projectKey: 'PROJ',
+        },
       });
 
       expect(result.success).toBe(true);
@@ -287,7 +287,12 @@ describe('AdapterController', () => {
 
       const result = await controller.testConnection({
         type: 'confluence' as AdapterType,
-        config: { domain: 'acme.atlassian.net', email: 'user@example.com', apiToken: 'token', spaceKey: 'SPACE' },
+        config: {
+          domain: 'acme.atlassian.net',
+          email: 'user@example.com',
+          apiToken: 'token',
+          spaceKey: 'SPACE',
+        },
       });
 
       expect(result.success).toBe(true);
@@ -341,7 +346,11 @@ describe('AdapterController', () => {
     });
 
     it('should sync GitLab adapter successfully', async () => {
-      const gitlabConfig = { ...mockConfig, type: 'gitlab' as AdapterType, config: { token: 'token', projectId: 123 } };
+      const gitlabConfig = {
+        ...mockConfig,
+        type: 'gitlab' as AdapterType,
+        config: { token: 'token', projectId: 123 },
+      };
       mockAdapterConfigService.getAdapterConfig.mockResolvedValue(gitlabConfig);
       mockAdapterConfigService.updateSyncStatus.mockResolvedValue(undefined);
       mockGitLabAdapter.ingestAllEvidence.mockResolvedValue({
@@ -362,7 +371,12 @@ describe('AdapterController', () => {
       const jiraConfig = {
         ...mockConfig,
         type: 'jira' as AdapterType,
-        config: { domain: 'acme.atlassian.net', email: 'user@example.com', apiToken: 'token', projectKey: 'PROJ' },
+        config: {
+          domain: 'acme.atlassian.net',
+          email: 'user@example.com',
+          apiToken: 'token',
+          projectKey: 'PROJ',
+        },
       };
       mockAdapterConfigService.getAdapterConfig.mockResolvedValue(jiraConfig);
       mockAdapterConfigService.updateSyncStatus.mockResolvedValue(undefined);
@@ -420,15 +434,35 @@ describe('AdapterController', () => {
     it('should sync all enabled adapters', async () => {
       mockAdapterConfigService.getEnabledAdapters.mockResolvedValue([
         mockConfig,
-        { ...mockConfig, id: 'adapter-2', type: 'gitlab' as AdapterType, config: { token: 'token', projectId: 123 } },
+        {
+          ...mockConfig,
+          id: 'adapter-2',
+          type: 'gitlab' as AdapterType,
+          config: { token: 'token', projectId: 123 },
+        },
       ]);
       mockAdapterConfigService.getAdapterConfig.mockImplementation((tenantId, adapterId) => {
-        if (adapterId === 'adapter-1') {return Promise.resolve(mockConfig);}
-        return Promise.resolve({ ...mockConfig, id: 'adapter-2', type: 'gitlab' as AdapterType, config: { token: 'token', projectId: 123 } });
+        if (adapterId === 'adapter-1') {
+          return Promise.resolve(mockConfig);
+        }
+        return Promise.resolve({
+          ...mockConfig,
+          id: 'adapter-2',
+          type: 'gitlab' as AdapterType,
+          config: { token: 'token', projectId: 123 },
+        });
       });
       mockAdapterConfigService.updateSyncStatus.mockResolvedValue(undefined);
-      mockGitHubAdapter.ingestAllEvidence.mockResolvedValue({ ingested: 5, errors: [], results: {} });
-      mockGitLabAdapter.ingestAllEvidence.mockResolvedValue({ ingested: 3, errors: [], results: {} });
+      mockGitHubAdapter.ingestAllEvidence.mockResolvedValue({
+        ingested: 5,
+        errors: [],
+        results: {},
+      });
+      mockGitLabAdapter.ingestAllEvidence.mockResolvedValue({
+        ingested: 3,
+        errors: [],
+        results: {},
+      });
 
       const result = await controller.syncAllAdapters('tenant-1', { sessionId: 'session-1' });
 

@@ -33,10 +33,7 @@ describe('RolesGuard', () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        RolesGuard,
-        { provide: Reflector, useValue: mockReflector },
-      ],
+      providers: [RolesGuard, { provide: Reflector, useValue: mockReflector }],
     }).compile();
 
     guard = module.get<RolesGuard>(RolesGuard);
@@ -112,7 +109,9 @@ describe('RolesGuard', () => {
       mockReflector.getAllAndOverride.mockReturnValue([UserRole.ADMIN, UserRole.SUPER_ADMIN]);
 
       expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
-      expect(() => guard.canActivate(context)).toThrow('Access denied. Required roles: ADMIN, SUPER_ADMIN');
+      expect(() => guard.canActivate(context)).toThrow(
+        'Access denied. Required roles: ADMIN, SUPER_ADMIN',
+      );
     });
 
     it('should return true for SUPER_ADMIN when ADMIN is required', () => {

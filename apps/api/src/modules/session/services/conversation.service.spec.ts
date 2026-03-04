@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '@libs/database';
+import { ConversationService, SubmitAnswerWithAiParams } from './conversation.service';
 import {
-  ConversationService,
-  SubmitAnswerWithAiParams,
-} from './conversation.service';
-import { ClaudeAiService, ConversationFollowUp } from '../../idea-capture/services/claude-ai.service';
+  ClaudeAiService,
+  ConversationFollowUp,
+} from '../../idea-capture/services/claude-ai.service';
 
 const mockPrismaService = {
   conversationMessage: {
@@ -113,7 +113,7 @@ describe('ConversationService', () => {
 
       expect(result.followUp.shouldFollowUp).toBe(true);
       expect(mockPrismaService.conversationMessage.create).toHaveBeenCalledTimes(2);
-      
+
       // Second call should be for assistant follow-up
       expect(mockPrismaService.conversationMessage.create).toHaveBeenNthCalledWith(2, {
         data: {
@@ -149,7 +149,7 @@ describe('ConversationService', () => {
         mockMessage,
         { ...mockMessage, id: 'msg-2', role: 'assistant', content: 'Follow up question' },
       ];
-      
+
       mockPrismaService.conversationMessage.create.mockResolvedValue(mockMessage);
       mockClaudeAiService.evaluateAnswerCompleteness.mockResolvedValue(mockFollowUp);
       mockPrismaService.conversationMessage.findMany.mockResolvedValue(messages);
@@ -309,10 +309,21 @@ describe('ConversationService', () => {
     });
 
     it('should order messages by createdAt ascending', async () => {
-      const olderMessage = { ...mockMessage, id: 'msg-1', createdAt: new Date('2024-01-15T09:00:00Z') };
-      const newerMessage = { ...mockMessage, id: 'msg-2', createdAt: new Date('2024-01-15T10:00:00Z') };
+      const olderMessage = {
+        ...mockMessage,
+        id: 'msg-1',
+        createdAt: new Date('2024-01-15T09:00:00Z'),
+      };
+      const newerMessage = {
+        ...mockMessage,
+        id: 'msg-2',
+        createdAt: new Date('2024-01-15T10:00:00Z'),
+      };
 
-      mockPrismaService.conversationMessage.findMany.mockResolvedValue([olderMessage, newerMessage]);
+      mockPrismaService.conversationMessage.findMany.mockResolvedValue([
+        olderMessage,
+        newerMessage,
+      ]);
 
       const result = await service.getQuestionConversation('session-1', 'question-1');
 
