@@ -784,9 +784,7 @@ describe('SessionService', () => {
         currentSectionId: null,
         questionnaire: {
           ...mockQuestionnaire,
-          sections: [
-            { id: 'section-1', name: 'Section 1', orderIndex: 0 },
-          ],
+          sections: [{ id: 'section-1', name: 'Section 1', orderIndex: 0 }],
         },
       };
       prismaService.session.findUnique.mockResolvedValue(sessionNoSection as any);
@@ -810,9 +808,7 @@ describe('SessionService', () => {
         ...mockSession,
         questionnaire: {
           ...mockQuestionnaire,
-          sections: [
-            { id: 'section-1', name: 'Section 1', orderIndex: 0 },
-          ],
+          sections: [{ id: 'section-1', name: 'Section 1', orderIndex: 0 }],
         },
       };
       prismaService.session.findUnique.mockResolvedValue(sessionWithQuestionnaire as any);
@@ -841,9 +837,7 @@ describe('SessionService', () => {
         currentQuestionId: 'q3',
         questionnaire: {
           ...mockQuestionnaire,
-          sections: [
-            { id: 'section-1', name: 'Section 1', orderIndex: 0 },
-          ],
+          sections: [{ id: 'section-1', name: 'Section 1', orderIndex: 0 }],
         },
       };
       prismaService.session.findUnique.mockResolvedValue(sessionAtQ3 as any);
@@ -872,9 +866,7 @@ describe('SessionService', () => {
         projectTypeId: 'pt-1',
         questionnaire: {
           ...mockQuestionnaire,
-          sections: [
-            { id: 'section-1', name: 'Section 1', orderIndex: 0 },
-          ],
+          sections: [{ id: 'section-1', name: 'Section 1', orderIndex: 0 }],
         },
       };
       prismaService.session.findUnique.mockResolvedValue(sessionWithProjectType as any);
@@ -888,7 +880,10 @@ describe('SessionService', () => {
       prismaService.session.update.mockResolvedValue(sessionWithProjectType as any);
       // This is a readiness-gated project type with low score
       prismaService.projectType.findUnique.mockResolvedValue({ slug: 'technical-readiness' });
-      scoringEngineService.calculateScore.mockResolvedValueOnce({ score: 50, portfolioResidual: 0.5 });
+      scoringEngineService.calculateScore.mockResolvedValueOnce({
+        score: 50,
+        portfolioResidual: 0.5,
+      });
 
       const result = await service.continueSession(mockSessionId, mockUserId, 1);
 
@@ -901,9 +896,7 @@ describe('SessionService', () => {
         readinessScore: 88.5,
         questionnaire: {
           ...mockQuestionnaire,
-          sections: [
-            { id: 'section-1', name: 'Section 1', orderIndex: 0 },
-          ],
+          sections: [{ id: 'section-1', name: 'Section 1', orderIndex: 0 }],
         },
       };
       prismaService.session.findUnique.mockResolvedValue(sessionWithScore as any);
@@ -1097,9 +1090,7 @@ describe('SessionService', () => {
 
     it('should calculate section progress correctly with answered questions', async () => {
       prismaService.session.findUnique.mockResolvedValue(mockSession as any);
-      prismaService.response.findMany.mockResolvedValue([
-        { questionId: 'q1', value: 'a' },
-      ] as any);
+      prismaService.response.findMany.mockResolvedValue([{ questionId: 'q1', value: 'a' }] as any);
       questionnaireService.getQuestionById.mockResolvedValue(mockQuestion as any);
       adaptiveLogicService.getVisibleQuestions.mockResolvedValue([
         { ...mockQuestion, id: 'q1', sectionId: 'section-1' },
@@ -1169,12 +1160,14 @@ describe('SessionService', () => {
 
     it('should use NQS question as next when scoring engine returns one', async () => {
       scoringEngineService.getNextQuestions.mockResolvedValueOnce({
-        questions: [{
-          questionId: 'q2',
-          text: 'NQS question',
-          dimensionKey: 'dim-1',
-          expectedScoreLift: 5.5,
-        }],
+        questions: [
+          {
+            questionId: 'q2',
+            text: 'NQS question',
+            dimensionKey: 'dim-1',
+            expectedScoreLift: 5.5,
+          },
+        ],
       });
 
       const result = await service.submitResponse(mockSessionId, mockUserId, submitDto);
@@ -1196,12 +1189,14 @@ describe('SessionService', () => {
 
     it('should fall back to sequential next when NQS question not in visible list', async () => {
       scoringEngineService.getNextQuestions.mockResolvedValueOnce({
-        questions: [{
-          questionId: 'q-nonexistent',
-          text: 'Not visible',
-          dimensionKey: 'dim-1',
-          expectedScoreLift: 3.0,
-        }],
+        questions: [
+          {
+            questionId: 'q-nonexistent',
+            text: 'Not visible',
+            dimensionKey: 'dim-1',
+            expectedScoreLift: 3.0,
+          },
+        ],
       });
 
       const result = await service.submitResponse(mockSessionId, mockUserId, submitDto);
@@ -1240,7 +1235,9 @@ describe('SessionService', () => {
       await service.submitResponse(mockSessionId, mockUserId, submitDto);
 
       expect(scoringEngineService.invalidateScoreCache).toHaveBeenCalledWith(mockSessionId);
-      expect(scoringEngineService.calculateScore).toHaveBeenCalledWith({ sessionId: mockSessionId });
+      expect(scoringEngineService.calculateScore).toHaveBeenCalledWith({
+        sessionId: mockSessionId,
+      });
     });
 
     it('should handle null/undefined value for required question', async () => {
@@ -1390,7 +1387,12 @@ describe('SessionService', () => {
       questionnaireService.getQuestionById.mockResolvedValue({
         ...mockQuestion,
         isRequired: false,
-        validationRules: { minLength: 'invalid', maxLength: 'invalid', min: 'invalid', max: 'invalid' },
+        validationRules: {
+          minLength: 'invalid',
+          maxLength: 'invalid',
+          min: 'invalid',
+          max: 'invalid',
+        },
       } as any);
 
       const result = await service.submitResponse(mockSessionId, mockUserId, {
@@ -2168,9 +2170,7 @@ describe('SessionService', () => {
     it('should throw NotFoundException for non-existent source session', async () => {
       prismaService.session.findUnique.mockResolvedValue(null);
 
-      await expect(service.cloneSession('no-exist', mockUserId)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.cloneSession('no-exist', mockUserId)).rejects.toThrow(NotFoundException);
     });
 
     it('should throw ForbiddenException for unauthorized user', async () => {
@@ -2393,11 +2393,7 @@ describe('SessionService', () => {
       prismaService.session.findMany.mockResolvedValue([]);
       prismaService.session.count.mockResolvedValue(0);
 
-      await service.findAllByUser(
-        mockUserId,
-        { page: 1, limit: 10, skip: 0 },
-        undefined,
-      );
+      await service.findAllByUser(mockUserId, { page: 1, limit: 10, skip: 0 }, undefined);
 
       expect(prismaService.session.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -2416,10 +2412,7 @@ describe('SessionService', () => {
         .mockResolvedValueOnce(10)
         .mockResolvedValueOnce(20);
 
-      const result = await service.findAllByUser(
-        mockUserId,
-        { page: 1, limit: 10, skip: 0 },
-      );
+      const result = await service.findAllByUser(mockUserId, { page: 1, limit: 10, skip: 0 });
 
       expect(result.items).toHaveLength(2);
       expect(result.total).toBe(2);
@@ -2431,10 +2424,7 @@ describe('SessionService', () => {
       prismaService.session.findMany.mockResolvedValue([]);
       prismaService.session.count.mockResolvedValue(0);
 
-      await service.findAllByUser(
-        mockUserId,
-        { page: 3, limit: 5, skip: 10 },
-      );
+      await service.findAllByUser(mockUserId, { page: 3, limit: 5, skip: 10 });
 
       expect(prismaService.session.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -2528,9 +2518,7 @@ describe('SessionService', () => {
         id: 'response-1',
         answeredAt: new Date(),
       } as any);
-      prismaService.response.findMany.mockResolvedValue([
-        { questionId: 'q1', value: 'a' },
-      ] as any);
+      prismaService.response.findMany.mockResolvedValue([{ questionId: 'q1', value: 'a' }] as any);
       adaptiveLogicService.getVisibleQuestions.mockResolvedValue([
         { id: 'q1', sectionId: 'section-1' },
       ] as any);
@@ -3043,9 +3031,7 @@ describe('SessionService', () => {
 
     it('should handle multiple sections in section progress calculation', async () => {
       prismaService.session.findUnique.mockResolvedValue(mockSession as any);
-      prismaService.response.findMany.mockResolvedValue([
-        { questionId: 'q1', value: 'a' },
-      ] as any);
+      prismaService.response.findMany.mockResolvedValue([{ questionId: 'q1', value: 'a' }] as any);
       const currentQ = { ...mockQuestion, sectionId: 'section-2' };
       questionnaireService.getQuestionById.mockResolvedValue(currentQ as any);
       adaptiveLogicService.getVisibleQuestions.mockResolvedValue([
@@ -3142,12 +3128,14 @@ describe('SessionService', () => {
       ] as any);
       // NQS returns q3 which IS in visible list
       scoringEngineService.getNextQuestions.mockResolvedValueOnce({
-        questions: [{
-          questionId: 'q3',
-          text: 'NQS picks q3',
-          dimensionKey: 'dim-2',
-          expectedScoreLift: 8.0,
-        }],
+        questions: [
+          {
+            questionId: 'q3',
+            text: 'NQS picks q3',
+            dimensionKey: 'dim-2',
+            expectedScoreLift: 8.0,
+          },
+        ],
       });
 
       await service.submitResponse(mockSessionId, mockUserId, {
@@ -3168,9 +3156,7 @@ describe('SessionService', () => {
 
     it('should update session with progress after submitResponse', async () => {
       baseSubmitSetup();
-      prismaService.response.findMany.mockResolvedValue([
-        { questionId: 'q1', value: 'a' },
-      ] as any);
+      prismaService.response.findMany.mockResolvedValue([{ questionId: 'q1', value: 'a' }] as any);
       adaptiveLogicService.getVisibleQuestions.mockResolvedValue([
         { id: 'q1', sectionId: 'section-1' },
         { id: 'q2', sectionId: 'section-1' },
@@ -3480,7 +3466,9 @@ describe('SessionService', () => {
       expect(prismaService.response.upsert).toHaveBeenCalledWith(
         expect.objectContaining({
           create: expect.objectContaining({
-            validationErrors: { errors: expect.arrayContaining(['Minimum length is 10 characters']) },
+            validationErrors: {
+              errors: expect.arrayContaining(['Minimum length is 10 characters']),
+            },
           }),
         }),
       );
@@ -4357,11 +4345,15 @@ describe('SessionService', () => {
         expect.objectContaining({
           create: expect.objectContaining({
             isValid: false,
-            validationErrors: { errors: expect.arrayContaining(['Minimum length is 50 characters']) },
+            validationErrors: {
+              errors: expect.arrayContaining(['Minimum length is 50 characters']),
+            },
           }),
           update: expect.objectContaining({
             isValid: false,
-            validationErrors: { errors: expect.arrayContaining(['Minimum length is 50 characters']) },
+            validationErrors: {
+              errors: expect.arrayContaining(['Minimum length is 50 characters']),
+            },
           }),
         }),
       );

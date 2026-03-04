@@ -444,9 +444,7 @@ describe('BillingService', () => {
         currency: null,
         next_payment_attempt: null,
         lines: {
-          data: [
-            { description: null, amount: null },
-          ],
+          data: [{ description: null, amount: null }],
         },
       };
 

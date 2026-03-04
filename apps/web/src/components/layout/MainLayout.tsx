@@ -26,9 +26,7 @@ const navigation = [
   { name: 'Billing', href: '/billing', icon: CreditCard },
 ];
 
-const bottomNav = [
-  { name: 'Help Center', href: '/help', icon: HelpCircle },
-];
+const bottomNav = [{ name: 'Help Center', href: '/help', icon: HelpCircle }];
 
 export function MainLayout() {
   const { user, logout } = useAuthStore();
@@ -43,12 +41,18 @@ export function MainLayout() {
   };
 
   const isActive = (href: string) => {
-    if (href === '/dashboard') return location.pathname === '/dashboard' || location.pathname === '/';
+    if (href === '/dashboard')
+      return location.pathname === '/dashboard' || location.pathname === '/';
     return location.pathname.startsWith(href);
   };
 
   const userInitials = user?.name
-    ? user.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
+    ? user.name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2)
     : user?.email?.[0]?.toUpperCase() || 'U';
 
   return (
@@ -84,13 +88,29 @@ export function MainLayout() {
         )}
       >
         {/* Logo */}
-        <div className={clsx('flex h-16 items-center border-b border-surface-100 px-4', collapsed ? 'justify-center' : 'justify-between')}>
+        <div
+          className={clsx(
+            'flex h-16 items-center border-b border-surface-100 px-4',
+            collapsed ? 'justify-center' : 'justify-between',
+          )}
+        >
           {!collapsed && (
             <Link to="/dashboard" className="flex items-center gap-2 group">
               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-600 shadow-xs group-hover:shadow-elevated transition-shadow">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-white">
-                  <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  <path
+                    d="M9 12l2 2 4-4"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
                 </svg>
               </div>
               <span className="text-lg font-bold tracking-tight text-surface-900">
@@ -99,10 +119,24 @@ export function MainLayout() {
             </Link>
           )}
           {collapsed && (
-            <Link to="/dashboard" className="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-600">
+            <Link
+              to="/dashboard"
+              className="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-600"
+            >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-white">
-                <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                <path
+                  d="M9 12l2 2 4-4"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
               </svg>
             </Link>
           )}
@@ -111,7 +145,9 @@ export function MainLayout() {
             onClick={() => setCollapsed(!collapsed)}
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            <ChevronLeft className={clsx('h-4 w-4 transition-transform', collapsed && 'rotate-180')} />
+            <ChevronLeft
+              className={clsx('h-4 w-4 transition-transform', collapsed && 'rotate-180')}
+            />
           </button>
           <button
             className="lg:hidden p-1.5 rounded-md hover:bg-surface-100 text-surface-500"
@@ -122,7 +158,10 @@ export function MainLayout() {
         </div>
 
         {/* Main nav */}
-        <nav className="flex-1 flex flex-col px-3 py-4 overflow-y-auto" aria-label="Main navigation">
+        <nav
+          className="flex-1 flex flex-col px-3 py-4 overflow-y-auto"
+          aria-label="Main navigation"
+        >
           <ul className="space-y-1" role="list">
             {navigation.map((item) => {
               const active = isActive(item.href);
@@ -140,7 +179,13 @@ export function MainLayout() {
                     )}
                     title={collapsed ? item.name : undefined}
                   >
-                    <item.icon className={clsx('h-[18px] w-[18px] shrink-0', active ? 'text-brand-600' : 'text-surface-400')} aria-hidden="true" />
+                    <item.icon
+                      className={clsx(
+                        'h-[18px] w-[18px] shrink-0',
+                        active ? 'text-brand-600' : 'text-surface-400',
+                      )}
+                      aria-hidden="true"
+                    />
                     {!collapsed && <span>{item.name}</span>}
                   </Link>
                 </li>
@@ -161,7 +206,10 @@ export function MainLayout() {
                   )}
                   title={collapsed ? item.name : undefined}
                 >
-                  <item.icon className="h-[18px] w-[18px] shrink-0 text-surface-400" aria-hidden="true" />
+                  <item.icon
+                    className="h-[18px] w-[18px] shrink-0 text-surface-400"
+                    aria-hidden="true"
+                  />
                   {!collapsed && <span>{item.name}</span>}
                 </Link>
               </li>
@@ -170,7 +218,9 @@ export function MainLayout() {
         </nav>
 
         {/* User section */}
-        <div className={clsx('border-t border-surface-100 p-3', collapsed && 'flex justify-center')}>
+        <div
+          className={clsx('border-t border-surface-100 p-3', collapsed && 'flex justify-center')}
+        >
           {!collapsed ? (
             <div className="space-y-2">
               <div className="flex items-center gap-3 px-2 py-1.5">
@@ -178,7 +228,9 @@ export function MainLayout() {
                   {userInitials}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-surface-900 truncate">{user?.name || 'User'}</p>
+                  <p className="text-sm font-medium text-surface-900 truncate">
+                    {user?.name || 'User'}
+                  </p>
                   <p className="text-xs text-surface-400 truncate">{user?.email}</p>
                 </div>
               </div>
@@ -233,7 +285,10 @@ export function MainLayout() {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-surface-100 bg-white/50 px-4 lg:px-6 py-4 mt-auto" role="contentinfo">
+        <footer
+          className="border-t border-surface-100 bg-white/50 px-4 lg:px-6 py-4 mt-auto"
+          role="contentinfo"
+        >
           <p className="text-center text-xs text-surface-400">
             &copy; {new Date().getFullYear()} Quiz2Biz. All rights reserved.
           </p>

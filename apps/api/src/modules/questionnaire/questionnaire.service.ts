@@ -196,7 +196,9 @@ export class QuestionnaireService {
       where: { slug: projectTypeSlug },
     });
 
-    if (!projectType) {return null;}
+    if (!projectType) {
+      return null;
+    }
 
     const questionnaire = await this.prisma.questionnaire.findFirst({
       where: { projectTypeId: projectType.id, isActive: true },
@@ -292,7 +294,11 @@ export class QuestionnaireService {
   private mapQuestion(question: Question): QuestionResponse {
     const options = question.options as QuestionOption[] | null;
     const validation = question.validationRules as Record<string, unknown> | null;
-    const q = question as Question & { bestPractice?: string | null; practicalExplainer?: string | null; dimensionKey?: string | null };
+    const q = question as Question & {
+      bestPractice?: string | null;
+      practicalExplainer?: string | null;
+      dimensionKey?: string | null;
+    };
 
     return {
       id: question.id,

@@ -81,10 +81,7 @@ describe('ContextBuilderService', () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        ContextBuilderService,
-        { provide: PrismaService, useValue: mockPrismaService },
-      ],
+      providers: [ContextBuilderService, { provide: PrismaService, useValue: mockPrismaService }],
     }).compile();
 
     service = module.get<ContextBuilderService>(ContextBuilderService);
@@ -99,9 +96,9 @@ describe('ContextBuilderService', () => {
 
       // Should have 2 gaps (resp-1 and resp-3), not resp-2 (full coverage)
       expect(result.length).toBe(2);
-      expect(result.some(g => g.questionId === 'q-1')).toBe(true);
-      expect(result.some(g => g.questionId === 'q-3')).toBe(true);
-      expect(result.some(g => g.questionId === 'q-2')).toBe(false);
+      expect(result.some((g) => g.questionId === 'q-1')).toBe(true);
+      expect(result.some((g) => g.questionId === 'q-3')).toBe(true);
+      expect(result.some((g) => g.questionId === 'q-2')).toBe(false);
     });
 
     it('should sort gaps by residual risk (highest first)', async () => {
@@ -128,7 +125,7 @@ describe('ContextBuilderService', () => {
 
       const result = await service.buildGapContexts('session-1');
 
-      const securityGap = result.find(g => g.dimensionKey === 'SECURITY');
+      const securityGap = result.find((g) => g.dimensionKey === 'SECURITY');
       // residualRisk = severity * (1 - coverage) = 0.8 * 0.7 = 0.56
       expect(securityGap?.residualRisk).toBeCloseTo(0.56, 2);
     });
@@ -138,7 +135,7 @@ describe('ContextBuilderService', () => {
 
       const result = await service.buildGapContexts('session-1');
 
-      const securityGap = result.find(g => g.dimensionKey === 'SECURITY');
+      const securityGap = result.find((g) => g.dimensionKey === 'SECURITY');
       expect(securityGap?.standardRefs).toEqual(['ISO-27001', 'NIST']);
     });
 
@@ -147,7 +144,7 @@ describe('ContextBuilderService', () => {
 
       const result = await service.buildGapContexts('session-1');
 
-      const complianceGap = result.find(g => g.dimensionKey === 'COMPLIANCE');
+      const complianceGap = result.find((g) => g.dimensionKey === 'COMPLIANCE');
       expect(complianceGap?.standardRefs).toEqual([]);
     });
 

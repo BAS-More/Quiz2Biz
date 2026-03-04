@@ -338,11 +338,7 @@ describe('AdaptiveLogicService', () => {
         .mockResolvedValueOnce(sameQuestions)
         .mockResolvedValueOnce(sameQuestions);
 
-      const changes = await service.calculateAdaptiveChanges(
-        'quest-001',
-        new Map(),
-        new Map(),
-      );
+      const changes = await service.calculateAdaptiveChanges('quest-001', new Map(), new Map());
 
       expect(changes.added).toEqual([]);
       expect(changes.removed).toEqual([]);
@@ -922,9 +918,7 @@ describe('AdaptiveLogicService', () => {
             nested: [
               {
                 logicalOp: 'AND',
-                nested: [
-                  { field: 'q-deep-source', operator: 'equals', value: 'yes' },
-                ],
+                nested: [{ field: 'q-deep-source', operator: 'equals', value: 'yes' }],
               },
             ],
           },

@@ -268,11 +268,10 @@ describe('FeatureFlagService', () => {
 
     it('should evaluate rate-limit-config flag', () => {
       const context: FlagEvaluationContext = {};
-      const result = service.getJsonFlag(
-        'rate-limit-config',
-        context,
-        { requestsPerMinute: 0, burstSize: 0 },
-      );
+      const result = service.getJsonFlag('rate-limit-config', context, {
+        requestsPerMinute: 0,
+        burstSize: 0,
+      });
       expect(result).toHaveProperty('requestsPerMinute');
     });
 
@@ -280,11 +279,10 @@ describe('FeatureFlagService', () => {
       const context: FlagEvaluationContext = {
         subscriptionTier: 'ENTERPRISE',
       };
-      const result = service.getJsonFlag(
-        'rate-limit-config',
-        context,
-        { requestsPerMinute: 60, burstSize: 10 },
-      );
+      const result = service.getJsonFlag('rate-limit-config', context, {
+        requestsPerMinute: 60,
+        burstSize: 10,
+      });
       expect(result.requestsPerMinute).toBe(120);
     });
   });
@@ -460,7 +458,9 @@ describe('FeatureFlagService', () => {
           rules: [
             {
               id: 'negate-rule',
-              clauses: [{ attribute: 'email', op: 'endsWith', values: ['@blocked.com'], negate: true }],
+              clauses: [
+                { attribute: 'email', op: 'endsWith', values: ['@blocked.com'], negate: true },
+              ],
               variation: 1,
             },
           ],
@@ -736,9 +736,7 @@ describe('FeatureFlagService', () => {
               id: 'rule-with-rollout',
               clauses: [{ attribute: 'email', op: 'endsWith', values: ['@test.com'] }],
               rollout: {
-                variations: [
-                  { variation: 1, weight: 100000 },
-                ],
+                variations: [{ variation: 1, weight: 100000 }],
               },
             },
           ],
@@ -747,7 +745,10 @@ describe('FeatureFlagService', () => {
         },
       });
 
-      const result = svc.getBooleanFlag('test-rule-rollout', { email: 'admin@test.com', userId: 'u1' });
+      const result = svc.getBooleanFlag('test-rule-rollout', {
+        email: 'admin@test.com',
+        userId: 'u1',
+      });
       expect(result).toBe(true);
     });
 
@@ -758,9 +759,7 @@ describe('FeatureFlagService', () => {
         key: 'test-rule-oob',
         kind: 'boolean',
         defaultValue: true,
-        variations: [
-          { value: false, name: 'Off' },
-        ],
+        variations: [{ value: false, name: 'Off' }],
         targeting: {
           enabled: true,
           rules: [
@@ -816,17 +815,13 @@ describe('FeatureFlagService', () => {
         key: 'test-rollout-var-oob',
         kind: 'boolean',
         defaultValue: true,
-        variations: [
-          { value: false, name: 'Off' },
-        ],
+        variations: [{ value: false, name: 'Off' }],
         targeting: {
           enabled: true,
           rules: [],
           fallthrough: {
             rollout: {
-              variations: [
-                { variation: 99, weight: 100000 },
-              ],
+              variations: [{ variation: 99, weight: 100000 }],
             },
           },
           offVariation: 0,
@@ -844,9 +839,7 @@ describe('FeatureFlagService', () => {
         key: 'test-fallthrough-oob',
         kind: 'boolean',
         defaultValue: true,
-        variations: [
-          { value: false, name: 'Off' },
-        ],
+        variations: [{ value: false, name: 'Off' }],
         targeting: {
           enabled: true,
           rules: [],
