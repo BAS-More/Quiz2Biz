@@ -19,7 +19,7 @@ env:
 jobs:
   lint-and-format:
     name: lint-and-format
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -54,7 +54,7 @@ jobs:
 
   test-api:
     name: test-api
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -134,7 +134,7 @@ jobs:
 
   test-web:
     name: test-web
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -174,7 +174,7 @@ jobs:
 
   test-regression:
     name: test-regression
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -237,7 +237,7 @@ jobs:
 
   test-e2e:
     name: test-e2e
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/')
     continue-on-error: true
     runs-on: ubuntu-latest
     permissions:
@@ -329,7 +329,7 @@ jobs:
 
   build:
     name: build
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -377,7 +377,7 @@ jobs:
 
   docker-build-test:
     name: docker-build-test
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -411,7 +411,7 @@ jobs:
 
   security-scan:
     name: security-scan
-    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/') && !startsWith(github.head_ref, 'alert-autofix-') && !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'qoder/')
+    if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -454,7 +454,7 @@ jobs:
 
   automation-smoke:
     name: automation-smoke
-    if: github.actor == 'dependabot[bot]' || startsWith(github.head_ref, 'dependabot/') || startsWith(github.head_ref, 'alert-autofix-') || startsWith(github.head_ref, 'copilot/') || startsWith(github.head_ref, 'qoder/')
+    if: github.actor == 'dependabot[bot]' || startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
