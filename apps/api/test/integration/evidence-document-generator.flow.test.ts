@@ -426,7 +426,9 @@ This evidence demonstrates substantial coverage of security policy requirements.
         });
 
         expect(rejected?.verified).toBe(false);
-        expect((rejected?.metadata as { rejectionReason?: string })?.rejectionReason).toContain('50MB');
+        expect((rejected?.metadata as { rejectionReason?: string })?.rejectionReason).toContain(
+          '50MB',
+        );
 
         // Clean up
         await prisma.evidenceRegistry.delete({ where: { id: rejected!.id } });

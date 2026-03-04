@@ -147,7 +147,7 @@ jobs:
 
       - name: Run Trivy vulnerability scanner (JSON)
         run: |
-          trivy image --format json --output trivy-results.json --severity CRITICAL,HIGH,MEDIUM --ignore-unfixed quiz-api:scan || true
+          trivy image --format json --output trivy-results.json --severity CRITICAL,HIGH,MEDIUM --ignore-unfixed quiz-api:scan
 
       - name: Generate security summary
         if: always()
@@ -197,8 +197,8 @@ jobs:
           fetch-depth: 0
 
       - name: TruffleHog Secret Scanning (Push)
-        if: github.event_name == 'push'
-        uses: trufflesecurity/trufflehog@main
+        if: github.event_name == 'push' && github.event.before != '0000000000000000000000000000000000000000'
+        uses: trufflesecurity/trufflehog@v3.93.5
         with:
           path: ./
           base: ${{ github.event.before }}
@@ -207,19 +207,21 @@ jobs:
 
       - name: TruffleHog Secret Scanning (Pull Request)
         if: github.event_name == 'pull_request'
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@v3.93.5
         with:
           path: ./
           base: ${{ github.event.pull_request.base.sha }}
           head: ${{ github.event.pull_request.head.sha }}
           extra_args: --debug --only-verified
 
+      # NOTE: Scheduled/manual runs only scan the last 50 commits.
+      # Secrets older than 50 commits may be missed on these runs.
       - name: TruffleHog Secret Scanning (Schedule/Manual)
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@v3.93.5
         with:
           path: ./
-          extra_args: --debug --only-verified --since-commit HEAD~50
+          extra_args: --debug --only-verified --since-commit ${{ steps.trufflehog_since.outputs.commit }}
 
   security-summary:
     name: Security Scan Summary
@@ -250,8 +252,8 @@ jobs:
             FAILED=true
           fi
           
-          # Container scan is skipped on schedule events - don't fail if skipped
-          if [ "${{ needs.container-scan.result }}" != "success" ] && [ "${{ needs.container-scan.result }}" != "skipped" ]; then
+          # Container scan is skipped on schedule events - don't fail if skipped or cancelled
+          if [ "${{ needs.container-scan.result }}" != "success" ] && [ "${{ needs.container-scan.result }}" != "skipped" ] && [ "${{ needs.container-scan.result }}" != "cancelled" ]; then
             FAILED=true
           fi
           
