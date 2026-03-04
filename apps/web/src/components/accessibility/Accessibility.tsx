@@ -556,7 +556,6 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
     }
   }, []);
 
-
   const cancelSpeech = useCallback(() => {
     synthRef.current?.cancel();
   }, []);

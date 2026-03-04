@@ -11,11 +11,7 @@
 // ---------------------------------------------------------------------------
 
 import type { MessageType, ValidationResult, ValidationTier } from '../config/interfaces';
-import type {
-  ICriterionResult,
-  IMessage,
-  IValidationSummary,
-} from './interfaces';
+import type { ICriterionResult, IMessage, IValidationSummary } from './interfaces';
 
 // ── Validation ──────────────────────────────────────────────────────────────
 
@@ -75,7 +71,10 @@ export function validateMessage(msg: Partial<IMessage>): IMessageValidationResul
   if (msg.message_type === 'DELEGATE') {
     const payload = msg.payload as Record<string, unknown> | undefined;
     if (!payload?.instruction) {
-      errors.push({ field: 'payload.instruction', message: 'DELEGATE messages require an instruction in payload' });
+      errors.push({
+        field: 'payload.instruction',
+        message: 'DELEGATE messages require an instruction in payload',
+      });
     }
     // CEO (coo) is exempt from predecessorSummary requirement
     if (msg.from_agent && msg.from_agent !== 'coo' && !msg.predecessor_summary) {
@@ -98,7 +97,10 @@ export function validateMessage(msg: Partial<IMessage>): IMessageValidationResul
   if (msg.message_type === 'ESCALATE') {
     const payload = msg.payload as Record<string, unknown> | undefined;
     if (!payload?.reason) {
-      errors.push({ field: 'payload.reason', message: 'ESCALATE messages require a reason in payload' });
+      errors.push({
+        field: 'payload.reason',
+        message: 'ESCALATE messages require a reason in payload',
+      });
     }
   }
 
@@ -327,7 +329,7 @@ export function buildValidationSummary(
   tier3: ITier3Input,
 ): IValidationSummary {
   const criteriaCount = tier2.criteriaResults.length;
-  const criteriaPassed = tier2.criteriaResults.filter(c => c.result === 'YES').length;
+  const criteriaPassed = tier2.criteriaResults.filter((c) => c.result === 'YES').length;
 
   return {
     tier_1: {
@@ -407,14 +409,13 @@ export function getOverallValidationResult(summary: IValidationSummary): Validat
  * @param summary - The 3-tier validation summary.
  * @returns True if the tier was actually executed.
  */
-export function wasTierExecuted(
-  tier: ValidationTier,
-  summary: IValidationSummary,
-): boolean {
+export function wasTierExecuted(tier: ValidationTier, summary: IValidationSummary): boolean {
   const status =
-    tier === 'TIER_1' ? summary.tier_1.status
-    : tier === 'TIER_2' ? summary.tier_2.status
-    : summary.tier_3.status;
+    tier === 'TIER_1'
+      ? summary.tier_1.status
+      : tier === 'TIER_2'
+        ? summary.tier_2.status
+        : summary.tier_3.status;
 
   return status !== 'NOT_REQUIRED';
 }

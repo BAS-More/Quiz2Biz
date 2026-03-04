@@ -18,7 +18,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
 
   // Retry on CI only
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 0 : 0,
 
   // Limit parallel workers on CI
   workers: process.env.CI ? 1 : undefined,
@@ -112,10 +112,12 @@ export default defineConfig({
             timeout: 120000,
           },
           {
-            command: 'cd apps/api && npm run start:dev',
-            url: 'http://localhost:3000/health',
+            command: process.env.CI
+              ? 'cd apps/api && npx nest start'
+              : 'cd apps/api && npm run start:dev',
+            url: 'http://localhost:3000/api/v1/health/live',
             reuseExistingServer: !process.env.CI,
-            timeout: 120000,
+            timeout: process.env.CI ? 60000 : 120000,
           },
         ],
       }),

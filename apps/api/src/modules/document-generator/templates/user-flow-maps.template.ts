@@ -301,7 +301,11 @@ export const USER_FLOW_MAPS_TEMPLATE = {
    */
   defaults: {
     'accessibility.wcagCompliance': 'WCAG 2.1 Level AA compliance targeted',
-    'wireframes.responsiveDesign': 'Mobile-first responsive design with breakpoints at 768px and 1024px',
-    'userResearch.recommendations': ['Conduct usability testing with target personas', 'Iterate on flows based on analytics data'],
+    'wireframes.responsiveDesign':
+      'Mobile-first responsive design with breakpoints at 768px and 1024px',
+    'userResearch.recommendations': [
+      'Conduct usability testing with target personas',
+      'Iterate on flows based on analytics data',
+    ],
   },
 };

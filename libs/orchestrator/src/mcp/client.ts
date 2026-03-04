@@ -6,11 +6,7 @@ import { Pool, type PoolClient, type QueryResult } from 'pg';
 import { config } from '../config';
 import { createLogger } from '../utils/logger';
 import { validateMessage } from '../schemas/message';
-import type {
-  AuditOperation,
-  TaskTier,
-  ValidationTier,
-} from '../config/interfaces';
+import type { AuditOperation, TaskTier, ValidationTier } from '../config/interfaces';
 import type {
   IAgent,
   IAgentConfig,
@@ -53,7 +49,9 @@ let pool: Pool | null = null;
  * Safe to call multiple times — subsequent calls are no-ops.
  */
 export function init(): void {
-  if (pool) {return;}
+  if (pool) {
+    return;
+  }
 
   const { db } = config;
 
@@ -62,9 +60,7 @@ export function init(): void {
   const sslRejectUnauthorized =
     sslRejectUnauthorizedEnv == null
       ? true // Secure default: validate certificates
-      : !['false', '0', 'no', 'off'].includes(
-          sslRejectUnauthorizedEnv.toLowerCase().trim(),
-        );
+      : !['false', '0', 'no', 'off'].includes(sslRejectUnauthorizedEnv.toLowerCase().trim());
 
   if (db.ssl && !sslRejectUnauthorized) {
     log.warn(
@@ -103,7 +99,9 @@ export function init(): void {
  * Gracefully shut down the connection pool, draining all active connections.
  */
 export async function shutdown(): Promise<void> {
-  if (!pool) {return;}
+  if (!pool) {
+    return;
+  }
   await pool.end();
   pool = null;
   log.info('Connection pool shut down');
@@ -111,7 +109,9 @@ export async function shutdown(): Promise<void> {
 
 /** Get the pool instance, throwing if not initialised. */
 function getPool(): Pool {
-  if (!pool) {throw new Error('MCP client not initialised — call init() first');}
+  if (!pool) {
+    throw new Error('MCP client not initialised — call init() first');
+  }
   return pool;
 }
 
@@ -161,7 +161,7 @@ export async function getClient(): Promise<PoolClient> {
  * @param params - Bind parameters.
  * @param options - Optional query execution options.
  * @returns The query result.
- * 
+ *
  * @remarks
  * This function provides basic protection against resource-exhausting queries:
  * - A default statement timeout is applied (configurable via options)
@@ -172,12 +172,12 @@ export async function getClient(): Promise<PoolClient> {
  *   - Per-query execution time limits
  */
 export async function query(
-  sql: string, 
+  sql: string,
   params?: unknown[],
-  options?: { 
+  options?: {
     allowDDL?: boolean;
     statementTimeout?: number; // milliseconds
-  }
+  },
 ): Promise<QueryResult> {
   const { allowDDL = false, statementTimeout = 30000 } = options ?? {};
 
@@ -185,17 +185,17 @@ export async function query(
   if (!allowDDL) {
     const upperSQL = sql.trim().toUpperCase();
     const ddlKeywords = ['CREATE', 'DROP', 'ALTER', 'TRUNCATE', 'GRANT', 'REVOKE'];
-    const isDDL = ddlKeywords.some(keyword => upperSQL.startsWith(keyword));
-    
+    const isDDL = ddlKeywords.some((keyword) => upperSQL.startsWith(keyword));
+
     if (isDDL) {
       throw new Error(
-        'DDL statements are not allowed. Set allowDDL: true to override this protection.'
+        'DDL statements are not allowed. Set allowDDL: true to override this protection.',
       );
     }
   }
 
   const pool = getPool();
-  
+
   // Set statement timeout for this query
   const client = await pool.connect();
   try {
@@ -416,19 +416,34 @@ export async function updateTask(taskId: number, updates: Partial<ITask>): Promi
   let paramIndex = 1;
 
   const allowed: Array<keyof ITask> = [
-    'tier', 'task_type', 'project', 'module', 'instruction', 'status',
-    'queue_position', 'assigned_agent', 'delegated_by', 'token_budget',
-    'tokens_consumed', 'error_count', 'max_errors', 'output',
-    'validation_summary', 'expected_output_schema', 'classification_reasoning',
-    'is_urgent', 'started_at', 'completed_at',
+    'tier',
+    'task_type',
+    'project',
+    'module',
+    'instruction',
+    'status',
+    'queue_position',
+    'assigned_agent',
+    'delegated_by',
+    'token_budget',
+    'tokens_consumed',
+    'error_count',
+    'max_errors',
+    'output',
+    'validation_summary',
+    'expected_output_schema',
+    'classification_reasoning',
+    'is_urgent',
+    'started_at',
+    'completed_at',
   ];
 
   // Runtime validation: ensure all keys in updates are in the allowed list
   const updateKeys = Object.keys(updates) as Array<keyof ITask>;
-  const invalidKeys = updateKeys.filter(key => !allowed.includes(key));
+  const invalidKeys = updateKeys.filter((key) => !allowed.includes(key));
   if (invalidKeys.length > 0) {
     throw new Error(
-      `Invalid update fields: ${invalidKeys.join(', ')}. Allowed fields: ${allowed.join(', ')}`
+      `Invalid update fields: ${invalidKeys.join(', ')}. Allowed fields: ${allowed.join(', ')}`,
     );
   }
 
@@ -440,13 +455,12 @@ export async function updateTask(taskId: number, updates: Partial<ITask>): Promi
     }
   }
 
-  if (setClauses.length === 0) {return;}
+  if (setClauses.length === 0) {
+    return;
+  }
 
   values.push(taskId);
-  await query(
-    `UPDATE tasks SET ${setClauses.join(', ')} WHERE task_id = $${paramIndex}`,
-    values,
-  );
+  await query(`UPDATE tasks SET ${setClauses.join(', ')} WHERE task_id = $${paramIndex}`, values);
 }
 
 // ── Messages ────────────────────────────────────────────────────────────────
@@ -459,7 +473,7 @@ export async function createMessage(data: Partial<IMessage>): Promise<IMessage> 
   // Validate message before persistence
   const validation = validateMessage(data);
   if (!validation.valid) {
-    const errorDetails = validation.errors.map(e => `${e.field}: ${e.message}`).join('; ');
+    const errorDetails = validation.errors.map((e) => `${e.field}: ${e.message}`).join('; ');
     const taskId = data.task_id || 'unknown';
     throw new Error(`Message validation failed for task ${taskId}: ${errorDetails}`);
   }

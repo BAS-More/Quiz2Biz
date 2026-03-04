@@ -358,9 +358,27 @@ export const ONBOARDING_OFFBOARDING_TEMPLATE = {
    * Default values for optional fields
    */
   defaults: {
-    'onboardingProcess.firstMonth': ['Complete all mandatory training modules', 'Meet with key stakeholders', 'Understand team workflows and processes', 'Begin contributing to assigned projects'],
-    'accessRevocation.physical': ['Collect building access cards', 'Collect parking passes', 'Collect company equipment', 'Update physical access control lists'],
-    'accessRevocation.thirdParty': ['Revoke access to third-party SaaS platforms', 'Remove from vendor communication channels', 'Update external service accounts'],
-    'compliance.legal': ['Remind departing employee of ongoing NDA obligations', 'Confirm IP assignment agreements are on file', 'Process final compensation per local regulations'],
+    'onboardingProcess.firstMonth': [
+      'Complete all mandatory training modules',
+      'Meet with key stakeholders',
+      'Understand team workflows and processes',
+      'Begin contributing to assigned projects',
+    ],
+    'accessRevocation.physical': [
+      'Collect building access cards',
+      'Collect parking passes',
+      'Collect company equipment',
+      'Update physical access control lists',
+    ],
+    'accessRevocation.thirdParty': [
+      'Revoke access to third-party SaaS platforms',
+      'Remove from vendor communication channels',
+      'Update external service accounts',
+    ],
+    'compliance.legal': [
+      'Remind departing employee of ongoing NDA obligations',
+      'Confirm IP assignment agreements are on file',
+      'Process final compensation per local regulations',
+    ],
   },
 };
