@@ -8,6 +8,7 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  BadRequestException,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { OAuthService, OAuthProvider } from './oauth.service';
@@ -105,7 +106,7 @@ export class OAuthController {
         emailVerified: true,
       };
     } else {
-      throw new Error('Invalid provider or missing token');
+      throw new BadRequestException('Invalid provider or missing token');
     }
 
     // Link the account
