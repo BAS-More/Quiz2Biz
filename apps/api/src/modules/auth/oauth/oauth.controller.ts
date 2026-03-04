@@ -120,7 +120,10 @@ export class OAuthController {
   @Delete('unlink/:provider')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  async unlinkAccount(@CurrentUser() user: AuthenticatedUser, @Param('provider') provider: OAuthProvider) {
+  async unlinkAccount(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('provider') provider: OAuthProvider,
+  ) {
     await this.oauthService.unlinkOAuthAccount(user.id, provider);
     return { success: true, provider };
   }

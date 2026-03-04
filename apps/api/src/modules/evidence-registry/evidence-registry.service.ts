@@ -292,7 +292,10 @@ export class EvidenceRegistryService {
   /**
    * Get evidence statistics for a session
    */
-  async getEvidenceStats(sessionId: string, userId: string): Promise<{
+  async getEvidenceStats(
+    sessionId: string,
+    userId: string,
+  ): Promise<{
     total: number;
     verified: number;
     pending: number;

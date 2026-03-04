@@ -332,7 +332,11 @@ export class HeatmapService {
     if (!session) {
       throw new NotFoundException(`Session not found: ${sessionId}`);
     }
-    if (!this.canBypassSessionOwnership(currentUser) && currentUser && session.userId !== currentUser.id) {
+    if (
+      !this.canBypassSessionOwnership(currentUser) &&
+      currentUser &&
+      session.userId !== currentUser.id
+    ) {
       throw new ForbiddenException(`Forbidden session access: ${sessionId}`);
     }
 
@@ -634,7 +638,10 @@ export class HeatmapService {
    * Generate action plan from heatmap
    * Returns structured improvement recommendations
    */
-  async generateActionPlan(sessionId: string, currentUser?: AuthenticatedUser): Promise<ActionPlan> {
+  async generateActionPlan(
+    sessionId: string,
+    currentUser?: AuthenticatedUser,
+  ): Promise<ActionPlan> {
     const priorityGaps = await this.getPriorityGaps(sessionId, 20, currentUser);
     const result = await this.generateHeatmap(sessionId, currentUser);
 

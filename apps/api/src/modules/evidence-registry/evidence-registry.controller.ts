@@ -346,10 +346,7 @@ Checks: hash chain links, computed hashes match stored hashes, evidence not modi
   })
   @ApiParam({ name: 'sessionId', description: 'Session UUID' })
   @ApiResponse({ status: 200, description: 'Chain verification result' })
-  async verifyChain(
-    @Param('sessionId') sessionId: string,
-    @CurrentUser() user: AuthenticatedUser,
-  ) {
+  async verifyChain(@Param('sessionId') sessionId: string, @CurrentUser() user: AuthenticatedUser) {
     await this.evidenceService.assertSessionOwnership(sessionId, user.id);
     return this.integrityService.verifyChain(sessionId);
   }
@@ -436,10 +433,7 @@ Parses artifacts and extracts relevant metrics.
   })
   @ApiResponse({ status: 201, description: 'Artifact ingested successfully' })
   @ApiResponse({ status: 400, description: 'Invalid artifact format or type' })
-  async ingestCIArtifact(
-    @Body() dto: IngestArtifactDto,
-    @CurrentUser() user: AuthenticatedUser,
-  ) {
+  async ingestCIArtifact(@Body() dto: IngestArtifactDto, @CurrentUser() user: AuthenticatedUser) {
     await this.evidenceService.assertSessionOwnership(dto.sessionId, user.id);
     return this.ciIngestionService.ingestArtifact(dto);
   }
@@ -454,10 +448,7 @@ Parses artifacts and extracts relevant metrics.
     description: 'Ingest multiple CI artifacts from a single build in one request.',
   })
   @ApiResponse({ status: 201, description: 'Bulk ingestion result' })
-  async bulkIngestCIArtifacts(
-    @Body() dto: BulkIngestDto,
-    @CurrentUser() user: AuthenticatedUser,
-  ) {
+  async bulkIngestCIArtifacts(@Body() dto: BulkIngestDto, @CurrentUser() user: AuthenticatedUser) {
     await this.evidenceService.assertSessionOwnership(dto.sessionId, user.id);
     return this.ciIngestionService.bulkIngestArtifacts(dto);
   }
