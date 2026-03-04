@@ -294,7 +294,10 @@ export class HeatmapService {
         };
       });
 
-    const potentialImprovement = cellQuestions.reduce((sum, q) => sum + q.residualRisk, 0);
+    const potentialImprovement = cellQuestions.reduce(
+      (sum: number, q: { residualRisk: number }) => sum + q.residualRisk,
+      0,
+    );
 
     return {
       dimensionKey: cell.dimensionKey,
@@ -590,7 +593,7 @@ export class HeatmapService {
       const severityMultiplier = this.getSeverityMultiplier(cell.severityBucket);
 
       // Priority score = cell value × dimension weight × severity multiplier
-      const priorityScore = cell.cellValue * dimensionWeight * severityMultiplier;
+      const priorityScore = Number(cell.cellValue) * dimensionWeight * severityMultiplier;
 
       // Get questions contributing to this cell
       const cellQuestions = questions
