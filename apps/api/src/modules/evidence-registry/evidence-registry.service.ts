@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@libs/database';
-import { EvidenceType, CoverageLevel, Prisma } from '@prisma/client';
+import { EvidenceRegistry, EvidenceType, CoverageLevel, Prisma } from '@prisma/client';
 import { BlobServiceClient, ContainerClient } from '@azure/storage-blob';
 import * as crypto from 'crypto';
 
@@ -283,7 +283,7 @@ export class EvidenceRegistryService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return evidenceList.map((e) => this.mapToResponse(e));
+    return evidenceList.map((e: EvidenceRegistry) => this.mapToResponse(e));
   }
 
   /**
@@ -304,7 +304,7 @@ export class EvidenceRegistryService {
     let verified = 0;
     let pending = 0;
 
-    evidence.forEach((e) => {
+    evidence.forEach((e: { verified: boolean; artifactType: string }) => {
       if (e.verified) {
         verified++;
       } else {
@@ -637,7 +637,7 @@ export class EvidenceRegistryService {
     }
 
     // Add any logged decisions (filter to relevant ones)
-    auditLogs.forEach((log) => {
+    auditLogs.forEach((log: { id: string; statement: string; createdAt: Date; status: string }) => {
       auditTrail.push({
         action: log.status as string,
         timestamp: log.createdAt,
@@ -763,7 +763,7 @@ export class EvidenceRegistryService {
     return {
       sessionId,
       totalEvidence: evidence.length,
-      verifiedEvidence: evidence.filter((e) => e.verified).length,
+      verifiedEvidence: evidence.filter((e: { verified: boolean }) => e.verified).length,
       dimensionCoverage: Array.from(byDimension.values()).map((d) => ({
         ...d,
         questionsCovered: d.questionsCovered.size,
