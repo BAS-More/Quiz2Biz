@@ -88,7 +88,7 @@ describe('scoreCommand', () => {
   });
 
   it('should have session ID argument', () => {
-    const args = scoreCommand['_args'];
+    const args = (scoreCommand as any)['_args'];
     expect(args[0].name()).toBe('sessionId');
   });
 

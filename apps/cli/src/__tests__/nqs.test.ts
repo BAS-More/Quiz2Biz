@@ -77,7 +77,7 @@ describe('nqsCommand', () => {
   });
 
   it('should have session ID argument', () => {
-    const args = nqsCommand['_args'];
+    const args = (nqsCommand as any)['_args'];
     expect(args[0].name()).toBe('sessionId');
   });
 
