@@ -6,7 +6,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
-import { DecisionStatus, Prisma } from '@prisma/client';
+import { DecisionLog, DecisionStatus, Prisma } from '@prisma/client';
 import {
   CreateDecisionDto,
   UpdateDecisionStatusDto,
@@ -149,7 +149,7 @@ export class DecisionLogService {
     }
 
     // Use transaction to ensure atomicity
-    const result = await this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Create new decision that supersedes the old one
       const newDecision = await tx.decisionLog.create({
         data: {
@@ -223,7 +223,7 @@ export class DecisionLogService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return decisions.map((d) => this.mapToResponse(d));
+    return decisions.map((d: DecisionLog) => this.mapToResponse(d));
   }
 
   /**
@@ -248,7 +248,7 @@ export class DecisionLogService {
     // Build supersession chain
     const supersessionChain: Record<string, string[]> = {};
 
-    decisions.forEach((d) => {
+    decisions.forEach((d: DecisionLog) => {
       if (d.supersedesDecisionId) {
         if (!supersessionChain[d.supersedesDecisionId]) {
           supersessionChain[d.supersedesDecisionId] = [];
@@ -261,7 +261,7 @@ export class DecisionLogService {
       exportedAt: new Date(),
       sessionId,
       totalDecisions: decisions.length,
-      decisions: decisions.map((d) => this.mapToResponse(d)),
+      decisions: decisions.map((d: DecisionLog) => this.mapToResponse(d)),
       supersessionChain,
     };
   }
@@ -305,7 +305,7 @@ export class DecisionLogService {
       orderBy: { createdAt: 'asc' },
     });
 
-    supersessions.forEach((d) => {
+    supersessions.forEach((d: DecisionLog) => {
       chain.push(this.mapToResponse(d));
     });
 
