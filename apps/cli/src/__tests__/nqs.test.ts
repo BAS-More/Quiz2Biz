@@ -2,7 +2,6 @@
  * Unit tests for NQS (Next Question Suggest) command
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
@@ -10,58 +9,66 @@ import { nqsCommand } from '../commands/nqs';
 import { ApiClient } from '../lib/api-client';
 import { Config } from '../lib/config';
 
-// Mock dependencies
+// Mock spinner object - accessible in tests
 const mockSpinner = {
-  start: vi.fn().mockReturnThis(),
-  succeed: vi.fn().mockReturnThis(),
-  fail: vi.fn().mockReturnThis(),
+  start: jest.fn().mockReturnThis(),
+  succeed: jest.fn().mockReturnThis(),
+  fail: jest.fn().mockReturnThis(),
 };
 
-vi.mock('ora', () => ({
-  default: vi.fn(() => mockSpinner),
-}));
+// Mock ora - use the mockSpinner defined above
+jest.mock('ora', () => {
+  return jest.fn(() => ({
+    start: jest.fn().mockReturnThis(),
+    succeed: jest.fn().mockReturnThis(),
+    fail: jest.fn().mockReturnThis(),
+  }));
+});
 
-vi.mock('chalk', () => ({
+jest.mock('chalk', () => ({
   default: {
-    red: vi.fn((str) => `RED:${str}`),
-    bold: vi.fn((str) => `BOLD:${str}`),
-    gray: vi.fn((str) => `GRAY:${str}`),
+    red: jest.fn((str: string) => `RED:${str}`),
+    bold: jest.fn((str: string) => `BOLD:${str}`),
+    gray: jest.fn((str: string) => `GRAY:${str}`),
   },
 }));
 
-vi.mock('../lib/api-client');
-vi.mock('../lib/config');
+jest.mock('../lib/api-client');
+jest.mock('../lib/config');
+
+// Get mocked ora for assertions
+const mockedOra = ora as jest.MockedFunction<typeof ora>;
 
 describe('nqsCommand', () => {
   let mockConfig: any;
   let mockApiClient: any;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
 
     // Setup Config mock
     mockConfig = {
-      get: vi.fn(),
-      reset: vi.fn(),
+      get: jest.fn(),
+      reset: jest.fn(),
     };
     (Config as any).mockImplementation(() => mockConfig);
 
     // Setup ApiClient mock
     mockApiClient = {
-      getNextQuestions: vi.fn(),
+      getNextQuestions: jest.fn(),
     };
     (ApiClient as any).mockImplementation(() => mockApiClient);
 
     // Mock console methods
-    vi.spyOn(console, 'error').mockImplementation(() => {});
-    vi.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, 'log').mockImplementation(() => {});
 
     // Mock process.exit
-    vi.spyOn(process, 'exit').mockImplementation(() => undefined as never);
+    jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   it('should be a Command instance', () => {
