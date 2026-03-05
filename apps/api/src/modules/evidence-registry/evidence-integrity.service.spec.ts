@@ -49,6 +49,14 @@ describe('EvidenceIntegrityService', () => {
     configService = module.get<ConfigService>(ConfigService);
 
     jest.clearAllMocks();
+    // Mock requestTimestamp to avoid external HTTP calls to TSA in all tests
+    jest.spyOn(service, 'requestTimestamp').mockResolvedValue({
+      token: 'mock-token-base64',
+      timestamp: new Date(),
+      tsaUrl: 'https://freetsa.org/tsr',
+      hashAlgorithm: 'SHA-256',
+      hashedMessage: 'mock-hash',
+    });
   });
 
   afterAll(async () => {
