@@ -186,7 +186,7 @@ export class StandardsService {
           category: mapping.standard.category,
           title:
             mapping.sectionTitle ||
-            STANDARD_CATEGORY_TITLES[mapping.standard.category as StandardCategory],
+            STANDARD_CATEGORY_TITLES[mapping.standard.category],
           principles: mapping.standard.principles as unknown as Principle[],
         }),
       );
