@@ -51,6 +51,11 @@
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
+    "cloud:login": "az acr login --name acrquestionnaireprod",
+    "cloud:build": "docker build -t acrquestionnaireprod.azurecr.io/quiz-api:latest -f docker/api/Dockerfile .",
+    "cloud:push": "docker push acrquestionnaireprod.azurecr.io/quiz-api:latest",
+    "cloud:deploy": "az containerapp update --name ca-questionnaire-api-prod --resource-group rg-questionnaire-prod --image acrquestionnaireprod.azurecr.io/quiz-api:latest",
+    "cloud:all": "npm run cloud:login && npm run cloud:build && npm run cloud:push && npm run cloud:deploy",
     "validate:skills": "node scripts/validate-skills.js",
     "prepare": "echo husky disabled for OneDrive path compatibility"
   },

@@ -59,7 +59,8 @@ fi
 # Check Docker daemon
 if ! docker info &> /dev/null; then
     echo -e "${RED}Error: Docker daemon is not running.${NC}"
-    echo -e "Please start Docker Desktop or the Docker service."
+    echo -e "This project uses Azure Container Registry (Docker Cloud)."
+        echo -e "Run: az acr login --name acrquestionnaireprod"
     exit 1
 fi
 echo -e "${GREEN}  [OK] Docker daemon is running${NC}"
@@ -241,7 +242,8 @@ fi
 # Check Docker daemon
 if ! docker info &> /dev/null; then
     echo -e "${RED}Error: Docker daemon is not running.${NC}"
-    echo -e "Please start Docker Desktop or the Docker service."
+    echo -e "This project uses Azure Container Registry (Docker Cloud)."
+        echo -e "Run: az acr login --name acrquestionnaireprod"
     exit 1
 fi
 echo -e "${GREEN}  [OK] Docker daemon is running${NC}"

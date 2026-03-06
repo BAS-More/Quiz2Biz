@@ -1,3 +1,20 @@
+# ============================================
+# QUIZ-TO-BUILD DOCKER COMPOSE
+# ============================================
+# IMPORTANT: This project uses Azure Container Registry (Docker Cloud)
+# DO NOT use Docker Desktop for development or production
+#
+# For cloud deployment, use:
+#   az acr login --name acrquestionnaireprod
+#   docker build -t acrquestionnaireprod.azurecr.io/quiz-api:latest -f docker/api/Dockerfile .
+#   docker push acrquestionnaireprod.azurecr.io/quiz-api:latest
+#   az containerapp update --name ca-questionnaire-api-prod --resource-group rg-questionnaire-prod --image acrquestionnaireprod.azurecr.io/quiz-api:latest
+#
+# Azure Container Registry: acrquestionnaireprod.azurecr.io
+# Production API: https://ca-questionnaire-api-prod.wittyriver-206156ea.australiasoutheast.azurecontainerapps.io
+# Production Web: https://ca-questionnaire-web-prod.wittyriver-206156ea.australiasoutheast.azurecontainerapps.io
+# ============================================
+
 services:
   # PostgreSQL 16 — upgraded from PG 15
   # MIGRATION NOTES:
