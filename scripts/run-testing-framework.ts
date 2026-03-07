@@ -291,14 +291,33 @@ function runPreDeploymentChecks() {
   
   test('OWASP dependency check', () => {
     // Optional - requires OWASP dependency check installed.
-    // To enable, set OWASP_DC_CMD to the dependency-check command, e.g.:
-    //   export OWASP_DC_CMD="dependency-check.sh --project Quiz2Biz --scan ."
+    // To enable, set OWASP_DC_CMD to the dependency-check executable path, e.g.:
+    //   export OWASP_DC_CMD="/usr/local/bin/dependency-check.sh"
     const owaspCommand = process.env.OWASP_DC_CMD;
     if (!owaspCommand) {
       console.log(`${colors.yellow}Skipping OWASP dependency check (OWASP_DC_CMD not set).${colors.reset}`);
       return true;
     }
-    const { success } = runCommand(`${owaspCommand} 2>&1`, true);
+
+    // Basic safety/robustness checks: do not allow whitespace or unexpected command names.
+    if (/\s/.test(owaspCommand)) {
+      console.log(
+        `${colors.yellow}Skipping OWASP dependency check (OWASP_DC_CMD must be an executable path without spaces).${colors.reset}`,
+      );
+      return true;
+    }
+
+    const owaspBasename = path.basename(owaspCommand);
+    const allowedExecutables = ['dependency-check', 'dependency-check.sh'];
+    if (!allowedExecutables.includes(owaspBasename)) {
+      console.log(
+        `${colors.yellow}Skipping OWASP dependency check (OWASP_DC_CMD must point to dependency-check executable).${colors.reset}`,
+      );
+      return true;
+    }
+
+    const fullCommand = `${owaspCommand} --project Quiz2Biz --scan . 2>&1`;
+    const { success } = runCommand(fullCommand, true);
     return success;
   }, true);
   
