@@ -15,7 +15,7 @@
  *   quick         - Run essential smoke tests only
  */
 
-import { execSync, exec } from 'child_process';
+import { execFileSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -58,10 +58,10 @@ function header(title: string) {
   console.log('='.repeat(60));
 }
 
-function runCommand(command: string, silent: boolean = false): { success: boolean; output: string } {
+function runCommand(program: string, args: string[], silent: boolean = false): { success: boolean; output: string } {
   try {
-    const output = execSync(command, { 
-      encoding: 'utf8', 
+    const output = execFileSync(program, args, {
+      encoding: 'utf8',
       stdio: silent ? 'pipe' : 'inherit',
       timeout: 300000 // 5 minute timeout
     });
@@ -263,12 +263,12 @@ function runPostDeploymentChecks(baseUrl: string = 'http://localhost:3000') {
   startPhase('Phase 1: Immediate Health Checks');
   
   test('Health endpoint responds', () => {
-    const { success } = runCommand(`curl -sf ${baseUrl}/health 2>&1`, true);
+    const { success } = runCommand('curl', ['-sf', `${baseUrl}/health`], true);
     return success;
   });
   
   test('API responds', () => {
-    const { success } = runCommand(`curl -sf ${baseUrl}/api/health 2>&1`, true);
+    const { success } = runCommand('curl', ['-sf', `${baseUrl}/api/health`], true);
     return success;
   }, true);
   
@@ -366,8 +366,8 @@ async function main() {
       
     case 'quick':
       startPhase('Quick Smoke Test');
-      test('Build succeeds', () => runCommand('npm run build 2>&1', true).success);
-      test('Tests pass', () => runCommand('npm test 2>&1', true).success);
+      test('Build succeeds', () => runCommand('npm', ['run', 'build'], true).success);
+      test('Tests pass', () => runCommand('npm', ['test'], true).success);
       endPhase();
       break;
       
