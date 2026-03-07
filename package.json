@@ -58,8 +58,10 @@
     "cloud:login": "az acr login --name acrquestionnaireprod",
     "cloud:build": "docker build -t acrquestionnaireprod.azurecr.io/quiz-api:latest -f docker/api/Dockerfile .",
     "cloud:push": "docker push acrquestionnaireprod.azurecr.io/quiz-api:latest",
-    "cloud:deploy": "az containerapp update --name ca-questionnaire-api-prod --resource-group rg-questionnaire-prod --image acrquestionnaireprod.azurecr.io/quiz-api:latest",
-    "cloud:all": "npm run cloud:login && npm run cloud:build && npm run cloud:push && npm run cloud:deploy",
+    "cloud:deploy": "echo \"Deprecated: use 'npm run cloud:deploy:prod' to deploy to production.\" && exit 1",
+    "cloud:deploy:prod": "az containerapp update --name ca-questionnaire-api-prod --resource-group rg-questionnaire-prod --image acrquestionnaireprod.azurecr.io/quiz-api:latest",
+    "cloud:all": "npm run cloud:login && npm run cloud:build && npm run cloud:push",
+    "cloud:all:prod": "npm run cloud:login && npm run cloud:build && npm run cloud:push && npm run cloud:deploy:prod",
     "validate:skills": "node scripts/validate-skills.js",
     "prepare": "echo husky disabled for OneDrive path compatibility"
   },
