@@ -88,7 +88,8 @@ if ($kvExists -and $kvExists.Count -gt 0) {
     Write-Host "Key Vault not found in production. Deploying via Terraform..." -ForegroundColor Yellow
     
     # Navigate to terraform directory and apply
-    Push-Location c:\Repos\Quiz-to-Build\infrastructure\terraform
+    $terraformPath = Join-Path $PSScriptRoot '..\infrastructure\terraform'
+    Push-Location $terraformPath
     
     Write-Host "Running Terraform plan for Key Vault..." -ForegroundColor Yellow
     terraform plan -target=module.keyvault -out=keyvault.tfplan
