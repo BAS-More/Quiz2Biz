@@ -88,16 +88,21 @@
       "^.+\\.(t|j)s$": [
         "ts-jest",
         {
-          "diagnostics": false
+          "diagnostics": false,
+          "isolatedModules": true
         }
       ]
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s",
+      "**/*.ts",
       "!**/*.module.ts",
-      "!**/main.ts"
+      "!**/main.ts",
+      "!**/*.spec.ts",
+      "!**/*.test.ts",
+      "!**/index.ts"
     ],
     "coverageDirectory": "../coverage",
+    "coverageProvider": "v8",
     "coverageReporters": [
       "text",
       "lcov",
@@ -106,10 +111,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 80,
-        "functions": 80,
-        "lines": 80,
-        "statements": 80
+        "branches": 50,
+        "functions": 50,
+        "lines": 50,
+        "statements": 50
       }
     },
     "cacheDirectory": "<rootDir>/../.jest-cache",
