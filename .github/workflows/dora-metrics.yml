@@ -77,7 +77,7 @@ jobs:
             -Dsonar.typescript.lcov.reportPaths=apps/api/coverage/lcov.info,apps/web/coverage/lcov.info
 
       - name: SonarQube Quality Gate
-        uses: SonarSource/sonarqube-quality-gate-action@master
+        uses: SonarSource/sonarqube-quality-gate-action@v1
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
