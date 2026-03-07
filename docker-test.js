@@ -17,7 +17,7 @@ const CONFIG = {
     // Quest Project Settings
     project: {
         name: 'Adaptive Questionnaire System',
-        dockerHub: 'aviben770',
+        dockerHub: 'basmore',
         imageName: 'questionnaire-api',
     },
     // Local Docker Settings

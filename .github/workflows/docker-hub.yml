@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  DOCKERHUB_REPO: aviben770/questionnaire-api
+  DOCKERHUB_REPO: basmore/questionnaire-api
 
 permissions:
   contents: read
