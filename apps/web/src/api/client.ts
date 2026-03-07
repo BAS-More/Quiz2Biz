@@ -112,10 +112,7 @@ apiClient.interceptors.request.use(
 // Response interceptor for token refresh and CSRF handling
 apiClient.interceptors.response.use(
   (response) => {
-    // Unwrap API response if it has the standard { success, data, meta } format
-    if (response.data && typeof response.data === 'object' && 'success' in response.data && 'data' in response.data) {
-      response.data = response.data.data;
-    }
+    // Return the full Axios response without mutating the data shape
     return response;
   },
   async (error: AxiosError) => {
