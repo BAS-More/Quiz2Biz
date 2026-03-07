@@ -12,6 +12,10 @@ const CSRF_TOKEN_COOKIE = 'csrf-token';
 // CSRF token storage
 let csrfToken: string | null = null;
 
+// Token refresh state to prevent race conditions
+let isRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
+
 /**
  * Get CSRF token from cookie
  */
@@ -150,6 +154,18 @@ apiClient.interceptors.response.use(
       const refreshToken = useAuthStore.getState().refreshToken;
 
       if (refreshToken) {
+        // If already refreshing, wait for the refresh to complete
+        if (isRefreshing) {
+          return new Promise((resolve) => {
+            refreshSubscribers.push((newToken: string) => {
+              originalRequest.headers.Authorization = `Bearer ${newToken}`;
+              resolve(apiClient(originalRequest));
+            });
+          });
+        }
+
+        isRefreshing = true;
+
         try {
           // Try to refresh token
           const { data } = await axios.post(
@@ -163,14 +179,21 @@ apiClient.interceptors.response.use(
           // Update tokens in store
           useAuthStore.getState().setAccessToken(data.accessToken);
 
+          // Notify all waiting requests
+          refreshSubscribers.forEach((callback) => callback(data.accessToken));
+          refreshSubscribers = [];
+
           // Retry original request with new token
           originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
           return apiClient(originalRequest);
         } catch (refreshError) {
           // Refresh failed, logout user
+          refreshSubscribers = [];
           useAuthStore.getState().logout();
           window.location.href = '/auth/login';
           return Promise.reject(refreshError);
+        } finally {
+          isRefreshing = false;
         }
       } else {
         // No refresh token, logout user

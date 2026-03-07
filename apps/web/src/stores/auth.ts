@@ -4,7 +4,10 @@
 
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import axios from 'axios';
 import type { User } from '../types';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
 
 interface AuthState {
   // State
@@ -69,14 +72,29 @@ export const useAuthStore = create<AuthState>()(
         refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,
       }),
-      onRehydrateStorage: () => (state, error) => {
-        // After rehydration, always set loading to false
-        // Even if rehydration fails or state is empty
-        if (state) {
-          state.setLoading(false);
-        }
+      onRehydrateStorage: () => async (state, error) => {
         if (error) {
           console.error('Auth rehydration error:', error);
+        }
+
+        // After rehydration, check if we need to refresh the access token
+        if (state) {
+          // If we have a refresh token but no access token, refresh proactively
+          if (state.refreshToken && !state.accessToken) {
+            try {
+              const { data } = await axios.post(
+                `${API_BASE_URL}/api/v1/auth/refresh`,
+                { refreshToken: state.refreshToken },
+                { withCredentials: true },
+              );
+              state.setAccessToken(data.accessToken);
+            } catch (refreshError) {
+              // Refresh failed - clear auth state and redirect to login
+              console.error('Token refresh failed on rehydration:', refreshError);
+              state.logout();
+            }
+          }
+          state.setLoading(false);
         }
       },
     },
