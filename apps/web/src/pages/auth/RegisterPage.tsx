@@ -96,8 +96,9 @@ export function RegisterPage() {
         email: data.email,
         password: data.password,
       });
-      login(response.accessToken, response.refreshToken, response.user);
-      void navigate('/dashboard');
+      // Wait for state to persist before navigating
+      await login(response.accessToken, response.refreshToken, response.user);
+      navigate('/dashboard');
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
       setError(error.response?.data?.message || 'Failed to create account. Please try again.');

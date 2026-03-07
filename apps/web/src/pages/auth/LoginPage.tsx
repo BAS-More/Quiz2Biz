@@ -39,8 +39,9 @@ export function LoginPage() {
     setError(null);
     try {
       const response = await authApi.login(data);
-      login(response.accessToken, response.refreshToken, response.user);
-      void navigate('/dashboard');
+      // Wait for login to complete and persist before navigating
+      await login(response.accessToken, response.refreshToken, response.user);
+      navigate('/dashboard');
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
       setError(error.response?.data?.message || 'Invalid email or password. Please try again.');

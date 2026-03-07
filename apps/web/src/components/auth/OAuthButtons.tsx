@@ -111,8 +111,8 @@ export function OAuthButtons({ mode, onError }: OAuthButtonsProps) {
             }
 
             const data = await res.json();
-            login(data.accessToken, data.refreshToken, data.user);
-            void navigate('/dashboard');
+            await login(data.accessToken, data.refreshToken, data.user);
+            navigate('/dashboard');
           } catch {
             onError?.('Failed to authenticate with Google');
           } finally {
@@ -181,8 +181,8 @@ export function OAuthButtons({ mode, onError }: OAuthButtonsProps) {
             }
 
             const data = await res.json();
-            login(data.accessToken, data.refreshToken, data.user);
-            void navigate('/dashboard');
+            await login(data.accessToken, data.refreshToken, data.user);
+            navigate('/dashboard');
           } catch {
             onError?.('Failed to authenticate with Microsoft');
           } finally {

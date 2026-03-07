@@ -21,7 +21,7 @@ interface AuthState {
   setUser: (user: User | null) => void;
   setAccessToken: (token: string | null) => void;
   setTokens: (accessToken: string, refreshToken: string) => void;
-  login: (accessToken: string, refreshToken: string, user: User) => void;
+  login: (accessToken: string, refreshToken: string, user: User) => Promise<void>;
   logout: () => void;
   setLoading: (loading: boolean) => void;
 }
@@ -43,14 +43,25 @@ export const useAuthStore = create<AuthState>()(
 
       setTokens: (accessToken, refreshToken) => set({ accessToken, refreshToken }),
 
-      login: (accessToken, refreshToken, user) =>
+      login: async (accessToken, refreshToken, user) => {
+        // Set state synchronously
         set({
           accessToken,
           refreshToken,
           user,
           isAuthenticated: true,
           isLoading: false,
-        }),
+        });
+        // Wait for persist middleware to write to localStorage
+        // This ensures the token is available before navigation triggers API calls
+        await new Promise<void>((resolve) => {
+          // Use requestAnimationFrame to ensure DOM updates and persist writes are scheduled
+          requestAnimationFrame(() => {
+            // Double RAF to ensure we're past the microtask queue
+            requestAnimationFrame(() => resolve());
+          });
+        });
+      },
 
       logout: () =>
         set({
