@@ -290,8 +290,16 @@ function runPreDeploymentChecks() {
   });
   
   test('OWASP dependency check', () => {
-    // Optional - requires OWASP dependency check installed
-    return true;
+    // Optional - requires OWASP dependency check installed.
+    // To enable, set OWASP_DC_CMD to the dependency-check command, e.g.:
+    //   export OWASP_DC_CMD="dependency-check.sh --project Quiz2Biz --scan ."
+    const owaspCommand = process.env.OWASP_DC_CMD;
+    if (!owaspCommand) {
+      console.log(`${colors.yellow}Skipping OWASP dependency check (OWASP_DC_CMD not set).${colors.reset}`);
+      return true;
+    }
+    const { success } = runCommand(`${owaspCommand} 2>&1`, true);
+    return success;
   }, true);
   
   endPhase();
