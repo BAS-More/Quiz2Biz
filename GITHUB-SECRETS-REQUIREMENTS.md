@@ -77,7 +77,7 @@ This document lists all GitHub Secrets that MUST be configured before deployment
 
 ### 1. Navigate to Repository Settings
 ```
-https://github.com/Avi-Bendetsky/Quiz-to-build/settings/secrets/actions
+https://github.com/BAS-More/Quiz-to-build/settings/secrets/actions
 ```
 
 ### 2. Add Each Secret

@@ -41,7 +41,7 @@
 
 **4. GitHub Remote Configuration**
 - **FINDING:** Remote IS configured correctly
-- **Current Remote:** https://github.com/Avi-Bendetsky/Quiz-to-build.git
+- **Current Remote:** https://github.com/BAS-More/Quiz-to-build.git
 - **Impact:** NONE - false alarm from audit
 - **Action Required:** Update audit report only
 

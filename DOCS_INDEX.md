@@ -1,7 +1,7 @@
 # 📚 Software Health Documentation Index
 
 **Last Updated:** February 5, 2026  
-**Repository:** Avi-Bendetsky/Quiz-to-build  
+**Repository:** BAS-More/Quiz-to-build  
 **Branch:** copilot/review-software-health  
 **Overall Health:** 6.5/10 🟡 Not Production-Ready
 
@@ -210,7 +210,7 @@
 
 ## 🔗 External Resources
 
-- **Repository:** https://github.com/Avi-Bendetsky/Quiz-to-build
+- **Repository:** https://github.com/BAS-More/Quiz-to-build
 - **NestJS Docs:** https://docs.nestjs.com/
 - **Prisma Docs:** https://www.prisma.io/docs
 - **Azure Docs:** https://learn.microsoft.com/azure/

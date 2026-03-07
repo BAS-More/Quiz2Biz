@@ -5,7 +5,7 @@ The CI pipeline has been updated and pushed to the repository. Here's how to ver
 ## Steps to Verify CI Status
 
 1. **Go to GitHub Repository**:
-   - Navigate to https://github.com/Avi-Bendetsky/Quiz-to-build
+   - Navigate to https://github.com/BAS-More/Quiz-to-build
    - Click on the "Actions" tab
 
 2. **Check CI Workflow**:

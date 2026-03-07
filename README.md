@@ -401,13 +401,13 @@ For more FAQ, see [QUICK-START.md](QUICK-START.md#-faq).
 
 ## 📄 License
 
-Private/Proprietary - © Avi-Bendetsky
+Private/Proprietary - © BAS-More
 
 ---
 
 *Last Updated: February 5, 2026*  
 *Documentation Version: 1.0*  
-*Repository: github.com/Avi-Bendetsky/Quiz-to-build*
+*Repository: github.com/BAS-More/Quiz-to-build*
 
 ---
 

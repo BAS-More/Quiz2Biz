@@ -116,7 +116,7 @@ Write-Host "2. Save the PostgreSQL password securely"
 Write-Host "3. Run the deployment workflow"
 Write-Host ""
 Write-Host "GitHub Secrets to update at:" -ForegroundColor Cyan
-Write-Host "https://github.com/Avi-Bendetsky/Quiz-to-build/settings/secrets/actions"
+Write-Host "https://github.com/BAS-More/Quiz-to-build/settings/secrets/actions"
 Write-Host ""
 Write-Host "Required secrets:"
 Write-Host "  - AZURE_ACR_USERNAME = $ACR_USERNAME"

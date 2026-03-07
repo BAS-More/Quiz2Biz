@@ -10,7 +10,7 @@
 
 ### Step 1: Access Branch Protection Settings
 
-1. Navigate to: `https://github.com/Avi-Bendetsky/Quiz-to-build/settings/branches`
+1. Navigate to: `https://github.com/BAS-More/Quiz-to-build/settings/branches`
 2. Click **"Add branch protection rule"**
 
 ---
@@ -115,7 +115,7 @@ develop
 
 ```powershell
 # Navigate to Actions tab in GitHub
-# https://github.com/Avi-Bendetsky/Quiz-to-build/actions/workflows/security-scan.yml
+# https://github.com/BAS-More/Quiz-to-build/actions/workflows/security-scan.yml
 
 # Click "Run workflow" button
 # Select branch: develop
@@ -148,7 +148,7 @@ git checkout -b test/coverage-gate-validation
 git push -u origin test/coverage-gate-validation
 
 # Create PR from GitHub UI:
-# https://github.com/Avi-Bendetsky/Quiz-to-build/compare/develop...test/coverage-gate-validation
+# https://github.com/BAS-More/Quiz-to-build/compare/develop...test/coverage-gate-validation
 ```
 
 **Expected Results:**
@@ -182,7 +182,7 @@ The workflow will automatically post a comment like:
 
 **Check Workflow Status:**
 ```
-https://github.com/Avi-Bendetsky/Quiz-to-build/actions/workflows/security-scan.yml
+https://github.com/BAS-More/Quiz-to-build/actions/workflows/security-scan.yml
 ```
 
 **Key Metrics to Monitor:**
@@ -193,7 +193,7 @@ https://github.com/Avi-Bendetsky/Quiz-to-build/actions/workflows/security-scan.y
 
 **View Security Results:**
 ```
-https://github.com/Avi-Bendetsky/Quiz-to-build/security
+https://github.com/BAS-More/Quiz-to-build/security
 ```
 
 ---
@@ -202,7 +202,7 @@ https://github.com/Avi-Bendetsky/Quiz-to-build/security
 
 **Check Workflow Status:**
 ```
-https://github.com/Avi-Bendetsky/Quiz-to-build/actions/workflows/coverage-gate.yml
+https://github.com/BAS-More/Quiz-to-build/actions/workflows/coverage-gate.yml
 ```
 
 **Key Metrics to Monitor:**

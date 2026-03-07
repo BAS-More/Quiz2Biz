@@ -45,7 +45,7 @@ actionlint .github/workflows/*.yml
 
 ### Manual Validation (GitHub Web UI)
 
-1. Navigate to: https://github.com/Avi-Bendetsky/Quiz-to-build/actions
+1. Navigate to: https://github.com/BAS-More/Quiz-to-build/actions
 2. Click "New workflow" dropdown
 3. Verify new workflows appear in list:
    - ✅ Security Scanning
@@ -61,7 +61,7 @@ actionlint .github/workflows/*.yml
 
 **Method 1: GitHub Web UI (Easiest)**
 
-1. Navigate to: https://github.com/Avi-Bendetsky/Quiz-to-build/actions
+1. Navigate to: https://github.com/BAS-More/Quiz-to-build/actions
 2. Click "Security Scanning" workflow
 3. Click "Run workflow" button (top right)
 4. Select branch: `main` or `develop`
@@ -137,7 +137,7 @@ gh pr create `
 ```
 
 **Using GitHub Web UI:**
-1. Navigate to: https://github.com/Avi-Bendetsky/Quiz-to-build/pulls
+1. Navigate to: https://github.com/BAS-More/Quiz-to-build/pulls
 2. Click "New pull request"
 3. Base: `main`, Compare: `test/coverage-gate-validation`
 4. Click "Create pull request"
@@ -196,7 +196,7 @@ gh pr close <PR_NUMBER> --delete-branch
 ### Real-Time Monitoring (During Execution)
 
 **GitHub Web UI:**
-1. Navigate to: https://github.com/Avi-Bendetsky/Quiz-to-build/actions
+1. Navigate to: https://github.com/BAS-More/Quiz-to-build/actions
 2. Click on running workflow
 3. Watch live log output (auto-refreshes)
 4. Click individual jobs to see detailed logs
@@ -244,7 +244,7 @@ gh run download <RUN_ID> -n coverage-report
 ```
 
 **Review GitHub Security Tab:**
-1. Navigate to: https://github.com/Avi-Bendetsky/Quiz-to-build/security
+1. Navigate to: https://github.com/BAS-More/Quiz-to-build/security
 2. Click "Code scanning" → View CodeQL alerts
 3. Click "Secret scanning" → Review any findings (should be 0)
 4. Review Dependabot alerts (if any)

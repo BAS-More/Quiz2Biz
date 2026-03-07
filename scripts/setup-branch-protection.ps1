@@ -4,7 +4,7 @@
 
 param(
     [Parameter(Mandatory=$false)]
-    [string]$Owner = "Avi-Bendetsky",
+    [string]$Owner = "BAS-More",
     
     [Parameter(Mandatory=$false)]
     [string]$Repo = "Quiz-to-build",

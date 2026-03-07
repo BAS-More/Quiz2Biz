@@ -2,7 +2,7 @@
 ## Adaptive Client Questionnaire System
 
 **Assessment Date:** February 5, 2026  
-**Repository:** Avi-Bendetsky/Quiz-to-build  
+**Repository:** BAS-More/Quiz-to-build  
 **Project Version:** 1.0.0  
 **Assessment Status:** ⚠️ **Production-Ready with Critical Issues to Address**
 

@@ -172,7 +172,7 @@ develop
 **Set up environment variables:**
 ```powershell
 $GITHUB_TOKEN = "your_personal_access_token"
-$REPO_OWNER = "Avi-Bendetsky"
+$REPO_OWNER = "BAS-More"
 $REPO_NAME = "Quiz-to-build"
 ```
 

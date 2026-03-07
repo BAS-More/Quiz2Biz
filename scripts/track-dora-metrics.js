@@ -7,7 +7,7 @@
 
 const https = require('https');
 
-const REPO_OWNER = 'Avi-Bendetsky';
+const REPO_OWNER = 'BAS-More';
 const REPO_NAME = 'Quiz-to-build';
 const DEFAULT_DAYS = 30;
 

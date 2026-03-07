@@ -348,10 +348,10 @@ az storage account list --resource-group rg-questionnaire-dev --output table
 **Action Steps:**
 ```bash
 gh auth login
-gh secret list --repo Avi-Bendetsky/Quiz-to-build
+gh secret list --repo BAS-More/Quiz-to-build
 ```
 
-Alternatively: Visit https://github.com/Avi-Bendetsky/Quiz-to-build/settings/secrets/actions
+Alternatively: Visit https://github.com/BAS-More/Quiz-to-build/settings/secrets/actions
 
 **Acceptance Criteria:**
 - [ ] All required secrets verified present

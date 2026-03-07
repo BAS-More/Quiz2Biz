@@ -6,7 +6,7 @@ Generated: 2026-02-07 (Updated)
 
 Analysis of all repository branches and their sync status with `main` branch.
 
-Main branch commit: `c8dc0f3` - Merge pull request #12 from Avi-Bendetsky/copilot/sync-repository-analysis-with-main
+Main branch commit: `c8dc0f3` - Merge pull request #12 from BAS-More/copilot/sync-repository-analysis-with-main
 
 **New:** Automated synchronization tools have been added to this repository. See [BRANCH-SYNC-GUIDE.md](BRANCH-SYNC-GUIDE.md) for details.
 
@@ -65,7 +65,7 @@ All of the following branches are missing 1 commit from main (PR #12: copilot/sy
 ### qoder/quiz-build-deployment-eUsiDf
 - **Status**: Needs sync
 - **Position**: 29 commits ahead, 1 commit behind main
-- **Latest commit**: `994bfbd` - Merge pull request #8 from Avi-Bendetsky/copilot/review-software-health
+- **Latest commit**: `994bfbd` - Merge pull request #8 from BAS-More/copilot/review-software-health
 - **Action Required**: Run sync workflow or script
 
 ### qoder/quiz-builder-kBVnJv

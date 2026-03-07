@@ -10,7 +10,7 @@
 
 ### Main Branch Protection
 
-**Navigate to:** [`Settings → Branches → Add Rule`](https://github.com/Avi-Bendetsky/Quiz-to-build/settings/branches)
+**Navigate to:** [`Settings → Branches → Add Rule`](https://github.com/BAS-More/Quiz-to-build/settings/branches)
 
 - [ ] Branch name pattern: `main`
 - [ ] ✅ Require pull request before merging (1 approval)
@@ -40,7 +40,7 @@
 
 ### Develop Branch Protection
 
-**Navigate to:** [`Settings → Branches → Add Rule`](https://github.com/Avi-Bendetsky/Quiz-to-build/settings/branches)
+**Navigate to:** [`Settings → Branches → Add Rule`](https://github.com/BAS-More/Quiz-to-build/settings/branches)
 
 - [ ] Branch name pattern: `develop`
 - [ ] ✅ Require pull request before merging (1 approval)
@@ -89,7 +89,7 @@ cd c:\Repos\Quiz-to-Build
 ```
 
 **Option B: Using GitHub Actions UI**
-1. [ ] Navigate to: [`Actions → Security Scanning`](https://github.com/Avi-Bendetsky/Quiz-to-build/actions/workflows/security-scan.yml)
+1. [ ] Navigate to: [`Actions → Security Scanning`](https://github.com/BAS-More/Quiz-to-build/actions/workflows/security-scan.yml)
 2. [ ] Click **"Run workflow"** button
 3. [ ] Select branch: `develop`
 4. [ ] Click **"Run workflow"**
@@ -121,7 +121,7 @@ cd c:\Repos\Quiz-to-Build
    git commit -m "test: validate coverage-gate workflow"
    git push -u origin test/coverage-gate-validation
    ```
-4. [ ] Create PR: [`Create Pull Request`](https://github.com/Avi-Bendetsky/Quiz-to-build/compare/develop...test/coverage-gate-validation)
+4. [ ] Create PR: [`Create Pull Request`](https://github.com/BAS-More/Quiz-to-build/compare/develop...test/coverage-gate-validation)
 5. [ ] Wait for `coverage-check` to complete (~8-12 minutes)
 
 **Verify Results:**
@@ -133,14 +133,14 @@ cd c:\Repos\Quiz-to-Build
 ### Step 4: Monitor Workflow Logs
 
 **Security Scan Logs:**
-- [ ] Navigate to: [`Actions → Security Scanning`](https://github.com/Avi-Bendetsky/Quiz-to-build/actions/workflows/security-scan.yml)
+- [ ] Navigate to: [`Actions → Security Scanning`](https://github.com/BAS-More/Quiz-to-build/actions/workflows/security-scan.yml)
 - [ ] Click on latest run
 - [ ] Expand each job and review logs
 - [ ] Check for any warnings or errors
-- [ ] Review [`Security tab`](https://github.com/Avi-Bendetsky/Quiz-to-build/security) for findings
+- [ ] Review [`Security tab`](https://github.com/BAS-More/Quiz-to-build/security) for findings
 
 **Coverage Gate Logs:**
-- [ ] Navigate to: [`Actions → Code Coverage Gate`](https://github.com/Avi-Bendetsky/Quiz-to-build/actions/workflows/coverage-gate.yml)
+- [ ] Navigate to: [`Actions → Code Coverage Gate`](https://github.com/BAS-More/Quiz-to-build/actions/workflows/coverage-gate.yml)
 - [ ] Click on latest run
 - [ ] Review coverage summary in job logs
 - [ ] Download coverage report artifact
@@ -224,10 +224,10 @@ git push origin main
 
 ## Quick Links
 
-- **Branch Protection Settings:** https://github.com/Avi-Bendetsky/Quiz-to-build/settings/branches
-- **GitHub Actions:** https://github.com/Avi-Bendetsky/Quiz-to-build/actions
-- **Security Tab:** https://github.com/Avi-Bendetsky/Quiz-to-build/security
-- **Pull Requests:** https://github.com/Avi-Bendetsky/Quiz-to-build/pulls
+- **Branch Protection Settings:** https://github.com/BAS-More/Quiz-to-build/settings/branches
+- **GitHub Actions:** https://github.com/BAS-More/Quiz-to-build/actions
+- **Security Tab:** https://github.com/BAS-More/Quiz-to-build/security
+- **Pull Requests:** https://github.com/BAS-More/Quiz-to-build/pulls
 - **Detailed Guide:** [`docs/BRANCH-PROTECTION-SETUP-GUIDE.md`](./BRANCH-PROTECTION-SETUP-GUIDE.md)
 
 ---

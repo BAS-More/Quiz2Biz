@@ -230,8 +230,8 @@ Investors use it to:
 ## License & Ownership
 
 - **Type**: Private/Proprietary
-- **Owner**: Avi-Bendetsky
-- **Repository**: github.com/Avi-Bendetsky/Quiz-to-build
+- **Owner**: BAS-More
+- **Repository**: github.com/BAS-More/Quiz-to-build
 
 ---
 

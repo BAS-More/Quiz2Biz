@@ -293,7 +293,7 @@ Auto-creates professional docs from your answers:
 - **Live Chat**: Professional & Enterprise plans
 
 ### Resources
-- GitHub: github.com/Avi-Bendetsky/Quiz-to-build
+- GitHub: github.com/BAS-More/Quiz-to-build
 - Status Page: Coming soon
 - Blog: Coming soon
 

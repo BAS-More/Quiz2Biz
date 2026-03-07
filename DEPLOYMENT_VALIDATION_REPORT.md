@@ -288,10 +288,10 @@ curl https://ca-questionnaire-api-dev.ambitioussea-ad6d342d.eastus2.azurecontain
 **Verification Method**: Requires GitHub repository access
 ```bash
 # Via GitHub CLI
-gh secret list --repo Avi-Bendetsky/Quiz-to-build
+gh secret list --repo BAS-More/Quiz-to-build
 
 # Via Web UI
-https://github.com/Avi-Bendetsky/Quiz-to-build/settings/secrets/actions
+https://github.com/BAS-More/Quiz-to-build/settings/secrets/actions
 ```
 
 **Current Deployment**: Appears to be working (containers are running), suggesting secrets are configured
@@ -441,7 +441,7 @@ ca-questionnaire-web-dev  Running   ca-questionnaire-web-dev.ambitioussea-ad6d34
 **Current Branch**: `fix/trufflehog-schedule-event`  
 **Working Tree**: Clean (no uncommitted changes)  
 **Sync Status**: Up to date with remote  
-**Repository**: https://github.com/Avi-Bendetsky/Quiz-to-build.git
+**Repository**: https://github.com/BAS-More/Quiz-to-build.git
 
 ---
 

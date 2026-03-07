@@ -1,7 +1,7 @@
 # Complete Repository Review Summary
 
 **Review Date:** February 5, 2026  
-**Repository:** Avi-Bendetsky/Quiz-to-build  
+**Repository:** BAS-More/Quiz-to-build  
 **Reviewer:** GitHub Copilot AI Agent  
 
 ## Executive Summary

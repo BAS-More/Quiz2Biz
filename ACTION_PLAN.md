@@ -543,7 +543,7 @@ GitHub repository secrets used for CI/CD were not verified during validation. Th
 
 Navigate to:
 ```
-https://github.com/Avi-Bendetsky/Quiz-to-build/settings/secrets/actions
+https://github.com/BAS-More/Quiz-to-build/settings/secrets/actions
 ```
 
 **Step 2: Verify Required Secrets Exist**
@@ -571,7 +571,7 @@ Check that all required secrets are present (names only, not values):
 gh auth login
 
 # List repository secrets
-gh secret list --repo Avi-Bendetsky/Quiz-to-build
+gh secret list --repo BAS-More/Quiz-to-build
 ```
 
 **Expected Output:**
