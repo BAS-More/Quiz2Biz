@@ -128,22 +128,22 @@ function runPreDeploymentChecks() {
   startPhase('Phase 1: Static Analysis');
   
   test('ESLint passes', () => {
-    const { success } = runCommand('npm run lint 2>&1', true);
+    const { success } = runCommand('npm', ['run', 'lint'], true);
     return success;
   });
   
   test('TypeScript compiles', () => {
-    const { success } = runCommand('npx tsc --noEmit 2>&1', true);
+    const { success } = runCommand('npx', ['tsc', '--noEmit'], true);
     return success;
   });
   
   test('Prettier formatting', () => {
-    const { success } = runCommand('npx prettier --check "**/*.{ts,tsx,js,jsx}" 2>&1', true);
+    const { success } = runCommand('npx', ['prettier', '--check', '**/*.{ts,tsx,js,jsx}'], true);
     return success;
   }, true); // Optional
   
   test('No security vulnerabilities (npm audit)', () => {
-    const { success } = runCommand('npm audit --audit-level=high 2>&1', true);
+    const { success } = runCommand('npm', ['audit', '--audit-level=high'], true);
     return success;
   });
   
