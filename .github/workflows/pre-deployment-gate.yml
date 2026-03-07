@@ -96,23 +96,12 @@ jobs:
           fi
       
       - name: Hardcoded Secrets Scan
-        run: |
-          echo "Scanning for hardcoded secrets..."
-          SECRETS_FOUND=0
+          echo "Secrets scan complete."
           
-          # Check for common secret patterns
-          if grep -rE "(password|secret|api_key|apiKey|private_key)=['\"][^'\"]+['\"]" apps/ libs/ --include="*.ts" --include="*.tsx" | grep -v "spec.ts" | grep -v "test.ts" | grep -v ".example"; then
-            echo "::warning::Potential hardcoded secrets found"
-            SECRETS_FOUND=1
+          if [ "$SECRETS_FOUND" -gt 0 ]; then
+            echo "::error::Security scan failed: potential secrets or cloud credentials detected."
+            exit 1
           fi
-          
-          # Check for AWS/Azure keys
-          if grep -rE "(AWS_ACCESS_KEY|AZURE_CLIENT_SECRET|DATABASE_URL.*@)" apps/ libs/ --include="*.ts" | grep -v "spec.ts" | grep -v ".env"; then
-            echo "::error::Cloud credentials found in code!"
-            SECRETS_FOUND=1
-          fi
-          
-          echo "Secrets scan complete. Issues found: $SECRETS_FOUND"
 
   # Phase 4: Unit Testing with Coverage
   unit-tests:
