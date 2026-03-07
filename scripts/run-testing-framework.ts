@@ -148,13 +148,70 @@ function runPreDeploymentChecks() {
   });
   
   test('No hardcoded secrets', () => {
-    const patterns = [
+    const patternStrings = [
       'password\\s*=\\s*["\'][^"\']+["\']',
       'secret\\s*=\\s*["\'][^"\']+["\']',
       'api[_-]?key\\s*=\\s*["\'][^"\']+["\']',
     ];
-    // Simple check - real implementation would use gitleaks or similar
-    return true;
+    const patterns = patternStrings.map((p) => new RegExp(p, 'i'));
+
+    const ignoreDirs = new Set(['node_modules', '.git', 'dist', 'build', 'coverage', '.turbo']);
+    const maxFileSizeBytes = 1024 * 1024; // 1 MB
+    const rootDir = process.cwd();
+
+    const searchDir = (dir: string): boolean => {
+      let entries: fs.Dirent[];
+      try {
+        entries = fs.readdirSync(dir, { withFileTypes: true });
+      } catch {
+        // Ignore directories we cannot read
+        return true;
+      }
+
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+
+        if (entry.isDirectory()) {
+          if (ignoreDirs.has(entry.name)) {
+            continue;
+          }
+          if (!searchDir(fullPath)) {
+            return false;
+          }
+        } else if (entry.isFile()) {
+          let stat: fs.Stats;
+          try {
+            stat = fs.statSync(fullPath);
+          } catch {
+            continue;
+          }
+
+          if (stat.size > maxFileSizeBytes) {
+            continue;
+          }
+
+          let content: string;
+          try {
+            content = fs.readFileSync(fullPath, 'utf8');
+          } catch {
+            continue;
+          }
+
+          for (const regex of patterns) {
+            if (regex.test(content)) {
+              console.error(
+                `${colors.red}Potential hardcoded secret detected in ${fullPath}${colors.reset}`,
+              );
+              return false;
+            }
+          }
+        }
+      }
+
+      return true;
+    };
+
+    return searchDir(rootDir);
   }, true);
   
   endPhase();
