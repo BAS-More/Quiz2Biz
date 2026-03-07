@@ -257,12 +257,33 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Determine scan range
+        id: scan-range
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "base=${{ github.event.pull_request.base.sha }}" >> $GITHUB_OUTPUT
+            echo "head=${{ github.event.pull_request.head.sha }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            BASE="${{ github.event.before }}"
+            # Handle first push (all zeros)
+            if [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
+              echo "base=${{ github.event.after }}~1" >> $GITHUB_OUTPUT
+            else
+              echo "base=$BASE" >> $GITHUB_OUTPUT
+            fi
+            echo "head=${{ github.event.after }}" >> $GITHUB_OUTPUT
+          else
+            # schedule / workflow_dispatch: scan last commit against its parent
+            echo "base=HEAD~1" >> $GITHUB_OUTPUT
+            echo "head=HEAD" >> $GITHUB_OUTPUT
+          fi
+
       - name: TruffleHog Secret Scanning
         uses: trufflesecurity/trufflehog@v3.93.5
         with:
           path: ./
-          base: ${{ github.event.repository.default_branch || 'main' }}
-          head: HEAD
+          base: ${{ steps.scan-range.outputs.base }}
+          head: ${{ steps.scan-range.outputs.head }}
           extra_args: --debug --only-verified
 
   security-summary:
