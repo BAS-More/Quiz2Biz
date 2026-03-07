@@ -30,6 +30,9 @@ describe('EvidenceIntegrityService', () => {
   };
 
   beforeEach(async () => {
+    // Restore all mocks to clear any spies from previous tests
+    jest.restoreAllMocks();
+
     module = await Test.createTestingModule({
       providers: [
         EvidenceIntegrityService,
