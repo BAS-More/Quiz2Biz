@@ -541,22 +541,18 @@ describe('EvidenceIntegrityService', () => {
       const port = typeof address === 'object' && address ? address.port : 0;
       (service as unknown as { tsaUrl: string }).tsaUrl = `http://127.0.0.1:${port}/tsr`;
 
-      const result = await service.requestTimestamp(dataHash);
+      try {
+        const result = await service.requestTimestamp(dataHash);
 
-      expect(result).toBeDefined();
-      expect(result.hashedMessage).toBe(dataHash);
-      expect(result.token).toBe(mockTsaResponse.toString('base64'));
-      expect(result.tsaUrl).toBe(`http://127.0.0.1:${port}/tsr`);
-
-      await new Promise<void>((resolve, reject) => {
-        server.close((error) => {
-          if (error) {
-            reject(error);
-            return;
-          }
-          resolve();
+        expect(result).toBeDefined();
+        expect(result.hashedMessage).toBe(dataHash);
+        expect(result.token).toBe(mockTsaResponse.toString('base64'));
+        expect(result.tsaUrl).toBe(`http://127.0.0.1:${port}/tsr`);
+      } finally {
+        await new Promise<void>((resolve, reject) => {
+          server.close((error) => (error ? reject(error) : resolve()));
         });
-      });
+      }
     });
   });
 
@@ -957,13 +953,15 @@ describe('EvidenceIntegrityService', () => {
       const port = typeof address === 'object' && address ? address.port : 0;
       (service as unknown as { tsaUrl: string }).tsaUrl = `http://127.0.0.1:${port}/tsr`;
 
-      await expect(service.requestTimestamp('a'.repeat(64))).rejects.toThrow(
-        'TSA returned status 500',
-      );
-
-      await new Promise<void>((resolve, reject) => {
-        server.close((error) => (error ? reject(error) : resolve()));
-      });
+      try {
+        await expect(service.requestTimestamp('a'.repeat(64))).rejects.toThrow(
+          'TSA returned status 500',
+        );
+      } finally {
+        await new Promise<void>((resolve, reject) => {
+          server.close((error) => (error ? reject(error) : resolve()));
+        });
+      }
     });
   });
 
