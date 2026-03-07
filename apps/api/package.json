@@ -85,7 +85,12 @@
     "rootDir": "src",
     "testRegex": ".*\\.(spec|test)\\.ts$",
     "transform": {
-      "^.+\\.(t|j)s$": ["ts-jest", { "diagnostics": false }]
+      "^.+\\.(t|j)s$": [
+        "ts-jest",
+        {
+          "diagnostics": false
+        }
+      ]
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s",
@@ -101,10 +106,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 50,
-        "functions": 50,
-        "lines": 50,
-        "statements": 50
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
       }
     },
     "cacheDirectory": "<rootDir>/../.jest-cache",
