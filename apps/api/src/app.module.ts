@@ -20,6 +20,7 @@ import { PaymentModule } from './modules/payment/payment.module';
 import { AdaptersModule } from './modules/adapters/adapters.module';
 import { IdeaCaptureModule } from './modules/idea-capture/idea-capture.module';
 import { AiGatewayModule } from './modules/ai-gateway/ai-gateway.module';
+import { ChatEngineModule } from './modules/chat-engine/chat-engine.module';
 import { HealthController } from './health.controller';
 import configuration from './config/configuration';
 
@@ -91,6 +92,7 @@ function getLegacyModules(): Array<Type | DynamicModule> {
     AdaptersModule,
     IdeaCaptureModule,
     AiGatewayModule,
+    ChatEngineModule,
 
     // Legacy modules (feature-flagged via ENABLE_LEGACY_MODULES env var)
     ...getLegacyModules(),
