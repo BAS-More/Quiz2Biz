@@ -18,7 +18,7 @@ import {
   AiGatewayResponseDto,
   GatewayHealthDto,
 } from './dto';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { CurrentUser } from '../auth/decorators/user.decorator';
 
 /**
  * AI Gateway Controller

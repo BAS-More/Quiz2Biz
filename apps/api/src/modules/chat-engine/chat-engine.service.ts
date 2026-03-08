@@ -1,5 +1,6 @@
 import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
-import { PrismaService } from '../../../prisma/prisma.service';
+import { PrismaService } from '@libs/database';
+import { ChatMessage, Prisma } from '@prisma/client';
 import { AiGatewayService } from '../ai-gateway/ai-gateway.service';
 import { PromptBuilderService } from './services/prompt-builder.service';
 import { AiStreamChunk, AiMessage } from '../ai-gateway/interfaces';
@@ -71,7 +72,7 @@ export class ChatEngineService {
       take,
     });
 
-    return messages.map((m) => ({
+    return messages.map((m: ChatMessage) => ({
       id: m.id,
       projectId: m.projectId,
       role: m.role as 'user' | 'assistant' | 'system',
@@ -151,7 +152,7 @@ export class ChatEngineService {
             model: response.model,
             cost: response.cost,
             finishReason: response.finishReason,
-          },
+          } as unknown as Prisma.InputJsonValue,
         },
       });
 
@@ -272,7 +273,7 @@ export class ChatEngineService {
           inputTokens: finalUsage.inputTokens,
           outputTokens: finalUsage.outputTokens,
           totalTokens: finalUsage.totalTokens,
-          metadata: { cost: finalCost },
+          metadata: { cost: finalCost } as Prisma.InputJsonValue,
         },
       });
 
@@ -312,7 +313,7 @@ export class ChatEngineService {
       },
     });
 
-    return messages.map((m) => ({
+    return messages.map((m: { role: string; content: string }) => ({
       role: m.role as 'user' | 'assistant' | 'system',
       content: m.content,
     }));

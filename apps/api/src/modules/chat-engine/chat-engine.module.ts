@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from '../../../prisma/prisma.module';
+import { PrismaModule } from '@libs/database';
 import { AiGatewayModule } from '../ai-gateway/ai-gateway.module';
 import { ChatEngineController } from './chat-engine.controller';
 import { ChatEngineService } from './chat-engine.service';

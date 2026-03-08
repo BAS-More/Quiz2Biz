@@ -1,5 +1,5 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { PrismaService } from '../../../prisma/prisma.service';
+import { PrismaService } from '@libs/database';
 import { ClaudeAdapter, OpenAIAdapter } from './adapters';
 import { CostTrackerService } from './services/cost-tracker.service';
 import {
