@@ -28,6 +28,9 @@ import {
   AlertCircle,
   Target,
   TrendingUp,
+  CheckSquare,
+  Square,
+  Plus,
   ChevronRight,
   Loader2,
 } from 'lucide-react';
@@ -53,7 +56,8 @@ export function IdeaCapturePage() {
 
   const [ideaResponse, setIdeaResponse] = useState<IdeaCaptureResponse | null>(null);
 
-  const [selectedProjectTypeSlug, setSelectedProjectTypeSlug] = useState<string | null>(null);
+  // Multi-select for document types - user can select multiple
+  const [selectedProjectTypeSlugs, setSelectedProjectTypeSlugs] = useState<string[]>([]);
 
   const [error, setError] = useState<string | null>(null);
 
@@ -77,7 +81,8 @@ export function IdeaCapturePage() {
 
       setIdeaResponse(response);
 
-      setSelectedProjectTypeSlug(response.analysis.recommendedProjectType.slug);
+      // Pre-select the recommended project type
+      setSelectedProjectTypeSlugs([response.analysis.recommendedProjectType.slug]);
 
       setStep('results');
     } catch (err) {
@@ -96,18 +101,21 @@ export function IdeaCapturePage() {
   }, [rawInput, title]);
 
   const handleConfirmAndStart = useCallback(async () => {
-    if (!ideaResponse || !selectedProjectTypeSlug) return;
+    if (!ideaResponse || selectedProjectTypeSlugs.length === 0) return;
 
     setStep('creating-session');
 
     setError(null);
 
     try {
-      // If user picked a different type, confirm it first
-      if (selectedProjectTypeSlug !== ideaResponse.analysis.recommendedProjectType.slug) {
+      // Use the first selected type as the primary project type for the session
+      const primarySlug = selectedProjectTypeSlugs[0];
+      
+      // If user's primary selection differs from recommendation, confirm it
+      if (primarySlug !== ideaResponse.analysis.recommendedProjectType.slug) {
         const projectTypes = await listProjectTypes();
         const selectedProjectType = projectTypes.find(
-          (projectType) => projectType.slug === selectedProjectTypeSlug,
+          (projectType) => projectType.slug === primarySlug,
         );
 
         if (!selectedProjectType) {
@@ -117,7 +125,11 @@ export function IdeaCapturePage() {
         await confirmProjectType(ideaResponse.id, selectedProjectType.id);
       }
 
+      // Create session - the selected document types will be used when generating documents
       const { sessionId } = await createSessionFromIdea(ideaResponse.id);
+
+      // Store selected document types in session storage for later use
+      sessionStorage.setItem(`selectedDocTypes_${sessionId}`, JSON.stringify(selectedProjectTypeSlugs));
 
       navigate(`/questionnaire?sessionId=${sessionId}`);
     } catch (err) {
@@ -125,7 +137,7 @@ export function IdeaCapturePage() {
 
       setStep('results');
     }
-  }, [ideaResponse, selectedProjectTypeSlug, navigate]);
+  }, [ideaResponse, selectedProjectTypeSlugs, navigate]);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 animate-fade-in">
@@ -346,12 +358,15 @@ export function IdeaCapturePage() {
             </div>
           </div>
 
-          {/* Project Type Selection */}
+          {/* Project Type Selection - Multi-select */}
 
           <div className="bg-white rounded-2xl shadow-card p-6 border border-surface-200">
-            <h2 className="text-lg font-semibold text-surface-900 mb-4">
-              Recommended Project Type
+            <h2 className="text-lg font-semibold text-surface-900 mb-2">
+              Select Document Types
             </h2>
+            <p className="text-sm text-surface-500 mb-4">
+              Choose all the documents you need. You can add more later.
+            </p>
 
             <div className="space-y-3">
               {[
@@ -362,20 +377,38 @@ export function IdeaCapturePage() {
                 <ProjectTypeCard
                   key={pt.slug}
                   projectType={pt}
-                  isSelected={selectedProjectTypeSlug === pt.slug}
+                  isSelected={selectedProjectTypeSlugs.includes(pt.slug)}
                   isRecommended={pt.slug === ideaResponse.analysis.recommendedProjectType.slug}
-                  onSelect={() => setSelectedProjectTypeSlug(pt.slug)}
+                  onToggle={() => {
+                    setSelectedProjectTypeSlugs((prev) =>
+                      prev.includes(pt.slug)
+                        ? prev.filter((s) => s !== pt.slug)
+                        : [...prev, pt.slug]
+                    );
+                  }}
                 />
               ))}
             </div>
+
+            {/* Add More Documents link */}
+            <button
+              type="button"
+              className="mt-4 w-full flex items-center justify-center gap-2 py-2.5 text-sm text-brand-600 hover:text-brand-700 hover:bg-brand-50 rounded-lg transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Browse more document types
+            </button>
           </div>
 
           {/* Confirm Button */}
 
-          <div className="flex justify-end">
+          <div className="flex justify-between items-center">
+            <p className="text-sm text-surface-500">
+              {selectedProjectTypeSlugs.length} document{selectedProjectTypeSlugs.length !== 1 ? 's' : ''} selected
+            </p>
             <button
               onClick={handleConfirmAndStart}
-              disabled={!selectedProjectTypeSlug || step === 'creating-session'}
+              disabled={selectedProjectTypeSlugs.length === 0 || step === 'creating-session'}
               className="inline-flex items-center gap-2 px-6 py-3 bg-brand-600 text-white font-medium rounded-xl hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm"
             >
               {step === 'creating-session' ? (
@@ -404,7 +437,7 @@ function ProjectTypeCard({
 
   isRecommended,
 
-  onSelect,
+  onToggle,
 }: {
   projectType: ProjectTypeRecommendation;
 
@@ -412,13 +445,13 @@ function ProjectTypeCard({
 
   isRecommended: boolean;
 
-  onSelect: () => void;
+  onToggle: () => void;
 }) {
   const confidencePercent = Math.round(projectType.confidence * 100);
 
   return (
     <button
-      onClick={onSelect}
+      onClick={onToggle}
       className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
         isSelected
           ? 'border-brand-500 bg-brand-50 shadow-sm'
@@ -453,12 +486,13 @@ function ProjectTypeCard({
           <p className="text-sm text-surface-500">{projectType.reasoning}</p>
         </div>
 
-        <div
-          className={`w-5 h-5 rounded-full border-2 flex-shrink-0 ml-3 mt-1 transition-colors ${
-            isSelected ? 'border-brand-500 bg-brand-500' : 'border-surface-300'
-          }`}
-        >
-          {isSelected && <CheckCircle2 className="w-full h-full text-white" />}
+        {/* Checkbox visual */}
+        <div className="flex-shrink-0 ml-3 mt-1">
+          {isSelected ? (
+            <CheckSquare className="w-5 h-5 text-brand-500" />
+          ) : (
+            <Square className="w-5 h-5 text-surface-300" />
+          )}
         </div>
       </div>
     </button>
