@@ -110,7 +110,7 @@ jobs:
       - name: Sync database schema
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
-        run: npx prisma db push --skip-generate
+        run: ./node_modules/.bin/prisma db push --skip-generate
 
       - name: Run API tests
         env:
@@ -229,7 +229,7 @@ jobs:
       - name: Sync database schema
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
-        run: npx prisma db push --skip-generate
+        run: ./node_modules/.bin/prisma db push --skip-generate
 
       - name: Run Regression tests
         env:
@@ -304,7 +304,7 @@ jobs:
       - name: Sync database schema
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
-        run: npx prisma db push --skip-generate
+        run: ./node_modules/.bin/prisma db push --skip-generate
 
       - name: Build core packages
         run: npx turbo run build --filter=api --filter=database --filter=redis --filter=shared --filter=web

@@ -244,8 +244,8 @@ function runPreDeploymentChecks() {
   }, true);
   
   test('Database connection works', () => {
-    // Check if Prisma can connect
-    const { success } = runCommand('npx prisma db pull --force 2>&1', true);
+    // Check if Prisma can connect - use local binary to avoid version mismatch
+    const { success } = runCommand('./node_modules/.bin/prisma db pull --force 2>&1', true);
     return success;
   }, true);
   

@@ -148,7 +148,7 @@ jobs:
       - name: Sync database schema
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
-        run: npx prisma db push --skip-generate
+        run: ./node_modules/.bin/prisma db push --skip-generate
       
       - name: Run API Tests with Coverage
         env:
