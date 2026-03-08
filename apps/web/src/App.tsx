@@ -68,6 +68,12 @@ const IdeaCapturePage = lazy(() =>
 const ChatPage = lazy(() =>
   import('./pages/chat/ChatPage').then((m) => ({ default: m.ChatPage })),
 );
+const DocumentMenuPage = lazy(() =>
+  import('./pages/document-menu/DocumentMenuPage').then((m) => ({ default: m.DocumentMenuPage })),
+);
+const FactReviewPage = lazy(() =>
+  import('./pages/fact-review/FactReviewPage').then((m) => ({ default: m.FactReviewPage })),
+);
 
 // Loading fallback for lazy-loaded routes
 function PageLoader() {
@@ -183,6 +189,9 @@ export default function App() {
                   )}
                   <Route path="documents" element={<DocumentsPage />} />
                   <Route path="project/:projectId/chat" element={<ChatPage />} />
+                  <Route path="project/:projectId/documents" element={<DocumentMenuPage />} />
+                  <Route path="project/:projectId/facts" element={<FactReviewPage />} />
+                  <Route path="chat/:projectId?" element={<ChatPage />} />
                   <Route path="billing" element={<BillingPage />} />
                   <Route path="billing/invoices" element={<InvoicesPage />} />
                   <Route path="billing/upgrade" element={<UpgradePage />} />
