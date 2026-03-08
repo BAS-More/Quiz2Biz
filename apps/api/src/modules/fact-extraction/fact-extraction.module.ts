@@ -13,11 +13,12 @@ import { Module } from '@nestjs/common';
 import { PrismaModule } from '@libs/database';
 import { AiGatewayModule } from '../ai-gateway/ai-gateway.module';
 import { FactExtractionController } from './fact-extraction.controller';
+import { FactsController } from './facts.controller';
 import { FactExtractionService } from './services';
 
 @Module({
   imports: [PrismaModule, AiGatewayModule],
-  controllers: [FactExtractionController],
+  controllers: [FactExtractionController, FactsController],
   providers: [FactExtractionService],
   exports: [FactExtractionService],
 })

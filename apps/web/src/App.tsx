@@ -74,6 +74,12 @@ const DocumentMenuPage = lazy(() =>
 const FactReviewPage = lazy(() =>
   import('./pages/fact-review/FactReviewPage').then((m) => ({ default: m.FactReviewPage })),
 );
+const WorkspacePage = lazy(() =>
+  import('./pages/workspace/WorkspacePage').then((m) => ({ default: m.WorkspacePage })),
+);
+const NewProjectFlow = lazy(() =>
+  import('./pages/workspace/NewProjectFlow').then((m) => ({ default: m.NewProjectFlow })),
+);
 
 // Loading fallback for lazy-loaded routes
 function PageLoader() {
@@ -177,6 +183,8 @@ export default function App() {
                 >
                   <Route index element={<Navigate to="/dashboard" replace />} />
                   <Route path="dashboard" element={<DashboardPage />} />
+                  <Route path="workspace" element={<WorkspacePage />} />
+                  <Route path="new-project" element={<NewProjectFlow />} />
                   <Route path="idea" element={<IdeaCapturePage />} />
                   <Route path="questionnaire/:action?" element={<QuestionnairePage />} />
                   <Route path="heatmap/:sessionId" element={<HeatmapPage />} />
