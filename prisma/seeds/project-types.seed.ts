@@ -311,6 +311,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'business-plan',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 25,
+    basePrice: 149.0, // AUD - Premium document
+    qualitySliderEnabled: true,
     // Core questions: strategy/vision, stakeholder alignment, budget, system architecture, requirements
     requiredQuestions: ['q-strategy-001', 'q-strategy-002', 'q-finance-001', 'q-arch-001', 'q-req-001'],
   },
@@ -322,6 +324,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'business-plan',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 15,
+    basePrice: 99.0, // AUD
+    qualitySliderEnabled: true,
     // Core questions: strategy/vision, requirements definition, market requirements, people/team
     requiredQuestions: ['q-strategy-001', 'q-req-001', 'q-req-002', 'q-people-001', 'q-people-002'],
   },
@@ -333,6 +337,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'business-plan',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 12,
+    basePrice: 129.0, // AUD - High-value financial document
+    qualitySliderEnabled: true,
     // Core questions: budget tracking, TCO analysis, cloud cost optimization
     requiredQuestions: ['q-finance-001', 'q-finance-002', 'q-finance-003'],
   },
@@ -344,6 +350,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'business-plan',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 10,
+    basePrice: 79.0, // AUD - Shorter document
+    qualitySliderEnabled: true,
     // Core questions: strategy/vision, stakeholder alignment, budget, architecture, requirements
     requiredQuestions: ['q-strategy-001', 'q-strategy-002', 'q-finance-001', 'q-arch-001', 'q-req-001'],
   },
@@ -355,6 +363,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'business-plan',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 8,
+    basePrice: 49.0, // AUD - Lower complexity
+    qualitySliderEnabled: false, // Fixed quality for prompt library
     // Core questions: strategy/vision, operations
     requiredQuestions: ['q-strategy-001', 'q-ops-001'],
   },
@@ -366,6 +376,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'marketing-strategy',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 18,
+    basePrice: 119.0, // AUD
+    qualitySliderEnabled: true,
     // Core questions: strategy/vision, requirements definition, market requirements, people/team
     requiredQuestions: ['q-strategy-001', 'q-req-001', 'q-req-002', 'q-people-001'],
   },
@@ -377,6 +389,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'financial-projections',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 20,
+    basePrice: 149.0, // AUD - Premium financial document
+    qualitySliderEnabled: true,
     // Core questions: budget tracking, TCO analysis, cloud cost optimization
     requiredQuestions: ['q-finance-001', 'q-finance-002', 'q-finance-003'],
   },
@@ -536,6 +550,8 @@ export async function seedProjectTypes(): Promise<void> {
         outputFormats: dt.outputFormats,
         estimatedPages: dt.estimatedPages,
         requiredQuestions: dt.requiredQuestions,
+        basePrice: dt.basePrice,
+        qualitySliderEnabled: dt.qualitySliderEnabled,
         isActive: true,
       },
       create: {
@@ -547,11 +563,14 @@ export async function seedProjectTypes(): Promise<void> {
         outputFormats: dt.outputFormats,
         estimatedPages: dt.estimatedPages,
         requiredQuestions: dt.requiredQuestions,
+        basePrice: dt.basePrice,
+        qualitySliderEnabled: dt.qualitySliderEnabled,
         isActive: true,
         metadata: {},
       },
     });
-    console.log(`    ✓ DocumentType: ${dt.name} (${dt.slug}) → ${dt.projectTypeSlug}`);
+    const priceStr = dt.basePrice ? `$${dt.basePrice}` : 'N/A';
+    console.log(`    ✓ DocumentType: ${dt.name} (${dt.slug}) → ${dt.projectTypeSlug} [${priceStr}]`);
   }
 
   // Link existing questionnaires to project types

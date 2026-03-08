@@ -199,7 +199,11 @@ apiClient.interceptors.request.use(
 // Response interceptor for token refresh and CSRF handling
 apiClient.interceptors.response.use(
   (response) => {
-    // Return the full Axios response without mutating the data shape
+    // Unwrap API response wrapper { success, data, meta } -> data
+    // This normalizes backend responses to what frontend expects
+    if (response.data && typeof response.data === 'object' && 'success' in response.data && 'data' in response.data) {
+      response.data = response.data.data;
+    }
     return response;
   },
   async (error: AxiosError) => {
@@ -274,15 +278,23 @@ apiClient.interceptors.response.use(
             { withCredentials: true },
           );
 
+          // API returns wrapped response { success, data: { accessToken }, meta }
+          const tokenData = data?.data ?? data;
+          const newAccessToken = tokenData?.accessToken;
+
+          if (!newAccessToken) {
+            throw new Error('No access token in refresh response');
+          }
+
           // Update tokens in store
-          useAuthStore.getState().setAccessToken(data.accessToken);
+          useAuthStore.getState().setAccessToken(newAccessToken);
 
           // Notify all waiting requests
-          refreshSubscribers.forEach((callback) => callback(data.accessToken));
+          refreshSubscribers.forEach((callback) => callback(newAccessToken));
           refreshSubscribers = [];
 
           // Retry original request with new token
-          originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return apiClient(originalRequest);
         } catch (refreshError) {
           // Refresh failed, logout user
