@@ -19,8 +19,8 @@ RUN npm ci --legacy-peer-deps || npm install --legacy-peer-deps
 # Copy source files
 COPY . .
 
-# Generate Prisma client
-RUN npx prisma generate
+# Generate Prisma client (use local binary to ensure version consistency)
+RUN ./node_modules/.bin/prisma generate
 
 # Build the application (API and dependencies only, exclude CLI and web)
 RUN npx turbo run build --filter=api --filter=database --filter=redis --filter=shared
@@ -56,8 +56,8 @@ RUN npm ci --legacy-peer-deps || npm install --legacy-peer-deps
 # Copy source files
 COPY . .
 
-# Generate Prisma client
-RUN npx prisma generate
+# Generate Prisma client (use local binary to ensure version consistency)
+RUN ./node_modules/.bin/prisma generate
 
 # Expose port
 EXPOSE 3000

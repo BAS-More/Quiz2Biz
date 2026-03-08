@@ -1,5 +1,27 @@
 {
   "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@libs/database": [
+        "../../libs/database/dist"
+      ],
+      "@libs/database/*": [
+        "../../libs/database/dist/*"
+      ],
+      "@libs/redis": [
+        "../../libs/redis/dist"
+      ],
+      "@libs/redis/*": [
+        "../../libs/redis/dist/*"
+      ],
+      "@libs/shared": [
+        "../../libs/shared/dist"
+      ],
+      "@libs/shared/*": [
+        "../../libs/shared/dist/*"
+      ]
+    }
+  },
   "exclude": [
     "node_modules",
     "dist",
