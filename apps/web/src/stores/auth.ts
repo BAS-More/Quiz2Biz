@@ -44,7 +44,7 @@ export const useAuthStore = create<AuthState>()(
       setTokens: (accessToken, refreshToken) => set({ accessToken, refreshToken }),
 
       login: async (accessToken, refreshToken, user) => {
-        // Set state synchronously
+        // Set state synchronously - Zustand's set() updates in-memory state immediately
         set({
           accessToken,
           refreshToken,
@@ -52,15 +52,31 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: true,
           isLoading: false,
         });
-        // Wait for persist middleware to write to localStorage
-        // This ensures the token is available before navigation triggers API calls
-        await new Promise<void>((resolve) => {
-          // Use requestAnimationFrame to ensure DOM updates and persist writes are scheduled
-          requestAnimationFrame(() => {
-            // Double RAF to ensure we're past the microtask queue
-            requestAnimationFrame(() => resolve());
-          });
-        });
+
+        // Force localStorage write to complete synchronously
+        // This ensures the token is available even if there's a module boundary issue
+        try {
+          const currentState = {
+            state: {
+              user,
+              accessToken,
+              refreshToken,
+              isAuthenticated: true,
+            },
+            version: 0,
+          };
+          localStorage.setItem('auth-storage', JSON.stringify(currentState));
+        } catch {
+          // Ignore localStorage errors, the persist middleware will handle it
+        }
+
+        // Verify the token is accessible via getState() - fail fast if not
+        const storedToken = useAuthStore.getState().accessToken;
+        if (storedToken !== accessToken) {
+          console.error('Auth state verification failed - token mismatch');
+          // Force a small delay to allow state to propagate
+          await new Promise<void>((resolve) => setTimeout(resolve, 50));
+        }
       },
 
       logout: () =>

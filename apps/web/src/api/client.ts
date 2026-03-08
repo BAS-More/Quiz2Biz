@@ -77,11 +77,42 @@ export const apiClient = axios.create({
   withCredentials: true, // Required for CSRF cookies
 });
 
+/**
+ * Get auth token from store or localStorage fallback
+ * This handles race conditions during state synchronization
+ */
+function getAuthToken(): string | null {
+  // First try Zustand in-memory state
+  const storeToken = useAuthStore.getState().accessToken;
+  if (storeToken) {
+    return storeToken;
+  }
+
+  // Fallback: check localStorage directly
+  // This handles cases where in-memory state hasn't synchronized yet
+  try {
+    const stored = localStorage.getItem('auth-storage');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      const localToken = parsed.state?.accessToken;
+      if (localToken) {
+        // Sync the token back to in-memory state
+        useAuthStore.getState().setAccessToken(localToken);
+        return localToken;
+      }
+    }
+  } catch {
+    // Ignore localStorage errors
+  }
+
+  return null;
+}
+
 // Request interceptor to add auth token and CSRF token
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    // Add auth token if available
-    const token = useAuthStore.getState().accessToken;
+    // Add auth token if available (with localStorage fallback)
+    const token = getAuthToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -123,6 +154,7 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean;
       _csrfRetry?: boolean;
+      _authRetry?: boolean;
     };
 
     // Handle CSRF token errors (403 with CSRF_TOKEN_* codes)
@@ -147,8 +179,22 @@ apiClient.interceptors.response.use(
       }
     }
 
-    // If 401 and not already retrying
+    // Handle 401 errors
     if (error.response?.status === 401 && !originalRequest._retry) {
+      // First, check if this is a timing issue where the token wasn't attached
+      // This can happen immediately after login due to state synchronization
+      if (!originalRequest._authRetry) {
+        originalRequest._authRetry = true;
+        
+        // Try to get token from localStorage directly
+        const token = getAuthToken();
+        if (token && !originalRequest.headers.Authorization) {
+          // Token exists but wasn't in the original request - retry with token
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return apiClient(originalRequest);
+        }
+      }
+
       originalRequest._retry = true;
 
       const refreshToken = useAuthStore.getState().refreshToken;
