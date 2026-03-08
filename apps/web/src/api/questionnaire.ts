@@ -179,7 +179,9 @@ export const questionnaireApi = {
   async listQuestionnaires(industry?: string): Promise<QuestionnaireListItem[]> {
     const params = industry ? { industry } : {};
     const { data } = await apiClient.get(`${API_PREFIX}/questionnaires`, { params });
-    return data.items ?? data;
+    // API returns { items, pagination } structure - extract items array
+    const items = data?.items ?? data;
+    return Array.isArray(items) ? items : [];
   },
 
   /** Create a new session */

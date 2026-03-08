@@ -129,11 +129,11 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
       const result = await questionnaireApi.continueSession(sessionId);
       set({
         session: result.session,
-        currentQuestions: result.nextQuestions,
-        currentSection: result.currentSection,
+        currentQuestions: result.nextQuestions ?? [],
+        currentSection: result.currentSection ?? null,
         readinessScore: result.readinessScore ?? null,
-        canComplete: result.canComplete,
-        isComplete: result.isComplete,
+        canComplete: result.canComplete ?? false,
+        isComplete: result.isComplete ?? false,
         isLoading: false,
       });
     } catch (err: unknown) {

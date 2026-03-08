@@ -49,7 +49,7 @@ export function QuestionnairePage() {
 
   const {
     session,
-    currentQuestions,
+    currentQuestions: rawCurrentQuestions,
     currentSection,
     readinessScore,
     canComplete,
@@ -63,6 +63,9 @@ export function QuestionnairePage() {
     completeSession,
     clearError,
   } = useQuestionnaireStore();
+
+  // Ensure currentQuestions is always an array
+  const currentQuestions = rawCurrentQuestions ?? [];
 
   const [questionnaires, setQuestionnaires] = useState<QuestionnaireListItem[]>([]);
   const [questionnaireLoadError, setQuestionnaireLoadError] = useState(false);
@@ -274,6 +277,16 @@ export function QuestionnairePage() {
 
   // --- ACTIVE SESSION: Question flow with score tracking ---
   if (isLoading && !session) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <span className="ml-3 text-gray-600">Loading session...</span>
+      </div>
+    );
+  }
+
+  // Show loading while session is loading after URL navigation
+  if (!session && sessionIdParam && !error) {
     return (
       <div className="flex items-center justify-center py-20">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
