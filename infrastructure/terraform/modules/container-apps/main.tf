@@ -104,6 +104,18 @@ resource "azurerm_container_app" "api" {
         value = "info"
       }
 
+      # CORS configuration - allow frontend domains
+      env {
+        name  = "CORS_ORIGIN"
+        value = "https://quiz2biz.com,https://www.quiz2biz.com"
+      }
+
+      # Frontend URL for email links and redirects
+      env {
+        name  = "FRONTEND_URL"
+        value = "https://www.quiz2biz.com"
+      }
+
       env {
         name  = "APPLICATIONINSIGHTS_CONNECTION_STRING"
         value = var.app_insights_connection_string

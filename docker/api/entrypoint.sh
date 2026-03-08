@@ -3,13 +3,21 @@ set -e
 
 echo "Running database migrations..."
 
-# Try to resolve any failed migrations first
-npx prisma migrate resolve --rolled-back 20260125000000_initial 2>/dev/null || true
+# Use local prisma binary to avoid npx downloading latest (potentially breaking) version
+PRISMA_BIN="./node_modules/.bin/prisma"
 
-# Run migrations (continue on failure - migrations may already be applied)
-npx prisma migrate deploy 2>&1 || {
-  echo "Warning: Migration failed (may already be applied), continuing startup..."
-}
+# Check if local prisma exists
+if [ ! -f "$PRISMA_BIN" ]; then
+  echo "Warning: Local prisma binary not found, skipping migrations"
+else
+  # Try to resolve any failed migrations first
+  $PRISMA_BIN migrate resolve --rolled-back 20260125000000_initial 2>/dev/null || true
+
+  # Run migrations (continue on failure - migrations may already be applied)
+  $PRISMA_BIN migrate deploy 2>&1 || {
+    echo "Warning: Migration failed (may already be applied), continuing startup..."
+  }
+fi
 
 echo "Starting application..."
 exec node --max-old-space-size=512 dist/apps/api/main.js

@@ -1,5 +1,10 @@
 /**
  * Auth store using Zustand with localStorage persistence
+ *
+ * Token Synchronization Strategy:
+ * 1. Zustand set() updates in-memory state immediately
+ * 2. Manual localStorage write ensures persistence even with module boundary issues
+ * 3. Retry mechanism (3 attempts, 100ms apart) to verify state synchronization
  */
 
 import { create } from 'zustand';
@@ -7,7 +12,19 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import axios from 'axios';
 import type { User } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
+/**
+ * Resolve API base URL based on environment
+ * Must match the resolution in api/client.ts
+ */
+const API_BASE_URL = (() => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  if (import.meta.env.PROD) {
+    return ''; // Production: relative URL, nginx proxies
+  }
+  return 'http://localhost:3000';
+})();
 
 interface AuthState {
   // State
@@ -44,7 +61,7 @@ export const useAuthStore = create<AuthState>()(
       setTokens: (accessToken, refreshToken) => set({ accessToken, refreshToken }),
 
       login: async (accessToken, refreshToken, user) => {
-        // Set state synchronously - Zustand's set() updates in-memory state immediately
+        // 1. Set Zustand state synchronously - updates in-memory state immediately
         set({
           accessToken,
           refreshToken,
@@ -53,7 +70,7 @@ export const useAuthStore = create<AuthState>()(
           isLoading: false,
         });
 
-        // Force localStorage write to complete synchronously
+        // 2. Force synchronous localStorage write
         // This ensures the token is available even if there's a module boundary issue
         try {
           const currentState = {
@@ -70,12 +87,30 @@ export const useAuthStore = create<AuthState>()(
           // Ignore localStorage errors, the persist middleware will handle it
         }
 
-        // Verify the token is accessible via getState() - fail fast if not
-        const storedToken = useAuthStore.getState().accessToken;
-        if (storedToken !== accessToken) {
-          console.error('Auth state verification failed - token mismatch');
-          // Force a small delay to allow state to propagate
-          await new Promise<void>((resolve) => setTimeout(resolve, 50));
+        // 3. Verify with retry mechanism (max 3 attempts, 100ms apart)
+        // This handles edge cases where state propagation is delayed
+        for (let attempt = 0; attempt < 3; attempt++) {
+          const storedToken = useAuthStore.getState().accessToken;
+          if (storedToken === accessToken) {
+            return; // Success - state is synchronized
+          }
+          await new Promise<void>((resolve) => setTimeout(resolve, 100));
+        }
+
+        // If we get here, state sync failed after all attempts
+        console.error('Auth state sync failed after 3 attempts - forcing localStorage reload');
+        // Force reload from localStorage as last resort
+        try {
+          const stored = localStorage.getItem('auth-storage');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (parsed.state?.accessToken === accessToken) {
+              // localStorage has the correct value, trigger a re-read
+              set({ accessToken: parsed.state.accessToken });
+            }
+          }
+        } catch {
+          // Ignore errors
         }
       },
 

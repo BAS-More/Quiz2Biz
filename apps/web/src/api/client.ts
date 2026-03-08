@@ -1,11 +1,34 @@
 /**
  * Axios API client with interceptors for auth token management and CSRF protection
+ *
+ * API URL Resolution Strategy:
+ * - Production: Uses empty string (relative URLs) - nginx proxies /api/ to backend
+ * - Development: Falls back to localhost:3000
+ * - Explicit VITE_API_URL: Always used if set
  */
 
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '../stores/auth';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
+/**
+ * Resolve API base URL based on environment
+ * - If VITE_API_URL is explicitly set, use it
+ * - In production, use relative URL (nginx proxies /api/ to backend)
+ * - In development, fall back to localhost
+ */
+const API_BASE_URL = (() => {
+  // If VITE_API_URL is explicitly set and non-empty, use it
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  // In production, use relative URL (nginx handles proxy to backend)
+  if (import.meta.env.PROD) {
+    return ''; // Empty string = relative URL
+  }
+  // Development fallback
+  return 'http://localhost:3000';
+})();
+
 const CSRF_TOKEN_HEADER = 'X-CSRF-Token';
 const CSRF_TOKEN_COOKIE = 'csrf-token';
 
@@ -108,9 +131,38 @@ function getAuthToken(): string | null {
   return null;
 }
 
+/**
+ * Wait for auth store to finish hydration
+ * Prevents race condition where requests fire before localStorage is loaded
+ */
+async function waitForAuthHydration(): Promise<void> {
+  const authState = useAuthStore.getState();
+  if (!authState.isLoading) {
+    return; // Already hydrated
+  }
+
+  return new Promise<void>((resolve) => {
+    const unsubscribe = useAuthStore.subscribe((state) => {
+      if (!state.isLoading) {
+        unsubscribe();
+        resolve();
+      }
+    });
+    // Timeout after 2 seconds to prevent blocking forever
+    setTimeout(() => {
+      unsubscribe();
+      resolve();
+    }, 2000);
+  });
+}
+
 // Request interceptor to add auth token and CSRF token
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
+    // Wait for auth store hydration before checking for tokens
+    // This prevents 401 errors on initial page load
+    await waitForAuthHydration();
+
     // Add auth token if available (with localStorage fallback)
     const token = getAuthToken();
     if (token) {
