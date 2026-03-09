@@ -1,0 +1,63 @@
+﻿# npm audit report
+
+ajv  7.0.0-alpha.0 - 8.17.1
+Severity: moderate
+ajv has ReDoS when using `$data` option - https://github.com/advisories/GHSA-2g4f-4pwh-qvx6
+fix available via `npm audit fix --force`
+Will install @nestjs/schematics@7.3.1, which is a breaking change
+node_modules/@angular-devkit/schematics-cli/node_modules/ajv
+node_modules/@angular-devkit/schematics/node_modules/ajv
+node_modules/@nestjs/cli/node_modules/ajv
+node_modules/@nestjs/schematics/node_modules/ajv
+  @angular-devkit/core  12.0.0-next.0 - 19.2.21 || 20.0.0-next.0 - 20.3.17 || 21.0.0-next.0 - 21.1.4 || 21.2.0-next.0 - 21.2.0-rc.2
+  Depends on vulnerable versions of ajv
+  node_modules/@angular-devkit/schematics-cli/node_modules/@angular-devkit/core
+  node_modules/@angular-devkit/schematics/node_modules/@angular-devkit/core
+  node_modules/@nestjs/cli/node_modules/@angular-devkit/core
+  node_modules/@nestjs/cli/node_modules/@nestjs/schematics/node_modules/@angular-devkit/core
+  node_modules/@nestjs/schematics/node_modules/@angular-devkit/core
+    @angular-devkit/schematics  12.0.0-next.0 - 19.2.21 || 20.0.0-next.0 - 20.3.17 || 21.0.0-next.0 - 21.1.4 || 21.2.0-next.0 - 21.2.0-rc.2
+    Depends on vulnerable versions of @angular-devkit/core
+    node_modules/@angular-devkit/schematics
+    node_modules/@nestjs/cli/node_modules/@nestjs/schematics/node_modules/@angular-devkit/schematics
+    node_modules/@nestjs/schematics/node_modules/@angular-devkit/schematics
+    @angular-devkit/schematics-cli  0.1200.0-next.0 - 19.2.21 || 20.0.0-next.0 - 20.3.17 || 21.0.0-next.0 - 21.1.4 || 21.2.0-next.0 - 21.2.0-rc.2
+    Depends on vulnerable versions of @angular-devkit/core
+    Depends on vulnerable versions of @angular-devkit/schematics
+    node_modules/@angular-devkit/schematics-cli
+    @nestjs/cli  8.0.0 - 11.0.16
+    Depends on vulnerable versions of @angular-devkit/core
+    Depends on vulnerable versions of @angular-devkit/schematics
+    Depends on vulnerable versions of @angular-devkit/schematics-cli
+    Depends on vulnerable versions of @nestjs/schematics
+    Depends on vulnerable versions of node-emoji
+    node_modules/@nestjs/cli
+    @nestjs/schematics  8.0.0 - 11.0.9
+    Depends on vulnerable versions of @angular-devkit/core
+    Depends on vulnerable versions of @angular-devkit/schematics
+    node_modules/@nestjs/cli/node_modules/@nestjs/schematics
+    node_modules/@nestjs/schematics
+
+lodash  4.0.0 - 4.17.21
+Severity: moderate
+Lodash has Prototype Pollution Vulnerability in `_.unset` and `_.omit` functions - https://github.com/advisories/GHSA-xxjr-mmjv-4gpg
+fix available via `npm audit fix --force`
+Will install @nestjs/swagger@11.2.6, which is a breaking change
+node_modules/lodash
+  @nestjs/config  1.1.6 - 4.0.2
+  Depends on vulnerable versions of lodash
+  node_modules/@nestjs/config
+  @nestjs/swagger  1.1.0 - 1.1.4 || 3.0.1 - 11.2.5
+  Depends on vulnerable versions of lodash
+  node_modules/@nestjs/swagger
+  node-emoji  
+  Depends on vulnerable versions of lodash
+  node_modules/node-emoji
+
+10 moderate severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force

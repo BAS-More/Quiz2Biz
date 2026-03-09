@@ -1,0 +1,4548 @@
+﻿node.exe : ts-jest[config] (WARN) 
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" "C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpe 
+   cified: (ts-jest[config] (WARN)   
+  :String) [], RemoteException
+    + FullyQualifiedErrorId : Native 
+   CommandError
+ 
+    The "ts-jest" config option 
+"isolatedModules" is deprecated and 
+will be removed in v30.0.0. Please 
+use "isolatedModules: true" in C:/Rep
+os/Quiz-to-Build/apps/api/tsconfig.js
+on instead, see https://www.typescrip
+tlang.org/tsconfig/#isolatedModules
+  
+ts-jest[config] (WARN) 
+    The "ts-jest" config option 
+"isolatedModules" is deprecated and 
+will be removed in v30.0.0. Please 
+use "isolatedModules: true" in C:/Rep
+os/Quiz-to-Build/apps/api/tsconfig.js
+on instead, see https://www.typescrip
+tlang.org/tsconfig/#isolatedModules
+  
+ts-jest[config] (WARN) 
+    The "ts-jest" config option 
+"isolatedModules" is deprecated and 
+will be removed in v30.0.0. Please 
+use "isolatedModules: true" in C:/Rep
+os/Quiz-to-Build/apps/api/tsconfig.js
+on instead, see https://www.typescrip
+tlang.org/tsconfig/#isolatedModules
+  
+ts-jest[config] (WARN) 
+    The "ts-jest" config option 
+"isolatedModules" is deprecated and 
+will be removed in v30.0.0. Please 
+use "isolatedModules: true" in C:/Rep
+os/Quiz-to-Build/apps/api/tsconfig.js
+on instead, see https://www.typescrip
+tlang.org/tsconfig/#isolatedModules
+  
+ts-jest[config] (WARN) 
+    The "ts-jest" config option 
+"isolatedModules" is deprecated and 
+will be removed in v30.0.0. Please 
+use "isolatedModules: true" in C:/Rep
+os/Quiz-to-Build/apps/api/tsconfig.js
+on instead, see https://www.typescrip
+tlang.org/tsconfig/#isolatedModules
+  
+ts-jest[config] (WARN) 
+    The "ts-jest" config option 
+"isolatedModules" is deprecated and 
+will be removed in v30.0.0. Please 
+use "isolatedModules: true" in C:/Rep
+os/Quiz-to-Build/apps/api/tsconfig.js
+on instead, see https://www.typescrip
+tlang.org/tsconfig/#isolatedModules
+  
+ts-jest[config] (WARN) 
+    The "ts-jest" config option 
+"isolatedModules" is deprecated and 
+will be removed in v30.0.0. Please 
+use "isolatedModules: true" in C:/Rep
+os/Quiz-to-Build/apps/api/tsconfig.js
+on instead, see https://www.typescrip
+tlang.org/tsconfig/#isolatedModules
+  
+PASS apps/api/src/common/tests/valida
+tion/code-hygiene.spec.ts (33.546 s)
+  ÔùÅ Console
+
+    console.warn
+      Files exceeding 400 lines:
+      
+src\config\alerting-rules.config.ts: 
+772 lines (max 400)
+      
+src\config\appinsights.config.ts: 
+579 lines (max 400)
+      src\config\canary-deployment.co
+nfig.ts: 1004 lines (max 400)
+      src\config\chaos-engineering.co
+nfig.ts: 1265 lines (max 400)
+      src\config\disaster-recovery.co
+nfig.ts: 791 lines (max 400)
+      src\config\failure-injection.co
+nfig.ts: 1083 lines (max 400)
+      
+src\config\feature-flags.config.ts: 
+914 lines (max 400)
+      src\config\graceful-degradation
+.config.ts: 906 lines (max 400)
+      src\config\incident-response.co
+nfig.ts: 1111 lines (max 400)
+      src\config\resource-pressure.co
+nfig.ts: 902 lines (max 400)
+      src\modules\adapters\adapter-co
+nfig.service.ts: 468 lines (max 400)
+      src\modules\adapters\adapter.co
+ntroller.ts: 508 lines (max 400)
+      src\modules\adapters\github.ada
+pter.ts: 595 lines (max 400)
+      src\modules\adapters\gitlab.ada
+pter.ts: 849 lines (max 400)
+      src\modules\adapters\jira-confl
+uence.adapter.ts: 893 lines (max 400)
+      src\modules\adaptive-logic\eval
+uators\condition.evaluator.ts: 406 
+lines (max 400)
+      src\modules\admin\services\admi
+n-questionnaire.service.ts: 575 
+lines (max 400)
+      
+src\modules\auth\auth.service.ts: 
+509 lines (max 400)
+      src\modules\decision-log\approv
+al-workflow.service.ts: 652 lines 
+(max 400)
+      src\modules\document-generator\
+services\deliverables-compiler.servic
+e.ts: 1385 lines (max 400)
+      src\modules\document-generator\
+services\document-builder.service.ts:
+ 539 lines (max 400)
+      src\modules\document-generator\
+services\document-generator.service.t
+s: 568 lines (max 400)
+      src\modules\document-generator\
+templates\business-plan.template.ts: 
+497 lines (max 400)
+      src\modules\document-generator\
+templates\engineering-handbook.templa
+te.ts: 424 lines (max 400)
+      src\modules\document-generator\
+templates\process-maps.template.ts: 
+422 lines (max 400)
+      src\modules\document-generator\
+templates\wireframes-mockups.template
+.ts: 449 lines (max 400)
+      src\modules\evidence-registry\c
+i-artifact-ingestion.service.ts: 794 
+lines (max 400)
+      src\modules\evidence-registry\e
+vidence-integrity.service.ts: 607 
+lines (max 400)
+      src\modules\evidence-registry\e
+vidence-registry.controller.ts: 462 
+lines (max 400)
+      src\modules\evidence-registry\e
+vidence-registry.service.ts: 910 
+lines (max 400)
+      src\modules\fact-extraction\ser
+vices\fact-extraction.service.ts: 
+403 lines (max 400)
+      src\modules\heatmap\heatmap.ser
+vice.ts: 831 lines (max 400)
+      src\modules\notifications\adapt
+ive-card.service.ts: 686 lines (max 
+400)
+      src\modules\notifications\notif
+ication.service.ts: 471 lines (max 
+400)
+      src\modules\policy-pack\service
+s\control-mapping.service.ts: 480 
+lines (max 400)
+      src\modules\scoring-engine\scor
+ing-engine.service.ts: 974 lines 
+(max 400)
+      src\modules\session\session.ser
+vice.ts: 1761 lines (max 400)
+
+    [0m [90m 58 |[39m
+     [90m 59 |[39m       
+[36mif[39m 
+(violations[33m.[39mlength 
+[33m>[39m [35m0[39m) {
+    [31m[1m>[22m[39m[90m 60 
+|[39m         
+console[33m.[39mwarn([32m'Files 
+exceeding 400 lines:\n'[39m 
+[33m+[39m violations[33m.[39mjoin
+([32m'\n'[39m))[33m;[39m
+     [90m    |[39m                 
+[31m[1m^[22m[39m
+     [90m 61 |[39m       }
+     [90m 62 |[39m       [90m// 
+Allow some violations but flag 
+them[39m
+     [90m 63 |[39m       expect(vio
+lations[33m.[39mlength)[33m.[39mt
+oBeLessThan([35m50[39m)[33m;[39m
+[0m
+
+      at Object.<anonymous> (common/t
+ests/validation/code-hygiene.spec.ts:
+60:17)
+
+    console.warn
+      Functions exceeding 30 lines:
+      src\common\filters\http-excepti
+on.filter.ts:26 catch(): 76 lines
+      src\common\guards\subscription.
+guard.ts:51 canActivate(): 109 lines
+      src\common\interceptors\logging
+.interceptor.ts:14 intercept(): 42 
+lines
+      src\common\services\memory-opti
+mization.service.ts:28 
+onModuleInit(): 184 lines
+      src\health.controller.ts:77 
+check(): 317 lines
+      src\modules\adapters\adapter-co
+nfig.service.ts:90 
+getAdapterConfigs(): 378 lines
+      src\modules\adapters\adapter.co
+ntroller.ts:74 getSupportedTypes(): 
+434 lines
+      src\modules\adaptive-logic\adap
+tive-logic.service.ts:80 if(): 52 
+lines
+      src\modules\adaptive-logic\adap
+tive-logic.service.ts:180 
+evaluateCondition(): 102 lines
+      src\modules\adaptive-logic\eval
+uators\condition.evaluator.ts:9 
+evaluate(): 397 lines
+
+    [0m [90m 119 |[39m
+     [90m 120 |[39m       
+[36mif[39m 
+(violations[33m.[39mlength 
+[33m>[39m [35m0[39m) {
+    [31m[1m>[22m[39m[90m 121 
+|[39m         console[33m.[39mwarn
+([32m'Functions exceeding 30 
+lines:\n'[39m [33m+[39m violations
+[33m.[39mslice([35m0[39m[33m,[3
+9m [35m10[39m)[33m.[39mjoin([32m
+'\n'[39m))[33m;[39m
+     [90m     |[39m                
+ [31m[1m^[22m[39m
+     [90m 122 |[39m       }
+     [90m 123 |[39m       [90m// 
+Allow some violations but flag 
+them[39m
+     [90m 124 |[39m       expect(vi
+olations[33m.[39mlength)[33m.[39m
+toBeLessThan([35m100[39m)[33m;[39
+m[0m
+
+      at Object.<anonymous> (common/t
+ests/validation/code-hygiene.spec.ts:
+121:17)
+
+    console.warn
+      Potential code duplication 
+found:
+      Block duplicated 3 times: 
+alerting-rules.config.ts:116, 
+alerting-rules.config.ts:130, 
+alerting-rules.config.ts:144
+      Block duplicated 4 times: 
+alerting-rules.config.ts:147, 
+alerting-rules.config.ts:224, 
+alerting-rules.config.ts:306
+      Block duplicated 4 times: 
+alerting-rules.config.ts:165, 
+alerting-rules.config.ts:179, 
+alerting-rules.config.ts:207
+      Block duplicated 3 times: 
+alerting-rules.config.ts:166, 
+alerting-rules.config.ts:180, 
+alerting-rules.config.ts:208
+      Block duplicated 5 times: 
+alerting-rules.config.ts:387, 
+alerting-rules.config.ts:401, 
+alerting-rules.config.ts:416
+
+    [0m [90m 228 |[39m
+     [90m 229 |[39m       
+[36mif[39m 
+(duplicates[33m.[39mlength 
+[33m>[39m [35m0[39m) {
+    [31m[1m>[22m[39m[90m 230 
+|[39m         console[33m.[39mwarn
+([32m'Potential code duplication 
+found:\n'[39m [33m+[39m duplicates
+[33m.[39mslice([35m0[39m[33m,[3
+9m [35m5[39m)[33m.[39mjoin([32m'
+\n'[39m))[33m;[39m
+     [90m     |[39m                
+ [31m[1m^[22m[39m
+     [90m 231 |[39m       }
+     [90m 232 |[39m       [90m// 
+Some duplication is acceptable in a 
+growing codebase[39m
+     [90m 233 |[39m       expect(du
+plicates[33m.[39mlength)[33m.[39m
+toBeLessThan([35m500[39m)[33m;[39
+m[0m
+
+      at Object.<anonymous> (common/t
+ests/validation/code-hygiene.spec.ts:
+230:17)
+
+    console.warn
+      Found 78 uses of 'any' type - 
+consider using specific types
+
+    [0m [90m 409 |[39m
+     [90m 410 |[39m       
+[36mif[39m (anyCount [33m>[39m 
+[35m50[39m) {
+    [31m[1m>[22m[39m[90m 411 
+|[39m         
+console[33m.[39mwarn([32m`Found 
+${anyCount} uses of 'any' type - 
+consider using specific 
+types`[39m)[33m;[39m
+     [90m     |[39m                
+ [31m[1m^[22m[39m
+     [90m 412 |[39m       }
+     [90m 413 |[39m       expect(an
+yCount)[33m.[39mtoBeLessThan([35m1
+50[39m)[33m;[39m
+     [90m 414 |[39m     
+})[33m;[39m[0m
+
+      at Object.<anonymous> (common/t
+ests/validation/code-hygiene.spec.ts:
+411:17)
+
+PASS apps/api/src/modules/auth/auth.c
+ontroller.spec.ts (40.062 s)
+PASS apps/api/src/modules/evidence-re
+gistry/index.spec.ts (40.78 s)
+PASS apps/api/src/modules/evidence-re
+gistry/evidence-registry.controller.s
+pec.ts (48.92 s)
+PASS apps/api/src/modules/auth/tests/
+auth.security.test.ts (49.236 s)
+'true' is not recognized as an 
+internal or external command,
+operable program or batch file.
+PASS apps/api/src/common/tests/valida
+tion/dependency-health.spec.ts 
+(53.054 s)
+  ÔùÅ Console
+
+    console.warn
+      npm audit check skipped due to 
+error
+
+    [0m [90m 168 |[39m       } 
+[36mcatch[39m (error) {
+     [90m 169 |[39m         
+[90m// npm audit command failed - 
+might be network issue[39m
+    [31m[1m>[22m[39m[90m 170 
+|[39m         
+console[33m.[39mwarn([32m'npm 
+audit check skipped due to 
+error'[39m)[33m;[39m
+     [90m     |[39m                
+ [31m[1m^[22m[39m
+     [90m 171 |[39m         expect(
+[36mtrue[39m)[33m.[39mtoBe([36mt
+rue[39m)[33m;[39m
+     [90m 172 |[39m       }
+     [90m 173 |[39m     
+})[33m;[39m[0m
+
+      at Object.<anonymous> (common/t
+ests/validation/dependency-health.spe
+c.ts:170:17)
+
+(node:28020) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:198768) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+PASS apps/api/src/modules/document-ge
+nerator/controllers/document.controll
+er.spec.ts (59.431 s)
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:58:06 am [31m  
+ERROR[39m 
+[38;5;3m[JiraConfluenceAdapter] 
+[39m[31mAtlassian API request 
+failed: ECONNREFUSED[39m
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:58:08 am [31m  
+ERROR[39m 
+[38;5;3m[JiraConfluenceAdapter] 
+[39m[31mAtlassian API request 
+failed: Cannot read properties of 
+undefined (reading 'ok')[39m
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:58:08 am [31m  
+ERROR[39m 
+[38;5;3m[JiraConfluenceAdapter] 
+[39m[31mAtlassian API request 
+failed: Cannot read properties of 
+undefined (reading 'ok')[39m
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:58:08 am [31m  
+ERROR[39m 
+[38;5;3m[JiraConfluenceAdapter] 
+[39m[31mAtlassian API request 
+failed: Cannot read properties of 
+undefined (reading 'ok')[39m
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:58:08 am [31m  
+ERROR[39m 
+[38;5;3m[JiraConfluenceAdapter] 
+[39m[31mAtlassian API request 
+failed: Cannot read properties of 
+undefined (reading 'ok')[39m
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:58:09 am [31m  
+ERROR[39m 
+[38;5;3m[JiraConfluenceAdapter] 
+[39m[31mAtlassian API request 
+failed: Cannot read properties of 
+undefined (reading 'ok')[39m
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:58:09 am [31m  
+ERROR[39m 
+[38;5;3m[JiraConfluenceAdapter] 
+[39m[31mAtlassian API request 
+failed: Cannot read properties of 
+undefined (reading 'ok')[39m
+PASS apps/api/src/modules/adapters/ji
+ra-confluence.adapter.spec.ts 
+(12.336 s)
+PASS apps/api/src/common/tests/valida
+tion/security-scan.spec.ts (20.409 s)
+PASS apps/api/src/modules/policy-pack
+/policy-pack.controller.spec.ts 
+(33.446 s)
+[31m[Nest] 168488  - 
+[39m10/03/2026, 3:58:20 am [31m  
+ERROR[39m 
+[38;5;3m[PaymentController] 
+[39m[31mWebhook signature 
+verification failed: Invalid 
+signature[39m
+PASS apps/api/src/modules/document-ge
+nerator/services/document-builder.ser
+vice.spec.ts (40.027 s)
+[31m[Nest] 168488  - 
+[39m10/03/2026, 3:58:21 am [31m  
+ERROR[39m 
+[38;5;3m[PaymentController] 
+[39m[31mWebhook signature 
+verification failed: string error 
+thrown[39m
+PASS apps/api/src/modules/payment/pay
+ment.controller.spec.ts (25.367 s)
+PASS apps/api/src/modules/session/ses
+sion.controller.spec.ts (21.088 s)
+PASS apps/api/src/modules/heatmap/hea
+tmap.controller.spec.ts (18.895 s)
+PASS apps/api/src/modules/heatmap/hea
+tmap.service.spec.ts (31.078 s)
+(node:104864) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+PASS apps/api/src/modules/document-ge
+nerator/controllers/document-admin.co
+ntroller.spec.ts (25.795 s)
+PASS apps/api/src/modules/payment/sub
+scription.service.spec.ts (9.476 s)
+PASS apps/api/src/modules/session/ses
+sion.service.spec.ts (18.737 s)
+PASS apps/api/src/modules/auth/oauth/
+oauth.controller.spec.ts (12.721 s)
+PASS apps/api/src/modules/idea-captur
+e/idea-capture.controller.spec.ts 
+(14.893 s)
+[31m[Nest] 104864  - 
+[39m10/03/2026, 3:58:43 am [31m  
+ERROR[39m [38;5;3m[AuthService] 
+[39m[31mFailed to send 
+verification email to 
+test@example.com:[39m
+[31m[Nest] 104864  - 
+[39m10/03/2026, 3:58:43 am [31m  
+ERROR[39m [38;5;3m[AuthService] 
+[39m[31mError: SMTP connection 
+failed[39m
+(node:162008) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+[31m[Nest] 104864  - 
+[39m10/03/2026, 3:58:43 am [31m  
+ERROR[39m [38;5;3m[AuthService] 
+[39m[31mFailed to send password 
+reset email to test@example.com:[39m
+[31m[Nest] 104864  - 
+[39m10/03/2026, 3:58:43 am [31m  
+ERROR[39m [38;5;3m[AuthService] 
+[39m[31mError: Email service 
+down[39m
+[31m[Nest] 104864  - 
+[39m10/03/2026, 3:58:43 am [31m  
+ERROR[39m [38;5;3m[AuthService] 
+[39m[31mFailed to send 
+verification email to 
+test@example.com:[39m
+[31m[Nest] 104864  - 
+[39m10/03/2026, 3:58:43 am [31m  
+ERROR[39m [38;5;3m[AuthService] 
+[39m[31mError: SMTP timeout[39m
+[31m[Nest] 104864  - 
+[39m10/03/2026, 3:58:44 am [31m  
+ERROR[39m [38;5;3m[AuthService] 
+[39m[31mFailed to send password 
+reset email to test@example.com:[39m
+[31m[Nest] 104864  - 
+[39m10/03/2026, 3:58:44 am [31m  
+ERROR[39m [38;5;3m[AuthService] 
+[39m[31mError: SMTP error[39m
+PASS apps/api/src/modules/document-ge
+nerator/services/document-generator.s
+ervice.spec.ts (23.769 s)
+PASS apps/api/src/modules/notificatio
+ns/index.spec.ts (23.051 s)
+PASS apps/api/src/modules/auth/auth.s
+ervice.spec.ts (8.278 s)
+[31m[Nest] 168488  - 
+[39m10/03/2026, 3:58:46 am [31m  
+ERROR[39m 
+[38;5;3m[ScoringEngineService] 
+[39m[31mFailed to calculate score 
+for session-error[39m
+[31m[Nest] 168488  - 
+[39m10/03/2026, 3:58:46 am [31m  
+ERROR[39m 
+[38;5;3m[ScoringEngineService] 
+[39m[31mNotFoundException: Session 
+not found: session-error[39m
+[31m[Nest] 168488  - 
+[39m10/03/2026, 3:58:47 am [31m  
+ERROR[39m 
+[38;5;3m[ScoringEngineService] 
+[39m[31mFailed to calculate score 
+for s3[39m
+[31m[Nest] 168488  - 
+[39m10/03/2026, 3:58:47 am [31m  
+ERROR[39m 
+[38;5;3m[ScoringEngineService] 
+[39m[31mNotFoundException: Session 
+not found: s3[39m
+PASS apps/api/src/modules/scoring-eng
+ine/scoring-engine.service.spec.ts 
+(6.22 s)
+PASS apps/api/src/modules/evidence-re
+gistry/evidence-registry.service.spec
+.ts (7.449 s)
+PASS apps/api/src/modules/document-ge
+nerator/controllers/deliverables-comp
+iler.controller.spec.ts (7.422 s)
+PASS apps/api/src/common/tests/valida
+tion/accessibility.spec.ts (5.467 s)
+  ÔùÅ Console
+
+    console.warn
+      Found 52 potential 
+accessibility issues
+
+    [0m [90m  95 |[39m       
+[90m// Allow some violations but 
+flag for review[39m
+     [90m  96 |[39m       
+[36mif[39m 
+(violations[33m.[39mlength 
+[33m>[39m [35m5[39m) {
+    [31m[1m>[22m[39m[90m  97 
+|[39m         
+console[33m.[39mwarn([32m`Found 
+${violations.length} potential 
+accessibility 
+issues`[39m)[33m;[39m
+     [90m     |[39m                
+ [31m[1m^[22m[39m
+     [90m  98 |[39m       }
+     [90m  99 |[39m       expect(vi
+olations[33m.[39mlength)[33m.[39m
+toBeLessThan([35m100[39m)[33m;[39
+m
+     [90m 100 |[39m     
+})[33m;[39m[0m
+
+      at Object.<anonymous> (common/t
+ests/validation/accessibility.spec.ts
+:97:17)
+
+PASS apps/api/src/health.controller.s
+pec.ts (9.25 s)
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:58:50 am [31m  
+ERROR[39m [38;5;3m[BrevoProvider] 
+[39m[31mBrevo error: 401 - 
+Unauthorized[39m
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:58:50 am [31m  
+ERROR[39m [38;5;3m[BrevoProvider] 
+[39m[31mBrevo request failed[39m
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:58:50 am [31m  
+ERROR[39m [38;5;3m[BrevoProvider] 
+[39m[31mError: Network error[39m
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:58:50 am [31m  
+ERROR[39m [38;5;3m[BrevoProvider] 
+[39m[31mBrevo request failed[39m
+String error
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:58:50 am [31m  
+ERROR[39m 
+[38;5;3m[SendGridProvider] 
+[39m[31mSendGrid error: 403 - 
+Forbidden[39m
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:58:50 am [31m  
+ERROR[39m 
+[38;5;3m[SendGridProvider] 
+[39m[31mSendGrid request 
+failed[39m
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:58:50 am [31m  
+ERROR[39m 
+[38;5;3m[SendGridProvider] 
+[39m[31mError: Connection 
+refused[39m
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:58:50 am [31m  
+ERROR[39m 
+[38;5;3m[SendGridProvider] 
+[39m[31mSendGrid request 
+failed[39m
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:58:50 am [31m  
+ERROR[39m 
+[38;5;3m[SendGridProvider] 
+[39m[31mObject:[39m
+{
+  "code": "TIMEOUT"
+}
+
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:58:50 am [31m  
+ERROR[39m 
+[38;5;3m[NotificationService] 
+[39m[31mFailed to send email to 
+user@example.com[39m
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:58:50 am [31m  
+ERROR[39m 
+[38;5;3m[NotificationService] 
+[39m[31mError: Unknown email 
+template type: UNKNOWN_TYPE[39m
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:58:51 am [31m  
+ERROR[39m [38;5;3m[BrevoProvider] 
+[39m[31mBrevo request failed[39m
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:58:51 am [31m  
+ERROR[39m [38;5;3m[BrevoProvider] 
+[39m[31mError: Unexpected 
+error[39m
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:58:51 am [31m  
+ERROR[39m [38;5;3m[BrevoProvider] 
+[39m[31mBrevo request failed[39m
+String exception
+PASS apps/api/src/modules/notificatio
+ns/notification.service.spec.ts 
+(7.389 s)
+[31m[Nest] 168488  - 
+[39m10/03/2026, 3:58:52 am [31m  
+ERROR[39m 
+[38;5;3m[ChatEngineService] 
+[39m[31mFailed to generate 
+response: Error: AI failed[39m
+PASS apps/api/src/modules/chat-engine
+/chat-engine.service.spec.ts (5.439 
+s)
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:58:53 am [31m  
+ERROR[39m 
+[38;5;3m[AdapterConfigService] 
+[39m[31mFailed to save adapter 
+config: Write failed[39m
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:58:54 am [31m  
+ERROR[39m 
+[38;5;3m[AdapterConfigService] 
+[39m[31mFailed to remove adapter 
+config: Delete failed[39m
+PASS apps/api/src/modules/evidence-re
+gistry/evidence-integrity.service.spe
+c.ts (9.559 s)
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:58:54 am [31m  
+ERROR[39m 
+[38;5;3m[AdapterConfigService] 
+[39m[31mFailed to save adapter 
+config: Unknown error[39m
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:58:54 am [31m  
+ERROR[39m 
+[38;5;3m[AdapterConfigService] 
+[39m[31mFailed to remove adapter 
+config: Unknown error[39m
+PASS apps/api/src/modules/adapters/ad
+apter-config.service.spec.ts (5.683 
+s)
+PASS apps/api/src/modules/questionnai
+re/questionnaire.controller.spec.ts 
+(6.21 s)
+PASS apps/api/src/modules/decision-lo
+g/index.spec.ts (6.133 s)
+PASS apps/api/src/config/appinsights.
+config.spec.ts (5.905 s)
+  ÔùÅ Console
+
+    console.log
+      Application Insights not 
+configured (no connection string or 
+instrumentation key)
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:72:13)
+
+    console.log
+      Application Insights 
+initialized: role=quiz-to-build-api, 
+instance=local-dev
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:105:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights telemetry 
+flushed
+
+      at shutdown 
+(config/appinsights.config.ts:540:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+    console.log
+      Application Insights already 
+initialized
+
+      at initializeAppInsights 
+(config/appinsights.config.ts:67:13)
+
+PASS apps/api/src/common/guards/subsc
+ription.guard.spec.ts (5.284 s)
+PASS apps/api/src/modules/payment/pay
+ment.service.spec.ts (5.19 s)
+[31m[Nest] 198768  - 
+[39m10/03/2026, 3:59:00 am [31m  
+ERROR[39m 
+[38;5;3m[PdfRendererService] 
+[39m[31mPDF generation failed: 
+Error: PDF error[39m
+PASS apps/api/src/modules/document-ge
+nerator/services/pdf-renderer.service
+.spec.ts
+PASS apps/api/src/modules/policy-pack
+/index.spec.ts (10.43 s)
+PASS apps/api/src/modules/questionnai
+re/questionnaire.service.spec.ts
+PASS apps/api/src/modules/document-co
+mmerce/services/pricing-calculator.se
+rvice.spec.ts
+PASS apps/api/src/modules/adapters/ad
+apters.spec.ts (5.62 s)
+PASS apps/api/src/modules/payment/bil
+ling.service.spec.ts
+[31m[Nest] 198768  - 
+[39m10/03/2026, 3:59:04 am [31m  
+ERROR[39m 
+[38;5;3m[AiDocumentContentService] 
+[39m[31mAI document generation 
+failed: API rate limit exceeded[39m
+[31m[Nest] 198768  - 
+[39m10/03/2026, 3:59:04 am [31m  
+ERROR[39m 
+[38;5;3m[AiDocumentContentService] 
+[39m[31mAI document generation 
+failed: Connection refused[39m
+[31m[Nest] 198768  - 
+[39m10/03/2026, 3:59:04 am [31m  
+ERROR[39m 
+[38;5;3m[AiDocumentContentService] 
+[39m[31mFailed to parse AI 
+response: Unexpected token 'T', 
+"This is no"... is not valid 
+JSON[39m
+PASS apps/api/src/config/graceful-deg
+radation.config.spec.ts
+  ÔùÅ Console
+
+    console.log
+      Queuing request to test-queue 
+for retry
+
+      at 
+FallbackHandler.queueForRetry (config
+/graceful-degradation.config.ts:282:1
+3)
+
+    console.log
+      Reading from local cache at 
+/tmp/cache
+
+      at FallbackHandler.localCache (
+config/graceful-degradation.config.ts
+:310:13)
+
+    console.log
+      [Retry] test: Attempt 1 failed 
+with 500, retrying in 10ms (2 
+retries left)
+
+      at 
+RetryExecutor.executeWithRetry (confi
+g/graceful-degradation.config.ts:475:
+19)
+
+    console.log
+      [Retry] test: Non-retryable 
+error 400, aborting
+
+      at 
+RetryExecutor.executeWithRetry (confi
+g/graceful-degradation.config.ts:462:
+19)
+
+    console.log
+      [Retry] test: Attempt 1 failed 
+with 500, retrying in 5ms (1 retries 
+left)
+
+      at 
+RetryExecutor.executeWithRetry (confi
+g/graceful-degradation.config.ts:475:
+19)
+
+    console.log
+      [Retry] test: Attempt 2 failed 
+with 500, retrying in 10ms (0 
+retries left)
+
+      at 
+RetryExecutor.executeWithRetry (confi
+g/graceful-degradation.config.ts:475:
+19)
+
+    console.log
+      [Retry] test: Unknown error 
+UNKNOWN, aborting
+
+      at 
+RetryExecutor.executeWithRetry (confi
+g/graceful-degradation.config.ts:468:
+19)
+
+    console.log
+      [Retry] test: Attempt 1 failed 
+with P1001, retrying in 5ms (2 
+retries left)
+
+      at 
+RetryExecutor.executeWithRetry (confi
+g/graceful-degradation.config.ts:475:
+19)
+
+    console.log
+      [GracefulDegradation] Level 
+changed from 0 (Normal) to 2 
+(Severely Degraded)
+
+      at GracefulDegradationService.s
+etDegradationLevel (config/graceful-d
+egradation.config.ts:830:15)
+
+    console.log
+      [GracefulDegradation] Level 
+changed from 0 (Normal) to 2 
+(Severely Degraded)
+
+      at GracefulDegradationService.s
+etDegradationLevel (config/graceful-d
+egradation.config.ts:830:15)
+
+    console.log
+      [GracefulDegradation] Level 
+changed from 0 (Normal) to 1 
+(Degraded)
+
+      at GracefulDegradationService.s
+etDegradationLevel (config/graceful-d
+egradation.config.ts:830:15)
+
+    console.log
+      [GracefulDegradation] Level 
+changed from 0 (Normal) to 3 
+(Emergency)
+
+      at GracefulDegradationService.s
+etDegradationLevel (config/graceful-d
+egradation.config.ts:830:15)
+
+    console.log
+      [GracefulDegradation] Level 
+changed from 0 (Normal) to 1 
+(Degraded)
+
+      at GracefulDegradationService.s
+etDegradationLevel (config/graceful-d
+egradation.config.ts:830:15)
+
+    console.log
+      [GracefulDegradation] Level 
+changed from 0 (Normal) to 1 
+(Degraded)
+
+      at GracefulDegradationService.s
+etDegradationLevel (config/graceful-d
+egradation.config.ts:830:15)
+
+    console.log
+      [GracefulDegradation] Level 
+changed from 0 (Normal) to 3 
+(Emergency)
+
+      at GracefulDegradationService.s
+etDegradationLevel (config/graceful-d
+egradation.config.ts:830:15)
+
+    console.log
+      [Retry] test: Unknown error 
+UNKNOWN, aborting
+
+      at 
+RetryExecutor.executeWithRetry (confi
+g/graceful-degradation.config.ts:468:
+19)
+
+    console.log
+      [Retry] jitter-test: Attempt 1 
+failed with 500, retrying in 107ms 
+(2 retries left)
+
+      at 
+RetryExecutor.executeWithRetry (confi
+g/graceful-degradation.config.ts:475:
+19)
+
+    console.log
+      [Retry] jitter-test: Attempt 2 
+failed with 500, retrying in 236ms 
+(1 retries left)
+
+      at 
+RetryExecutor.executeWithRetry (confi
+g/graceful-degradation.config.ts:475:
+19)
+
+    console.log
+      [Retry] cap-test: Attempt 1 
+failed with 500, retrying in 10ms (4 
+retries left)
+
+      at 
+RetryExecutor.executeWithRetry (confi
+g/graceful-degradation.config.ts:475:
+19)
+
+    console.log
+      [Retry] cap-test: Attempt 2 
+failed with 500, retrying in 15ms (3 
+retries left)
+
+      at 
+RetryExecutor.executeWithRetry (confi
+g/graceful-degradation.config.ts:475:
+19)
+
+    console.log
+      [Retry] cap-test: Attempt 3 
+failed with 500, retrying in 15ms (2 
+retries left)
+
+      at 
+RetryExecutor.executeWithRetry (confi
+g/graceful-degradation.config.ts:475:
+19)
+
+PASS apps/api/src/modules/document-ge
+nerator/services/ai-document-content.
+service.spec.ts
+PASS apps/api/src/config/canary-deplo
+yment.config.spec.ts
+  ÔùÅ Console
+
+    console.log
+      [Canary] Traffic weight 
+updated: canary=0%, stable=100%
+
+      at CanaryDeploymentManager.upda
+teTrafficWeight (config/canary-deploy
+ment.config.ts:826:13)
+
+PASS apps/api/src/modules/session/con
+trollers/conversation.controller.spec
+.ts (5.683 s)
+PASS apps/api/src/common/guards/csrf.
+guard.spec.ts
+PASS apps/api/src/modules/document-ge
+nerator/templates/index.spec.ts
+PASS apps/api/src/modules/qpg/qpg.con
+troller.spec.ts
+PASS apps/api/src/modules/admin/contr
+ollers/admin-questionnaire.controller
+.spec.ts (14.496 s)
+PASS apps/api/src/modules/session/ser
+vices/conversation.service.spec.ts
+[31m[Nest] 198768  - 
+[39m10/03/2026, 3:59:09 am [31m  
+ERROR[39m [38;5;3m[GitLabAdapter] 
+[39m[31mFailed to resolve GitLab 
+API host "gitlab.com": GitLab API 
+URL must not point to a private or 
+loopback address[39m
+[31m[Nest] 198768  - 
+[39m10/03/2026, 3:59:09 am [31m  
+ERROR[39m [38;5;3m[GitLabAdapter] 
+[39m[31mFailed to resolve GitLab 
+API host "gitlab.com": GitLab API 
+URL must not point to a private or 
+loopback address[39m
+[31m[Nest] 198768  - 
+[39m10/03/2026, 3:59:09 am [31m  
+ERROR[39m [38;5;3m[GitLabAdapter] 
+[39m[31mFailed to resolve GitLab 
+API host "gitlab.com": ENOTFOUND[39m
+[31m[Nest] 198768  - 
+[39m10/03/2026, 3:59:09 am [31m  
+ERROR[39m [38;5;3m[GitLabAdapter] 
+[39m[31mGitLab API request failed: 
+fetch failed[39m
+[31m[Nest] 198768  - 
+[39m10/03/2026, 3:59:09 am [31m  
+ERROR[39m [38;5;3m[GitLabAdapter] 
+[39m[31mGitLab API request failed: 
+fetch failed[39m
+[31m[Nest] 198768  - 
+[39m10/03/2026, 3:59:09 am [31m  
+ERROR[39m [38;5;3m[GitLabAdapter] 
+[39m[31mGitLab API request failed: 
+fetch failed[39m
+PASS apps/api/src/modules/adapters/gi
+tlab.adapter.spec.ts
+PASS apps/api/src/modules/document-ge
+nerator/tests/template-engine.service
+.spec.ts
+PASS apps/api/src/modules/session/ses
+sion-expiration.service.spec.ts 
+(5.058 s)
+PASS apps/api/src/modules/standards/s
+tandards.controller.spec.ts
+PASS apps/api/src/modules/document-ge
+nerator/services/deliverables-compile
+r.service.spec.ts
+PASS apps/api/src/modules/scoring-eng
+ine/index.spec.ts
+PASS apps/api/src/modules/document-ge
+nerator/services/project-document-gen
+eration.service.spec.ts (5.058 s)
+PASS apps/api/src/modules/decision-lo
+g/decorators/require-approval.decorat
+or.spec.ts
+PASS apps/api/src/modules/decision-lo
+g/decision-log.spec.ts (5.105 s)
+PASS apps/api/src/modules/qpg/qpg.ser
+vice.spec.ts
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:59:15 am [31m  
+ERROR[39m 
+[38;5;3m[StandardsService] 
+[39m[31mFailed to fetch 
+standards:[39m
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:59:15 am [31m  
+ERROR[39m 
+[38;5;3m[StandardsService] 
+[39m[31mError: DB connection 
+lost[39m
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:59:16 am [31m  
+ERROR[39m 
+[38;5;3m[StandardsService] 
+[39m[31mFailed to fetch standard 
+by category MODERN_ARCHITECTURE:[39m
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:59:16 am [31m  
+ERROR[39m 
+[38;5;3m[StandardsService] 
+[39m[31mError: DB timeout[39m
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:59:16 am [31m  
+ERROR[39m 
+[38;5;3m[StandardsService] 
+[39m[31mFailed to fetch standard 
+with mappings for 
+MODERN_ARCHITECTURE:[39m
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:59:16 am [31m  
+ERROR[39m 
+[38;5;3m[StandardsService] 
+[39m[31mError: Query failed[39m
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:59:16 am [31m  
+ERROR[39m 
+[38;5;3m[StandardsService] 
+[39m[31mFailed to fetch standards 
+for document doc-type-1:[39m
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:59:16 am [31m  
+ERROR[39m 
+[38;5;3m[StandardsService] 
+[39m[31mError: Connection 
+refused[39m
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:59:16 am [31m  
+ERROR[39m 
+[38;5;3m[StandardsService] 
+[39m[31mFailed to generate 
+standards section for 
+doc-type-1:[39m
+[31m[Nest] 220588  - 
+[39m10/03/2026, 3:59:16 am [31m  
+ERROR[39m 
+[38;5;3m[StandardsService] 
+[39m[31mError: Timeout[39m
+PASS apps/api/src/modules/standards/s
+tandards.service.spec.ts
+[31m[Nest] 168488  - 
+[39m10/03/2026, 3:59:16 am [31m  
+ERROR[39m 
+[38;5;3m[AiGatewayService] 
+[39m[31mFailed to load provider 
+configs: Error: DB error[39m
+PASS apps/api/src/modules/auth/strate
+gies/jwt.strategy.spec.ts (5.7 s)
+PASS apps/api/src/modules/ai-gateway/
+ai-gateway.service.spec.ts
+PASS apps/api/src/config/incident-res
+ponse.config.spec.ts
+  ÔùÅ Console
+
+    console.log
+      [Incident] INC-1773075556672 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075556672: Test Incident
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075556789 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075556789: Test 1
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075556796 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075556796: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075556805 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075556805: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075556805 
+acknowledged by user@test.com
+
+      at 
+IncidentManager.acknowledgeIncident (
+config/incident-response.config.ts:92
+3:13)
+
+    console.log
+      [Incident] INC-1773075556948 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075556948: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075556948 
+acknowledged by user@test.com
+
+      at 
+IncidentManager.acknowledgeIncident (
+config/incident-response.config.ts:92
+3:13)
+
+    console.log
+      [Incident] INC-1773075556955 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075556955: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075556955 
+status: detected ÔåÆ investigating
+
+      at 
+IncidentManager.updateStatus (config/
+incident-response.config.ts:955:13)
+
+    console.log
+      [Incident] INC-1773075556962 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075556962: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075556962 
+status: detected ÔåÆ resolved
+
+      at 
+IncidentManager.updateStatus (config/
+incident-response.config.ts:955:13)
+
+    console.log
+      [Incident] INC-1773075556968 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075556968: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075556968 
+status: detected ÔåÆ investigating
+
+      at 
+IncidentManager.updateStatus (config/
+incident-response.config.ts:955:13)
+
+    console.log
+      [Incident] INC-1773075556975 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075556975: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075556984 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075556984: Test 1
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075556991 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075556991: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075556991 
+status: detected ÔåÆ resolved
+
+      at 
+IncidentManager.updateStatus (config/
+incident-response.config.ts:955:13)
+
+    console.log
+      [Incident] INC-1773075557004 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075557004: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075557004 
+acknowledged by user@test.com
+
+      at 
+IncidentManager.acknowledgeIncident (
+config/incident-response.config.ts:92
+3:13)
+
+    console.log
+      [Incident] INC-1773075557012 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075557012: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075557019 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075557019: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075557019 
+escalating to level 2: [ 
+'engineering-lead', 'sre-lead' ]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via slack
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] INC-1773075557030 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075557030: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075557036 
+escalating to level 1: [ 
+'engineering-team' ]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via slack
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075557036: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075557045 
+escalating to level 1: [ 
+'engineering-team' ]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via slack
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075557045: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] No escalation path 
+for level 99
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:984:
+15)
+
+    console.log
+      [Incident] INC-1773075557050 
+escalating to level 1: [ 
+'engineering-team' ]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via slack
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075557050: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075557050 
+escalating to level 1: [ 
+'engineering-team' ]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via slack
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] INC-1773075557056 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075557056: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075557056 
+escalating to level 2: [ 
+'engineering-lead', 'sre-lead' ]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via slack
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] INC-1773075557076 
+escalating to level 1: [ 
+'oncall-primary' ]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via slack
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075557076: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075557076 
+status: detected ÔåÆ resolved
+
+      at 
+IncidentManager.updateStatus (config/
+incident-response.config.ts:955:13)
+
+    console.log
+      [Incident] INC-1773075557083 
+escalating to level 1: [ 
+'oncall-primary' ]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via slack
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075557083: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075557083 
+status: detected ÔåÆ mitigating
+
+      at 
+IncidentManager.updateStatus (config/
+incident-response.config.ts:955:13)
+
+    console.log
+      [Incident] INC-1773075557097 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075557097: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075557104 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075557104: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075557118 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075557118: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075557123 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075557123: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075557130 
+escalating to level 1: [ 
+'oncall-primary', 'oncall-secondary' 
+]
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:988:
+13)
+
+    console.log
+      [Incident] Notifying via 
+pagerduty
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via phone
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Notifying via sms
+
+      at 
+IncidentManager.triggerEscalation (co
+nfig/incident-response.config.ts:999:
+15)
+
+    console.log
+      [Incident] Created incident 
+INC-1773075557130: Test
+
+      at 
+IncidentManager.createIncident (confi
+g/incident-response.config.ts:900:13)
+
+    console.log
+      [Incident] INC-1773075557130 
+status: detected ÔåÆ postmortem
+
+      at 
+IncidentManager.updateStatus (config/
+incident-response.config.ts:955:13)
+
+PASS apps/api/src/modules/qpg/service
+s/prompt-template.service.spec.ts
+PASS apps/api/src/modules/users/users
+.service.spec.ts
+PASS apps/api/src/modules/notificatio
+ns/teams-webhook.controller.spec.ts
+PASS apps/api/src/modules/policy-pack
+/services/policy-export.service.spec.
+ts
+PASS apps/api/src/modules/notificatio
+ns/notification.controller.spec.ts 
+(5.597 s)
+PASS apps/api/src/modules/decision-lo
+g/approval-workflow.service.spec.ts 
+(5.238 s)
+PASS apps/api/src/modules/heatmap/ind
+ex.spec.ts (6.433 s)
+PASS apps/api/src/modules/decision-lo
+g/decision-log.controller.spec.ts 
+(5.887 s)
+PASS apps/api/src/modules/evidence-re
+gistry/ci-artifact-ingestion.service.
+spec.ts (5.826 s)
+[31m[Nest] 198768  - 
+[39m10/03/2026, 3:59:25 am [31m  
+ERROR[39m 
+[38;5;3m[FactExtractionService] 
+[39m[31mFact extraction failed: 
+Error: AI service down[39m
+[31m[Nest] 198768  - 
+[39m10/03/2026, 3:59:25 am [31m  
+ERROR[39m 
+[38;5;3m[FactExtractionService] 
+[39m[31mFailed to parse extraction 
+response: SyntaxError: Unexpected 
+token 'o', "not valid j"... is not 
+valid JSON[39m
+PASS apps/api/src/modules/fact-extrac
+tion/services/fact-extraction.service
+.spec.ts (6.302 s)
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:59:26 am [31m  
+ERROR[39m 
+[38;5;3m[ClaudeAiService] 
+[39m[31mCompleteness evaluation 
+error: API rate limit[39m
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:59:26 am [31m  
+ERROR[39m 
+[38;5;3m[ClaudeAiService] 
+[39m[31mClaude API error: API key 
+invalid[39m
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:59:26 am [31m  
+ERROR[39m 
+[38;5;3m[ClaudeAiService] 
+[39m[31mClaude API error: string 
+error not an Error object[39m
+[31m[Nest] 162008  - 
+[39m10/03/2026, 3:59:26 am [31m  
+ERROR[39m 
+[38;5;3m[ClaudeAiService] 
+[39m[31mCompleteness evaluation 
+error: [object Object][39m
+PASS apps/api/src/modules/idea-captur
+e/services/claude-ai.service.spec.ts 
+(5.562 s)
+PASS apps/api/src/modules/admin/tests
+/admin-questionnaire.service.spec.ts
+[31m[Nest] 104864  - 
+[39m10/03/2026, 3:59:28 am [31m  
+ERROR[39m [38;5;3m[GitHubAdapter] 
+[39m[31mGitHub API request failed: 
+ECONNREFUSED[39m
+[31m[Nest] 104864  - 
+[39m10/03/2026, 3:59:28 am [31m  
+ERROR[39m [38;5;3m[GitHubAdapter] 
+[39m[31mGitHub API request failed: 
+Network error[39m
+[31m[Nest] 104864  - 
+[39m10/03/2026, 3:59:28 am [31m  
+ERROR[39m [38;5;3m[GitHubAdapter] 
+[39m[31mGitHub API request failed: 
+Network error[39m
+PASS apps/api/src/modules/policy-pack
+/services/terraform-rules.service.spe
+c.ts
+[31m[Nest] 104864  - 
+[39m10/03/2026, 3:59:28 am [31m  
+ERROR[39m [38;5;3m[GitHubAdapter] 
+[39m[31mGitHub API request failed: 
+Network error[39m
+[31m[Nest] 104864  - 
+[39m10/03/2026, 3:59:28 am [31m  
+ERROR[39m [38;5;3m[GitHubAdapter] 
+[39m[31mGitHub API request failed: 
+Network error[39m
+[31m[Nest] 104864  - 
+[39m10/03/2026, 3:59:28 am [31m  
+ERROR[39m [38;5;3m[GitHubAdapter] 
+[39m[31mGitHub API request failed: 
+Network error[39m
+[31m[Nest] 104864  - 
+[39m10/03/2026, 3:59:28 am [31m  
+ERROR[39m [38;5;3m[GitHubAdapter] 
+[39m[31mGitHub API request failed: 
+Network error[39m
+PASS apps/api/src/modules/adapters/gi
+thub.adapter.spec.ts (5.647 s)
+PASS apps/api/src/modules/users/users
+.controller.spec.ts (6.981 s)
+PASS apps/api/src/modules/document-co
+mmerce/services/document-purchase.ser
+vice.spec.ts
+PASS apps/api/src/modules/policy-pack
+/policy-pack.service.spec.ts (5.606 
+s)
+PASS apps/api/src/modules/idea-captur
+e/project-types.controller.spec.ts 
+(5.46 s)
+PASS apps/api/src/modules/policy-pack
+/services/control-mapping.service.spe
+c.ts (5.25 s)
+PASS apps/api/src/modules/admin/dto/d
+to.spec.ts (6.457 s)
+PASS apps/api/src/modules/admin/servi
+ces/admin-questionnaire.service.spec.
+ts (5.124 s)
+[31m[Nest] 198700  - 
+[39m10/03/2026, 3:59:34 am [31m  
+ERROR[39m [38;5;3m[OAuthService] 
+[39m[31mMicrosoft authentication 
+failed[39m
+[31m[Nest] 198700  - 
+[39m10/03/2026, 3:59:34 am [31m  
+ERROR[39m [38;5;3m[OAuthService] 
+[39m[31mUnauthorizedException: 
+Failed to fetch Microsoft 
+profile[39m
+[31m[Nest] 198700  - 
+[39m10/03/2026, 3:59:35 am [31m  
+ERROR[39m [38;5;3m[OAuthService] 
+[39m[31mGoogle authentication 
+failed[39m
+[31m[Nest] 198700  - 
+[39m10/03/2026, 3:59:35 am [31m  
+ERROR[39m [38;5;3m[OAuthService] 
+[39m[31mUnauthorizedException: 
+Invalid Google token[39m
+[31m[Nest] 198700  - 
+[39m10/03/2026, 3:59:35 am [31m  
+ERROR[39m [38;5;3m[OAuthService] 
+[39m[31mGoogle authentication 
+failed[39m
+[31m[Nest] 198700  - 
+[39m10/03/2026, 3:59:35 am [31m  
+ERROR[39m [38;5;3m[OAuthService] 
+[39m[31mError: Token expired[39m
+[31m[Nest] 198700  - 
+[39m10/03/2026, 3:59:35 am [31m  
+ERROR[39m [38;5;3m[OAuthService] 
+[39m[31mMicrosoft authentication 
+failed[39m
+[31m[Nest] 198700  - 
+[39m10/03/2026, 3:59:35 am [31m  
+ERROR[39m [38;5;3m[OAuthService] 
+[39m[31mError: Network error[39m
+PASS apps/api/src/modules/auth/oauth/
+oauth.service.spec.ts (5.564 s)
+PASS apps/api/src/modules/scoring-eng
+ine/scoring-engine.controller.spec.ts
+ (6.152 s)
+PASS apps/api/src/modules/policy-pack
+/services/opa-policy.service.spec.ts 
+(5.968 s)
+PASS apps/api/src/common/interceptors
+/logging.interceptor.spec.ts
+PASS apps/api/src/modules/adapters/ad
+apter.controller.spec.ts (6.646 s)
+PASS apps/api/src/modules/auth/oauth/
+index.spec.ts (6.121 s)
+PASS apps/api/src/modules/qpg/index.s
+pec.ts (5.704 s)
+[31m[Nest] 198700  - 
+[39m10/03/2026, 3:59:41 am [31m  
+ERROR[39m 
+[38;5;3m[AdaptiveCardService] 
+[39m[31mTeams webhook error:[39m
+[31m[Nest] 198700  - 
+[39m10/03/2026, 3:59:41 am [31m  
+ERROR[39m 
+[38;5;3m[AdaptiveCardService] 
+[39m[31mError: getaddrinfo 
+ENOTFOUND teams.webhook[39m
+[31m[Nest] 198700  - 
+[39m10/03/2026, 3:59:41 am [31m  
+ERROR[39m 
+[38;5;3m[AdaptiveCardService] 
+[39m[31mTeams webhook error:[39m
+[31m[Nest] 198700  - 
+[39m10/03/2026, 3:59:41 am [31m  
+ERROR[39m 
+[38;5;3m[AdaptiveCardService] 
+[39m[31mError: getaddrinfo 
+ENOTFOUND teams.webhook[39m
+PASS apps/api/src/modules/idea-captur
+e/services/idea-capture.service.spec.
+ts (5.369 s)
+PASS apps/api/src/modules/notificatio
+ns/adaptive-card.service.spec.ts 
+(6.2 s)
+PASS apps/api/src/common/tests/valida
+tion/ux-quality.spec.ts
+PASS apps/api/src/modules/adaptive-lo
+gic/adaptive-logic.service.spec.ts 
+(5.199 s)
+PASS apps/api/src/modules/auth/guards
+/roles.guard.spec.ts
+PASS apps/api/src/common/guards/index
+.spec.ts (6.017 s)
+PASS apps/api/src/modules/auth/guards
+/jwt-auth.guard.spec.ts
+PASS apps/api/src/modules/policy-pack
+/services/policy-generator.service.sp
+ec.ts
+PASS apps/api/src/modules/scoring-eng
+ine/dto/calculate-score.dto.spec.ts 
+(5.971 s)
+PASS apps/api/src/modules/quality-sco
+ring/services/quality-scoring.service
+.spec.ts (5.459 s)
+PASS apps/api/src/modules/qpg/service
+s/context-builder.service.spec.ts 
+(6.07 s)
+PASS apps/api/src/modules/adapters/in
+dex.spec.ts (6.655 s)
+PASS apps/api/src/modules/document-ge
+nerator/services/storage.service.spec
+.ts (5.654 s)
+PASS apps/api/src/modules/decision-lo
+g/decision-log.service.spec.ts 
+(6.648 s)
+[31m[Nest] 198700  - 
+[39m10/03/2026, 4:00:21 am [31m  
+ERROR[39m 
+[38;5;3m[MemoryOptimizationService] 
+[39m[31mCRITICAL: Memory usage at 
+550.00MB (78.6% of heap). RSS: 
+600.00MB. Triggering GC.[39m
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:51 am [31m  
+ERROR[39m 
+[38;5;3m[AdminAuditService] 
+[39m[31mFailed to create audit 
+log: DB Error[39m
+Error: DB Error
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\modules\adm
+in\services\admin-audit.service.spec.
+ts:94:63)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+PASS apps/api/src/common/services/mem
+ory-optimization.service.spec.ts
+PASS apps/api/src/modules/admin/servi
+ces/admin-audit.service.spec.ts
+PASS apps/api/src/modules/qpg/service
+s/prompt-generator.service.spec.ts 
+(5.484 s)
+PASS apps/api/src/config/resource-pre
+ssure.config.spec.ts
+  ÔùÅ Console
+
+    console.log
+      Starting resource pressure 
+test: CPU Pressure 80%
+
+      at 
+ResourcePressureTestRunner.runTest (c
+onfig/resource-pressure.config.ts:832
+:13)
+
+    console.log
+      Expected behavior: HPA should 
+scale out additional pods, response 
+times increase moderately
+
+      at 
+ResourcePressureTestRunner.runTest (c
+onfig/resource-pressure.config.ts:833
+:13)
+
+    console.log
+      Starting resource pressure 
+test: CPU Pressure 80%
+
+      at 
+ResourcePressureTestRunner.runTest (c
+onfig/resource-pressure.config.ts:832
+:13)
+
+    console.log
+      Expected behavior: HPA should 
+scale out additional pods, response 
+times increase moderately
+
+      at 
+ResourcePressureTestRunner.runTest (c
+onfig/resource-pressure.config.ts:833
+:13)
+
+    console.log
+      Starting resource pressure 
+test: CPU Pressure 80%
+
+      at 
+ResourcePressureTestRunner.runTest (c
+onfig/resource-pressure.config.ts:832
+:13)
+
+    console.log
+      Expected behavior: HPA should 
+scale out additional pods, response 
+times increase moderately
+
+      at 
+ResourcePressureTestRunner.runTest (c
+onfig/resource-pressure.config.ts:833
+:13)
+
+    console.log
+      Starting resource pressure 
+test: CPU Pressure 80%
+
+      at 
+ResourcePressureTestRunner.runTest (c
+onfig/resource-pressure.config.ts:832
+:13)
+
+    console.log
+      Expected behavior: HPA should 
+scale out additional pods, response 
+times increase moderately
+
+      at 
+ResourcePressureTestRunner.runTest (c
+onfig/resource-pressure.config.ts:833
+:13)
+
+    console.log
+      Starting resource pressure 
+test: CPU Pressure 80%
+
+      at 
+ResourcePressureTestRunner.runTest (c
+onfig/resource-pressure.config.ts:832
+:13)
+
+    console.log
+      Expected behavior: HPA should 
+scale out additional pods, response 
+times increase moderately
+
+      at 
+ResourcePressureTestRunner.runTest (c
+onfig/resource-pressure.config.ts:833
+:13)
+
+    console.log
+      Starting resource pressure 
+test: CPU Pressure 80%
+
+      at 
+ResourcePressureTestRunner.runTest (c
+onfig/resource-pressure.config.ts:832
+:13)
+
+    console.log
+      Expected behavior: HPA should 
+scale out additional pods, response 
+times increase moderately
+
+      at 
+ResourcePressureTestRunner.runTest (c
+onfig/resource-pressure.config.ts:833
+:13)
+
+    console.log
+      Starting resource pressure 
+test: CPU Pressure 90%
+
+      at 
+ResourcePressureTestRunner.runTest (c
+onfig/resource-pressure.config.ts:832
+:13)
+
+    console.log
+      Expected behavior: System 
+should degrade gracefully, critical 
+operations prioritized
+
+      at 
+ResourcePressureTestRunner.runTest (c
+onfig/resource-pressure.config.ts:833
+:13)
+
+PASS apps/api/src/common/interceptors
+/transform.interceptor.spec.ts 
+(5.176 s)
+PASS apps/api/src/modules/document-ge
+nerator/templates/templates.spec.ts 
+(5.74 s)
+PASS apps/api/src/modules/adaptive-lo
+gic/evaluators/condition.evaluator.sp
+ec.ts (5.115 s)
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 404 - Not 
+found[39m
+HttpException: Not found
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:36:
+25)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+PASS apps/api/src/modules/auth/decora
+tors/user.decorator.spec.ts
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 400 - 
+Validation failed[39m
+HttpException: Validation failed
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:54:
+25)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 400 - field1 
+is required,field2 must be 
+number[39m
+HttpException: Http Exception
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:74:
+25)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mUnhandled error: Something 
+went wrong[39m
+Error: Something went wrong
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:92:
+25)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 500 - Internal 
+server error[39m
+Error: Something went wrong
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:92:
+25)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 500 - Unknown 
+error occurred[39m
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 400 - Test[39m
+HttpException: Test
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:126
+:25)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 400 - Test[39m
+HttpException: Test
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:141
+:25)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 400 - Test[39m
+HttpException: Test
+    at C:\Repos\Quiz-to-Build\apps\ap
+i\src\common\filters\http-exception.f
+ilter.spec.ts:166:27
+    at Array.forEach (<anonymous>)
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:165
+:19)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 401 - Test[39m
+HttpException: Test
+    at C:\Repos\Quiz-to-Build\apps\ap
+i\src\common\filters\http-exception.f
+ilter.spec.ts:166:27
+    at Array.forEach (<anonymous>)
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:165
+:19)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 403 - Test[39m
+HttpException: Test
+    at C:\Repos\Quiz-to-Build\apps\ap
+i\src\common\filters\http-exception.f
+ilter.spec.ts:166:27
+    at Array.forEach (<anonymous>)
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:165
+:19)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 404 - Test[39m
+HttpException: Test
+    at C:\Repos\Quiz-to-Build\apps\ap
+i\src\common\filters\http-exception.f
+ilter.spec.ts:166:27
+    at Array.forEach (<anonymous>)
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:165
+:19)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 409 - Test[39m
+HttpException: Test
+    at C:\Repos\Quiz-to-Build\apps\ap
+i\src\common\filters\http-exception.f
+ilter.spec.ts:166:27
+    at Array.forEach (<anonymous>)
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:165
+:19)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 429 - Test[39m
+HttpException: Test
+    at C:\Repos\Quiz-to-Build\apps\ap
+i\src\common\filters\http-exception.f
+ilter.spec.ts:166:27
+    at Array.forEach (<anonymous>)
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:165
+:19)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 503 - Test[39m
+HttpException: Test
+    at C:\Repos\Quiz-to-Build\apps\ap
+i\src\common\filters\http-exception.f
+ilter.spec.ts:166:27
+    at Array.forEach (<anonymous>)
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:165
+:19)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 400 - Http 
+Exception[39m
+HttpException: Http Exception
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:178
+:25)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 400 - [39m
+HttpException: 
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:188
+:25)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 403 - 
+Something failed[39m
+HttpException: Something failed
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:205
+:25)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+[31m[Nest] 28020  - 
+[39m10/03/2026, 3:59:56 am [31m  
+ERROR[39m 
+[38;5;3m[HttpExceptionFilter] 
+[39m[31mGET /test - 418 - 
+Teapot[39m
+HttpException: Teapot
+    at Object.<anonymous> (C:\Repos\Q
+uiz-to-Build\apps\api\src\common\filt
+ers\http-exception.filter.spec.ts:222
+:25)
+    at Promise.then.completed (C:\Rep
+os\Quiz-to-Build\node_modules\jest-ci
+rcus\build\utils.js:298:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Repos\Qu
+iz-to-Build\node_modules\jest-circus\
+build\utils.js:231:10)
+    at _callCircusTest (C:\Repos\Quiz
+-to-Build\node_modules\jest-circus\bu
+ild\run.js:316:40)
+    at processTicksAndRejections (nod
+e:internal/process/task_queues:104:5)
+    at _runTest (C:\Repos\Quiz-to-Bui
+ld\node_modules\jest-circus\build\run
+.js:252:3)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\
+Repos\Quiz-to-Build\node_modules\jest
+-circus\build\run.js:121:9)
+    at run (C:\Repos\Quiz-to-Build\no
+de_modules\jest-circus\build\run.js:7
+1:3)
+    at 
+runAndTransformResultsToJestFormat (C
+:\Repos\Quiz-to-Build\node_modules\je
+st-circus\build\legacy-code-todo-rewr
+ite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Repos\Quiz-to-
+Build\node_modules\jest-circus\build\
+legacy-code-todo-rewrite\jestAdapter.
+js:79:19)
+    at runTestInternal (C:\Repos\Quiz
+-to-Build\node_modules\jest-runner\bu
+ild\runTest.js:367:16)
+    at runTest (C:\Repos\Quiz-to-Buil
+d\node_modules\jest-runner\build\runT
+est.js:444:34)
+    at Object.worker (C:\Repos\Quiz-t
+o-Build\node_modules\jest-runner\buil
+d\testWorker.js:106:12)
+PASS apps/api/src/common/filters/http
+-exception.filter.spec.ts
+PASS apps/api/src/modules/policy-pack
+/services/index.spec.ts
+PASS apps/api/src/modules/qpg/service
+s/index.spec.ts
+PASS apps/api/src/modules/document-ge
+nerator/templates/document-templates.
+spec.ts
+PASS apps/api/src/config/failure-inje
+ction.config.spec.ts
+PASS apps/api/src/config/disaster-rec
+overy.config.spec.ts
+PASS apps/api/src/config/sentry.confi
+g.spec.ts (5.112 s)
+PASS apps/api/src/config/configuratio
+n.spec.ts
+PASS apps/api/src/common/tests/input-
+validation.security.spec.ts
+PASS apps/api/src/config/uptime-monit
+oring.config.spec.ts
+PASS apps/api/src/config/chaos-engine
+ering.config.spec.ts
+PASS apps/api/src/common/tests/valida
+tion/index.spec.ts
+PASS apps/api/src/common/tests/index.
+spec.ts
+PASS apps/api/src/config/alerting-rul
+es.config.spec.ts
+PASS apps/api/src/config/feature-flag
+s.config.spec.ts
+PASS apps/api/src/common/tests/api-se
+curity.spec.ts
+A worker process has failed to exit 
+gracefully and has been force 
+exited. This is likely caused by 
+tests leaking due to improper 
+teardown. Try running with 
+--detectOpenHandles to find leaks. 
+Active timers can also cause this, 
+ensure that .unref() was called on 
+them.
+--------------------------------------------|---------|----------|---------|---------|---------------------------------------------------------------------------------------------------
+File                                        | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                                                                                 
+--------------------------------------------|---------|----------|---------|---------|---------------------------------------------------------------------------------------------------
+All files                                   |   89.39 |    86.03 |   85.39 |   89.39 |                                                                                                   
+ src                                        |   91.34 |    87.09 |     100 |   91.34 |                                                                                                   
+  health.controller.ts                      |   91.34 |    87.09 |     100 |   91.34 | 104-108,363-391                                                                                   
+ src/common/filters                         |     100 |      100 |     100 |     100 |                                                                                                   
+  http-exception.filter.ts                  |     100 |      100 |     100 |     100 |                                                                                                   
+ src/common/guards                          |   97.46 |    80.45 |   90.47 |   97.46 |                                                                                                   
+  csrf.guard.ts                             |   95.85 |       70 |     100 |   95.85 | 60-61,73,91-93,187-188,206-207                                                                    
+  subscription.guard.ts                     |   98.89 |    89.36 |   84.61 |   98.89 | 259-261                                                                                           
+ src/common/interceptors                    |     100 |     87.5 |     100 |     100 |                                                                                                   
+  logging.interceptor.ts                    |     100 |    83.33 |     100 |     100 | 19                                                                                                
+  transform.interceptor.ts                  |     100 |      100 |     100 |     100 |                                                                                                   
+ src/common/services                        |     100 |      100 |     100 |     100 |                                                                                                   
+  memory-optimization.service.ts            |     100 |      100 |     100 |     100 |                                                                                                   
+ src/config                                 |   99.12 |    96.89 |   98.28 |   99.12 |                                                                                                   
+  alerting-rules.config.ts                  |     100 |      100 |     100 |     100 |                                                                                                   
+  appinsights.config.ts                     |   98.78 |     97.1 |   95.45 |   98.78 | 83-84,109-110,116-118                                                                             
+  canary-deployment.config.ts               |    99.6 |     98.7 |   96.29 |    99.6 | 584-585,852-853                                                                                   
+  chaos-engineering.config.ts               |     100 |      100 |     100 |     100 |                                                                                                   
+  configuration.ts                          |   91.91 |       92 |     100 |   91.91 | 16-19,21-24                                                                                       
+  disaster-recovery.config.ts               |     100 |      100 |     100 |     100 |                                                                                                   
+  failure-injection.config.ts               |    99.9 |    95.45 |     100 |    99.9 | 1032                                                                                              
+  feature-flags.config.ts                   |   99.56 |    95.94 |     100 |   99.56 | 746-748,860                                                                                       
+  graceful-degradation.config.ts            |   99.33 |    97.87 |     100 |   99.33 | 519-520,635-638                                                                                   
+  incident-response.config.ts               |     100 |    96.77 |     100 |     100 | 1077,1080                                                                                         
+  logger.config.ts                          |       0 |        0 |       0 |       0 | 1-58                                                                                              
+  resource-pressure.config.ts               |     100 |    94.11 |     100 |     100 | 853                                                                                               
+  sentry.config.ts                          |     100 |    96.77 |     100 |     100 | 69                                                                                                
+  uptime-monitoring.config.ts               |     100 |      100 |     100 |     100 |                                                                                                   
+ src/modules/adapters                       |   98.51 |    91.49 |   94.73 |   98.51 |                                                                                                   
+  adapter-config.service.ts                 |     100 |     97.5 |     100 |     100 | 83-84                                                                                             
+  adapter.controller.ts                     |   96.84 |    84.21 |      75 |   96.84 | 36-37,43,417-420,439-443,472-475                                                                  
+  github.adapter.ts                         |   98.48 |    90.76 |     100 |   98.48 | 11-15,543-544,555-556                                                                             
+  gitlab.adapter.ts                         |   98.46 |    91.97 |     100 |   98.46 | 13-17,318-319,763-764,803-804,815-816                                                             
+  jira-confluence.adapter.ts                |   98.76 |    92.76 |     100 |   98.76 | 11-15,171-172,215-216,270-271                                                                     
+ src/modules/adaptive-logic                 |     100 |    96.61 |     100 |     100 |                                                                                                   
+  adaptive-logic.service.ts                 |     100 |    96.61 |     100 |     100 | 22-23                                                                                             
+ src/modules/adaptive-logic/evaluators      |     100 |    98.18 |     100 |     100 |                                                                                                   
+  condition.evaluator.ts                    |     100 |    98.18 |     100 |     100 | 76,80,84                                                                                          
+ src/modules/adaptive-logic/types           |       0 |        0 |       0 |       0 |                                                                                                   
+  rule.types.ts                             |       0 |        0 |       0 |       0 | 1-119                                                                                             
+ src/modules/admin/controllers              |     100 |    35.48 |     100 |     100 |                                                                                                   
+  admin-questionnaire.controller.ts         |     100 |    35.48 |     100 |     100 | 40-50,77-78,90-91,103,120-121,133-134,147,160-161,177-178,190-191,204,217-218,243-244,256-257,269 
+ src/modules/admin/dto                      |     100 |    46.15 |     100 |     100 |                                                                                                   
+  create-question.dto.ts                    |     100 |    22.22 |     100 |     100 | 41-107                                                                                            
+  create-questionnaire.dto.ts               |     100 |    33.33 |     100 |     100 | 35                                                                                                
+  create-section.dto.ts                     |     100 |    33.33 |     100 |     100 | 39                                                                                                
+  create-visibility-rule.dto.ts             |     100 |       25 |     100 |     100 | 26-30                                                                                             
+  reorder-questions.dto.ts                  |     100 |      100 |     100 |     100 |                                                                                                   
+  reorder-sections.dto.ts                   |     100 |      100 |     100 |     100 |                                                                                                   
+  update-question.dto.ts                    |     100 |      100 |     100 |     100 |                                                                                                   
+  update-questionnaire.dto.ts               |     100 |      100 |     100 |     100 |                                                                                                   
+  update-section.dto.ts                     |     100 |      100 |     100 |     100 |                                                                                                   
+  update-visibility-rule.dto.ts             |     100 |      100 |     100 |     100 |                                                                                                   
+ src/modules/admin/services                 |   99.67 |    90.14 |     100 |   99.67 |                                                                                                   
+  admin-audit.service.ts                    |     100 |    76.47 |     100 |     100 | 18,31,40-41                                                                                       
+  admin-questionnaire.service.ts            |   99.65 |    94.44 |     100 |   99.65 | 413-414                                                                                           
+ src/modules/ai-gateway                     |   52.04 |    81.39 |      75 |   52.04 |                                                                                                   
+  ai-gateway.controller.ts                  |       0 |        0 |       0 |       0 | 1-142                                                                                             
+  ai-gateway.service.ts                     |   74.92 |    83.33 |   81.81 |   74.92 | 192-258,264-277                                                                                   
+ src/modules/ai-gateway/adapters            |   26.11 |      100 |       0 |   26.11 |                                                                                                   
+  claude.adapter.ts                         |   26.73 |      100 |       0 |   26.73 | 22-24,28-29,32-39,45-46,52-53,59-69,75-86,92-103,109-163,169-243,250-252,258-272                  
+  openai.adapter.ts                         |   25.52 |      100 |       0 |   25.52 | 22-24,28-29,32-39,45-46,52-53,59-69,75-86,92-103,109-176,182-256,263-265,271-285                  
+ src/modules/ai-gateway/dto                 |       0 |        0 |       0 |       0 |                                                                                                   
+  ai-gateway.dto.ts                         |       0 |        0 |       0 |       0 | 1-178                                                                                             
+ src/modules/ai-gateway/interfaces          |       0 |        0 |       0 |       0 |                                                                                                   
+  ai-gateway.interface.ts                   |       0 |        0 |       0 |       0 | 1-213                                                                                             
+ src/modules/ai-gateway/services            |   39.16 |        0 |       0 |   39.16 |                                                                                                   
+  cost-tracker.service.ts                   |   39.16 |        0 |       0 |   39.16 | 59-61,67-80,86-147,153-157,163-167,173-204,210-231,237-239                                        
+ src/modules/auth                           |   99.41 |     73.6 |     100 |   99.41 |                                                                                                   
+  auth.controller.ts                        |     100 |       35 |     100 |     100 | 34-54,69-154                                                                                      
+  auth.service.ts                           |   99.21 |    91.76 |     100 |   99.21 | 100-102,293                                                                                       
+ src/modules/auth/decorators                |     100 |      100 |     100 |     100 |                                                                                                   
+  public.decorator.ts                       |     100 |      100 |     100 |     100 |                                                                                                   
+  roles.decorator.ts                        |     100 |      100 |     100 |     100 |                                                                                                   
+  user.decorator.ts                         |     100 |      100 |     100 |     100 |                                                                                                   
+ src/modules/auth/dto                       |   61.83 |        0 |       0 |   61.83 |                                                                                                   
+  login.dto.ts                              |   47.36 |        0 |       0 |   47.36 | 8-17                                                                                              
+  refresh-token.dto.ts                      |     100 |        0 |       0 |     100 | 8                                                                                                 
+  register.dto.ts                           |    37.5 |        0 |       0 |    37.5 | 8-22                                                                                              
+  token.dto.ts                              |   52.27 |        0 |       0 |   52.27 | 10-17,24-34,41-42                                                                                 
+  verification.dto.ts                       |   88.57 |        0 |       0 |   88.57 | 23-26                                                                                             
+ src/modules/auth/guards                    |     100 |    90.32 |     100 |     100 |                                                                                                   
+  jwt-auth.guard.ts                         |     100 |    89.47 |     100 |     100 | 18,48                                                                                             
+  roles.guard.ts                            |     100 |    91.66 |     100 |     100 | 9                                                                                                 
+ src/modules/auth/mfa                       |       0 |        0 |       0 |       0 |                                                                                                   
+  mfa.controller.ts                         |       0 |        0 |       0 |       0 | 1-130                                                                                             
+  mfa.dto.ts                                |       0 |        0 |       0 |       0 | 1-56                                                                                              
+  mfa.service.ts                            |       0 |        0 |       0 |       0 | 1-256                                                                                             
+ src/modules/auth/oauth                     |   99.79 |    86.79 |   83.33 |   99.79 |                                                                                                   
+  oauth.controller.ts                       |   99.28 |       80 |      70 |   99.28 | 37                                                                                                
+  oauth.service.ts                          |     100 |    89.47 |     100 |     100 | 61-63,139                                                                                         
+ src/modules/auth/strategies                |     100 |       75 |     100 |     100 |                                                                                                   
+  jwt.strategy.ts                           |     100 |       75 |     100 |     100 | 10-11                                                                                             
+ src/modules/chat-engine                    |   47.27 |    85.18 |      75 |   47.27 |                                                                                                   
+  chat-engine.controller.ts                 |       0 |        0 |       0 |       0 | 1-150                                                                                             
+  chat-engine.service.ts                    |   67.82 |    88.46 |   85.71 |   67.82 | 193-301,317-318                                                                                   
+ src/modules/chat-engine/dto                |       0 |        0 |       0 |       0 |                                                                                                   
+  chat-engine.dto.ts                        |       0 |        0 |       0 |       0 | 1-96                                                                                              
+ src/modules/chat-engine/services           |   28.37 |        0 |       0 |   28.37 |                                                                                                   
+  prompt-builder.service.ts                 |   28.37 |        0 |       0 |   28.37 | 23-72,78-81,87-95,101-133,139-170,176-187,193-205,211-212,218-221                                 
+ src/modules/decision-log                   |   99.69 |    88.31 |     100 |   99.69 |                                                                                                   
+  approval-workflow.service.ts              |   99.69 |    96.59 |     100 |   99.69 | 260-261                                                                                           
+  decision-log.controller.ts                |     100 |    43.47 |     100 |     100 | 40,61-63,93-95,127-216,250                                                                        
+  decision-log.service.ts                   |   99.48 |    95.34 |     100 |   99.48 | 295-296                                                                                           
+ src/modules/decision-log/decorators        |     100 |    93.54 |     100 |     100 |                                                                                                   
+  require-approval.decorator.ts             |     100 |    93.54 |     100 |     100 | 71-72                                                                                             
+ src/modules/decision-log/dto               |      44 |        0 |       0 |      44 |                                                                                                   
+  decision.dto.ts                           |      44 |        0 |       0 |      44 | 15-30,42-47,58-73,85-96,106-128,138-148                                                           
+ src/modules/document-commerce              |       0 |        0 |       0 |       0 |                                                                                                   
+  document-commerce.controller.ts           |       0 |        0 |       0 |       0 | 1-101                                                                                             
+  stripe-webhook.controller.ts              |       0 |        0 |       0 |       0 | 1-143                                                                                             
+ src/modules/document-commerce/dto          |       0 |        0 |       0 |       0 |                                                                                                   
+  document-commerce.dto.ts                  |       0 |        0 |       0 |       0 | 1-100                                                                                             
+ src/modules/document-commerce/services     |   79.75 |    67.27 |   84.61 |   79.75 |                                                                                                   
+  document-purchase.service.ts              |   96.49 |    58.33 |     100 |   96.49 | 34-35,95-96,115-117,139-141                                                                       
+  pricing-calculator.service.ts             |   56.93 |    84.21 |   71.42 |   56.93 | 99-174,181-194                                                                                    
+ src/modules/document-generator/controllers |   90.69 |    43.65 |   84.37 |   90.69 |                                                                                                   
+  deliverables-compiler.controller.ts       |     100 |    41.02 |     100 |     100 | 31,50-52,90-91,116-118,151-152,179,218-219,244-245                                                
+  document-admin.controller.ts              |   87.87 |    53.84 |   81.81 |   87.87 | 225-240,248-263                                                                                   
+  document.controller.ts                    |   84.31 |     37.5 |      75 |   84.31 | 141-157,176-192,199-204                                                                           
+ src/modules/document-generator/dto         |   37.37 |        0 |       0 |   37.37 |                                                                                                   
+  create-document-type.dto.ts               |   31.94 |        0 |       0 |   31.94 | 22-70                                                                                             
+  deliverables-pack.dto.ts                  |   31.28 |        0 |       0 |   31.28 | 14-43,50-63,70-98,105-115,122-138,145-158,170-177                                                 
+  document-response.dto.ts                  |   32.53 |        0 |       0 |   32.53 | 11-30,37-68,78-81                                                                                 
+  request-generation.dto.ts                 |   44.44 |      100 |       0 |   44.44 | 11-25                                                                                             
+  review-document.dto.ts                    |     100 |      100 |       0 |     100 |                                                                                                   
+  update-document-type.dto.ts               |     100 |      100 |     100 |     100 |                                                                                                   
+ src/modules/document-generator/services    |   83.07 |    93.68 |   81.17 |   83.07 |                                                                                                   
+  ai-document-content.service.ts            |     100 |    94.64 |     100 |     100 | 66,106,287                                                                                        
+  bulk-download.service.ts                  |   18.97 |        0 |       0 |   18.97 | 27-29,35-122,128-198,204-215,221-239,245-273                                                      
+  deliverables-compiler.service.ts          |   99.13 |    96.29 |     100 |   99.13 | 346-355,1207-1208                                                                                 
+  document-builder.service.ts               |     100 |      100 |     100 |     100 |                                                                                                   
+  document-generator.service.ts             |   89.06 |    92.94 |   83.33 |   89.06 | 312-325,478-501,507-530                                                                           
+  markdown-renderer.service.ts              |   32.85 |        0 |       0 |   32.85 | 37-76,82-95,101-114,120-136,142-145,151-152,158-162,168-175,181-196,202-208,214-249,255-279       
+  pdf-renderer.service.ts                   |     100 |     90.9 |     100 |     100 | 200                                                                                               
+  project-document-generation.service.ts    |     100 |    82.75 |     100 |     100 | 45-48,200                                                                                         
+  provider-comparison.service.ts            |       0 |        0 |       0 |       0 | 1-235                                                                                             
+  quality-calibrator.service.ts             |   66.36 |        0 |       0 |   66.36 | 188-197,203-248,254-263,269-293,299-304,310-315,321-324,330-335                                   
+  storage.service.ts                        |     100 |    78.57 |     100 |     100 | 26,40-41                                                                                          
+  template-engine.service.ts                |   98.11 |    96.15 |     100 |   98.11 | 227-229,247-249                                                                                   
+ src/modules/document-generator/templates   |     100 |      100 |     100 |     100 |                                                                                                   
+  api-documentation.template.ts             |     100 |      100 |     100 |     100 |                                                                                                   
+  base.template.ts                          |     100 |      100 |     100 |     100 |                                                                                                   
+  business-case.template.ts                 |     100 |      100 |     100 |     100 |                                                                                                   
+  business-plan.template.ts                 |     100 |      100 |     100 |     100 |                                                                                                   
+  business-requirements.template.ts         |     100 |      100 |     100 |     100 |                                                                                                   
+  change-request.template.ts                |     100 |      100 |     100 |     100 |                                                                                                   
+  data-models.template.ts                   |     100 |      100 |     100 |     100 |                                                                                                   
+  data-protection-policy.template.ts        |     100 |      100 |     100 |     100 |                                                                                                   
+  disaster-recovery-plan.template.ts        |     100 |      100 |     100 |     100 |                                                                                                   
+  document-templates.ts                     |     100 |      100 |     100 |     100 |                                                                                                   
+  engineering-handbook.template.ts          |     100 |      100 |     100 |     100 |                                                                                                   
+  functional-requirements.template.ts       |     100 |      100 |     100 |     100 |                                                                                                   
+  incident-response-plan.template.ts        |     100 |      100 |     100 |     100 |                                                                                                   
+  information-security-policy.template.ts   |     100 |      100 |     100 |     100 |                                                                                                   
+  ip-assignment-nda.template.ts             |     100 |      100 |     100 |     100 |                                                                                                   
+  onboarding-offboarding.template.ts        |     100 |      100 |     100 |     100 |                                                                                                   
+  process-maps.template.ts                  |     100 |      100 |     100 |     100 |                                                                                                   
+  product-architecture.template.ts          |     100 |      100 |     100 |     100 |                                                                                                   
+  requirements-traceability.template.ts     |     100 |      100 |     100 |     100 |                                                                                                   
+  stakeholder-analysis.template.ts          |     100 |      100 |     100 |     100 |                                                                                                   
+  technical-debt-register.template.ts       |     100 |      100 |     100 |     100 |                                                                                                   
+  technology-roadmap.template.ts            |     100 |      100 |     100 |     100 |                                                                                                   
+  technology-strategy.template.ts           |     100 |      100 |     100 |     100 |                                                                                                   
+  user-flow-maps.template.ts                |     100 |      100 |     100 |     100 |                                                                                                   
+  user-stories.template.ts                  |     100 |      100 |     100 |     100 |                                                                                                   
+  vendor-management.template.ts             |     100 |      100 |     100 |     100 |                                                                                                   
+  wireframes-mockups.template.ts            |     100 |      100 |     100 |     100 |                                                                                                   
+ src/modules/evidence-registry              |   96.17 |    90.31 |     100 |   96.17 |                                                                                                   
+  ci-artifact-ingestion.service.ts          |   99.87 |    95.23 |     100 |   99.87 | 226                                                                                               
+  evidence-integrity.service.ts             |   98.67 |    95.65 |     100 |   98.67 | 379-386                                                                                           
+  evidence-registry.controller.ts           |     100 |    53.12 |     100 |     100 | 62-64,136-138,166-211,275,411-425                                                                 
+  evidence-registry.service.ts              |   89.32 |    89.25 |     100 |   89.32 | 147-149,154-155,184-191,199-208,378-392,402-412,671-693,700-702,797-815,819-821                   
+ src/modules/evidence-registry/dto          |   37.39 |        0 |       0 |   37.39 |                                                                                                   
+  evidence.dto.ts                           |   37.39 |        0 |       0 |   37.39 | 15-31,42-52,62-96,108-121                                                                         
+ src/modules/fact-extraction                |       0 |        0 |       0 |       0 |                                                                                                   
+  fact-extraction.controller.ts             |       0 |        0 |       0 |       0 | 1-155                                                                                             
+  facts.controller.ts                       |       0 |        0 |       0 |       0 | 1-222                                                                                             
+  interfaces.ts                             |       0 |        0 |       0 |       0 | 1-87                                                                                              
+ src/modules/fact-extraction/dto            |       0 |        0 |       0 |       0 |                                                                                                   
+  fact-extraction.dto.ts                    |       0 |        0 |       0 |       0 | 1-82                                                                                              
+ src/modules/fact-extraction/schemas        |       0 |        0 |       0 |       0 |                                                                                                   
+  extraction-schemas.ts                     |       0 |        0 |       0 |       0 | 1-307                                                                                             
+ src/modules/fact-extraction/services       |   97.01 |    74.07 |     100 |   97.01 |                                                                                                   
+  fact-extraction.service.ts                |   97.01 |    74.07 |     100 |   97.01 | 117-120,175-176,296-298,387-389                                                                   
+ src/modules/heatmap                        |   98.71 |    85.32 |     100 |   98.71 |                                                                                                   
+  heatmap.controller.ts                     |     100 |    43.47 |     100 |     100 | 35,39,66-100,121-122,153-154,182                                                                  
+  heatmap.service.ts                        |   98.43 |     91.3 |     100 |   98.43 | 151-152,445,638-645,716-717                                                                       
+ src/modules/idea-capture                   |     100 |    45.45 |     100 |     100 |                                                                                                   
+  idea-capture.controller.ts                |     100 |    38.88 |     100 |     100 | 25,40-42,49,64-65,90-91                                                                           
+  project-types.controller.ts               |     100 |       75 |     100 |     100 | 11                                                                                                
+ src/modules/idea-capture/dto               |    38.8 |        0 |       0 |    38.8 |                                                                                                   
+  confirm-project-type.dto.ts               |     100 |        0 |       0 |     100 | 10                                                                                                
+  create-idea.dto.ts                        |   54.28 |        0 |       0 |   54.28 | 18-33                                                                                             
+  idea-response.dto.ts                      |      25 |        0 |       0 |      25 | 6-20,30-63,70-86                                                                                  
+ src/modules/idea-capture/services          |   98.96 |       93 |     100 |   98.96 |                                                                                                   
+  claude-ai.service.ts                      |     100 |       96 |     100 |     100 | 36,239                                                                                            
+  idea-capture.service.ts                   |   97.87 |       90 |     100 |   97.87 | 136-137,194-197                                                                                   
+ src/modules/notifications                  |   98.56 |    86.22 |     100 |   98.56 |                                                                                                   
+  adaptive-card.service.ts                  |   96.78 |    92.72 |     100 |   96.78 | 505-517,539-542,553-556,573                                                                       
+  notification.controller.ts                |     100 |    44.44 |     100 |     100 | 15-33                                                                                             
+  notification.service.ts                   |     100 |    89.85 |     100 |     100 | 166-167,209-213,229                                                                               
+  teams-webhook.controller.ts               |     100 |    79.41 |     100 |     100 | 41,93,115,138,160,192,235                                                                         
+ src/modules/notifications/dto              |   88.99 |       25 |       0 |   88.99 |                                                                                                   
+  email-template.dto.ts                     |   96.14 |      100 |       0 |   96.14 | 30-43                                                                                             
+  send-email.dto.ts                         |   48.43 |       25 |       0 |   48.43 | 19-40,52-62                                                                                       
+ src/modules/notifications/jobs             |      26 |        0 |       0 |      26 |                                                                                                   
+  session-reminder.job.ts                   |      26 |        0 |       0 |      26 | 27-29,37-65,72-98,104-131,137-159,165-219,225-234,240-249                                         
+ src/modules/payment                        |   99.82 |    85.79 |     100 |   99.82 |                                                                                                   
+  billing.service.ts                        |     100 |       95 |     100 |     100 | 37-38                                                                                             
+  payment.controller.ts                     |     100 |    71.87 |     100 |     100 | 41-44,53,62-77,90,106,118,161,182,201-203                                                         
+  payment.service.ts                        |   99.36 |    88.88 |     100 |   99.36 | 96-97                                                                                             
+  subscription.service.ts                   |     100 |    97.05 |     100 |     100 | 32                                                                                                
+ src/modules/payment/dto                    |   69.64 |       25 |       0 |   69.64 |                                                                                                   
+  payment.dto.ts                            |   69.64 |       25 |       0 |   69.64 | 25-38,49-51,60-65,80-86,97-98,109-110                                                             
+ src/modules/policy-pack                    |   99.33 |    74.35 |    92.3 |   99.33 |                                                                                                   
+  policy-pack.controller.ts                 |     100 |    71.42 |     100 |     100 | 21-22,80                                                                                          
+  policy-pack.service.ts                    |   98.48 |       76 |   85.71 |   98.48 | 102-103                                                                                           
+ src/modules/policy-pack/services           |     100 |    97.29 |     100 |     100 |                                                                                                   
+  control-mapping.service.ts                |     100 |    91.66 |     100 |     100 | 472                                                                                               
+  opa-policy.service.ts                     |     100 |      100 |     100 |     100 |                                                                                                   
+  policy-export.service.ts                  |     100 |      100 |     100 |     100 |                                                                                                   
+  policy-generator.service.ts               |     100 |    93.33 |     100 |     100 | 35                                                                                                
+  terraform-rules.service.ts                |     100 |      100 |     100 |     100 |                                                                                                   
+ src/modules/policy-pack/types              |     100 |      100 |     100 |     100 |                                                                                                   
+  policy-pack.types.ts                      |     100 |      100 |     100 |     100 |                                                                                                   
+ src/modules/qpg                            |     100 |    83.33 |     100 |     100 |                                                                                                   
+  qpg.controller.ts                         |     100 |    84.21 |     100 |     100 | 27-48                                                                                             
+  qpg.service.ts                            |     100 |     82.6 |     100 |     100 | 16-19                                                                                             
+ src/modules/qpg/dto                        |      50 |      100 |       0 |      50 |                                                                                                   
+  generate-prompts.dto.ts                   |      50 |      100 |       0 |      50 | 15-37,52-58                                                                                       
+ src/modules/qpg/services                   |     100 |    98.82 |     100 |     100 |                                                                                                   
+  context-builder.service.ts                |     100 |    96.42 |     100 |     100 | 13                                                                                                
+  prompt-generator.service.ts               |     100 |      100 |     100 |     100 |                                                                                                   
+  prompt-template.service.ts                |     100 |      100 |     100 |     100 |                                                                                                   
+ src/modules/qpg/types                      |     100 |      100 |     100 |     100 |                                                                                                   
+  qpg.types.ts                              |     100 |      100 |     100 |     100 |                                                                                                   
+ src/modules/quality-scoring                |       0 |        0 |       0 |       0 |                                                                                                   
+  interfaces.ts                             |       0 |        0 |       0 |       0 | 1-62                                                                                              
+  quality-scoring.controller.ts             |       0 |        0 |       0 |       0 | 1-198                                                                                             
+ src/modules/quality-scoring/dto            |       0 |        0 |       0 |       0 |                                                                                                   
+  quality-scoring.dto.ts                    |       0 |        0 |       0 |       0 | 1-99                                                                                              
+ src/modules/quality-scoring/services       |   99.42 |    88.05 |     100 |   99.42 |                                                                                                   
+  quality-scoring.service.ts                |   99.42 |    88.05 |     100 |   99.42 | 161-162                                                                                           
+ src/modules/questionnaire                  |     100 |     86.2 |     100 |     100 |                                                                                                   
+  questionnaire.controller.ts               |     100 |    63.63 |     100 |     100 | 16,23-25,45                                                                                       
+  questionnaire.service.ts                  |     100 |    91.48 |     100 |     100 | 68,277-280                                                                                        
+ src/modules/scoring-engine                 |   99.83 |    91.01 |     100 |   99.83 |                                                                                                   
+  scoring-engine.controller.ts              |     100 |    47.36 |     100 |     100 | 47-155,188,229,264                                                                                
+  scoring-engine.service.ts                 |   99.79 |    96.22 |     100 |   99.79 | 652-653                                                                                           
+ src/modules/scoring-engine/dto             |   97.97 |    94.11 |     100 |   97.97 |                                                                                                   
+  calculate-score.dto.ts                    |   97.97 |    94.11 |     100 |   97.97 | 88-93                                                                                             
+ src/modules/session                        |     100 |     87.7 |     100 |     100 |                                                                                                   
+  session-expiration.service.ts             |     100 |    77.77 |     100 |     100 | 11-16,40                                                                                          
+  session.controller.ts                     |     100 |     32.6 |     100 |     100 | 37,43-45,54-57,82-84,107-110,125-128,137-140,148-152,160-162                                      
+  session.service.ts                        |     100 |    96.68 |     100 |     100 | 177-179,182-184,858,874,980,1014-1016                                                             
+ src/modules/session/controllers            |   97.56 |    46.15 |      75 |   97.56 |                                                                                                   
+  conversation.controller.ts                |   97.56 |    46.15 |      75 |   97.56 | 14-15                                                                                             
+ src/modules/session/dto                    |   43.83 |        0 |       0 |   43.83 |                                                                                                   
+  continue-session.dto.ts                   |     100 |        0 |       0 |     100 | 12                                                                                                
+  create-session.dto.ts                     |   25.64 |        0 |       0 |   25.64 | 9-37                                                                                              
+  submit-response.dto.ts                    |   42.85 |        0 |       0 |   42.85 | 8-19                                                                                              
+ src/modules/session/services               |     100 |    85.71 |     100 |     100 |                                                                                                   
+  conversation.service.ts                   |     100 |    85.71 |     100 |     100 | 35-36                                                                                             
+ src/modules/standards                      |   99.41 |    86.27 |     100 |   99.41 |                                                                                                   
+  standards.controller.ts                   |     100 |    54.54 |     100 |     100 | 18-46,65,84                                                                                       
+  standards.service.ts                      |   99.21 |       95 |     100 |   99.21 | 215-216                                                                                           
+ src/modules/standards/dto                  |   59.13 |        0 |       0 |   59.13 |                                                                                                   
+  standard.dto.ts                           |   59.13 |        0 |       0 |   59.13 | 11-35,58-59,73-83                                                                                 
+ src/modules/standards/types                |     100 |      100 |     100 |     100 |                                                                                                   
+  standard.types.ts                         |     100 |      100 |     100 |     100 |                                                                                                   
+ src/modules/users                          |     100 |    76.92 |     100 |     100 |                                                                                                   
+  users.controller.ts                       |     100 |       45 |     100 |     100 | 21-26,34-36,47-49,71                                                                              
+  users.service.ts                          |     100 |    96.87 |     100 |     100 | 39                                                                                                
+ src/modules/users/dto                      |   48.57 |        0 |       0 |   48.57 |                                                                                                   
+  update-user.dto.ts                        |   48.57 |        0 |       0 |   48.57 | 10-27                                                                                             
+--------------------------------------------|---------|----------|---------|---------|---------------------------------------------------------------------------------------------------
+
+Test Suites: 132 passed, 132 total
+Tests:       4165 passed, 4165 total
+Snapshots:   0 total
+Time:        191.51 s
+Ran all test suites.
+Force exiting Jest: Have you 
+considered using 
+`--detectOpenHandles` to detect 
+async operations that kept running 
+after all tests finished?

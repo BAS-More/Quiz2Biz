@@ -63,8 +63,7 @@ describe('LoggingInterceptor', () => {
       interceptor.intercept(context, callHandler).subscribe({
         next: () => {
           expect(logSpy).toHaveBeenCalled();
-          const logCall = logSpy.mock.calls[0][0];
-          const logData = JSON.parse(logCall);
+          const logData = logSpy.mock.calls[0][0];
           expect(logData.method).toBe('GET');
           expect(logData.url).toBe('/api/test');
           expect(logData.statusCode).toBe(200);
@@ -81,8 +80,7 @@ describe('LoggingInterceptor', () => {
       interceptor.intercept(context, callHandler).subscribe({
         error: () => {
           expect(errorSpy).toHaveBeenCalled();
-          const logCall = errorSpy.mock.calls[0][0];
-          const logData = JSON.parse(logCall);
+          const logData = errorSpy.mock.calls[0][0];
           expect(logData.method).toBe('GET');
           expect(logData.url).toBe('/api/test');
           expect(logData.error).toBe('Test error');
@@ -91,16 +89,16 @@ describe('LoggingInterceptor', () => {
       });
     });
 
-    it('should include request duration', (done) => {
+    it('should include request duration as number', (done) => {
       const logSpy = jest.spyOn(interceptor['logger'], 'log').mockImplementation();
       const context = createMockContext();
       const callHandler = createMockCallHandler({ data: 'success' });
 
       interceptor.intercept(context, callHandler).subscribe({
         next: () => {
-          const logCall = logSpy.mock.calls[0][0];
-          const logData = JSON.parse(logCall);
-          expect(logData.duration).toMatch(/\d+ms/);
+          const logData = logSpy.mock.calls[0][0];
+          expect(typeof logData.duration).toBe('number');
+          expect(logData.duration).toBeGreaterThanOrEqual(0);
           done();
         },
       });
@@ -113,8 +111,7 @@ describe('LoggingInterceptor', () => {
 
       interceptor.intercept(context, callHandler).subscribe({
         next: () => {
-          const logCall = logSpy.mock.calls[0][0];
-          const logData = JSON.parse(logCall);
+          const logData = logSpy.mock.calls[0][0];
           expect(logData.requestId).toBe('unique-id-123');
           done();
         },
@@ -128,8 +125,7 @@ describe('LoggingInterceptor', () => {
 
       interceptor.intercept(context, callHandler).subscribe({
         next: () => {
-          const logCall = logSpy.mock.calls[0][0];
-          const logData = JSON.parse(logCall);
+          const logData = logSpy.mock.calls[0][0];
           expect(logData.userAgent).toBe('');
           done();
         },
@@ -143,8 +139,7 @@ describe('LoggingInterceptor', () => {
 
       interceptor.intercept(context, callHandler).subscribe({
         next: () => {
-          const logCall = logSpy.mock.calls[0][0];
-          const logData = JSON.parse(logCall);
+          const logData = logSpy.mock.calls[0][0];
           expect(logData.method).toBe('POST');
           expect(logData.url).toBe('/api/users');
           done();

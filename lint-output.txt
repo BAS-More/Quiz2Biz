@@ -1,0 +1,1066 @@
+﻿ÔÇó Packages in scope: @libs/orchestrator, @quiz2biz/cli, api, database, redis, shared, web
+ÔÇó Running lint in 7 packages
+ÔÇó Remote caching disabled
+shared:lint: cache bypass, force executing 99f851ee7341cc75
+web:lint: cache bypass, force executing a5105bcf5a09728a
+redis:lint: cache bypass, force executing 1f4bf573206ebbc9
+api:lint: cache bypass, force executing bfd427b1e9befb8c
+@quiz2biz/cli:lint: cache bypass, force executing b445e77683ec2a59
+database:lint: cache bypass, force executing 41872548532d8f92
+api:lint: 
+api:lint: > api@1.0.0 lint
+api:lint: > eslint "{src,test}/**/*.ts" --fix
+api:lint: 
+database:lint: 
+database:lint: > database@1.0.0 lint
+database:lint: > eslint "src/**/*.ts" --fix
+database:lint: 
+redis:lint: 
+redis:lint: > redis@1.0.0 lint
+redis:lint: > eslint "src/**/*.ts" --fix
+redis:lint: 
+@quiz2biz/cli:lint: 
+@quiz2biz/cli:lint: > @quiz2biz/cli@1.0.0 lint
+@quiz2biz/cli:lint: > eslint src --ext .ts
+@quiz2biz/cli:lint: 
+shared:lint: 
+shared:lint: > shared@1.0.0 lint
+shared:lint: > eslint "src/**/*.ts" --fix
+shared:lint: 
+web:lint: 
+web:lint: > web@0.0.0 lint
+web:lint: > eslint .
+web:lint: 
+web:lint: 
+web:lint: C:\Repos\Quiz-to-Build\apps\web\src\lib\logger.ts
+web:lint:   10:1  warning  Unused eslint-disable directive (no problems were reported from 'no-console')
+web:lint: 
+web:lint: Ô£û 1 problem (0 errors, 1 warning)
+web:lint:   0 errors and 1 warning potentially fixable with the `--fix` option.
+web:lint: 
+@quiz2biz/cli:lint: 
+@quiz2biz/cli:lint: C:\Repos\Quiz-to-Build\apps\cli\src\__tests__\config.test.ts
+@quiz2biz/cli:lint:     8:20  warning  Arrow function has too many lines (154). Maximum allowed is 50  max-lines-per-function
+@quiz2biz/cli:lint:   108:39  warning  Arrow function has too many lines (75). Maximum allowed is 50   max-lines-per-function
+@quiz2biz/cli:lint: 
+@quiz2biz/cli:lint: C:\Repos\Quiz-to-Build\apps\cli\src\__tests__\nqs.test.ts
+@quiz2biz/cli:lint:   35:24  warning  Arrow function has too many lines (193). Maximum allowed is 50  max-lines-per-function
+@quiz2biz/cli:lint: 
+@quiz2biz/cli:lint: C:\Repos\Quiz-to-Build\apps\cli\src\__tests__\score.test.ts
+@quiz2biz/cli:lint:   45:26  warning  Arrow function has too many lines (207). Maximum allowed is 50  max-lines-per-function
+@quiz2biz/cli:lint: 
+@quiz2biz/cli:lint: C:\Repos\Quiz-to-Build\apps\cli\src\commands\nqs.ts
+@quiz2biz/cli:lint:   20:11  warning  Async arrow function has too many lines (62). Maximum allowed is 50  max-lines-per-function
+@quiz2biz/cli:lint: 
+@quiz2biz/cli:lint: C:\Repos\Quiz-to-Build\apps\cli\src\commands\score.ts
+@quiz2biz/cli:lint:   20:11  warning  Async arrow function has too many lines (78). Maximum allowed is 50  max-lines-per-function
+@quiz2biz/cli:lint:   20:58  warning  Async arrow function has a complexity of 18. Maximum allowed is 15   complexity
+@quiz2biz/cli:lint: 
+@quiz2biz/cli:lint: C:\Repos\Quiz-to-Build\apps\cli\src\lib\__tests__\api-client.test.ts
+@quiz2biz/cli:lint:     8:23  warning  Arrow function has too many lines (189). Maximum allowed is 50  max-lines-per-function
+@quiz2biz/cli:lint:   131:32  warning  Arrow function has too many lines (57). Maximum allowed is 50   max-lines-per-function
+@quiz2biz/cli:lint: 
+@quiz2biz/cli:lint: Ô£û 9 problems (0 errors, 9 warnings)
+@quiz2biz/cli:lint: 
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\common\filters\http-exception.filter.spec.ts
+api:lint:    4:33  warning  Arrow function has too many lines (192). Maximum allowed is 50  max-lines-per-function
+api:lint:   34:21  warning  Arrow function has too many lines (125). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\common\guards\csrf.guard.spec.ts
+api:lint:    13:23  warning  Arrow function has too many lines (341). Maximum allowed is 50  max-lines-per-function
+api:lint:    69:27  warning  Arrow function has too many lines (182). Maximum allowed is 50  max-lines-per-function
+api:lint:   303:51  warning  Arrow function has too many lines (92). Maximum allowed is 50   max-lines-per-function
+api:lint:   436:25  warning  Arrow function has too many lines (56). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\common\guards\csrf.guard.ts
+api:lint:   66:3  warning  Method 'canActivate' has too many lines (66). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\common\guards\subscription.guard.spec.ts
+api:lint:    16:31  warning  Arrow function has too many lines (159). Maximum allowed is 50  max-lines-per-function
+api:lint:    56:27  warning  Arrow function has too many lines (125). Maximum allowed is 50  max-lines-per-function
+api:lint:   208:36  warning  Arrow function has too many lines (72). Maximum allowed is 50   max-lines-per-function
+api:lint:   230:19  warning  Arrow function has too many lines (54). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\common\interceptors\logging.interceptor.spec.ts
+api:lint:    8:32  warning  Arrow function has too many lines (126). Maximum allowed is 50  max-lines-per-function
+api:lint:   57:25  warning  Arrow function has too many lines (82). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\common\interceptors\transform.interceptor.spec.ts
+api:lint:    5:34  warning  Arrow function has too many lines (145). Maximum allowed is 50  max-lines-per-function
+api:lint:   27:25  warning  Arrow function has too many lines (126). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\common\services\memory-optimization.service.spec.ts
+api:lint:     7:39  warning  Arrow function has too many lines (293). Maximum allowed is 50  max-lines-per-function
+api:lint:   109:48  warning  Arrow function has too many lines (66). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\common\tests\api-security.spec.ts
+api:lint:   1:32  warning  Arrow function has too many lines (193). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\common\tests\input-validation.security.spec.ts
+api:lint:   1:45  warning  Arrow function has too many lines (165). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\common\tests\validation\accessibility.spec.ts
+api:lint:    18:38  warning  Arrow function has too many lines (338). Maximum allowed is 50  max-lines-per-function
+api:lint:    43:35  warning  Arrow function has too many lines (63). Maximum allowed is 50   max-lines-per-function
+api:lint:   126:32  warning  Arrow function has too many lines (87). Maximum allowed is 50   max-lines-per-function
+api:lint:   230:34  warning  Arrow function has too many lines (54). Maximum allowed is 50   max-lines-per-function
+api:lint:   378:37  warning  Arrow function has too many lines (51). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\common\tests\validation\code-hygiene.spec.ts
+api:lint:    19:37  warning  Arrow function has too many lines (355). Maximum allowed is 50  max-lines-per-function
+api:lint:    68:51  warning  Arrow function has a complexity of 17. Maximum allowed is 15    complexity
+api:lint:   109:15  warning  Blocks are nested too deeply (5). Maximum allowed is 4          max-depth
+api:lint:   128:34  warning  Arrow function has too many lines (53). Maximum allowed is 50   max-lines-per-function
+api:lint:   281:15  warning  Blocks are nested too deeply (5). Maximum allowed is 4          max-depth
+api:lint:   284:17  warning  Blocks are nested too deeply (6). Maximum allowed is 4          max-depth
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\common\tests\validation\dependency-health.spec.ts
+api:lint:    20:42  warning  Arrow function has too many lines (353). Maximum allowed is 50  max-lines-per-function
+api:lint:    30:40  warning  Arrow function has too many lines (62). Maximum allowed is 50   max-lines-per-function
+api:lint:   146:40  warning  Arrow function has too many lines (54). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\common\tests\validation\security-scan.spec.ts
+api:lint:   17:38  warning  Arrow function has too many lines (243). Maximum allowed is 50  max-lines-per-function
+api:lint:   40:43  warning  Arrow function has too many lines (57). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\common\tests\validation\ux-quality.spec.ts
+api:lint:    22:35  warning  Arrow function has too many lines (414). Maximum allowed is 50  max-lines-per-function
+api:lint:    45:47  warning  Arrow function has too many lines (57). Maximum allowed is 50   max-lines-per-function
+api:lint:   207:45  warning  Arrow function has too many lines (51). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\alerting-rules.config.spec.ts
+api:lint:   21:35  warning  Arrow function has too many lines (93). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\appinsights.config.spec.ts
+api:lint:    59:41  warning  Arrow function has too many lines (860). Maximum allowed is 50  max-lines-per-function
+api:lint:    71:36  warning  Arrow function has too many lines (57). Maximum allowed is 50   max-lines-per-function
+api:lint:   645:47  warning  Arrow function has too many lines (66). Maximum allowed is 50   max-lines-per-function
+api:lint:   943:53  warning  Arrow function has too many lines (52). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\appinsights.config.ts
+api:lint:   302:8  warning  Function 'trackEndpointUsage' has too many parameters (5). Maximum allowed is 4  max-params
+api:lint:   498:8  warning  Function 'trackAvailability' has too many parameters (5). Maximum allowed is 4   max-params
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\canary-deployment.config.spec.ts
+api:lint:    328:37  warning  Arrow function has too many lines (1405). Maximum allowed is 50  max-lines-per-function
+api:lint:    389:31  warning  Arrow function has too many lines (55). Maximum allowed is 50    max-lines-per-function
+api:lint:    469:34  warning  Arrow function has too many lines (95). Maximum allowed is 50    max-lines-per-function
+api:lint:    602:32  warning  Arrow function has too many lines (61). Maximum allowed is 50    max-lines-per-function
+api:lint:    691:47  warning  Arrow function has too many lines (296). Maximum allowed is 50   max-lines-per-function
+api:lint:   1012:48  warning  Arrow function has too many lines (244). Maximum allowed is 50   max-lines-per-function
+api:lint:   1345:64  warning  Arrow function has too many lines (210). Maximum allowed is 50   max-lines-per-function
+api:lint:   1641:41  warning  Arrow function has too many lines (51). Maximum allowed is 50    max-lines-per-function
+api:lint:   1706:66  warning  Arrow function has too many lines (75). Maximum allowed is 50    max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\canary-deployment.config.ts
+api:lint:   154:8  warning  Function 'getDefaultCanaryStages' has too many lines (68). Maximum allowed is 50       max-lines-per-function
+api:lint:   266:8  warning  Function 'getDefaultRollbackTriggers' has too many lines (53). Maximum allowed is 50   max-lines-per-function
+api:lint:   352:8  warning  Function 'getCanaryNotificationConfig' has too many lines (69). Maximum allowed is 50  max-lines-per-function
+api:lint:   651:3  warning  Method 'checkRollbackTriggers' has too many lines (54). Maximum allowed is 50          max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\chaos-engineering.config.spec.ts
+api:lint:    13:40  warning  Arrow function has too many lines (85). Maximum allowed is 50  max-lines-per-function
+api:lint:   158:32  warning  Arrow function has too many lines (74). Maximum allowed is 50  max-lines-per-function
+api:lint:   257:37  warning  Arrow function has too many lines (57). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\chaos-engineering.config.ts
+api:lint:    286:8  warning  Function 'getDefaultChaosExperiments' has too many lines (338). Maximum allowed is 50  max-lines-per-function
+api:lint:    648:8  warning  Function 'getAzureChaosStudioConfig' has too many lines (91). Maximum allowed is 50    max-lines-per-function
+api:lint:    747:8  warning  Function 'getChaosMeshConfig' has too many lines (230). Maximum allowed is 50          max-lines-per-function
+api:lint:   1086:8  warning  Function 'getDefaultGameDayConfig' has too many lines (79). Maximum allowed is 50      max-lines-per-function
+api:lint:   1196:8  warning  Function 'getSteadyStateHypotheses' has too many lines (57). Maximum allowed is 50     max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\configuration.spec.ts
+api:lint:     3:27  warning  Arrow function has too many lines (204). Maximum allowed is 50  max-lines-per-function
+api:lint:    15:30  warning  Arrow function has too many lines (90). Maximum allowed is 50   max-lines-per-function
+api:lint:   121:46  warning  Arrow function has too many lines (80). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\configuration.ts
+api:lint:   1:16  warning  Arrow function has too many lines (73). Maximum allowed is 50  max-lines-per-function
+api:lint:   1:44  warning  Arrow function has a complexity of 29. Maximum allowed is 15   complexity
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\disaster-recovery.config.spec.ts
+api:lint:   189:37  warning  Arrow function has too many lines (52). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\disaster-recovery.config.ts
+api:lint:   113:8  warning  Function 'getBackupConfigurations' has too many lines (188). Maximum allowed is 50  max-lines-per-function
+api:lint:   455:8  warning  Function 'getDRProcedures' has too many lines (231). Maximum allowed is 50          max-lines-per-function
+api:lint:   724:8  warning  Function 'getDRTestConfigurations' has too many lines (54). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\failure-injection.config.spec.ts
+api:lint:    23:38  warning  Arrow function has too many lines (614). Maximum allowed is 50  max-lines-per-function
+api:lint:   395:67  warning  Arrow function has too many lines (123). Maximum allowed is 50  max-lines-per-function
+api:lint:   535:66  warning  Arrow function has too many lines (103). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\failure-injection.config.ts
+api:lint:    94:8  warning  Function 'getDatabaseFailureScenarios' has too many lines (127). Maximum allowed is 50     max-lines-per-function
+api:lint:   233:8  warning  Function 'getExternalApiFailureScenarios' has too many lines (134). Maximum allowed is 50  max-lines-per-function
+api:lint:   379:8  warning  Function 'getNetworkFailureScenarios' has too many lines (155). Maximum allowed is 50      max-lines-per-function
+api:lint:   548:8  warning  Function 'getPodFailureScenarios' has too many lines (122). Maximum allowed is 50          max-lines-per-function
+api:lint:   682:8  warning  Function 'getResourcePressureScenarios' has too many lines (152). Maximum allowed is 50    max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\feature-flags.config.spec.ts
+api:lint:    75:36  warning  Arrow function has too many lines (64). Maximum allowed is 50   max-lines-per-function
+api:lint:   199:32  warning  Arrow function has too many lines (565). Maximum allowed is 50  max-lines-per-function
+api:lint:   383:57  warning  Arrow function has too many lines (137). Maximum allowed is 50  max-lines-per-function
+api:lint:   537:64  warning  Arrow function has too many lines (56). Maximum allowed is 50   max-lines-per-function
+api:lint:   715:34  warning  Arrow function has too many lines (129). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\feature-flags.config.ts
+api:lint:   225:8  warning  Function 'getDefaultFeatureFlags' has too many lines (355). Maximum allowed is 50  max-lines-per-function
+api:lint:   601:8  warning  Function 'getDefaultABTests' has too many lines (85). Maximum allowed is 50        max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\graceful-degradation.config.spec.ts
+api:lint:    17:38  warning  Arrow function has too many lines (52). Maximum allowed is 50   max-lines-per-function
+api:lint:   220:29  warning  Arrow function has too many lines (70). Maximum allowed is 50   max-lines-per-function
+api:lint:   300:27  warning  Arrow function has too many lines (108). Maximum allowed is 50  max-lines-per-function
+api:lint:   427:22  warning  Arrow function has too many lines (67). Maximum allowed is 50   max-lines-per-function
+api:lint:   507:40  warning  Arrow function has too many lines (243). Maximum allowed is 50  max-lines-per-function
+api:lint:   593:67  warning  Arrow function has too many lines (139). Maximum allowed is 50  max-lines-per-function
+api:lint:   839:46  warning  Arrow function has too many lines (63). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\graceful-degradation.config.ts
+api:lint:    62:8  warning  Function 'getCircuitBreakerConfigs' has too many lines (137). Maximum allowed is 50  max-lines-per-function
+api:lint:   347:8  warning  Function 'getRetryConfigs' has too many lines (82). Maximum allowed is 50            max-lines-per-function
+api:lint:   744:8  warning  Function 'getDegradationLevels' has too many lines (65). Maximum allowed is 50       max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\incident-response.config.spec.ts
+api:lint:    31:38  warning  Arrow function has too many lines (528). Maximum allowed is 50  max-lines-per-function
+api:lint:    32:38  warning  Arrow function has too many lines (62). Maximum allowed is 50   max-lines-per-function
+api:lint:   142:35  warning  Arrow function has too many lines (60). Maximum allowed is 50   max-lines-per-function
+api:lint:   281:31  warning  Arrow function has too many lines (258). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\incident-response.config.ts
+api:lint:   132:8  warning  Function 'getSeverityDefinitions' has too many lines (96). Maximum allowed is 50  max-lines-per-function
+api:lint:   243:8  warning  Function 'getEscalationPaths' has too many lines (82). Maximum allowed is 50      max-lines-per-function
+api:lint:   336:8  warning  Function 'getIncidentRunbooks' has too many lines (400). Maximum allowed is 50    max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\resource-pressure.config.spec.ts
+api:lint:    25:38  warning  Arrow function has too many lines (366). Maximum allowed is 50  max-lines-per-function
+api:lint:    26:35  warning  Arrow function has too many lines (61). Maximum allowed is 50   max-lines-per-function
+api:lint:   303:42  warning  Arrow function has too many lines (71). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\resource-pressure.config.ts
+api:lint:    74:8  warning  Function 'getCpuPressureTests' has too many lines (172). Maximum allowed is 50      max-lines-per-function
+api:lint:   256:8  warning  Function 'getMemoryPressureTests' has too many lines (181). Maximum allowed is 50   max-lines-per-function
+api:lint:   447:8  warning  Function 'getDiskPressureTests' has too many lines (166). Maximum allowed is 50     max-lines-per-function
+api:lint:   623:8  warning  Function 'getNetworkPressureTests' has too many lines (159). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\sentry.config.spec.ts
+api:lint:   260:52  warning  Arrow function has too many lines (197). Maximum allowed is 50  max-lines-per-function
+api:lint:   341:35  warning  Arrow function has too many lines (96). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\config\sentry.config.ts
+api:lint:   47:8  warning  Function 'initializeSentry' has too many lines (54). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\health.controller.spec.ts
+api:lint:    7:30  warning  Arrow function has too many lines (336). Maximum allowed is 50  max-lines-per-function
+api:lint:   40:35  warning  Arrow function has too many lines (57). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\health.controller.ts
+api:lint:   70:3  warning  Async method 'check' has too many lines (60). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\main.ts
+api:lint:   27:1  warning  Async function 'bootstrap' has too many lines (211). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\adapters\adapter-config.service.spec.ts
+api:lint:     6:34  warning  Arrow function has too many lines (763). Maximum allowed is 50  max-lines-per-function
+api:lint:    60:33  warning  Arrow function has too many lines (129). Maximum allowed is 50  max-lines-per-function
+api:lint:   285:35  warning  Arrow function has too many lines (72). Maximum allowed is 50   max-lines-per-function
+api:lint:   498:30  warning  Arrow function has too many lines (204). Maximum allowed is 50  max-lines-per-function
+api:lint:   573:22  warning  Arrow function has too many lines (53). Maximum allowed is 50   max-lines-per-function
+api:lint:   638:28  warning  Arrow function has too many lines (53). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\adapters\adapter-config.service.ts
+api:lint:   188:3  warning  Method 'validateConfig' has too many lines (67). Maximum allowed is 50     max-lines-per-function
+api:lint:   188:3  warning  Method 'validateConfig' has a complexity of 22. Maximum allowed is 15      complexity
+api:lint:   404:3  warning  Method 'getDefaultConfigs' has too many lines (56). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\adapters\adapter.controller.spec.ts
+api:lint:    37:31  warning  Arrow function has too many lines (457). Maximum allowed is 50  max-lines-per-function
+api:lint:   243:30  warning  Arrow function has too many lines (65). Maximum allowed is 50   max-lines-per-function
+api:lint:   325:27  warning  Arrow function has too many lines (92). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\adapters\adapter.controller.ts
+api:lint:   199:3  warning  Async method 'testConnection' has too many lines (55). Maximum allowed is 50  max-lines-per-function
+api:lint:   262:3  warning  Async method 'syncAdapter' has too many lines (86). Maximum allowed is 50     max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\adapters\adapters.spec.ts
+api:lint:    14:31  warning  Arrow function has too many lines (165). Maximum allowed is 50       max-lines-per-function
+api:lint:    36:14  warning  Async arrow function has too many lines (53). Maximum allowed is 50  max-lines-per-function
+api:lint:   314:49  warning  Arrow function has too many lines (395). Maximum allowed is 50       max-lines-per-function
+api:lint:   336:14  warning  Async arrow function has too many lines (54). Maximum allowed is 50  max-lines-per-function
+api:lint:   436:58  warning  Arrow function has too many lines (60). Maximum allowed is 50        max-lines-per-function
+api:lint:   513:55  warning  Arrow function has too many lines (83). Maximum allowed is 50        max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\adapters\github.adapter.spec.ts
+api:lint:    12:27  warning  Arrow function has too many lines (936). Maximum allowed is 50  max-lines-per-function
+api:lint:   120:33  warning  Arrow function has too many lines (107). Maximum allowed is 50  max-lines-per-function
+api:lint:   246:30  warning  Arrow function has too many lines (69). Maximum allowed is 50   max-lines-per-function
+api:lint:   330:33  warning  Arrow function has too many lines (72). Maximum allowed is 50   max-lines-per-function
+api:lint:   416:38  warning  Arrow function has too many lines (93). Maximum allowed is 50   max-lines-per-function
+api:lint:   535:29  warning  Arrow function has too many lines (99). Maximum allowed is 50   max-lines-per-function
+api:lint:   655:40  warning  Arrow function has too many lines (57). Maximum allowed is 50   max-lines-per-function
+api:lint:   731:39  warning  Arrow function has too many lines (80). Maximum allowed is 50   max-lines-per-function
+api:lint:   871:33  warning  Arrow function has too many lines (254). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\adapters\github.adapter.ts
+api:lint:   464:3  warning  Async method 'ingestAllEvidence' has too many lines (90). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\adapters\gitlab.adapter.spec.ts
+api:lint:    219:27  warning  Arrow function has too many lines (794). Maximum allowed is 50  max-lines-per-function
+api:lint:    366:37  warning  Arrow function has too many lines (65). Maximum allowed is 50   max-lines-per-function
+api:lint:    517:30  warning  Arrow function has too many lines (64). Maximum allowed is 50   max-lines-per-function
+api:lint:    605:33  warning  Arrow function has too many lines (71). Maximum allowed is 50   max-lines-per-function
+api:lint:    754:34  warning  Arrow function has too many lines (55). Maximum allowed is 50   max-lines-per-function
+api:lint:    886:36  warning  Arrow function has too many lines (55). Maximum allowed is 50   max-lines-per-function
+api:lint:    966:36  warning  Arrow function has too many lines (60). Maximum allowed is 50   max-lines-per-function
+api:lint:   1077:33  warning  Arrow function has too many lines (146). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\adapters\gitlab.adapter.ts
+api:lint:   599:3  warning  Async method 'fetchVulnerabilities' has too many lines (53). Maximum allowed is 50  max-lines-per-function
+api:lint:   712:3  warning  Async method 'ingestAllEvidence' has too many lines (101). Maximum allowed is 50    max-lines-per-function
+api:lint:   712:3  warning  Async method 'ingestAllEvidence' has a complexity of 16. Maximum allowed is 15      complexity
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\adapters\jira-confluence.adapter.spec.ts
+api:lint:     77:35  warning  Arrow function has too many lines (1266). Maximum allowed is 50      max-lines-per-function
+api:lint:    113:30  warning  Arrow function has too many lines (81). Maximum allowed is 50        max-lines-per-function
+api:lint:    321:27  warning  Arrow function has too many lines (65). Maximum allowed is 50        max-lines-per-function
+api:lint:    432:27  warning  Arrow function has too many lines (138). Maximum allowed is 50       max-lines-per-function
+api:lint:    592:33  warning  Arrow function has too many lines (91). Maximum allowed is 50        max-lines-per-function
+api:lint:    593:59  warning  Async arrow function has too many lines (62). Maximum allowed is 50  max-lines-per-function
+api:lint:    692:28  warning  Arrow function has too many lines (80). Maximum allowed is 50        max-lines-per-function
+api:lint:    839:27  warning  Arrow function has too many lines (72). Maximum allowed is 50        max-lines-per-function
+api:lint:   1052:24  warning  Arrow function has too many lines (79). Maximum allowed is 50        max-lines-per-function
+api:lint:   1166:33  warning  Arrow function has too many lines (92). Maximum allowed is 50        max-lines-per-function
+api:lint:   1304:39  warning  Arrow function has too many lines (91). Maximum allowed is 50        max-lines-per-function
+api:lint:   1420:33  warning  Arrow function has too many lines (132). Maximum allowed is 50       max-lines-per-function
+api:lint:   1589:29  warning  Arrow function has too many lines (67). Maximum allowed is 50        max-lines-per-function
+api:lint:   1667:26  warning  Arrow function has too many lines (58). Maximum allowed is 50        max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\adapters\jira-confluence.adapter.ts
+api:lint:   166:3  warning  Method 'validateDomain' has a complexity of 18. Maximum allowed is 15               complexity
+api:lint:   231:3  warning  Async method 'makeRequest' has too many lines (60). Maximum allowed is 50           max-lines-per-function
+api:lint:   231:3  warning  Async method 'makeRequest' has too many parameters (6). Maximum allowed is 4        max-params
+api:lint:   231:3  warning  Async method 'makeRequest' has a complexity of 16. Maximum allowed is 15            complexity
+api:lint:   309:3  warning  Async method 'fetchIssues' has too many lines (92). Maximum allowed is 50           max-lines-per-function
+api:lint:   708:3  warning  Method 'mapConfluencePageToEvidence' has a complexity of 23. Maximum allowed is 15  complexity
+api:lint:   813:3  warning  Async method 'ingestAllEvidence' has too many lines (58). Maximum allowed is 50     max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\adaptive-logic\adaptive-logic.service.spec.ts
+api:lint:     7:34  warning  Arrow function has too many lines (794). Maximum allowed is 50  max-lines-per-function
+api:lint:    58:37  warning  Arrow function has too many lines (94). Maximum allowed is 50   max-lines-per-function
+api:lint:   168:35  warning  Arrow function has too many lines (70). Maximum allowed is 50   max-lines-per-function
+api:lint:   403:72  warning  Arrow function has too many lines (124). Maximum allowed is 50  max-lines-per-function
+api:lint:   607:31  warning  Arrow function has too many lines (95). Maximum allowed is 50   max-lines-per-function
+api:lint:   782:36  warning  Arrow function has too many lines (162). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\adaptive-logic\adaptive-logic.service.ts
+api:lint:   68:3  warning  Method 'evaluateQuestionState' has too many lines (54). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\adaptive-logic\evaluators\condition.evaluator.spec.ts
+api:lint:      4:32  warning  Arrow function has too many lines (891). Maximum allowed is 50  max-lines-per-function
+api:lint:    250:33  warning  Arrow function has too many lines (79). Maximum allowed is 50   max-lines-per-function
+api:lint:    365:51  warning  Arrow function has too many lines (54). Maximum allowed is 50   max-lines-per-function
+api:lint:    560:44  warning  Arrow function has too many lines (70). Maximum allowed is 50   max-lines-per-function
+api:lint:    683:46  warning  Arrow function has too many lines (82). Maximum allowed is 50   max-lines-per-function
+api:lint:   1103:53  warning  Arrow function has too many lines (63). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\adaptive-logic\evaluators\condition.evaluator.ts
+api:lint:    44:3  warning  Method 'evaluateOperator' has a complexity of 25. Maximum allowed is 15  complexity
+api:lint:   276:3  warning  Method 'isEmpty' has a complexity of 16. Maximum allowed is 15           complexity
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\admin\controllers\admin-questionnaire.controller.spec.ts
+api:lint:   9:42  warning  Arrow function has too many lines (283). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\admin\dto\dto.spec.ts
+api:lint:    19:31  warning  Arrow function has too many lines (331). Maximum allowed is 50  max-lines-per-function
+api:lint:   172:33  warning  Arrow function has too many lines (72). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\admin\services\admin-audit.service.spec.ts
+api:lint:    5:31  warning  Arrow function has too many lines (87). Maximum allowed is 50  max-lines-per-function
+api:lint:   35:19  warning  Arrow function has too many lines (60). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\admin\services\admin-audit.service.ts
+api:lint:   20:3  warning  Async method 'log' has a complexity of 16. Maximum allowed is 15  complexity
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\admin\services\admin-questionnaire.service.spec.ts
+api:lint:    15:39  warning  Arrow function has too many lines (501). Maximum allowed is 50  max-lines-per-function
+api:lint:   129:34  warning  Arrow function has too many lines (133). Maximum allowed is 50  max-lines-per-function
+api:lint:   287:28  warning  Arrow function has too many lines (104). Maximum allowed is 50  max-lines-per-function
+api:lint:   414:29  warning  Arrow function has too many lines (84). Maximum allowed is 50   max-lines-per-function
+api:lint:   519:36  warning  Arrow function has too many lines (74). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\admin\tests\admin-questionnaire.service.spec.ts
+api:lint:   8:39  warning  Arrow function has too many lines (295). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\ai-gateway\adapters\claude.adapter.ts
+api:lint:   160:54  error    Invalid type "unknown" of template literal expression                                   @typescript-eslint/restrict-template-expressions
+api:lint:   168:3   warning  Async generator method 'generateStream' has too many lines (67). Maximum allowed is 50  max-lines-per-function
+api:lint:   235:50  error    Invalid type "unknown" of template literal expression                                   @typescript-eslint/restrict-template-expressions
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\ai-gateway\adapters\openai.adapter.ts
+api:lint:   108:3   warning  Async method 'generate' has too many lines (56). Maximum allowed is 50                  max-lines-per-function
+api:lint:   108:3   warning  Async method 'generate' has a complexity of 16. Maximum allowed is 15                   complexity
+api:lint:   173:54  error    Invalid type "unknown" of template literal expression                                   @typescript-eslint/restrict-template-expressions
+api:lint:   181:3   warning  Async generator method 'generateStream' has too many lines (65). Maximum allowed is 50  max-lines-per-function
+api:lint:   248:50  error    Invalid type "unknown" of template literal expression                                   @typescript-eslint/restrict-template-expressions
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\ai-gateway\ai-gateway.controller.ts
+api:lint:    57:45  error  Invalid type "unknown" of template literal expression  @typescript-eslint/restrict-template-expressions
+api:lint:   104:43  error  Invalid type "unknown" of template literal expression  @typescript-eslint/restrict-template-expressions
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\ai-gateway\ai-gateway.service.spec.ts
+api:lint:    11:30  warning  Arrow function has too many lines (213). Maximum allowed is 50  max-lines-per-function
+api:lint:   132:24  warning  Arrow function has too many lines (61). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\ai-gateway\ai-gateway.service.ts
+api:lint:    85:61  error    Invalid type "unknown" of template literal expression                                   @typescript-eslint/restrict-template-expressions
+api:lint:   191:3   warning  Async generator method 'generateStream' has too many lines (56). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\ai-gateway\services\cost-tracker.service.ts
+api:lint:    85:3   warning  Async method 'flushCostBuffer' has too many lines (51). Maximum allowed is 50  max-lines-per-function
+api:lint:   137:77  error    Invalid type "unknown" of template literal expression                          @typescript-eslint/restrict-template-expressions
+api:lint:   145:57  error    Invalid type "unknown" of template literal expression                          @typescript-eslint/restrict-template-expressions
+api:lint:   201:64  error    Invalid type "unknown" of template literal expression                          @typescript-eslint/restrict-template-expressions
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\auth\auth.controller.spec.ts
+api:lint:   6:28  warning  Arrow function has too many lines (222). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\auth\auth.service.spec.ts
+api:lint:     22:25  warning  Arrow function has too many lines (923). Maximum allowed is 50       max-lines-per-function
+api:lint:     45:14  warning  Async arrow function has too many lines (54). Maximum allowed is 50  max-lines-per-function
+api:lint:    168:21  warning  Arrow function has too many lines (63). Maximum allowed is 50        max-lines-per-function
+api:lint:    296:28  warning  Arrow function has too many lines (58). Maximum allowed is 50        max-lines-per-function
+api:lint:    445:27  warning  Arrow function has too many lines (68). Maximum allowed is 50        max-lines-per-function
+api:lint:    593:36  warning  Arrow function has too many lines (60). Maximum allowed is 50        max-lines-per-function
+api:lint:    668:29  warning  Arrow function has too many lines (82). Maximum allowed is 50        max-lines-per-function
+api:lint:   1009:67  warning  Arrow function has too many lines (122). Maximum allowed is 50       max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\auth\auth.service.ts
+api:lint:   48:3  warning  Constructor has too many parameters (5). Maximum allowed is 4  max-params
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\auth\decorators\user.decorator.spec.ts
+api:lint:   5:35  warning  Arrow function has too many lines (133). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\auth\guards\jwt-auth.guard.spec.ts
+api:lint:    7:26  warning  Arrow function has too many lines (132). Maximum allowed is 50  max-lines-per-function
+api:lint:   89:29  warning  Arrow function has too many lines (68). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\auth\guards\roles.guard.spec.ts
+api:lint:    8:24  warning  Arrow function has too many lines (109). Maximum allowed is 50  max-lines-per-function
+api:lint:   46:27  warning  Arrow function has too many lines (77). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\auth\oauth\oauth.controller.spec.ts
+api:lint:   8:29  warning  Arrow function has too many lines (100). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\auth\oauth\oauth.service.spec.ts
+api:lint:    21:26  warning  Arrow function has too many lines (454). Maximum allowed is 50  max-lines-per-function
+api:lint:   179:34  warning  Arrow function has too many lines (53). Maximum allowed is 50   max-lines-per-function
+api:lint:   245:38  warning  Arrow function has too many lines (76). Maximum allowed is 50   max-lines-per-function
+api:lint:   337:63  warning  Arrow function has too many lines (85). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\auth\oauth\oauth.service.ts
+api:lint:   156:3  warning  Async method 'handleOAuthLogin' has too many lines (72). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\auth\strategies\jwt.strategy.spec.ts
+api:lint:   11:25  warning  Arrow function has too many lines (68). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\auth\tests\auth.security.test.ts
+api:lint:   28:43  warning  Arrow function has too many lines (258). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\chat-engine\chat-engine.controller.ts
+api:lint:   127:43  error  Invalid type "unknown" of template literal expression  @typescript-eslint/restrict-template-expressions
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\chat-engine\chat-engine.service.spec.ts
+api:lint:    11:31  warning  Arrow function has too many lines (208). Maximum allowed is 50  max-lines-per-function
+api:lint:   168:27  warning  Arrow function has too many lines (59). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\chat-engine\chat-engine.service.ts
+api:lint:    91:3   warning  Async method 'sendMessage' has too many lines (78). Maximum allowed is 50                  max-lines-per-function
+api:lint:   180:57  error    Invalid type "unknown" of template literal expression                                      @typescript-eslint/restrict-template-expressions
+api:lint:   192:3   warning  Async generator method 'sendMessageStream' has too many lines (88). Maximum allowed is 50  max-lines-per-function
+api:lint:   289:43  error    Invalid type "unknown" of template literal expression                                      @typescript-eslint/restrict-template-expressions
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\decision-log\approval-workflow.service.spec.ts
+api:lint:    30:37  warning  Arrow function has too many lines (888). Maximum allowed is 50  max-lines-per-function
+api:lint:    64:37  warning  Arrow function has too many lines (102). Maximum allowed is 50  max-lines-per-function
+api:lint:   194:33  warning  Arrow function has too many lines (112). Maximum allowed is 50  max-lines-per-function
+api:lint:   336:35  warning  Arrow function has too many lines (73). Maximum allowed is 50   max-lines-per-function
+api:lint:   924:36  warning  Arrow function has too many lines (57). Maximum allowed is 50   max-lines-per-function
+api:lint:   992:34  warning  Arrow function has too many lines (106). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\decision-log\approval-workflow.service.ts
+api:lint:   172:3  warning  Async method 'respondToApproval' has too many lines (51). Maximum allowed is 50    max-lines-per-function
+api:lint:   500:3  warning  Async method 'createAuditEntry' has too many parameters (5). Maximum allowed is 4  max-params
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\decision-log\decision-log.controller.spec.ts
+api:lint:   8:35  warning  Arrow function has too many lines (141). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\decision-log\decision-log.service.spec.ts
+api:lint:   25:32  warning  Arrow function has too many lines (324). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\decision-log\decision-log.spec.ts
+api:lint:    12:32  warning  Arrow function has too many lines (200). Maximum allowed is 50  max-lines-per-function
+api:lint:   171:33  warning  Arrow function has too many lines (52). Maximum allowed is 50   max-lines-per-function
+api:lint:   254:35  warning  Arrow function has too many lines (107). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\decision-log\decorators\require-approval.decorator.spec.ts
+api:lint:   68:27  warning  Arrow function has too many lines (245). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-commerce\services\document-purchase.service.spec.ts
+api:lint:    27:37  warning  Arrow function has too many lines (217). Maximum allowed is 50  max-lines-per-function
+api:lint:   126:30  warning  Arrow function has too many lines (66). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-commerce\services\document-purchase.service.ts
+api:lint:   44:3  warning  Async method 'createPurchase' has too many lines (104). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-commerce\services\pricing-calculator.service.spec.ts
+api:lint:   10:38  warning  Arrow function has too many lines (175). Maximum allowed is 50  max-lines-per-function
+api:lint:   63:30  warning  Arrow function has too many lines (107). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-commerce\services\pricing-calculator.service.ts
+api:lint:   98:3  warning  Async method 'getProjectDocuments' has too many lines (63). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\controllers\deliverables-compiler.controller.spec.ts
+api:lint:   9:44  warning  Arrow function has too many lines (131). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\controllers\document-admin.controller.spec.ts
+api:lint:    10:37  warning  Arrow function has too many lines (256). Maximum allowed is 50  max-lines-per-function
+api:lint:   223:73  warning  Arrow function has too many lines (58). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\controllers\document.controller.spec.ts
+api:lint:     8:32  warning  Arrow function has too many lines (242). Maximum allowed is 50  max-lines-per-function
+api:lint:   229:42  warning  Arrow function has too many lines (54). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\services\ai-document-content.service.spec.ts
+api:lint:    30:38  warning  Arrow function has too many lines (571). Maximum allowed is 50  max-lines-per-function
+api:lint:   176:53  warning  Arrow function has too many lines (97). Maximum allowed is 50   max-lines-per-function
+api:lint:   304:67  warning  Arrow function has too many lines (134). Maximum allowed is 50  max-lines-per-function
+api:lint:   472:39  warning  Arrow function has too many lines (109). Maximum allowed is 50  max-lines-per-function
+api:lint:   605:78  warning  Arrow function has too many lines (54). Maximum allowed is 50   max-lines-per-function
+api:lint:   674:80  warning  Arrow function has too many lines (64). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\services\bulk-download.service.ts
+api:lint:    34:3   warning  Async method 'createSessionDocumentsZip' has too many lines (70). Maximum allowed is 50               max-lines-per-function
+api:lint:   105:11  error    Numeric '+' operations must either be both bigints or both numbers. Got `number` + `number | bigint`  @typescript-eslint/restrict-plus-operands
+api:lint:   127:3   warning  Async method 'createSelectedDocumentsZip' has too many lines (59). Maximum allowed is 50              max-lines-per-function
+api:lint:   183:11  error    Numeric '+' operations must either be both bigints or both numbers. Got `number` + `number | bigint`  @typescript-eslint/restrict-plus-operands
+api:lint:   265:7   error    Numeric '+' operations must either be both bigints or both numbers. Got `number` + `number | bigint`  @typescript-eslint/restrict-plus-operands
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\services\deliverables-compiler.service.spec.ts
+api:lint:     7:41  warning  Arrow function has too many lines (767). Maximum allowed is 50  max-lines-per-function
+api:lint:   126:39  warning  Arrow function has too many lines (239). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\services\deliverables-compiler.service.ts
+api:lint:    96:3  warning  Async method 'compileDeliverablesPack' has too many lines (102). Maximum allowed is 50   max-lines-per-function
+api:lint:   395:3  warning  Method 'compileArchitectureDossier' has too many parameters (5). Maximum allowed is 4    max-params
+api:lint:   459:3  warning  Method 'compileSDLCPlaybook' has too many lines (52). Maximum allowed is 50              max-lines-per-function
+api:lint:   459:3  warning  Method 'compileSDLCPlaybook' has too many parameters (5). Maximum allowed is 4           max-params
+api:lint:   518:3  warning  Method 'compileTestStrategy' has too many parameters (5). Maximum allowed is 4           max-params
+api:lint:   574:3  warning  Method 'compileDevSecOpsDocument' has too many lines (51). Maximum allowed is 50         max-lines-per-function
+api:lint:   574:3  warning  Method 'compileDevSecOpsDocument' has too many parameters (5). Maximum allowed is 4      max-params
+api:lint:   632:3  warning  Method 'compilePrivacyDocument' has too many parameters (5). Maximum allowed is 4        max-params
+api:lint:   688:3  warning  Method 'compileObservabilityDocument' has too many parameters (5). Maximum allowed is 4  max-params
+api:lint:   744:3  warning  Method 'compileFinanceDocument' has too many parameters (5). Maximum allowed is 4        max-params
+api:lint:   800:3  warning  Method 'compilePolicyDocument' has too many lines (53). Maximum allowed is 50            max-lines-per-function
+api:lint:   800:3  warning  Method 'compilePolicyDocument' has too many parameters (5). Maximum allowed is 4         max-params
+api:lint:   912:3  warning  Method 'compileReadinessReport' has too many lines (55). Maximum allowed is 50           max-lines-per-function
+api:lint:   912:3  warning  Method 'compileReadinessReport' has too many parameters (5). Maximum allowed is 4        max-params
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\services\document-builder.service.spec.ts
+api:lint:     7:36  warning  Arrow function has too many lines (723). Maximum allowed is 50  max-lines-per-function
+api:lint:    25:29  warning  Arrow function has too many lines (346). Maximum allowed is 50  max-lines-per-function
+api:lint:   132:38  warning  Arrow function has too many lines (87). Maximum allowed is 50   max-lines-per-function
+api:lint:   233:38  warning  Arrow function has too many lines (80). Maximum allowed is 50   max-lines-per-function
+api:lint:   327:37  warning  Arrow function has too many lines (89). Maximum allowed is 50   max-lines-per-function
+api:lint:   435:42  warning  Arrow function has too many lines (130). Maximum allowed is 50  max-lines-per-function
+api:lint:   589:53  warning  Arrow function has too many lines (64). Maximum allowed is 50   max-lines-per-function
+api:lint:   665:55  warning  Arrow function has too many lines (105). Maximum allowed is 50  max-lines-per-function
+api:lint:   788:67  warning  Arrow function has too many lines (66). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\services\document-generator.service.spec.ts
+api:lint:     21:38  warning  Arrow function has too many lines (945). Maximum allowed is 50  max-lines-per-function
+api:lint:    144:32  warning  Arrow function has too many lines (284). Maximum allowed is 50  max-lines-per-function
+api:lint:    593:30  warning  Arrow function has too many lines (81). Maximum allowed is 50   max-lines-per-function
+api:lint:    775:31  warning  Arrow function has too many lines (94). Maximum allowed is 50   max-lines-per-function
+api:lint:    899:30  warning  Arrow function has too many lines (81). Maximum allowed is 50   max-lines-per-function
+api:lint:   1027:34  warning  Arrow function has too many lines (148). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\services\document-generator.service.ts
+api:lint:    25:3  warning  Constructor has too many parameters (6). Maximum allowed is 4                            max-params
+api:lint:    37:3  warning  Async method 'generateDocument' has too many lines (79). Maximum allowed is 50           max-lines-per-function
+api:lint:   142:3  warning  Async method 'processDocumentGeneration' has too many lines (63). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\services\pdf-renderer.service.spec.ts
+api:lint:    13:32  warning  Arrow function has too many lines (235). Maximum allowed is 50  max-lines-per-function
+api:lint:    48:36  warning  Arrow function has too many lines (67). Maximum allowed is 50   max-lines-per-function
+api:lint:   134:32  warning  Arrow function has too many lines (79). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\services\pdf-renderer.service.ts
+api:lint:    29:3   warning  Method 'markdownToHtml' has too many lines (86). Maximum allowed is 50          max-lines-per-function
+api:lint:   144:3   warning  Async method 'generateFromHtml' has too many lines (53). Maximum allowed is 50  max-lines-per-function
+api:lint:   198:51  error    Invalid type "unknown" of template literal expression                           @typescript-eslint/restrict-template-expressions
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\services\project-document-generation.service.spec.ts
+api:lint:     9:46  warning  Arrow function has too many lines (530). Maximum allowed is 50  max-lines-per-function
+api:lint:   126:32  warning  Arrow function has too many lines (102). Maximum allowed is 50  max-lines-per-function
+api:lint:   253:30  warning  Arrow function has too many lines (68). Maximum allowed is 50   max-lines-per-function
+api:lint:   338:30  warning  Arrow function has too many lines (62). Maximum allowed is 50   max-lines-per-function
+api:lint:   414:34  warning  Arrow function has too many lines (52). Maximum allowed is 50   max-lines-per-function
+api:lint:   521:24  warning  Arrow function has too many lines (63). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\services\project-document-generation.service.ts
+api:lint:    54:3   warning  Async method 'generateDocument' has too many lines (78). Maximum allowed is 50    max-lines-per-function
+api:lint:   179:3   warning  Async method 'generateContent' has too many parameters (6). Maximum allowed is 4  max-params
+api:lint:   286:21  error    Unnecessary escape character: \[                                                  no-useless-escape
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\services\provider-comparison.service.ts
+api:lint:   86:3  warning  Method 'getProviderMetrics' has too many lines (79). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\services\storage.service.spec.ts
+api:lint:   39:28  warning  Arrow function has too many lines (105). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\services\template-engine.service.ts
+api:lint:    44:3  warning  Async method 'assembleTemplateData' has too many lines (51). Maximum allowed is 50  max-lines-per-function
+api:lint:   142:3  warning  Method 'extractResponseValue' has too many lines (51). Maximum allowed is 50        max-lines-per-function
+api:lint:   142:3  warning  Method 'extractResponseValue' has a complexity of 23. Maximum allowed is 15         complexity
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\templates\document-templates.spec.ts
+api:lint:   15:40  warning  Arrow function has too many lines (117). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\templates\index.spec.ts
+api:lint:   9:31  warning  Arrow function has too many lines (117). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\templates\templates.spec.ts
+api:lint:    42:41  warning  Arrow function has too many lines (67). Maximum allowed is 50  max-lines-per-function
+api:lint:   122:32  warning  Arrow function has too many lines (56). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\document-generator\tests\template-engine.service.spec.ts
+api:lint:     7:35  warning  Arrow function has too many lines (1012). Maximum allowed is 50  max-lines-per-function
+api:lint:   192:38  warning  Arrow function has too many lines (71). Maximum allowed is 50    max-lines-per-function
+api:lint:   275:57  warning  Arrow function has too many lines (416). Maximum allowed is 50   max-lines-per-function
+api:lint:   732:46  warning  Arrow function has too many lines (216). Maximum allowed is 50   max-lines-per-function
+api:lint:   969:67  warning  Arrow function has too many lines (88). Maximum allowed is 50    max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\evidence-registry\ci-artifact-ingestion.service.spec.ts
+api:lint:      7:40  warning  Arrow function has too many lines (983). Maximum allowed is 50  max-lines-per-function
+api:lint:     70:30  warning  Arrow function has too many lines (223). Maximum allowed is 50  max-lines-per-function
+api:lint:    582:53  warning  Arrow function has too many lines (72). Maximum allowed is 50   max-lines-per-function
+api:lint:    841:54  warning  Arrow function has too many lines (75). Maximum allowed is 50   max-lines-per-function
+api:lint:    929:54  warning  Arrow function has too many lines (78). Maximum allowed is 50   max-lines-per-function
+api:lint:   1020:63  warning  Arrow function has too many lines (65). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\evidence-registry\ci-artifact-ingestion.service.ts
+api:lint:    98:3   warning  Async method 'ingestArtifact' has too many lines (53). Maximum allowed is 50  max-lines-per-function
+api:lint:   288:3   warning  Method 'parseLcov' has a complexity of 18. Maximum allowed is 15              complexity
+api:lint:   378:13  warning  Blocks are nested too deeply (5). Maximum allowed is 4                        max-depth
+api:lint:   381:13  warning  Blocks are nested too deeply (5). Maximum allowed is 4                        max-depth
+api:lint:   441:3   warning  Method 'parseTrivy' has too many lines (51). Maximum allowed is 50            max-lines-per-function
+api:lint:   500:3   warning  Method 'parseOWASP' has a complexity of 16. Maximum allowed is 15             complexity
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\evidence-registry\evidence-integrity.service.spec.ts
+api:lint:     8:38  warning  Arrow function has too many lines (898). Maximum allowed is 50       max-lines-per-function
+api:lint:    63:29  warning  Arrow function has too many lines (59). Maximum allowed is 50        max-lines-per-function
+api:lint:   220:27  warning  Arrow function has too many lines (101). Maximum allowed is 50       max-lines-per-function
+api:lint:   338:39  warning  Arrow function has too many lines (76). Maximum allowed is 50        max-lines-per-function
+api:lint:   434:39  warning  Arrow function has too many lines (81). Maximum allowed is 50        max-lines-per-function
+api:lint:   435:52  warning  Async arrow function has too many lines (58). Maximum allowed is 50  max-lines-per-function
+api:lint:   711:94  warning  Arrow function has too many lines (108). Maximum allowed is 50       max-lines-per-function
+api:lint:   868:96  warning  Arrow function has too many lines (67). Maximum allowed is 50        max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\evidence-registry\evidence-integrity.service.ts
+api:lint:    63:3  warning  Async method 'chainEvidence' has too many lines (54). Maximum allowed is 50  max-lines-per-function
+api:lint:   200:3  warning  Async method 'verifyChain' has too many lines (63). Maximum allowed is 50    max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\evidence-registry\evidence-registry.controller.spec.ts
+api:lint:   8:40  warning  Arrow function has too many lines (412). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\evidence-registry\evidence-registry.controller.ts
+api:lint:   70:3  warning  Async method 'uploadEvidence' has too many lines (70). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\evidence-registry\evidence-registry.service.spec.ts
+api:lint:     15:37  warning  Arrow function has too many lines (1267). Maximum allowed is 50  max-lines-per-function
+api:lint:     90:30  warning  Arrow function has too many lines (59). Maximum allowed is 50    max-lines-per-function
+api:lint:    157:30  warning  Arrow function has too many lines (131). Maximum allowed is 50   max-lines-per-function
+api:lint:    307:28  warning  Arrow function has too many lines (61). Maximum allowed is 50    max-lines-per-function
+api:lint:    520:42  warning  Arrow function has too many lines (72). Maximum allowed is 50    max-lines-per-function
+api:lint:    781:53  warning  Arrow function has too many lines (88). Maximum allowed is 50    max-lines-per-function
+api:lint:    882:52  warning  Arrow function has too many lines (108). Maximum allowed is 50   max-lines-per-function
+api:lint:   1074:37  warning  Arrow function has too many lines (114). Maximum allowed is 50   max-lines-per-function
+api:lint:   1335:66  warning  Arrow function has too many lines (52). Maximum allowed is 50    max-lines-per-function
+api:lint:   1402:80  warning  Arrow function has too many lines (70). Maximum allowed is 50    max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\evidence-registry\evidence-registry.service.ts
+api:lint:   586:3  warning  Async method 'getEvidenceAuditTrail' has too many lines (57). Maximum allowed is 50       max-lines-per-function
+api:lint:   709:3  warning  Async method 'getEvidenceCoverageSummary' has too many lines (61). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\fact-extraction\services\fact-extraction.service.spec.ts
+api:lint:    29:35  warning  Arrow function has too many lines (218). Maximum allowed is 50  max-lines-per-function
+api:lint:   109:28  warning  Arrow function has too many lines (58). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\fact-extraction\services\fact-extraction.service.ts
+api:lint:    72:52  error  Invalid type "unknown" of template literal expression  @typescript-eslint/restrict-template-expressions
+api:lint:   175:63  error  Invalid type "unknown" of template literal expression  @typescript-eslint/restrict-template-expressions
+api:lint:   398:65  error  Invalid type "unknown" of template literal expression  @typescript-eslint/restrict-template-expressions
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\heatmap\heatmap.controller.spec.ts
+api:lint:     7:31  warning  Arrow function has too many lines (426). Maximum allowed is 50  max-lines-per-function
+api:lint:    44:26  warning  Arrow function has too many lines (51). Maximum allowed is 50   max-lines-per-function
+api:lint:   234:24  warning  Arrow function has too many lines (97). Maximum allowed is 50   max-lines-per-function
+api:lint:   347:25  warning  Arrow function has too many lines (93). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\heatmap\heatmap.service.spec.ts
+api:lint:      8:28  warning  Arrow function has too many lines (1676). Maximum allowed is 50  max-lines-per-function
+api:lint:    107:31  warning  Arrow function has too many lines (103). Maximum allowed is 50   max-lines-per-function
+api:lint:    502:31  warning  Arrow function has too many lines (94). Maximum allowed is 50    max-lines-per-function
+api:lint:    620:31  warning  Arrow function has too many lines (84). Maximum allowed is 50    max-lines-per-function
+api:lint:    721:34  warning  Arrow function has too many lines (77). Maximum allowed is 50    max-lines-per-function
+api:lint:    943:41  warning  Arrow function has too many lines (59). Maximum allowed is 50    max-lines-per-function
+api:lint:   1233:75  warning  Arrow function has too many lines (56). Maximum allowed is 50    max-lines-per-function
+api:lint:   1603:70  warning  Arrow function has too many lines (98). Maximum allowed is 50    max-lines-per-function
+api:lint:   1720:71  warning  Arrow function has too many lines (59). Maximum allowed is 50    max-lines-per-function
+api:lint:   1792:66  warning  Arrow function has too many lines (51). Maximum allowed is 50    max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\heatmap\heatmap.service.ts
+api:lint:   115:3  warning  Async method 'exportToMarkdown' has too many lines (55). Maximum allowed is 50    max-lines-per-function
+api:lint:   214:3  warning  Async method 'drilldown' has too many lines (58). Maximum allowed is 50           max-lines-per-function
+api:lint:   453:3  warning  Async method 'compareHeatmaps' has too many lines (54). Maximum allowed is 50     max-lines-per-function
+api:lint:   523:3  warning  Async method 'getPriorityGaps' has too many lines (53). Maximum allowed is 50     max-lines-per-function
+api:lint:   596:3  warning  Async method 'generateActionPlan' has too many lines (59). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\idea-capture\idea-capture.controller.spec.ts
+api:lint:   8:35  warning  Arrow function has too many lines (100). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\idea-capture\project-types.controller.spec.ts
+api:lint:   5:36  warning  Arrow function has too many lines (67). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\idea-capture\services\claude-ai.service.spec.ts
+api:lint:    17:29  warning  Arrow function has too many lines (464). Maximum allowed is 50  max-lines-per-function
+api:lint:    78:27  warning  Arrow function has too many lines (114). Maximum allowed is 50  max-lines-per-function
+api:lint:   218:42  warning  Arrow function has too many lines (85). Maximum allowed is 50   max-lines-per-function
+api:lint:   322:52  warning  Arrow function has too many lines (69). Maximum allowed is 50   max-lines-per-function
+api:lint:   409:45  warning  Arrow function has too many lines (149). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\idea-capture\services\claude-ai.service.ts
+api:lint:    53:3  warning  Async method 'analyzeIdea' has too many lines (69). Maximum allowed is 50  max-lines-per-function
+api:lint:   182:3  warning  Method 'fallbackAnalysis' has too many lines (79). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\idea-capture\services\idea-capture.service.spec.ts
+api:lint:     7:32  warning  Arrow function has too many lines (488). Maximum allowed is 50  max-lines-per-function
+api:lint:    72:33  warning  Arrow function has too many lines (83). Maximum allowed is 50   max-lines-per-function
+api:lint:   232:37  warning  Arrow function has too many lines (73). Maximum allowed is 50   max-lines-per-function
+api:lint:   318:73  warning  Arrow function has too many lines (68). Maximum allowed is 50   max-lines-per-function
+api:lint:   396:62  warning  Arrow function has too many lines (85). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\idea-capture\services\idea-capture.service.ts
+api:lint:   144:3  warning  Async method 'createSessionFromIdea' has too many lines (66). Maximum allowed is 50  max-lines-per-function
+api:lint:   221:3  warning  Method 'toResponseDto' has too many lines (58). Maximum allowed is 50                max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\notifications\adaptive-card.service.spec.ts
+api:lint:    11:33  warning  Arrow function has too many lines (845). Maximum allowed is 50  max-lines-per-function
+api:lint:   252:52  warning  Arrow function has too many lines (61). Maximum allowed is 50   max-lines-per-function
+api:lint:   321:62  warning  Arrow function has too many lines (51). Maximum allowed is 50   max-lines-per-function
+api:lint:   462:55  warning  Arrow function has too many lines (136). Maximum allowed is 50  max-lines-per-function
+api:lint:   659:56  warning  Arrow function has too many lines (159). Maximum allowed is 50  max-lines-per-function
+api:lint:   858:87  warning  Arrow function has too many lines (53). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\notifications\adaptive-card.service.ts
+api:lint:    30:3   warning  Method 'generateHeatmapCard' has too many lines (127). Maximum allowed is 50         max-lines-per-function
+api:lint:   167:3   warning  Method 'generateGapSummaryCard' has too many lines (105). Maximum allowed is 50      max-lines-per-function
+api:lint:   168:48  warning  Arrow function has too many lines (53). Maximum allowed is 50                        max-lines-per-function
+api:lint:   282:3   warning  Method 'generateApprovalRequestCard' has too many lines (72). Maximum allowed is 50  max-lines-per-function
+api:lint:   362:3   warning  Method 'generateScoreUpdateCard' has too many lines (107). Maximum allowed is 50     max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\notifications\notification.controller.spec.ts
+api:lint:   6:36  warning  Arrow function has too many lines (86). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\notifications\notification.service.spec.ts
+api:lint:    10:33  warning  Arrow function has too many lines (719). Maximum allowed is 50  max-lines-per-function
+api:lint:   105:25  warning  Arrow function has too many lines (51). Maximum allowed is 50   max-lines-per-function
+api:lint:   283:45  warning  Arrow function has too many lines (86). Maximum allowed is 50   max-lines-per-function
+api:lint:   385:48  warning  Arrow function has too many lines (119). Maximum allowed is 50  max-lines-per-function
+api:lint:   626:46  warning  Arrow function has too many lines (56). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\notifications\notification.service.ts
+api:lint:   324:3  warning  Async method 'sendSessionReminderEmail' has too many parameters (5). Maximum allowed is 4  max-params
+api:lint:   444:3  warning  Async method 'logEmailSent' has too many parameters (5). Maximum allowed is 4              max-params
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\notifications\teams-webhook.controller.spec.ts
+api:lint:   11:36  warning  Arrow function has too many lines (182). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\notifications\teams-webhook.controller.ts
+api:lint:    46:3  warning  Async method 'sendHeatmapCard' has too many lines (54). Maximum allowed is 50  max-lines-per-function
+api:lint:   261:3  warning  Method 'getSampleData' has too many lines (83). Maximum allowed is 50          max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\payment\billing.service.spec.ts
+api:lint:     6:28  warning  Arrow function has too many lines (515). Maximum allowed is 50  max-lines-per-function
+api:lint:    53:27  warning  Arrow function has too many lines (63). Maximum allowed is 50   max-lines-per-function
+api:lint:   177:29  warning  Arrow function has too many lines (70). Maximum allowed is 50   max-lines-per-function
+api:lint:   257:36  warning  Arrow function has too many lines (66). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\payment\payment.controller.spec.ts
+api:lint:     8:31  warning  Arrow function has too many lines (540). Maximum allowed is 50  max-lines-per-function
+api:lint:   274:29  warning  Arrow function has too many lines (216). Maximum allowed is 50  max-lines-per-function
+api:lint:   558:34  warning  Arrow function has too many lines (84). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\payment\payment.service.spec.ts
+api:lint:     9:28  warning  Arrow function has too many lines (516). Maximum allowed is 50       max-lines-per-function
+api:lint:    15:14  warning  Async arrow function has too many lines (54). Maximum allowed is 50  max-lines-per-function
+api:lint:   102:37  warning  Arrow function has too many lines (85). Maximum allowed is 50        max-lines-per-function
+api:lint:   415:72  warning  Arrow function has too many lines (65). Maximum allowed is 50        max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\payment\subscription.service.spec.ts
+api:lint:   7:33  warning  Arrow function has too many lines (286). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\policy-pack\policy-pack.controller.spec.ts
+api:lint:   6:34  warning  Arrow function has too many lines (202). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\policy-pack\policy-pack.service.spec.ts
+api:lint:    11:31  warning  Arrow function has too many lines (267). Maximum allowed is 50       max-lines-per-function
+api:lint:    20:14  warning  Async arrow function has too many lines (56). Maximum allowed is 50  max-lines-per-function
+api:lint:    84:34  warning  Arrow function has too many lines (84). Maximum allowed is 50        max-lines-per-function
+api:lint:   227:34  warning  Arrow function has too many lines (79). Maximum allowed is 50        max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\policy-pack\policy-pack.service.ts
+api:lint:   20:3  warning  Constructor has too many parameters (6). Maximum allowed is 4                     max-params
+api:lint:   32:3  warning  Async method 'generatePolicyPack' has too many lines (51). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\policy-pack\services\control-mapping.service.spec.ts
+api:lint:   5:35  warning  Arrow function has too many lines (214). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\policy-pack\services\opa-policy.service.spec.ts
+api:lint:     5:30  warning  Arrow function has too many lines (166). Maximum allowed is 50  max-lines-per-function
+api:lint:   117:34  warning  Arrow function has too many lines (56). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\policy-pack\services\policy-export.service.spec.ts
+api:lint:    15:33  warning  Arrow function has too many lines (308). Maximum allowed is 50  max-lines-per-function
+api:lint:   187:38  warning  Arrow function has too many lines (62). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\policy-pack\services\policy-export.service.ts
+api:lint:    15:3   warning  Method 'generateReadme' has too many lines (67). Maximum allowed is 50          max-lines-per-function
+api:lint:    94:3   warning  Method 'generatePolicyMarkdown' has too many lines (81). Maximum allowed is 50  max-lines-per-function
+api:lint:   156:13  warning  Blocks are nested too deeply (5). Maximum allowed is 4                          max-depth
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\policy-pack\services\policy-generator.service.spec.ts
+api:lint:    7:36  warning  Arrow function has too many lines (135). Maximum allowed is 50  max-lines-per-function
+api:lint:   48:36  warning  Arrow function has too many lines (51). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\policy-pack\services\terraform-rules.service.spec.ts
+api:lint:   4:35  warning  Arrow function has too many lines (173). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\qpg\qpg.controller.spec.ts
+api:lint:    6:27  warning  Arrow function has too many lines (231). Maximum allowed is 50  max-lines-per-function
+api:lint:   44:31  warning  Arrow function has too many lines (105). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\qpg\qpg.service.spec.ts
+api:lint:     9:24  warning  Arrow function has too many lines (389). Maximum allowed is 50       max-lines-per-function
+api:lint:    64:41  warning  Arrow function has too many lines (195). Maximum allowed is 50       max-lines-per-function
+api:lint:    65:42  warning  Async arrow function has too many lines (90). Maximum allowed is 50  max-lines-per-function
+api:lint:   190:37  warning  Async arrow function has too many lines (77). Maximum allowed is 50  max-lines-per-function
+api:lint:   273:36  warning  Arrow function has too many lines (57). Maximum allowed is 50        max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\qpg\services\context-builder.service.spec.ts
+api:lint:     6:35  warning  Arrow function has too many lines (315). Maximum allowed is 50  max-lines-per-function
+api:lint:    91:32  warning  Arrow function has too many lines (71). Maximum allowed is 50   max-lines-per-function
+api:lint:   246:33  warning  Arrow function has too many lines (53). Maximum allowed is 50   max-lines-per-function
+api:lint:   308:55  warning  Arrow function has too many lines (68). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\qpg\services\prompt-generator.service.spec.ts
+api:lint:     5:36  warning  Arrow function has too many lines (323). Maximum allowed is 50  max-lines-per-function
+api:lint:   146:33  warning  Arrow function has too many lines (72). Maximum allowed is 50   max-lines-per-function
+api:lint:   249:34  warning  Arrow function has too many lines (117). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\qpg\services\prompt-template.service.spec.ts
+api:lint:     5:35  warning  Arrow function has too many lines (242). Maximum allowed is 50  max-lines-per-function
+api:lint:    27:39  warning  Arrow function has too many lines (87). Maximum allowed is 50   max-lines-per-function
+api:lint:   196:43  warning  Arrow function has too many lines (58). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\qpg\services\prompt-template.service.ts
+api:lint:   38:3  warning  Method 'initializeDefaultTemplates' has too many lines (316). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\quality-scoring\services\quality-scoring.service.spec.ts
+api:lint:    9:35  warning  Arrow function has too many lines (195). Maximum allowed is 50  max-lines-per-function
+api:lint:   97:37  warning  Arrow function has too many lines (70). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\quality-scoring\services\quality-scoring.service.ts
+api:lint:   167:21  error  'criterion.key || ''' will use Object's default stringification format ('[object Object]') when stringified          @typescript-eslint/no-base-to-string
+api:lint:   168:29  error  'criterion.description || ''' will use Object's default stringification format ('[object Object]') when stringified  @typescript-eslint/no-base-to-string
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\questionnaire\questionnaire.controller.spec.ts
+api:lint:   5:37  warning  Arrow function has too many lines (110). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\questionnaire\questionnaire.service.spec.ts
+api:lint:   7:34  warning  Arrow function has too many lines (470). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\scoring-engine\scoring-engine.controller.spec.ts
+api:lint:   5:37  warning  Arrow function has too many lines (184). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\scoring-engine\scoring-engine.service.spec.ts
+api:lint:     12:34  warning  Arrow function has too many lines (1494). Maximum allowed is 50  max-lines-per-function
+api:lint:    186:30  warning  Arrow function has too many lines (104). Maximum allowed is 50   max-lines-per-function
+api:lint:    330:32  warning  Arrow function has too many lines (75). Maximum allowed is 50    max-lines-per-function
+api:lint:    552:31  warning  Arrow function has too many lines (58). Maximum allowed is 50    max-lines-per-function
+api:lint:    820:41  warning  Arrow function has too many lines (94). Maximum allowed is 50    max-lines-per-function
+api:lint:    944:53  warning  Arrow function has too many lines (52). Maximum allowed is 50    max-lines-per-function
+api:lint:   1151:48  warning  Arrow function has too many lines (115). Maximum allowed is 50   max-lines-per-function
+api:lint:   1295:47  warning  Arrow function has too many lines (66). Maximum allowed is 50    max-lines-per-function
+api:lint:   1376:54  warning  Arrow function has too many lines (111). Maximum allowed is 50   max-lines-per-function
+api:lint:   1510:66  warning  Arrow function has too many lines (144). Maximum allowed is 50   max-lines-per-function
+api:lint:   1689:56  warning  Arrow function has too many lines (95). Maximum allowed is 50    max-lines-per-function
+api:lint:   1856:54  warning  Arrow function has too many lines (52). Maximum allowed is 50    max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\scoring-engine\scoring-engine.service.ts
+api:lint:   108:3  warning  Async method 'calculateScore' has too many lines (83). Maximum allowed is 50          max-lines-per-function
+api:lint:   229:3  warning  Async method 'getNextQuestions' has too many lines (91). Maximum allowed is 50        max-lines-per-function
+api:lint:   229:3  warning  Async method 'getNextQuestions' has a complexity of 17. Maximum allowed is 15         complexity
+api:lint:   402:3  warning  Method 'calculateDimensionResiduals' has too many lines (57). Maximum allowed is 50   max-lines-per-function
+api:lint:   643:3  warning  Async method 'getIndustryBenchmark' has too many lines (88). Maximum allowed is 50    max-lines-per-function
+api:lint:   822:3  warning  Async method 'getDimensionBenchmarks' has too many lines (61). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\session\controllers\conversation.controller.spec.ts
+api:lint:   5:36  warning  Arrow function has too many lines (124). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\session\services\conversation.service.spec.ts
+api:lint:    20:33  warning  Arrow function has too many lines (340). Maximum allowed is 50  max-lines-per-function
+api:lint:    64:35  warning  Arrow function has too many lines (83). Maximum allowed is 50   max-lines-per-function
+api:lint:   206:38  warning  Arrow function has too many lines (60). Maximum allowed is 50   max-lines-per-function
+api:lint:   375:40  warning  Arrow function has too many lines (53). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\session\session-expiration.service.spec.ts
+api:lint:    6:38  warning  Arrow function has too many lines (182). Maximum allowed is 50  max-lines-per-function
+api:lint:   66:39  warning  Arrow function has too many lines (133). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\session\session.controller.spec.ts
+api:lint:     6:31  warning  Arrow function has too many lines (251). Maximum allowed is 50  max-lines-per-function
+api:lint:   248:34  warning  Arrow function has too many lines (56). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\session\session.service.spec.ts
+api:lint:     11:28  warning  Arrow function has too many lines (3633). Maximum allowed is 50      max-lines-per-function
+api:lint:     73:14  warning  Async arrow function has too many lines (53). Maximum allowed is 50  max-lines-per-function
+api:lint:    298:30  warning  Arrow function has too many lines (70). Maximum allowed is 50        max-lines-per-function
+api:lint:    423:32  warning  Arrow function has too many lines (66). Maximum allowed is 50        max-lines-per-function
+api:lint:    573:31  warning  Arrow function has too many lines (277). Maximum allowed is 50       max-lines-per-function
+api:lint:    919:57  warning  Arrow function has too many lines (113). Maximum allowed is 50       max-lines-per-function
+api:lint:   1051:53  warning  Arrow function has too many lines (66). Maximum allowed is 50        max-lines-per-function
+api:lint:   1133:58  warning  Arrow function has too many lines (138). Maximum allowed is 50       max-lines-per-function
+api:lint:   1304:54  warning  Arrow function has too many lines (85). Maximum allowed is 50        max-lines-per-function
+api:lint:   1408:57  warning  Arrow function has too many lines (97). Maximum allowed is 50        max-lines-per-function
+api:lint:   1559:30  warning  Arrow function has too many lines (55). Maximum allowed is 50        max-lines-per-function
+api:lint:   1625:35  warning  Arrow function has too many lines (118). Maximum allowed is 50       max-lines-per-function
+api:lint:   1626:64  warning  Async arrow function has too many lines (59). Maximum allowed is 50  max-lines-per-function
+api:lint:   1760:35  warning  Arrow function has too many lines (105). Maximum allowed is 50       max-lines-per-function
+api:lint:   1880:29  warning  Arrow function has too many lines (93). Maximum allowed is 50        max-lines-per-function
+api:lint:   2045:28  warning  Arrow function has too many lines (120). Maximum allowed is 50       max-lines-per-function
+api:lint:   2185:58  warning  Arrow function has too many lines (104). Maximum allowed is 50       max-lines-per-function
+api:lint:   2321:53  warning  Arrow function has too many lines (64). Maximum allowed is 50        max-lines-per-function
+api:lint:   2473:55  warning  Arrow function has too many lines (57). Maximum allowed is 50        max-lines-per-function
+api:lint:   2596:60  warning  Arrow function has too many lines (86). Maximum allowed is 50        max-lines-per-function
+api:lint:   2698:73  warning  Arrow function has too many lines (228). Maximum allowed is 50       max-lines-per-function
+api:lint:   2987:63  warning  Arrow function has too many lines (67). Maximum allowed is 50        max-lines-per-function
+api:lint:   3073:68  warning  Arrow function has too many lines (116). Maximum allowed is 50       max-lines-per-function
+api:lint:   3207:64  warning  Arrow function has too many lines (221). Maximum allowed is 50       max-lines-per-function
+api:lint:   3478:55  warning  Arrow function has too many lines (56). Maximum allowed is 50        max-lines-per-function
+api:lint:   3543:67  warning  Arrow function has too many lines (149). Maximum allowed is 50       max-lines-per-function
+api:lint:   3718:59  warning  Arrow function has too many lines (146). Maximum allowed is 50       max-lines-per-function
+api:lint:   3885:42  warning  Arrow function has too many lines (62). Maximum allowed is 50        max-lines-per-function
+api:lint:   3953:52  warning  Arrow function has too many lines (125). Maximum allowed is 50       max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\session\session.service.ts
+api:lint:    345:3  warning  Async method 'getNextQuestion' has too many lines (58). Maximum allowed is 50      max-lines-per-function
+api:lint:    444:3  warning  Async method 'submitResponse' has too many lines (93). Maximum allowed is 50       max-lines-per-function
+api:lint:    656:3  warning  Async method 'continueSession' has too many lines (159). Maximum allowed is 50     max-lines-per-function
+api:lint:    656:3  warning  Async method 'continueSession' has a complexity of 30. Maximum allowed is 15       complexity
+api:lint:    965:3  warning  Method 'mapToSessionResponse' has a complexity of 20. Maximum allowed is 15        complexity
+api:lint:   1105:3  warning  Method 'validateResponse' has a complexity of 23. Maximum allowed is 15            complexity
+api:lint:   1319:3  warning  Async method 'getSessionAnalytics' has too many lines (87). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\standards\standards.controller.spec.ts
+api:lint:   5:33  warning  Arrow function has too many lines (91). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\standards\standards.service.spec.ts
+api:lint:     7:30  warning  Arrow function has too many lines (303). Maximum allowed is 50  max-lines-per-function
+api:lint:   211:40  warning  Arrow function has too many lines (52). Maximum allowed is 50   max-lines-per-function
+api:lint:   308:70  warning  Arrow function has too many lines (57). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\standards\standards.service.ts
+api:lint:   152:3  warning  Async method 'generateStandardsSection' has too many lines (53). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\users\users.controller.spec.ts
+api:lint:   6:29  warning  Arrow function has too many lines (119). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\src\modules\users\users.service.spec.ts
+api:lint:     8:26  warning  Arrow function has too many lines (261). Maximum allowed is 50  max-lines-per-function
+api:lint:    64:24  warning  Arrow function has too many lines (56). Maximum allowed is 50   max-lines-per-function
+api:lint:   129:22  warning  Arrow function has too many lines (58). Maximum allowed is 50   max-lines-per-function
+api:lint:   246:34  warning  Arrow function has too many lines (61). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\test\integration\admin-approval-workflow.flow.test.ts
+api:lint:    22:63  warning  Arrow function has too many lines (181). Maximum allowed is 50  max-lines-per-function
+api:lint:   101:48  warning  Arrow function has too many lines (85). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\test\integration\api-contracts.test.ts
+api:lint:   19:58  warning  Arrow function has too many lines (331). Maximum allowed is 50  max-lines-per-function
+api:lint:   78:51  warning  Arrow function has too many lines (63). Maximum allowed is 50   max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\test\integration\evidence-document-generator.flow.test.ts
+api:lint:    21:65  warning  Arrow function has too many lines (425). Maximum allowed is 50       max-lines-per-function
+api:lint:    36:13  warning  Async arrow function has too many lines (71). Maximum allowed is 50  max-lines-per-function
+api:lint:   133:49  warning  Arrow function has too many lines (214). Maximum allowed is 50       max-lines-per-function
+api:lint:   134:88  warning  Async arrow function has too many lines (86). Maximum allowed is 50  max-lines-per-function
+api:lint:   329:49  warning  Async arrow function has too many lines (57). Maximum allowed is 50  max-lines-per-function
+api:lint:   398:41  warning  Arrow function has too many lines (66). Maximum allowed is 50        max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\test\integration\questionnaire-scoring-session.flow.test.ts
+api:lint:    22:65  warning  Arrow function has too many lines (348). Maximum allowed is 50       max-lines-per-function
+api:lint:    97:43  warning  Arrow function has too many lines (129). Maximum allowed is 50       max-lines-per-function
+api:lint:    98:89  warning  Async arrow function has too many lines (98). Maximum allowed is 50  max-lines-per-function
+api:lint:   251:35  warning  Arrow function has too many lines (106). Maximum allowed is 50       max-lines-per-function
+api:lint:   252:54  warning  Async arrow function has too many lines (62). Maximum allowed is 50  max-lines-per-function
+api:lint: 
+api:lint: C:\Repos\Quiz-to-Build\apps\api\test\integration\transaction-concurrency.test.ts
+api:lint:    18:50  warning  Arrow function has too many lines (474). Maximum allowed is 50       max-lines-per-function
+api:lint:    29:13  warning  Async arrow function has too many lines (54). Maximum allowed is 50  max-lines-per-function
+api:lint:   107:35  warning  Arrow function has too many lines (104). Maximum allowed is 50       max-lines-per-function
+api:lint:   244:43  warning  Arrow function has too many lines (94). Maximum allowed is 50        max-lines-per-function
+api:lint: 
+api:lint: Ô£û 602 problems (23 errors, 579 warnings)
+api:lint: 
+api:lint: npm error Lifecycle script `lint` failed with error:
+api:lint: npm error code 1
+api:lint: npm error path C:\Repos\Quiz-to-Build\apps\api
+api:lint: npm error workspace api@1.0.0
+api:lint: npm error location C:\Repos\Quiz-to-Build\apps\api
+api:lint: npm error command failed
+api:lint: npm error command C:\WINDOWS\system32\cmd.exe /d /s /c eslint "{src,test}/**/*.ts" --fix
+node.exe : api:lint: ERROR: command 
+finished with error: command 
+(C:\Repos\Quiz-to-Build\apps\api) 
+C:\Program Files\nodejs\npm.cmd run 
+lint exited (1)
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" "C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpe 
+   cified: (api:lint: ERROR...lint   
+  exited (1):String) [], RemoteExc   
+ eption
+    + FullyQualifiedErrorId : Native 
+   CommandError
+ 
+api#lint: command 
+(C:\Repos\Quiz-to-Build\apps\api) 
+C:\Program Files\nodejs\npm.cmd run 
+lint exited (1)
+
+ Tasks:    5 successful, 6 total
+Cached:    0 cached, 6 total
+  Time:    4m6.036s 
+Failed:    api#lint
+
+ ERROR  run failed: command  exited 
+(1)

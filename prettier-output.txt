@@ -1,0 +1,213 @@
+﻿Checking formatting...
+node.exe : [[33mwarn[39m] 
+apps/web/src/api/admin.ts
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" "C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpe 
+   cified: ([[33mwarn[39m...rc/ap  
+  i/admin.ts:String) [], RemoteExc   
+ eption
+    + FullyQualifiedErrorId : Native 
+   CommandError
+ 
+[[33mwarn[39m] 
+apps/web/src/api/auth.test.ts
+[[33mwarn[39m] 
+apps/web/src/api/auth.ts
+[[33mwarn[39m] 
+apps/web/src/api/billing.test.ts
+[[33mwarn[39m] 
+apps/web/src/api/billing.ts
+[[33mwarn[39m] 
+apps/web/src/api/chat.ts
+[[33mwarn[39m] 
+apps/web/src/api/client.test.ts
+[[33mwarn[39m] 
+apps/web/src/api/client.ts
+[[33mwarn[39m] 
+apps/web/src/api/conversation.ts
+[[33mwarn[39m] 
+apps/web/src/api/documentCommerce.ts
+[[33mwarn[39m] 
+apps/web/src/api/documents.ts
+[[33mwarn[39m] 
+apps/web/src/api/facts.ts
+[[33mwarn[39m] 
+apps/web/src/api/mfa.ts
+[[33mwarn[39m] 
+apps/web/src/api/projects.ts
+[[33mwarn[39m] 
+apps/web/src/api/questionnaire.ts
+[[33mwarn[39m] apps/web/src/App.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/accessibility/Accessibility.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/admin/index.ts
+[[33mwarn[39m] apps/web/src/compone
+nts/admin/ReviewActions.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/analytics/CompletionRateChart.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/analytics/DropOffFunnelChart.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/analytics/RetentionChart.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/analytics/UserGrowthChart.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/auth/TOTPVerification.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/documents/DocumentVersionHistory.
+tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/documents/index.ts
+[[33mwarn[39m] apps/web/src/compone
+nts/documents/PDFViewer.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/ErrorBoundary.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/i18n/Internationalization.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/layout/AuthLayout.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/layout/MainLayout.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/layout/ProjectSidebar.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/personalization/AdaptiveNavigatio
+n.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/questionnaire/FileUploadInput.tes
+t.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/questionnaire/QuestionnaireNaviga
+tion.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/settings/index.ts
+[[33mwarn[39m] apps/web/src/compone
+nts/settings/ThemeToggle.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/tutorials/GuidedWalkthroughs.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/ui/Badge.test.tsx
+[[33mwarn[39m] 
+apps/web/src/components/ui/Badge.tsx
+[[33mwarn[39m] 
+apps/web/src/components/ui/Button.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/ui/Card.test.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/ui/EmptyState.tsx
+[[33mwarn[39m] 
+apps/web/src/components/ui/index.ts
+[[33mwarn[39m] apps/web/src/compone
+nts/ui/Skeleton.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/ui/Tooltip.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/ux/NavigationGuards.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/ux/NetworkStatus.tsx
+[[33mwarn[39m] apps/web/src/compone
+nts/verification/NielsenVerification.
+tsx
+[[33mwarn[39m] apps/web/src/hooks/u
+seDraftAutosave.test.ts
+[[33mwarn[39m] 
+apps/web/src/hooks/useTheme.test.ts
+[[33mwarn[39m] 
+apps/web/src/hooks/useTheme.ts
+[[33mwarn[39m] 
+apps/web/src/lib/logger.ts
+[[33mwarn[39m] apps/web/src/pages/a
+dmin/DocumentReviewPage.tsx
+[[33mwarn[39m] apps/web/src/pages/a
+dmin/ReviewQueuePage.tsx
+[[33mwarn[39m] apps/web/src/pages/a
+nalytics/AnalyticsDashboardPage.tsx
+[[33mwarn[39m] 
+apps/web/src/pages/auth/LoginPage.tsx
+[[33mwarn[39m] apps/web/src/pages/a
+uth/OAuthCallbackPage.tsx
+[[33mwarn[39m] apps/web/src/pages/a
+uth/RegisterPage.tsx
+[[33mwarn[39m] 
+apps/web/src/pages/chat/ChatPage.tsx
+[[33mwarn[39m] 
+apps/web/src/pages/chat/index.ts
+[[33mwarn[39m] apps/web/src/pages/d
+ashboard/DashboardPage.test.tsx
+[[33mwarn[39m] apps/web/src/pages/d
+ashboard/DashboardPage.tsx
+[[33mwarn[39m] apps/web/src/pages/d
+ecisions/DecisionsPage.tsx
+[[33mwarn[39m] apps/web/src/pages/d
+ocument-menu/DocumentMenuPage.tsx
+[[33mwarn[39m] apps/web/src/pages/d
+ocuments/DocumentPreviewPage.tsx
+[[33mwarn[39m] apps/web/src/pages/d
+ocuments/DocumentsPage.tsx
+[[33mwarn[39m] apps/web/src/pages/e
+vidence/EvidencePage.test.tsx
+[[33mwarn[39m] apps/web/src/pages/e
+vidence/EvidencePage.tsx
+[[33mwarn[39m] apps/web/src/pages/f
+act-review/FactReviewPage.tsx
+[[33mwarn[39m] apps/web/src/pages/h
+eatmap/HeatmapPage.test.tsx
+[[33mwarn[39m] apps/web/src/pages/h
+eatmap/HeatmapPage.tsx
+[[33mwarn[39m] apps/web/src/pages/i
+dea-capture/IdeaCapturePage.test.tsx
+[[33mwarn[39m] apps/web/src/pages/i
+dea-capture/IdeaCapturePage.tsx
+[[33mwarn[39m] apps/web/src/pages/l
+egal/PrivacyPage.test.tsx
+[[33mwarn[39m] apps/web/src/pages/l
+egal/TermsPage.test.tsx
+[[33mwarn[39m] apps/web/src/pages/p
+olicy-pack/PolicyPackPage.test.tsx
+[[33mwarn[39m] apps/web/src/pages/p
+olicy-pack/PolicyPackPage.tsx
+[[33mwarn[39m] apps/web/src/pages/q
+uestionnaire/QuestionnairePage.test.t
+sx
+[[33mwarn[39m] apps/web/src/pages/q
+uestionnaire/QuestionnairePage.tsx
+[[33mwarn[39m] apps/web/src/pages/s
+essions/SessionComparisonPage.tsx
+[[33mwarn[39m] apps/web/src/pages/s
+ettings/MFASetupPage.tsx
+[[33mwarn[39m] apps/web/src/pages/s
+ettings/ProfilePage.tsx
+[[33mwarn[39m] apps/web/src/pages/w
+orkspace/NewProjectFlow.tsx
+[[33mwarn[39m] apps/web/src/pages/w
+orkspace/WorkspacePage.tsx
+[[33mwarn[39m] 
+apps/web/src/stores/auth.test.ts
+[[33mwarn[39m] 
+apps/web/src/stores/decisions.test.ts
+[[33mwarn[39m] 
+apps/web/src/stores/decisions.ts
+[[33mwarn[39m] 
+apps/web/src/stores/evidence.test.ts
+[[33mwarn[39m] 
+apps/web/src/stores/evidence.ts
+[[33mwarn[39m] apps/web/src/stores/
+questionnaire.test.ts
+[[33mwarn[39m] 
+apps/web/src/stores/questionnaire.ts
+[[33mwarn[39m] apps/web/src/test/re
+sponsive/mobile-responsiveness.test.t
+sx
+[[33mwarn[39m] 
+apps/web/src/test/setup.ts
+[[33mwarn[39m] 
+apps/web/src/vite-env.d.ts
+[[33mwarn[39m] Code style issues 
+found in 95 files. Run Prettier with 
+--write to fix.
