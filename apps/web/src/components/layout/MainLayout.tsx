@@ -15,9 +15,11 @@ import {
   ChevronLeft,
   CreditCard,
   HelpCircle,
+  Settings,
 } from 'lucide-react';
 import { useState } from 'react';
 import { clsx } from 'clsx';
+import { ThemeToggle } from '../settings/ThemeToggle';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -271,6 +273,9 @@ export function MainLayout() {
 
           {/* User avatar in header (mobile/quick access) */}
           <div className="flex items-center gap-3">
+            {/* Theme toggle */}
+            <ThemeToggle compact />
+
             <div className="h-8 w-8 rounded-full bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center text-white text-xs font-semibold lg:hidden">
               {userInitials}
             </div>
