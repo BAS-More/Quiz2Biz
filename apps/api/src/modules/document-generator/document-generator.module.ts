@@ -14,6 +14,7 @@ import { QualityCalibratorService } from './services/quality-calibrator.service'
 import { MarkdownRendererService } from './services/markdown-renderer.service';
 import { ProjectDocumentGenerationService } from './services/project-document-generation.service';
 import { ProviderComparisonService } from './services/provider-comparison.service';
+import { PdfRendererService } from './services/pdf-renderer.service';
 
 @Module({
   imports: [PrismaModule, ConfigModule],
@@ -29,6 +30,7 @@ import { ProviderComparisonService } from './services/provider-comparison.servic
     MarkdownRendererService,
     ProjectDocumentGenerationService,
     ProviderComparisonService,
+    PdfRendererService,
   ],
   exports: [
     DocumentGeneratorService,
@@ -38,6 +40,7 @@ import { ProviderComparisonService } from './services/provider-comparison.servic
     MarkdownRendererService,
     ProjectDocumentGenerationService,
     ProviderComparisonService,
+    PdfRendererService,
   ],
 })
 export class DocumentGeneratorModule {}

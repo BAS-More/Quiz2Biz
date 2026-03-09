@@ -71,6 +71,9 @@ const ChatPage = lazy(() =>
 const DocumentMenuPage = lazy(() =>
   import('./pages/document-menu/DocumentMenuPage').then((m) => ({ default: m.DocumentMenuPage })),
 );
+const DocumentPreviewPage = lazy(() =>
+  import('./pages/documents/DocumentPreviewPage').then((m) => ({ default: m.DocumentPreviewPage })),
+);
 const FactReviewPage = lazy(() =>
   import('./pages/fact-review/FactReviewPage').then((m) => ({ default: m.FactReviewPage })),
 );
@@ -196,6 +199,7 @@ export default function App() {
                     </>
                   )}
                   <Route path="documents" element={<DocumentsPage />} />
+                  <Route path="documents/:documentId" element={<DocumentPreviewPage />} />
                   <Route path="project/:projectId/chat" element={<ChatPage />} />
                   <Route path="project/:projectId/documents" element={<DocumentMenuPage />} />
                   <Route path="project/:projectId/facts" element={<FactReviewPage />} />

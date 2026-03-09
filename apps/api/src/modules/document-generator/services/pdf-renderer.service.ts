@@ -1,0 +1,224 @@
+import { Injectable, Logger } from '@nestjs/common';
+import * as puppeteer from 'puppeteer';
+
+export interface PdfOptions {
+  title: string;
+  format?: 'A4' | 'Letter';
+  margin?: {
+    top?: string;
+    right?: string;
+    bottom?: string;
+    left?: string;
+  };
+  headerTemplate?: string;
+  footerTemplate?: string;
+  displayHeaderFooter?: boolean;
+}
+
+/**
+ * PDF Renderer Service
+ * Converts HTML/Markdown content to PDF using Puppeteer
+ */
+@Injectable()
+export class PdfRendererService {
+  private readonly logger = new Logger(PdfRendererService.name);
+
+  /**
+   * Convert Markdown to HTML string
+   */
+  private markdownToHtml(markdown: string, title: string): string {
+    // Simple markdown to HTML conversion
+    let html = markdown
+      // Headers
+      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+      .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+      // Bold
+      .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+      // Italic
+      .replace(/\*(.*?)\*/gim, '<em>$1</em>')
+      // Unordered lists
+      .replace(/^\s*[-*] (.*$)/gim, '<li>$1</li>')
+      // Ordered lists
+      .replace(/^\s*\d+\. (.*$)/gim, '<li>$1</li>')
+      // Links
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2">$1</a>')
+      // Line breaks
+      .replace(/\n\n/gim, '</p><p>')
+      // Wrap in paragraphs
+      .replace(/^(?!<h|<li|<ul|<ol|<p)(.*$)/gim, '<p>$1</p>');
+
+    // Wrap lists
+    html = html.replace(/(<li>.*<\/li>\s*)+/g, '<ul>$&</ul>');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>${title}</title>
+        <style>
+          body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+          }
+          h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 30px;
+          }
+          h2 {
+            color: #34495e;
+            margin-top: 25px;
+          }
+          h3 {
+            color: #7f8c8d;
+            margin-top: 20px;
+          }
+          p {
+            margin: 10px 0;
+            text-align: justify;
+          }
+          ul, ol {
+            margin: 10px 0;
+            padding-left: 30px;
+          }
+          li {
+            margin: 5px 0;
+          }
+          strong {
+            color: #2c3e50;
+          }
+          a {
+            color: #3498db;
+            text-decoration: none;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+          }
+          th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+          }
+          th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+          }
+          .page-break {
+            page-break-after: always;
+          }
+        </style>
+      </head>
+      <body>
+        ${html}
+      </body>
+      </html>
+    `;
+  }
+
+  /**
+   * Generate PDF from Markdown content
+   */
+  async generateFromMarkdown(
+    markdown: string,
+    options: PdfOptions,
+  ): Promise<Buffer> {
+    this.logger.log(`Generating PDF: ${options.title}`);
+
+    const html = this.markdownToHtml(markdown, options.title);
+    return this.generateFromHtml(html, options);
+  }
+
+  /**
+   * Generate PDF from HTML content
+   */
+  async generateFromHtml(
+    html: string,
+    options: PdfOptions,
+  ): Promise<Buffer> {
+    let browser: puppeteer.Browser | null = null;
+
+    try {
+      // Launch browser
+      browser = await puppeteer.launch({
+        headless: true,
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-accelerated-2d-canvas',
+          '--disable-gpu',
+        ],
+      });
+
+      const page = await browser.newPage();
+
+      // Set content
+      await page.setContent(html, {
+        waitUntil: 'networkidle0',
+      });
+
+      // Generate PDF
+      const pdfBuffer = await page.pdf({
+        format: options.format ?? 'A4',
+        margin: options.margin ?? {
+          top: '1in',
+          right: '1in',
+          bottom: '1in',
+          left: '1in',
+        },
+        printBackground: true,
+        displayHeaderFooter: options.displayHeaderFooter ?? true,
+        headerTemplate: options.headerTemplate ?? `
+          <div style="font-size: 9px; width: 100%; text-align: center; color: #999;">
+            ${options.title}
+          </div>
+        `,
+        footerTemplate: options.footerTemplate ?? `
+          <div style="font-size: 9px; width: 100%; text-align: center; color: #999;">
+            Page <span class="pageNumber"></span> of <span class="totalPages"></span>
+            | Generated by Quiz2Biz
+          </div>
+        `,
+      });
+
+      this.logger.log(`PDF generated successfully: ${pdfBuffer.length} bytes`);
+
+      return Buffer.from(pdfBuffer);
+    } catch (error) {
+      this.logger.error(`PDF generation failed: ${error}`);
+      throw error;
+    } finally {
+      if (browser) {
+        await browser.close();
+      }
+    }
+  }
+
+  /**
+   * Generate PDF from document sections
+   */
+  async generateFromSections(
+    sections: Array<{ title: string; content: string }>,
+    options: PdfOptions,
+  ): Promise<Buffer> {
+    // Build markdown from sections
+    let markdown = `# ${options.title}\n\n`;
+
+    for (const section of sections) {
+      markdown += `## ${section.title}\n\n`;
+      markdown += `${section.content}\n\n`;
+    }
+
+    return this.generateFromMarkdown(markdown, options);
+  }
+}
