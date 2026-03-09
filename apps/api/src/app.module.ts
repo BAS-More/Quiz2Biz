@@ -1,7 +1,9 @@
 import { Module, DynamicModule, Type } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { LoggerModule } from 'nestjs-pino';
+import { buildLoggerConfig } from './config/logger.config';
 import { CsrfGuard } from './common/guards/csrf.guard';
 import { PrismaModule } from '@libs/database';
 import { RedisModule } from '@libs/redis';
@@ -52,6 +54,12 @@ function getLegacyModules(): Array<Type | DynamicModule> {
       isGlobal: true,
       load: [configuration],
       envFilePath: ['.env', '.env.local'],
+    }),
+
+    // Structured logging (Pino)
+    LoggerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => buildLoggerConfig(config),
     }),
 
     // Rate limiting

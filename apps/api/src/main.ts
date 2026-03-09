@@ -11,6 +11,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { Logger as PinoLogger } from 'nestjs-pino';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { Request, Response, NextFunction } from 'express';
@@ -27,7 +28,11 @@ async function bootstrap(): Promise<void> {
   const logger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule, {
     rawBody: true, // Required for Stripe webhook signature verification
+    bufferLogs: true, // Buffer logs until Pino logger is ready
   });
+
+  // Use Pino as the NestJS logger (structured JSON in production)
+  app.useLogger(app.get(PinoLogger));
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT', 3000);

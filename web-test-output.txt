@@ -1,0 +1,744 @@
+﻿
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Repos/Quiz-to-Build/apps/web[39m
+
+node.exe : (node:95288) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" "C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpe 
+   cified: ((node:95288) Wa...ut a   
+  valid path:String) [], RemoteExc   
+ eption
+    + FullyQualifiedErrorId : Native 
+   CommandError
+ 
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:131796) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:99024) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:37380) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:85308) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:134536) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:14032) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+[90mstderr[2m | src/components/auth
+/OAuthButtons.test.tsx[2m > 
+[22m[2mOAuthButtons[2m > 
+[22m[2mtriggers Microsoft OAuth 
+flow on click
+[22m[39mNot implemented: Window's 
+open() method
+
+ [32mÔ£ô[39m src/components/auth/OAuthButtons.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 6470[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m OAuthButtons[2m > [22mrenders Google OAuth button [33m 2843[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m OAuthButtons[2m > [22mrenders Microsoft OAuth button [33m 821[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m OAuthButtons[2m > [22mtriggers Google OAuth flow on click [33m 764[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m OAuthButtons[2m > [22mtriggers Microsoft OAuth flow on click [33m 541[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m OAuthButtons[2m > [22mshows Google logo icon [33m 581[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m OAuthButtons[2m > [22mshows Microsoft logo icon [33m 436[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m OAuthButtons[2m > [22mbuttons are enabled by default [33m 475[2mms[22m[39m
+[90mstderr[2m | src/test/a11y/keybo
+ard-navigation.a11y.test.tsx[2m > 
+[22m[2mKeyboard Navigation 
+Accessibility[2m > [22m[2mAJAX 
+Update Focus Management[2m > 
+[22m[2mshould move focus to loaded 
+content after AJAX update
+[22m[39mAn update to 
+MockAjaxUpdate inside a test was not 
+wrapped in act(...).
+
+When testing, code that causes React 
+state updates should be wrapped into 
+act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the 
+behavior the user would see in the 
+browser. Learn more at https://react.
+dev/link/wrap-tests-with-act
+An update to MockAjaxUpdate inside a 
+test was not wrapped in act(...).
+
+When testing, code that causes React 
+state updates should be wrapped into 
+act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the 
+behavior the user would see in the 
+browser. Learn more at https://react.
+dev/link/wrap-tests-with-act
+
+ [32mÔ£ô[39m src/pages/legal/TermsPage.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 10763[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m TermsPage[2m > [22mPage Structure and Content[2m > [22mrenders terms of service page with correct structure [33m 509[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m TermsPage[2m > [22mPage Structure and Content[2m > [22mrenders all terms of service sections [33m 365[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m TermsPage[2m > [22mPage Structure and Content[2m > [22mrenders all list items correctly [33m 562[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m TermsPage[2m > [22mNavigation Links[2m > [22mrenders link to Privacy Policy within content [33m 3218[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m TermsPage[2m > [22mAccessibility Features[2m > [22mrenders semantic HTML structure [33m 1099[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m TermsPage[2m > [22mContent Formatting[2m > [22mrenders content with proper formatting [33m 2412[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m TermsPage[2m > [22mWCAG Compliance[2m > [22mmeets basic WCAG requirements [33m 1650[2mms[22m[39m
+ [32mÔ£ô[39m src/test/a11y/keyboard-navigation.a11y.test.tsx [2m([22m[2m28 tests[22m[2m)[22m[33m 10770[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Keyboard Navigation Accessibility[2m > [22mSkip Links[2m > [22mshould have a skip link as first focusable element [33m 1335[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Keyboard Navigation Accessibility[2m > [22mTab Order[2m > [22mshould follow logical tab order in forms [33m 2260[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Keyboard Navigation Accessibility[2m > [22mTab Order[2m > [22mshould support reverse tab order with Shift+Tab [33m 745[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Keyboard Navigation Accessibility[2m > [22mTab Order[2m > [22mshould have no accessibility violations in form tab order [33m 1180[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Keyboard Navigation Accessibility[2m > [22mNo Keyboard Traps[2m > [22mshould allow tabbing through and out of interactive regions [33m 560[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Keyboard Navigation Accessibility[2m > [22mNo Keyboard Traps[2m > [22mshould allow backward navigation through regions [33m 566[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Keyboard Navigation Accessibility[2m > [22mDropdown Keyboard Navigation[2m > [22mshould close dropdown with Escape key [33m 339[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Keyboard Navigation Accessibility[2m > [22mError Focus Management[2m > [22merror message should have role alert [33m 408[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Keyboard Navigation Accessibility[2m > [22mAJAX Update Focus Management[2m > [22mshould move focus to loaded content after AJAX update [33m 823[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Keyboard Navigation Accessibility[2m > [22mAJAX Update Focus Management[2m > [22mresult region should have accessible label [33m 951[2mms[22m[39m
+ [32mÔ£ô[39m src/components/layout/MainLayout.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 10075[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m MainLayout[2m > [22mrenders navigation menu [33m 4085[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m MainLayout[2m > [22mrenders logo link [33m 1626[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m MainLayout[2m > [22mdisplays sign out button [33m 599[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m MainLayout[2m > [22mtoggles sidebar on mobile menu button click [33m 629[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m MainLayout[2m > [22mnavigates to dashboard from logo [33m 826[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m MainLayout[2m > [22mrenders navigation links with correct hrefs [33m 925[2mms[22m[39m
+ [32mÔ£ô[39m src/test/a11y/screen-reader.a11y.test.tsx [2m([22m[2m43 tests[22m[2m)[22m[33m 12275[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Screen Reader Accessibility[2m > [22mLandmark Roles[2m > [22mshould have no accessibility violations [33m 2836[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Screen Reader Accessibility[2m > [22mLandmark Roles[2m > [22mshould have main landmark [33m 335[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Screen Reader Accessibility[2m > [22mLandmark Roles[2m > [22mshould have navigation landmark with label [33m 316[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Screen Reader Accessibility[2m > [22mLandmark Roles[2m > [22mshould have complementary landmark (aside) with label [33m 332[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Screen Reader Accessibility[2m > [22mForm Labels[2m > [22mshould have no accessibility violations [33m 2189[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Screen Reader Accessibility[2m > [22mImage Alt Text[2m > [22mshould have no accessibility violations [33m 341[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Screen Reader Accessibility[2m > [22mLive Regions[2m > [22mshould have no accessibility violations [33m 381[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Screen Reader Accessibility[2m > [22mLive Regions[2m > [22mstatus updates should be announced [33m 387[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Screen Reader Accessibility[2m > [22mExpanded/Collapsed States[2m > [22mshould have no accessibility violations [33m 489[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Screen Reader Accessibility[2m > [22mExpanded/Collapsed States[2m > [22maccordion aria-expanded should update on click [33m 609[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Screen Reader Accessibility[2m > [22mTables[2m > [22mshould have no accessibility violations [33m 596[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Screen Reader Accessibility[2m > [22mTables[2m > [22mrow headers should have scope row [33m 301[2mms[22m[39m
+ [32mÔ£ô[39m src/test/a11y/color-contrast-forms.a11y.test.tsx [2m([22m[2m43 tests[22m[2m)[22m[33m 14452[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Form Accessibility[2m > [22mForm Labels[2m > [22mshould have no accessibility violations [33m 5712[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Form Accessibility[2m > [22mForm Labels[2m > [22mall form inputs should have associated labels [33m 616[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Form Accessibility[2m > [22mError Messages[2m > [22mshould have no accessibility violations with errors [33m 3377[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Form Accessibility[2m > [22mInline Validation[2m > [22mshould update aria-invalid on blur [33m 581[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Form Accessibility[2m > [22mInline Validation[2m > [22mshould show error message on validation failure [33m 819[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Form Accessibility[2m > [22mInline Validation[2m > [22mshould show success message on valid input [33m 1001[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m Form Accessibility[2m > [22mDisabled Form Elements[2m > [22mshould have no accessibility violations [33m 505[2mms[22m[39m
+(node:121440) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+ [32mÔ£ô[39m src/pages/auth/RegisterPage.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 13127[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m RegisterPage[2m > [22mrenders registration form [33m 3372[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m RegisterPage[2m > [22mshows password requirements when typing password [33m 1549[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m RegisterPage[2m > [22mhas link to login page [33m 651[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m RegisterPage[2m > [22mrenders create account button [33m 1423[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m RegisterPage[2m > [22mshows OAuth buttons [33m 303[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m RegisterPage[2m > [22mvalidates password mismatch on form submission [33m 5705[2mms[22m[39m
+(node:213928) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:87688) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:168168) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:176900) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:85364) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:10840) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+ [32mÔ£ô[39m src/api/client.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 1032[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m API client[2m > [22mmodule exports[2m > [22mexports apiClient as named and default export [33m 951[2mms[22m[39m
+ [32mÔ£ô[39m src/test/a11y/ScoreDashboard.a11y.test.tsx [2m([22m[2m19 tests[22m[2m)[22m[33m 15922[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m ScoreDashboard Accessibility[2m > [22mWith score data[2m > [22mshould have no accessibility violations [33m 8165[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m ScoreDashboard Accessibility[2m > [22mWith score data[2m > [22mshould have proper heading structure [33m 851[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m ScoreDashboard Accessibility[2m > [22mWith score data[2m > [22mshould have accessible region landmarks [33m 668[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m ScoreDashboard Accessibility[2m > [22mWith score data[2m > [22mshould have accessible score gauge with description [33m 523[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m ScoreDashboard Accessibility[2m > [22mWith score data[2m > [22mshould use definition list for stats [33m 1309[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m ScoreDashboard Accessibility[2m > [22mWith score data[2m > [22mshould have accessible high risk areas section [33m 974[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m ScoreDashboard Accessibility[2m > [22mWith score data[2m > [22mshould have accessible top performers section [33m 553[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m ScoreDashboard Accessibility[2m > [22mEmpty state[2m > [22mshould have accessible calculate button when empty [33m 391[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m ScoreDashboard Accessibility[2m > [22mRefresh functionality[2m > [22mshould have accessible refresh button [33m 483[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m ScoreDashboard Accessibility[2m > [22mTrend indicator[2m > [22mshould announce trend status via aria-live [33m 303[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/legal/PrivacyPage.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 13092[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m PrivacyPage[2m > [22mPage Structure and Content[2m > [22mrenders privacy policy page with correct structure [33m 988[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m PrivacyPage[2m > [22mPage Structure and Content[2m > [22mrenders all privacy policy sections [33m 407[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m PrivacyPage[2m > [22mPage Structure and Content[2m > [22mrenders all list items correctly [33m 1079[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m PrivacyPage[2m > [22mContact Information[2m > [22mdisplays complete contact information [33m 591[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m PrivacyPage[2m > [22mNavigation Links[2m > [22mrenders navigation links in footer [33m 441[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m PrivacyPage[2m > [22mAccessibility Features[2m > [22mrenders semantic HTML structure [33m 4963[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m PrivacyPage[2m > [22mContent Formatting[2m > [22mrenders content with proper formatting [33m 1991[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m PrivacyPage[2m > [22mWCAG Compliance[2m > [22mmeets basic WCAG requirements [33m 2216[2mms[22m[39m
+[90mstderr[2m | src/pages/heatmap/H
+eatmapPage.test.tsx[2m > 
+[22m[2mHeatmapPage[2m > 
+[22m[2mCell Interaction[2m > 
+[22m[2mhandles drilldown API error 
+gracefully
+[22m[39mDrilldown failed: Error: 
+Drilldown failed
+    at [90mC:\Repos\Quiz-to-Build\ap
+ps\web\[39msrc\pages\heatmap\Heatmap
+Page.test.tsx:414:9
+    at file:///C:/Repos/Quiz-to-Build
+/node_modules/[4m@vitest/runner[24m
+/dist/chunk-hooks.js:155:11
+    at file:///C:/Repos/Quiz-to-Build
+/node_modules/[4m@vitest/runner[24m
+/dist/chunk-hooks.js:752:26
+    at file:///C:/Repos/Quiz-to-Build
+/node_modules/[4m@vitest/runner[24m
+/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///C:/Rep
+os/Quiz-to-Build/node_modules/[4m@vi
+test/runner[24m/dist/chunk-hooks.js:
+1863:10)
+    at runTest (file:///C:/Repos/Quiz
+-to-Build/node_modules/[4m@vitest/ru
+nner[24m/dist/chunk-hooks.js:1574:12
+)
+    at runSuite (file:///C:/Repos/Qui
+z-to-Build/node_modules/[4m@vitest/r
+unner[24m/dist/chunk-hooks.js:1729:8
+)
+    at runSuite (file:///C:/Repos/Qui
+z-to-Build/node_modules/[4m@vitest/r
+unner[24m/dist/chunk-hooks.js:1729:8
+)
+    at runSuite (file:///C:/Repos/Qui
+z-to-Build/node_modules/[4m@vitest/r
+unner[24m/dist/chunk-hooks.js:1729:8
+)
+
+ [32mÔ£ô[39m src/pages/heatmap/HeatmapPage.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 10318[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m HeatmapPage[2m > [22mLoading State[2m > [22mshows loading state initially [33m 465[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m HeatmapPage[2m > [22mLoading State[2m > [22mshows error state when API fails [33m 441[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m HeatmapPage[2m > [22mLoading State[2m > [22mshows error with specific message from API [33m 610[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m HeatmapPage[2m > [22mHeatmap Display[2m > [22mrenders heatmap with summary cards [33m 984[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m HeatmapPage[2m > [22mHeatmap Display[2m > [22mrenders heatmap grid with correct data [33m 720[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m HeatmapPage[2m > [22mHeatmap Display[2m > [22mrenders cells with correct colors and styling [33m 3589[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m HeatmapPage[2m > [22mHeatmap Display[2m > [22mshows overall risk score [33m 582[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m HeatmapPage[2m > [22mHeatmap Display[2m > [22mshows high risk score in red [33m 744[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m HeatmapPage[2m > [22mCell Interaction[2m > [22mcalls drilldown API when cell is clicked [33m 408[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m HeatmapPage[2m > [22mCell Interaction[2m > [22mshows drilldown panel with question details [33m 460[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m HeatmapPage[2m > [22mCell Interaction[2m > [22mallows closing drilldown panel [33m 481[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m HeatmapPage[2m > [22mNavigation[2m > [22mnavigates back to dashboard when back link is clicked [33m 373[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/decisions/DecisionsPage.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 10620[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m DecisionsPage[2m > [22mrenders decision log heading [33m 1676[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m DecisionsPage[2m > [22mloads decisions on mount [33m 312[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m DecisionsPage[2m > [22mtoggles new decision form on button click [33m 3617[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m DecisionsPage[2m > [22mcreates decision on form submit [33m 4509[2mms[22m[39m
+ [32mÔ£ô[39m src/test/a11y/BillingPage.a11y.test.tsx [2m([22m[2m24 tests[22m[2m)[22m[33m 17235[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m BillingPage Accessibility[2m > [22mFull page with data[2m > [22mshould have no accessibility violations [33m 8571[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m BillingPage Accessibility[2m > [22mFull page with data[2m > [22mshould have proper heading structure [33m 499[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m BillingPage Accessibility[2m > [22mFull page with data[2m > [22mshould have labeled articles for subscription and usage [33m 436[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m BillingPage Accessibility[2m > [22mSubscription card[2m > [22mshould have accessible subscription card [33m 663[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m BillingPage Accessibility[2m > [22mSubscription card[2m > [22mshould use definition list for subscription details [33m 1032[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m BillingPage Accessibility[2m > [22mSubscription card[2m > [22mshould have proper time element for renewal date [33m 419[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m BillingPage Accessibility[2m > [22mSubscription card[2m > [22mshould have accessible action buttons group [33m 529[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m BillingPage Accessibility[2m > [22mCancellation warning[2m > [22mshould have accessible resume subscription button [33m 479[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m BillingPage Accessibility[2m > [22mUsage card[2m > [22mshould have accessible usage card [33m 368[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m BillingPage Accessibility[2m > [22mUsage card[2m > [22mshould have accessible progress bars [33m 702[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m BillingPage Accessibility[2m > [22mUsage card[2m > [22mshould have usage list with accessible items [33m 547[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m BillingPage Accessibility[2m > [22mLoading state[2m > [22mshould have no accessibility violations when loading [33m 601[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m BillingPage Accessibility[2m > [22mError state[2m > [22mshould have no accessibility violations with error [33m 516[2mms[22m[39m
+ [32mÔ£ô[39m src/components/questionnaire/QuestionRenderer.extended.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 8277[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionRenderer - All Question Types[2m > [22mrenders TEXT input correctly [33m 1965[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionRenderer - All Question Types[2m > [22mrenders TEXTAREA correctly [33m 718[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionRenderer - All Question Types[2m > [22mrenders NUMBER input correctly [33m 827[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionRenderer - All Question Types[2m > [22mrenders SINGLE_CHOICE correctly [33m 854[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionRenderer - All Question Types[2m > [22mrenders MULTIPLE_CHOICE correctly [33m 693[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionRenderer - All Question Types[2m > [22mrenders SCALE correctly [33m 748[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionRenderer - All Question Types[2m > [22mrenders URL correctly [33m 1533[2mms[22m[39m
+(node:60468) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:200040) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:152536) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:89824) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:214692) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:71480) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+[90mstderr[2m | src/pages/documents
+/DocumentsPage.test.tsx[2m > 
+[22m[2mDocumentsPage[2m > 
+[22m[2mrenders documents page 
+heading
+[22m[39mAn update to DocumentsPage 
+inside a test was not wrapped in 
+act(...).
+
+When testing, code that causes React 
+state updates should be wrapped into 
+act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the 
+behavior the user would see in the 
+browser. Learn more at https://react.
+dev/link/wrap-tests-with-act
+An update to DocumentsPage inside a 
+test was not wrapped in act(...).
+
+When testing, code that causes React 
+state updates should be wrapped into 
+act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the 
+behavior the user would see in the 
+browser. Learn more at https://react.
+dev/link/wrap-tests-with-act
+An update to DocumentsPage inside a 
+test was not wrapped in act(...).
+
+When testing, code that causes React 
+state updates should be wrapped into 
+act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the 
+behavior the user would see in the 
+browser. Learn more at https://react.
+dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/documents
+/DocumentsPage.test.tsx[2m > 
+[22m[2mDocumentsPage[2m > 
+[22m[2mloads sessions on mount
+[22m[39mAn update to DocumentsPage 
+inside a test was not wrapped in 
+act(...).
+
+When testing, code that causes React 
+state updates should be wrapped into 
+act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the 
+behavior the user would see in the 
+browser. Learn more at https://react.
+dev/link/wrap-tests-with-act
+An update to DocumentsPage inside a 
+test was not wrapped in act(...).
+
+When testing, code that causes React 
+state updates should be wrapped into 
+act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the 
+behavior the user would see in the 
+browser. Learn more at https://react.
+dev/link/wrap-tests-with-act
+An update to DocumentsPage inside a 
+test was not wrapped in act(...).
+
+When testing, code that causes React 
+state updates should be wrapped into 
+act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the 
+behavior the user would see in the 
+browser. Learn more at https://react.
+dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/documents
+/DocumentsPage.test.tsx[2m > 
+[22m[2mDocumentsPage[2m > 
+[22m[2mrenders back to dashboard 
+button
+[22m[39mAn update to DocumentsPage 
+inside a test was not wrapped in 
+act(...).
+
+When testing, code that causes React 
+state updates should be wrapped into 
+act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the 
+behavior the user would see in the 
+browser. Learn more at https://react.
+dev/link/wrap-tests-with-act
+An update to DocumentsPage inside a 
+test was not wrapped in act(...).
+
+When testing, code that causes React 
+state updates should be wrapped into 
+act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the 
+behavior the user would see in the 
+browser. Learn more at https://react.
+dev/link/wrap-tests-with-act
+An update to DocumentsPage inside a 
+test was not wrapped in act(...).
+
+When testing, code that causes React 
+state updates should be wrapped into 
+act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the 
+behavior the user would see in the 
+browser. Learn more at https://react.
+dev/link/wrap-tests-with-act
+
+ [32mÔ£ô[39m src/test/a11y/FileUploadInput.a11y.test.tsx [2m([22m[2m21 tests[22m[2m)[22m[33m 7804[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m FileUploadInput Accessibility[2m > [22mEmpty state[2m > [22mshould have no accessibility violations [33m 3391[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m FileUploadInput Accessibility[2m > [22mWith files[2m > [22mshould have no accessibility violations with files [33m 1352[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m FileUploadInput Accessibility[2m > [22mWith files[2m > [22mshould have accessible file list [33m 420[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m FileUploadInput Accessibility[2m > [22mDisabled state[2m > [22mshould have no accessibility violations when disabled [33m 521[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m FileUploadInput Accessibility[2m > [22mError state[2m > [22mshould have no accessibility violations with error [33m 331[2mms[22m[39m
+(node:2912) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+ [32mÔ£ô[39m src/pages/documents/DocumentsPage.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 3635[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m DocumentsPage[2m > [22mrenders documents page heading [33m 418[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m DocumentsPage[2m > [22mnavigates to dashboard on back click [33m 1237[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m DocumentsPage[2m > [22mshows generate button for each document type [33m 1187[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/idea-capture/IdeaCapturePage.test.tsx [2m([22m[2m19 tests[22m[2m)[22m[33m 3503[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m IdeaCapturePage[2m > [22mInitial Input State[2m > [22mrenders initial input form [33m 481[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m IdeaCapturePage[2m > [22mSession Creation[2m > [22mcreates session with recommended project type [33m 347[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m IdeaCapturePage[2m > [22mSession Creation[2m > [22mconfirms project type when different from recommendation [33m 354[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/dashboard/DashboardPage.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 6790[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m DashboardPage[2m > [22mrenders dashboard with greeting [33m 857[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m DashboardPage[2m > [22mloads projects on mount [33m 867[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m DashboardPage[2m > [22mdisplays completed stat [33m 552[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m DashboardPage[2m > [22mdisplays best quality stat [33m 486[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m DashboardPage[2m > [22mnavigates to new chat on New Project click [33m 2754[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m DashboardPage[2m > [22mdisplays completed project cards [33m 368[2mms[22m[39m
+ [32mÔ£ô[39m src/test/a11y/QuestionRenderer.a11y.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 8270[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionRenderer Accessibility[2m > [22mText question type[2m > [22mshould have no accessibility violations [33m 4061[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionRenderer Accessibility[2m > [22mSingle choice question type[2m > [22mshould have no accessibility violations [33m 1404[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionRenderer Accessibility[2m > [22mSingle choice question type[2m > [22mshould have all options as radio buttons with labels [33m 349[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionRenderer Accessibility[2m > [22mMultiple choice question type[2m > [22mshould have no accessibility violations [33m 491[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionRenderer Accessibility[2m > [22mMultiple choice question type[2m > [22mshould have all options as checkboxes with labels [33m 307[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionRenderer Accessibility[2m > [22mScale question type[2m > [22mshould have no accessibility violations [33m 394[2mms[22m[39m
+ [32mÔ£ô[39m src/test/a11y/MainLayout.a11y.test.tsx [2m([22m[2m20 tests[22m[2m)[22m[33m 6557[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m MainLayout Accessibility[2m > [22mLandmarks and structure[2m > [22mshould have no accessibility violations [33m 3215[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m MainLayout Accessibility[2m > [22mLandmarks and structure[2m > [22mshould have proper landmark roles [33m 348[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m MainLayout Accessibility[2m > [22mNavigation[2m > [22mshould have accessible navigation links [33m 358[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m MainLayout Accessibility[2m > [22mMobile sidebar toggle[2m > [22mshould toggle aria-expanded when sidebar state changes [33m 365[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m MainLayout Accessibility[2m > [22mLogo and branding[2m > [22mshould have accessible logo link [33m 392[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/auth/LoginPage.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 3719[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m LoginPage[2m > [22mrenders login form [33m 2144[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m LoginPage[2m > [22mhas link to register page [33m 508[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m LoginPage[2m > [22mhas link to forgot password [33m 431[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m LoginPage[2m > [22mshows password visibility toggle [33m 461[2mms[22m[39m
+(node:15348) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+ [32mÔ£ô[39m src/hooks/useTheme.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 655[2mms[22m[39m
+(node:82176) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:179296) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:125020) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:34164) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:170388) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+[90mstderr[2m | src/pages/questionn
+aire/QuestionnairePage.test.tsx[2m 
+> [22m[2mQuestionnairePage[2m > 
+[22m[2mNew Session View[2m > 
+[22m[2mallows persona selection
+[22m[39mAn update to 
+QuestionnairePage inside a test was 
+not wrapped in act(...).
+
+When testing, code that causes React 
+state updates should be wrapped into 
+act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the 
+behavior the user would see in the 
+browser. Learn more at https://react.
+dev/link/wrap-tests-with-act
+
+ [32mÔ£ô[39m src/hooks/useDraftAutosave.test.ts [2m([22m[2m18 tests[22m[2m)[22m[33m 813[2mms[22m[39m
+[90mstderr[2m | src/pages/questionn
+aire/QuestionnairePage.test.tsx[2m 
+> [22m[2mQuestionnairePage[2m > 
+[22m[2mNew Session View[2m > 
+[22m[2mshows error message from 
+store
+[22m[39mAn update to 
+QuestionnairePage inside a test was 
+not wrapped in act(...).
+
+When testing, code that causes React 
+state updates should be wrapped into 
+act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the 
+behavior the user would see in the 
+browser. Learn more at https://react.
+dev/link/wrap-tests-with-act
+
+(node:90980) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+ [32mÔ£ô[39m src/pages/questionnaire/QuestionnairePage.test.tsx [2m([22m[2m21 tests[22m[2m)[22m[33m 3785[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionnairePage[2m > [22mNew Session View[2m > [22mrenders persona selection and questionnaire list [33m 610[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionnairePage[2m > [22mNew Session View[2m > [22mshows error state when questionnaire load fails [33m 539[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionnairePage[2m > [22mAI Follow-up Functionality[2m > [22mshows AI follow-up when triggered [33m 370[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionnairePage[2m > [22mAI Follow-up Functionality[2m > [22mhandles follow-up submission [33m 465[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionnairePage[2m > [22mAI Follow-up Functionality[2m > [22mallows skipping follow-up [33m 361[2mms[22m[39m
+ [32mÔ£ô[39m src/components/questionnaire/FileUploadInput.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 4511[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m FileUploadInput[2m > [22mrenders drag and drop zone [33m 444[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m FileUploadInput[2m > [22mhandles file removal [33m 2615[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m FileUploadInput[2m > [22mdisables upload when disabled prop is true [33m 380[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/policy-pack/PolicyPackPage.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 5714[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m PolicyPackPage[2m > [22mInitial State[2m > [22mrenders initial page with generate button [33m 644[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m PolicyPackPage[2m > [22mPolicy Generation[2m > [22mcalls API when generate button is clicked [33m 463[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m PolicyPackPage[2m > [22mPolicy Generation[2m > [22mdisplays error when generation fails [33m 571[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m PolicyPackPage[2m > [22mGenerated Policy Pack Display[2m > [22mdisplays summary cards after successful generation [33m 321[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m PolicyPackPage[2m > [22mGenerated Policy Pack Display[2m > [22mdisplays Terraform rules when available [33m 1595[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m PolicyPackPage[2m > [22mUI Behavior[2m > [22mshows proper cursor states [33m 1125[2mms[22m[39m
+ [32mÔ£ô[39m src/test/a11y/RegisterPage.a11y.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 6450[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m RegisterPage Accessibility[2m > [22mshould have no accessibility violations [33m 4125[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m RegisterPage Accessibility[2m > [22mshould have accessible form with proper ARIA attributes [33m 463[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m RegisterPage Accessibility[2m > [22mshould have accessible toggle password visibility button [33m 471[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m RegisterPage Accessibility[2m > [22mshould indicate required fields with aria-required [33m 329[2mms[22m[39m
+(node:69232) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+ [32mÔ£ô[39m src/test/a11y/LoginPage.a11y.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 5122[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m LoginPage Accessibility[2m > [22mshould have no accessibility violations [33m 3821[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m LoginPage Accessibility[2m > [22mshould have labeled form inputs [33m 309[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m LoginPage Accessibility[2m > [22mshould have accessible OAuth buttons [33m 488[2mms[22m[39m
+ [32mÔ£ô[39m src/components/questionnaire/ScoreDashboard.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 1229[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m ScoreDashboard[2m > [22mrenders readiness score heading [33m 317[2mms[22m[39m
+(node:215404) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:219220) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:198060) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:70120) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+ [32mÔ£ô[39m src/pages/help/HelpPage.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 1505[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m HelpPage[2m > [22mhas accessible navigation [33m 642[2mms[22m[39m
+ [32mÔ£ô[39m src/stores/questionnaire.test.ts [2m([22m[2m33 tests[22m[2m)[22m[32m 91[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/billing/BillingPage.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 833[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m BillingPage[2m > [22mrenders billing page with subscription info [33m 525[2mms[22m[39m
+(node:141324) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+ [32mÔ£ô[39m src/stores/evidence.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/evidence/EvidencePage.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 1826[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m EvidencePage[2m > [22mrenders evidence registry heading [33m 1133[2mms[22m[39m
+(node:204088) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+ [32mÔ£ô[39m src/api/billing.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+(node:15428) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+ [32mÔ£ô[39m src/stores/auth.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 79[2mms[22m[39m
+(node:16220) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+(node:82656) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+ [32mÔ£ô[39m src/components/ui/Badge.test.tsx [2m([22m[2m19 tests[22m[2m)[22m[33m 353[2mms[22m[39m
+(node:11684) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+ [32mÔ£ô[39m src/api/auth.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 109[2mms[22m[39m
+ [32mÔ£ô[39m src/components/ui/Card.test.tsx [2m([22m[2m19 tests[22m[2m)[22m[33m 734[2mms[22m[39m
+(node:122120) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+ [32mÔ£ô[39m src/stores/decisions.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 63[2mms[22m[39m
+(node:6612) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+ [32mÔ£ô[39m src/components/questionnaire/QuestionRenderer.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 775[2mms[22m[39m
+   [33m[2mÔ£ô[22m[39m QuestionRenderer[2m > [22mshould render question text [33m 381[2mms[22m[39m
+(node:180672) Warning: 
+`--localstorage-file` was provided 
+without a valid path
+(Use `node --trace-warnings ...` to 
+show where the warning was created)
+ [32mÔ£ô[39m src/test/responsive/mobile-responsiveness.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m42 passed[39m[22m[90m (42)[39m
+[2m      Tests [22m [1m[32m633 passed[39m[22m[90m (633)[39m
+[2m   Start at [22m 03:23:22
+[2m   Duration [22m 102.24s[2m (transform 29.28s, setup 75.07s, collect 44.97s, tests 229.52s, environment 217.82s, prepare 36.05s)[22m
+

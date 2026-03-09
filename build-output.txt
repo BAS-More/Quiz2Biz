@@ -1,0 +1,101 @@
+﻿ÔÇó Packages in scope: api, web
+ÔÇó Running build in 2 packages
+ÔÇó Remote caching disabled
+web:build: cache bypass, force executing 494a6d2e9cd1759d
+api:build: cache bypass, force executing c249f80c3a4a4a6e
+api:build: 
+api:build: > api@1.0.0 build
+api:build: > nest build && tsc-alias -p tsconfig.build.json
+api:build: 
+web:build: 
+web:build: > web@0.0.0 build
+web:build: > tsc -b && vite build
+web:build: 
+api:build: [36m> [39m[46m[1m SWC [22m[49m [36mRunning...[39m
+api:build: Successfully compiled: 399 files with swc (381.17ms)
+web:build: [36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+web:build: transforming...
+web:build: [32mÔ£ô[39m 3199 modules transformed.
+web:build: rendering chunks...
+web:build: computing gzip size...
+web:build: [2mdist/[22m[32mindex.html                                 [39m[1m[2m  0.95 kB[22m[1m[22m[2m Ôöé gzip:   0.50 kB[22m
+web:build: [2mdist/[22m[35massets/PDFViewer-CBXYWCWZ.css              [39m[1m[2m  9.14 kB[22m[1m[22m[2m Ôöé gzip:   1.98 kB[22m
+web:build: [2mdist/[22m[35massets/index-nmnhRSdw.css                  [39m[1m[2m 86.43 kB[22m[1m[22m[2m Ôöé gzip:  13.90 kB[22m
+web:build: [2mdist/[22m[36massets/minus-B0u5YFlt.js                   [39m[1m[2m  0.12 kB[22m[1m[22m[2m Ôöé gzip:   0.13 kB[22m
+web:build: [2mdist/[22m[36massets/check-C6j5BTA-.js                   [39m[1m[2m  0.12 kB[22m[1m[22m[2m Ôöé gzip:   0.14 kB[22m
+web:build: [2mdist/[22m[36massets/chevron-right-1Q8eYKpv.js           [39m[1m[2m  0.13 kB[22m[1m[22m[2m Ôöé gzip:   0.14 kB[22m
+web:build: [2mdist/[22m[36massets/loader-circle-BI0uMHGL.js           [39m[1m[2m  0.14 kB[22m[1m[22m[2m Ôöé gzip:   0.15 kB[22m
+web:build: [2mdist/[22m[36massets/plus-D2skATPA.js                    [39m[1m[2m  0.15 kB[22m[1m[22m[2m Ôöé gzip:   0.15 kB[22m
+web:build: [2mdist/[22m[36massets/clock-z_HXgElb.js                   [39m[1m[2m  0.17 kB[22m[1m[22m[2m Ôöé gzip:   0.17 kB[22m
+web:build: [2mdist/[22m[36massets/arrow-left-Cz3cypQ4.js              [39m[1m[2m  0.17 kB[22m[1m[22m[2m Ôöé gzip:   0.16 kB[22m
+web:build: [2mdist/[22m[36massets/arrow-right-C0eKUdmZ.js             [39m[1m[2m  0.17 kB[22m[1m[22m[2m Ôöé gzip:   0.16 kB[22m
+web:build: [2mdist/[22m[36massets/circle-check-Ces1_UD7.js            [39m[1m[2m  0.17 kB[22m[1m[22m[2m Ôöé gzip:   0.17 kB[22m
+web:build: [2mdist/[22m[36massets/trending-up-C4jdpE2F.js             [39m[1m[2m  0.18 kB[22m[1m[22m[2m Ôöé gzip:   0.17 kB[22m
+web:build: [2mdist/[22m[36massets/user-D1EdQ1sr.js                    [39m[1m[2m  0.19 kB[22m[1m[22m[2m Ôöé gzip:   0.18 kB[22m
+web:build: [2mdist/[22m[36massets/circle-x-D1Roga1v.js                [39m[1m[2m  0.20 kB[22m[1m[22m[2m Ôöé gzip:   0.18 kB[22m
+web:build: [2mdist/[22m[36massets/mail-CG5wlWIv.js                    [39m[1m[2m  0.21 kB[22m[1m[22m[2m Ôöé gzip:   0.20 kB[22m
+web:build: [2mdist/[22m[36massets/briefcase-JPeaygit.js               [39m[1m[2m  0.22 kB[22m[1m[22m[2m Ôöé gzip:   0.20 kB[22m
+web:build: [2mdist/[22m[36massets/target-D8E9O9bj.js                  [39m[1m[2m  0.22 kB[22m[1m[22m[2m Ôöé gzip:   0.16 kB[22m
+web:build: [2mdist/[22m[36massets/download-CEDv3ryD.js                [39m[1m[2m  0.23 kB[22m[1m[22m[2m Ôöé gzip:   0.19 kB[22m
+web:build: [2mdist/[22m[36massets/message-square-F7DP2JA3.js          [39m[1m[2m  0.23 kB[22m[1m[22m[2m Ôöé gzip:   0.20 kB[22m
+web:build: [2mdist/[22m[36massets/eye-yTnBzIKV.js                     [39m[1m[2m  0.25 kB[22m[1m[22m[2m Ôöé gzip:   0.20 kB[22m
+web:build: [2mdist/[22m[36massets/archive-CBJUKTvG.js                 [39m[1m[2m  0.25 kB[22m[1m[22m[2m Ôöé gzip:   0.21 kB[22m
+web:build: [2mdist/[22m[36massets/users-BhVRAtGw.js                   [39m[1m[2m  0.31 kB[22m[1m[22m[2m Ôöé gzip:   0.23 kB[22m
+web:build: [2mdist/[22m[36massets/refresh-cw-T4X-RAT4.js              [39m[1m[2m  0.32 kB[22m[1m[22m[2m Ôöé gzip:   0.23 kB[22m
+web:build: [2mdist/[22m[36massets/save-CTN4VT0A.js                    [39m[1m[2m  0.33 kB[22m[1m[22m[2m Ôöé gzip:   0.23 kB[22m
+web:build: [2mdist/[22m[36massets/bot-WXNyVE4t.js                     [39m[1m[2m  0.33 kB[22m[1m[22m[2m Ôöé gzip:   0.23 kB[22m
+web:build: [2mdist/[22m[36massets/square-BU1xgUT2.js                  [39m[1m[2m  0.33 kB[22m[1m[22m[2m Ôöé gzip:   0.26 kB[22m
+web:build: [2mdist/[22m[36massets/search-C2xwNRjw.js                  [39m[1m[2m  0.38 kB[22m[1m[22m[2m Ôöé gzip:   0.28 kB[22m
+web:build: [2mdist/[22m[36massets/loader-0K74jwwl.js                  [39m[1m[2m  0.41 kB[22m[1m[22m[2m Ôöé gzip:   0.24 kB[22m
+web:build: [2mdist/[22m[36massets/Card-D5YkF5K6.js                    [39m[1m[2m  0.42 kB[22m[1m[22m[2m Ôöé gzip:   0.31 kB[22m
+web:build: [2mdist/[22m[36massets/sparkles-BMTOFqIO.js                [39m[1m[2m  0.50 kB[22m[1m[22m[2m Ôöé gzip:   0.29 kB[22m
+web:build: [2mdist/[22m[36massets/projects-D-xvpyvC.js                [39m[1m[2m  0.54 kB[22m[1m[22m[2m Ôöé gzip:   0.28 kB[22m
+web:build: [2mdist/[22m[36massets/documents-DuPhtzHS.js               [39m[1m[2m  0.79 kB[22m[1m[22m[2m Ôöé gzip:   0.32 kB[22m
+web:build: [2mdist/[22m[36massets/Badge-0Q3SNHz8.js                   [39m[1m[2m  0.88 kB[22m[1m[22m[2m Ôöé gzip:   0.43 kB[22m
+web:build: [2mdist/[22m[36massets/billing-DpsgCrew.js                 [39m[1m[2m  1.86 kB[22m[1m[22m[2m Ôöé gzip:   0.73 kB[22m
+web:build: [2mdist/[22m[36massets/questionnaire-CRMbb532.js           [39m[1m[2m  2.31 kB[22m[1m[22m[2m Ôöé gzip:   0.70 kB[22m
+web:build: [2mdist/[22m[36massets/client-CxBR894i.js                  [39m[1m[2m  2.49 kB[22m[1m[22m[2m Ôöé gzip:   1.16 kB[22m
+web:build: [2mdist/[22m[36massets/ForgotPasswordPage-CEWPugVT.js      [39m[1m[2m  3.00 kB[22m[1m[22m[2m Ôöé gzip:   1.24 kB[22m
+web:build: [2mdist/[22m[36massets/PolicyPackPage-B8HZTntP.js          [39m[1m[2m  3.33 kB[22m[1m[22m[2m Ôöé gzip:   1.21 kB[22m
+web:build: [2mdist/[22m[36massets/questionnaire-DtBmjw9k.js           [39m[1m[2m  3.65 kB[22m[1m[22m[2m Ôöé gzip:   1.10 kB[22m
+web:build: [2mdist/[22m[36massets/EvidencePage-dSGQ8N-H.js            [39m[1m[2m  3.95 kB[22m[1m[22m[2m Ôöé gzip:   1.28 kB[22m
+web:build: [2mdist/[22m[36massets/OAuthCallbackPage-BbMjcbBM.js       [39m[1m[2m  3.99 kB[22m[1m[22m[2m Ôöé gzip:   1.45 kB[22m
+web:build: [2mdist/[22m[36massets/DecisionsPage-Cjy1EsAA.js           [39m[1m[2m  4.27 kB[22m[1m[22m[2m Ôöé gzip:   1.51 kB[22m
+web:build: [2mdist/[22m[36massets/InvoicesPage-DM1q5lvd.js            [39m[1m[2m  4.84 kB[22m[1m[22m[2m Ôöé gzip:   1.55 kB[22m
+web:build: [2mdist/[22m[36massets/OAuthButtons-BQy99irG.js            [39m[1m[2m  5.07 kB[22m[1m[22m[2m Ôöé gzip:   2.30 kB[22m
+web:build: [2mdist/[22m[36massets/HeatmapPage-MxUNXekh.js             [39m[1m[2m  5.11 kB[22m[1m[22m[2m Ôöé gzip:   1.88 kB[22m
+web:build: [2mdist/[22m[36massets/LoginPage-Bf-6afXG.js               [39m[1m[2m  5.13 kB[22m[1m[22m[2m Ôöé gzip:   1.85 kB[22m
+web:build: [2mdist/[22m[36massets/BillingPage-DlT6jP-D.js             [39m[1m[2m  5.65 kB[22m[1m[22m[2m Ôöé gzip:   1.83 kB[22m
+web:build: [2mdist/[22m[36massets/admin-CkRPCqG5.js                   [39m[1m[2m  5.70 kB[22m[1m[22m[2m Ôöé gzip:   1.71 kB[22m
+web:build: [2mdist/[22m[36massets/UpgradePage-C_W3Vpxi.js             [39m[1m[2m  5.86 kB[22m[1m[22m[2m Ôöé gzip:   2.32 kB[22m
+web:build: [2mdist/[22m[36massets/DocumentPreviewPage-BwKNAstf.js     [39m[1m[2m  7.31 kB[22m[1m[22m[2m Ôöé gzip:   2.30 kB[22m
+web:build: [2mdist/[22m[36massets/NewProjectFlow-9Gd5FG8t.js          [39m[1m[2m  7.94 kB[22m[1m[22m[2m Ôöé gzip:   2.76 kB[22m
+web:build: [2mdist/[22m[36massets/DocumentReviewPage-B94wqRUB.js      [39m[1m[2m  8.04 kB[22m[1m[22m[2m Ôöé gzip:   2.23 kB[22m
+web:build: [2mdist/[22m[36massets/WorkspacePage-BJYDvS1Y.js           [39m[1m[2m  8.89 kB[22m[1m[22m[2m Ôöé gzip:   2.75 kB[22m
+web:build: [2mdist/[22m[36massets/RegisterPage-BmhvZfl_.js            [39m[1m[2m  9.01 kB[22m[1m[22m[2m Ôöé gzip:   2.87 kB[22m
+web:build: [2mdist/[22m[36massets/DocumentsPage-aGNziBK_.js           [39m[1m[2m  9.02 kB[22m[1m[22m[2m Ôöé gzip:   3.16 kB[22m
+web:build: [2mdist/[22m[36massets/SessionComparisonPage-Bh_rBapp.js   [39m[1m[2m 10.04 kB[22m[1m[22m[2m Ôöé gzip:   3.18 kB[22m
+web:build: [2mdist/[22m[36massets/FactReviewPage-CrgIE9fd.js          [39m[1m[2m 10.12 kB[22m[1m[22m[2m Ôöé gzip:   3.01 kB[22m
+web:build: [2mdist/[22m[36massets/ChatPage-BGPuUdL7.js                [39m[1m[2m 10.41 kB[22m[1m[22m[2m Ôöé gzip:   3.61 kB[22m
+web:build: [2mdist/[22m[36massets/ProfilePage-DqbgIGc3.js             [39m[1m[2m 10.87 kB[22m[1m[22m[2m Ôöé gzip:   3.45 kB[22m
+web:build: [2mdist/[22m[36massets/ReviewQueuePage-Cvfqz2A4.js         [39m[1m[2m 11.11 kB[22m[1m[22m[2m Ôöé gzip:   3.55 kB[22m
+web:build: [2mdist/[22m[36massets/DocumentMenuPage-B6vmxmKX.js        [39m[1m[2m 11.13 kB[22m[1m[22m[2m Ôöé gzip:   3.37 kB[22m
+web:build: [2mdist/[22m[36massets/IdeaCapturePage-D6JwWP8g.js         [39m[1m[2m 11.85 kB[22m[1m[22m[2m Ôöé gzip:   3.60 kB[22m
+web:build: [2mdist/[22m[36massets/PrivacyPage-Bz070mZX.js             [39m[1m[2m 12.08 kB[22m[1m[22m[2m Ôöé gzip:   3.30 kB[22m
+web:build: [2mdist/[22m[36massets/MFASetupPage-BoA5TMKt.js            [39m[1m[2m 12.35 kB[22m[1m[22m[2m Ôöé gzip:   4.27 kB[22m
+web:build: [2mdist/[22m[36massets/TermsPage-BgTnBPPB.js               [39m[1m[2m 14.66 kB[22m[1m[22m[2m Ôöé gzip:   4.21 kB[22m
+web:build: [2mdist/[22m[36massets/DashboardPage-BZNfqT9u.js           [39m[1m[2m 15.27 kB[22m[1m[22m[2m Ôöé gzip:   4.01 kB[22m
+web:build: [2mdist/[22m[36massets/QuestionnairePage-frbA2j_j.js       [39m[1m[2m 17.35 kB[22m[1m[22m[2m Ôöé gzip:   5.02 kB[22m
+web:build: [2mdist/[22m[36massets/HelpPage-BDMlPxL1.js                [39m[1m[2m 20.53 kB[22m[1m[22m[2m Ôöé gzip:   7.43 kB[22m
+web:build: [2mdist/[22m[36massets/AnalyticsDashboardPage-BdjSIh9a.js  [39m[1m[2m 28.27 kB[22m[1m[22m[2m Ôöé gzip:   6.52 kB[22m
+web:build: [2mdist/[22m[36massets/vendor-query-zWUOCico.js            [39m[1m[2m 35.77 kB[22m[1m[22m[2m Ôöé gzip:  10.65 kB[22m
+web:build: [2mdist/[22m[36massets/vendor-react-BPaE5EMj.js            [39m[1m[2m 48.58 kB[22m[1m[22m[2m Ôöé gzip:  17.18 kB[22m
+web:build: [2mdist/[22m[36massets/auth-Cwc1eFKF.js                    [39m[1m[2m 82.57 kB[22m[1m[22m[2m Ôöé gzip:  22.49 kB[22m
+web:build: [2mdist/[22m[36massets/index-CMXIkLdG.js                   [39m[1m[2m274.49 kB[22m[1m[22m[2m Ôöé gzip:  89.76 kB[22m
+web:build: [2mdist/[22m[36massets/PDFViewer-B9b5E6P6.js               [39m[1m[2m429.55 kB[22m[1m[22m[2m Ôöé gzip: 127.27 kB[22m
+web:build: [32mÔ£ô built in 32.99s[39m
+
+ Tasks:    2 successful, 2 total
+Cached:    0 cached, 2 total
+  Time:    1m40.62s 
+

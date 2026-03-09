@@ -91,3 +91,36 @@ resource "azurerm_key_vault_secret" "jwt_refresh_secret" {
 
   depends_on = [azurerm_key_vault_access_policy.deployer]
 }
+
+# CSRF secret for double-submit cookie pattern
+resource "random_password" "csrf_secret" {
+  length  = 64
+  special = false
+}
+
+resource "azurerm_key_vault_secret" "csrf_secret" {
+  name         = "CSRF-SECRET"
+  value        = random_password.csrf_secret.result
+  key_vault_id = azurerm_key_vault.main.id
+
+  depends_on = [azurerm_key_vault_access_policy.deployer]
+}
+
+# Stripe webhook signing secret (provided via variable)
+resource "azurerm_key_vault_secret" "stripe_webhook_secret" {
+  count        = var.stripe_webhook_secret != "" ? 1 : 0
+  name         = "STRIPE-WEBHOOK-SECRET"
+  value        = var.stripe_webhook_secret
+  key_vault_id = azurerm_key_vault.main.id
+
+  depends_on = [azurerm_key_vault_access_policy.deployer]
+}
+
+# CORS allowed origin (provided via variable)
+resource "azurerm_key_vault_secret" "cors_origin" {
+  name         = "CORS-ORIGIN"
+  value        = var.cors_origin
+  key_vault_id = azurerm_key_vault.main.id
+
+  depends_on = [azurerm_key_vault_access_policy.deployer]
+}
