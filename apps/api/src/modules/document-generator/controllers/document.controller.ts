@@ -7,12 +7,16 @@ import {
   Query,
   UseGuards,
   ParseUUIDPipe,
+  Res,
+  StreamableFile,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery, ApiBody } from '@nestjs/swagger';
+import { Response } from 'express';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
 import { AuthenticatedUser } from '../../auth/auth.service';
 import { DocumentGeneratorService } from '../services/document-generator.service';
+import { BulkDownloadService } from '../services/bulk-download.service';
 import {
   RequestGenerationDto,
   DocumentResponseDto,
@@ -25,7 +29,10 @@ import {
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('JWT-auth')
 export class DocumentController {
-  constructor(private readonly documentGeneratorService: DocumentGeneratorService) {}
+  constructor(
+    private readonly documentGeneratorService: DocumentGeneratorService,
+    private readonly bulkDownloadService: BulkDownloadService,
+  ) {}
 
   @Post('generate')
   @ApiOperation({ summary: 'Request document generation for a session' })
@@ -123,6 +130,77 @@ export class DocumentController {
       url,
       expiresAt: new Date(Date.now() + expiresInMinutes * 60000),
     };
+  }
+
+  @Get('session/:sessionId/bulk-download')
+  @ApiOperation({ summary: 'Download all session documents as ZIP' })
+  @ApiResponse({ status: 200, description: 'ZIP file stream' })
+  @ApiResponse({ status: 400, description: 'No documents available' })
+  @ApiResponse({ status: 404, description: 'Session not found' })
+  async bulkDownloadSession(
+    @Param('sessionId', ParseUUIDPipe) sessionId: string,
+    @CurrentUser() user: AuthenticatedUser,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+    const result = await this.bulkDownloadService.createSessionDocumentsZip(
+      sessionId,
+      user.id,
+    );
+
+    res.set({
+      'Content-Type': 'application/zip',
+      'Content-Disposition': `attachment; filename="${result.filename}"`,
+      'X-Document-Count': result.totalDocuments.toString(),
+    });
+
+    return new StreamableFile(result.stream);
+  }
+
+  @Post('bulk-download')
+  @ApiOperation({ summary: 'Download selected documents as ZIP' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        documentIds: {
+          type: 'array',
+          items: { type: 'string', format: 'uuid' },
+        },
+      },
+      required: ['documentIds'],
+    },
+  })
+  @ApiResponse({ status: 200, description: 'ZIP file stream' })
+  @ApiResponse({ status: 400, description: 'No documents selected or max exceeded' })
+  async bulkDownloadSelected(
+    @Body() body: { documentIds: string[] },
+    @CurrentUser() user: AuthenticatedUser,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+    const result = await this.bulkDownloadService.createSelectedDocumentsZip(
+      body.documentIds,
+      user.id,
+    );
+
+    res.set({
+      'Content-Type': 'application/zip',
+      'Content-Disposition': `attachment; filename="${result.filename}"`,
+      'X-Document-Count': result.totalDocuments.toString(),
+    });
+
+    return new StreamableFile(result.stream);
+  }
+
+  @Get(':id/versions')
+  @ApiOperation({ summary: 'Get document version history' })
+  @ApiResponse({ status: 200, description: 'Document version history' })
+  @ApiResponse({ status: 404, description: 'Document not found' })
+  async getDocumentVersions(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<DocumentResponseDto[]> {
+    const versions = await this.documentGeneratorService.getDocumentVersionHistory(id, user.id);
+    return versions.map((doc) => this.mapToResponse(doc));
   }
 
   private mapToResponse(document: {

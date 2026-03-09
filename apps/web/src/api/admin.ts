@@ -143,3 +143,40 @@ export async function downloadDocumentForReview(documentId: string): Promise<Blo
   );
   return data;
 }
+
+// Batch Operations Types
+export interface BatchReviewResult {
+  message: string;
+  approved?: string[];
+  rejected?: string[];
+  failed: { id: string; error: string }[];
+  totalRequested: number;
+}
+
+/**
+ * Batch approve multiple documents
+ */
+export async function batchApproveDocuments(
+  documentIds: string[],
+  notes?: string
+): Promise<BatchReviewResult> {
+  const { data } = await apiClient.post(
+    `${API_PREFIX}/documents/batch-approve`,
+    { documentIds, notes }
+  );
+  return data;
+}
+
+/**
+ * Batch reject multiple documents
+ */
+export async function batchRejectDocuments(
+  documentIds: string[],
+  reason: string
+): Promise<BatchReviewResult> {
+  const { data } = await apiClient.post(
+    `${API_PREFIX}/documents/batch-reject`,
+    { documentIds, reason }
+  );
+  return data;
+}

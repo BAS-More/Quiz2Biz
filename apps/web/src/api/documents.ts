@@ -76,3 +76,51 @@ export async function downloadDocument(documentId: string): Promise<Blob> {
   });
   return data;
 }
+
+export async function bulkDownloadSession(sessionId: string): Promise<Blob> {
+  const { data } = await apiClient.get(`${API_PREFIX}/documents/session/${sessionId}/bulk-download`, {
+    responseType: 'blob',
+  });
+  return data;
+}
+
+export async function bulkDownloadSelected(documentIds: string[]): Promise<Blob> {
+  const { data } = await apiClient.post(
+    `${API_PREFIX}/documents/bulk-download`,
+    { documentIds },
+    { responseType: 'blob' },
+  );
+  return data;
+}
+
+export interface DocumentVersion {
+  id: string;
+  documentId: string;
+  version: number;
+  status: string;
+  format: string;
+  fileName?: string;
+  fileSize?: number;
+  generatedAt?: string;
+  createdAt: string;
+  downloadUrl?: string;
+  changeDescription?: string;
+  metadata?: {
+    generatedBy?: string;
+    aiModel?: string;
+    templateVersion?: string;
+  };
+}
+
+export async function getDocumentVersions(documentId: string): Promise<DocumentVersion[]> {
+  const { data } = await apiClient.get(`${API_PREFIX}/documents/${documentId}/versions`);
+  return data.data ?? data.items ?? data;
+}
+
+export async function downloadDocumentVersion(documentId: string, version: number): Promise<Blob> {
+  const { data } = await apiClient.get(
+    `${API_PREFIX}/documents/${documentId}/versions/${version}/download`,
+    { responseType: 'blob' },
+  );
+  return data;
+}

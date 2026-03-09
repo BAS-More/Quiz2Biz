@@ -305,6 +305,26 @@ export class DocumentGeneratorService {
   }
 
   /**
+   * Get document version history
+   * Returns all versions of documents of the same type for the same session
+   */
+  async getDocumentVersionHistory(documentId: string, userId: string): Promise<DocumentWithType[]> {
+    const document = await this.getDocument(documentId, userId);
+
+    // Get all documents of the same type for the same session (versions)
+    const versions = await this.prisma.document.findMany({
+      where: {
+        sessionId: document.sessionId,
+        documentTypeId: document.documentTypeId,
+      },
+      include: { documentType: true },
+      orderBy: { version: 'desc' },
+    });
+
+    return versions;
+  }
+
+  /**
    * Get download URL for a document
    */
   async getDownloadUrl(id: string, userId: string, expiresInMinutes: number = 60): Promise<string> {
@@ -449,6 +469,64 @@ export class DocumentGeneratorService {
         },
       },
     });
+  }
+
+  /**
+   * Batch approve multiple documents
+   */
+  async batchApproveDocuments(
+    documentIds: string[],
+    adminUserId: string,
+    notes?: string,
+  ): Promise<{ approved: string[]; failed: { id: string; error: string }[] }> {
+    const approved: string[] = [];
+    const failed: { id: string; error: string }[] = [];
+
+    for (const docId of documentIds) {
+      try {
+        await this.approveDocument(docId, adminUserId);
+        approved.push(docId);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        failed.push({ id: docId, error: message });
+        this.logger.warn(`Failed to batch approve document ${docId}: ${message}`);
+      }
+    }
+
+    this.logger.log(
+      `Batch approve: ${approved.length} approved, ${failed.length} failed out of ${documentIds.length}`,
+    );
+
+    return { approved, failed };
+  }
+
+  /**
+   * Batch reject multiple documents
+   */
+  async batchRejectDocuments(
+    documentIds: string[],
+    adminUserId: string,
+    reason: string,
+  ): Promise<{ rejected: string[]; failed: { id: string; error: string }[] }> {
+    const rejected: string[] = [];
+    const failed: { id: string; error: string }[] = [];
+
+    for (const docId of documentIds) {
+      try {
+        await this.rejectDocument(docId, adminUserId, reason);
+        rejected.push(docId);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        failed.push({ id: docId, error: message });
+        this.logger.warn(`Failed to batch reject document ${docId}: ${message}`);
+      }
+    }
+
+    this.logger.log(
+      `Batch reject: ${rejected.length} rejected, ${failed.length} failed out of ${documentIds.length}`,
+    );
+
+    return { rejected, failed };
   }
 
   /**

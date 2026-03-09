@@ -92,8 +92,14 @@ const DocumentReviewPage = lazy(() =>
 const MFASetupPage = lazy(() =>
   import('./pages/settings/MFASetupPage').then((m) => ({ default: m.MFASetupPage })),
 );
+const ProfilePage = lazy(() =>
+  import('./pages/settings/ProfilePage').then((m) => ({ default: m.ProfilePage })),
+);
 const AnalyticsDashboardPage = lazy(() =>
   import('./pages/analytics/AnalyticsDashboardPage').then((m) => ({ default: m.AnalyticsDashboardPage })),
+);
+const SessionComparisonPage = lazy(() =>
+  import('./pages/sessions/SessionComparisonPage').then((m) => ({ default: m.SessionComparisonPage })),
 );
 
 // Loading fallback for lazy-loaded routes
@@ -219,6 +225,8 @@ export default function App() {
                   <Route path="admin/review" element={<ReviewQueuePage />} />
                   <Route path="admin/review/:documentId" element={<DocumentReviewPage />} />
                   <Route path="settings/mfa" element={<MFASetupPage />} />
+                  <Route path="settings/profile" element={<ProfilePage />} />
+                  <Route path="sessions/compare" element={<SessionComparisonPage />} />
                   <Route path="analytics" element={<AnalyticsDashboardPage />} />
                   <Route path="billing" element={<BillingPage />} />
                   <Route path="billing/invoices" element={<InvoicesPage />} />

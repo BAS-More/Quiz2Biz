@@ -1,6 +1,6 @@
 /**
  * Admin Review Queue Page
- * Shows all documents pending review with filtering and sorting
+ * Shows all documents pending review with filtering, sorting, and batch operations
  */
 
 import { useState, useCallback } from 'react';
@@ -21,6 +21,9 @@ import {
   AlertCircle,
   Eye,
   Inbox,
+  CheckSquare,
+  Square,
+  Minus,
 } from 'lucide-react';
 import { Card, Button, Badge, Input } from '../../components/ui';
 import { ReviewActions } from '../../components/admin/ReviewActions';
@@ -28,6 +31,8 @@ import {
   getPendingReviewDocuments,
   approveDocument,
   rejectDocument,
+  batchApproveDocuments,
+  batchRejectDocuments,
   type PendingReviewDocument,
 } from '../../api/admin';
 import clsx from 'clsx';
@@ -54,6 +59,9 @@ export function ReviewQueuePage() {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [showBatchRejectModal, setShowBatchRejectModal] = useState(false);
+  const [batchRejectReason, setBatchRejectReason] = useState('');
   const perPage = 10;
 
   // Fetch pending review documents
@@ -87,6 +95,28 @@ export function ReviewQueuePage() {
     },
   });
 
+  // Batch approve mutation
+  const batchApproveMutation = useMutation({
+    mutationFn: ({ ids, notes }: { ids: string[]; notes?: string }) =>
+      batchApproveDocuments(ids, notes),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'pending-review'] });
+      setSelectedIds(new Set());
+    },
+  });
+
+  // Batch reject mutation
+  const batchRejectMutation = useMutation({
+    mutationFn: ({ ids, reason }: { ids: string[]; reason: string }) =>
+      batchRejectDocuments(ids, reason),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'pending-review'] });
+      setSelectedIds(new Set());
+      setShowBatchRejectModal(false);
+      setBatchRejectReason('');
+    },
+  });
+
   const handleApprove = useCallback(
     async (documentId: string, notes?: string) => {
       await approveMutation.mutateAsync({ id: documentId, notes });
@@ -107,6 +137,43 @@ export function ReviewQueuePage() {
     },
     [navigate]
   );
+
+  // Selection handlers
+  const handleSelectOne = useCallback((docId: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(docId)) {
+        next.delete(docId);
+      } else {
+        next.add(docId);
+      }
+      return next;
+    });
+  }, []);
+
+  const handleSelectAll = useCallback(() => {
+    if (!filteredDocuments) return;
+    const allIds = filteredDocuments.map((doc) => doc.id);
+    const allSelected = allIds.every((id) => selectedIds.has(id));
+    if (allSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(allIds));
+    }
+  }, [filteredDocuments, selectedIds]);
+
+  const handleBatchApprove = useCallback(async () => {
+    if (selectedIds.size === 0) return;
+    await batchApproveMutation.mutateAsync({ ids: Array.from(selectedIds) });
+  }, [selectedIds, batchApproveMutation]);
+
+  const handleBatchReject = useCallback(async () => {
+    if (selectedIds.size === 0 || !batchRejectReason.trim()) return;
+    await batchRejectMutation.mutateAsync({
+      ids: Array.from(selectedIds),
+      reason: batchRejectReason,
+    });
+  }, [selectedIds, batchRejectReason, batchRejectMutation]);
 
   // Filter documents by search and category
   const filteredDocuments = reviewQueue?.data?.filter((doc) => {
@@ -155,6 +222,18 @@ export function ReviewQueuePage() {
     new Set(reviewQueue?.data?.map((doc) => doc.documentType.category) || [])
   );
 
+  // Selection state helpers
+  const selectAllState =
+    filteredDocuments && filteredDocuments.length > 0
+      ? filteredDocuments.every((doc) => selectedIds.has(doc.id))
+        ? 'all'
+        : filteredDocuments.some((doc) => selectedIds.has(doc.id))
+          ? 'some'
+          : 'none'
+      : 'none';
+
+  const isBatchActionPending = batchApproveMutation.isPending || batchRejectMutation.isPending;
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -186,6 +265,22 @@ export function ReviewQueuePage() {
       {/* Filters */}
       <Card padding="sm">
         <div className="flex items-center gap-4">
+          {/* Select All Checkbox */}
+          <button
+            onClick={handleSelectAll}
+            className="p-2 hover:bg-surface-100 rounded-lg transition-colors"
+            disabled={!filteredDocuments || filteredDocuments.length === 0}
+            aria-label="Select all documents"
+          >
+            {selectAllState === 'all' ? (
+              <CheckSquare className="h-5 w-5 text-brand-600" />
+            ) : selectAllState === 'some' ? (
+              <Minus className="h-5 w-5 text-brand-400" />
+            ) : (
+              <Square className="h-5 w-5 text-surface-400" />
+            )}
+          </button>
+
           <div className="flex-1 relative">
             <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-surface-400" />
             <input
@@ -211,8 +306,90 @@ export function ReviewQueuePage() {
               ))}
             </select>
           </div>
+
+          {/* Batch Actions */}
+          {selectedIds.size > 0 && (
+            <div className="flex items-center gap-2 ml-4 pl-4 border-l border-surface-200">
+              <span className="text-sm text-surface-600">
+                {selectedIds.size} selected
+              </span>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleBatchApprove}
+                disabled={isBatchActionPending}
+              >
+                {batchApproveMutation.isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-1" />
+                ) : (
+                  <CheckCircle className="h-4 w-4 mr-1" />
+                )}
+                Approve All
+              </Button>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => setShowBatchRejectModal(true)}
+                disabled={isBatchActionPending}
+              >
+                <XCircle className="h-4 w-4 mr-1" />
+                Reject All
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedIds(new Set())}
+                disabled={isBatchActionPending}
+              >
+                Clear
+              </Button>
+            </div>
+          )}
         </div>
       </Card>
+
+      {/* Batch Reject Modal */}
+      {showBatchRejectModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <Card className="w-full max-w-md mx-4">
+            <h3 className="text-lg font-semibold text-surface-900 mb-4">
+              Reject {selectedIds.size} Document{selectedIds.size > 1 ? 's' : ''}
+            </h3>
+            <p className="text-sm text-surface-500 mb-4">
+              Please provide a reason for rejecting these documents. This will be sent to the document owners.
+            </p>
+            <textarea
+              value={batchRejectReason}
+              onChange={(e) => setBatchRejectReason(e.target.value)}
+              placeholder="Enter rejection reason..."
+              className="w-full px-3 py-2 border border-surface-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none"
+              rows={4}
+            />
+            <div className="flex items-center justify-end gap-2 mt-4">
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  setShowBatchRejectModal(false);
+                  setBatchRejectReason('');
+                }}
+                disabled={batchRejectMutation.isPending}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="danger"
+                onClick={handleBatchReject}
+                disabled={!batchRejectReason.trim() || batchRejectMutation.isPending}
+              >
+                {batchRejectMutation.isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-1" />
+                ) : null}
+                Reject {selectedIds.size} Document{selectedIds.size > 1 ? 's' : ''}
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
 
       {/* Loading State */}
       {isLoading && (
@@ -279,6 +456,19 @@ export function ReviewQueuePage() {
           {filteredDocuments.map((doc) => (
             <Card key={doc.id} padding="md" className="hover:shadow-md transition-shadow">
               <div className="flex items-start gap-4">
+                {/* Selection Checkbox */}
+                <button
+                  onClick={() => handleSelectOne(doc.id)}
+                  className="p-1 hover:bg-surface-100 rounded transition-colors mt-2"
+                  aria-label={`Select ${doc.fileName}`}
+                >
+                  {selectedIds.has(doc.id) ? (
+                    <CheckSquare className="h-5 w-5 text-brand-600" />
+                  ) : (
+                    <Square className="h-5 w-5 text-surface-400" />
+                  )}
+                </button>
+
                 {/* Document Icon */}
                 <div
                   className={clsx(

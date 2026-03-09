@@ -15,6 +15,7 @@ import { MarkdownRendererService } from './services/markdown-renderer.service';
 import { ProjectDocumentGenerationService } from './services/project-document-generation.service';
 import { ProviderComparisonService } from './services/provider-comparison.service';
 import { PdfRendererService } from './services/pdf-renderer.service';
+import { BulkDownloadService } from './services/bulk-download.service';
 
 @Module({
   imports: [PrismaModule, ConfigModule],
@@ -31,6 +32,7 @@ import { PdfRendererService } from './services/pdf-renderer.service';
     ProjectDocumentGenerationService,
     ProviderComparisonService,
     PdfRendererService,
+    BulkDownloadService,
   ],
   exports: [
     DocumentGeneratorService,
@@ -41,6 +43,7 @@ import { PdfRendererService } from './services/pdf-renderer.service';
     ProjectDocumentGenerationService,
     ProviderComparisonService,
     PdfRendererService,
+    BulkDownloadService,
   ],
 })
 export class DocumentGeneratorModule {}

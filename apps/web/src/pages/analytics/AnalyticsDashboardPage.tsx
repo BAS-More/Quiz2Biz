@@ -20,6 +20,8 @@ import {
 import { Card, Badge } from '../../components/ui';
 import { CompletionRateChart } from '../../components/analytics/CompletionRateChart';
 import { UserGrowthChart } from '../../components/analytics/UserGrowthChart';
+import { RetentionChart, generateMockRetentionData } from '../../components/analytics/RetentionChart';
+import { DropOffFunnelChart, generateMockDropOffData } from '../../components/analytics/DropOffFunnelChart';
 import clsx from 'clsx';
 import { apiClient } from '../../api/client';
 
@@ -36,6 +38,24 @@ interface AnalyticsMetrics {
   userGrowthData: Array<{ date: string; users: number; newUsers: number }>;
   completionData: Array<{ date: string; completed: number; abandoned: number }>;
   documentMetrics: Array<{ type: string; count: number; revenue: number }>;
+  retentionData: Array<{ cohort: string; size: number; retention: number[] }>;
+  userRegistrationTrends: {
+    dailyAverage: number;
+    weekOverWeekChange: number;
+    monthOverMonthChange: number;
+    totalThisMonth: number;
+  };
+  dropOffData: {
+    data: Array<{
+      questionId: string;
+      questionText: string;
+      sectionName: string;
+      totalReached: number;
+      abandoned: number;
+      dropOffRate: number;
+    }>;
+    totalSessionsStarted: number;
+  };
 }
 
 // Fetch analytics data
@@ -91,6 +111,14 @@ function generateMockData(): AnalyticsMetrics {
       { type: 'Marketing Plan', count: 645, revenue: 19350 },
       { type: 'SWOT Analysis', count: 610, revenue: 12200 },
     ],
+    retentionData: generateMockRetentionData(),
+    userRegistrationTrends: {
+      dailyAverage: Math.floor(Math.random() * 30) + 20,
+      weekOverWeekChange: Math.round((Math.random() * 30 - 10) * 10) / 10,
+      monthOverMonthChange: Math.round((Math.random() * 40 - 5) * 10) / 10,
+      totalThisMonth: Math.floor(Math.random() * 500) + 400,
+    },
+    dropOffData: generateMockDropOffData(),
   };
 }
 
@@ -370,6 +398,65 @@ export function AnalyticsDashboardPage() {
           <UserGrowthChart data={analytics.userGrowthData} />
         </Card>
       </div>
+
+      {/* User Registration Trends */}
+      <Card>
+        <h3 className="font-semibold text-surface-900 mb-4 flex items-center gap-2">
+          <TrendingUp className="h-4 w-4 text-success-600" />
+          User Registration Trends
+        </h3>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="p-4 bg-surface-50 rounded-lg">
+            <p className="text-sm text-surface-500">Daily Average</p>
+            <p className="text-xl font-bold text-surface-900">
+              {analytics.userRegistrationTrends.dailyAverage}
+            </p>
+            <p className="text-xs text-surface-400">new users/day</p>
+          </div>
+          <div className="p-4 bg-surface-50 rounded-lg">
+            <p className="text-sm text-surface-500">Week over Week</p>
+            <p className={clsx(
+              'text-xl font-bold',
+              analytics.userRegistrationTrends.weekOverWeekChange >= 0
+                ? 'text-success-600'
+                : 'text-danger-600'
+            )}>
+              {analytics.userRegistrationTrends.weekOverWeekChange >= 0 ? '+' : ''}
+              {analytics.userRegistrationTrends.weekOverWeekChange}%
+            </p>
+            <p className="text-xs text-surface-400">vs last week</p>
+          </div>
+          <div className="p-4 bg-surface-50 rounded-lg">
+            <p className="text-sm text-surface-500">Month over Month</p>
+            <p className={clsx(
+              'text-xl font-bold',
+              analytics.userRegistrationTrends.monthOverMonthChange >= 0
+                ? 'text-success-600'
+                : 'text-danger-600'
+            )}>
+              {analytics.userRegistrationTrends.monthOverMonthChange >= 0 ? '+' : ''}
+              {analytics.userRegistrationTrends.monthOverMonthChange}%
+            </p>
+            <p className="text-xs text-surface-400">vs last month</p>
+          </div>
+          <div className="p-4 bg-surface-50 rounded-lg">
+            <p className="text-sm text-surface-500">This Month</p>
+            <p className="text-xl font-bold text-surface-900">
+              {analytics.userRegistrationTrends.totalThisMonth}
+            </p>
+            <p className="text-xs text-surface-400">total registrations</p>
+          </div>
+        </div>
+      </Card>
+
+      {/* Retention Chart */}
+      <RetentionChart data={analytics.retentionData} />
+
+      {/* Drop-off Analysis */}
+      <DropOffFunnelChart
+        data={analytics.dropOffData.data}
+        totalSessionsStarted={analytics.dropOffData.totalSessionsStarted}
+      />
 
       {/* Document Metrics */}
       <DocumentMetricsTable data={analytics.documentMetrics} />
