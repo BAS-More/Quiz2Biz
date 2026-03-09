@@ -1,21 +1,25 @@
 /**
- * Quiz2Biz E2E Global Teardown
- * Runs once after all tests
+ * Global Teardown for Quiz2Biz E2E Tests
+ * Runs once after all tests to clean up
  */
 import { FullConfig } from '@playwright/test';
 
 async function globalTeardown(config: FullConfig) {
-  console.log('🧹 Starting E2E Global Teardown...');
+  console.log('🧹 E2E Global Teardown - Starting...');
 
-  // Clean up test data if needed
-  if (process.env.E2E_CLEANUP === 'true') {
-    console.log('🗑️ Cleaning up test data...');
-    // Cleanup logic would go here
+  const apiUrl = process.env.API_URL || 'http://localhost:3000';
+
+  try {
+    // Clean up test data
+    await fetch(`${apiUrl}/api/v1/test/cleanup`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    }).catch(() => null);
+  } catch {
+    // Cleanup endpoint might not exist
   }
 
-  // Generate summary report
-  console.log('📊 Test execution complete');
-  console.log('✅ E2E Global Teardown complete');
+  console.log('✅ E2E Global Teardown - Complete');
 }
 
 export default globalTeardown;

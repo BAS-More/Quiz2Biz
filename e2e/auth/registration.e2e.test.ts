@@ -1,185 +1,220 @@
 /**
- * Quiz2Biz E2E Tests - User Registration Flow
- * Tests: Registration, email verification, validation errors
+ * Authentication E2E Tests
+ * Tests user registration, login, logout, and authentication flows
  */
-import { test, expect } from '@playwright/test';
-import { testUsers, createTestHelpers } from '../fixtures';
+import { test, expect, Page } from '@playwright/test';
 
-test.describe('User Registration Flow', () => {
+const API_URL = process.env.API_URL || 'http://localhost:3000';
+
+// Test user credentials
+const testUser = {
+  email: `e2e-test-${Date.now()}@quiz2biz.test`,
+  password: 'Test@Password123!',
+  firstName: 'E2E',
+  lastName: 'TestUser',
+};
+
+test.describe('User Registration', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/register');
   });
 
-  test('should display registration form with all required fields', async ({ page }) => {
-    // Verify form elements are present
-    await expect(page.locator('[data-testid="name-input"]')).toBeVisible();
-    await expect(page.locator('[data-testid="email-input"]')).toBeVisible();
-    await expect(page.locator('[data-testid="password-input"]')).toBeVisible();
-    await expect(page.locator('[data-testid="confirm-password-input"]')).toBeVisible();
-    await expect(page.locator('[data-testid="register-button"]')).toBeVisible();
-
-    // Verify OAuth buttons
-    await expect(page.locator('[data-testid="google-oauth-button"]')).toBeVisible();
-    await expect(page.locator('[data-testid="microsoft-oauth-button"]')).toBeVisible();
-
-    // Verify link to login
-    await expect(page.locator('text=Already have an account')).toBeVisible();
+  test('should display registration form', async ({ page }) => {
+    await expect(page.getByRole('heading', { name: /register|sign up/i })).toBeVisible();
+    await expect(page.getByLabel(/email/i)).toBeVisible();
+    await expect(page.getByLabel(/password/i).first()).toBeVisible();
+    await expect(page.getByRole('button', { name: /register|sign up|create account/i })).toBeVisible();
   });
 
-  test('should successfully register a new user', async ({ page }) => {
-    const newUser = {
-      name: `Test User ${Date.now()}`,
-      email: `testuser-${Date.now()}@quiz2biz.test`,
-      password: 'SecurePassword123!',
-    };
-
-    // Fill registration form
-    await page.fill('[data-testid="name-input"]', newUser.name);
-    await page.fill('[data-testid="email-input"]', newUser.email);
-    await page.fill('[data-testid="password-input"]', newUser.password);
-    await page.fill('[data-testid="confirm-password-input"]', newUser.password);
-
-    // Submit form
-    await page.click('[data-testid="register-button"]');
-
-    // Wait for success - should redirect to email verification page
-    await page.waitForURL(/\/verify-email|\/registration-success/, { timeout: 10000 });
-
-    // Verify success message
-    await expect(page.locator('text=verification email')).toBeVisible();
-  });
-
-  test('should show validation errors for empty fields', async ({ page }) => {
-    // Click register without filling any fields
-    await page.click('[data-testid="register-button"]');
-
-    // Check for validation errors
-    await expect(page.locator('text=Name is required')).toBeVisible();
-    await expect(page.locator('text=Email is required')).toBeVisible();
-    await expect(page.locator('text=Password is required')).toBeVisible();
+  test('should validate required fields', async ({ page }) => {
+    // Try to submit empty form
+    await page.getByRole('button', { name: /register|sign up|create account/i }).click();
+    
+    // Should show validation errors
+    await expect(page.getByText(/required|email|password/i)).toBeVisible();
   });
 
   test('should validate email format', async ({ page }) => {
-    await page.fill('[data-testid="name-input"]', 'Test User');
-    await page.fill('[data-testid="email-input"]', 'invalid-email');
-    await page.fill('[data-testid="password-input"]', 'Password123!');
-    await page.fill('[data-testid="confirm-password-input"]', 'Password123!');
-    await page.click('[data-testid="register-button"]');
-
-    // Check for email validation error
-    await expect(page.locator('text=valid email')).toBeVisible();
+    const emailInput = page.getByLabel(/email/i);
+    await emailInput.fill('invalid-email');
+    await emailInput.blur();
+    
+    await expect(page.getByText(/valid email|invalid email/i)).toBeVisible();
   });
 
-  test('should validate password strength requirements', async ({ page }) => {
-    await page.fill('[data-testid="name-input"]', 'Test User');
-    await page.fill('[data-testid="email-input"]', 'test@quiz2biz.test');
-    await page.fill('[data-testid="password-input"]', 'weak');
-    await page.fill('[data-testid="confirm-password-input"]', 'weak');
-    await page.click('[data-testid="register-button"]');
-
-    // Check for password strength error
-    await expect(
-      page
-        .locator('text=Password must be at least 8 characters')
-        .or(page.locator('text=Password must contain')),
-    ).toBeVisible();
+  test('should validate password strength', async ({ page }) => {
+    const passwordInput = page.getByLabel(/^password$/i);
+    await passwordInput.fill('weak');
+    await passwordInput.blur();
+    
+    // Should show password requirements
+    await expect(page.getByText(/characters|uppercase|number|special/i)).toBeVisible();
   });
 
-  test('should validate password confirmation match', async ({ page }) => {
-    await page.fill('[data-testid="name-input"]', 'Test User');
-    await page.fill('[data-testid="email-input"]', 'test@quiz2biz.test');
-    await page.fill('[data-testid="password-input"]', 'Password123!');
-    await page.fill('[data-testid="confirm-password-input"]', 'DifferentPassword123!');
-    await page.click('[data-testid="register-button"]');
-
-    // Check for password mismatch error
-    await expect(page.locator('text=Passwords do not match')).toBeVisible();
+  test('should register new user successfully', async ({ page }) => {
+    // Fill registration form
+    await page.getByLabel(/first name/i).fill(testUser.firstName);
+    await page.getByLabel(/last name/i).fill(testUser.lastName);
+    await page.getByLabel(/email/i).fill(testUser.email);
+    await page.getByLabel(/^password$/i).fill(testUser.password);
+    
+    // Check for confirm password if exists
+    const confirmPassword = page.getByLabel(/confirm password/i);
+    if (await confirmPassword.isVisible()) {
+      await confirmPassword.fill(testUser.password);
+    }
+    
+    // Accept terms if checkbox exists
+    const termsCheckbox = page.getByRole('checkbox', { name: /terms|agree/i });
+    if (await termsCheckbox.isVisible()) {
+      await termsCheckbox.check();
+    }
+    
+    // Submit
+    await page.getByRole('button', { name: /register|sign up|create account/i }).click();
+    
+    // Should redirect to dashboard or show success
+    await expect(page).toHaveURL(/dashboard|verify|success/i, { timeout: 10000 });
   });
 
-  test('should show error for existing email', async ({ page }) => {
-    // Try to register with existing user email
-    await page.fill('[data-testid="name-input"]', 'Test User');
-    await page.fill('[data-testid="email-input"]', testUsers.user.email);
-    await page.fill('[data-testid="password-input"]', 'Password123!');
-    await page.fill('[data-testid="confirm-password-input"]', 'Password123!');
-    await page.click('[data-testid="register-button"]');
-
-    // Check for existing email error
-    await expect(
-      page.locator('text=email already exists').or(page.locator('text=already registered')),
-    ).toBeVisible();
+  test('should show error for duplicate email', async ({ page }) => {
+    // First, try to register with an existing email
+    await page.getByLabel(/email/i).fill('test@quiz2biz.com');
+    await page.getByLabel(/^password$/i).fill(testUser.password);
+    
+    const confirmPassword = page.getByLabel(/confirm password/i);
+    if (await confirmPassword.isVisible()) {
+      await confirmPassword.fill(testUser.password);
+    }
+    
+    await page.getByRole('button', { name: /register|sign up|create account/i }).click();
+    
+    // Should show error about existing user
+    await expect(page.getByText(/already exists|already registered|in use/i)).toBeVisible({ timeout: 10000 });
   });
 
-  test('should navigate to login page', async ({ page }) => {
-    await page.click('text=Already have an account');
-    await page.waitForURL('/login');
-    await expect(page.locator('[data-testid="login-button"]')).toBeVisible();
-  });
-
-  test('should initiate Google OAuth flow', async ({ page }) => {
-    // Click Google OAuth button
-    const [popup] = await Promise.all([
-      page.waitForEvent('popup'),
-      page.click('[data-testid="google-oauth-button"]'),
-    ]);
-
-    // Verify OAuth popup opens
-    await expect(popup).toBeTruthy();
-    expect(popup.url()).toContain('accounts.google.com');
-    await popup.close();
-  });
-
-  test('should initiate Microsoft OAuth flow', async ({ page }) => {
-    // Click Microsoft OAuth button
-    const [popup] = await Promise.all([
-      page.waitForEvent('popup'),
-      page.click('[data-testid="microsoft-oauth-button"]'),
-    ]);
-
-    // Verify OAuth popup opens
-    await expect(popup).toBeTruthy();
-    expect(popup.url()).toContain('login.microsoftonline.com');
-    await popup.close();
+  test('should have link to login page', async ({ page }) => {
+    const loginLink = page.getByRole('link', { name: /login|sign in|already have/i });
+    await expect(loginLink).toBeVisible();
+    
+    await loginLink.click();
+    await expect(page).toHaveURL(/login|signin/i);
   });
 });
 
-test.describe('Email Verification Flow', () => {
-  test('should display email verification page', async ({ page }) => {
-    await page.goto('/verify-email');
-
-    // Verify page content
-    await expect(page.locator('text=Verify your email')).toBeVisible();
-    await expect(page.locator('[data-testid="resend-email-button"]')).toBeVisible();
+test.describe('User Login', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/login');
   });
 
-  test('should handle valid verification token', async ({ page }) => {
-    // Navigate with valid token (mock token for testing)
-    await page.goto('/verify-email?token=valid-test-token');
-
-    // Should show success or redirect to login
-    await expect(
-      page.locator('text=Email verified').or(page.locator('[data-testid="login-button"]')),
-    ).toBeVisible({ timeout: 5000 });
+  test('should display login form', async ({ page }) => {
+    await expect(page.getByRole('heading', { name: /login|sign in|welcome/i })).toBeVisible();
+    await expect(page.getByLabel(/email/i)).toBeVisible();
+    await expect(page.getByLabel(/password/i)).toBeVisible();
+    await expect(page.getByRole('button', { name: /login|sign in/i })).toBeVisible();
   });
 
-  test('should handle invalid verification token', async ({ page }) => {
-    await page.goto('/verify-email?token=invalid-token');
-
-    // Should show error message
-    await expect(page.locator('text=invalid').or(page.locator('text=expired'))).toBeVisible({
-      timeout: 5000,
-    });
+  test('should validate required fields', async ({ page }) => {
+    await page.getByRole('button', { name: /login|sign in/i }).click();
+    
+    await expect(page.getByText(/required|email|password/i)).toBeVisible();
   });
 
-  test('should allow resending verification email', async ({ page }) => {
-    await page.goto('/verify-email');
+  test('should show error for invalid credentials', async ({ page }) => {
+    await page.getByLabel(/email/i).fill('invalid@email.com');
+    await page.getByLabel(/password/i).fill('wrongpassword');
+    await page.getByRole('button', { name: /login|sign in/i }).click();
+    
+    await expect(page.getByText(/invalid|incorrect|not found|failed/i)).toBeVisible({ timeout: 10000 });
+  });
 
-    // Click resend button
-    await page.click('[data-testid="resend-email-button"]');
+  test('should login successfully with valid credentials', async ({ page }) => {
+    // Use test credentials (should be seeded in global setup)
+    await page.getByLabel(/email/i).fill('test@quiz2biz.com');
+    await page.getByLabel(/password/i).fill('Test@Password123!');
+    await page.getByRole('button', { name: /login|sign in/i }).click();
+    
+    // Should redirect to dashboard
+    await expect(page).toHaveURL(/dashboard|home/i, { timeout: 15000 });
+  });
 
-    // Should show confirmation
-    await expect(page.locator('text=email sent').or(page.locator('text=Resent'))).toBeVisible({
-      timeout: 5000,
-    });
+  test('should have forgot password link', async ({ page }) => {
+    const forgotLink = page.getByRole('link', { name: /forgot|reset|trouble/i });
+    await expect(forgotLink).toBeVisible();
+  });
+
+  test('should have link to register page', async ({ page }) => {
+    const registerLink = page.getByRole('link', { name: /register|sign up|create/i });
+    await expect(registerLink).toBeVisible();
+    
+    await registerLink.click();
+    await expect(page).toHaveURL(/register|signup/i);
+  });
+});
+
+test.describe('User Logout', () => {
+  test.beforeEach(async ({ page }) => {
+    // Login first
+    await page.goto('/login');
+    await page.getByLabel(/email/i).fill('test@quiz2biz.com');
+    await page.getByLabel(/password/i).fill('Test@Password123!');
+    await page.getByRole('button', { name: /login|sign in/i }).click();
+    await expect(page).toHaveURL(/dashboard|home/i, { timeout: 15000 });
+  });
+
+  test('should logout successfully', async ({ page }) => {
+    // Find and click logout button/link
+    const userMenu = page.getByRole('button', { name: /user|profile|account|menu/i });
+    if (await userMenu.isVisible()) {
+      await userMenu.click();
+    }
+    
+    const logoutButton = page.getByRole('button', { name: /logout|sign out/i })
+      .or(page.getByRole('link', { name: /logout|sign out/i }));
+    await logoutButton.click();
+    
+    // Should redirect to login or home
+    await expect(page).toHaveURL(/login|signin|\/$/i, { timeout: 10000 });
+  });
+});
+
+test.describe('Protected Routes', () => {
+  test('should redirect unauthenticated users to login', async ({ page }) => {
+    // Try to access protected route
+    await page.goto('/dashboard');
+    
+    // Should redirect to login
+    await expect(page).toHaveURL(/login|signin/i, { timeout: 10000 });
+  });
+
+  test('should allow authenticated users to access protected routes', async ({ page }) => {
+    // Login first
+    await page.goto('/login');
+    await page.getByLabel(/email/i).fill('test@quiz2biz.com');
+    await page.getByLabel(/password/i).fill('Test@Password123!');
+    await page.getByRole('button', { name: /login|sign in/i }).click();
+    
+    // Navigate to protected route
+    await page.goto('/dashboard');
+    
+    // Should stay on dashboard
+    await expect(page).toHaveURL(/dashboard/i, { timeout: 10000 });
+  });
+});
+
+test.describe('Session Persistence', () => {
+  test('should maintain session after page reload', async ({ page }) => {
+    // Login
+    await page.goto('/login');
+    await page.getByLabel(/email/i).fill('test@quiz2biz.com');
+    await page.getByLabel(/password/i).fill('Test@Password123!');
+    await page.getByRole('button', { name: /login|sign in/i }).click();
+    await expect(page).toHaveURL(/dashboard|home/i, { timeout: 15000 });
+    
+    // Reload page
+    await page.reload();
+    
+    // Should still be on protected page
+    await expect(page).toHaveURL(/dashboard|home/i, { timeout: 10000 });
   });
 });

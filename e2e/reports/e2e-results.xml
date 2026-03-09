@@ -1,5 +1,5 @@
-<testsuites id="" name="" tests="820" failures="0" skipped="820" errors="0" time="0.2559989999999998">
-<testsuite name="admin\dashboard.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="chromium" tests="28" failures="0" skipped="28" time="0" errors="0">
+<testsuites id="" name="" tests="1040" failures="0" skipped="1040" errors="0" time="11.313047000000001">
+<testsuite name="admin\dashboard.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="chromium" tests="28" failures="0" skipped="28" time="0" errors="0">
 <testcase name="Admin Dashboard › Dashboard Overview › should display admin dashboard with statistics" classname="admin\dashboard.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -113,7 +113,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="auth\login.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="chromium" tests="24" failures="0" skipped="24" time="0" errors="0">
+<testsuite name="auth\login.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="chromium" tests="24" failures="0" skipped="24" time="0" errors="0">
 <testcase name="User Login Flow › should display login form with all required fields" classname="auth\login.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -211,65 +211,201 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="auth\registration.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="chromium" tests="14" failures="0" skipped="14" time="0" errors="0">
-<testcase name="User Registration Flow › should display registration form with all required fields" classname="auth\registration.e2e.test.ts" time="0">
+<testsuite name="auth\registration.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="chromium" tests="17" failures="0" skipped="17" time="0" errors="0">
+<testcase name="User Registration › should display registration form" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should successfully register a new user" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should validate required fields" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should show validation errors for empty fields" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should validate email format" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should validate email format" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should validate password strength" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should validate password strength requirements" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should register new user successfully" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should validate password confirmation match" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should show error for duplicate email" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should show error for existing email" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should have link to login page" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should navigate to login page" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should display login form" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should initiate Google OAuth flow" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should validate required fields" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should initiate Microsoft OAuth flow" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should show error for invalid credentials" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should display email verification page" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should login successfully with valid credentials" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should handle valid verification token" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should have forgot password link" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should handle invalid verification token" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should have link to register page" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should allow resending verification email" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Logout › should logout successfully" classname="auth\registration.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Protected Routes › should redirect unauthenticated users to login" classname="auth\registration.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Protected Routes › should allow authenticated users to access protected routes" classname="auth\registration.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Session Persistence › should maintain session after page reload" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="document-generation\generation.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="chromium" tests="27" failures="0" skipped="27" time="0" errors="0">
+<testsuite name="chat\chat-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="chromium" tests="17" failures="0" skipped="17" time="0" errors="0">
+<testcase name="Chat Interface › should display chat interface" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Interface › should show message input field" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Interface › should show send button" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Interface › should display initial AI greeting" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should send a message" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should receive AI response" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should send message with Enter key" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should disable input while AI is responding" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message History › should persist message history on reload" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message History › should show conversation thread" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message Limit › should display message limit indicator" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message Limit › should warn when approaching limit" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Fact Extraction Display › should display extracted facts panel" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Quality Score Updates › should show quality score indicator" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Error Handling › should handle empty message gracefully" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Error Handling › should show error state on network failure" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Streaming Response › should show typing/streaming indicator" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="document-generation\generation-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="chromium" tests="13" failures="0" skipped="13" time="0" errors="0">
+<testcase name="Document Generation Flow › Document Menu › should display available document types" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Menu › should show pricing for document types" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Menu › should show quality level options" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Menu › should indicate document availability based on facts" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Selection › should be able to select a document type" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Selection › should be able to select quality level" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Selection › should show price calculation based on quality" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Checkout Flow › should display checkout button" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Checkout Flow › should navigate to payment page on checkout" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Generated Documents › should display list of purchased documents" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Generated Documents › should have download button for generated documents" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Preview › should display document preview" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Formats › should offer multiple download formats (PDF, DOCX)" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="document-generation\generation.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="chromium" tests="27" failures="0" skipped="27" time="0" errors="0">
 <testcase name="Document Generation Flow › Technology Roadmap Generation › should display document generation page" classname="document-generation\generation.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -379,7 +515,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="payment\payment.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="chromium" tests="29" failures="0" skipped="29" time="0" errors="0">
+<testsuite name="payment\payment.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="chromium" tests="29" failures="0" skipped="29" time="0" errors="0">
 <testcase name="Payment Flow › Billing Page › should display current subscription status" classname="payment\payment.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -497,7 +633,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="questionnaire\adaptive.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="chromium" tests="16" failures="0" skipped="16" time="0" errors="0">
+<testsuite name="questionnaire\adaptive.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="chromium" tests="16" failures="0" skipped="16" time="0" errors="0">
 <testcase name="Adaptive Logic Flow › should show conditional question when trigger condition is met" classname="questionnaire\adaptive.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -563,7 +699,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="questionnaire\complete-flow.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="chromium" tests="26" failures="0" skipped="26" time="0" errors="0">
+<testsuite name="questionnaire\complete-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="chromium" tests="26" failures="0" skipped="26" time="0" errors="0">
 <testcase name="Complete Questionnaire Flow › should display questionnaire list" classname="questionnaire\complete-flow.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -669,7 +805,53 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="admin\dashboard.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="firefox" tests="28" failures="0" skipped="28" time="0" errors="0">
+<testsuite name="questionnaire\session-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="chromium" tests="11" failures="0" skipped="11" time="0" errors="0">
+<testcase name="Questionnaire Session Flow › Starting a New Session › should display project types to choose from" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Starting a New Session › should create new project and start questionnaire" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Answering Questions › should display first question" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Answering Questions › should accept text input answer" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Answering Questions › should display progress indicator" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Session Management › should save progress automatically" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Session Management › should display existing projects in dashboard" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Session Management › should be able to resume an existing project" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Message Limit Handling › should display message count or limit indicator" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Quality Score › should display quality score for project" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Navigation Controls › should be able to navigate back to dashboard" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="admin\dashboard.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="firefox" tests="28" failures="0" skipped="28" time="0" errors="0">
 <testcase name="Admin Dashboard › Dashboard Overview › should display admin dashboard with statistics" classname="admin\dashboard.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -783,7 +965,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="auth\login.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="firefox" tests="24" failures="0" skipped="24" time="0" errors="0">
+<testsuite name="auth\login.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="firefox" tests="24" failures="0" skipped="24" time="0" errors="0">
 <testcase name="User Login Flow › should display login form with all required fields" classname="auth\login.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -881,65 +1063,201 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="auth\registration.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="firefox" tests="14" failures="0" skipped="14" time="0" errors="0">
-<testcase name="User Registration Flow › should display registration form with all required fields" classname="auth\registration.e2e.test.ts" time="0">
+<testsuite name="auth\registration.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="firefox" tests="17" failures="0" skipped="17" time="0" errors="0">
+<testcase name="User Registration › should display registration form" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should successfully register a new user" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should validate required fields" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should show validation errors for empty fields" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should validate email format" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should validate email format" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should validate password strength" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should validate password strength requirements" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should register new user successfully" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should validate password confirmation match" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should show error for duplicate email" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should show error for existing email" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should have link to login page" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should navigate to login page" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should display login form" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should initiate Google OAuth flow" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should validate required fields" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should initiate Microsoft OAuth flow" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should show error for invalid credentials" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should display email verification page" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should login successfully with valid credentials" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should handle valid verification token" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should have forgot password link" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should handle invalid verification token" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should have link to register page" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should allow resending verification email" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Logout › should logout successfully" classname="auth\registration.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Protected Routes › should redirect unauthenticated users to login" classname="auth\registration.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Protected Routes › should allow authenticated users to access protected routes" classname="auth\registration.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Session Persistence › should maintain session after page reload" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="document-generation\generation.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="firefox" tests="27" failures="0" skipped="27" time="0" errors="0">
+<testsuite name="chat\chat-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="firefox" tests="17" failures="0" skipped="17" time="0" errors="0">
+<testcase name="Chat Interface › should display chat interface" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Interface › should show message input field" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Interface › should show send button" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Interface › should display initial AI greeting" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should send a message" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should receive AI response" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should send message with Enter key" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should disable input while AI is responding" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message History › should persist message history on reload" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message History › should show conversation thread" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message Limit › should display message limit indicator" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message Limit › should warn when approaching limit" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Fact Extraction Display › should display extracted facts panel" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Quality Score Updates › should show quality score indicator" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Error Handling › should handle empty message gracefully" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Error Handling › should show error state on network failure" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Streaming Response › should show typing/streaming indicator" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="document-generation\generation-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="firefox" tests="13" failures="0" skipped="13" time="0" errors="0">
+<testcase name="Document Generation Flow › Document Menu › should display available document types" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Menu › should show pricing for document types" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Menu › should show quality level options" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Menu › should indicate document availability based on facts" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Selection › should be able to select a document type" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Selection › should be able to select quality level" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Selection › should show price calculation based on quality" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Checkout Flow › should display checkout button" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Checkout Flow › should navigate to payment page on checkout" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Generated Documents › should display list of purchased documents" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Generated Documents › should have download button for generated documents" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Preview › should display document preview" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Formats › should offer multiple download formats (PDF, DOCX)" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="document-generation\generation.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="firefox" tests="27" failures="0" skipped="27" time="0" errors="0">
 <testcase name="Document Generation Flow › Technology Roadmap Generation › should display document generation page" classname="document-generation\generation.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -1049,7 +1367,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="payment\payment.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="firefox" tests="29" failures="0" skipped="29" time="0" errors="0">
+<testsuite name="payment\payment.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="firefox" tests="29" failures="0" skipped="29" time="0" errors="0">
 <testcase name="Payment Flow › Billing Page › should display current subscription status" classname="payment\payment.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -1167,7 +1485,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="questionnaire\adaptive.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="firefox" tests="16" failures="0" skipped="16" time="0" errors="0">
+<testsuite name="questionnaire\adaptive.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="firefox" tests="16" failures="0" skipped="16" time="0" errors="0">
 <testcase name="Adaptive Logic Flow › should show conditional question when trigger condition is met" classname="questionnaire\adaptive.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -1233,7 +1551,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="questionnaire\complete-flow.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="firefox" tests="26" failures="0" skipped="26" time="0" errors="0">
+<testsuite name="questionnaire\complete-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="firefox" tests="26" failures="0" skipped="26" time="0" errors="0">
 <testcase name="Complete Questionnaire Flow › should display questionnaire list" classname="questionnaire\complete-flow.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -1339,7 +1657,53 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="admin\dashboard.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="webkit" tests="28" failures="0" skipped="28" time="0" errors="0">
+<testsuite name="questionnaire\session-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="firefox" tests="11" failures="0" skipped="11" time="0" errors="0">
+<testcase name="Questionnaire Session Flow › Starting a New Session › should display project types to choose from" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Starting a New Session › should create new project and start questionnaire" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Answering Questions › should display first question" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Answering Questions › should accept text input answer" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Answering Questions › should display progress indicator" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Session Management › should save progress automatically" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Session Management › should display existing projects in dashboard" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Session Management › should be able to resume an existing project" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Message Limit Handling › should display message count or limit indicator" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Quality Score › should display quality score for project" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Navigation Controls › should be able to navigate back to dashboard" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="admin\dashboard.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="webkit" tests="28" failures="0" skipped="28" time="0" errors="0">
 <testcase name="Admin Dashboard › Dashboard Overview › should display admin dashboard with statistics" classname="admin\dashboard.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -1453,7 +1817,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="auth\login.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="webkit" tests="24" failures="0" skipped="24" time="0" errors="0">
+<testsuite name="auth\login.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="webkit" tests="24" failures="0" skipped="24" time="0" errors="0">
 <testcase name="User Login Flow › should display login form with all required fields" classname="auth\login.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -1551,65 +1915,201 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="auth\registration.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="webkit" tests="14" failures="0" skipped="14" time="0" errors="0">
-<testcase name="User Registration Flow › should display registration form with all required fields" classname="auth\registration.e2e.test.ts" time="0">
+<testsuite name="auth\registration.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="webkit" tests="17" failures="0" skipped="17" time="0" errors="0">
+<testcase name="User Registration › should display registration form" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should successfully register a new user" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should validate required fields" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should show validation errors for empty fields" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should validate email format" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should validate email format" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should validate password strength" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should validate password strength requirements" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should register new user successfully" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should validate password confirmation match" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should show error for duplicate email" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should show error for existing email" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should have link to login page" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should navigate to login page" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should display login form" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should initiate Google OAuth flow" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should validate required fields" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should initiate Microsoft OAuth flow" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should show error for invalid credentials" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should display email verification page" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should login successfully with valid credentials" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should handle valid verification token" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should have forgot password link" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should handle invalid verification token" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should have link to register page" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should allow resending verification email" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Logout › should logout successfully" classname="auth\registration.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Protected Routes › should redirect unauthenticated users to login" classname="auth\registration.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Protected Routes › should allow authenticated users to access protected routes" classname="auth\registration.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Session Persistence › should maintain session after page reload" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="document-generation\generation.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="webkit" tests="27" failures="0" skipped="27" time="0" errors="0">
+<testsuite name="chat\chat-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="webkit" tests="17" failures="0" skipped="17" time="0" errors="0">
+<testcase name="Chat Interface › should display chat interface" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Interface › should show message input field" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Interface › should show send button" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Interface › should display initial AI greeting" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should send a message" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should receive AI response" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should send message with Enter key" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should disable input while AI is responding" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message History › should persist message history on reload" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message History › should show conversation thread" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message Limit › should display message limit indicator" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message Limit › should warn when approaching limit" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Fact Extraction Display › should display extracted facts panel" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Quality Score Updates › should show quality score indicator" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Error Handling › should handle empty message gracefully" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Error Handling › should show error state on network failure" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Streaming Response › should show typing/streaming indicator" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="document-generation\generation-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="webkit" tests="13" failures="0" skipped="13" time="0" errors="0">
+<testcase name="Document Generation Flow › Document Menu › should display available document types" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Menu › should show pricing for document types" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Menu › should show quality level options" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Menu › should indicate document availability based on facts" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Selection › should be able to select a document type" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Selection › should be able to select quality level" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Selection › should show price calculation based on quality" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Checkout Flow › should display checkout button" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Checkout Flow › should navigate to payment page on checkout" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Generated Documents › should display list of purchased documents" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Generated Documents › should have download button for generated documents" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Preview › should display document preview" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Formats › should offer multiple download formats (PDF, DOCX)" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="document-generation\generation.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="webkit" tests="27" failures="0" skipped="27" time="0" errors="0">
 <testcase name="Document Generation Flow › Technology Roadmap Generation › should display document generation page" classname="document-generation\generation.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -1719,7 +2219,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="payment\payment.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="webkit" tests="29" failures="0" skipped="29" time="0" errors="0">
+<testsuite name="payment\payment.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="webkit" tests="29" failures="0" skipped="29" time="0" errors="0">
 <testcase name="Payment Flow › Billing Page › should display current subscription status" classname="payment\payment.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -1837,7 +2337,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="questionnaire\adaptive.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="webkit" tests="16" failures="0" skipped="16" time="0" errors="0">
+<testsuite name="questionnaire\adaptive.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="webkit" tests="16" failures="0" skipped="16" time="0" errors="0">
 <testcase name="Adaptive Logic Flow › should show conditional question when trigger condition is met" classname="questionnaire\adaptive.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -1903,7 +2403,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="questionnaire\complete-flow.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="webkit" tests="26" failures="0" skipped="26" time="0" errors="0">
+<testsuite name="questionnaire\complete-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="webkit" tests="26" failures="0" skipped="26" time="0" errors="0">
 <testcase name="Complete Questionnaire Flow › should display questionnaire list" classname="questionnaire\complete-flow.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -2009,7 +2509,53 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="admin\dashboard.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="Mobile Chrome" tests="28" failures="0" skipped="28" time="0" errors="0">
+<testsuite name="questionnaire\session-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="webkit" tests="11" failures="0" skipped="11" time="0" errors="0">
+<testcase name="Questionnaire Session Flow › Starting a New Session › should display project types to choose from" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Starting a New Session › should create new project and start questionnaire" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Answering Questions › should display first question" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Answering Questions › should accept text input answer" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Answering Questions › should display progress indicator" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Session Management › should save progress automatically" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Session Management › should display existing projects in dashboard" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Session Management › should be able to resume an existing project" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Message Limit Handling › should display message count or limit indicator" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Quality Score › should display quality score for project" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Navigation Controls › should be able to navigate back to dashboard" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="admin\dashboard.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Chrome" tests="28" failures="0" skipped="28" time="0" errors="0">
 <testcase name="Admin Dashboard › Dashboard Overview › should display admin dashboard with statistics" classname="admin\dashboard.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -2123,7 +2669,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="auth\login.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="Mobile Chrome" tests="24" failures="0" skipped="24" time="0" errors="0">
+<testsuite name="auth\login.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Chrome" tests="24" failures="0" skipped="24" time="0" errors="0">
 <testcase name="User Login Flow › should display login form with all required fields" classname="auth\login.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -2221,65 +2767,201 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="auth\registration.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="Mobile Chrome" tests="14" failures="0" skipped="14" time="0" errors="0">
-<testcase name="User Registration Flow › should display registration form with all required fields" classname="auth\registration.e2e.test.ts" time="0">
+<testsuite name="auth\registration.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Chrome" tests="17" failures="0" skipped="17" time="0" errors="0">
+<testcase name="User Registration › should display registration form" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should successfully register a new user" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should validate required fields" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should show validation errors for empty fields" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should validate email format" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should validate email format" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should validate password strength" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should validate password strength requirements" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should register new user successfully" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should validate password confirmation match" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should show error for duplicate email" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should show error for existing email" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should have link to login page" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should navigate to login page" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should display login form" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should initiate Google OAuth flow" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should validate required fields" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should initiate Microsoft OAuth flow" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should show error for invalid credentials" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should display email verification page" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should login successfully with valid credentials" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should handle valid verification token" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should have forgot password link" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should handle invalid verification token" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should have link to register page" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should allow resending verification email" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Logout › should logout successfully" classname="auth\registration.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Protected Routes › should redirect unauthenticated users to login" classname="auth\registration.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Protected Routes › should allow authenticated users to access protected routes" classname="auth\registration.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Session Persistence › should maintain session after page reload" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="document-generation\generation.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="Mobile Chrome" tests="27" failures="0" skipped="27" time="0" errors="0">
+<testsuite name="chat\chat-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Chrome" tests="17" failures="0" skipped="17" time="0" errors="0">
+<testcase name="Chat Interface › should display chat interface" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Interface › should show message input field" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Interface › should show send button" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Interface › should display initial AI greeting" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should send a message" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should receive AI response" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should send message with Enter key" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should disable input while AI is responding" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message History › should persist message history on reload" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message History › should show conversation thread" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message Limit › should display message limit indicator" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message Limit › should warn when approaching limit" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Fact Extraction Display › should display extracted facts panel" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Quality Score Updates › should show quality score indicator" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Error Handling › should handle empty message gracefully" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Error Handling › should show error state on network failure" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Streaming Response › should show typing/streaming indicator" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="document-generation\generation-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Chrome" tests="13" failures="0" skipped="13" time="0" errors="0">
+<testcase name="Document Generation Flow › Document Menu › should display available document types" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Menu › should show pricing for document types" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Menu › should show quality level options" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Menu › should indicate document availability based on facts" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Selection › should be able to select a document type" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Selection › should be able to select quality level" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Selection › should show price calculation based on quality" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Checkout Flow › should display checkout button" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Checkout Flow › should navigate to payment page on checkout" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Generated Documents › should display list of purchased documents" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Generated Documents › should have download button for generated documents" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Preview › should display document preview" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Formats › should offer multiple download formats (PDF, DOCX)" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="document-generation\generation.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Chrome" tests="27" failures="0" skipped="27" time="0" errors="0">
 <testcase name="Document Generation Flow › Technology Roadmap Generation › should display document generation page" classname="document-generation\generation.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -2389,7 +3071,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="payment\payment.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="Mobile Chrome" tests="29" failures="0" skipped="29" time="0" errors="0">
+<testsuite name="payment\payment.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Chrome" tests="29" failures="0" skipped="29" time="0" errors="0">
 <testcase name="Payment Flow › Billing Page › should display current subscription status" classname="payment\payment.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -2507,7 +3189,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="questionnaire\adaptive.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="Mobile Chrome" tests="16" failures="0" skipped="16" time="0" errors="0">
+<testsuite name="questionnaire\adaptive.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Chrome" tests="16" failures="0" skipped="16" time="0" errors="0">
 <testcase name="Adaptive Logic Flow › should show conditional question when trigger condition is met" classname="questionnaire\adaptive.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -2573,7 +3255,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="questionnaire\complete-flow.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="Mobile Chrome" tests="26" failures="0" skipped="26" time="0" errors="0">
+<testsuite name="questionnaire\complete-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Chrome" tests="26" failures="0" skipped="26" time="0" errors="0">
 <testcase name="Complete Questionnaire Flow › should display questionnaire list" classname="questionnaire\complete-flow.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -2679,7 +3361,53 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="admin\dashboard.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="Mobile Safari" tests="28" failures="0" skipped="28" time="0" errors="0">
+<testsuite name="questionnaire\session-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Chrome" tests="11" failures="0" skipped="11" time="0" errors="0">
+<testcase name="Questionnaire Session Flow › Starting a New Session › should display project types to choose from" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Starting a New Session › should create new project and start questionnaire" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Answering Questions › should display first question" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Answering Questions › should accept text input answer" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Answering Questions › should display progress indicator" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Session Management › should save progress automatically" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Session Management › should display existing projects in dashboard" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Session Management › should be able to resume an existing project" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Message Limit Handling › should display message count or limit indicator" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Quality Score › should display quality score for project" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Navigation Controls › should be able to navigate back to dashboard" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="admin\dashboard.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Safari" tests="28" failures="0" skipped="28" time="0" errors="0">
 <testcase name="Admin Dashboard › Dashboard Overview › should display admin dashboard with statistics" classname="admin\dashboard.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -2793,7 +3521,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="auth\login.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="Mobile Safari" tests="24" failures="0" skipped="24" time="0" errors="0">
+<testsuite name="auth\login.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Safari" tests="24" failures="0" skipped="24" time="0" errors="0">
 <testcase name="User Login Flow › should display login form with all required fields" classname="auth\login.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -2891,65 +3619,201 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="auth\registration.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="Mobile Safari" tests="14" failures="0" skipped="14" time="0" errors="0">
-<testcase name="User Registration Flow › should display registration form with all required fields" classname="auth\registration.e2e.test.ts" time="0">
+<testsuite name="auth\registration.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Safari" tests="17" failures="0" skipped="17" time="0" errors="0">
+<testcase name="User Registration › should display registration form" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should successfully register a new user" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should validate required fields" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should show validation errors for empty fields" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should validate email format" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should validate email format" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should validate password strength" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should validate password strength requirements" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should register new user successfully" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should validate password confirmation match" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should show error for duplicate email" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should show error for existing email" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Registration › should have link to login page" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should navigate to login page" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should display login form" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should initiate Google OAuth flow" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should validate required fields" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="User Registration Flow › should initiate Microsoft OAuth flow" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should show error for invalid credentials" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should display email verification page" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should login successfully with valid credentials" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should handle valid verification token" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should have forgot password link" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should handle invalid verification token" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Login › should have link to register page" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Email Verification Flow › should allow resending verification email" classname="auth\registration.e2e.test.ts" time="0">
+<testcase name="User Logout › should logout successfully" classname="auth\registration.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Protected Routes › should redirect unauthenticated users to login" classname="auth\registration.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Protected Routes › should allow authenticated users to access protected routes" classname="auth\registration.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Session Persistence › should maintain session after page reload" classname="auth\registration.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="document-generation\generation.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="Mobile Safari" tests="27" failures="0" skipped="27" time="0" errors="0">
+<testsuite name="chat\chat-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Safari" tests="17" failures="0" skipped="17" time="0" errors="0">
+<testcase name="Chat Interface › should display chat interface" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Interface › should show message input field" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Interface › should show send button" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Chat Interface › should display initial AI greeting" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should send a message" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should receive AI response" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should send message with Enter key" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Sending Messages › should disable input while AI is responding" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message History › should persist message history on reload" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message History › should show conversation thread" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message Limit › should display message limit indicator" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Message Limit › should warn when approaching limit" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Fact Extraction Display › should display extracted facts panel" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Quality Score Updates › should show quality score indicator" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Error Handling › should handle empty message gracefully" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Error Handling › should show error state on network failure" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Streaming Response › should show typing/streaming indicator" classname="chat\chat-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="document-generation\generation-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Safari" tests="13" failures="0" skipped="13" time="0" errors="0">
+<testcase name="Document Generation Flow › Document Menu › should display available document types" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Menu › should show pricing for document types" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Menu › should show quality level options" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Menu › should indicate document availability based on facts" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Selection › should be able to select a document type" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Selection › should be able to select quality level" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Document Selection › should show price calculation based on quality" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Checkout Flow › should display checkout button" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Checkout Flow › should navigate to payment page on checkout" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Generated Documents › should display list of purchased documents" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Generation Flow › Generated Documents › should have download button for generated documents" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Preview › should display document preview" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Document Formats › should offer multiple download formats (PDF, DOCX)" classname="document-generation\generation-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="document-generation\generation.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Safari" tests="27" failures="0" skipped="27" time="0" errors="0">
 <testcase name="Document Generation Flow › Technology Roadmap Generation › should display document generation page" classname="document-generation\generation.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -3059,7 +3923,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="payment\payment.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="Mobile Safari" tests="29" failures="0" skipped="29" time="0" errors="0">
+<testsuite name="payment\payment.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Safari" tests="29" failures="0" skipped="29" time="0" errors="0">
 <testcase name="Payment Flow › Billing Page › should display current subscription status" classname="payment\payment.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -3177,7 +4041,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="questionnaire\adaptive.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="Mobile Safari" tests="16" failures="0" skipped="16" time="0" errors="0">
+<testsuite name="questionnaire\adaptive.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Safari" tests="16" failures="0" skipped="16" time="0" errors="0">
 <testcase name="Adaptive Logic Flow › should show conditional question when trigger condition is met" classname="questionnaire\adaptive.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -3243,7 +4107,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="questionnaire\complete-flow.e2e.test.ts" timestamp="2026-03-01T14:07:06.277Z" hostname="Mobile Safari" tests="26" failures="0" skipped="26" time="0" errors="0">
+<testsuite name="questionnaire\complete-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Safari" tests="26" failures="0" skipped="26" time="0" errors="0">
 <testcase name="Complete Questionnaire Flow › should display questionnaire list" classname="questionnaire\complete-flow.e2e.test.ts" time="0">
 <skipped>
 </skipped>
@@ -3345,6 +4209,52 @@
 </skipped>
 </testcase>
 <testcase name="Question Validation › should validate text minimum length" classname="questionnaire\complete-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="questionnaire\session-flow.e2e.test.ts" timestamp="2026-03-09T00:30:08.032Z" hostname="Mobile Safari" tests="11" failures="0" skipped="11" time="0" errors="0">
+<testcase name="Questionnaire Session Flow › Starting a New Session › should display project types to choose from" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Starting a New Session › should create new project and start questionnaire" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Answering Questions › should display first question" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Answering Questions › should accept text input answer" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Answering Questions › should display progress indicator" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Session Management › should save progress automatically" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Session Management › should display existing projects in dashboard" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Session Management › should be able to resume an existing project" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Message Limit Handling › should display message count or limit indicator" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Questionnaire Session Flow › Quality Score › should display quality score for project" classname="questionnaire\session-flow.e2e.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Navigation Controls › should be able to navigate back to dashboard" classname="questionnaire\session-flow.e2e.test.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
