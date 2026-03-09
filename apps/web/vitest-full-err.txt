@@ -1,0 +1,1295 @@
+(node:96736) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+[90mstderr[2m | src/pages/heatmap/HeatmapPage.test.tsx[2m > [22m[2mHeatmapPage[2m > [22m[2mCell Interaction[2m > [22m[2mhandles drilldown API error gracefully
+[22m[39mDrilldown failed: Error: Drilldown failed
+    at [90mC:\Repos\Quiz-to-Build\apps\web\[39msrc\pages\heatmap\HeatmapPage.test.tsx:414:9
+    at file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:155:11
+    at file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:752:26
+    at file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:1574:12)
+    at runSuite (file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:1729:8)
+    at runSuite (file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:1729:8)
+    at runSuite (file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:1729:8)
+
+[90mstderr[2m | src/components/auth/OAuthButtons.test.tsx[2m > [22m[2mOAuthButtons[2m > [22m[2mtriggers Microsoft OAuth flow on click
+[22m[39mNot implemented: Window's open() method
+
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 30 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mrenders navigation menu
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mdisplays user email
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mdisplays user name
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mrenders logo link
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mrenders outlet content
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mdisplays sign out button
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mtoggles sidebar on mobile menu button click
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mnavigates to dashboard from logo
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mrenders navigation links with correct hrefs
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mhas accessible navigation landmark
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mhas accessible main content landmark
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mhas accessible banner landmark
+[31m[1mTypeError[22m: localStorage.getItem is not a function[39m
+[36m [2m❯[22m src/hooks/useTheme.ts:[2m35:33[22m[39m
+    [90m 33| [39m  [35mconst[39m [mode[33m,[39m setModeState] [33m=[39m useState[33m<[39m[33mThemeMode[39m[33m>[39m(() [33m=>[39m {
+    [90m 34| [39m    [35mif[39m ([35mtypeof[39m window [33m===[39m [32m'undefined'[39m) [35mreturn[39m [32m'system'[39m[33m;[39m
+    [90m 35| [39m    [35mconst[39m stored [33m=[39m localStorage[33m.[39m[34mgetItem[39m([33mTHEME_STORAGE_KEY[39m)[33m;[39m
+    [90m   | [39m                                [31m^[39m
+    [90m 36| [39m    if (stored === 'light' || stored === 'dark' || stored === 'system'…
+    [90m 37| [39m      [35mreturn[39m stored[33m;[39m
+[90m [2m❯[22m mountStateImpl ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m8268:24[22m[39m
+[90m [2m❯[22m mountState ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m8289:22[22m[39m
+[90m [2m❯[22m Object.useState ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m26243:18[22m[39m
+[90m [2m❯[22m process.env.NODE_ENV.exports.useState ../../node_modules/react/cjs/react.development.js:[2m1263:34[22m[39m
+[90m [2m❯[22m useTheme src/hooks/useTheme.ts:[2m33:32[22m[39m
+[90m [2m❯[22m ThemeToggle src/components/settings/ThemeToggle.tsx:[2m36:50[22m[39m
+[90m [2m❯[22m Object.react_stack_bottom_frame ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m25904:20[22m[39m
+[90m [2m❯[22m renderWithHooks ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m7662:22[22m[39m
+[90m [2m❯[22m updateFunctionComponent ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m10166:19[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/30]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/pages/dashboard/DashboardPage.test.tsx[2m > [22mDashboardPage[2m > [22mloads sessions on mount
+[31m[1mAssertionError[22m: expected "spy" to be called at least once[39m
+[36m [2m❯[22m src/pages/dashboard/DashboardPage.test.tsx:[2m85:30[22m[39m
+    [90m 83| [39m    [34mrenderDashboardPage[39m()[33m;[39m
+    [90m 84| [39m
+    [90m 85| [39m    [34mexpect[39m(mockLoadSessions)[33m.[39m[34mtoHaveBeenCalled[39m()[33m;[39m
+    [90m   | [39m                             [31m^[39m
+    [90m 86| [39m  })[33m;[39m
+    [90m 87| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/30]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/pages/dashboard/DashboardPage.test.tsx[2m > [22mDashboardPage[2m > [22mdisplays active sessions count
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: Active Sessions. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"space-y-6"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"animate-slide-up"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-2xl font-bold text-surface-900 tracking-tight"[39m
+          [36m>[39m
+            [0mGood evening[0m
+            [0m, [0m
+            [0mJohn[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-2 mt-1"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-calendar h-3.5 w-3.5 text-surface-400"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"24"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"24"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 2v4"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 2v4"[39m
+              [36m/>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"18"[39m
+                [33mrx[39m=[32m"2"[39m
+                [33mwidth[39m=[32m"18"[39m
+                [33mx[39m=[32m"3"[39m
+                [33my[39m=[32m"4"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 10h18"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-sm text-surface-500"[39m
+            [36m>[39m
+              [0mMonday, March 9[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center gap-2 px-4 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-medium shadow-xs hover:bg-brand-700 hover:shadow-elevated active:bg-brand-800 transition-all cursor-pointer"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-plus h-4 w-4"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"24"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"24"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M5 12h14"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M12 5v14"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mNew Project[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 60%; height: 24px;"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 40%; height: 14px;"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 60%; height: 24px;"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 40%; height: 14px;"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 ...
+[90m [2m❯[22m Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m src/pages/dashboard/DashboardPage.test.tsx:[2m91:32[22m[39m
+    [90m 89| [39m    [34mrenderDashboardPage[39m()[33m;[39m
+    [90m 90| [39m
+    [90m 91| [39m    [35mconst[39m activeLabel [33m=[39m screen[33m.[39m[34mgetByText[39m([32m'Active Sessions'[39m)[33m;[39m
+    [90m   | [39m                               [31m^[39m
+    [90m 92| [39m    [34mexpect[39m(activeLabel)[33m.[39m[34mtoBeInTheDocument[39m()[33m;[39m
+    [90m 93| [39m    [35mconst[39m statContainer [33m=[39m activeLabel[33m.[39m[34mclosest[39m([32m'.min-w-0'[39m)[33m![39m[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/30]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/pages/dashboard/DashboardPage.test.tsx[2m > [22mDashboardPage[2m > [22mdisplays completed sessions count
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: Completed. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"space-y-6"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"animate-slide-up"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-2xl font-bold text-surface-900 tracking-tight"[39m
+          [36m>[39m
+            [0mGood evening[0m
+            [0m, [0m
+            [0mJohn[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-2 mt-1"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-calendar h-3.5 w-3.5 text-surface-400"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"24"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"24"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 2v4"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 2v4"[39m
+              [36m/>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"18"[39m
+                [33mrx[39m=[32m"2"[39m
+                [33mwidth[39m=[32m"18"[39m
+                [33mx[39m=[32m"3"[39m
+                [33my[39m=[32m"4"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 10h18"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-sm text-surface-500"[39m
+            [36m>[39m
+              [0mMonday, March 9[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center gap-2 px-4 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-medium shadow-xs hover:bg-brand-700 hover:shadow-elevated active:bg-brand-800 transition-all cursor-pointer"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-plus h-4 w-4"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"24"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"24"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M5 12h14"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M12 5v14"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mNew Project[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 60%; height: 24px;"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 40%; height: 14px;"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 60%; height: 24px;"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 40%; height: 14px;"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 ...
+[90m [2m❯[22m Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m src/pages/dashboard/DashboardPage.test.tsx:[2m100:19[22m[39m
+    [90m 98| [39m    [34mrenderDashboardPage[39m()[33m;[39m
+    [90m 99| [39m
+    [90m100| [39m    [34mexpect[39m(screen[33m.[39m[34mgetByText[39m([32m'Completed'[39m))[33m.[39m[34mtoBeInTheDocument[39m()[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m101| [39m  })[33m;[39m
+    [90m102| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/30]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/pages/dashboard/DashboardPage.test.tsx[2m > [22mDashboardPage[2m > [22mdisplays highest score
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: Highest Score. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"space-y-6"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"animate-slide-up"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-2xl font-bold text-surface-900 tracking-tight"[39m
+          [36m>[39m
+            [0mGood evening[0m
+            [0m, [0m
+            [0mJohn[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-2 mt-1"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-calendar h-3.5 w-3.5 text-surface-400"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"24"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"24"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 2v4"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 2v4"[39m
+              [36m/>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"18"[39m
+                [33mrx[39m=[32m"2"[39m
+                [33mwidth[39m=[32m"18"[39m
+                [33mx[39m=[32m"3"[39m
+                [33my[39m=[32m"4"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 10h18"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-sm text-surface-500"[39m
+            [36m>[39m
+              [0mMonday, March 9[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center gap-2 px-4 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-medium shadow-xs hover:bg-brand-700 hover:shadow-elevated active:bg-brand-800 transition-all cursor-pointer"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-plus h-4 w-4"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"24"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"24"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M5 12h14"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M12 5v14"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mNew Project[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 60%; height: 24px;"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 40%; height: 14px;"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 60%; height: 24px;"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 40%; height: 14px;"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 ...
+[90m [2m❯[22m Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m src/pages/dashboard/DashboardPage.test.tsx:[2m106:33[22m[39m
+    [90m104| [39m    [34mrenderDashboardPage[39m()[33m;[39m
+    [90m105| [39m
+    [90m106| [39m    [35mconst[39m highestLabel [33m=[39m screen[33m.[39m[34mgetByText[39m([32m'Highest Score'[39m)[33m;[39m
+    [90m   | [39m                                [31m^[39m
+    [90m107| [39m    [34mexpect[39m(highestLabel)[33m.[39m[34mtoBeInTheDocument[39m()[33m;[39m
+    [90m108| [39m    [35mconst[39m statContainer [33m=[39m highestLabel[33m.[39m[34mclosest[39m([32m'.min-w-0'[39m)[33m![39m[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/30]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/pages/dashboard/DashboardPage.test.tsx[2m > [22mDashboardPage[2m > [22mnavigates to idea capture on New Project click
+[31m[1mAssertionError[22m: expected "spy" to be called with arguments: [ '/idea' ][90m
+
+Received: 
+
+[1m  1st spy call:
+
+[22m[2m  [[22m
+[32m-   "/idea",[90m
+[31m+   "/chat/new",[90m
+[2m  ][22m
+[31m[90m
+
+Number of calls: [1m1[22m
+[31m[39m
+[36m [2m❯[22m src/pages/dashboard/DashboardPage.test.tsx:[2m119:26[22m[39m
+    [90m117| [39m    [35mawait[39m user[33m.[39m[34mclick[39m(newProjectButtons[[34m0[39m])[33m;[39m
+    [90m118| [39m
+    [90m119| [39m    [34mexpect[39m(mockNavigate)[33m.[39m[34mtoHaveBeenCalledWith[39m([32m'/idea'[39m)[33m;[39m
+    [90m   | [39m                         [31m^[39m
+    [90m120| [39m  })[33m;[39m
+    [90m121| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/30]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/pages/dashboard/DashboardPage.test.tsx[2m > [22mDashboardPage[2m > [22mdisplays active project cards
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: Web Application. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"space-y-6"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"animate-slide-up"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-2xl font-bold text-surface-900 tracking-tight"[39m
+          [36m>[39m
+            [0mGood evening[0m
+            [0m, [0m
+            [0mJohn[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-2 mt-1"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-calendar h-3.5 w-3.5 text-surface-400"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"24"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"24"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 2v4"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 2v4"[39m
+              [36m/>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"18"[39m
+                [33mrx[39m=[32m"2"[39m
+                [33mwidth[39m=[32m"18"[39m
+                [33mx[39m=[32m"3"[39m
+                [33my[39m=[32m"4"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 10h18"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-sm text-surface-500"[39m
+            [36m>[39m
+              [0mMonday, March 9[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center gap-2 px-4 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-medium shadow-xs hover:bg-brand-700 hover:shadow-elevated active:bg-brand-800 transition-all cursor-pointer"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-plus h-4 w-4"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"24"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"24"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M5 12h14"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M12 5v14"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mNew Project[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 60%; height: 24px;"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 40%; height: 14px;"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 60%; height: 24px;"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 40%; height: 14px;"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 ...
+[90m [2m❯[22m Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m src/pages/dashboard/DashboardPage.test.tsx:[2m126:19[22m[39m
+    [90m124| [39m
+    [90m125| [39m    [34mexpect[39m(screen[33m.[39m[34mgetByText[39m([32m'Active Projects'[39m))[33m.[39m[34mtoBeInTheDocument[39m()[33m;[39m
+    [90m126| [39m    [34mexpect[39m(screen[33m.[39m[34mgetByText[39m([32m'Web Application'[39m))[33m.[39m[34mtoBeInTheDocument[39m()[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m127| [39m  })[33m;[39m
+    [90m128| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/30]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/pages/dashboard/DashboardPage.test.tsx[2m > [22mDashboardPage[2m > [22mdisplays completed project cards
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: Completed Projects. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"space-y-6"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"animate-slide-up"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-2xl font-bold text-surface-900 tracking-tight"[39m
+          [36m>[39m
+            [0mGood evening[0m
+            [0m, [0m
+            [0mJohn[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-2 mt-1"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-calendar h-3.5 w-3.5 text-surface-400"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"24"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"24"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 2v4"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 2v4"[39m
+              [36m/>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"18"[39m
+                [33mrx[39m=[32m"2"[39m
+                [33mwidth[39m=[32m"18"[39m
+                [33mx[39m=[32m"3"[39m
+                [33my[39m=[32m"4"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 10h18"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-sm text-surface-500"[39m
+            [36m>[39m
+              [0mMonday, March 9[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center gap-2 px-4 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-medium shadow-xs hover:bg-brand-700 hover:shadow-elevated active:bg-brand-800 transition-all cursor-pointer"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-plus h-4 w-4"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"24"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"24"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M5 12h14"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M12 5v14"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mNew Project[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 60%; height: 24px;"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 40%; height: 14px;"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 60%; height: 24px;"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 40%; height: 14px;"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 ...
+[90m [2m❯[22m Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m src/pages/dashboard/DashboardPage.test.tsx:[2m132:19[22m[39m
+    [90m130| [39m    [34mrenderDashboardPage[39m()[33m;[39m
+    [90m131| [39m
+    [90m132| [39m    [34mexpect[39m(screen[33m.[39m[34mgetByText[39m([32m'Completed Projects'[39m))[33m.[39m[34mtoBeInTheDocument[39m()[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m133| [39m    [34mexpect[39m(screen[33m.[39m[34mgetByText[39m([32m'Mobile App'[39m))[33m.[39m[34mtoBeInTheDocument[39m()[33m;[39m
+    [90m134| [39m  })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/30]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/pages/dashboard/DashboardPage.test.tsx[2m > [22mDashboardPage[2m > [22mnavigates to questionnaire on session click
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: Web Application. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"space-y-6"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"animate-slide-up"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-2xl font-bold text-surface-900 tracking-tight"[39m
+          [36m>[39m
+            [0mGood evening[0m
+            [0m, [0m
+            [0mJohn[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-2 mt-1"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-calendar h-3.5 w-3.5 text-surface-400"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"24"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"24"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 2v4"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 2v4"[39m
+              [36m/>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"18"[39m
+                [33mrx[39m=[32m"2"[39m
+                [33mwidth[39m=[32m"18"[39m
+                [33mx[39m=[32m"3"[39m
+                [33my[39m=[32m"4"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 10h18"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-sm text-surface-500"[39m
+            [36m>[39m
+              [0mMonday, March 9[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center gap-2 px-4 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-medium shadow-xs hover:bg-brand-700 hover:shadow-elevated active:bg-brand-800 transition-all cursor-pointer"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-plus h-4 w-4"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"24"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"24"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M5 12h14"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M12 5v14"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mNew Project[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 60%; height: 24px;"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 40%; height: 14px;"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 60%; height: 24px;"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 40%; height: 14px;"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 ...
+[90m [2m❯[22m Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m src/pages/dashboard/DashboardPage.test.tsx:[2m140:32[22m[39m
+    [90m138| [39m    [34mrenderDashboardPage[39m()[33m;[39m
+    [90m139| [39m
+    [90m140| [39m    const sessionCard = screen.getByText('Web Application').closest('[…
+    [90m   | [39m                               [31m^[39m
+    [90m141| [39m    [35mif[39m (sessionCard) {
+    [90m142| [39m      [35mawait[39m user[33m.[39m[34mclick[39m(sessionCard)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/30]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/pages/dashboard/DashboardPage.test.tsx[2m > [22mDashboardPage[2m > [22mdisplays progress ring with average score
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: Project Score. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"space-y-6"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"animate-slide-up"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-2xl font-bold text-surface-900 tracking-tight"[39m
+          [36m>[39m
+            [0mGood evening[0m
+            [0m, [0m
+            [0mJohn[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-2 mt-1"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-calendar h-3.5 w-3.5 text-surface-400"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"24"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"24"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 2v4"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 2v4"[39m
+              [36m/>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"18"[39m
+                [33mrx[39m=[32m"2"[39m
+                [33mwidth[39m=[32m"18"[39m
+                [33mx[39m=[32m"3"[39m
+                [33my[39m=[32m"4"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 10h18"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-sm text-surface-500"[39m
+            [36m>[39m
+              [0mMonday, March 9[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center gap-2 px-4 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-medium shadow-xs hover:bg-brand-700 hover:shadow-elevated active:bg-brand-800 transition-all cursor-pointer"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-plus h-4 w-4"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"24"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"24"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M5 12h14"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M12 5v14"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mNew Project[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 60%; height: 24px;"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 40%; height: 14px;"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 60%; height: 24px;"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md h-4"[39m
+                [33mstyle[39m=[32m"width: 40%; height: 14px;"[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"bg-white rounded-xl border border-surface-200/60 p-6 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 bg-[length:200%_100%] animate-shimmer rounded-md rounded-lg"[39m
+              [33mstyle[39m=[32m"width: 40px; height: 40px;"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex-1 space-y-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"bg-gradient-to-r from-surface-200 via-surface-100 to-surface-200 ...
+[90m [2m❯[22m Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m src/pages/dashboard/DashboardPage.test.tsx:[2m158:19[22m[39m
+    [90m156| [39m    [34mrenderDashboardPage[39m()[33m;[39m
+    [90m157| [39m
+    [90m158| [39m    [34mexpect[39m(screen[33m.[39m[34mgetByText[39m([32m'Project Score'[39m))[33m.[39m[34mtoBeInTheDocument[39m()[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m159| [39m  })[33m;[39m
+    [90m160| [39m})[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/30]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mActive Session State[2m > [22mshows active session with question flow
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mActive Session State[2m > [22msubmits text answer
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mActive Session State[2m > [22mshows NQS hint when available
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mActive Session State[2m > [22mhandles single choice question type
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mActive Session State[2m > [22mhandles scale question type
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mActive Session State[2m > [22mhandles multiple choice question type
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mAI Follow-up Functionality[2m > [22mshows AI follow-up when triggered
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mAI Follow-up Functionality[2m > [22mhandles follow-up submission
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mAI Follow-up Functionality[2m > [22mallows skipping follow-up
+[31m[1mTypeError[22m: canGoBack is not a function[39m
+[36m [2m❯[22m QuestionnairePage src/pages/questionnaire/QuestionnairePage.tsx:[2m549:26[22m[39m
+    [90m547| [39m              [33monSkip[39m[33m=[39m[33m{[39m() [33m=>[39m session [33m&&[39m [34mskipQuestion[39m(session[33m.[39mid)[33m}[39m
+    [90m548| [39m              [33monSubmit[39m[33m=[39m[33m{[39mhandleSubmit[33m}[39m
+    [90m549| [39m              [33mcanGoBack[39m[33m=[39m[33m{[39m[34mcanGoBack[39m()[33m}[39m
+    [90m   | [39m                         [31m^[39m
+    [90m550| [39m              [33mcanSkip[39m[33m=[39m[33m{[39m[34mcanSkip[39m()[33m}[39m
+    [90m551| [39m              [33misSubmitDisabled[39m[33m=[39m[33m{[39misValueEmpty[33m}[39m
+[90m [2m❯[22m Object.react_stack_bottom_frame ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m25904:20[22m[39m
+[90m [2m❯[22m renderWithHooks ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m7662:22[22m[39m
+[90m [2m❯[22m updateFunctionComponent ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m10166:19[22m[39m
+[90m [2m❯[22m beginWork ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m11778:18[22m[39m
+[90m [2m❯[22m runWithFiberInDEV ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m874:13[22m[39m
+[90m [2m❯[22m performUnitOfWork ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m17641:22[22m[39m
+[90m [2m❯[22m workLoopSync ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m17469:41[22m[39m
+[90m [2m❯[22m renderRootSync ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m17450:11[22m[39m
+[90m [2m❯[22m performWorkOnRoot ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m16583:35[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/30]⎯[22m[39m
+

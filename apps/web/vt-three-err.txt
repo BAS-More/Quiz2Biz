@@ -1,0 +1,42 @@
+(node:156560) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 9 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mActive Session State[2m > [22mshows active session with question flow
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mActive Session State[2m > [22msubmits text answer
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mActive Session State[2m > [22mshows NQS hint when available
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mActive Session State[2m > [22mhandles single choice question type
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mActive Session State[2m > [22mhandles scale question type
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mActive Session State[2m > [22mhandles multiple choice question type
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mAI Follow-up Functionality[2m > [22mshows AI follow-up when triggered
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mAI Follow-up Functionality[2m > [22mhandles follow-up submission
+[41m[1m FAIL [22m[49m src/pages/questionnaire/QuestionnairePage.test.tsx[2m > [22mQuestionnairePage[2m > [22mAI Follow-up Functionality[2m > [22mallows skipping follow-up
+[31m[1mError[22m: [vitest] No "ChevronLeft" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+vi[33m.[39m[34mmock[39m([35mimport[39m([32m"lucide-react"[39m)[33m,[39m [35masync[39m (importOriginal) [33m=>[39m {
+  [35mconst[39m actual [33m=[39m [35mawait[39m [34mimportOriginal[39m()
+  [35mreturn[39m {
+    [33m...[39mactual[33m,[39m
+    [90m// your mocked methods[39m
+  }
+})
+
+[36m [2m❯[22m QuestionnaireNavigation src/components/questionnaire/QuestionnaireNavigation.tsx:[2m60:12[22m[39m
+    [90m 58| [39m          [33maria-label[39m[33m=[39m[32m"Go to previous question"[39m
+    [90m 59| [39m        [33m>[39m
+    [90m 60| [39m          [33m<[39m[33mChevronLeft[39m [33mclassName[39m[33m=[39m[32m"h-4 w-4"[39m [33maria-hidden[39m[33m=[39m[32m"true"[39m [33m/[39m[33m>[39m
+    [90m   | [39m           [31m^[39m
+    [90m 61| [39m          Previous
+    [90m 62| [39m        [33m<[39m[33m/[39m[33mbutton[39m[33m>[39m
+[90m [2m❯[22m Object.react_stack_bottom_frame ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m25904:20[22m[39m
+[90m [2m❯[22m renderWithHooks ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m7662:22[22m[39m
+[90m [2m❯[22m updateFunctionComponent ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m10166:19[22m[39m
+[90m [2m❯[22m beginWork ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m11778:18[22m[39m
+[90m [2m❯[22m runWithFiberInDEV ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m874:13[22m[39m
+[90m [2m❯[22m performUnitOfWork ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m17641:22[22m[39m
+[90m [2m❯[22m workLoopSync ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m17469:41[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯[22m[39m
+

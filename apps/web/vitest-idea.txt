@@ -1,0 +1,683 @@
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Repos/Quiz-to-Build/apps/web[39m
+
+ [31m❯[39m src/pages/idea-capture/IdeaCapturePage.test.tsx [2m([22m[2m19 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 2705[2mms[22m[39m
+   [32m✓[39m IdeaCapturePage[2m > [22mInitial Input State[2m > [22mrenders initial input form[32m 98[2mms[22m[39m
+   [33m[2m✓[22m[39m IdeaCapturePage[2m > [22mInitial Input State[2m > [22mupdates character count as user types [33m 378[2mms[22m[39m
+   [32m✓[39m IdeaCapturePage[2m > [22mInitial Input State[2m > [22mallows optional title input[32m 84[2mms[22m[39m
+   [32m✓[39m IdeaCapturePage[2m > [22mIdea Submission and Analysis[2m > [22msubmits idea when button is clicked[32m 74[2mms[22m[39m
+   [32m✓[39m IdeaCapturePage[2m > [22mIdea Submission and Analysis[2m > [22mshows analyzing state while submission is in progress[32m 27[2mms[22m[39m
+   [32m✓[39m IdeaCapturePage[2m > [22mIdea Submission and Analysis[2m > [22msubmits idea with title when provided[32m 45[2mms[22m[39m
+   [32m✓[39m IdeaCapturePage[2m > [22mIdea Submission and Analysis[2m > [22mdisables submit button for insufficient input length[32m 16[2mms[22m[39m
+   [32m✓[39m IdeaCapturePage[2m > [22mIdea Submission and Analysis[2m > [22mshows error when submission fails with Error object[32m 33[2mms[22m[39m
+   [32m✓[39m IdeaCapturePage[2m > [22mIdea Submission and Analysis[2m > [22mshows generic error when submission fails with non-Error[32m 29[2mms[22m[39m
+   [32m✓[39m IdeaCapturePage[2m > [22mIdea Submission and Analysis[2m > [22mshows timeout error[32m 33[2mms[22m[39m
+   [32m✓[39m IdeaCapturePage[2m > [22mIdea Submission and Analysis[2m > [22mshows network error[32m 50[2mms[22m[39m
+[31m   [31m×[31m IdeaCapturePage[2m > [22mAnalysis Results Display[2m > [22mdisplays analysis results after successful submission[39m[32m 73[2mms[22m[39m
+[31m     → Unable to find an element with the text: Recommended Project Type. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"max-w-4xl mx-auto px-4 py-8 animate-fade-in"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"mb-8 text-center"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-100 text-brand-600 mb-4"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mdata-testid[31m=[32m"lightbulb-icon"[31m
+          [36m/>[31m
+        [36m</div>[31m
+        [36m<h1[31m
+          [33mclass[31m=[32m"text-3xl font-bold text-surface-900 mb-2"[31m
+        [36m>[31m
+          [0mCapture Your Idea[0m
+        [36m</h1>[31m
+        [36m<p[31m
+          [33mclass[31m=[32m"text-surface-500 text-lg max-w-2xl mx-auto"[31m
+        [36m>[31m
+          [0mDescribe your business idea in your own words. Our AI will analyze it and recommend the best path to turn it into professional documents.[0m
+        [36m</p>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"flex items-center justify-center gap-2 mb-8"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center gap-2"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors bg-success-100 text-success-700"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mdata-testid[31m=[32m"check-circle-icon"[31m
+            [36m/>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"w-12 h-0.5 bg-success-400"[31m
+          [36m/>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center gap-2"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors bg-success-100 text-success-700"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mdata-testid[31m=[32m"check-circle-icon"[31m
+            [36m/>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"w-12 h-0.5 bg-success-400"[31m
+          [36m/>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center gap-2"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors bg-brand-600 text-white"[31m
+          [36m>[31m
+            [0m3[0m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"space-y-6 animate-fade-in"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"bg-white rounded-2xl shadow-card p-6 border border-surface-200"[31m
+        [36m>[31m
+          [36m<h2[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-surface-900 mb-3 flex items-center gap-2"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mdata-testid[31m=[32m"sparkles-icon"[31m
+            [36m/>[31m
+            [0mAnalysis Summary[0m
+          [36m</h2>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"text-surface-600 leading-relaxed"[31m
+          [36m>[31m
+            [0mThis is a comprehensive analysis of your business idea.[0m
+          [36m</p>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"grid grid-cols-1 md:grid-cols-3 gap-4"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-white rounded-2xl shadow-card p-5 border border-surface-200"[31m
+          [36m>[31m
+            [36m<h3[31m
+              [33mclass[31m=[32m"text-sm font-semibold text-surface-700 mb-3 flex items-center gap-2"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mdata-testid[31m=[32m"target-icon"[31m
+              [36m/>[31m
+              [0mKey Themes[0m
+            [36m</h3>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"flex flex-wrap gap-2"[31m
+            [36m>[31m
+              [36m<span[31m
+                [33mclass[31m=[32m"inline-block px-2.5 py-1 bg-brand-50 text-brand-700 text-xs font-medium rounded-full"[31m
+              [36m>[31m
+                [0mE-commerce[0m
+              [36m</span>[31m
+              [36m<span[31m
+                [33mclass[31m=[32m"inline-block px-2.5 py-1 bg-brand-50 text-brand-700 text-xs font-medium rounded-full"[31m
+              [36m>[31m
+                [0mMarketplace[0m
+              [36m</span>[31m
+              [36m<span[31m
+                [33mclass[31m=[32m"inline-block px-2.5 py-1 bg-brand-50 text-brand-700 text-xs font-medium rounded-full"[31m
+              [36m>[31m
+                [0mTechnology[0m
+              [36m</span>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-white rounded-2xl shadow-card p-5 border border-surface-200"[31m
+          [36m>[31m
+            [36m<h3[31m
+              [33mclass[31m=[32m"text-sm font-semibold text-surface-700 mb-3 flex items-center gap-2"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mdata-testid[31m=[32m"trending-up-icon"[31m
+              [36m/>[31m
+              [0mStrengths[0m
+            [36m</h3>[31m
+            [36m<ul[31m
+              [33mclass[31m=[32m"space-y-1.5"[31m
+            [36m>[31m
+              [36m<li[31m
+                [33mclass[31m=[32m"text-xs text-surface-600 flex items-start gap-1.5"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mdata-testid[31m=[32m"check-circle-icon"[31m
+                [36m/>[31m
+                [0mClear value proposition[0m
+              [36m</li>[31m
+              [36m<li[31m
+                [33mclass[31m=[32m"text-xs text-surface-600 flex items-start gap-1.5"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mdata-testid[31m=[32m"check-circle-icon"[31m
+                [36m/>[31m
+                [0mScalable business model[0m
+              [36m</li>[31m
+            [36m</ul>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-white rounded-2xl shadow-card p-5 border border-surface-200"[31m
+          [36m>[31m
+            [36m<h3[31m
+              [33mclass[31m=[32m"text-sm font-semibold text-surface-700 mb-3 flex items-center gap-2"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mdata-testid[31m=[32m"alert-circle-icon"[31m
+              [36m/>[31m
+              [0mAreas to Explore[0m
+            [36m</h3>[31m
+            [36m<ul[31m
+              [33mclass[31m=[32m"space-y-1.5"[31m
+            [36m>[31m
+              [36m<li[31m
+                [33mclass[31m=[32m"text-xs text-surface-600 flex items-start gap-1.5"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mdata-testid[31m=[32m"chevron-right-icon"[31m
+                [36m/>[31m
+                [0mRevenue model details[0m
+              [36m</li>[31m
+              [36m<li[31m
+                [33mclass[31m=[32m"text-xs text-surface-600 flex items-start gap-1.5"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mdata-testid[31m=[32m"chevron-right-icon"[31m
+                [36m/>[31m
+                [0mCompetitive analysis[0m
+              [36m</li>[31m
+            [36m</ul>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"bg-white rounded-2xl shadow-card p-6 border border-surface-200"[31m
+        [36m>[31m
+          [36m<h2[31m
+            [33mclass[31m=[32m"text-lg font-semibold text-surface-900 mb-2"[31m
+          [36m>[31m
+            [0mSelect Document Types[0m
+          [36m</h2>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"text-sm text-surface-500 mb-4"[31m
+          [36m>[31m
+            [0mChoose all the documents you need. You can add more later.[0m
+          [36m</p>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"space-y-3"[31m
+          [36m>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"w-full text-left p-4 rounded-xl border-2 transition-all border-brand-500 bg-brand-50 shadow-sm"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex items-start justify-between"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"flex-1"[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"flex items-center gap-2 mb-1"[31m
+                  [36m>[31m
+                    [36m<span[31m
+                      [33mclass[31m=[32m"font-semibold text-surface-900"[31m
+                    [36m>[31m
+                      [0mWeb Application[0m
+                    [36m</span>[31m
+                    [36m<span[31m
+                      [33mclass[31m=[32m"inline-flex items-center gap-1 px-2 py-0.5 bg-brand-100 text-brand-700 text-xs font-medium rounded-full"[31m
+                    [36m>[31m
+                      [36m<div[31m
+                        [33mdata-testid[31m=[32m"sparkles-icon"[31m
+                      [36m/>[31m
+                      [0mRecommended[0m
+                    [36m</span>[31m
+                    [36m<span[31m
+                      [33mclass[31m=[32m"text-xs font-medium px-2 py-0.5 rounded-full bg-success-100 text-success-700"[31m
+                    [36m>[31m
+                      [0m95[0m
+                      [0m% match[0m
+                    [36m</span>[31m
+                  [36m</div>[31m
+                  [36m<p[31m
+                    [33mclass[31m=[32m"text-sm text-surface-500"[31m
+                  [36m>[31m
+                    [0mBest fit for your e-commerce marketplace idea[0m
+                  [36m</p>[31m
+                [36m</div>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"flex-shrink-0 ml-3 mt-1"[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mdata-testid[31m=[32m"check-square-icon"[31m
+                  [36m/>[31m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</button>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"w-full text-left p-4 rounded-xl border-2 transition-all border-surface-200 hover:border-surface-300 bg-white"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex items-start justify-between"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"flex-1"[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"flex items-center gap-2 mb-1"[31m
+                  [36m>[31m
+                    [36m<span[31m
+                      [33mclass[31m=[32m"font-semibold text-surface-900"[31m
+                    [36m>[31m
+                      [0mMobile Application[0m
+                    [36m</span>[31m
+                    [36m<span[31m
+                      [33mclass[31m=[32m"text-xs font-medium px-2 py-0.5 rounded-full bg-success-100 text-success-700"[31m
+                    [36m>[31m
+                      [0m75[0m
+                      [0m% match[0m
+                    [36m</span>[31m
+                  [36m</div>[31m
+                  [36m<p[31m
+                    [33mclass[31m=[32m"text-sm text-surface-500"[31m
+                  [36m>[31m
+                    [0mAlternative approach for mobile-first strategy[0m
+                  [36m</p>[31m
+                [36m</div>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"flex-shrink-0 ml-3 mt-1"[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mdata-testid[31m=[32m"square-icon"[31m
+                  [36m/>[31m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</button>[31m
+          [36m</div>[31m
+          [36m<button[31m
+            [33mclass[31m=[32m"mt-4 w-full flex items-center justify-center gap-2 py-2.5 text-sm text-brand-600 hover:text-brand-700 hover:bg-brand-50 rounded-lg transition-colors"[31m
+            [33mtype[31m=[32m"button"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mdata-testid[31m=[32m"plus-icon"[31m
+            [36m/>[31m
+            [0mBrowse more document types[0m
+          [36m</button>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex justify-between items-center"[31m
+        [36m>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"text-sm text-surface-500"[31m
+          [36m>[31m
+            [0m1[0m
+            [0m document[0m
+            [0m selected[0m
+          [36m</p>[31m
+          [36m<button[31m
+            [33mclass[31m=[32m"inline-flex items-center gap-2 px-6 py-3 bg-brand-600 text-white font-medium rounded-xl hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm"[31m
+          [36m>[31m
+            [0mStart Questionnaire[0m
+            [36m<div[31m
+              [33mdata-testid[31m=[32m"arrow-right-icon"[31m
+            [36m/>[31m
+          [36m</button>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+   [32m✓[39m IdeaCapturePage[2m > [22mAnalysis Results Display[2m > [22mallows project type selection[32m 47[2mms[22m[39m
+   [32m✓[39m IdeaCapturePage[2m > [22mSession Creation[2m > [22mcreates session with recommended project type[32m 130[2mms[22m[39m
+[31m   [31m×[31m IdeaCapturePage[2m > [22mSession Creation[2m > [22mconfirms project type when different from recommendation[39m[33m 1094[2mms[22m[39m
+[31m     → expected "spy" to be called with arguments: [ 'idea-123', 'mobile-app-id' ][90m
+
+Number of calls: [1m0[22m
+[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"max-w-4xl mx-auto px-4 py-8 animate-fade-in"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"mb-8 text-center"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-100 text-brand-600 mb-4"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mdata-testid[31m=[32m"lightbulb-icon"[31m
+            [36m/>[31m
+          [36m</div>[31m
+          [36m<h1[31m
+            [33mclass[31m=[32m"text-3xl font-bold text-surface-900 mb-2"[31m
+          [36m>[31m
+            [0mCapture Your Idea[0m
+          [36m</h1>[31m
+          [36m<p[31m
+            [33mclass[31m=[32m"text-surface-500 text-lg max-w-2xl mx-auto"[31m
+          [36m>[31m
+            [0mDescribe your business idea in your own words. Our AI will analyze it and recommend the best path to turn it into professional documents.[0m
+          [36m</p>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-center justify-center gap-2 mb-8"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-2"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors bg-surface-200 text-surface-500"[31m
+            [36m>[31m
+              [0m1[0m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"w-12 h-0.5 bg-surface-200"[31m
+            [36m/>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-2"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors bg-surface-200 text-surface-500"[31m
+            [36m>[31m
+              [0m2[0m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"w-12 h-0.5 bg-surface-200"[31m
+            [36m/>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex items-center gap-2"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors bg-brand-600 text-white"[31m
+            [36m>[31m
+              [0m3[0m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"space-y-6 animate-fade-in"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-white rounded-2xl shadow-card p-6 border border-surface-200"[31m
+          [36m>[31m
+            [36m<h2[31m
+              [33mclass[31m=[32m"text-lg font-semibold text-surface-900 mb-3 flex items-center gap-2"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mdata-testid[31m=[32m"sparkles-icon"[31m
+              [36m/>[31m
+              [0mAnalysis Summary[0m
+            [36m</h2>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-surface-600 leading-relaxed"[31m
+            [36m>[31m
+              [0mThis is a comprehensive analysis of your business idea.[0m
+            [36m</p>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"grid grid-cols-1 md:grid-cols-3 gap-4"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"bg-white rounded-2xl shadow-card p-5 border border-surface-200"[31m
+            [36m>[31m
+              [36m<h3[31m
+                [33mclass[31m=[32m"text-sm font-semibold text-surface-700 mb-3 flex items-center gap-2"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mdata-testid[31m=[32m"target-icon"[31m
+                [36m/>[31m
+                [0mKey Themes[0m
+              [36m</h3>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"flex flex-wrap gap-2"[31m
+              [36m>[31m
+                [36m<span[31m
+                  [33mclass[31m=[32m"inline-block px-2.5 py-1 bg-brand-50 text-brand-700 text-xs font-medium rounded-full"[31m
+                [36m>[31m
+                  [0mE-commerce[0m
+                [36m</span>[31m
+                [36m<span[31m
+                  [33mclass[31m=[32m"inline-block px-2.5 py-1 bg-brand-50 text-brand-700 text-xs font-medium rounded-full"[31m
+                [36m>[31m
+                  [0mMarketplace[0m
+                [36m</span>[31m
+                [36m<span[31m
+                  [33mclass[31m=[32m"inline-block px-2.5 py-1 bg-brand-50 text-brand-700 text-xs font-medium rounded-full"[31m
+                [36m>[31m
+                  [0mTechnology[0m
+                [36m</span>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"bg-white rounded-2xl shadow-card p-5 border border-surface-200"[31m
+            [36m>[31m
+              [36m<h3[31m
+                [33mclass[31m=[32m"text-sm font-semibold text-surface-700 mb-3 flex items-center gap-2"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mdata-testid[31m=[32m"trending-up-icon"[31m
+                [36m/>[31m
+                [0mStrengths[0m
+              [36m</h3>[31m
+              [36m<ul[31m
+                [33mclass[31m=[32m"space-y-1.5"[31m
+              [36m>[31m
+                [36m<li[31m
+                  [33mclass[31m=[32m"text-xs text-surface-600 flex items-start gap-1.5"[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mdata-testid[31m=[32m"check-circle-icon"[31m
+                  [36m/>[31m
+                  [0mClear value proposition[0m
+                [36m</li>[31m
+                [36m<li[31m
+                  [33mclass[31m=[32m"text-xs text-surface-600 flex items-start gap-1.5"[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mdata-testid[31m=[32m"check-circle-icon"[31m
+                  [36m/>[31m
+                  [0mScalable business model[0m
+                [36m</li>[31m
+              [36m</ul>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"bg-white rounded-2xl shadow-card p-5 border border-surface-200"[31m
+            [36m>[31m
+              [36m<h3[31m
+                [33mclass[31m=[32m"text-sm font-semibold text-surface-700 mb-3 flex items-center gap-2"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mdata-testid[31m=[32m"alert-circle-icon"[31m
+                [36m/>[31m
+                [0mAreas to Explore[0m
+              [36m</h3>[31m
+              [36m<ul[31m
+                [33mclass[31m=[32m"space-y-1.5"[31m
+              [36m>[31m
+                [36m<li[31m
+                  [33mclass[31m=[32m"text-xs text-surface-600 flex items-start gap-1.5"[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mdata-testid[31m=[32m"chevron-right-icon"[31m
+                  [36m/>[31m
+                  [0mRevenue model details[0m
+                [36m</li>[31m
+                [36m<li[31m
+                  [33mclass[31m=[32m"text-xs text-surface-600 flex items-start gap-1.5"[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mdata-testid[31m=[32m"chevron-right-icon"[31m
+                  [36m/>[31m
+                  [0mCompetitive analysis[0m
+                [36m</li>[31m
+              [36m</ul>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"bg-white rounded-2xl shadow-card p-6 border border-surface-200"[31m
+          [36m>[31m
+            [36m<h2[31m
+              [33mclass[31m=[32m"text-lg font-semibold text-surface-900 mb-2"[31m
+            [36m>[31m
+              [0mSelect Document Types[0m
+            [36m</h2>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm text-surface-500 mb-4"[31m
+            [36m>[31m
+              [0mChoose all the documents you need. You can add more later.[0m
+            [36m</p>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"space-y-3"[31m
+            [36m>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"w-full text-left p-4 rounded-xl border-2 transition-all border-brand-500 bg-brand-50 shadow-sm"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"flex items-start justify-between"[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"flex-1"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"flex items-center gap-2 mb-1"[31m
+                    [36m>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"font-semibold text-surface-900"[31m
+                      [36m>[31m
+                        [0mWeb Application[0m
+                      [36m</span>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"inline-flex items-center gap-1 px-2 py-0.5 bg-brand-100 text-brand-700 text-xs font-medium rounded-full"[31m
+                      [36m>[31m
+                        [36m<div[31m
+                          [33mdata-testid[31m=[32m"sparkles-icon"[31m
+                        [36m/>[31m
+                        [0mRecommended[0m
+                      [36m</span>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-xs font-medium px-2 py-0.5 rounded-full bg-success-100 text-success-700"[31m
+                      [36m>[31m
+                        [0m95[0m
+                        [0m% match[0m
+                      [36m</span>[31m
+                    [36m</div>[31m
+                    [36m<p[31m
+                      [33mclass[31m=[32m"text-sm text-surface-500"[31m
+                    [36m>[31m
+                      [0mBest fit for your e-commerce marketplace idea[0m
+                    [36m</p>[31m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"flex-shrink-0 ml-3 mt-1"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mdata-testid[31m=[32m"check-square-icon"[31m
+                    [36m/>[31m
+                  [36m</div>[31m
+                [36m</div>[31m
+              [36m</button>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"w-full text-left p-4 rounded-xl border-2 transition-all border-brand-500 bg-brand-50 shadow-sm"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"flex items-start justify-between"[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"flex-1"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mclass[31m=[32m"flex items-center gap-2 mb-1"[31m
+                    [36m>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"font-semibold text-surface-900"[31m
+                      [36m>[31m
+                        [0mMobile Application[0m
+                      [36m</span>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"text-xs font-medium px-2 py-0.5 rounded-full bg-success-100 text-success-700"[31m
+                      [36m>[31m
+                        [0m75[0m
+                        [0m% match[0m
+                      [36m</span>[31m
+                    [36m</div>[31m
+                    [36m<p[31m
+                      [33mclass[31m=[32m"text-sm text-surface-500"[31m
+                    [36m>[31m
+                      [0mAlternative approach for mobile-first strategy[0m
+                    [36m</p>[31m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"flex-shrink-0 ml-3 mt-1"[31m
+                  [36m>[31m
+                    [36m<div[31m
+                      [33mdata-testid[31m=[32m"check-square-icon"[31m
+                    [36m/>[31m
+                  [36m</div>[31m
+                [36m</div>[31m
+              [36m</button>[31m
+            [36m</div>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"mt-4 w-full flex items-center justify-center gap-2 py-2.5 text-sm text-brand-600 hover:text-brand-700 hover:bg-brand-50 rounded-lg transition-colors"[31m
+              [33mtype[31m=[32m"button"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mdata-testid[31m=[32m"plus-icon"[31m
+              [36m/>[31m
+              [0mBrowse more document types[0m
+            [36m</button>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex justify-between items-center"[31m
+          [36m>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-sm text-surface-500"[31m
+            [36m>[31m
+              [0m2[0m
+              [0m document[0m
+              [0ms[0m
+              [0m selected[0m
+            [36m</p>[31m
+            [36m<button[31m
+              [33mclass[31m=[32m"inline-flex items-center gap-2 px-6 py-3 bg-brand-600 text-white font-medium rounded-xl hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm"[31m
+              [33mdisabled[31m=[32m""[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mdata-testid[31m=[32m"loader-icon"[31m
+              [36m/>[31m
+              [0mCreating Session...[0m
+            [36m</button>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</body>[31m
+[36m</html>[31m[39m
+   [32m✓[39m IdeaCapturePage[2m > [22mSession Creation[2m > [22mshows error when session creation fails[32m 209[2mms[22m[39m
+   [32m✓[39m IdeaCapturePage[2m > [22mSession Creation[2m > [22mshows loading state during session creation[32m 147[2mms[22m[39m
+   [32m✓[39m IdeaCapturePage[2m > [22mError Handling and Dismissal[2m > [22mallows dismissing error messages[32m 67[2mms[22m[39m
+   [32m✓[39m IdeaCapturePage[2m > [22mUI State Transitions[2m > [22mshows correct step indicators throughout flow[32m 64[2mms[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m17 passed[39m[22m[90m (19)[39m
+[2m   Start at [22m 18:05:46
+[2m   Duration [22m 6.11s[2m (transform 249ms, setup 645ms, collect 244ms, tests 2.71s, environment 1.80s, prepare 224ms)[22m
+

@@ -1,0 +1,63 @@
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Repos/Quiz-to-Build/apps/web[39m
+
+ [32m✓[39m src/pages/dashboard/DashboardPage.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 1511[2mms[22m[39m
+   [33m[2m✓[22m[39m DashboardPage[2m > [22mnavigates to new chat on New Project click [33m 715[2mms[22m[39m
+ [32m✓[39m src/components/layout/MainLayout.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1653[2mms[22m[39m
+   [33m[2m✓[22m[39m MainLayout[2m > [22mrenders navigation menu [33m 326[2mms[22m[39m
+   [33m[2m✓[22m[39m MainLayout[2m > [22mnavigates to dashboard from logo [33m 319[2mms[22m[39m
+ [31m❯[39m src/pages/questionnaire/QuestionnairePage.test.tsx [2m([22m[2m21 tests[22m[2m | [22m[31m9 failed[39m[2m)[22m[32m 292[2mms[22m[39m
+   [32m✓[39m QuestionnairePage[2m > [22mNew Session View[2m > [22mrenders persona selection and questionnaire list[32m 48[2mms[22m[39m
+   [32m✓[39m QuestionnairePage[2m > [22mNew Session View[2m > [22mallows persona selection[32m 18[2mms[22m[39m
+   [32m✓[39m QuestionnairePage[2m > [22mNew Session View[2m > [22mstarts session when questionnaire is selected[32m 29[2mms[22m[39m
+   [32m✓[39m QuestionnairePage[2m > [22mNew Session View[2m > [22mshows loading state during questionnaire load[32m 8[2mms[22m[39m
+   [32m✓[39m QuestionnairePage[2m > [22mNew Session View[2m > [22mshows error state when questionnaire load fails[32m 14[2mms[22m[39m
+   [32m✓[39m QuestionnairePage[2m > [22mNew Session View[2m > [22mshows error message from store[32m 9[2mms[22m[39m
+   [32m✓[39m QuestionnairePage[2m > [22mLoading Session State[2m > [22mshows loading spinner when loading session[32m 5[2mms[22m[39m
+   [32m✓[39m QuestionnairePage[2m > [22mCompleted Session State[2m > [22mshows completion screen with score[32m 9[2mms[22m[39m
+[31m   [31m×[31m QuestionnairePage[2m > [22mActive Session State[2m > [22mshows active session with question flow[39m[32m 42[2mms[22m[39m
+[31m     → [vitest] No "ChevronLeft" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [31m×[31m QuestionnairePage[2m > [22mActive Session State[2m > [22msubmits text answer[39m[32m 8[2mms[22m[39m
+[31m     → [vitest] No "ChevronLeft" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [31m×[31m QuestionnairePage[2m > [22mActive Session State[2m > [22mshows NQS hint when available[39m[32m 12[2mms[22m[39m
+[31m     → [vitest] No "ChevronLeft" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [31m×[31m QuestionnairePage[2m > [22mActive Session State[2m > [22mhandles single choice question type[39m[32m 15[2mms[22m[39m
+[31m     → [vitest] No "ChevronLeft" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [31m×[31m QuestionnairePage[2m > [22mActive Session State[2m > [22mhandles scale question type[39m[32m 10[2mms[22m[39m
+[31m     → [vitest] No "ChevronLeft" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [31m×[31m QuestionnairePage[2m > [22mActive Session State[2m > [22mhandles multiple choice question type[39m[32m 12[2mms[22m[39m
+[31m     → [vitest] No "ChevronLeft" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [31m×[31m QuestionnairePage[2m > [22mAI Follow-up Functionality[2m > [22mshows AI follow-up when triggered[39m[32m 9[2mms[22m[39m
+[31m     → [vitest] No "ChevronLeft" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [31m×[31m QuestionnairePage[2m > [22mAI Follow-up Functionality[2m > [22mhandles follow-up submission[39m[32m 8[2mms[22m[39m
+[31m     → [vitest] No "ChevronLeft" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+[31m   [31m×[31m QuestionnairePage[2m > [22mAI Follow-up Functionality[2m > [22mallows skipping follow-up[39m[32m 8[2mms[22m[39m
+[31m     → [vitest] No "ChevronLeft" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+   [32m✓[39m QuestionnairePage[2m > [22mCompletion Threshold States[2m > [22mshows ready to complete screen when threshold is met[32m 8[2mms[22m[39m
+   [32m✓[39m QuestionnairePage[2m > [22mCompletion Threshold States[2m > [22mshows below threshold warning[32m 7[2mms[22m[39m
+   [32m✓[39m QuestionnairePage[2m > [22mSession Resumption[2m > [22mresumes session when sessionId parameter is present[32m 5[2mms[22m[39m
+   [32m✓[39m QuestionnairePage[2m > [22mSession Resumption[2m > [22mdoes not resume when session ID matches[32m 3[2mms[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m2 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[31m9 failed[39m[22m[2m | [22m[1m[32m35 passed[39m[22m[90m (44)[39m
+[2m   Start at [22m 18:15:33
+[2m   Duration [22m 7.76s[2m (transform 554ms, setup 547ms, collect 963ms, tests 3.46s, environment 1.72s, prepare 332ms)[22m
+

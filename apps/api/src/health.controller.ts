@@ -3,6 +3,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SkipThrottle } from '@nestjs/throttler';
 import { PrismaService } from '@libs/database';
 import { RedisService } from '@libs/redis';
+import { AiGatewayService } from './modules/ai-gateway/ai-gateway.service';
 
 // =============================================================================
 // Health Response Interfaces
@@ -57,6 +58,7 @@ export class HealthController {
   constructor(
     @Optional() @Inject(PrismaService) private readonly prisma?: PrismaService,
     @Optional() @Inject(RedisService) private readonly redis?: RedisService,
+    @Optional() @Inject(AiGatewayService) private readonly aiGateway?: AiGatewayService,
   ) {
     this.startTime = new Date();
   }
@@ -93,6 +95,15 @@ export class HealthController {
       checks.push(redisCheck);
       if (redisCheck.status !== 'healthy' && overallStatus === 'ok') {
         overallStatus = 'degraded'; // Redis is non-critical, so only degrade
+      }
+    }
+
+    // Check AI Gateway
+    const aiCheck = await this.checkAiGateway();
+    if (aiCheck) {
+      checks.push(aiCheck);
+      if (aiCheck.status === 'unhealthy' && overallStatus === 'ok') {
+        overallStatus = 'degraded'; // AI Gateway degradation is non-critical
       }
     }
 
@@ -339,5 +350,44 @@ export class HealthController {
       status: 'healthy',
       message: 'Disk space check not implemented',
     };
+  }
+
+  /**
+   * Check AI Gateway provider availability
+   * Returns null if AI Gateway service is not injected
+   */
+  private async checkAiGateway(): Promise<DependencyCheck | null> {
+    if (!this.aiGateway) {
+      return null;
+    }
+
+    const startTime = Date.now();
+    try {
+      const health = await this.aiGateway.getHealth();
+      const responseTime = Date.now() - startTime;
+      const availableProviders = health.providers
+        .filter((p) => p.available)
+        .map((p) => p.provider);
+
+      let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
+      let message = `${availableProviders.length}/${health.providers.length} providers available`;
+
+      if (health.status === 'unhealthy') {
+        status = 'unhealthy';
+        message = 'No AI providers available';
+      } else if (health.status === 'degraded') {
+        status = 'degraded';
+        message = `Degraded: only ${availableProviders.join(', ')} available`;
+      }
+
+      return { name: 'ai-gateway', status, responseTime, message };
+    } catch (error) {
+      return {
+        name: 'ai-gateway',
+        status: 'unhealthy',
+        responseTime: Date.now() - startTime,
+        message: error instanceof Error ? error.message : 'AI Gateway check failed',
+      };
+    }
   }
 }

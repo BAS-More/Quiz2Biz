@@ -1,0 +1,37 @@
+(node:175364) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 12 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mrenders navigation menu
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mdisplays user email
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mdisplays user name
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mrenders logo link
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mrenders outlet content
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mdisplays sign out button
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mtoggles sidebar on mobile menu button click
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mnavigates to dashboard from logo
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mrenders navigation links with correct hrefs
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mhas accessible navigation landmark
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mhas accessible main content landmark
+[41m[1m FAIL [22m[49m src/components/layout/MainLayout.test.tsx[2m > [22mMainLayout[2m > [22mhas accessible banner landmark
+[31m[1mTypeError[22m: window.matchMedia is not a function[39m
+[36m [2m❯[22m src/hooks/useTheme.ts:[2m45:19[22m[39m
+    [90m 43| [39m  const [systemPrefersDark, setSystemPrefersDark] = useState<boolean>(…
+    [90m 44| [39m    [35mif[39m ([35mtypeof[39m window [33m===[39m [32m'undefined'[39m) [35mreturn[39m [35mfalse[39m[33m;[39m
+    [90m 45| [39m    [35mreturn[39m window[33m.[39m[34mmatchMedia[39m([32m'(prefers-color-scheme: dark)'[39m)[33m.[39mmatches[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m 46| [39m  })[33m;[39m
+    [90m 47| [39m
+[90m [2m❯[22m mountStateImpl ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m8268:24[22m[39m
+[90m [2m❯[22m mountState ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m8289:22[22m[39m
+[90m [2m❯[22m Object.useState ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m26243:18[22m[39m
+[90m [2m❯[22m process.env.NODE_ENV.exports.useState ../../node_modules/react/cjs/react.development.js:[2m1263:34[22m[39m
+[90m [2m❯[22m useTheme src/hooks/useTheme.ts:[2m43:53[22m[39m
+[90m [2m❯[22m ThemeToggle src/components/settings/ThemeToggle.tsx:[2m36:50[22m[39m
+[90m [2m❯[22m Object.react_stack_bottom_frame ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m25904:20[22m[39m
+[90m [2m❯[22m renderWithHooks ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m7662:22[22m[39m
+[90m [2m❯[22m updateFunctionComponent ../../node_modules/react-dom/cjs/react-dom-client.development.js:[2m10166:19[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯[22m[39m
+

@@ -73,11 +73,18 @@ describe('QuestionnairePage', () => {
     isLoading: false,
     error: null,
     nqsHint: null,
+    questionHistory: [],
+    isReviewingPrevious: false,
+    reviewIndex: -1,
     createSession: vi.fn(),
     continueSession: vi.fn(),
     submitResponse: vi.fn(),
     completeSession: vi.fn(),
     clearError: vi.fn(),
+    goToPrevious: vi.fn(),
+    skipQuestion: vi.fn(),
+    canGoBack: vi.fn().mockReturnValue(false),
+    canSkip: vi.fn().mockReturnValue(false),
   };
 
   beforeEach(() => {

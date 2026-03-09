@@ -1,0 +1,34 @@
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Repos/Quiz-to-Build/apps/web[39m
+
+ [31m❯[39m src/components/layout/MainLayout.test.tsx [2m([22m[2m12 tests[22m[2m | [22m[31m12 failed[39m[2m)[22m[33m 504[2mms[22m[39m
+[31m   [31m×[31m MainLayout[2m > [22mrenders navigation menu[39m[32m 121[2mms[22m[39m
+[31m     → window.matchMedia is not a function[39m
+[31m   [31m×[31m MainLayout[2m > [22mdisplays user email[39m[32m 46[2mms[22m[39m
+[31m     → window.matchMedia is not a function[39m
+[31m   [31m×[31m MainLayout[2m > [22mdisplays user name[39m[32m 48[2mms[22m[39m
+[31m     → window.matchMedia is not a function[39m
+[31m   [31m×[31m MainLayout[2m > [22mrenders logo link[39m[32m 39[2mms[22m[39m
+[31m     → window.matchMedia is not a function[39m
+[31m   [31m×[31m MainLayout[2m > [22mrenders outlet content[39m[32m 46[2mms[22m[39m
+[31m     → window.matchMedia is not a function[39m
+[31m   [31m×[31m MainLayout[2m > [22mdisplays sign out button[39m[32m 35[2mms[22m[39m
+[31m     → window.matchMedia is not a function[39m
+[31m   [31m×[31m MainLayout[2m > [22mtoggles sidebar on mobile menu button click[39m[32m 38[2mms[22m[39m
+[31m     → window.matchMedia is not a function[39m
+[31m   [31m×[31m MainLayout[2m > [22mnavigates to dashboard from logo[39m[32m 25[2mms[22m[39m
+[31m     → window.matchMedia is not a function[39m
+[31m   [31m×[31m MainLayout[2m > [22mrenders navigation links with correct hrefs[39m[32m 26[2mms[22m[39m
+[31m     → window.matchMedia is not a function[39m
+[31m   [31m×[31m MainLayout[2m > [22mhas accessible navigation landmark[39m[32m 26[2mms[22m[39m
+[31m     → window.matchMedia is not a function[39m
+[31m   [31m×[31m MainLayout[2m > [22mhas accessible main content landmark[39m[32m 26[2mms[22m[39m
+[31m     → window.matchMedia is not a function[39m
+[31m   [31m×[31m MainLayout[2m > [22mhas accessible banner landmark[39m[32m 26[2mms[22m[39m
+[31m     → window.matchMedia is not a function[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m12 failed[39m[22m[90m (12)[39m
+[2m   Start at [22m 18:14:41
+[2m   Duration [22m 4.43s[2m (transform 281ms, setup 577ms, collect 467ms, tests 504ms, environment 1.44s, prepare 801ms)[22m
+
