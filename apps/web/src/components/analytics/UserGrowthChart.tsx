@@ -4,7 +4,6 @@
  */
 
 import { useMemo } from 'react';
-import clsx from 'clsx';
 
 interface UserGrowthChartProps {
   data: Array<{
@@ -140,7 +139,7 @@ export function UserGrowthChart({
           />
 
           {/* Data points */}
-          {chartData.points.map((point, index) => (
+          {chartData.points.map((point) => (
             <g key={point.date} className="group">
               <circle
                 cx={point.x}

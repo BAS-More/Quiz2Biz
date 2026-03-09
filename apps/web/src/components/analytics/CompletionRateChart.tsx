@@ -4,7 +4,6 @@
  */
 
 import { useMemo } from 'react';
-import clsx from 'clsx';
 
 interface CompletionRateChartProps {
   data: Array<{
@@ -109,7 +108,7 @@ export function CompletionRateChart({
         <div
           className="absolute left-8 right-0 bottom-6 top-0 flex items-end"
         >
-          {chartData.bars.map((bar, index) => {
+          {chartData.bars.map((bar, _index) => {
             const totalHeight =
               chartData.maxValue > 0
                 ? (bar.total / chartData.maxValue) * 100

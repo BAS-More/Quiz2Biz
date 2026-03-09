@@ -3,7 +3,7 @@
  * Displays session completion rates, user growth, and document metrics
  */
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   TrendingUp,
@@ -14,7 +14,6 @@ import {
   Clock,
   CheckCircle,
   Activity,
-  CalendarDays,
   Loader2,
 } from 'lucide-react';
 import { Card, Badge } from '../../components/ui';

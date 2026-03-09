@@ -20,7 +20,6 @@ import { Card, Button, Badge } from '../../components/ui';
 import { PDFViewer } from '../../components/documents/PDFViewer';
 import { downloadDocument } from '../../api/documents';
 import apiClient from '../../api/client';
-import clsx from 'clsx';
 
 interface DocumentDetails {
   id: string;

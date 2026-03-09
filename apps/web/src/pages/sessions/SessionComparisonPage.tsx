@@ -18,8 +18,6 @@ import {
   AlertCircle,
   ChevronDown,
   ChevronUp,
-  Calendar,
-  User,
 } from 'lucide-react';
 import { Card, Button, Badge } from '../../components/ui';
 import { useQuestionnaireStore } from '../../stores/questionnaire';
@@ -47,8 +45,8 @@ interface ResponseDiff {
 
 // Mock function to fetch comparison data
 async function fetchSessionComparison(
-  session1Id: string,
-  session2Id: string
+  _session1Id: string,
+  _session2Id: string
 ): Promise<ResponseDiff[]> {
   // In production, this would call the API
   // For now, generate mock data
@@ -241,7 +239,7 @@ function ComparisonRow({ diff, isExpanded, onToggle }: ComparisonRowProps) {
 // Main component
 export function SessionComparisonPage() {
   const navigate = useNavigate();
-  const { sessions, loadSessions } = useQuestionnaireStore();
+  const { sessions, loadSessions: _loadSessions } = useQuestionnaireStore();
   const [session1Id, setSession1Id] = useState<string | null>(null);
   const [session2Id, setSession2Id] = useState<string | null>(null);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());

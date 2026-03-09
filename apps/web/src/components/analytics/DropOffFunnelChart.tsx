@@ -32,12 +32,6 @@ function getDropOffColor(rate: number): string {
   return 'text-success-600 bg-success-50';
 }
 
-function getDropOffSeverity(rate: number): string {
-  if (rate >= 20) return 'Critical';
-  if (rate >= 10) return 'High';
-  if (rate >= 5) return 'Medium';
-  return 'Low';
-}
 
 export function DropOffFunnelChart({
   data,

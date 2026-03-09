@@ -15,7 +15,6 @@ import {
   ChevronLeft,
   CreditCard,
   HelpCircle,
-  Settings,
 } from 'lucide-react';
 import { useState } from 'react';
 import { clsx } from 'clsx';

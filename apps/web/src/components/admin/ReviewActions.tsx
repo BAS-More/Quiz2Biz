@@ -4,7 +4,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { CheckCircle, XCircle, Loader2, AlertTriangle } from 'lucide-react';
+import { CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import { Button, Card } from '../ui';
 import clsx from 'clsx';
 

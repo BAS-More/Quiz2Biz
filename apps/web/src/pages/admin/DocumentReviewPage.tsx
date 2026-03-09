@@ -10,14 +10,11 @@ import {
   ArrowLeft,
   FileText,
   User,
-  Clock,
-  Building,
   Download,
   Loader2,
   AlertCircle,
   CheckCircle,
   XCircle,
-  ExternalLink,
 } from 'lucide-react';
 import { Card, Button, Badge } from '../../components/ui';
 import { PDFViewer } from '../../components/documents/PDFViewer';
@@ -28,9 +25,7 @@ import {
   rejectDocument,
   getDocumentPreviewUrl,
   downloadDocumentForReview,
-  type PendingReviewDocument,
 } from '../../api/admin';
-import clsx from 'clsx';
 
 export function DocumentReviewPage() {
   const { documentId } = useParams<{ documentId: string }>();
@@ -45,7 +40,7 @@ export function DocumentReviewPage() {
     data: document,
     isLoading,
     isError,
-    error,
+    error: _error,
   } = useQuery({
     queryKey: ['admin', 'document', documentId],
     queryFn: () => getDocumentForReview(documentId!),

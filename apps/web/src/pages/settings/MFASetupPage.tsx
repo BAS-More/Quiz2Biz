@@ -9,7 +9,6 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   ShieldCheck,
   Shield,
-  Smartphone,
   QrCode,
   Key,
   Copy,
@@ -30,7 +29,6 @@ import {
   disableMfa,
   regenerateBackupCodes,
   type MfaSetupResponse,
-  type BackupCodesResponse,
 } from '../../api/mfa';
 import clsx from 'clsx';
 

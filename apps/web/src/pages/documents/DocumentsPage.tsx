@@ -20,7 +20,6 @@ import {
   Bot,
   RefreshCw,
   Archive,
-  Download,
 } from 'lucide-react';
 import { Card } from '../../components/ui';
 import { useQuestionnaireStore } from '../../stores/questionnaire';

@@ -14,7 +14,6 @@ import {
   ChevronUp,
   Eye,
   GitCompare,
-  RotateCcw,
   CheckCircle,
   XCircle,
   Loader2,
@@ -358,11 +357,11 @@ const VersionCompareView: React.FC<VersionCompareProps> = ({
 // ============================================================================
 
 export const DocumentVersionHistory: React.FC<DocumentVersionHistoryProps> = ({
-  documentId,
+  documentId: _documentId,
   currentVersion,
   versions,
   onDownload,
-  onRestore,
+  onRestore: _onRestore,
   onCompare,
   isLoading = false,
   className,

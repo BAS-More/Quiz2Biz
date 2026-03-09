@@ -25,7 +25,7 @@ import {
   Square,
   Minus,
 } from 'lucide-react';
-import { Card, Button, Badge, Input } from '../../components/ui';
+import { Card, Button, Badge } from '../../components/ui';
 import { ReviewActions } from '../../components/admin/ReviewActions';
 import {
   getPendingReviewDocuments,
@@ -33,7 +33,6 @@ import {
   rejectDocument,
   batchApproveDocuments,
   batchRejectDocuments,
-  type PendingReviewDocument,
 } from '../../api/admin';
 import clsx from 'clsx';
 
@@ -151,6 +150,20 @@ export function ReviewQueuePage() {
     });
   }, []);
 
+  // Filter documents by search and category
+  const filteredDocuments = reviewQueue?.data?.filter((doc) => {
+    const matchesSearch =
+      !searchQuery ||
+      doc.fileName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      doc.documentType.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      doc.session?.user?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesCategory =
+      !categoryFilter || doc.documentType.category === categoryFilter;
+
+    return matchesSearch && matchesCategory;
+  });
+
   const handleSelectAll = useCallback(() => {
     if (!filteredDocuments) return;
     const allIds = filteredDocuments.map((doc) => doc.id);
@@ -174,20 +187,6 @@ export function ReviewQueuePage() {
       reason: batchRejectReason,
     });
   }, [selectedIds, batchRejectReason, batchRejectMutation]);
-
-  // Filter documents by search and category
-  const filteredDocuments = reviewQueue?.data?.filter((doc) => {
-    const matchesSearch =
-      !searchQuery ||
-      doc.fileName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doc.documentType.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doc.session?.user?.name?.toLowerCase().includes(searchQuery.toLowerCase());
-
-    const matchesCategory =
-      !categoryFilter || doc.documentType.category === categoryFilter;
-
-    return matchesSearch && matchesCategory;
-  });
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);

@@ -40,7 +40,7 @@ export function Tooltip({
   content,
   children,
   position = 'top',
-  variant = 'default',
+  variant: _variant = 'default',
   delay = 200,
   maxWidth = 250,
   className,
