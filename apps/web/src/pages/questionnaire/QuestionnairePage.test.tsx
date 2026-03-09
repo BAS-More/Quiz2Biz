@@ -44,8 +44,10 @@ vi.mock('../../api/conversation', () => ({
 
 vi.mock('lucide-react', () => ({
   ArrowLeft: () => <div data-testid="arrow-left-icon" />,
+  ArrowRight: () => <div data-testid="arrow-right-icon" />,
   CheckCircle: () => <div data-testid="check-circle-icon" />,
   AlertTriangle: () => <div data-testid="alert-triangle-icon" />,
+  ChevronLeft: () => <div data-testid="chevron-left-icon" />,
   Loader2: () => <div data-testid="loader-icon" />,
   Target: () => <div data-testid="target-icon" />,
   Users: () => <div data-testid="users-icon" />,

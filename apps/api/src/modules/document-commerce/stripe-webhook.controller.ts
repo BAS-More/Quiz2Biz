@@ -17,8 +17,10 @@ import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
 import { DocumentPurchaseService } from './services/document-purchase.service';
 import type { Request } from 'express';
+import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('api/v1/stripe')
+@Public()
 export class StripeWebhookController {
   private readonly logger = new Logger(StripeWebhookController.name);
   private readonly stripe: Stripe;

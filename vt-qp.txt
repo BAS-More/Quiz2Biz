@@ -1,0 +1,348 @@
+
+ RUN  v4.0.18 C:/Repos/Quiz-to-Build
+
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > New Session View > renders persona selection and questionnaire list 6ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > New Session View > allows persona selection 1ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > New Session View > starts session when questionnaire is selected 1ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > New Session View > shows loading state during questionnaire load 1ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > New Session View > shows error state when questionnaire load fails 1ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > New Session View > shows error message from store 1ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Loading Session State > shows loading spinner when loading session 0ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Completed Session State > shows completion screen with score 0ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Active Session State > shows active session with question flow 0ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Active Session State > submits text answer 0ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Active Session State > shows NQS hint when available 0ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Active Session State > handles single choice question type 0ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Active Session State > handles scale question type 0ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Active Session State > handles multiple choice question type 0ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > AI Follow-up Functionality > shows AI follow-up when triggered 0ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > AI Follow-up Functionality > handles follow-up submission 0ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > AI Follow-up Functionality > allows skipping follow-up 0ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Completion Threshold States > shows ready to complete screen when threshold is met 0ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Completion Threshold States > shows below threshold warning 0ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Session Resumption > resumes session when sessionId parameter is present 0ms
+   → document is not defined
+ × apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Session Resumption > does not resume when session ID matches 0ms
+   → document is not defined
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 21 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > New Session View > renders persona selection and questionnaire list
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:141:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > New Session View > allows persona selection
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:174:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > New Session View > starts session when questionnaire is selected
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:195:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > New Session View > shows loading state during questionnaire load
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:212:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > New Session View > shows error state when questionnaire load fails
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:220:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > New Session View > shows error message from store
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:237:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Loading Session State > shows loading spinner when loading session
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:254:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Completed Session State > shows completion screen with score
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:270:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Active Session State > shows active session with question flow
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:321:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Active Session State > submits text answer
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:347:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Active Session State > shows NQS hint when available
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:376:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Active Session State > handles single choice question type
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:416:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Active Session State > handles scale question type
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:451:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Active Session State > handles multiple choice question type
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:486:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > AI Follow-up Functionality > shows AI follow-up when triggered
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:530:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > AI Follow-up Functionality > handles follow-up submission
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:569:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > AI Follow-up Functionality > allows skipping follow-up
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:612:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Completion Threshold States > shows ready to complete screen when threshold is met
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:653:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Completion Threshold States > shows below threshold warning
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:681:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Session Resumption > resumes session when sessionId parameter is present
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:701:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/21]⎯
+
+ FAIL  apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx > QuestionnairePage > Session Resumption > does not resume when session ID matches
+ReferenceError: document is not defined
+ ❯ Proxy.render node_modules/@testing-library/react/dist/pure.js:256:5
+ ❯ renderQuestionnairePage apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:110:12
+    108| 
+    109|   const renderQuestionnairePage = (initialEntries: string[] = ['/quest…
+    110|     return render(
+       |            ^
+    111|       <MemoryRouter initialEntries={initialEntries}>
+    112|         <Routes>
+ ❯ apps/web/src/pages/questionnaire/QuestionnairePage.test.tsx:712:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/21]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  21 failed (21)
+   Start at  20:15:54
+   Duration  1.16s (transform 450ms, setup 0ms, import 857ms, tests 16ms, environment 0ms)
+

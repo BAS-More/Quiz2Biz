@@ -242,10 +242,20 @@ describe('IdeaCaptureService', () => {
 
     const mockQuestionnaire = {
       id: 'q-1',
+      name: 'Business Plan Questionnaire',
       version: 1,
       projectTypeId: 'pt-1',
       isActive: true,
       isDefault: true,
+      sections: [
+        {
+          id: 's-1',
+          orderIndex: 0,
+          questions: [
+            { id: 'question-1', orderIndex: 0, text: 'First question', type: 'TEXT' },
+          ],
+        },
+      ],
     };
 
     it('should create session from confirmed idea', async () => {
@@ -526,10 +536,20 @@ describe('IdeaCaptureService', () => {
       });
       mockPrismaService.questionnaire.findFirst.mockResolvedValue({
         id: 'q-1',
+        name: 'Business Plan Questionnaire',
         version: 1,
         projectTypeId: 'pt-1',
         isActive: true,
         isDefault: true,
+        sections: [
+          {
+            id: 's-1',
+            orderIndex: 0,
+            questions: [
+              { id: 'question-1', orderIndex: 0, text: 'First question', type: 'TEXT' },
+            ],
+          },
+        ],
       });
       mockPrismaService.session.create.mockResolvedValue({ id: 'session-1' });
 

@@ -1,0 +1,84 @@
+﻿
+ RUN  v3.2.4 C:/Repos/Quiz-to-Build/apps/web
+
+node.exe : (node:190012) Warning: `--localstorage-file` was 
+provided without a valid path
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:190012) W.. 
+   .ut a valid path:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(Use `node --trace-warnings ...` to show where the warning was 
+created)
+ Ô£ô src/hooks/useDraftAutosave.test.ts (18 tests) 314ms
+stderr | src/components/auth/OAuthButtons.test.tsx > 
+OAuthButtons > triggers Microsoft OAuth flow on click
+Not implemented: Window's open() method
+
+ Ô£ô src/components/auth/OAuthButtons.test.tsx (7 tests) 1455ms
+   Ô£ô OAuthButtons > renders Google OAuth button  459ms
+ Ô£ô src/components/layout/MainLayout.test.tsx (12 tests) 2266ms
+   Ô£ô MainLayout > renders navigation menu  559ms
+   Ô£ô MainLayout > renders logo link  301ms
+   Ô£ô MainLayout > navigates to dashboard from logo  345ms
+   Ô£ô MainLayout > renders navigation links with correct hrefs  391ms
+ Ô£ô src/components/questionnaire/FileUploadInput.test.tsx (10 tests) 262ms
+ Ô£ô src/components/questionnaire/QuestionRenderer.extended.test.tsx (14 tests) 1884ms
+   Ô£ô QuestionRenderer - All Question Types > renders SINGLE_CHOICE correctly  535ms
+   Ô£ô QuestionRenderer - All Question Types > renders MULTIPLE_CHOICE correctly  449ms
+   Ô£ô QuestionRenderer - All Question Types > renders URL correctly  378ms
+ Ô£ô src/components/questionnaire/QuestionRenderer.test.tsx (5 tests) 31ms
+ Ô£ô src/components/questionnaire/ScoreDashboard.test.tsx (10 tests) 237ms
+ Ô£ô src/pages/auth/LoginPage.test.tsx (5 tests) 603ms
+ Ô£ô src/pages/auth/RegisterPage.test.tsx (7 tests) 2060ms
+   Ô£ô RegisterPage > validates password mismatch on form submission  1570ms
+ Ô£ô src/pages/billing/BillingPage.test.tsx (4 tests) 161ms
+ Ô£ô src/pages/decisions/DecisionsPage.test.tsx (10 tests) 1933ms
+   Ô£ô DecisionsPage > toggles new decision form on button click  525ms
+   Ô£ô DecisionsPage > creates decision on form submit  1265ms
+ Ô£ô src/pages/dashboard/DashboardPage.test.tsx (11 tests) 1527ms
+   Ô£ô DashboardPage > navigates to new chat on New Project click  590ms
+ Ô£ô src/pages/documents/DocumentsPage.test.tsx (9 tests) 573ms
+   Ô£ô DocumentsPage > shows generate button for each document type  370ms
+ Ô£ô src/pages/evidence/EvidencePage.test.tsx (9 tests) 136ms
+stderr | src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage 
+> Cell Interaction > handles drilldown API error gracefully
+Drilldown failed: Error: Drilldown failed
+    at [90mC:\Repos\Quiz-to-Build\apps\web\[39msrc\pages\heat
+map\HeatmapPage.test.tsx:414:9
+    at file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/
+runner[24m/dist/chunk-hooks.js:155:11
+    at file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/
+runner[24m/dist/chunk-hooks.js:752:26
+    at file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/
+runner[24m/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///C:/Repos/Quiz-to-Build/node_modu
+les/[4m@vitest/runner[24m/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///C:/Repos/Quiz-to-Build/node_modules/[4
+m@vitest/runner[24m/dist/chunk-hooks.js:1574:12)
+    at runSuite (file:///C:/Repos/Quiz-to-Build/node_modules/[
+4m@vitest/runner[24m/dist/chunk-hooks.js:1729:8)
+    at runSuite (file:///C:/Repos/Quiz-to-Build/node_modules/[
+4m@vitest/runner[24m/dist/chunk-hooks.js:1729:8)
+    at runSuite (file:///C:/Repos/Quiz-to-Build/node_modules/[
+4m@vitest/runner[24m/dist/chunk-hooks.js:1729:8)
+
+ Ô£ô src/pages/heatmap/HeatmapPage.test.tsx (16 tests) 1783ms
+   Ô£ô HeatmapPage > Heatmap Display > renders cells with correct colors and styling  463ms
+ Ô£ô src/pages/help/HelpPage.test.tsx (9 tests) 147ms
+ Ô£ô src/pages/idea-capture/IdeaCapturePage.test.tsx (19 tests) 956ms
+ Ô£ô src/pages/legal/PrivacyPage.test.tsx (11 tests) 1789ms
+   Ô£ô PrivacyPage > Content Formatting > renders content with proper formatting  810ms
+   Ô£ô PrivacyPage > WCAG Compliance > meets basic WCAG requirements  369ms
+ Ô£ô src/pages/legal/TermsPage.test.tsx (13 tests) 2746ms
+   Ô£ô TermsPage > Contact Information > displays complete contact information  434ms
+   Ô£ô TermsPage > Accessibility Features > renders semantic HTML structure  344ms
+   Ô£ô TermsPage > Content Formatting > renders content with proper formatting  848ms
+   Ô£ô TermsPage > WCAG Compliance > meets basic WCAG requirements  423ms
+ Ô£ô src/pages/policy-pack/PolicyPackPage.test.tsx (13 tests) 567ms
+ Ô£ô src/pages/questionnaire/QuestionnairePage.test.tsx (21 tests) 456ms

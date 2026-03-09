@@ -1,0 +1,14 @@
+file:///C:/Repos/Quiz-to-Build/apps/web/node_modules/vitest/dist/chunks/cac.Cb-PYCCB.js:404
+          throw new CACError(`Unknown option \`${name.length > 1 ? `--${name}` : `-${name}`}\``);
+                ^
+
+CACError: Unknown option `--clearCache`
+    at Command.checkUnknownOptions (file:///C:/Repos/Quiz-to-Build/apps/web/node_modules/vitest/dist/chunks/cac.Cb-PYCCB.js:404:17)
+    at CAC.runMatchedCommand (file:///C:/Repos/Quiz-to-Build/apps/web/node_modules/vitest/dist/chunks/cac.Cb-PYCCB.js:604:13)
+    at CAC.parse (file:///C:/Repos/Quiz-to-Build/apps/web/node_modules/vitest/dist/chunks/cac.Cb-PYCCB.js:545:12)
+    at file:///C:/Repos/Quiz-to-Build/apps/web/node_modules/vitest/dist/cli.js:27:13
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:655:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v25.6.1

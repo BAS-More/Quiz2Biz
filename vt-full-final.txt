@@ -1,0 +1,258 @@
+
+ RUN  v3.2.4 C:/Repos/Quiz-to-Build/apps/web
+
+(node:112124) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > With score data > should have no accessibility violations 658ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > With score data > should have proper heading structure 99ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > With score data > should have accessible region landmarks 59ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > With score data > should have accessible score gauge with description 20ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > With score data > should use definition list for stats 40ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > With score data > should have accessible progress bars with ARIA attributes 40ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > With score data > should have accessible dimension list 48ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > With score data > should have accessible high risk areas section 55ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > With score data > should have accessible top performers section 47ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > With score data > should have proper time element for last updated 36ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > With score data > should hide decorative icons from assistive technology 8ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > Loading state > should have no accessibility violations when loading 31ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > Loading state > should indicate loading state with proper ARIA 9ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > Loading state > should have screen reader text for loading state 2ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > Empty state > should have no accessibility violations when empty 26ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > Empty state > should have accessible calculate button when empty 11ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > Refresh functionality > should have accessible refresh button 28ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > Trend indicator > should announce trend status via aria-live 7ms
+ ✓ src/test/a11y/ScoreDashboard.a11y.test.tsx > ScoreDashboard Accessibility > Trend indicator > should show correct trend for different statuses 8ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Landmark Roles > should have no accessibility violations 93ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Landmark Roles > should have banner landmark (header) 13ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Landmark Roles > should have main landmark 11ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Landmark Roles > should have navigation landmark with label 21ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Landmark Roles > should have complementary landmark (aside) with label 10ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Landmark Roles > should have contentinfo landmark (footer) 13ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Landmark Roles > should have article with accessible name 16ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Landmark Roles > should differentiate multiple navigation regions 21ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Form Labels > should have no accessibility violations 177ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Form Labels > all inputs should have associated labels 10ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Form Labels > required fields should have aria-required 5ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Form Labels > fields with hints should have aria-describedby 3ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Form Labels > invalid fields should have aria-invalid 4ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Form Labels > error messages should have role alert 18ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Form Labels > fieldsets should have legends 39ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Form Labels > checkbox and radio inputs should be properly labeled 6ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Image Alt Text > should have no accessibility violations 45ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Image Alt Text > informative images should have descriptive alt text 2ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Image Alt Text > complex images should have detailed descriptions 2ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Image Alt Text > decorative images should have empty alt text 2ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Image Alt Text > icons should be hidden from screen readers with text alternative 1ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Image Alt Text > background images with meaning should have role img and aria-label 1ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Live Regions > should have no accessibility violations 67ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Live Regions > status region should have role status and aria-live polite 3ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Live Regions > alert region should have role alert and aria-live assertive 4ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Live Regions > log region should have role log and aria-relevant additions 2ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Live Regions > timer region should have role timer 2ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Live Regions > progress region should have proper ARIA attributes 2ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Live Regions > status updates should be announced 71ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Expanded/Collapsed States > should have no accessibility violations 78ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Expanded/Collapsed States > accordion should have aria-expanded attribute 4ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Expanded/Collapsed States > accordion should have aria-controls pointing to content 3ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Expanded/Collapsed States > accordion aria-expanded should update on click 85ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Expanded/Collapsed States > dropdown should have aria-haspopup menu 3ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Expanded/Collapsed States > dropdown menu should have role menu 47ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Expanded/Collapsed States > menu items should have role menuitem 107ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Expanded/Collapsed States > tree items should have aria-expanded 3ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Expanded/Collapsed States > dialog trigger should have aria-haspopup dialog 3ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Expanded/Collapsed States > dialog should have aria-modal and accessible name 81ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Tables > should have no accessibility violations 117ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Tables > table should have caption 15ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Tables > column headers should have scope col 30ms
+ ✓ src/test/a11y/screen-reader.a11y.test.tsx > Screen Reader Accessibility > Tables > row headers should have scope row 48ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Skip Links > should have a skip link as first focusable element 40ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Skip Links > skip link should point to main content 3ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Skip Links > main content should have correct id for skip link target 2ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Skip Links > main content should be focusable when skip link is activated 1ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Tab Order > should follow logical tab order in forms 196ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Tab Order > should support reverse tab order with Shift+Tab 116ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Tab Order > should have no accessibility violations in form tab order 105ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > No Keyboard Traps > should allow tabbing through and out of interactive regions 126ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > No Keyboard Traps > should allow backward navigation through regions 321ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Focus Visible > all interactive elements should be focusable 5ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Focus Visible > buttons should be keyboard activatable with Enter 26ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Focus Visible > buttons should be keyboard activatable with Space 47ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Modal Focus Management > should move focus to modal when opened 22ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Modal Focus Management > modal should close on Escape key 6ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Modal Focus Management > modal should have aria-modal attribute 34ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Modal Focus Management > modal should have accessible label 22ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Dropdown Keyboard Navigation > should open dropdown with Enter key 36ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Dropdown Keyboard Navigation > should close dropdown with Escape key 63ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Dropdown Keyboard Navigation > trigger should have aria-expanded attribute 2ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Dropdown Keyboard Navigation > trigger should have aria-haspopup attribute 2ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Error Focus Management > should move focus to error message when form has errors 32ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Error Focus Management > error message should have role alert 66ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > AJAX Update Focus Management > should move focus to loaded content after AJAX update 615ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > AJAX Update Focus Management > should announce loading state 34ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > AJAX Update Focus Management > result region should have accessible label 614ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Focus Indicator Requirements > all focusable elements should receive focus 8ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Focus Indicator Requirements > disabled elements should not receive focus 47ms
+ ✓ src/test/a11y/keyboard-navigation.a11y.test.tsx > Keyboard Navigation Accessibility > Focus Indicator Requirements > elements with tabindex=-1 should be programmatically focusable but not in tab order 51ms
+ ✓ src/pages/auth/RegisterPage.test.tsx > RegisterPage > renders registration form 40ms
+ ✓ src/pages/auth/RegisterPage.test.tsx > RegisterPage > shows password requirements when typing password 148ms
+ ✓ src/pages/auth/RegisterPage.test.tsx > RegisterPage > has link to login page 43ms
+ ✓ src/pages/auth/RegisterPage.test.tsx > RegisterPage > renders create account button 89ms
+ ✓ src/pages/auth/RegisterPage.test.tsx > RegisterPage > shows OAuth buttons 12ms
+ ✓ src/pages/auth/RegisterPage.test.tsx > RegisterPage > shows password visibility toggle 18ms
+ ✓ src/pages/auth/RegisterPage.test.tsx > RegisterPage > validates password mismatch on form submission 1434ms
+ ✓ src/pages/legal/TermsPage.test.tsx > TermsPage > Page Structure and Content > renders terms of service page with correct structure 21ms
+ ✓ src/pages/legal/TermsPage.test.tsx > TermsPage > Page Structure and Content > renders all terms of service sections 53ms
+ ✓ src/pages/legal/TermsPage.test.tsx > TermsPage > Page Structure and Content > renders all list items correctly 42ms
+ ✓ src/pages/legal/TermsPage.test.tsx > TermsPage > Contact Information > displays complete contact information 17ms
+ ✓ src/pages/legal/TermsPage.test.tsx > TermsPage > Navigation Links > renders navigation links in footer 14ms
+ ✓ src/pages/legal/TermsPage.test.tsx > TermsPage > Navigation Links > renders link to Privacy Policy within content 59ms
+ ✓ src/pages/legal/TermsPage.test.tsx > TermsPage > Footer > renders footer with copyright information 11ms
+ ✓ src/pages/legal/TermsPage.test.tsx > TermsPage > Accessibility Features > includes accessibility attributes 11ms
+ ✓ src/pages/legal/TermsPage.test.tsx > TermsPage > Accessibility Features > renders semantic HTML structure 115ms
+ ✓ src/pages/legal/TermsPage.test.tsx > TermsPage > Content Formatting > renders content with proper formatting 245ms
+ ✓ src/pages/legal/TermsPage.test.tsx > TermsPage > WCAG Compliance > meets basic WCAG requirements 147ms
+ ✓ src/pages/legal/TermsPage.test.tsx > TermsPage > Internationalization > uses current year in copyright 12ms
+ ✓ src/pages/legal/TermsPage.test.tsx > TermsPage > Legal Content Verification > includes key legal clauses 20ms
+ ✓ src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage > Loading State > shows loading state initially 4ms
+ ✓ src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage > Loading State > shows error state when API fails 13ms
+ ✓ src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage > Loading State > shows error with specific message from API 12ms
+ ✓ src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage > Heatmap Display > renders heatmap with summary cards 92ms
+ ✓ src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage > Heatmap Display > renders heatmap grid with correct data 63ms
+ ✓ src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage > Heatmap Display > renders cells with correct colors and styling 123ms
+ ✓ src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage > Heatmap Display > shows overall risk score 36ms
+ ✓ src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage > Heatmap Display > shows high risk score in red 35ms
+ ✓ src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage > Cell Interaction > calls drilldown API when cell is clicked 39ms
+ ✓ src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage > Cell Interaction > shows drilldown panel with question details 57ms
+stderr | src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage > Cell Interaction > handles drilldown API error gracefully
+Drilldown failed: Error: Drilldown failed
+    at [90mC:\Repos\Quiz-to-Build\apps\web\[39msrc\pages\heatmap\HeatmapPage.test.tsx:414:9
+    at file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:155:11
+    at file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:752:26
+    at file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:1574:12)
+    at runSuite (file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:1729:8)
+    at runSuite (file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:1729:8)
+    at runSuite (file:///C:/Repos/Quiz-to-Build/node_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:1729:8)
+
+ ✓ src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage > Cell Interaction > allows closing drilldown panel 67ms
+ ✓ src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage > Cell Interaction > handles drilldown API error gracefully 81ms
+ ✓ src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage > Navigation > navigates back to dashboard when back link is clicked 38ms
+ ✓ src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage > Accessibility > provides accessible labels for cells 39ms
+ ✓ src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage > Edge Cases > handles missing session ID gracefully 2ms
+ ✓ src/pages/heatmap/HeatmapPage.test.tsx > HeatmapPage > Edge Cases > handles empty heatmap data 16ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Color Contrast Accessibility > WCAG AA Compliance - Normal Text (4.5:1) > primary text on white background should meet 4.5:1 0ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Color Contrast Accessibility > WCAG AA Compliance - Normal Text (4.5:1) > secondary text on white background should meet 4.5:1 0ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Color Contrast Accessibility > WCAG AA Compliance - Normal Text (4.5:1) > error text on white background should meet 4.5:1 0ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Color Contrast Accessibility > WCAG AA Compliance - Normal Text (4.5:1) > success text on white background should meet 4.5:1 0ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Color Contrast Accessibility > WCAG AA Compliance - Normal Text (4.5:1) > warning text on white background should meet 4.5:1 0ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Color Contrast Accessibility > WCAG AA Compliance - Normal Text (4.5:1) > white text on dark background should meet 4.5:1 0ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Color Contrast Accessibility > WCAG AA Compliance - Normal Text (4.5:1) > link text on white background should meet 4.5:1 0ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Color Contrast Accessibility > WCAG AA Compliance - Large Text (3:1) > muted text (large) on white background should meet 3:1 0ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Color Contrast Accessibility > WCAG AA Compliance - Large Text (3:1) > disabled text on white background should meet 3:1 for large text 0ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Color Contrast Accessibility > WCAG AA Compliance - UI Components (3:1) > border color should meet 3:1 against background 0ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Color Contrast Accessibility > WCAG AA Compliance - UI Components (3:1) > focus ring should meet 3:1 against background 0ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Color Contrast Accessibility > WCAG AA Compliance - UI Components (3:1) > primary button text on button background should meet 4.5:1 0ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Color Contrast Accessibility > Status Colors on Status Backgrounds > error text on error background should meet 4.5:1 0ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Color Contrast Accessibility > Status Colors on Status Backgrounds > success text on success background should meet 4.5:1 0ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Color Contrast Accessibility > Status Colors on Status Backgrounds > warning text on warning background should meet 4.5:1 0ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Form Labels > should have no accessibility violations 278ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Form Labels > all form inputs should have associated labels 11ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Form Labels > labels should use htmlFor to associate with inputs 6ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Required Fields > required inputs should have aria-required attribute 4ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Required Fields > required indicator should be visible and accessible 5ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Required Fields > optional fields should be clearly marked 8ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Error Messages > should have no accessibility violations with errors 258ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Error Messages > invalid inputs should have aria-invalid 6ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Error Messages > errors should be linked via aria-describedby 5ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Error Messages > error messages should have role alert 32ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Error Messages > error summary should be present and focusable 8ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Error Messages > error summary should link to specific fields 7ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Hints and Descriptions > hint text should be linked via aria-describedby 7ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Hints and Descriptions > hints should provide useful context 11ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Hints and Descriptions > character counter should use aria-live 7ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Fieldsets and Legends > checkbox groups should be wrapped in fieldset with legend 8ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Fieldsets and Legends > radio groups should be wrapped in fieldset with legend 8ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Inline Validation > should update aria-invalid on blur 171ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Inline Validation > should show error message on validation failure 231ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Inline Validation > should show success message on valid input 368ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Disabled Form Elements > should have no accessibility violations 79ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Disabled Form Elements > disabled inputs should have aria-disabled 2ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Disabled Form Elements > readonly inputs should have aria-readonly 2ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Disabled Form Elements > disabled buttons should have aria-disabled 2ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Autocomplete Attributes > email input should have autocomplete="email" 5ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Autocomplete Attributes > phone input should have autocomplete="tel" 5ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Form Submission > submit button should have type="submit" 5ms
+ ✓ src/test/a11y/color-contrast-forms.a11y.test.tsx > Form Accessibility > Form Submission > reset button should have type="reset" 5ms
+ ✓ src/pages/legal/PrivacyPage.test.tsx > PrivacyPage > Page Structure and Content > renders privacy policy page with correct structure 26ms
+ ✓ src/pages/legal/PrivacyPage.test.tsx > PrivacyPage > Page Structure and Content > renders all privacy policy sections 48ms
+ ✓ src/pages/legal/PrivacyPage.test.tsx > PrivacyPage > Page Structure and Content > renders all list items correctly 41ms
+ ✓ src/pages/legal/PrivacyPage.test.tsx > PrivacyPage > Contact Information > displays complete contact information 11ms
+ ✓ src/pages/legal/PrivacyPage.test.tsx > PrivacyPage > Navigation Links > renders navigation links in footer 11ms
+ ✓ src/pages/legal/PrivacyPage.test.tsx > PrivacyPage > Footer > renders footer with copyright information 10ms
+ ✓ src/pages/legal/PrivacyPage.test.tsx > PrivacyPage > Accessibility Features > includes accessibility attributes 10ms
+ ✓ src/pages/legal/PrivacyPage.test.tsx > PrivacyPage > Accessibility Features > renders semantic HTML structure 112ms
+ ✓ src/pages/legal/PrivacyPage.test.tsx > PrivacyPage > Content Formatting > renders content with proper formatting 262ms
+ ✓ src/pages/legal/PrivacyPage.test.tsx > PrivacyPage > WCAG Compliance > meets basic WCAG requirements 201ms
+ ✓ src/pages/legal/PrivacyPage.test.tsx > PrivacyPage > Internationalization > uses current year in copyright 10ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Full page with data > should have no accessibility violations 220ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Full page with data > should have proper heading structure 51ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Full page with data > should have main landmark 27ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Full page with data > should have labeled articles for subscription and usage 38ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Subscription card > should have accessible subscription card 36ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Subscription card > should have accessible tier badge 7ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Subscription card > should use definition list for subscription details 45ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Subscription card > should have proper time element for renewal date 36ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Subscription card > should have accessible action buttons group 40ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Subscription card > should have cancel warning accessible to screen readers 10ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Cancellation warning > should show cancellation warning with alert role 30ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Cancellation warning > should have accessible resume subscription button 30ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Usage card > should have accessible usage card 32ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Usage card > should have accessible progress bars 61ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Usage card > should have usage list with accessible items 30ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Near limit warning > should announce near limit state 5ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Unlimited usage > should display unlimited correctly 5ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Loading state > should have no accessibility violations when loading 24ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Loading state > should indicate loading state properly 10ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Loading state > should have screen reader text for loading 2ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Error state > should have no accessibility violations with error 27ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Error state > should display error with alert role 19ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Error state > should have error heading 18ms
+ ✓ src/test/a11y/BillingPage.a11y.test.tsx > BillingPage Accessibility > Navigation > should have accessible invoice history link 46ms
+ ✓ src/components/layout/MainLayout.test.tsx > MainLayout > renders navigation menu 130ms
+ ✓ src/components/layout/MainLayout.test.tsx > MainLayout > displays user email 9ms
+ ✓ src/components/layout/MainLayout.test.tsx > MainLayout > displays user name 9ms
+ ✓ src/components/layout/MainLayout.test.tsx > MainLayout > renders logo link 132ms
+ ✓ src/components/layout/MainLayout.test.tsx > MainLayout > renders outlet content 11ms
+ ✓ src/components/layout/MainLayout.test.tsx > MainLayout > displays sign out button 50ms
+ ✓ src/components/layout/MainLayout.test.tsx > MainLayout > toggles sidebar on mobile menu button click 40ms
+ ✓ src/components/layout/MainLayout.test.tsx > MainLayout > navigates to dashboard from logo 128ms
+ ✓ src/components/layout/MainLayout.test.tsx > MainLayout > renders navigation links with correct hrefs 128ms
+ ✓ src/components/layout/MainLayout.test.tsx > MainLayout > has accessible navigation landmark 21ms
+ ✓ src/components/layout/MainLayout.test.tsx > MainLayout > has accessible main content landmark 19ms
+ ✓ src/components/layout/MainLayout.test.tsx > MainLayout > has accessible banner landmark 27ms
+ ✓ src/pages/dashboard/DashboardPage.test.tsx > DashboardPage > renders dashboard with greeting 50ms
+ ✓ src/pages/dashboard/DashboardPage.test.tsx > DashboardPage > loads projects on mount 21ms
+ ✓ src/pages/dashboard/DashboardPage.test.tsx > DashboardPage > displays active projects stat 18ms
+ ✓ src/pages/dashboard/DashboardPage.test.tsx > DashboardPage > displays completed stat 37ms
+ ✓ src/pages/dashboard/DashboardPage.test.tsx > DashboardPage > displays best quality stat 28ms
+ ✓ src/pages/dashboard/DashboardPage.test.tsx > DashboardPage > navigates to new chat on New Project click 214ms
+ ✓ src/pages/dashboard/DashboardPage.test.tsx > DashboardPage > displays active project cards 46ms
+ ✓ src/pages/dashboard/DashboardPage.test.tsx > DashboardPage > displays completed project cards 31ms
+ ✓ src/pages/dashboard/DashboardPage.test.tsx > DashboardPage > shows loading state initially 11ms
+ ✓ src/pages/dashboard/DashboardPage.test.tsx > DashboardPage > shows error when project loading fails 41ms
+ ✓ src/pages/dashboard/DashboardPage.test.tsx > DashboardPage > shows empty state when no projects exist 35ms
+ ✓ src/test/a11y/FileUploadInput.a11y.test.tsx > FileUploadInput Accessibility > Empty state > should have no accessibility violations 71ms
+ ✓ src/test/a11y/FileUploadInput.a11y.test.tsx > FileUploadInput Accessibility > Empty state > should have accessible region with label 19ms
+ ✓ src/test/a11y/FileUploadInput.a11y.test.tsx > FileUploadInput Accessibility > Empty state > should have keyboard-accessible drop zone 18ms
+ ✓ src/test/a11y/FileUploadInput.a11y.test.tsx > FileUploadInput Accessibility > Empty state > should have accessible file input 2ms
+ ✓ src/test/a11y/FileUploadInput.a11y.test.tsx > FileUploadInput Accessibility > Empty state > should have instructions accessible to screen readers 4ms
+ ✓ src/test/a11y/FileUploadInput.a11y.test.tsx > FileUploadInput Accessibility > Empty state > should have decorative icons hidden from assistive technology 3ms
+ ✓ src/test/a11y/FileUploadInput.a11y.test.tsx > FileUploadInput Accessibility > With files > should have no accessibility violations with files 131ms
+ ✓ src/test/a11y/FileUploadInput.a11y.test.tsx > FileUploadInput Accessibility > With files > should have accessible file list 17ms
+ ✓ src/test/a11y/FileUploadInput.a11y.test.tsx > FileUploadInput Accessibility > With files > should have accessible list items for each file 22ms
+ ✓ src/test/a11y/FileUploadInput.a11y.test.tsx > FileUploadInput Accessibility > With files > should have accessible image previews with alt text 4ms
+ ✓ src/test/a11y/FileUploadInput.a11y.test.tsx > FileUploadInput Accessibility > With files > should have accessible document icons with aria-label 34ms
+Terminate batch job (Y/N)? ^CTerminate batch job (Y/N)? Terminate batch job (Y/N)? 
+^C

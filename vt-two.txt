@@ -1,0 +1,24 @@
+﻿
+ RUN  v3.2.4 C:/Repos/Quiz-to-Build/apps/web
+
+node.exe : (node:47684) Warning: `--localstorage-file` was 
+provided without a valid path
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:47684) Wa.. 
+   .ut a valid path:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(Use `node --trace-warnings ...` to show where the warning was 
+created)
+ Ô£ô src/components/ui/Badge.test.tsx (19 tests) 57ms
+ Ô£ô src/components/ui/Card.test.tsx (19 tests) 27ms
+
+ Test Files  2 passed (2)
+      Tests  38 passed (38)
+   Start at  20:21:45
+   Duration  1.79s (transform 105ms, setup 291ms, collect 148ms, tests 84ms, environment 816ms, prepare 220ms)
+

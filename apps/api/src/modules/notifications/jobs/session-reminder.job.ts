@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { PrismaService } from '@libs/database';
-import { NotificationService } from '../notifications/notification.service';
+import { NotificationService } from '../notification.service';
 
 /**
  * Reminder intervals for abandoned sessions

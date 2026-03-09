@@ -1,0 +1,59 @@
+
+ RUN  v3.2.4 c:/Repos/Quiz-to-Build/apps/web
+
+(node:111384) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 34 ⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/hooks/useDraftAutosave.test.ts [ src/hooks/useDraftAutosave.test.ts ]
+ FAIL  src/components/auth/OAuthButtons.test.tsx [ src/components/auth/OAuthButtons.test.tsx ]
+ FAIL  src/components/layout/MainLayout.test.tsx [ src/components/layout/MainLayout.test.tsx ]
+ FAIL  src/components/questionnaire/FileUploadInput.test.tsx [ src/components/questionnaire/FileUploadInput.test.tsx ]
+ FAIL  src/components/questionnaire/QuestionRenderer.extended.test.tsx [ src/components/questionnaire/QuestionRenderer.extended.test.tsx ]
+ FAIL  src/components/questionnaire/QuestionRenderer.test.tsx [ src/components/questionnaire/QuestionRenderer.test.tsx ]
+ FAIL  src/components/questionnaire/ScoreDashboard.test.tsx [ src/components/questionnaire/ScoreDashboard.test.tsx ]
+ FAIL  src/components/ui/Badge.test.tsx [ src/components/ui/Badge.test.tsx ]
+ FAIL  src/components/ui/Card.test.tsx [ src/components/ui/Card.test.tsx ]
+ FAIL  src/pages/auth/LoginPage.test.tsx [ src/pages/auth/LoginPage.test.tsx ]
+ FAIL  src/pages/auth/RegisterPage.test.tsx [ src/pages/auth/RegisterPage.test.tsx ]
+ FAIL  src/pages/billing/BillingPage.test.tsx [ src/pages/billing/BillingPage.test.tsx ]
+ FAIL  src/pages/dashboard/DashboardPage.test.tsx [ src/pages/dashboard/DashboardPage.test.tsx ]
+ FAIL  src/pages/decisions/DecisionsPage.test.tsx [ src/pages/decisions/DecisionsPage.test.tsx ]
+ FAIL  src/pages/documents/DocumentsPage.test.tsx [ src/pages/documents/DocumentsPage.test.tsx ]
+ FAIL  src/pages/heatmap/HeatmapPage.test.tsx [ src/pages/heatmap/HeatmapPage.test.tsx ]
+ FAIL  src/pages/help/HelpPage.test.tsx [ src/pages/help/HelpPage.test.tsx ]
+ FAIL  src/pages/evidence/EvidencePage.test.tsx [ src/pages/evidence/EvidencePage.test.tsx ]
+ FAIL  src/pages/idea-capture/IdeaCapturePage.test.tsx [ src/pages/idea-capture/IdeaCapturePage.test.tsx ]
+ FAIL  src/pages/legal/PrivacyPage.test.tsx [ src/pages/legal/PrivacyPage.test.tsx ]
+ FAIL  src/pages/legal/TermsPage.test.tsx [ src/pages/legal/TermsPage.test.tsx ]
+ FAIL  src/pages/policy-pack/PolicyPackPage.test.tsx [ src/pages/policy-pack/PolicyPackPage.test.tsx ]
+ FAIL  src/pages/questionnaire/QuestionnairePage.test.tsx [ src/pages/questionnaire/QuestionnairePage.test.tsx ]
+ FAIL  src/test/a11y/BillingPage.a11y.test.tsx [ src/test/a11y/BillingPage.a11y.test.tsx ]
+ FAIL  src/test/a11y/color-contrast-forms.a11y.test.tsx [ src/test/a11y/color-contrast-forms.a11y.test.tsx ]
+ FAIL  src/test/a11y/FileUploadInput.a11y.test.tsx [ src/test/a11y/FileUploadInput.a11y.test.tsx ]
+ FAIL  src/test/a11y/keyboard-navigation.a11y.test.tsx [ src/test/a11y/keyboard-navigation.a11y.test.tsx ]
+ FAIL  src/test/a11y/LoginPage.a11y.test.tsx [ src/test/a11y/LoginPage.a11y.test.tsx ]
+ FAIL  src/test/a11y/MainLayout.a11y.test.tsx [ src/test/a11y/MainLayout.a11y.test.tsx ]
+ FAIL  src/test/a11y/QuestionRenderer.a11y.test.tsx [ src/test/a11y/QuestionRenderer.a11y.test.tsx ]
+ FAIL  src/test/a11y/RegisterPage.a11y.test.tsx [ src/test/a11y/RegisterPage.a11y.test.tsx ]
+ FAIL  src/test/a11y/ScoreDashboard.a11y.test.tsx [ src/test/a11y/ScoreDashboard.a11y.test.tsx ]
+ FAIL  src/test/a11y/screen-reader.a11y.test.tsx [ src/test/a11y/screen-reader.a11y.test.tsx ]
+ FAIL  src/test/responsive/mobile-responsiveness.test.tsx [ src/test/responsive/mobile-responsiveness.test.tsx ]
+Error: Vitest failed to find the runner. This is a bug in Vitest. Please, open an issue with reproduction.
+ ❯ src/test/setup.ts:52:1
+     50| 
+     51| // Cleanup after each test
+     52| afterEach(() => {
+       | ^
+     53|   cleanup();
+     54| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/34]⎯
+
+
+ Test Files  34 failed (34)
+      Tests  no tests
+   Start at  20:19:56
+   Duration  1.77s (transform 54ms, setup 0ms, collect 0ms, tests 0ms, environment 787ms, prepare 170ms)
+
