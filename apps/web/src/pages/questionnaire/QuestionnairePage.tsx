@@ -27,6 +27,7 @@ import {
   type ConversationMessage,
   type FollowUpResult,
 } from '../../api/conversation';
+import { QuestionnaireNavigation } from '../../components/questionnaire/QuestionnaireNavigation';
 
 const PERSONA_OPTIONS: { value: Persona; label: string; description: string }[] = [
   { value: 'CTO', label: 'CTO', description: 'Architecture, security, DevOps, quality' },
@@ -57,11 +58,18 @@ export function QuestionnairePage() {
     isLoading,
     error,
     nqsHint,
+    questionHistory,
+    isReviewingPrevious,
+    reviewIndex,
     createSession,
     continueSession,
     submitResponse,
     completeSession,
     clearError,
+    goToPrevious,
+    skipQuestion,
+    canGoBack,
+    canSkip,
   } = useQuestionnaireStore();
 
   // Ensure currentQuestions is always an array
@@ -83,12 +91,17 @@ export function QuestionnairePage() {
   const [currentValue, setCurrentValue] = useState<unknown>(null);
   const [valueQuestionId, setValueQuestionId] = useState(currentQuestionId);
 
-  // Reset value and follow-up when question changes
+  // Reset value and follow-up when question changes, preload value if reviewing
   if (currentQuestionId !== valueQuestionId) {
     setValueQuestionId(currentQuestionId);
-    if (currentValue !== null) {
+    
+    // If reviewing a previous question, preload the saved value
+    if (isReviewingPrevious && reviewIndex >= 0 && questionHistory[reviewIndex]) {
+      setCurrentValue(questionHistory[reviewIndex].answeredValue);
+    } else if (currentValue !== null) {
       setCurrentValue(null);
     }
+    
     if (followUp !== null) {
       setFollowUp(null);
       setFollowUpAnswer('');
@@ -504,25 +517,26 @@ export function QuestionnairePage() {
             )}
           </div>
 
-          {/* Submit button */}
-          <div className="mt-6 flex items-center justify-between">
-            <div className="text-sm text-gray-500">
-              {currentQuestion.required && <span className="text-red-500">* Required</span>}
+          {/* Navigation: Previous / Skip / Submit */}
+          <div className="mt-6">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm text-gray-500">
+                {currentQuestion.required && <span className="text-red-500">* Required</span>}
+                {!currentQuestion.required && <span className="text-gray-400">Optional</span>}
+              </div>
             </div>
-            <button
-              onClick={handleSubmit}
-              disabled={isLoading || isValueEmpty}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
-            >
-              {isLoading ? (
-                <span className="flex items-center">
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  Submitting...
-                </span>
-              ) : (
-                'Submit Answer'
-              )}
-            </button>
+            <QuestionnaireNavigation
+              onPrevious={goToPrevious}
+              onSkip={() => session && skipQuestion(session.id)}
+              onSubmit={handleSubmit}
+              canGoBack={canGoBack()}
+              canSkip={canSkip()}
+              isSubmitDisabled={isValueEmpty}
+              isLoading={isLoading}
+              isReviewing={isReviewingPrevious}
+              reviewPosition={isReviewingPrevious ? reviewIndex + 1 : undefined}
+              totalHistory={isReviewingPrevious ? questionHistory.length : undefined}
+            />
           </div>
 
           {/* AI Follow-up section */}

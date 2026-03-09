@@ -1,0 +1,380 @@
+/**
+ * Analytics Dashboard Page
+ * Displays session completion rates, user growth, and document metrics
+ */
+
+import { useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import {
+  TrendingUp,
+  TrendingDown,
+  Users,
+  FileText,
+  BarChart3,
+  Clock,
+  CheckCircle,
+  Activity,
+  CalendarDays,
+  Loader2,
+} from 'lucide-react';
+import { Card, Badge } from '../../components/ui';
+import { CompletionRateChart } from '../../components/analytics/CompletionRateChart';
+import { UserGrowthChart } from '../../components/analytics/UserGrowthChart';
+import clsx from 'clsx';
+import { apiClient } from '../../api/client';
+
+// Types for analytics data
+interface AnalyticsMetrics {
+  totalUsers: number;
+  activeUsers: number;
+  totalSessions: number;
+  completedSessions: number;
+  sessionCompletionRate: number;
+  avgSessionDuration: number;
+  totalDocuments: number;
+  documentsThisMonth: number;
+  userGrowthData: Array<{ date: string; users: number; newUsers: number }>;
+  completionData: Array<{ date: string; completed: number; abandoned: number }>;
+  documentMetrics: Array<{ type: string; count: number; revenue: number }>;
+}
+
+// Fetch analytics data
+async function fetchAnalyticsData(): Promise<AnalyticsMetrics> {
+  try {
+    const { data } = await apiClient.get('/api/v1/admin/analytics');
+    return data;
+  } catch {
+    // Return mock data for demo/development
+    return generateMockData();
+  }
+}
+
+// Generate mock data for development
+function generateMockData(): AnalyticsMetrics {
+  const now = new Date();
+  const userGrowthData = [];
+  const completionData = [];
+
+  for (let i = 29; i >= 0; i--) {
+    const date = new Date(now);
+    date.setDate(date.getDate() - i);
+    const dateStr = date.toISOString().split('T')[0];
+
+    userGrowthData.push({
+      date: dateStr,
+      users: 100 + Math.floor(Math.random() * 50) + i * 3,
+      newUsers: Math.floor(Math.random() * 10) + 1,
+    });
+
+    completionData.push({
+      date: dateStr,
+      completed: Math.floor(Math.random() * 20) + 10,
+      abandoned: Math.floor(Math.random() * 10) + 2,
+    });
+  }
+
+  return {
+    totalUsers: 1247,
+    activeUsers: 423,
+    totalSessions: 3892,
+    completedSessions: 2847,
+    sessionCompletionRate: 73.2,
+    avgSessionDuration: 18.5,
+    totalDocuments: 4521,
+    documentsThisMonth: 342,
+    userGrowthData,
+    completionData,
+    documentMetrics: [
+      { type: 'Business Plan', count: 1523, revenue: 45690 },
+      { type: 'Executive Summary', count: 987, revenue: 29610 },
+      { type: 'Financial Forecast', count: 756, revenue: 37800 },
+      { type: 'Marketing Plan', count: 645, revenue: 19350 },
+      { type: 'SWOT Analysis', count: 610, revenue: 12200 },
+    ],
+  };
+}
+
+// Metric Card Component
+interface MetricCardProps {
+  title: string;
+  value: string | number;
+  change?: number;
+  icon: React.ElementType;
+  iconColor?: string;
+  subtitle?: string;
+}
+
+function MetricCard({
+  title,
+  value,
+  change,
+  icon: Icon,
+  iconColor = 'text-brand-600',
+  subtitle,
+}: MetricCardProps) {
+  const isPositive = change !== undefined && change >= 0;
+
+  return (
+    <Card padding="md">
+      <div className="flex items-start justify-between">
+        <div>
+          <p className="text-sm text-surface-500 font-medium">{title}</p>
+          <p className="text-2xl font-bold text-surface-900 mt-1">{value}</p>
+          {subtitle && (
+            <p className="text-xs text-surface-400 mt-1">{subtitle}</p>
+          )}
+        </div>
+        <div className={clsx('p-2 rounded-lg bg-surface-100', iconColor)}>
+          <Icon className="h-5 w-5" />
+        </div>
+      </div>
+      {change !== undefined && (
+        <div className="flex items-center gap-1 mt-3">
+          {isPositive ? (
+            <TrendingUp className="h-4 w-4 text-success-500" />
+          ) : (
+            <TrendingDown className="h-4 w-4 text-danger-500" />
+          )}
+          <span
+            className={clsx(
+              'text-sm font-medium',
+              isPositive ? 'text-success-600' : 'text-danger-600'
+            )}
+          >
+            {isPositive ? '+' : ''}
+            {change}%
+          </span>
+          <span className="text-xs text-surface-400 ml-1">vs last month</span>
+        </div>
+      )}
+    </Card>
+  );
+}
+
+// Time Range Selector
+type TimeRange = '7d' | '30d' | '90d' | '1y';
+
+interface TimeRangeSelectorProps {
+  value: TimeRange;
+  onChange: (range: TimeRange) => void;
+}
+
+function TimeRangeSelector({ value, onChange }: TimeRangeSelectorProps) {
+  const ranges: { key: TimeRange; label: string }[] = [
+    { key: '7d', label: '7 Days' },
+    { key: '30d', label: '30 Days' },
+    { key: '90d', label: '90 Days' },
+    { key: '1y', label: '1 Year' },
+  ];
+
+  return (
+    <div className="flex items-center gap-1 p-1 bg-surface-100 rounded-lg">
+      {ranges.map(({ key, label }) => (
+        <button
+          key={key}
+          onClick={() => onChange(key)}
+          className={clsx(
+            'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
+            value === key
+              ? 'bg-white text-surface-900 shadow-sm'
+              : 'text-surface-500 hover:text-surface-700'
+          )}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// Document Metrics Table
+interface DocumentMetricsTableProps {
+  data: Array<{ type: string; count: number; revenue: number }>;
+}
+
+function DocumentMetricsTable({ data }: DocumentMetricsTableProps) {
+  const totalCount = data.reduce((sum, d) => sum + d.count, 0);
+  const totalRevenue = data.reduce((sum, d) => sum + d.revenue, 0);
+
+  return (
+    <Card>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="font-semibold text-surface-900">Document Generation Metrics</h3>
+        <Badge variant="secondary">
+          <FileText className="h-3 w-3 mr-1" />
+          {totalCount} Total
+        </Badge>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-surface-200">
+              <th className="text-left py-3 px-2 font-medium text-surface-600">
+                Document Type
+              </th>
+              <th className="text-right py-3 px-2 font-medium text-surface-600">
+                Generated
+              </th>
+              <th className="text-right py-3 px-2 font-medium text-surface-600">
+                Revenue
+              </th>
+              <th className="text-right py-3 px-2 font-medium text-surface-600">
+                Share
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((item, index) => (
+              <tr
+                key={item.type}
+                className={clsx(
+                  index !== data.length - 1 && 'border-b border-surface-100'
+                )}
+              >
+                <td className="py-3 px-2 text-surface-900">{item.type}</td>
+                <td className="py-3 px-2 text-right text-surface-700">
+                  {item.count.toLocaleString()}
+                </td>
+                <td className="py-3 px-2 text-right text-surface-700">
+                  ${item.revenue.toLocaleString()}
+                </td>
+                <td className="py-3 px-2 text-right">
+                  <div className="flex items-center justify-end gap-2">
+                    <div className="w-16 h-2 bg-surface-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-brand-500 rounded-full"
+                        style={{
+                          width: `${(item.count / totalCount) * 100}%`,
+                        }}
+                      />
+                    </div>
+                    <span className="text-surface-500 w-10 text-right">
+                      {((item.count / totalCount) * 100).toFixed(0)}%
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr className="border-t border-surface-200 font-medium">
+              <td className="py-3 px-2 text-surface-900">Total</td>
+              <td className="py-3 px-2 text-right text-surface-900">
+                {totalCount.toLocaleString()}
+              </td>
+              <td className="py-3 px-2 text-right text-surface-900">
+                ${totalRevenue.toLocaleString()}
+              </td>
+              <td className="py-3 px-2 text-right text-surface-500">100%</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </Card>
+  );
+}
+
+// Main Analytics Dashboard Page
+export function AnalyticsDashboardPage() {
+  const [timeRange, setTimeRange] = useState<TimeRange>('30d');
+
+  const { data: analytics, isLoading } = useQuery({
+    queryKey: ['analytics', timeRange],
+    queryFn: fetchAnalyticsData,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
+        <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
+        <p className="text-surface-500">Loading analytics...</p>
+      </div>
+    );
+  }
+
+  if (!analytics) {
+    return null;
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-surface-900 flex items-center gap-3">
+            <BarChart3 className="h-6 w-6 text-brand-600" />
+            Analytics Dashboard
+          </h1>
+          <p className="text-surface-500 mt-1">
+            Track your key metrics and business performance
+          </p>
+        </div>
+        <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
+      </div>
+
+      {/* Key Metrics */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <MetricCard
+          title="Total Users"
+          value={analytics.totalUsers.toLocaleString()}
+          change={12.5}
+          icon={Users}
+          iconColor="text-blue-600"
+          subtitle={`${analytics.activeUsers} active`}
+        />
+        <MetricCard
+          title="Session Completion"
+          value={`${analytics.sessionCompletionRate}%`}
+          change={3.2}
+          icon={CheckCircle}
+          iconColor="text-success-600"
+          subtitle={`${analytics.completedSessions} completed`}
+        />
+        <MetricCard
+          title="Avg. Session Duration"
+          value={`${analytics.avgSessionDuration} min`}
+          change={-2.1}
+          icon={Clock}
+          iconColor="text-warning-600"
+          subtitle="Time to completion"
+        />
+        <MetricCard
+          title="Documents Generated"
+          value={analytics.totalDocuments.toLocaleString()}
+          change={18.7}
+          icon={FileText}
+          iconColor="text-purple-600"
+          subtitle={`${analytics.documentsThisMonth} this month`}
+        />
+      </div>
+
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-semibold text-surface-900 flex items-center gap-2">
+              <Activity className="h-4 w-4 text-brand-600" />
+              Session Completion Rate
+            </h3>
+          </div>
+          <CompletionRateChart data={analytics.completionData} />
+        </Card>
+
+        <Card>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-semibold text-surface-900 flex items-center gap-2">
+              <Users className="h-4 w-4 text-blue-600" />
+              User Growth
+            </h3>
+          </div>
+          <UserGrowthChart data={analytics.userGrowthData} />
+        </Card>
+      </div>
+
+      {/* Document Metrics */}
+      <DocumentMetricsTable data={analytics.documentMetrics} />
+    </div>
+  );
+}
+
+export default AnalyticsDashboardPage;

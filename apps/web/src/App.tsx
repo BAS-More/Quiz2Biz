@@ -92,6 +92,9 @@ const DocumentReviewPage = lazy(() =>
 const MFASetupPage = lazy(() =>
   import('./pages/settings/MFASetupPage').then((m) => ({ default: m.MFASetupPage })),
 );
+const AnalyticsDashboardPage = lazy(() =>
+  import('./pages/analytics/AnalyticsDashboardPage').then((m) => ({ default: m.AnalyticsDashboardPage })),
+);
 
 // Loading fallback for lazy-loaded routes
 function PageLoader() {
@@ -216,6 +219,7 @@ export default function App() {
                   <Route path="admin/review" element={<ReviewQueuePage />} />
                   <Route path="admin/review/:documentId" element={<DocumentReviewPage />} />
                   <Route path="settings/mfa" element={<MFASetupPage />} />
+                  <Route path="analytics" element={<AnalyticsDashboardPage />} />
                   <Route path="billing" element={<BillingPage />} />
                   <Route path="billing/invoices" element={<InvoicesPage />} />
                   <Route path="billing/upgrade" element={<UpgradePage />} />

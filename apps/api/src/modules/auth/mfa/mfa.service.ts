@@ -5,7 +5,7 @@
 
 import { Injectable, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
-import { authenticator } from 'otplib';
+import { generateSecret, generateURI, verifySync } from 'otplib';
 import * as QRCode from 'qrcode';
 import { randomBytes } from 'crypto';
 
@@ -21,14 +21,7 @@ export interface BackupCodesResponse {
 
 @Injectable()
 export class MfaService {
-  constructor(private readonly prisma: PrismaService) {
-    // Configure OTP settings
-    authenticator.options = {
-      digits: 6,
-      step: 30,
-      window: 1, // Allow 1 window tolerance (30 seconds before/after)
-    };
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
   /**
    * Generate MFA setup data (secret and QR code)
@@ -45,11 +38,11 @@ export class MfaService {
     }
 
     // Generate a new secret
-    const secret = authenticator.generateSecret();
+    const secret = generateSecret();
 
     // Generate QR code for authenticator apps
     const issuer = 'Quiz2Biz';
-    const otpauthUrl = authenticator.keyuri(userEmail, issuer, secret);
+    const otpauthUrl = generateURI({ issuer, label: userEmail, secret });
     const qrCodeDataUrl = await QRCode.toDataURL(otpauthUrl);
 
     // Store the secret temporarily (pending verification)
@@ -86,10 +79,8 @@ export class MfaService {
     }
 
     // Verify the code
-    const isValid = authenticator.verify({
-      token: code,
-      secret: user.mfaSecret,
-    });
+    const result = verifySync({ token: code, secret: user.mfaSecret });
+    const isValid = result.valid;
 
     if (!isValid) {
       throw new BadRequestException('Invalid verification code');
@@ -124,10 +115,8 @@ export class MfaService {
     }
 
     // First check if it's a TOTP code
-    const isValidTotp = authenticator.verify({
-      token: code,
-      secret: user.mfaSecret,
-    });
+    const totpResult = verifySync({ token: code, secret: user.mfaSecret });
+    const isValidTotp = totpResult.valid;
 
     if (isValidTotp) {
       return true;
