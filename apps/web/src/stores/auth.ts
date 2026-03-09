@@ -11,6 +11,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import axios from 'axios';
 import type { User } from '../types';
+import { logger } from '../lib/logger';
 
 /**
  * Resolve API base URL based on environment
@@ -98,7 +99,7 @@ export const useAuthStore = create<AuthState>()(
         }
 
         // If we get here, state sync failed after all attempts
-        console.error('Auth state sync failed after 3 attempts - forcing localStorage reload');
+        logger.error('Auth state sync failed after 3 attempts - forcing localStorage reload');
         // Force reload from localStorage as last resort
         try {
           const stored = localStorage.getItem('auth-storage');
@@ -136,7 +137,7 @@ export const useAuthStore = create<AuthState>()(
       }),
       onRehydrateStorage: () => async (state, error) => {
         if (error) {
-          console.error('Auth rehydration error:', error);
+          logger.error('Auth rehydration error:', error);
         }
 
         // After rehydration, check if we need to refresh the access token
@@ -152,7 +153,7 @@ export const useAuthStore = create<AuthState>()(
               state.setAccessToken(data.accessToken);
             } catch (refreshError) {
               // Refresh failed - clear auth state and redirect to login
-              console.error('Token refresh failed on rehydration:', refreshError);
+              logger.error('Token refresh failed on rehydration:', refreshError);
               state.logout();
             }
           }

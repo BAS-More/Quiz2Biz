@@ -13,6 +13,7 @@ import {
   type SubmitResponseResult,
   type DimensionResidual,
 } from '../api/questionnaire';
+import { logger } from '../lib/logger';
 
 /** History entry for tracking answered questions */
 interface QuestionHistoryEntry {
@@ -257,7 +258,7 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
       });
     } catch (err: unknown) {
       // Non-critical, don't block the UI
-      console.warn('Failed to load score:', err);
+      logger.warn('Failed to load score:', err);
     }
   },
 
