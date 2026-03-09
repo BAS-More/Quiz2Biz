@@ -4,7 +4,7 @@
  */
 
 import { Injectable, BadRequestException, ForbiddenException } from '@nestjs/common';
-import { PrismaService } from '@modules/prisma/prisma.service';
+import { PrismaService } from '@libs/database';
 import { authenticator } from 'otplib';
 import * as QRCode from 'qrcode';
 import { randomBytes } from 'crypto';

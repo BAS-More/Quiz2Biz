@@ -254,6 +254,7 @@ model User {
   preferences         Json      @default("{}")
   mfaEnabled          Boolean   @default(false) @map("mfa_enabled")
   mfaSecret           String?   @map("mfa_secret")
+  mfaBackupCodes      String?   @map("mfa_backup_codes")
   lastLoginAt         DateTime? @map("last_login_at")
   lastLoginIp         String?   @map("last_login_ip")
   failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
