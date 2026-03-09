@@ -38,7 +38,9 @@ export class StripeWebhookController {
     });
 
     if (!this.webhookSecret) {
-      this.logger.warn('STRIPE_WEBHOOK_SECRET not configured - webhook verification disabled');
+      this.logger.warn(
+        'STRIPE_WEBHOOK_SECRET not configured — webhook endpoint will reject all events',
+      );
     }
   }
 
@@ -62,17 +64,18 @@ export class StripeWebhookController {
         throw new BadRequestException('Raw body not available for webhook');
       }
 
-      if (this.webhookSecret) {
-        // Verify webhook signature
-        event = this.stripe.webhooks.constructEvent(
-          rawBody,
-          signature,
-          this.webhookSecret,
+      if (!this.webhookSecret) {
+        throw new BadRequestException(
+          'STRIPE_WEBHOOK_SECRET not configured — cannot verify webhook signature',
         );
-      } else {
-        // Parse without verification (dev only)
-        event = JSON.parse(rawBody.toString()) as Stripe.Event;
       }
+
+      // Always verify webhook signature — no dev bypass
+      event = this.stripe.webhooks.constructEvent(
+        rawBody,
+        signature,
+        this.webhookSecret,
+      );
     } catch (err) {
       this.logger.error('Webhook signature verification failed', err);
       throw new BadRequestException('Invalid webhook signature');

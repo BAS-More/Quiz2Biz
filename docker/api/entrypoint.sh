@@ -13,10 +13,20 @@ else
   # Try to resolve any failed migrations first
   $PRISMA_BIN migrate resolve --rolled-back 20260125000000_initial 2>/dev/null || true
 
-  # Run migrations (continue on failure - migrations may already be applied)
-  $PRISMA_BIN migrate deploy 2>&1 || {
-    echo "Warning: Migration failed (may already be applied), continuing startup..."
-  }
+  # Run migrations
+  # ALLOW_MIGRATION_FAILURE=true allows startup when migrations fail
+  # (useful for multi-replica deployments where another replica ran them)
+  # Default: migration failure is FATAL to prevent running against stale schema
+  if $PRISMA_BIN migrate deploy 2>&1; then
+    echo "Migrations applied successfully."
+  else
+    if [ "${ALLOW_MIGRATION_FAILURE}" = "true" ]; then
+      echo "Warning: Migration failed (may already be applied), continuing startup..."
+    else
+      echo "FATAL: Migration failed. Set ALLOW_MIGRATION_FAILURE=true to override."
+      exit 1
+    fi
+  fi
 fi
 
 echo "Starting application..."

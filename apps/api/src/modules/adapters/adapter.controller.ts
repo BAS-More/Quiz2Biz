@@ -7,11 +7,13 @@ import {
   Body,
   Param,
   Query,
+  Headers,
   HttpCode,
   HttpStatus,
   BadRequestException,
   NotFoundException,
   UseGuards,
+  Logger,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -21,6 +23,7 @@ import {
   ApiParam,
   ApiQuery,
 } from '@nestjs/swagger';
+import * as crypto from 'crypto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { GitHubAdapter } from './github.adapter';
 import { GitLabAdapter } from './gitlab.adapter';
@@ -404,25 +407,44 @@ export class AdapterController {
 
   // ==================== WEBHOOKS ====================
 
+  private readonly webhookLogger = new Logger('AdapterWebhook');
+
+  /**
+   * Verify GitHub webhook signature using HMAC-SHA256
+   * @see https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries
+   */
+  private verifyGitHubSignature(payload: string, signature: string, secret: string): boolean {
+    const expected = 'sha256=' + crypto.createHmac('sha256', secret).update(payload).digest('hex');
+    return signature.length === expected.length &&
+      crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+  }
+
   @Post('webhooks/github')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'GitHub webhook endpoint' })
   async handleGitHubWebhook(
     @Body() payload: Record<string, unknown>,
+    @Headers('x-hub-signature-256') signature: string,
     @Query('adapterId') adapterId: string,
     @Query('tenantId') tenantId: string,
   ) {
-    // In production, verify webhook signature
-    // const signature = headers['x-hub-signature-256'];
-    // this.githubAdapter.verifyWebhookSignature(...)
-
     const config = await this.adapterConfigService.getAdapterConfig(tenantId, adapterId);
     if (!config || !config.enabled) {
       return { status: 'ignored', reason: 'Adapter not found or disabled' };
     }
 
-    // Process webhook event based on event type
-    // This would typically trigger an async job
+    // Verify webhook signature
+    const webhookSecret = (config as AdapterConfig & { webhookSecret?: string }).webhookSecret;
+    if (webhookSecret && signature) {
+      const isValid = this.verifyGitHubSignature(JSON.stringify(payload), signature, webhookSecret);
+      if (!isValid) {
+        this.webhookLogger.warn(`GitHub webhook signature mismatch for adapter ${adapterId}`);
+        throw new BadRequestException('Invalid webhook signature');
+      }
+    } else {
+      this.webhookLogger.warn(`GitHub webhook received without signature for adapter ${adapterId}`);
+    }
+
     return {
       status: 'received',
       adapterId,
@@ -435,12 +457,24 @@ export class AdapterController {
   @ApiOperation({ summary: 'GitLab webhook endpoint' })
   async handleGitLabWebhook(
     @Body() payload: Record<string, unknown>,
+    @Headers('x-gitlab-token') gitlabToken: string,
     @Query('adapterId') adapterId: string,
     @Query('tenantId') tenantId: string,
   ) {
     const config = await this.adapterConfigService.getAdapterConfig(tenantId, adapterId);
     if (!config || !config.enabled) {
       return { status: 'ignored', reason: 'Adapter not found or disabled' };
+    }
+
+    // Verify GitLab secret token
+    const webhookSecret = (config as AdapterConfig & { webhookSecret?: string }).webhookSecret;
+    if (webhookSecret) {
+      if (gitlabToken !== webhookSecret) {
+        this.webhookLogger.warn(`GitLab webhook token mismatch for adapter ${adapterId}`);
+        throw new BadRequestException('Invalid webhook token');
+      }
+    } else {
+      this.webhookLogger.warn(`GitLab webhook received without token for adapter ${adapterId}`);
     }
 
     return {

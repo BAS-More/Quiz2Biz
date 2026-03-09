@@ -9,6 +9,7 @@
 
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '../stores/auth';
+import { logger } from '../lib/logger';
 
 /**
  * Resolve API base URL based on environment
@@ -64,7 +65,7 @@ export async function fetchCsrfToken(): Promise<string> {
     csrfToken = response.data.csrfToken;
     return csrfToken!;
   } catch (error) {
-    console.error('Failed to fetch CSRF token:', error);
+    logger.error('Failed to fetch CSRF token:', error);
     // Fallback to cookie if direct fetch fails
     const cookieToken = getCsrfTokenFromCookie();
     if (cookieToken) {
@@ -182,7 +183,7 @@ apiClient.interceptors.request.use(
         try {
           await fetchCsrfToken();
         } catch {
-          console.warn('Could not fetch CSRF token, request may fail');
+          logger.warn('Could not fetch CSRF token, request may fail');
         }
       }
 
@@ -230,7 +231,7 @@ apiClient.interceptors.response.use(
         }
         return apiClient(originalRequest);
       } catch (csrfError) {
-        console.error('Failed to refresh CSRF token:', csrfError);
+        logger.error('Failed to refresh CSRF token:', csrfError);
         return Promise.reject(error);
       }
     }

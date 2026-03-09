@@ -25,7 +25,9 @@ initializeSentry();
 
 async function bootstrap(): Promise<void> {
   const logger = new Logger('Bootstrap');
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    rawBody: true, // Required for Stripe webhook signature verification
+  });
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT', 3000);
@@ -169,9 +171,10 @@ async function bootstrap(): Promise<void> {
   // Global interceptors
   app.useGlobalInterceptors(new TransformInterceptor(), new LoggingInterceptor());
 
-  // Swagger/OpenAPI documentation - available in all environments
-  // Production APIs benefit from self-documenting endpoints
-  const swaggerConfig = new DocumentBuilder()
+  // Swagger/OpenAPI documentation — gated by ENABLE_SWAGGER (disabled in production by default)
+  const enableSwagger = configService.get<string>('ENABLE_SWAGGER', nodeEnv !== 'production' ? 'true' : 'false');
+  if (enableSwagger === 'true') {
+    const swaggerConfig = new DocumentBuilder()
     .setTitle('Quiz2Biz API')
     .setDescription(
       `## Adaptive Questionnaire System API
@@ -247,6 +250,9 @@ For API issues, contact: support@quiz2biz.com`,
   });
 
   logger.log(`Swagger documentation available at /${apiPrefix}/docs`);
+  } else {
+    logger.log('Swagger documentation is disabled (set ENABLE_SWAGGER=true to enable)');
+  }
 
   // Graceful shutdown
   app.enableShutdownHooks();

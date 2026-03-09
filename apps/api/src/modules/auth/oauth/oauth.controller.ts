@@ -12,6 +12,14 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { OAuthService, OAuthProvider } from './oauth.service';
+import { Public } from '../decorators/public.decorator';
+import { SkipCsrf } from '../../../common/guards/csrf.guard';
+import { Request } from 'express';
+
+/** Typed request with user payload from JWT */
+interface AuthenticatedRequest extends Request {
+  user: { sub: string; email: string; role: string };
+}
 
 /**
  * DTOs for OAuth operations
@@ -46,8 +54,11 @@ export class OAuthController {
 
   /**
    * Authenticate with Google ID token
+   * Public endpoint — no JWT or CSRF required (initial OAuth login)
    */
   @Post('google')
+  @Public()
+  @SkipCsrf()
   @HttpCode(HttpStatus.OK)
   async googleAuth(@Body() dto: GoogleAuthDto) {
     return this.oauthService.authenticateWithGoogle(dto.idToken);
@@ -55,8 +66,11 @@ export class OAuthController {
 
   /**
    * Authenticate with Microsoft access token
+   * Public endpoint — no JWT or CSRF required (initial OAuth login)
    */
   @Post('microsoft')
+  @Public()
+  @SkipCsrf()
   @HttpCode(HttpStatus.OK)
   async microsoftAuth(@Body() dto: MicrosoftAuthDto) {
     return this.oauthService.authenticateWithMicrosoft(dto.accessToken);
@@ -67,7 +81,7 @@ export class OAuthController {
    */
   @Get('accounts')
   @UseGuards(JwtAuthGuard)
-  async getLinkedAccounts(@Req() req: any) {
+  async getLinkedAccounts(@Req() req: AuthenticatedRequest) {
     return this.oauthService.getLinkedAccounts(req.user.sub);
   }
 
@@ -77,7 +91,7 @@ export class OAuthController {
   @Post('link')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  async linkAccount(@Req() req: any, @Body() dto: LinkAccountDto) {
+  async linkAccount(@Req() req: AuthenticatedRequest, @Body() dto: LinkAccountDto) {
     // First verify the token with the provider
     let profile;
 
@@ -119,7 +133,7 @@ export class OAuthController {
   @Delete('unlink/:provider')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  async unlinkAccount(@Req() req: any, @Param('provider') provider: OAuthProvider) {
+  async unlinkAccount(@Req() req: AuthenticatedRequest, @Param('provider') provider: OAuthProvider) {
     await this.oauthService.unlinkOAuthAccount(req.user.sub, provider);
     return { success: true, provider };
   }
