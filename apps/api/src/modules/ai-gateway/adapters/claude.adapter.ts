@@ -72,7 +72,7 @@ export class ClaudeAdapter implements AiAdapter {
    * Get max tokens for a task type
    */
   private getMaxTokens(taskType: string, requested?: number): number {
-    if (requested) return requested;
+    if (requested) {return requested;}
     if (this.config?.config?.maxTokens?.[taskType as keyof typeof this.config.config.maxTokens]) {
       return this.config.config.maxTokens[taskType as keyof typeof this.config.config.maxTokens];
     }
@@ -89,7 +89,7 @@ export class ClaudeAdapter implements AiAdapter {
    * Get temperature for a task type
    */
   private getTemperature(taskType: string, requested?: number): number {
-    if (requested !== undefined) return requested;
+    if (requested !== undefined) {return requested;}
     if (this.config?.config?.temperature?.[taskType as keyof typeof this.config.config.temperature]) {
       return this.config.config.temperature[taskType as keyof typeof this.config.config.temperature];
     }

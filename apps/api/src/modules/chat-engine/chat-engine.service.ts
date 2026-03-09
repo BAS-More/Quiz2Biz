@@ -249,8 +249,8 @@ export class ChatEngineService {
           fullContent += chunk.content;
         } else {
           // Final chunk with usage info
-          if (chunk.usage) finalUsage = chunk.usage;
-          if (chunk.cost) finalCost = chunk.cost;
+          if (chunk.usage) {finalUsage = chunk.usage;}
+          if (chunk.cost) {finalCost = chunk.cost;}
           usedProvider = chunk.provider;
         }
 

@@ -135,7 +135,7 @@ export class QualityScoringService {
     // Score is weighted average of met criteria confidence
     const totalWeight = criteria.reduce((sum, c) => sum + c.weight, 0);
     const weightedConfidence = criteriaScores.reduce((sum, cs, i) => {
-      if (!cs.met) return sum;
+      if (!cs.met) {return sum;}
       return sum + cs.confidence * criteria[i].weight;
     }, 0);
     
@@ -182,14 +182,14 @@ export class QualityScoringService {
     const exactMatch = facts.find(
       (f) => f.fieldName.toLowerCase() === criterion.key.toLowerCase(),
     );
-    if (exactMatch) return exactMatch;
+    if (exactMatch) {return exactMatch;}
 
     // Try partial key match (criterion key might be part of fact field name)
     const partialMatch = facts.find((f) =>
       f.fieldName.toLowerCase().includes(criterion.key.toLowerCase()) ||
       criterion.key.toLowerCase().includes(f.fieldName.toLowerCase()),
     );
-    if (partialMatch) return partialMatch;
+    if (partialMatch) {return partialMatch;}
 
     // Try matching based on category or description keywords
     const keywordMatch = facts.find((f) => {
@@ -236,7 +236,7 @@ export class QualityScoringService {
    * Calculate average confidence score
    */
   private calculateConfidence(facts: ExtractedFact[]): number {
-    if (facts.length === 0) return 0;
+    if (facts.length === 0) {return 0;}
 
     const avgConfidence =
       facts.reduce((sum, f) => sum + f.confidence.toNumber(), 0) / facts.length;

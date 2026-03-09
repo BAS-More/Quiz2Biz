@@ -83,7 +83,7 @@ export class CostTrackerService {
    * Flush cost buffer to database
    */
   async flushCostBuffer(): Promise<void> {
-    if (this.costBuffer.length === 0) return;
+    if (this.costBuffer.length === 0) {return;}
 
     const records = [...this.costBuffer];
     this.costBuffer = [];
@@ -176,7 +176,7 @@ export class CostTrackerService {
         select: { metadata: true },
       });
 
-      if (!project) return null;
+      if (!project) {return null;}
 
       const metadata = (project.metadata as Record<string, unknown>) || {};
       const costTracking = (metadata.costTracking as Record<string, number>) || {};

@@ -292,8 +292,8 @@ export class FactExtractionService {
    */
   private decimalToConfidence(decimal: Prisma.Decimal): ConfidenceLevel {
     const value = decimal.toNumber();
-    if (value >= 0.8) return 'high';
-    if (value >= 0.5) return 'medium';
+    if (value >= 0.8) {return 'high';}
+    if (value >= 0.5) {return 'medium';}
     return 'low';
   }
 
