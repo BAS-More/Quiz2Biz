@@ -83,6 +83,12 @@ const WorkspacePage = lazy(() =>
 const NewProjectFlow = lazy(() =>
   import('./pages/workspace/NewProjectFlow').then((m) => ({ default: m.NewProjectFlow })),
 );
+const ReviewQueuePage = lazy(() =>
+  import('./pages/admin/ReviewQueuePage').then((m) => ({ default: m.ReviewQueuePage })),
+);
+const DocumentReviewPage = lazy(() =>
+  import('./pages/admin/DocumentReviewPage').then((m) => ({ default: m.DocumentReviewPage })),
+);
 
 // Loading fallback for lazy-loaded routes
 function PageLoader() {
@@ -204,6 +210,8 @@ export default function App() {
                   <Route path="project/:projectId/documents" element={<DocumentMenuPage />} />
                   <Route path="project/:projectId/facts" element={<FactReviewPage />} />
                   <Route path="chat/:projectId?" element={<ChatPage />} />
+                  <Route path="admin/review" element={<ReviewQueuePage />} />
+                  <Route path="admin/review/:documentId" element={<DocumentReviewPage />} />
                   <Route path="billing" element={<BillingPage />} />
                   <Route path="billing/invoices" element={<InvoicesPage />} />
                   <Route path="billing/upgrade" element={<UpgradePage />} />
