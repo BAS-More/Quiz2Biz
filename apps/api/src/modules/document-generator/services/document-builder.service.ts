@@ -415,7 +415,8 @@ export class DocumentBuilderService {
    * Build a simple two-column table
    */
   private buildTable(rows: string[][]): Paragraph {
-    const _table = new Table({
+    // Table constructed for future use when DOCX table embedding is implemented
+    void new Table({
       width: { size: 100, type: WidthType.PERCENTAGE },
       rows: rows.map(
         (row) =>

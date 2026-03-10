@@ -1,6 +1,7 @@
 /**
  * @fileoverview Tests for feature-flags.config.ts
  */
+import { Logger } from '@nestjs/common';
 import {
   getLaunchDarklyConfig,
   getDefaultFeatureFlags,
@@ -201,7 +202,7 @@ describe('FeatureFlagService', () => {
   let consoleSpy: jest.SpyInstance;
 
   beforeEach(() => {
-    consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+    consoleSpy = jest.spyOn(Logger.prototype, 'log').mockImplementation();
     service = new FeatureFlagService();
   });
 
@@ -211,7 +212,7 @@ describe('FeatureFlagService', () => {
 
   it('should initialize with default flags', () => {
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('[FeatureFlags] Initialized with'),
+      expect.stringContaining('Initialized with'),
     );
   });
 
@@ -310,8 +311,8 @@ describe('FeatureFlagService', () => {
       service.track('button_click', context, data);
 
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('[FeatureFlags] Track event: button_click'),
-        expect.objectContaining({ context, data }),
+        expect.stringContaining('Track event: button_click'),
+        expect.any(String),
       );
     });
   });
@@ -320,7 +321,7 @@ describe('FeatureFlagService', () => {
     it('should log client closed', async () => {
       await service.close();
 
-      expect(consoleSpy).toHaveBeenCalledWith('[FeatureFlags] Client closed');
+      expect(consoleSpy).toHaveBeenCalledWith('Client closed');
     });
   });
 

@@ -708,10 +708,10 @@ export interface FlagEvaluationContext {
  */
 export class FeatureFlagService {
   private flags: Map<string, FeatureFlagConfig> = new Map();
-  private _client: unknown; // LaunchDarkly client instance
 
   constructor(config?: LaunchDarklyConfig) {
-    const _ldConfig = config || getLaunchDarklyConfig();
+    const ldConfig = config || getLaunchDarklyConfig();
+    void ldConfig; // Reserved for LaunchDarkly SDK initialization
 
     // Initialize flags from defaults
     for (const flag of getDefaultFeatureFlags()) {

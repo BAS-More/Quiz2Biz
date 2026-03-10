@@ -87,7 +87,7 @@ export class CIArtifactIngestionService {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly _configService: ConfigService,
+    _configService: ConfigService,
   ) {}
 
   /**

@@ -2,7 +2,7 @@
  * Control Mapping Service
  * Maps policies to compliance frameworks: ISO 27001, NIST CSF, OWASP ASVS
  */
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ControlMapping, ComplianceFramework, MappingStrength } from '../types';
 
 interface FrameworkControl {
@@ -13,7 +13,6 @@ interface FrameworkControl {
 
 @Injectable()
 export class ControlMappingService {
-  private readonly logger = new Logger(ControlMappingService.name);
 
   /**
    * Control mappings by framework

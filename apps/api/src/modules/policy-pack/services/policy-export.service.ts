@@ -2,12 +2,11 @@
  * Policy Export Service
  * Exports policy packs as ZIP bundles with README
  */
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PolicyPackBundle, PolicyDocument } from '../types';
 
 @Injectable()
 export class PolicyExportService {
-  private readonly logger = new Logger(PolicyExportService.name);
 
   /**
    * Generate README content for policy pack

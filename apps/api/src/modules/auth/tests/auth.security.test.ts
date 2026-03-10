@@ -26,9 +26,7 @@ const mockRedisService = {
 };
 
 describe('Authentication Security Tests', () => {
-  let _authService: AuthService;
   let jwtService: JwtService;
-  let _prisma: PrismaService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -57,9 +55,9 @@ describe('Authentication Security Tests', () => {
       ],
     }).compile();
 
-    _authService = module.get<AuthService>(AuthService);
+    module.get<AuthService>(AuthService);
     jwtService = module.get<JwtService>(JwtService);
-    _prisma = module.get<PrismaService>(PrismaService);
+    module.get<PrismaService>(PrismaService);
   });
 
   describe('Password Hashing Security', () => {
@@ -263,7 +261,8 @@ describe('Authentication Security Tests', () => {
 
   describe('Brute Force Protection', () => {
     it('should implement rate limiting for failed login attempts', async () => {
-      const _email = 'bruteforce@example.com';
+      const email = 'bruteforce@example.com';
+      void email; // Used for documentation of test intent
       const maxAttempts = 5;
       const failedAttempts: number[] = [];
 

@@ -1,6 +1,7 @@
 /**
  * @fileoverview Tests for canary-deployment.config.ts
  */
+import { Logger } from '@nestjs/common';
 import {
   getCanaryDeploymentConfig,
   getDefaultCanaryStages,
@@ -390,7 +391,7 @@ describe('CanaryDeploymentManager', () => {
     let consoleSpy: jest.SpyInstance;
 
     beforeEach(() => {
-      consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      consoleSpy = jest.spyOn(Logger.prototype, 'log').mockImplementation();
     });
 
     afterEach(() => {
@@ -470,7 +471,7 @@ describe('CanaryDeploymentManager', () => {
     let consoleSpy: jest.SpyInstance;
 
     beforeEach(() => {
-      consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      consoleSpy = jest.spyOn(Logger.prototype, 'log').mockImplementation();
     });
 
     afterEach(() => {
@@ -601,13 +602,16 @@ describe('CanaryDeploymentManager', () => {
 
   describe('initiateRollback', () => {
     let consoleSpy: jest.SpyInstance;
+    let warnSpy: jest.SpyInstance;
 
     beforeEach(() => {
-      consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      consoleSpy = jest.spyOn(Logger.prototype, 'log').mockImplementation();
+      warnSpy = jest.spyOn(Logger.prototype, 'warn').mockImplementation();
     });
 
     afterEach(() => {
       consoleSpy.mockRestore();
+      warnSpy.mockRestore();
     });
 
     it('should set status to failed after rollback completes', async () => {
@@ -629,7 +633,7 @@ describe('CanaryDeploymentManager', () => {
     it('should log rollback initiation with reason', async () => {
       await manager.initiateRollback('memory_usage exceeded 90%');
 
-      expect(consoleSpy).toHaveBeenCalledWith(
+      expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining('Initiating rollback: memory_usage exceeded 90%'),
       );
     });
@@ -1299,7 +1303,7 @@ describe('CanaryDeploymentManager', () => {
     let consoleSpy: jest.SpyInstance;
 
     beforeEach(() => {
-      consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      consoleSpy = jest.spyOn(Logger.prototype, 'log').mockImplementation();
     });
 
     afterEach(() => {
@@ -1575,7 +1579,7 @@ describe('CanaryDeploymentManager', () => {
     let consoleSpy: jest.SpyInstance;
 
     beforeEach(() => {
-      consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      consoleSpy = jest.spyOn(Logger.prototype, 'log').mockImplementation();
     });
 
     afterEach(() => {
@@ -1586,7 +1590,7 @@ describe('CanaryDeploymentManager', () => {
       await (manager as any).notifyEvent('deployment_started', { test: true });
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('deployment_started'),
-        expect.objectContaining({ test: true }),
+        expect.stringContaining('"test":true'),
       );
     });
 
@@ -1642,7 +1646,7 @@ describe('CanaryDeploymentManager', () => {
     let consoleSpy: jest.SpyInstance;
 
     beforeEach(() => {
-      consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      consoleSpy = jest.spyOn(Logger.prototype, 'log').mockImplementation();
     });
 
     afterEach(() => {
@@ -1707,7 +1711,7 @@ describe('CanaryDeploymentManager', () => {
     let consoleSpy: jest.SpyInstance;
 
     beforeEach(() => {
-      consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      consoleSpy = jest.spyOn(Logger.prototype, 'log').mockImplementation();
     });
 
     afterEach(() => {

@@ -53,14 +53,13 @@ interface ReadinessResponse {
 @Controller()
 @SkipThrottle()
 export class HealthController {
-  private readonly _startTime: Date;
 
   constructor(
     @Optional() @Inject(PrismaService) private readonly prisma?: PrismaService,
     @Optional() @Inject(RedisService) private readonly redis?: RedisService,
     @Optional() @Inject(AiGatewayService) private readonly aiGateway?: AiGatewayService,
   ) {
-    this._startTime = new Date();
+    // DI-injected services used for health checks
   }
 
   // ===========================================================================

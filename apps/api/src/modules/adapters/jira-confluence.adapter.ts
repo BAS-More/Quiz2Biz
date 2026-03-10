@@ -134,7 +134,7 @@ export class JiraConfluenceAdapter {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly _prisma: PrismaService,
+    _prisma: PrismaService,
   ) {}
 
   private getTrustedJiraDomain(): string {

@@ -186,7 +186,7 @@ export class GitLabAdapter {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly _prisma: PrismaService,
+    _prisma: PrismaService,
   ) {}
 
   private getHeaders(token: string): Record<string, string> {

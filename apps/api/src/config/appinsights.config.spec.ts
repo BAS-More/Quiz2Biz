@@ -2,6 +2,7 @@
  * Application Insights Configuration Tests
  */
 import * as appInsights from 'applicationinsights';
+import { Logger } from '@nestjs/common';
 
 // Mock applicationinsights before importing the module
 jest.mock('applicationinsights', () => ({
@@ -740,13 +741,13 @@ describe('Application Insights Config', () => {
       process.env.APPLICATIONINSIGHTS_CONNECTION_STRING = 'test';
       initializeAppInsights();
 
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      const logSpy = jest.spyOn(Logger.prototype, 'log').mockImplementation();
 
       // Try to initialize again
       initializeAppInsights();
 
-      expect(consoleSpy).toHaveBeenCalledWith('Application Insights already initialized');
-      consoleSpy.mockRestore();
+      expect(logSpy).toHaveBeenCalledWith('Application Insights already initialized');
+      logSpy.mockRestore();
     });
   });
 

@@ -2,7 +2,7 @@
  * Terraform Rules Service
  * Generates Terraform compliance rules from readiness gaps
  */
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 export interface TerraformRule {
   name: string;
@@ -14,7 +14,6 @@ export interface TerraformRule {
 
 @Injectable()
 export class TerraformRulesService {
-  private readonly logger = new Logger(TerraformRulesService.name);
 
   /**
    * Terraform compliance rules by dimension
