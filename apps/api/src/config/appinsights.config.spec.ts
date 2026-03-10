@@ -104,10 +104,10 @@ describe('Application Insights Config', () => {
       expect(config.cloudRoleInstance).toBe('local-dev');
     });
 
-    it('should set 100% sampling in production', () => {
+    it('should set 75% sampling in production', () => {
       process.env.NODE_ENV = 'production';
       const config = getAppInsightsConfig();
-      expect(config.samplingPercentage).toBe(100);
+      expect(config.samplingPercentage).toBe(75);
     });
 
     it('should set 50% sampling in development', () => {

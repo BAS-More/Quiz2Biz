@@ -331,6 +331,7 @@ describe('EvidenceRegistryService', () => {
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
         where: {},
         orderBy: { createdAt: 'desc' },
+        take: 500,
       });
     });
 
@@ -342,6 +343,7 @@ describe('EvidenceRegistryService', () => {
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
         where: { sessionId: 'session-123' },
         orderBy: { createdAt: 'desc' },
+        take: 500,
       });
     });
 
@@ -353,6 +355,7 @@ describe('EvidenceRegistryService', () => {
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
         where: { verified: true },
         orderBy: { createdAt: 'desc' },
+        take: 500,
       });
     });
 
@@ -374,6 +377,7 @@ describe('EvidenceRegistryService', () => {
           verified: false,
         },
         orderBy: { createdAt: 'desc' },
+        take: 500,
       });
     });
   });
@@ -1272,6 +1276,7 @@ describe('EvidenceRegistryService', () => {
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
         where: { verified: false },
         orderBy: { createdAt: 'desc' },
+        take: 500,
       });
     });
   });
@@ -1341,6 +1346,7 @@ describe('EvidenceRegistryService', () => {
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
         where: {},
         orderBy: { createdAt: 'desc' },
+        take: 500,
       });
     });
 
@@ -1352,6 +1358,7 @@ describe('EvidenceRegistryService', () => {
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
         where: { sessionId: 'sess-1' },
         orderBy: { createdAt: 'desc' },
+        take: 500,
       });
     });
 
@@ -1363,6 +1370,7 @@ describe('EvidenceRegistryService', () => {
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
         where: { questionId: 'q-1' },
         orderBy: { createdAt: 'desc' },
+        take: 500,
       });
     });
 
@@ -1374,6 +1382,7 @@ describe('EvidenceRegistryService', () => {
       expect(mockPrisma.evidenceRegistry.findMany).toHaveBeenCalledWith({
         where: { artifactType: 'FILE' },
         orderBy: { createdAt: 'desc' },
+        take: 500,
       });
     });
 
@@ -1395,6 +1404,7 @@ describe('EvidenceRegistryService', () => {
           verified: true,
         },
         orderBy: { createdAt: 'desc' },
+        take: 500,
       });
     });
   });

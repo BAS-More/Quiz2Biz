@@ -12,10 +12,8 @@ import { DeliverablesCompilerService } from './services/deliverables-compiler.se
 import { AiDocumentContentService } from './services/ai-document-content.service';
 import { QualityCalibratorService } from './services/quality-calibrator.service';
 import { MarkdownRendererService } from './services/markdown-renderer.service';
-import { ProjectDocumentGenerationService } from './services/project-document-generation.service';
 import { ProviderComparisonService } from './services/provider-comparison.service';
 import { PdfRendererService } from './services/pdf-renderer.service';
-import { BulkDownloadService } from './services/bulk-download.service';
 
 @Module({
   imports: [PrismaModule, ConfigModule],
@@ -29,10 +27,8 @@ import { BulkDownloadService } from './services/bulk-download.service';
     AiDocumentContentService,
     QualityCalibratorService,
     MarkdownRendererService,
-    ProjectDocumentGenerationService,
     ProviderComparisonService,
     PdfRendererService,
-    BulkDownloadService,
   ],
   exports: [
     DocumentGeneratorService,
@@ -40,10 +36,8 @@ import { BulkDownloadService } from './services/bulk-download.service';
     AiDocumentContentService,
     QualityCalibratorService,
     MarkdownRendererService,
-    ProjectDocumentGenerationService,
     ProviderComparisonService,
     PdfRendererService,
-    BulkDownloadService,
   ],
 })
 export class DocumentGeneratorModule {}
