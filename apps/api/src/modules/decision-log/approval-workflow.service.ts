@@ -608,6 +608,7 @@ export class ApprovalWorkflowService {
         deletedAt: null,
       },
       select: { id: true, email: true, name: true },
+      take: 1000,
     });
   }
 

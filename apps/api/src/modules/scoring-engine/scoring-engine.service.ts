@@ -133,6 +133,7 @@ export class ScoringEngineService {
     const dimensions = await this.prisma.dimensionCatalog.findMany({
       where: dimensionWhere,
       orderBy: { orderIndex: 'asc' },
+      take: 10000, // safety cap for scoring aggregation
     });
 
     // Fetch questions for this questionnaire filtered by session persona
@@ -150,6 +151,7 @@ export class ScoringEngineService {
         },
         dimension: true,
       },
+      take: 10000, // safety cap for scoring aggregation
     });
 
     // Build coverage map (apply overrides if provided)
@@ -262,11 +264,13 @@ export class ScoringEngineService {
         },
         dimension: true,
       },
+      take: 10000, // safety cap for NQS scoring
     });
 
     // Get all dimensions for weight lookup
     const dimensions = await this.prisma.dimensionCatalog.findMany({
       where: { isActive: true },
+      take: 10000, // safety cap for scoring aggregation
     });
     const dimensionWeightMap = new Map(dimensions.map((d) => [d.key, Number(d.weight)]));
 

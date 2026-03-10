@@ -66,6 +66,7 @@ export class GdprService {
           completedAt: true,
         },
         orderBy: { startedAt: 'desc' },
+        take: 10000, // GDPR export — must retrieve all user data
       }),
       this.prisma.document.findMany({
         where: { session: { userId } },
@@ -76,6 +77,7 @@ export class GdprService {
           createdAt: true,
         },
         orderBy: { createdAt: 'desc' },
+        take: 10000, // GDPR export
       }),
       this.prisma.auditLog.findMany({
         where: { userId },
@@ -85,6 +87,7 @@ export class GdprService {
           createdAt: true,
         },
         orderBy: { createdAt: 'desc' },
+        take: 10000, // GDPR export
       }),
     ]);
 

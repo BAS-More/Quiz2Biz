@@ -53,6 +53,7 @@ export class SessionExpirationService {
         user: { select: { email: true, name: true } },
         questionnaire: { select: { name: true } },
       },
+      take: 1000,
     });
 
     for (const session of expiringSessions) {

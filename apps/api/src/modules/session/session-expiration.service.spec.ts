@@ -97,6 +97,7 @@ describe('SessionExpirationService', () => {
           user: { select: { email: true, name: true } },
           questionnaire: { select: { name: true } },
         },
+        take: 1000,
       });
 
       expect(mockNotificationService.sendSessionReminderEmail).toHaveBeenCalledTimes(2);

@@ -105,6 +105,7 @@ export class SubscriptionService {
           equals: params.stripeCustomerId,
         },
       },
+      take: 100,
     });
 
     if (orgs.length === 0) {
@@ -143,6 +144,7 @@ export class SubscriptionService {
           equals: stripeSubscriptionId,
         },
       },
+      take: 100,
     });
 
     for (const org of orgs) {
@@ -198,6 +200,7 @@ export class SubscriptionService {
         },
       },
       select: { id: true },
+      take: 1000,
     });
 
     return orgs.map((o: { id: string }) => o.id);

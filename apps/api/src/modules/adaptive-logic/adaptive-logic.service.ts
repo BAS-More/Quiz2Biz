@@ -47,6 +47,7 @@ export class AdaptiveLogicService {
         section: true,
       },
       orderBy: [{ section: { orderIndex: 'asc' } }, { orderIndex: 'asc' }],
+      take: 1000,
     });
 
     // Evaluate visibility for each question
@@ -232,6 +233,7 @@ export class AdaptiveLogicService {
         isActive: true,
       },
       orderBy: { priority: 'desc' },
+      take: 1000,
     });
   }
 
@@ -248,6 +250,7 @@ export class AdaptiveLogicService {
         },
         isActive: true,
       },
+      take: 1000,
     });
 
     const graph = new Map<string, Set<string>>();

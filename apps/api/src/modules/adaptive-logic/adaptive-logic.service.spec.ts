@@ -764,6 +764,7 @@ describe('AdaptiveLogicService', () => {
           isActive: true,
         },
         orderBy: { priority: 'desc' },
+        take: 1000,
       });
     });
 
@@ -967,6 +968,7 @@ describe('AdaptiveLogicService', () => {
           },
           isActive: true,
         },
+        take: 1000,
       });
     });
   });
