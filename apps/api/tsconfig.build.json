@@ -28,6 +28,8 @@
     "test",
     "**/*.spec.ts",
     "src/modules/document-commerce/**",
-    "src/modules/document-generator/services/bulk-download.service.ts"
+    "src/modules/document-generator/services/bulk-download.service.ts",
+    "src/modules/document-generator/services/project-document-generation.service.ts",
+    "src/modules/document-generator/_wip/**"
   ]
 }

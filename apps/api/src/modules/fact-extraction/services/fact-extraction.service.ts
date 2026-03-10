@@ -249,14 +249,19 @@ export class FactExtractionService {
    * Delete a fact
    */
   async deleteFact(projectId: string, fieldName: string): Promise<void> {
-    await this.prisma.extractedFact.delete({
-      where: {
-        projectId_fieldName: {
-          projectId,
-          fieldName,
+    try {
+      await this.prisma.extractedFact.delete({
+        where: {
+          projectId_fieldName: {
+            projectId,
+            fieldName,
+          },
         },
-      },
-    });
+      });
+    } catch (error) {
+      this.logger.error(`Failed to delete fact ${fieldName} for project ${projectId}: ${error}`);
+      throw error;
+    }
   }
 
   /**

@@ -342,12 +342,17 @@ export class QualityScoringService {
     projectId: string,
     score: ProjectQualityScore,
   ): Promise<void> {
-    await this.prisma.project.update({
-      where: { id: projectId },
-      data: {
-        qualityScore: new Prisma.Decimal(score.overallScore),
-        lastActivityAt: new Date(),
-      },
-    });
+    try {
+      await this.prisma.project.update({
+        where: { id: projectId },
+        data: {
+          qualityScore: new Prisma.Decimal(score.overallScore),
+          lastActivityAt: new Date(),
+        },
+      });
+    } catch (error) {
+      this.logger.error(`Failed to save quality score for project ${projectId}: ${error}`);
+      throw error;
+    }
   }
 }
