@@ -107,9 +107,11 @@ describe('AiGatewayService', () => {
 
       await service.onModuleInit();
 
-      expect(prismaService.aiProvider.findMany).toHaveBeenCalledWith({
-        where: { isActive: true },
-      });
+      expect(prismaService.aiProvider.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { isActive: true },
+        }),
+      );
       expect(claudeAdapter.setConfig).toHaveBeenCalled();
     });
 

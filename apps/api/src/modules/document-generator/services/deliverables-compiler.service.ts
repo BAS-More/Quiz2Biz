@@ -1,3 +1,4 @@
+// TODO: GAP-A5 — 1385 lines, extract section builders into separate strategy classes
 import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 import { SessionStatus, DecisionStatus } from '@prisma/client';

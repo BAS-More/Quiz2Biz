@@ -1,3 +1,4 @@
+// TODO: GAP-A5 — 1761 lines, extract into SessionQueryService + SessionMutationService
 import {
   Injectable,
   NotFoundException,

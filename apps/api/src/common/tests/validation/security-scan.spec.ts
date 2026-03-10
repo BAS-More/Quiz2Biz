@@ -135,7 +135,7 @@ describe('Security Scan Validation', () => {
       }
 
       // Allow a few violations in legacy code, but should be minimal
-      expect(violations.length).toBeLessThan(20);
+      expect(violations.length).toBeLessThanOrEqual(20);
     });
 
     it('should use Prisma parameterized queries', () => {

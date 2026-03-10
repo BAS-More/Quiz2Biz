@@ -1,3 +1,4 @@
+// TODO: GAP-A5 — 974 lines, extract scoring strategies into ScoringStrategy pattern
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 import { RedisService } from '@libs/redis';
