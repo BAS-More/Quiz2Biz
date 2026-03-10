@@ -2,7 +2,7 @@
  * Scoring Analytics — benchmark comparisons, score history, and trend analysis.
  * Instantiated internally by ScoringEngineService (not via DI).
  */
-import { Logger, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 import { DimensionResidual, ReadinessScoreResult } from '../dto';
 import {
@@ -15,8 +15,6 @@ import {
 import { calculateTrendAnalysis, generateDimensionRecommendation } from '../scoring-calculator';
 
 export class ScoringAnalyticsService {
-  private readonly logger = new Logger(ScoringAnalyticsService.name);
-
   constructor(private readonly prisma: PrismaService) {}
 
   /**
