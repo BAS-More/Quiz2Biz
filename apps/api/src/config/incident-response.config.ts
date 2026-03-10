@@ -3,6 +3,10 @@
  * Severity levels, escalation procedures, and response runbooks
  */
 
+import { Logger } from '@nestjs/common';
+
+const logger = new Logger('IncidentResponse');
+
 // ============================================================================
 // Types & Interfaces
 // ============================================================================
@@ -897,7 +901,7 @@ export class IncidentManager {
     // Trigger notifications based on severity
     this.triggerEscalation(incident, 1);
 
-    console.log(`[Incident] Created incident ${incident.id}: ${title}`);
+    logger.log(`Created incident ${incident.id}: ${title}`);
     return incident;
   }
 
@@ -920,7 +924,7 @@ export class IncidentManager {
       author: acknowledgedBy,
     });
 
-    console.log(`[Incident] ${incidentId} acknowledged by ${acknowledgedBy}`);
+    logger.log(`${incidentId} acknowledged by ${acknowledgedBy}`);
   }
 
   /**
@@ -952,7 +956,7 @@ export class IncidentManager {
       author: updatedBy,
     });
 
-    console.log(`[Incident] ${incidentId} status: ${oldStatus} → ${newStatus}`);
+    logger.log(`${incidentId} status: ${oldStatus} → ${newStatus}`);
   }
 
   /**
@@ -981,11 +985,11 @@ export class IncidentManager {
     const path = escalationPaths.find((p) => p.level === level);
 
     if (!path) {
-      console.log(`[Incident] No escalation path for level ${level}`);
+      logger.warn(`No escalation path for level ${level}`);
       return;
     }
 
-    console.log(`[Incident] ${incident.id} escalating to level ${level}:`, path.roles);
+    logger.log(`${incident.id} escalating to level ${level}:`, JSON.stringify(path.roles));
 
     incident.timeline.push({
       timestamp: new Date(),
@@ -996,7 +1000,7 @@ export class IncidentManager {
 
     // In production, send actual notifications via configured channels
     for (const channel of path.notificationChannels) {
-      console.log(`[Incident] Notifying via ${channel}`);
+      logger.log(`Notifying via ${channel}`);
     }
 
     // Set up auto-escalation timer if configured

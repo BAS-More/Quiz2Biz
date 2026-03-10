@@ -5,6 +5,9 @@
  * Tracks requests, dependencies, exceptions, and custom metrics.
  */
 import * as appInsights from 'applicationinsights';
+import { Logger } from '@nestjs/common';
+
+const logger = new Logger('AppInsights');
 
 // =============================================================================
 // Configuration Interface
@@ -64,12 +67,12 @@ export function initializeAppInsights(): void {
 
   // Skip if already initialized or no connection string
   if (isInitialized) {
-    console.log('Application Insights already initialized');
+    logger.log('Application Insights already initialized');
     return;
   }
 
   if (!config.connectionString && !config.instrumentationKey) {
-    console.log(
+    logger.warn(
       'Application Insights not configured (no connection string or instrumentation key)',
     );
     return;
@@ -102,11 +105,11 @@ export function initializeAppInsights(): void {
     client = appInsights.defaultClient;
     isInitialized = true;
 
-    console.log(
+    logger.log(
       `Application Insights initialized: role=${config.cloudRole}, instance=${config.cloudRoleInstance}`,
     );
   } catch (error) {
-    console.error('Failed to initialize Application Insights:', error);
+    logger.error('Failed to initialize Application Insights:', error instanceof Error ? error.stack : String(error));
   }
 }
 
@@ -537,7 +540,7 @@ export async function shutdown(): Promise<void> {
     client.flush();
     // Give time for telemetry to be sent
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log('Application Insights telemetry flushed');
+    logger.log('Application Insights telemetry flushed');
   }
 }
 

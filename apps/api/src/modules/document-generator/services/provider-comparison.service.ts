@@ -193,7 +193,7 @@ export class ProviderComparisonService {
    * Get provider recommendation for a specific use case
    */
   async getRecommendedProvider(
-    documentType: string,
+    _documentType: string,
     qualityLevel: number,
     prioritize: 'quality' | 'speed' | 'cost' = 'quality',
   ): Promise<{ providerId: string; providerName: string; reason: string }> {

@@ -120,8 +120,8 @@ export class GitHubAdapter {
   private readonly defaultApiUrl = 'https://api.github.com';
 
   constructor(
-    private readonly configService: ConfigService,
-    private readonly prisma: PrismaService,
+    private readonly _configService: ConfigService,
+    private readonly _prisma: PrismaService,
   ) {}
 
   private getHeaders(token: string): Record<string, string> {

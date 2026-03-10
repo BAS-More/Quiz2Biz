@@ -473,7 +473,7 @@ export class ScoringEngineService {
    */
   private generateRationale(
     deltaScore: number,
-    dimensionKey: string,
+    _dimensionKey: string,
     dimensionName: string,
     currentCoverage: number,
   ): string {

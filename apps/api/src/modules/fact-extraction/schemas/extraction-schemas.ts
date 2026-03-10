@@ -5,7 +5,7 @@
  * for each project type (Business Plan, Tech Assessment, etc.)
  */
 
-import { ExtractionSchema, ExtractionCategory } from '../interfaces';
+import { ExtractionSchema } from '../interfaces';
 
 /**
  * Business Plan extraction schema

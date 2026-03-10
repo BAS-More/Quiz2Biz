@@ -38,12 +38,12 @@ export interface AuthenticatedUser {
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
   private readonly bcryptRounds: number;
-  private readonly jwtRefreshSecret: string;
+  private readonly _jwtRefreshSecret: string;
   private readonly jwtRefreshExpiresIn: string;
   private readonly refreshTokenTtlSeconds: number;
   private readonly verificationTokenExpiry: number;
   private readonly passwordResetTokenExpiry: number;
-  private readonly frontendUrl: string;
+  private readonly _frontendUrl: string;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -53,7 +53,7 @@ export class AuthService {
     private readonly notificationService: NotificationService,
   ) {
     this.bcryptRounds = this.configService.get<number>('bcrypt.rounds', 12);
-    this.jwtRefreshSecret = this.configService.get<string>('jwt.refreshSecret', 'refresh-secret');
+    this._jwtRefreshSecret = this.configService.get<string>('jwt.refreshSecret', 'refresh-secret');
     this.jwtRefreshExpiresIn = this.configService.get<string>('jwt.refreshExpiresIn', '7d');
     this.refreshTokenTtlSeconds = this.parseExpiresInToSeconds(this.jwtRefreshExpiresIn);
     this.verificationTokenExpiry = this.parseExpiresInToSeconds(
@@ -62,7 +62,7 @@ export class AuthService {
     this.passwordResetTokenExpiry = this.parseExpiresInToSeconds(
       this.configService.get<string>('tokens.passwordResetExpiry', '1h'),
     );
-    this.frontendUrl = this.configService.get<string>('frontendUrl', 'http://localhost:3001');
+    this._frontendUrl = this.configService.get<string>('frontendUrl', 'http://localhost:3001');
   }
 
   async register(dto: RegisterDto): Promise<TokenResponseDto> {

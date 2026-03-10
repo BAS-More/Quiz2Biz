@@ -2,7 +2,7 @@
  * Quality Scoring DTOs
  */
 
-import { IsString, IsArray, IsNumber, IsOptional, ValidateNested } from 'class-validator';
+import { IsString, IsArray, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 

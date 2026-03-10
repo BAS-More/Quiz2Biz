@@ -477,7 +477,7 @@ export class DocumentGeneratorService {
   async batchApproveDocuments(
     documentIds: string[],
     adminUserId: string,
-    notes?: string,
+    _notes?: string,
   ): Promise<{ approved: string[]; failed: { id: string; error: string }[] }> {
     const approved: string[] = [];
     const failed: { id: string; error: string }[] = [];

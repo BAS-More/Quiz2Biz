@@ -102,7 +102,7 @@ async function bootstrap(): Promise<void> {
 
   // Permissions-Policy header (formerly Feature-Policy)
   // Restricts which browser features the site can use
-  app.use((req: Request, res: Response, next: NextFunction) => {
+  app.use((_req: Request, res: Response, next: NextFunction) => {
     res.setHeader(
       'Permissions-Policy',
       [
@@ -158,10 +158,14 @@ async function bootstrap(): Promise<void> {
   // CORS configuration - parse comma-separated origins and handle credentials properly
   const corsOrigin = configService.get<string>('CORS_ORIGIN', '*');
   const parsedOrigins = corsOrigin === '*' ? '*' : corsOrigin.split(',').map((o) => o.trim());
+  const useCredentials = parsedOrigins !== '*';
+  if (!useCredentials && nodeEnv !== 'development') {
+    logger.warn('CORS wildcard origin detected in non-dev environment — credentials disabled');
+  }
   app.enableCors({
     origin: parsedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    credentials: true,
+    credentials: useCredentials,
   });
 
   // Global prefix
@@ -241,7 +245,7 @@ For API issues, contact: support@quiz2biz.com`,
     .build();
 
   const openApiDocument = SwaggerModule.createDocument(app, swaggerConfig, {
-    operationIdFactory: (controllerKey: string, methodKey: string) => methodKey,
+    operationIdFactory: (_controllerKey: string, methodKey: string) => methodKey,
   });
 
   // Set up Swagger UI at /api/v1/docs

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
-import { AiProviderType, TokenUsage, CostInfo, AiTaskType } from '../interfaces';
+import { AiProviderType, CostInfo, AiTaskType } from '../interfaces';
 
 /**
  * Cost tracking record

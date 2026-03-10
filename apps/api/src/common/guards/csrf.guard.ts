@@ -19,7 +19,7 @@ export const CSRF_SKIP_KEY = 'skipCsrf';
  * Use sparingly - only for webhooks or public endpoints
  */
 export const SkipCsrf = () => {
-  return (target: object, propertyKey?: string, descriptor?: PropertyDescriptor) => {
+  return (target: object, _propertyKey?: string, descriptor?: PropertyDescriptor) => {
     if (descriptor) {
       Reflect.defineMetadata(CSRF_SKIP_KEY, true, descriptor.value);
     } else {

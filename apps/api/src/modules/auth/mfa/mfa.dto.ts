@@ -3,7 +3,7 @@
  * Data transfer objects for MFA operations
  */
 
-import { IsString, IsNotEmpty, Length, Matches } from 'class-validator';
+import { IsString, IsNotEmpty, Matches } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class VerifyMfaCodeDto {

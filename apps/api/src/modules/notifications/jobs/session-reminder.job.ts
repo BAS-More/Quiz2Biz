@@ -114,7 +114,7 @@ export class SessionReminderJobService {
       return timeSinceLastActivity >= REMINDER_INTERVALS.FIRST;
     }
 
-    const { remindersSent, lastReminderAt } = reminderRecord;
+    const { remindersSent, lastReminderAt: _lastReminderAt } = reminderRecord;
 
     // Max 3 reminders
     if (remindersSent >= 3) {

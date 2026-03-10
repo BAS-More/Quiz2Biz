@@ -6,6 +6,9 @@
  */
 
 import * as Sentry from '@sentry/nestjs';
+import { Logger } from '@nestjs/common';
+
+const logger = new Logger('Sentry');
 
 // Profiling is optional - only load if available
 
@@ -49,7 +52,7 @@ export function initializeSentry(): void {
 
   // Only initialize if DSN is provided
   if (!config.dsn) {
-    console.log('Sentry DSN not configured, skipping initialization');
+    logger.warn('Sentry DSN not configured, skipping initialization');
     return;
   }
 
@@ -119,7 +122,7 @@ export function initializeSentry(): void {
     ],
   });
 
-  console.log(`Sentry initialized for environment: ${config.environment}`);
+  logger.log(`Sentry initialized for environment: ${config.environment}`);
 }
 
 /**

@@ -1,8 +1,6 @@
 import { Controller, Post, Get, Body, Param, ParseUUIDPipe, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { CurrentUser } from '../../auth/decorators/user.decorator';
-import { AuthenticatedUser } from '../../auth/auth.service';
 import {
   ConversationService,
   AnswerWithFollowUpResult,

@@ -6,7 +6,6 @@
  */
 
 import {
-  ChaosExperimentConfig,
   ChaosMeshExperiment,
   ChaosMeshKind,
   ExperimentResult,

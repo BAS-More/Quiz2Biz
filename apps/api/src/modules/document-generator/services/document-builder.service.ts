@@ -14,7 +14,6 @@ import {
   Header,
   Footer,
   PageNumber,
-  NumberFormat,
 } from 'docx';
 import { DocumentCategory } from '@prisma/client';
 import { TemplateData, StandardSection } from './template-engine.service';
@@ -416,7 +415,7 @@ export class DocumentBuilderService {
    * Build a simple two-column table
    */
   private buildTable(rows: string[][]): Paragraph {
-    const table = new Table({
+    const _table = new Table({
       width: { size: 100, type: WidthType.PERCENTAGE },
       rows: rows.map(
         (row) =>
