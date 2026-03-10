@@ -11,6 +11,22 @@ import {
   HeatmapColor,
   HeatmapColors,
 } from './dto';
+import { Prisma } from '@prisma/client';
+
+/** Lightweight shape for Prisma Question rows used in heatmap calculations */
+interface HeatmapQuestion {
+  id: string;
+  text: string;
+  dimensionKey: string | null;
+  severity: Prisma.Decimal | null;
+}
+
+/** Lightweight shape for Prisma Response rows used in heatmap calculations */
+interface HeatmapResponse {
+  questionId: string;
+  coverage: Prisma.Decimal | null;
+  value?: unknown;
+}
 
 /**
  * Gap Heatmap Generator Service
@@ -232,7 +248,7 @@ export class HeatmapService {
 
     // Build response lookup
     const responseLookup = new Map(
-      responses.map((r: { questionId: string; coverage: any; value?: any }) => [r.questionId, r]),
+      responses.map((r: HeatmapResponse) => [r.questionId, r]),
     );
 
     // Get questions for this cell
@@ -245,11 +261,11 @@ export class HeatmapService {
     const cellQuestions = questions
       .filter((q: { dimensionKey: string | null }) => q.dimensionKey === dim?.key)
       .filter(
-        (q: { severity: any }) =>
+        (q: { severity: Prisma.Decimal | null }) =>
           SeverityBuckets.getBucket(Number(q.severity || this.DEFAULT_SEVERITY)) === bucket,
       )
-      .map((q: { id: string; text: string; severity: any }) => {
-        const response = responseLookup.get(q.id) as { coverage: any; value?: any } | undefined;
+      .map((q: HeatmapQuestion) => {
+        const response = responseLookup.get(q.id) as HeatmapResponse | undefined;
         const coverage = response?.coverage ? Number(response.coverage) : 0;
         const severity = Number(q.severity || this.DEFAULT_SEVERITY);
         return {
@@ -338,8 +354,8 @@ export class HeatmapService {
 
   private generateCells(
     dimensions: Array<{ key: string; displayName: string }>,
-    questions: Array<{ id: string; dimensionKey: string | null; severity: any }>,
-    responses: Array<{ questionId: string; coverage: any }>,
+    questions: Array<{ id: string; dimensionKey: string | null; severity: Prisma.Decimal | null }>,
+    responses: Array<{ questionId: string; coverage: Prisma.Decimal | null }>,
   ): HeatmapCellDto[] {
     const responseLookup = new Map(responses.map((r) => [r.questionId, r]));
     const cells: HeatmapCellDto[] = [];
@@ -531,11 +547,11 @@ export class HeatmapService {
 
     // Get dimension weights
     const dimensionWeights = new Map(
-      dimensions.map((d: { key: string; weight: any }) => [d.key, Number(d.weight || 0.1)]),
+      dimensions.map((d: { key: string; weight: Prisma.Decimal | null }) => [d.key, Number(d.weight || 0.1)]),
     );
 
     const responseLookup = new Map(
-      responses.map((r: { questionId: string; coverage: any }) => [r.questionId, r]),
+      responses.map((r: HeatmapResponse) => [r.questionId, r]),
     );
 
     // Calculate priority score for each cell
@@ -556,12 +572,12 @@ export class HeatmapService {
       const cellQuestions = questions
         .filter((q: { dimensionKey: string | null }) => q.dimensionKey === cell.dimensionKey)
         .filter(
-          (q: { severity: any }) =>
+          (q: { severity: Prisma.Decimal | null }) =>
             SeverityBuckets.getBucket(Number(q.severity || this.DEFAULT_SEVERITY)) ===
             cell.severityBucket,
         )
-        .map((q: { id: string; text: string; severity: any }) => {
-          const response = responseLookup.get(q.id) as { coverage: any } | undefined;
+        .map((q: HeatmapQuestion) => {
+          const response = responseLookup.get(q.id) as HeatmapResponse | undefined;
           const coverage = response?.coverage ? Number(response.coverage) : 0;
           return {
             questionId: q.id,

@@ -28,7 +28,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { GitHubAdapter } from './github.adapter';
 import { GitLabAdapter } from './gitlab.adapter';
 import { JiraConfluenceAdapter } from './jira-confluence.adapter';
-import { AdapterConfigService, AdapterType, AdapterConfig } from './adapter-config.service';
+import { AdapterConfigService, AdapterType, AdapterConfig, GitHubAdapterConfig, GitLabAdapterConfig, JiraAdapterConfig, ConfluenceAdapterConfig } from './adapter-config.service';
 
 // DTOs
 class CreateAdapterConfigDto {
@@ -203,7 +203,7 @@ export class AdapterController {
     try {
       switch (dto.type) {
         case 'github': {
-          const config = dto.config as any;
+          const config = dto.config as unknown as GitHubAdapterConfig;
           // Try to fetch a single PR to test connection
           await this.githubAdapter.fetchPullRequests(
             { token: config.token, owner: config.owner, repo: config.repo },
@@ -213,7 +213,7 @@ export class AdapterController {
         }
 
         case 'gitlab': {
-          const config = dto.config as any;
+          const config = dto.config as unknown as GitLabAdapterConfig;
           await this.gitlabAdapter.fetchPipelines(
             { token: config.token, projectId: config.projectId, apiUrl: config.apiUrl },
             { perPage: 1 },
@@ -222,7 +222,7 @@ export class AdapterController {
         }
 
         case 'jira': {
-          const config = dto.config as any;
+          const config = dto.config as unknown as JiraAdapterConfig;
           await this.jiraConfluenceAdapter.fetchProject(
             { domain: config.domain, email: config.email, apiToken: config.apiToken },
             config.projectKey,
@@ -231,7 +231,7 @@ export class AdapterController {
         }
 
         case 'confluence': {
-          const config = dto.config as any;
+          const config = dto.config as unknown as ConfluenceAdapterConfig;
           await this.jiraConfluenceAdapter.searchPages(
             {
               domain: config.domain,
@@ -286,7 +286,7 @@ export class AdapterController {
 
       switch (config.type) {
         case 'github': {
-          const githubConfig = config.config as any;
+          const githubConfig = config.config as unknown as GitHubAdapterConfig;
           result = await this.githubAdapter.ingestAllEvidence(
             {
               token: githubConfig.token,
@@ -300,7 +300,7 @@ export class AdapterController {
         }
 
         case 'gitlab': {
-          const gitlabConfig = config.config as any;
+          const gitlabConfig = config.config as unknown as GitLabAdapterConfig;
           result = await this.gitlabAdapter.ingestAllEvidence(
             {
               token: gitlabConfig.token,
@@ -314,14 +314,14 @@ export class AdapterController {
 
         case 'jira':
         case 'confluence': {
-          const atlassianConfig = config.config as any;
+          const atlassianConfig = config.config as unknown as JiraAdapterConfig & { spaceKey?: string };
           const confluenceConfig =
             config.type === 'confluence' || atlassianConfig.spaceKey
               ? {
                   domain: atlassianConfig.domain,
                   email: atlassianConfig.email,
                   apiToken: atlassianConfig.apiToken,
-                  spaceKey: atlassianConfig.spaceKey,
+                  spaceKey: atlassianConfig.spaceKey ?? '',
                 }
               : null;
 

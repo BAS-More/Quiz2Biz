@@ -123,7 +123,7 @@ export class PromptGeneratorService {
    * Evaluate task condition
    */
   private evaluateCondition(condition: TaskCondition, gap: GapContext): boolean {
-    const value = (gap as any)[condition.field];
+    const value = gap[condition.field as keyof GapContext];
     if (value === undefined) {
       return false;
     }

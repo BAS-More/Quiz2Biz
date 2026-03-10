@@ -6,7 +6,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
-import { DecisionStatus } from '@prisma/client';
+import { DecisionStatus, UserRole } from '@prisma/client';
 import * as crypto from 'crypto';
 
 /**
@@ -603,7 +603,7 @@ export class ApprovalWorkflowService {
 
     return this.prisma.user.findMany({
       where: {
-        role: { in: requiredRoles as any },
+        role: { in: requiredRoles as UserRole[] },
         id: { not: excludeUserId },
         deletedAt: null,
       },

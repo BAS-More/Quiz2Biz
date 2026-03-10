@@ -1,0 +1,220 @@
+﻿
+apps\api\src\modules\adapters\adapter.controller.ts:206:       
+   const config = dto.config as any;
+apps\api\src\modules\adapters\adapter.controller.ts:216:       
+   const config = dto.config as any;
+apps\api\src\modules\adapters\adapter.controller.ts:225:       
+   const config = dto.config as any;
+apps\api\src\modules\adapters\adapter.controller.ts:234:       
+   const config = dto.config as any;
+apps\api\src\modules\adapters\adapter.controller.ts:289:       
+   const githubConfig = config.config as any;
+apps\api\src\modules\adapters\adapter.controller.ts:303:       
+   const gitlabConfig = config.config as any;
+apps\api\src\modules\adapters\adapter.controller.ts:317:       
+   const atlassianConfig = config.config as any;
+apps\api\src\modules\adaptive-logic\adaptive-logic.service.ts:4
+0:        ...(persona && { persona: persona as any }),
+apps\api\src\modules\auth\oauth\oauth.service.ts:168:    let 
+user: any;
+apps\api\src\modules\auth\oauth\oauth.service.ts:346:        
+expiresIn: this.configService.get<string>('jwt.expiresIn', 
+'15m') as any,
+apps\api\src\modules\auth\oauth\oauth.service.ts:349:        
+expiresIn: 
+this.configService.get<string>('jwt.refreshExpiresIn', '7d') 
+as any,
+apps\api\src\modules\decision-log\decorators\require-approval.d
+ecorator.ts:130:  private getResourceId(request: any, options: 
+ApprovalRequirementOptions): string | null {
+apps\api\src\modules\decision-log\approval-workflow.service.ts:
+606:        role: { in: requiredRoles as any },
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:236:  private async 
+validateSession(sessionId: string, userId: string): 
+Promise<any> {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:397:    session: any,
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:398:    responses: any[],
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:461:    session: any,
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:462:    responses: any[],
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:520:    session: any,
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:521:    responses: any[],
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:576:    session: any,
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:577:    responses: any[],
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:634:    session: any,
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:635:    responses: any[],
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:690:    session: any,
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:691:    responses: any[],
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:746:    session: any,
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:747:    responses: any[],
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:802:    session: any,
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:803:    responses: any[],
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:862:    session: any,
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:863:    decisions: any[],
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:914:    session: any,
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:916:    evidenceItems: any[],
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:973:  private 
+generateSystemOverview(session: any, responses: any[]): string 
+{
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:994:  private 
+generateArchitectureDecisions(responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1018:  private 
+generateSecurityArchitecture(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1036:  private 
+generateTechnologyStack(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1054:  private 
+generateDevelopmentProcess(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1069:  private 
+generateCICDPipeline(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1087:  private 
+generateBranchingStrategy(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1091:  private 
+generateReleaseManagement(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1095:  private 
+generateTestObjectives(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1099:  private 
+generateTestTypesCoverage(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1103:  private 
+generateTestAutomation(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1107:  private 
+generatePerformanceTesting(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1111:  private 
+generateSecurityIntegration(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1115:  private 
+generateVulnerabilityManagement(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1119:  private 
+generateComplianceAutomation(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1123:  private 
+generateIncidentResponse(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1127:  private 
+generateDataClassification(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1131:  private 
+generatePrivacyControls(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1135:  private 
+generateDataRetention(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1139:  private 
+generateGDPRCompliance(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1143:  private 
+generateMonitoringStrategy(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1147:  private 
+generateLoggingArchitecture(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1151:  private 
+generateAlertingRunbooks(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1155:  private 
+generateSLOsErrorBudgets(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1159:  private 
+generateCostAnalysis(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1163:  private 
+generateUnitEconomics(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1167:  private 
+generateBudgetAllocation(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1171:  private 
+generateROIProjections(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1175:  private generatePolicies(_responses: 
+any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1179:  private 
+generateStandards(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1183:  private 
+generateProcedures(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1187:  private 
+generateControlMappings(_responses: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1191:  private formatDecisions(decisions: 
+any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1206:  private 
+generateDecisionTimeline(decisions: any[]): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1220:  private 
+generateExecutiveSummary(session: any, dimensions: 
+Record<string, number>): string {
+apps\api\src\modules\document-generator\services\deliverables-c
+ompiler.service.ts:1252:  private 
+generateEvidenceSummary(evidenceItems: any[]): string {
+apps\api\src\modules\heatmap\heatmap.service.ts:235:      
+responses.map((r: { questionId: string; coverage: any; value?: 
+any }) => [r.questionId, r]),
+apps\api\src\modules\heatmap\heatmap.service.ts:248:        
+(q: { severity: any }) =>
+apps\api\src\modules\heatmap\heatmap.service.ts:251:      
+.map((q: { id: string; text: string; severity: any }) => {
+apps\api\src\modules\heatmap\heatmap.service.ts:252:        
+const response = responseLookup.get(q.id) as { coverage: any; 
+value?: any } | undefined;
+apps\api\src\modules\heatmap\heatmap.service.ts:341:    
+questions: Array<{ id: string; dimensionKey: string | null; 
+severity: any }>,
+apps\api\src\modules\heatmap\heatmap.service.ts:342:    
+responses: Array<{ questionId: string; coverage: any }>,
+apps\api\src\modules\heatmap\heatmap.service.ts:534:      
+dimensions.map((d: { key: string; weight: any }) => [d.key, 
+Number(d.weight || 0.1)]),
+apps\api\src\modules\heatmap\heatmap.service.ts:538:      
+responses.map((r: { questionId: string; coverage: any }) => 
+[r.questionId, r]),
+apps\api\src\modules\heatmap\heatmap.service.ts:559:          
+(q: { severity: any }) =>
+apps\api\src\modules\heatmap\heatmap.service.ts:563:        
+.map((q: { id: string; text: string; severity: any }) => {
+apps\api\src\modules\heatmap\heatmap.service.ts:564:          
+const response = responseLookup.get(q.id) as { coverage: any } 
+| undefined;
+apps\api\src\modules\qpg\services\prompt-generator.service.ts:1
+26:    const value = (gap as any)[condition.field];
+apps\api\src\modules\session\session.service.ts:824:        
+description: (session.currentSection as any).description ?? 
+undefined,
+
+

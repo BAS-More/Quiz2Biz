@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 
 /**
@@ -12,7 +12,6 @@ import { PrismaService } from '@libs/database';
  */
 @Injectable()
 export class PromptBuilderService {
-  private readonly logger = new Logger(PromptBuilderService.name);
 
   constructor(private readonly prisma: PrismaService) {}
 

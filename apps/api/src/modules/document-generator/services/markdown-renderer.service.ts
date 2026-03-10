@@ -3,7 +3,7 @@
  * Converts AI-generated content to properly formatted Markdown documents
  */
 
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 export interface DocumentSection {
   title: string;
@@ -28,7 +28,6 @@ export interface TableData {
 
 @Injectable()
 export class MarkdownRendererService {
-  private readonly logger = new Logger(MarkdownRendererService.name);
 
   /**
    * Render a full document to Markdown

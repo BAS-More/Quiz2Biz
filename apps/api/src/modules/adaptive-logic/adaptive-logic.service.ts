@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
-import { Question, VisibilityRule, VisibilityAction } from '@prisma/client';
+import { Question, VisibilityRule, VisibilityAction, Persona } from '@prisma/client';
 import { ConditionEvaluator } from './evaluators/condition.evaluator';
 import { Condition, LogicalOperator } from './types/rule.types';
 
@@ -37,7 +37,7 @@ export class AdaptiveLogicService {
         section: {
           questionnaireId,
         },
-        ...(persona && { persona: persona as any }),
+        ...(persona && { persona: persona as Persona }),
       },
       include: {
         visibilityRules: {

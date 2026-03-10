@@ -8,6 +8,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { Request } from 'express';
 import { ApprovalCategory, ApprovalWorkflowService } from '../approval-workflow.service';
 
 /**
@@ -127,7 +128,7 @@ export class ApprovalGuard implements CanActivate {
   /**
    * Extract resource ID from request
    */
-  private getResourceId(request: any, options: ApprovalRequirementOptions): string | null {
+  private getResourceId(request: Request, options: ApprovalRequirementOptions): string | null {
     const paramName = options.resourceIdParam || 'id';
 
     // Check route params
@@ -137,12 +138,12 @@ export class ApprovalGuard implements CanActivate {
 
     // Check body
     if (request.body?.[paramName]) {
-      return request.body[paramName];
+      return String(request.body[paramName]);
     }
 
     // Check query
     if (request.query?.[paramName]) {
-      return request.query[paramName];
+      return String(request.query[paramName]);
     }
 
     return null;

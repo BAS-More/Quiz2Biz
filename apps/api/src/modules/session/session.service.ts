@@ -821,7 +821,7 @@ export class SessionService {
 
         name: session.currentSection.name,
 
-        description: (session.currentSection as any).description ?? undefined,
+        description: (session.currentSection as { description?: string | null }).description ?? undefined,
 
         progress:
           sectionQuestions.length > 0

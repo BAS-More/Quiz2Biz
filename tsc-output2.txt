@@ -1,0 +1,388 @@
+﻿apps/api/src/config/feature-flags.config.ts(711,11): error TS6133: '_client' is declared but its value is never read.
+apps/api/src/config/feature-flags.config.ts(714,11): error TS6133: '_ldConfig' is declared but its value is never read.
+apps/api/src/health.controller.ts(56,20): error TS6133: '_startTime' is declared but its value is never read.
+apps/api/src/modules/adapters/adapter.controller.ts(35,3): error TS2564: Property 'type' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/adapters/adapter.controller.ts(36,3): error TS2564: Property 'name' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/adapters/adapter.controller.ts(37,3): error TS2564: Property 'enabled' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/adapters/adapter.controller.ts(38,3): error TS2564: Property 'config' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/adapters/adapter.controller.ts(48,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/adapters/adapter.controller.ts(53,3): error TS2564: Property 'type' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/adapters/adapter.controller.ts(54,3): error TS2564: Property 'config' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/adapters/adapter.controller.ts(206,26): error TS2352: Conversion of type 'Record<string, unknown>' to type 'GitHubAdapterConfig' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'Record<string, unknown>' is missing the following properties from type 'GitHubAdapterConfig': token, owner, repo
+apps/api/src/modules/adapters/adapter.controller.ts(216,26): error TS2352: Conversion of type 'Record<string, unknown>' to type 'GitLabAdapterConfig' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'Record<string, unknown>' is missing the following properties from type 'GitLabAdapterConfig': token, projectId
+apps/api/src/modules/adapters/adapter.controller.ts(225,26): error TS2352: Conversion of type 'Record<string, unknown>' to type 'JiraAdapterConfig' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'Record<string, unknown>' is missing the following properties from type 'JiraAdapterConfig': domain, email, apiToken, projectKey
+apps/api/src/modules/adapters/adapter.controller.ts(234,26): error TS2352: Conversion of type 'Record<string, unknown>' to type 'ConfluenceAdapterConfig' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'Record<string, unknown>' is missing the following properties from type 'ConfluenceAdapterConfig': domain, email, apiToken, spaceKey
+apps/api/src/modules/adapters/adapter.controller.ts(289,32): error TS2352: Conversion of type 'Record<string, unknown>' to type 'GitHubAdapterConfig' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'Record<string, unknown>' is missing the following properties from type 'GitHubAdapterConfig': token, owner, repo
+apps/api/src/modules/adapters/adapter.controller.ts(303,32): error TS2352: Conversion of type 'Record<string, unknown>' to type 'GitLabAdapterConfig' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'Record<string, unknown>' is missing the following properties from type 'GitLabAdapterConfig': token, projectId
+apps/api/src/modules/adapters/adapter.controller.ts(317,35): error TS2352: Conversion of type 'Record<string, unknown>' to type 'JiraAdapterConfig & { spaceKey?: string | undefined; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'Record<string, unknown>' is missing the following properties from type 'JiraAdapterConfig': domain, email, apiToken, projectKey
+apps/api/src/modules/adapters/adapter.controller.ts(334,13): error TS2345: Argument of type '{ domain: string; email: string; apiToken: string; spaceKey: string | undefined; } | null' is not assignable to parameter of type 'ConfluenceConfig | null'.
+  Type '{ domain: string; email: string; apiToken: string; spaceKey: string | undefined; }' is not assignable to type 'ConfluenceConfig'.
+    Types of property 'spaceKey' are incompatible.
+      Type 'string | undefined' is not assignable to type 'string'.
+        Type 'undefined' is not assignable to type 'string'.
+apps/api/src/modules/adapters/github.adapter.ts(123,22): error TS6138: Property '_configService' is declared but its value is never read.
+apps/api/src/modules/adapters/github.adapter.ts(124,22): error TS6138: Property '_prisma' is declared but its value is never read.
+apps/api/src/modules/adapters/gitlab.adapter.ts(189,22): error TS6138: Property '_prisma' is declared but its value is never read.
+apps/api/src/modules/adapters/jira-confluence.adapter.ts(137,22): error TS6138: Property '_prisma' is declared but its value is never read.
+apps/api/src/modules/admin/dto/create-question.dto.ts(21,3): error TS2564: Property 'value' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/admin/dto/create-question.dto.ts(25,3): error TS2564: Property 'label' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/admin/dto/create-question.dto.ts(37,3): error TS2564: Property 'text' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/admin/dto/create-question.dto.ts(41,3): error TS2564: Property 'type' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/admin/dto/create-questionnaire.dto.ts(8,3): error TS2564: Property 'name' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/admin/dto/create-section.dto.ts(8,3): error TS2564: Property 'name' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/admin/dto/create-visibility-rule.dto.ts(26,3): error TS2564: Property 'condition' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/admin/dto/create-visibility-rule.dto.ts(30,3): error TS2564: Property 'action' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/admin/dto/create-visibility-rule.dto.ts(38,3): error TS2564: Property 'targetQuestionIds' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/admin/dto/reorder-questions.dto.ts(8,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/admin/dto/reorder-questions.dto.ts(13,3): error TS2564: Property 'orderIndex' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/admin/dto/reorder-questions.dto.ts(21,3): error TS2564: Property 'items' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/admin/dto/reorder-sections.dto.ts(8,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/admin/dto/reorder-sections.dto.ts(13,3): error TS2564: Property 'orderIndex' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/admin/dto/reorder-sections.dto.ts(21,3): error TS2564: Property 'items' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/auth.service.ts(41,20): error TS6133: '_jwtRefreshSecret' is declared but its value is never read.
+apps/api/src/modules/auth/auth.service.ts(46,20): error TS6133: '_frontendUrl' is declared but its value is never read.
+apps/api/src/modules/auth/dto/login.dto.ts(7,3): error TS2564: Property 'email' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/login.dto.ts(12,3): error TS2564: Property 'password' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/refresh-token.dto.ts(8,3): error TS2564: Property 'refreshToken' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/register.dto.ts(7,3): error TS2564: Property 'email' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/register.dto.ts(17,3): error TS2564: Property 'password' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/register.dto.ts(23,3): error TS2564: Property 'name' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/token.dto.ts(9,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/token.dto.ts(12,3): error TS2564: Property 'email' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/token.dto.ts(15,3): error TS2564: Property 'role' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/token.dto.ts(23,3): error TS2564: Property 'accessToken' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/token.dto.ts(26,3): error TS2564: Property 'refreshToken' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/token.dto.ts(29,3): error TS2564: Property 'expiresIn' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/token.dto.ts(32,3): error TS2564: Property 'tokenType' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/token.dto.ts(35,3): error TS2564: Property 'user' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/token.dto.ts(40,3): error TS2564: Property 'accessToken' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/token.dto.ts(43,3): error TS2564: Property 'expiresIn' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/verification.dto.ts(8,3): error TS2564: Property 'token' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/verification.dto.ts(15,3): error TS2564: Property 'email' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/verification.dto.ts(22,3): error TS2564: Property 'token' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/verification.dto.ts(27,3): error TS2564: Property 'newPassword' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/dto/verification.dto.ts(34,3): error TS2564: Property 'email' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/mfa/mfa.dto.ts(19,3): error TS2564: Property 'code' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/mfa/mfa.dto.ts(24,3): error TS2564: Property 'secret' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/mfa/mfa.dto.ts(27,3): error TS2564: Property 'qrCodeDataUrl' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/mfa/mfa.dto.ts(30,3): error TS2564: Property 'manualEntryKey' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/mfa/mfa.dto.ts(39,3): error TS2564: Property 'backupCodes' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/mfa/mfa.dto.ts(44,3): error TS2564: Property 'enabled' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/mfa/mfa.dto.ts(47,3): error TS2564: Property 'backupCodesCount' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/mfa/mfa.dto.ts(52,3): error TS2564: Property 'mfaToken' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/mfa/mfa.dto.ts(55,3): error TS2564: Property 'message' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/oauth/oauth.controller.ts(28,3): error TS2564: Property 'idToken' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/oauth/oauth.controller.ts(32,3): error TS2564: Property 'accessToken' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/oauth/oauth.controller.ts(36,3): error TS2564: Property 'provider' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/auth/oauth/oauth.service.ts(237,9): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+apps/api/src/modules/auth/oauth/oauth.service.ts(238,9): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+apps/api/src/modules/auth/tests/auth.security.test.ts(29,7): error TS6133: '_authService' is declared but its value is never read.
+apps/api/src/modules/auth/tests/auth.security.test.ts(31,7): error TS6133: '_prisma' is declared but its value is never read.
+apps/api/src/modules/auth/tests/auth.security.test.ts(266,13): error TS6133: '_email' is declared but its value is never read.
+apps/api/src/modules/chat-engine/services/prompt-builder.service.ts(15,20): error TS6133: 'logger' is declared but its value is never read.
+apps/api/src/modules/decision-log/decorators/require-approval.decorator.ts(136,7): error TS2322: Type 'string | string[]' is not assignable to type 'string | null'.
+  Type 'string[]' is not assignable to type 'string'.
+apps/api/src/modules/decision-log/decorators/require-approval.decorator.ts(146,7): error TS2322: Type 'string | ParsedQs | (string | ParsedQs)[]' is not assignable to type 'string | null'.
+  Type 'ParsedQs' is not assignable to type 'string'.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(14,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(19,3): error TS2564: Property 'statement' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(41,3): error TS2564: Property 'decisionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(48,3): error TS2564: Property 'status' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(57,3): error TS2564: Property 'supersedesDecisionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(62,3): error TS2564: Property 'statement' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(105,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(108,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(111,3): error TS2564: Property 'statement' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(114,3): error TS2564: Property 'assumptions' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(117,3): error TS2564: Property 'references' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(120,3): error TS2564: Property 'ownerId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(123,3): error TS2564: Property 'status' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(126,3): error TS2564: Property 'supersedesDecisionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(129,3): error TS2564: Property 'createdAt' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(137,3): error TS2564: Property 'exportedAt' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(140,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(143,3): error TS2564: Property 'totalDecisions' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(146,3): error TS2564: Property 'decisions' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/decision-log/dto/decision.dto.ts(149,3): error TS2564: Property 'supersessionChain' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/create-document-type.dto.ts(21,3): error TS2564: Property 'name' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/create-document-type.dto.ts(26,3): error TS2564: Property 'slug' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/create-document-type.dto.ts(35,3): error TS2564: Property 'category' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(13,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(49,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(52,3): error TS2564: Property 'title' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(55,3): error TS2564: Property 'content' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(58,3): error TS2564: Property 'wordCount' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(64,3): error TS2564: Property 'order' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(69,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(72,3): error TS2564: Property 'title' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(87,3): error TS2564: Property 'category' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(90,3): error TS2564: Property 'sections' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(93,3): error TS2564: Property 'wordCount' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(96,3): error TS2564: Property 'subSectionCount' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(99,3): error TS2564: Property 'generatedAt' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(104,3): error TS2564: Property 'totalDocuments' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(107,3): error TS2564: Property 'totalSections' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(110,3): error TS2564: Property 'totalWordCount' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(113,3): error TS2564: Property 'categories' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(116,3): error TS2564: Property 'completenessScore' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(121,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(124,3): error TS2564: Property 'userId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(127,3): error TS2564: Property 'questionnaireVersion' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(133,3): error TS2564: Property 'readinessScore' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(136,3): error TS2564: Property 'dimensionScores' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(139,3): error TS2564: Property 'generationTimestamp' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(144,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(147,3): error TS2564: Property 'generatedAt' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(150,3): error TS2564: Property 'documents' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(153,3): error TS2564: Property 'summary' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(156,3): error TS2564: Property 'readinessScore' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(159,3): error TS2564: Property 'metadata' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(164,3): error TS2564: Property 'format' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(169,3): error TS2564: Property 'url' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(172,3): error TS2564: Property 'expiresAt' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(175,3): error TS2564: Property 'format' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/deliverables-pack.dto.ts(178,3): error TS2564: Property 'estimatedSize' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(10,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(13,3): error TS2564: Property 'name' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(16,3): error TS2564: Property 'slug' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(19,3): error TS2564: Property 'description' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(22,3): error TS2564: Property 'category' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(25,3): error TS2564: Property 'outputFormats' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(28,3): error TS2564: Property 'estimatedPages' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(31,3): error TS2564: Property 'isActive' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(36,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(39,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(42,3): error TS2564: Property 'documentTypeId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(45,3): error TS2564: Property 'status' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(48,3): error TS2564: Property 'format' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(57,3): error TS2564: Property 'version' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(63,3): error TS2564: Property 'createdAt' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(66,3): error TS2564: Property 'updatedAt' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(77,3): error TS2564: Property 'url' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/document-response.dto.ts(82,3): error TS2564: Property 'expiresAt' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/request-generation.dto.ts(10,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/request-generation.dto.ts(17,3): error TS2564: Property 'documentTypeId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/dto/review-document.dto.ts(11,3): error TS2564: Property 'reason' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/document-generator/services/deliverables-compiler.service.ts(399,5): error TS6133: 'dimensions' is declared but its value is never read.
+apps/api/src/modules/document-generator/services/deliverables-compiler.service.ts(461,5): error TS6133: 'session' is declared but its value is never read.
+apps/api/src/modules/document-generator/services/deliverables-compiler.service.ts(463,5): error TS6133: 'dimensions' is declared but its value is never read.
+apps/api/src/modules/document-generator/services/deliverables-compiler.service.ts(520,5): error TS6133: 'session' is declared but its value is never read.
+apps/api/src/modules/document-generator/services/deliverables-compiler.service.ts(522,5): error TS6133: 'dimensions' is declared but its value is never read.
+apps/api/src/modules/document-generator/services/deliverables-compiler.service.ts(576,5): error TS6133: 'session' is declared but its value is never read.
+apps/api/src/modules/document-generator/services/deliverables-compiler.service.ts(578,5): error TS6133: 'dimensions' is declared but its value is never read.
+apps/api/src/modules/document-generator/services/deliverables-compiler.service.ts(634,5): error TS6133: 'session' is declared but its value is never read.
+apps/api/src/modules/document-generator/services/deliverables-compiler.service.ts(636,5): error TS6133: 'dimensions' is declared but its value is never read.
+apps/api/src/modules/document-generator/services/deliverables-compiler.service.ts(690,5): error TS6133: 'session' is declared but its value is never read.
+apps/api/src/modules/document-generator/services/deliverables-compiler.service.ts(692,5): error TS6133: 'dimensions' is declared but its value is never read.
+apps/api/src/modules/document-generator/services/deliverables-compiler.service.ts(746,5): error TS6133: 'session' is declared but its value is never read.
+apps/api/src/modules/document-generator/services/deliverables-compiler.service.ts(748,5): error TS6133: 'dimensions' is declared but its value is never read.
+apps/api/src/modules/document-generator/services/deliverables-compiler.service.ts(802,5): error TS6133: 'session' is declared but its value is never read.
+apps/api/src/modules/document-generator/services/deliverables-compiler.service.ts(804,5): error TS6133: 'dimensions' is declared but its value is never read.
+apps/api/src/modules/document-generator/services/deliverables-compiler.service.ts(862,5): error TS6133: 'session' is declared but its value is never read.
+apps/api/src/modules/document-generator/services/document-builder.service.ts(418,11): error TS6133: '_table' is declared but its value is never read.
+apps/api/src/modules/document-generator/services/markdown-renderer.service.ts(31,20): error TS6133: 'logger' is declared but its value is never read.
+apps/api/src/modules/evidence-registry/ci-artifact-ingestion.service.ts(90,22): error TS6138: Property '_configService' is declared but its value is never read.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(14,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(18,3): error TS2564: Property 'questionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(26,3): error TS2564: Property 'artifactType' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(41,3): error TS2564: Property 'evidenceId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(45,3): error TS2564: Property 'verified' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(61,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(64,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(67,3): error TS2564: Property 'questionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(70,3): error TS2564: Property 'artifactUrl' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(73,3): error TS2564: Property 'artifactType' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(76,3): error TS2564: Property 'fileName' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(79,3): error TS2564: Property 'fileSize' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(82,3): error TS2564: Property 'mimeType' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(85,3): error TS2564: Property 'hashSignature' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(88,3): error TS2564: Property 'verified' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(91,3): error TS2564: Property 'verifierId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(94,3): error TS2564: Property 'verifiedAt' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/evidence-registry/dto/evidence.dto.ts(97,3): error TS2564: Property 'createdAt' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/fact-extraction/dto/fact-extraction.dto.ts(12,3): error TS2564: Property 'key' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/fact-extraction/dto/fact-extraction.dto.ts(16,3): error TS2564: Property 'value' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/fact-extraction/dto/fact-extraction.dto.ts(24,3): error TS2564: Property 'category' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/fact-extraction/dto/fact-extraction.dto.ts(31,3): error TS2564: Property 'confidence' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/fact-extraction/dto/fact-extraction.dto.ts(49,3): error TS2564: Property 'value' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/fact-extraction/dto/fact-extraction.dto.ts(54,3): error TS2564: Property 'isValid' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/fact-extraction/dto/fact-extraction.dto.ts(59,3): error TS2564: Property 'missingRequired' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/fact-extraction/dto/fact-extraction.dto.ts(64,3): error TS2564: Property 'lowConfidenceFacts' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/fact-extraction/dto/fact-extraction.dto.ts(67,3): error TS2564: Property 'completenessScore' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/fact-extraction/dto/fact-extraction.dto.ts(75,3): error TS2564: Property 'facts' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/fact-extraction/dto/fact-extraction.dto.ts(78,3): error TS2564: Property 'processingTimeMs' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/fact-extraction/dto/fact-extraction.dto.ts(81,3): error TS2564: Property 'tokensUsed' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(60,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(83,3): error TS2564: Property 'dimensionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(86,3): error TS2564: Property 'dimensionKey' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(89,3): error TS2564: Property 'severityBucket' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(92,3): error TS2564: Property 'cellValue' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(95,3): error TS2564: Property 'colorCode' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(98,3): error TS2564: Property 'questionCount' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(110,3): error TS2564: Property 'totalCells' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(113,3): error TS2564: Property 'greenCells' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(116,3): error TS2564: Property 'amberCells' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(119,3): error TS2564: Property 'redCells' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(122,3): error TS2564: Property 'criticalGapCount' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(125,3): error TS2564: Property 'overallRiskScore' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(133,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(136,3): error TS2564: Property 'cells' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(139,3): error TS2564: Property 'dimensions' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(142,3): error TS2564: Property 'severityBuckets' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(145,3): error TS2564: Property 'summary' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(148,3): error TS2564: Property 'generatedAt' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(156,3): error TS2564: Property 'dimensionKey' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(159,3): error TS2564: Property 'dimensionName' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(162,3): error TS2564: Property 'severityBucket' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(165,3): error TS2564: Property 'cellValue' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(168,3): error TS2564: Property 'colorCode' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(171,3): error TS2564: Property 'questionCount' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/dto/index.ts(174,3): error TS2564: Property 'questions' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/heatmap/heatmap.service.ts(349,18): error TS2353: Object literal may only specify known properties, and 'createdAt' does not exist in type 'ResponseOrderByWithRelationInput | ResponseOrderByWithRelationInput[]'.
+apps/api/src/modules/idea-capture/dto/confirm-project-type.dto.ts(10,3): error TS2564: Property 'projectTypeId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/idea-capture/dto/create-idea.dto.ts(17,3): error TS2564: Property 'rawInput' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/idea-capture/dto/idea-response.dto.ts(5,3): error TS2564: Property 'slug' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/idea-capture/dto/idea-response.dto.ts(8,3): error TS2564: Property 'name' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/idea-capture/dto/idea-response.dto.ts(14,3): error TS2564: Property 'confidence' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/idea-capture/dto/idea-response.dto.ts(21,3): error TS2564: Property 'reasoning' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/idea-capture/dto/idea-response.dto.ts(29,3): error TS2564: Property 'themes' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/idea-capture/dto/idea-response.dto.ts(39,3): error TS2564: Property 'gaps' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/idea-capture/dto/idea-response.dto.ts(45,3): error TS2564: Property 'strengths' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/idea-capture/dto/idea-response.dto.ts(51,3): error TS2564: Property 'recommendedProjectType' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/idea-capture/dto/idea-response.dto.ts(64,3): error TS2564: Property 'summary' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/idea-capture/dto/idea-response.dto.ts(69,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/idea-capture/dto/idea-response.dto.ts(75,3): error TS2564: Property 'rawInput' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/idea-capture/dto/idea-response.dto.ts(78,3): error TS2564: Property 'analysis' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/idea-capture/dto/idea-response.dto.ts(81,3): error TS2564: Property 'status' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/idea-capture/dto/idea-response.dto.ts(87,3): error TS2564: Property 'createdAt' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/notifications/dto/email-template.dto.ts(29,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/notifications/dto/email-template.dto.ts(32,3): error TS2564: Property 'name' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/notifications/dto/email-template.dto.ts(35,3): error TS2564: Property 'subject' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/notifications/dto/email-template.dto.ts(38,3): error TS2564: Property 'htmlTemplate' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/notifications/dto/send-email.dto.ts(18,3): error TS2564: Property 'to' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/notifications/dto/send-email.dto.ts(22,3): error TS2564: Property 'subject' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/notifications/dto/send-email.dto.ts(26,3): error TS2564: Property 'type' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/notifications/dto/send-email.dto.ts(46,3): error TS2564: Property 'emails' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/notifications/dto/send-email.dto.ts(51,3): error TS2564: Property 'success' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/notifications/dto/send-email.dto.ts(60,3): error TS2564: Property 'to' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/notifications/dto/send-email.dto.ts(63,3): error TS2564: Property 'timestamp' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(24,3): error TS2564: Property 'organizationId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(27,3): error TS2564: Property 'tier' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(31,3): error TS2564: Property 'successUrl' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(35,3): error TS2564: Property 'cancelUrl' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(48,3): error TS2564: Property 'customerId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(52,3): error TS2564: Property 'returnUrl' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(59,3): error TS2564: Property 'organizationId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(60,3): error TS2564: Property 'tier' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(61,3): error TS2564: Property 'status' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(65,3): error TS2564: Property 'cancelAtPeriodEnd' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(66,3): error TS2564: Property 'features' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(79,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(80,3): error TS2564: Property 'stripeInvoiceId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(81,3): error TS2564: Property 'amount' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(82,3): error TS2564: Property 'currency' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(83,3): error TS2564: Property 'status' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(85,3): error TS2564: Property 'createdAt' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(96,3): error TS2564: Property 'subscriptionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(99,3): error TS2564: Property 'newTier' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/payment/dto/payment.dto.ts(108,3): error TS2564: Property 'subscriptionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/policy-pack/services/control-mapping.service.ts(16,20): error TS6133: 'logger' is declared but its value is never read.
+apps/api/src/modules/policy-pack/services/opa-policy.service.ts(10,20): error TS6133: 'logger' is declared but its value is never read.
+apps/api/src/modules/policy-pack/services/policy-export.service.ts(10,20): error TS6133: 'logger' is declared but its value is never read.
+apps/api/src/modules/policy-pack/services/policy-generator.service.ts(33,20): error TS6133: 'logger' is declared but its value is never read.
+apps/api/src/modules/policy-pack/services/terraform-rules.service.ts(17,20): error TS6133: 'logger' is declared but its value is never read.
+apps/api/src/modules/qpg/dto/generate-prompts.dto.ts(14,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/qpg/dto/generate-prompts.dto.ts(51,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/qpg/dto/generate-prompts.dto.ts(59,3): error TS2564: Property 'questionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(11,3): error TS2564: Property 'criterionKey' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(14,3): error TS2564: Property 'criterionDescription' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(17,3): error TS2564: Property 'met' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(20,3): error TS2564: Property 'confidence' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(28,3): error TS2564: Property 'dimensionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(31,3): error TS2564: Property 'dimensionName' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(34,3): error TS2564: Property 'weight' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(37,3): error TS2564: Property 'score' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(40,3): error TS2564: Property 'completeness' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(46,3): error TS2564: Property 'criteriaScores' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(51,3): error TS2564: Property 'projectId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(54,3): error TS2564: Property 'overallScore' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(57,3): error TS2564: Property 'completenessScore' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(60,3): error TS2564: Property 'confidenceScore' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(66,3): error TS2564: Property 'dimensionScores' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(71,3): error TS2564: Property 'recommendations' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(74,3): error TS2564: Property 'scoredAt' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(79,3): error TS2564: Property 'dimensionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(82,3): error TS2564: Property 'dimensionName' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(85,3): error TS2564: Property 'currentScore' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(88,3): error TS2564: Property 'potentialScore' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(93,3): error TS2564: Property 'missingCriteria' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/quality-scoring/dto/quality-scoring.dto.ts(98,3): error TS2564: Property 'suggestedQuestions' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(64,3): error TS2564: Property 'questionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(95,3): error TS2564: Property 'coverage' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(104,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(122,3): error TS2564: Property 'dimensionKey' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(125,3): error TS2564: Property 'displayName' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(131,3): error TS2564: Property 'weight' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(139,3): error TS2564: Property 'residualRisk' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(145,3): error TS2564: Property 'weightedContribution' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(148,3): error TS2564: Property 'questionCount' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(151,3): error TS2564: Property 'answeredCount' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(154,3): error TS2564: Property 'averageCoverage' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(162,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(170,3): error TS2564: Property 'score' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(178,3): error TS2564: Property 'portfolioResidual' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(184,3): error TS2564: Property 'dimensions' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(187,3): error TS2564: Property 'totalQuestions' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(190,3): error TS2564: Property 'answeredQuestions' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(193,3): error TS2564: Property 'completionPercentage' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(196,3): error TS2564: Property 'calculatedAt' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(203,3): error TS2564: Property 'trend' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(212,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(229,3): error TS2564: Property 'questionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(232,3): error TS2564: Property 'text' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(235,3): error TS2564: Property 'dimensionKey' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(238,3): error TS2564: Property 'dimensionName' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(245,3): error TS2564: Property 'severity' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(252,3): error TS2564: Property 'currentCoverage' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(258,3): error TS2564: Property 'currentCoverageLevel' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(264,3): error TS2564: Property 'expectedScoreLift' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(269,3): error TS2564: Property 'rationale' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(274,3): error TS2564: Property 'rank' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(282,3): error TS2564: Property 'sessionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(285,3): error TS2564: Property 'currentScore' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(291,3): error TS2564: Property 'questions' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/scoring-engine/dto/calculate-score.dto.ts(296,3): error TS2564: Property 'maxPotentialScore' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/session/controllers/conversation.controller.ts(11,3): error TS2564: Property 'questionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/session/controllers/conversation.controller.ts(12,3): error TS2564: Property 'questionText' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/session/controllers/conversation.controller.ts(13,3): error TS2564: Property 'answerText' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/session/controllers/conversation.controller.ts(14,3): error TS2564: Property 'dimensionContext' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/session/controllers/conversation.controller.ts(18,3): error TS2564: Property 'questionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/session/controllers/conversation.controller.ts(19,3): error TS2564: Property 'content' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/session/dto/create-session.dto.ts(8,3): error TS2564: Property 'questionnaireId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/session/dto/submit-response.dto.ts(7,3): error TS2564: Property 'questionId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/session/services/conversation.service.ts(32,20): error TS6133: 'logger' is declared but its value is never read.
+apps/api/src/modules/standards/dto/standard.dto.ts(10,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/standards/dto/standard.dto.ts(17,3): error TS2564: Property 'category' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/standards/dto/standard.dto.ts(20,3): error TS2564: Property 'title' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/standards/dto/standard.dto.ts(23,3): error TS2564: Property 'description' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/standards/dto/standard.dto.ts(26,3): error TS2564: Property 'principles' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/standards/dto/standard.dto.ts(33,3): error TS2564: Property 'version' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/standards/dto/standard.dto.ts(36,3): error TS2564: Property 'isActive' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/standards/dto/standard.dto.ts(46,3): error TS2564: Property 'category' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/standards/dto/standard.dto.ts(52,3): error TS2564: Property 'documentTypeId' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/standards/dto/standard.dto.ts(57,3): error TS2564: Property 'markdown' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/standards/dto/standard.dto.ts(60,3): error TS2564: Property 'standards' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/standards/dto/standard.dto.ts(72,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/standards/dto/standard.dto.ts(75,3): error TS2564: Property 'name' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/standards/dto/standard.dto.ts(78,3): error TS2564: Property 'slug' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/standards/dto/standard.dto.ts(84,3): error TS2564: Property 'priority' has no initializer and is not definitely assigned in the constructor.
+apps/api/src/modules/standards/dto/standard.dto.ts(92,3): error TS2564: Property 'documentTypes' has no initializer and is not definitely assigned in the constructor.
