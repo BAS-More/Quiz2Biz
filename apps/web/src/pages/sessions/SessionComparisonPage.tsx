@@ -46,7 +46,7 @@ interface ResponseDiff {
 // Mock function to fetch comparison data
 async function fetchSessionComparison(
   _session1Id: string,
-  _session2Id: string
+  _session2Id: string,
 ): Promise<ResponseDiff[]> {
   // In production, this would call the API
   // For now, generate mock data
@@ -55,15 +55,24 @@ async function fetchSessionComparison(
 
   sections.forEach((section, sectionIdx) => {
     for (let q = 0; q < 5; q++) {
-      const changeTypes: ResponseDiff['changeType'][] = ['unchanged', 'changed', 'added', 'removed'];
+      const changeTypes: ResponseDiff['changeType'][] = [
+        'unchanged',
+        'changed',
+        'added',
+        'removed',
+      ];
       const changeType = changeTypes[Math.floor(Math.random() * changeTypes.length)];
 
       diffs.push({
         questionId: `q-${sectionIdx}-${q}`,
         questionText: `Sample question ${q + 1} in ${section}?`,
         sectionName: section,
-        session1Value: changeType === 'added' ? null : `Answer from session 1 for question ${q + 1}`,
-        session2Value: changeType === 'removed' ? null : `Answer from session 2 for question ${q + 1}${changeType === 'changed' ? ' (modified)' : ''}`,
+        session1Value:
+          changeType === 'added' ? null : `Answer from session 1 for question ${q + 1}`,
+        session2Value:
+          changeType === 'removed'
+            ? null
+            : `Answer from session 2 for question ${q + 1}${changeType === 'changed' ? ' (modified)' : ''}`,
         changeType,
       });
     }
@@ -100,15 +109,19 @@ interface SessionSelectorProps {
   disabled?: string; // ID to disable
 }
 
-function SessionSelector({ sessions, selectedId, onChange, label, disabled }: SessionSelectorProps) {
+function SessionSelector({
+  sessions,
+  selectedId,
+  onChange,
+  label,
+  disabled,
+}: SessionSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const selectedSession = sessions.find((s) => s.id === selectedId);
 
   return (
     <div className="relative">
-      <label className="text-sm font-medium text-surface-500 mb-2 block">
-        {label}
-      </label>
+      <label className="text-sm font-medium text-surface-500 mb-2 block">{label}</label>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full p-3 border border-surface-200 rounded-lg text-left hover:border-brand-300 transition-colors"
@@ -126,10 +139,12 @@ function SessionSelector({ sessions, selectedId, onChange, label, disabled }: Se
         ) : (
           <span className="text-surface-400">Select a session...</span>
         )}
-        <ChevronDown className={clsx(
-          'absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-400 transition-transform',
-          isOpen && 'rotate-180'
-        )} />
+        <ChevronDown
+          className={clsx(
+            'absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-400 transition-transform',
+            isOpen && 'rotate-180',
+          )}
+        />
       </button>
 
       {isOpen && (
@@ -151,7 +166,7 @@ function SessionSelector({ sessions, selectedId, onChange, label, disabled }: Se
                 className={clsx(
                   'w-full p-3 text-left transition-colors',
                   isSelected && 'bg-brand-50',
-                  isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-surface-50'
+                  isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-surface-50',
                 )}
               >
                 <p className="font-medium text-surface-900">
@@ -193,9 +208,7 @@ function ComparisonRow({ diff, isExpanded, onToggle }: ComparisonRowProps) {
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <DiffBadge type={diff.changeType} />
           <div className="text-left min-w-0">
-            <p className="text-sm font-medium text-surface-900 truncate">
-              {diff.questionText}
-            </p>
+            <p className="text-sm font-medium text-surface-900 truncate">{diff.questionText}</p>
             <p className="text-xs text-surface-400">{diff.sectionName}</p>
           </div>
         </div>
@@ -208,25 +221,33 @@ function ComparisonRow({ diff, isExpanded, onToggle }: ComparisonRowProps) {
 
       {isExpanded && (
         <div className="grid grid-cols-2 gap-4 p-4 pt-0">
-          <div className={clsx(
-            'p-3 rounded-lg text-sm',
-            diff.changeType === 'removed' ? 'bg-danger-50' : 'bg-surface-50'
-          )}>
+          <div
+            className={clsx(
+              'p-3 rounded-lg text-sm',
+              diff.changeType === 'removed' ? 'bg-danger-50' : 'bg-surface-50',
+            )}
+          >
             <p className="text-xs font-medium text-surface-500 mb-1">Session 1</p>
-            <p className={clsx(
-              diff.session1Value === null ? 'text-surface-300 italic' : 'text-surface-700'
-            )}>
+            <p
+              className={clsx(
+                diff.session1Value === null ? 'text-surface-300 italic' : 'text-surface-700',
+              )}
+            >
               {formatValue(diff.session1Value)}
             </p>
           </div>
-          <div className={clsx(
-            'p-3 rounded-lg text-sm',
-            diff.changeType === 'added' ? 'bg-success-50' : 'bg-surface-50'
-          )}>
+          <div
+            className={clsx(
+              'p-3 rounded-lg text-sm',
+              diff.changeType === 'added' ? 'bg-success-50' : 'bg-surface-50',
+            )}
+          >
             <p className="text-xs font-medium text-surface-500 mb-1">Session 2</p>
-            <p className={clsx(
-              diff.session2Value === null ? 'text-surface-300 italic' : 'text-surface-700'
-            )}>
+            <p
+              className={clsx(
+                diff.session2Value === null ? 'text-surface-300 italic' : 'text-surface-700',
+              )}
+            >
               {formatValue(diff.session2Value)}
             </p>
           </div>
@@ -246,13 +267,17 @@ export function SessionComparisonPage() {
   const [filterType, setFilterType] = useState<ResponseDiff['changeType'] | 'all'>('all');
 
   // Load sessions
-  const completedSessions = useMemo(() => 
-    sessions.filter((s) => s.status === 'COMPLETED'),
-    [sessions]
+  const completedSessions = useMemo(
+    () => sessions.filter((s) => s.status === 'COMPLETED'),
+    [sessions],
   );
 
   // Fetch comparison data
-  const { data: diffs, isLoading, error } = useQuery({
+  const {
+    data: diffs,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['session-comparison', session1Id, session2Id],
     queryFn: () => fetchSessionComparison(session1Id!, session2Id!),
     enabled: !!session1Id && !!session2Id && session1Id !== session2Id,
@@ -376,7 +401,7 @@ export function SessionComparisonPage() {
             <Card
               className={clsx(
                 'cursor-pointer transition-all',
-                filterType === 'all' && 'ring-2 ring-brand-500'
+                filterType === 'all' && 'ring-2 ring-brand-500',
               )}
               onClick={() => setFilterType('all')}
             >
@@ -386,7 +411,7 @@ export function SessionComparisonPage() {
             <Card
               className={clsx(
                 'cursor-pointer transition-all',
-                filterType === 'changed' && 'ring-2 ring-warning-500'
+                filterType === 'changed' && 'ring-2 ring-warning-500',
               )}
               onClick={() => setFilterType('changed')}
             >
@@ -396,7 +421,7 @@ export function SessionComparisonPage() {
             <Card
               className={clsx(
                 'cursor-pointer transition-all',
-                filterType === 'added' && 'ring-2 ring-success-500'
+                filterType === 'added' && 'ring-2 ring-success-500',
               )}
               onClick={() => setFilterType('added')}
             >
@@ -406,7 +431,7 @@ export function SessionComparisonPage() {
             <Card
               className={clsx(
                 'cursor-pointer transition-all',
-                filterType === 'removed' && 'ring-2 ring-danger-500'
+                filterType === 'removed' && 'ring-2 ring-danger-500',
               )}
               onClick={() => setFilterType('removed')}
             >
@@ -416,7 +441,7 @@ export function SessionComparisonPage() {
             <Card
               className={clsx(
                 'cursor-pointer transition-all',
-                filterType === 'unchanged' && 'ring-2 ring-surface-500'
+                filterType === 'unchanged' && 'ring-2 ring-surface-500',
               )}
               onClick={() => setFilterType('unchanged')}
             >
@@ -464,9 +489,7 @@ export function SessionComparisonPage() {
         <Card className="py-12">
           <div className="text-center">
             <GitCompare className="h-12 w-12 text-surface-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-surface-900">
-              Select Two Sessions
-            </h3>
+            <h3 className="text-lg font-medium text-surface-900">Select Two Sessions</h3>
             <p className="text-surface-500 mt-2">
               Choose two completed sessions above to see a side-by-side comparison of answers.
             </p>

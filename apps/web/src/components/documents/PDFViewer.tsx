@@ -96,31 +96,25 @@ export function PDFViewer({
   // Navigation handlers
   const goToFirstPage = useCallback(() => setPageNumber(1), []);
   const goToLastPage = useCallback(() => setPageNumber(numPages), [numPages]);
-  const goToPrevPage = useCallback(
-    () => setPageNumber((prev) => Math.max(1, prev - 1)),
-    []
-  );
+  const goToPrevPage = useCallback(() => setPageNumber((prev) => Math.max(1, prev - 1)), []);
   const goToNextPage = useCallback(
     () => setPageNumber((prev) => Math.min(numPages, prev + 1)),
-    [numPages]
+    [numPages],
   );
 
   // Zoom handlers
   const zoomIn = useCallback(
     () => setScale((prev) => Math.min(maxScale, prev + SCALE_STEP)),
-    [maxScale]
+    [maxScale],
   );
   const zoomOut = useCallback(
     () => setScale((prev) => Math.max(minScale, prev - SCALE_STEP)),
-    [minScale]
+    [minScale],
   );
   const resetZoom = useCallback(() => setScale(initialScale), [initialScale]);
 
   // Rotation handler
-  const rotate = useCallback(
-    () => setRotation((prev) => (prev + 90) % 360),
-    []
-  );
+  const rotate = useCallback(() => setRotation((prev) => (prev + 90) % 360), []);
 
   // Fullscreen handler
   const toggleFullscreen = useCallback(() => {
@@ -135,7 +129,7 @@ export function PDFViewer({
         setPageNumber(value);
       }
     },
-    [numPages]
+    [numPages],
   );
 
   // Memoized options for react-pdf
@@ -144,7 +138,7 @@ export function PDFViewer({
       cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
       cMapPacked: true,
     }),
-    []
+    [],
   );
 
   // Scale percentage display
@@ -155,7 +149,7 @@ export function PDFViewer({
       className={clsx(
         'flex flex-col bg-surface-100 rounded-lg border border-surface-200 overflow-hidden',
         isFullscreen && 'fixed inset-0 z-50 rounded-none border-none',
-        className
+        className,
       )}
       style={{ height: isFullscreen ? '100vh' : height }}
     >
@@ -163,11 +157,7 @@ export function PDFViewer({
       <div className="flex items-center justify-between px-4 py-2 bg-white border-b border-surface-200">
         {/* Left: Title */}
         <div className="flex items-center gap-2 min-w-0">
-          {title && (
-            <h3 className="text-sm font-medium text-surface-700 truncate">
-              {title}
-            </h3>
-          )}
+          {title && <h3 className="text-sm font-medium text-surface-700 truncate">{title}</h3>}
         </div>
 
         {/* Center: Navigation */}
@@ -190,7 +180,7 @@ export function PDFViewer({
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          
+
           <div className="flex items-center gap-1 px-2">
             <input
               type="number"
@@ -203,7 +193,7 @@ export function PDFViewer({
             />
             <span className="text-sm text-surface-500">/ {numPages || '?'}</span>
           </div>
-          
+
           <Button
             variant="ghost"
             size="sm"
@@ -235,7 +225,7 @@ export function PDFViewer({
           >
             <ZoomOut className="h-4 w-4" />
           </Button>
-          
+
           <button
             onClick={resetZoom}
             disabled={isLoading}
@@ -244,7 +234,7 @@ export function PDFViewer({
           >
             {scalePercentage}%
           </button>
-          
+
           <Button
             variant="ghost"
             size="sm"
@@ -257,13 +247,7 @@ export function PDFViewer({
 
           <div className="w-px h-5 bg-surface-300 mx-1" />
 
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={rotate}
-            disabled={isLoading}
-            title="Rotate"
-          >
+          <Button variant="ghost" size="sm" onClick={rotate} disabled={isLoading} title="Rotate">
             <RotateCw className="h-4 w-4" />
           </Button>
 
@@ -274,11 +258,7 @@ export function PDFViewer({
               onClick={toggleFullscreen}
               title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
             >
-              {isFullscreen ? (
-                <Minimize2 className="h-4 w-4" />
-              ) : (
-                <Maximize2 className="h-4 w-4" />
-              )}
+              {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
             </Button>
           )}
 

@@ -133,20 +133,24 @@ describe('useDecisionsStore', () => {
       });
 
       await act(async () => {
-        await useDecisionsStore.getState().createDecision('session-1', 'Use PostgreSQL', 'Good fit');
+        await useDecisionsStore
+          .getState()
+          .createDecision('session-1', 'Use PostgreSQL', 'Good fit');
       });
 
       const state = useDecisionsStore.getState();
       expect(state.decisions).toHaveLength(3);
       expect(state.decisions[0].id).toBe('dec-3');
       expect(state.isLoading).toBe(false);
-      expect(questionnaireApi.createDecision).toHaveBeenCalledWith('session-1', 'Use PostgreSQL', 'Good fit');
+      expect(questionnaireApi.createDecision).toHaveBeenCalledWith(
+        'session-1',
+        'Use PostgreSQL',
+        'Good fit',
+      );
     });
 
     it('handles error on create', async () => {
-      vi.mocked(questionnaireApi.createDecision).mockRejectedValueOnce(
-        new Error('Forbidden'),
-      );
+      vi.mocked(questionnaireApi.createDecision).mockRejectedValueOnce(new Error('Forbidden'));
 
       await act(async () => {
         await useDecisionsStore.getState().createDecision('session-1', 'test');

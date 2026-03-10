@@ -31,9 +31,11 @@ const POSITION_CLASSES: Record<TooltipPosition, string> = {
 
 const ARROW_CLASSES: Record<TooltipPosition, string> = {
   top: 'top-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-b-transparent',
-  bottom: 'bottom-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-t-transparent',
+  bottom:
+    'bottom-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-t-transparent',
   left: 'left-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-r-transparent',
-  right: 'right-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-l-transparent',
+  right:
+    'right-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-l-transparent',
 };
 
 export function Tooltip({
@@ -79,7 +81,7 @@ export function Tooltip({
             'bg-surface-800 text-white',
             'animate-in fade-in-0 zoom-in-95 duration-150',
             POSITION_CLASSES[position],
-            className
+            className,
           )}
           style={{ maxWidth: maxWidthStyle }}
           role="tooltip"
@@ -89,7 +91,7 @@ export function Tooltip({
           <span
             className={clsx(
               'absolute w-0 h-0 border-[6px] border-surface-800',
-              ARROW_CLASSES[position]
+              ARROW_CLASSES[position],
             )}
           />
         </div>
@@ -144,7 +146,7 @@ export function HelpTooltip({
           'inline-flex items-center justify-center transition-colors',
           'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 rounded-full',
           VARIANT_COLORS[variant],
-          className
+          className,
         )}
         aria-label="Help"
       >
@@ -173,10 +175,7 @@ export function LabelWithHelp({
   return (
     <label
       htmlFor={htmlFor}
-      className={clsx(
-        'flex items-center gap-1.5 text-sm font-medium text-surface-700',
-        className
-      )}
+      className={clsx('flex items-center gap-1.5 text-sm font-medium text-surface-700', className)}
     >
       {label}
       {required && <span className="text-danger-500">*</span>}
@@ -195,26 +194,27 @@ interface InfoBannerProps {
   className?: string;
 }
 
-const BANNER_VARIANTS: Record<string, { bg: string; border: string; icon: string; text: string }> = {
-  info: {
-    bg: 'bg-blue-50',
-    border: 'border-blue-200',
-    icon: 'text-blue-500',
-    text: 'text-blue-700',
-  },
-  help: {
-    bg: 'bg-surface-50',
-    border: 'border-surface-200',
-    icon: 'text-surface-500',
-    text: 'text-surface-700',
-  },
-  warning: {
-    bg: 'bg-warning-50',
-    border: 'border-warning-200',
-    icon: 'text-warning-500',
-    text: 'text-warning-700',
-  },
-};
+const BANNER_VARIANTS: Record<string, { bg: string; border: string; icon: string; text: string }> =
+  {
+    info: {
+      bg: 'bg-blue-50',
+      border: 'border-blue-200',
+      icon: 'text-blue-500',
+      text: 'text-blue-700',
+    },
+    help: {
+      bg: 'bg-surface-50',
+      border: 'border-surface-200',
+      icon: 'text-surface-500',
+      text: 'text-surface-700',
+    },
+    warning: {
+      bg: 'bg-warning-50',
+      border: 'border-warning-200',
+      icon: 'text-warning-500',
+      text: 'text-warning-700',
+    },
+  };
 
 export function InfoBanner({
   title,
@@ -233,14 +233,12 @@ export function InfoBanner({
         'flex items-start gap-3 p-4 rounded-lg border',
         styles.bg,
         styles.border,
-        className
+        className,
       )}
     >
       <Icon className={clsx('h-5 w-5 flex-shrink-0 mt-0.5', styles.icon)} />
       <div className="flex-1">
-        {title && (
-          <h4 className={clsx('font-medium mb-1', styles.text)}>{title}</h4>
-        )}
+        {title && <h4 className={clsx('font-medium mb-1', styles.text)}>{title}</h4>}
         <div className={clsx('text-sm', styles.text)}>{children}</div>
       </div>
       {dismissible && onDismiss && (
@@ -248,7 +246,7 @@ export function InfoBanner({
           onClick={onDismiss}
           className={clsx(
             'flex-shrink-0 p-1 rounded hover:bg-black/5 transition-colors',
-            styles.text
+            styles.text,
           )}
           aria-label="Dismiss"
         >

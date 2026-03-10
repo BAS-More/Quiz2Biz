@@ -16,9 +16,4 @@ export {
   SearchEmptyState,
   NotificationsEmptyState,
 } from './EmptyState.tsx';
-export {
-  Tooltip,
-  HelpTooltip,
-  LabelWithHelp,
-  InfoBanner,
-} from './Tooltip.tsx';
+export { Tooltip, HelpTooltip, LabelWithHelp, InfoBanner } from './Tooltip.tsx';

@@ -170,7 +170,7 @@ export function EmptyState({
       className={clsx(
         'flex flex-col items-center justify-center text-center',
         sizes.container,
-        className
+        className,
       )}
     >
       {illustration ? (
@@ -179,16 +179,14 @@ export function EmptyState({
         <div
           className={clsx(
             'rounded-full bg-surface-100 flex items-center justify-center mb-4',
-            sizes.iconWrapper
+            sizes.iconWrapper,
           )}
         >
           <Icon className={clsx(sizes.icon, config.iconColor)} />
         </div>
       )}
 
-      <h3 className={clsx('font-semibold text-surface-900', sizes.title)}>
-        {displayTitle}
-      </h3>
+      <h3 className={clsx('font-semibold text-surface-900', sizes.title)}>{displayTitle}</h3>
 
       <p className={clsx('text-surface-500 mt-2 max-w-sm', sizes.description)}>
         {displayDescription}
@@ -226,11 +224,7 @@ interface ListEmptyStateProps extends EmptyStateProps {
   onClearFilters?: () => void;
 }
 
-export function ListEmptyState({
-  isFiltered,
-  onClearFilters,
-  ...props
-}: ListEmptyStateProps) {
+export function ListEmptyState({ isFiltered, onClearFilters, ...props }: ListEmptyStateProps) {
   if (isFiltered && onClearFilters) {
     return (
       <EmptyState
@@ -251,11 +245,7 @@ export function ListEmptyState({
 }
 
 // Pre-configured empty states for common use cases
-export function DocumentsEmptyState({
-  onCreateDocument,
-}: {
-  onCreateDocument?: () => void;
-}) {
+export function DocumentsEmptyState({ onCreateDocument }: { onCreateDocument?: () => void }) {
   return (
     <EmptyState
       type="documents"
@@ -271,11 +261,7 @@ export function DocumentsEmptyState({
   );
 }
 
-export function SessionsEmptyState({
-  onStartSession,
-}: {
-  onStartSession?: () => void;
-}) {
+export function SessionsEmptyState({ onStartSession }: { onStartSession?: () => void }) {
   return (
     <EmptyState
       type="sessions"
@@ -317,12 +303,7 @@ export function SearchEmptyState({
 }
 
 export function NotificationsEmptyState() {
-  return (
-    <EmptyState
-      type="notifications"
-      size="sm"
-    />
-  );
+  return <EmptyState type="notifications" size="sm" />;
 }
 
 export default EmptyState;

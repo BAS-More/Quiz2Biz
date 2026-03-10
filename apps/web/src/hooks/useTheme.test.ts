@@ -29,9 +29,7 @@ function createMatchMediaMock(prefersDark = false) {
     matchMedia: vi.fn((_query: string) => mql),
     fireChange: (dark: boolean) => {
       mql.matches = dark;
-      listeners.forEach((cb) =>
-        cb({ matches: dark, media: mql.media } as MediaQueryListEvent),
-      );
+      listeners.forEach((cb) => cb({ matches: dark, media: mql.media } as MediaQueryListEvent));
     },
   };
 }
@@ -241,10 +239,7 @@ describe('useTheme', () => {
 
       unmount();
 
-      expect(mmMock.mql.removeEventListener).toHaveBeenCalledWith(
-        'change',
-        expect.any(Function),
-      );
+      expect(mmMock.mql.removeEventListener).toHaveBeenCalledWith('change', expect.any(Function));
     });
   });
 });

@@ -113,21 +113,21 @@ export function MFASetupPage() {
     async (code: string) => {
       verifyMutation.mutate(code);
     },
-    [verifyMutation]
+    [verifyMutation],
   );
 
   const handleDisable = useCallback(
     async (code: string) => {
       disableMutation.mutate(code);
     },
-    [disableMutation]
+    [disableMutation],
   );
 
   const handleRegenerate = useCallback(
     async (code: string) => {
       regenerateMutation.mutate(code);
     },
-    [regenerateMutation]
+    [regenerateMutation],
   );
 
   const handleCopyBackupCodes = useCallback(() => {
@@ -179,9 +179,7 @@ export function MFASetupPage() {
             <ShieldCheck className="h-6 w-6 text-brand-600" />
             Two-Factor Authentication
           </h1>
-          <p className="text-surface-500 mt-1">
-            Add an extra layer of security to your account
-          </p>
+          <p className="text-surface-500 mt-1">Add an extra layer of security to your account</p>
         </div>
       </div>
 
@@ -194,23 +192,21 @@ export function MFASetupPage() {
                 'p-3 rounded-lg',
                 mfaStatus?.enabled
                   ? 'bg-success-100 text-success-600'
-                  : 'bg-surface-100 text-surface-400'
+                  : 'bg-surface-100 text-surface-400',
               )}
             >
               <Shield className="h-6 w-6" />
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-3">
-                <h3 className="font-semibold text-surface-900">
-                  Authenticator App
-                </h3>
+                <h3 className="font-semibold text-surface-900">Authenticator App</h3>
                 <Badge variant={mfaStatus?.enabled ? 'success' : 'secondary'}>
                   {mfaStatus?.enabled ? 'Enabled' : 'Disabled'}
                 </Badge>
               </div>
               <p className="text-sm text-surface-500 mt-1">
-                Use an authenticator app like Google Authenticator, Authy, or
-                1Password to generate verification codes.
+                Use an authenticator app like Google Authenticator, Authy, or 1Password to generate
+                verification codes.
               </p>
 
               {mfaStatus?.enabled && (
@@ -223,18 +219,10 @@ export function MFASetupPage() {
               <div className="flex items-center gap-3 mt-4">
                 {mfaStatus?.enabled ? (
                   <>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => setStep('regenerate')}
-                    >
+                    <Button variant="secondary" size="sm" onClick={() => setStep('regenerate')}>
                       Regenerate Backup Codes
                     </Button>
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() => setStep('disable')}
-                    >
+                    <Button variant="danger" size="sm" onClick={() => setStep('disable')}>
                       Disable MFA
                     </Button>
                   </>
@@ -254,22 +242,14 @@ export function MFASetupPage() {
       {step === 'scan' && setupData && (
         <Card>
           <div className="text-center mb-6">
-            <h2 className="text-xl font-semibold text-surface-900">
-              Scan QR Code
-            </h2>
-            <p className="text-surface-500 mt-2">
-              Scan this QR code with your authenticator app
-            </p>
+            <h2 className="text-xl font-semibold text-surface-900">Scan QR Code</h2>
+            <p className="text-surface-500 mt-2">Scan this QR code with your authenticator app</p>
           </div>
 
           <div className="flex flex-col items-center gap-6">
             {/* QR Code */}
             <div className="p-4 bg-white border border-surface-200 rounded-xl">
-              <img
-                src={setupData.qrCodeDataUrl}
-                alt="MFA QR Code"
-                className="w-48 h-48"
-              />
+              <img src={setupData.qrCodeDataUrl} alt="MFA QR Code" className="w-48 h-48" />
             </div>
 
             {/* Manual Entry */}
@@ -293,20 +273,12 @@ export function MFASetupPage() {
             </div>
 
             {/* Continue Button */}
-            <Button
-              variant="primary"
-              onClick={() => setStep('verify')}
-              className="w-full max-w-xs"
-            >
+            <Button variant="primary" onClick={() => setStep('verify')} className="w-full max-w-xs">
               I've scanned the code
               <ChevronRight className="h-4 w-4 ml-2" />
             </Button>
 
-            <Button
-              variant="ghost"
-              onClick={() => setStep('status')}
-              className="text-surface-500"
-            >
+            <Button variant="ghost" onClick={() => setStep('status')} className="text-surface-500">
               Cancel
             </Button>
           </div>
@@ -332,9 +304,7 @@ export function MFASetupPage() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-success-100 rounded-full mb-4">
               <Check className="h-8 w-8 text-success-600" />
             </div>
-            <h2 className="text-xl font-semibold text-surface-900">
-              Save Your Backup Codes
-            </h2>
+            <h2 className="text-xl font-semibold text-surface-900">Save Your Backup Codes</h2>
             <p className="text-surface-500 mt-2">
               Store these codes somewhere safe. Each code can only be used once.
             </p>
@@ -344,12 +314,10 @@ export function MFASetupPage() {
           <div className="flex items-start gap-3 p-3 bg-warning-50 border border-warning-200 rounded-lg mb-6">
             <AlertTriangle className="h-5 w-5 text-warning-600 flex-shrink-0 mt-0.5" />
             <div className="text-sm">
-              <p className="font-medium text-warning-800">
-                These codes won't be shown again
-              </p>
+              <p className="font-medium text-warning-800">These codes won't be shown again</p>
               <p className="text-warning-700 mt-1">
-                If you lose your phone and don't have these codes, you'll be
-                locked out of your account.
+                If you lose your phone and don't have these codes, you'll be locked out of your
+                account.
               </p>
             </div>
           </div>
@@ -368,11 +336,7 @@ export function MFASetupPage() {
 
           {/* Actions */}
           <div className="flex items-center gap-3 mb-6">
-            <Button
-              variant="secondary"
-              className="flex-1"
-              onClick={handleCopyBackupCodes}
-            >
+            <Button variant="secondary" className="flex-1" onClick={handleCopyBackupCodes}>
               {copiedCodes ? (
                 <>
                   <Check className="h-4 w-4 mr-2" />
@@ -385,11 +349,7 @@ export function MFASetupPage() {
                 </>
               )}
             </Button>
-            <Button
-              variant="secondary"
-              className="flex-1"
-              onClick={handleDownloadBackupCodes}
-            >
+            <Button variant="secondary" className="flex-1" onClick={handleDownloadBackupCodes}>
               <Download className="h-4 w-4 mr-2" />
               Download
             </Button>

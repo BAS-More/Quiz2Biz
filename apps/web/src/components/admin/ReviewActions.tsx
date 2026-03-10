@@ -98,21 +98,11 @@ export function ReviewActions({
   if (compact && mode === 'idle') {
     return (
       <div className={clsx('flex items-center gap-2', className)}>
-        <Button
-          variant="primary"
-          size="sm"
-          onClick={handleApprove}
-          disabled={disabled}
-        >
+        <Button variant="primary" size="sm" onClick={handleApprove} disabled={disabled}>
           <CheckCircle className="h-4 w-4 mr-1" />
           Approve
         </Button>
-        <Button
-          variant="danger"
-          size="sm"
-          onClick={handleReject}
-          disabled={disabled}
-        >
+        <Button variant="danger" size="sm" onClick={handleReject} disabled={disabled}>
           <XCircle className="h-4 w-4 mr-1" />
           Reject
         </Button>
@@ -128,12 +118,9 @@ export function ReviewActions({
           <div className="flex items-start gap-3">
             <CheckCircle className="h-5 w-5 text-success-600 mt-0.5 flex-shrink-0" />
             <div>
-              <h4 className="font-medium text-success-800">
-                Approve Document
-              </h4>
+              <h4 className="font-medium text-success-800">Approve Document</h4>
               <p className="text-sm text-success-700 mt-1">
-                Are you sure you want to approve "{documentName}"?
-                The client will be notified.
+                Are you sure you want to approve "{documentName}"? The client will be notified.
               </p>
             </div>
           </div>
@@ -164,12 +151,7 @@ export function ReviewActions({
           )}
 
           <div className="flex items-center justify-end gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleCancel}
-              disabled={isSubmitting}
-            >
+            <Button variant="ghost" size="sm" onClick={handleCancel} disabled={isSubmitting}>
               Cancel
             </Button>
             <Button
@@ -195,12 +177,10 @@ export function ReviewActions({
           <div className="flex items-start gap-3">
             <XCircle className="h-5 w-5 text-danger-600 mt-0.5 flex-shrink-0" />
             <div>
-              <h4 className="font-medium text-danger-800">
-                Reject Document
-              </h4>
+              <h4 className="font-medium text-danger-800">Reject Document</h4>
               <p className="text-sm text-danger-700 mt-1">
-                Please provide a reason for rejecting "{documentName}".
-                This feedback will be sent to the client.
+                Please provide a reason for rejecting "{documentName}". This feedback will be sent
+                to the client.
               </p>
             </div>
           </div>
@@ -223,9 +203,7 @@ export function ReviewActions({
               maxLength={1000}
               required
             />
-            <p className="text-xs text-surface-400 mt-1">
-              {reason.length}/1000 characters
-            </p>
+            <p className="text-xs text-surface-400 mt-1">{reason.length}/1000 characters</p>
           </div>
 
           {error && (
@@ -236,20 +214,10 @@ export function ReviewActions({
           )}
 
           <div className="flex items-center justify-end gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleCancel}
-              disabled={isSubmitting}
-            >
+            <Button variant="ghost" size="sm" onClick={handleCancel} disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={handleReject}
-              loading={isSubmitting}
-            >
+            <Button variant="danger" size="sm" onClick={handleReject} loading={isSubmitting}>
               <XCircle className="h-4 w-4 mr-1" />
               Confirm Rejection
             </Button>
@@ -272,12 +240,7 @@ export function ReviewActions({
           <CheckCircle className="h-4 w-4 mr-2" />
           Approve Document
         </Button>
-        <Button
-          variant="danger"
-          onClick={handleReject}
-          disabled={disabled}
-          className="flex-1"
-        >
+        <Button variant="danger" onClick={handleReject} disabled={disabled} className="flex-1">
           <XCircle className="h-4 w-4 mr-2" />
           Reject Document
         </Button>

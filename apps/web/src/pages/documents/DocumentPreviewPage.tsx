@@ -185,9 +185,7 @@ export function DocumentPreviewPage() {
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
         <AlertCircle className="h-12 w-12 text-danger-500" />
         <div className="text-center">
-          <h2 className="text-lg font-semibold text-surface-900">
-            Document Not Found
-          </h2>
+          <h2 className="text-lg font-semibold text-surface-900">Document Not Found</h2>
           <p className="text-surface-500 mt-1">
             The document you're looking for doesn't exist or you don't have access.
           </p>
@@ -228,11 +226,7 @@ export function DocumentPreviewPage() {
             {statusBadge.label}
           </Badge>
           {document.status === 'completed' && (
-            <Button
-              variant="primary"
-              onClick={handleDownload}
-              loading={isDownloading}
-            >
+            <Button variant="primary" onClick={handleDownload} loading={isDownloading}>
               <Download className="h-4 w-4 mr-2" />
               Download
             </Button>
@@ -245,13 +239,11 @@ export function DocumentPreviewPage() {
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center gap-6 text-surface-500">
             <span>
-              <strong className="text-surface-700">Format:</strong>{' '}
-              {document.format.toUpperCase()}
+              <strong className="text-surface-700">Format:</strong> {document.format.toUpperCase()}
             </span>
             {document.pageCount && (
               <span>
-                <strong className="text-surface-700">Pages:</strong>{' '}
-                {document.pageCount}
+                <strong className="text-surface-700">Pages:</strong> {document.pageCount}
               </span>
             )}
             <span>
@@ -286,9 +278,7 @@ export function DocumentPreviewPage() {
               <div className="absolute inset-0 h-16 w-16 rounded-full border-4 border-brand-600 border-t-transparent animate-spin" />
             </div>
             <div className="text-center">
-              <h3 className="text-lg font-medium text-surface-900">
-                Generating Document
-              </h3>
+              <h3 className="text-lg font-medium text-surface-900">Generating Document</h3>
               <p className="text-surface-500 mt-1">
                 Your document is being generated. This may take a few moments...
               </p>
@@ -302,9 +292,7 @@ export function DocumentPreviewPage() {
           <div className="flex flex-col items-center justify-center py-16 gap-4">
             <Clock className="h-16 w-16 text-surface-300" />
             <div className="text-center">
-              <h3 className="text-lg font-medium text-surface-900">
-                Document Queued
-              </h3>
+              <h3 className="text-lg font-medium text-surface-900">Document Queued</h3>
               <p className="text-surface-500 mt-1">
                 Your document is in the queue and will be generated shortly.
               </p>
@@ -318,9 +306,7 @@ export function DocumentPreviewPage() {
           <div className="flex flex-col items-center justify-center py-16 gap-4">
             <AlertCircle className="h-16 w-16 text-danger-500" />
             <div className="text-center">
-              <h3 className="text-lg font-medium text-surface-900">
-                Generation Failed
-              </h3>
+              <h3 className="text-lg font-medium text-surface-900">Generation Failed</h3>
               <p className="text-surface-500 mt-1">
                 There was an error generating your document. Please try again.
               </p>
@@ -354,19 +340,13 @@ export function DocumentPreviewPage() {
               <div className="flex flex-col items-center justify-center py-16 gap-4">
                 <FileText className="h-16 w-16 text-brand-400" />
                 <div className="text-center">
-                  <h3 className="text-lg font-medium text-surface-900">
-                    DOCX Document Ready
-                  </h3>
+                  <h3 className="text-lg font-medium text-surface-900">DOCX Document Ready</h3>
                   <p className="text-surface-500 mt-1">
-                    Preview is not available for DOCX files. Click download to
-                    view in Microsoft Word.
+                    Preview is not available for DOCX files. Click download to view in Microsoft
+                    Word.
                   </p>
                 </div>
-                <Button
-                  variant="primary"
-                  onClick={handleDownload}
-                  loading={isDownloading}
-                >
+                <Button variant="primary" onClick={handleDownload} loading={isDownloading}>
                   <Download className="h-4 w-4 mr-2" />
                   Download DOCX
                 </Button>

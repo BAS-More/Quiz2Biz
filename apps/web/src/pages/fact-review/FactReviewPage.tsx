@@ -355,9 +355,7 @@ export function FactReviewPage() {
     );
   }
 
-  const categories = Object.entries(data.factsByCategory).filter(
-    ([, facts]) => facts.length > 0,
-  );
+  const categories = Object.entries(data.factsByCategory).filter(([, facts]) => facts.length > 0);
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">

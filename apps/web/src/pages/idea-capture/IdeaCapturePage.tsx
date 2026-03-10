@@ -110,7 +110,7 @@ export function IdeaCapturePage() {
     try {
       // Use the first selected type as the primary project type for the session
       const primarySlug = selectedProjectTypeSlugs[0];
-      
+
       // If user's primary selection differs from recommendation, confirm it
       if (primarySlug !== ideaResponse.analysis.recommendedProjectType.slug) {
         const projectTypes = await listProjectTypes();
@@ -129,7 +129,10 @@ export function IdeaCapturePage() {
       const { sessionId } = await createSessionFromIdea(ideaResponse.id);
 
       // Store selected document types in session storage for later use
-      sessionStorage.setItem(`selectedDocTypes_${sessionId}`, JSON.stringify(selectedProjectTypeSlugs));
+      sessionStorage.setItem(
+        `selectedDocTypes_${sessionId}`,
+        JSON.stringify(selectedProjectTypeSlugs),
+      );
 
       navigate(`/questionnaire?sessionId=${sessionId}`);
     } catch (err) {
@@ -361,9 +364,7 @@ export function IdeaCapturePage() {
           {/* Project Type Selection - Multi-select */}
 
           <div className="bg-white rounded-2xl shadow-card p-6 border border-surface-200">
-            <h2 className="text-lg font-semibold text-surface-900 mb-2">
-              Select Document Types
-            </h2>
+            <h2 className="text-lg font-semibold text-surface-900 mb-2">Select Document Types</h2>
             <p className="text-sm text-surface-500 mb-4">
               Choose all the documents you need. You can add more later.
             </p>
@@ -383,7 +384,7 @@ export function IdeaCapturePage() {
                     setSelectedProjectTypeSlugs((prev) =>
                       prev.includes(pt.slug)
                         ? prev.filter((s) => s !== pt.slug)
-                        : [...prev, pt.slug]
+                        : [...prev, pt.slug],
                     );
                   }}
                 />
@@ -404,7 +405,8 @@ export function IdeaCapturePage() {
 
           <div className="flex justify-between items-center">
             <p className="text-sm text-surface-500">
-              {selectedProjectTypeSlugs.length} document{selectedProjectTypeSlugs.length !== 1 ? 's' : ''} selected
+              {selectedProjectTypeSlugs.length} document
+              {selectedProjectTypeSlugs.length !== 1 ? 's' : ''} selected
             </p>
             <button
               onClick={handleConfirmAndStart}

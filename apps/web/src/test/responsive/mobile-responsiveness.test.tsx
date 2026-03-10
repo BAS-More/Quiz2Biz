@@ -1,7 +1,7 @@
 /**
  * Mobile Responsiveness Tests
  * Verifies UI works at key breakpoints: 320px, 768px, 1024px
- * 
+ *
  * Tests:
  * - No horizontal overflow at any breakpoint
  * - Touch targets are appropriately sized (44x44px min)
@@ -139,15 +139,15 @@ describe('Mobile Responsiveness', () => {
         }
       `;
       document.head.appendChild(style);
-      
+
       const element = document.createElement('button');
       element.className = 'touch-target';
       document.body.appendChild(element);
-      
+
       const rect = element.getBoundingClientRect();
       // In jsdom, getBoundingClientRect returns 0, so we check the style
       expect(MIN_TOUCH_TARGET).toBe(44);
-      
+
       document.head.removeChild(style);
       document.body.removeChild(element);
     });
@@ -189,14 +189,9 @@ describe('Responsive Layout Verification', () => {
   describe('Grid Layouts', () => {
     it('should support responsive grid columns', () => {
       // Test that grid utilities work at different breakpoints
-      const gridClasses = [
-        'grid-cols-1',
-        'sm:grid-cols-2',
-        'md:grid-cols-3',
-        'lg:grid-cols-4',
-      ];
-      
-      gridClasses.forEach(cls => {
+      const gridClasses = ['grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4'];
+
+      gridClasses.forEach((cls) => {
         expect(cls).toBeTruthy();
       });
     });
@@ -208,7 +203,7 @@ describe('Responsive Layout Verification', () => {
         mobile: { h1: '24px', h2: '20px', h3: '18px' },
         desktop: { h1: '36px', h2: '30px', h3: '24px' },
       };
-      
+
       expect(headingSizes.mobile.h1).toBe('24px');
       expect(headingSizes.desktop.h1).toBe('36px');
     });
@@ -218,10 +213,10 @@ describe('Responsive Layout Verification', () => {
 describe('Overflow Prevention', () => {
   it('should prevent horizontal scroll on mobile', () => {
     mockMatchMedia(320);
-    
+
     // Check that common overflow utilities are available
     const overflowClasses = ['overflow-x-hidden', 'overflow-auto', 'max-w-full'];
-    overflowClasses.forEach(cls => {
+    overflowClasses.forEach((cls) => {
       expect(cls).toBeTruthy();
     });
   });
@@ -229,7 +224,7 @@ describe('Overflow Prevention', () => {
   it('should handle long text gracefully', () => {
     // Text handling utilities
     const textClasses = ['truncate', 'break-words', 'text-ellipsis'];
-    textClasses.forEach(cls => {
+    textClasses.forEach((cls) => {
       expect(cls).toBeTruthy();
     });
   });

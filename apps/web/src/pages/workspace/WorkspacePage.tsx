@@ -95,9 +95,7 @@ function ProjectCard({
           <div
             className={clsx(
               'w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold',
-              isComplete
-                ? 'bg-success-100 text-success-700'
-                : 'bg-brand-100 text-brand-700',
+              isComplete ? 'bg-success-100 text-success-700' : 'bg-brand-100 text-brand-700',
             )}
           >
             {(project.name ?? 'P').slice(0, 2).toUpperCase()}
@@ -232,9 +230,7 @@ export function WorkspacePage() {
   });
 
   // Group by status for display
-  const activeProjects = filteredProjects.filter((p) =>
-    ['DRAFT', 'ACTIVE'].includes(p.status),
-  );
+  const activeProjects = filteredProjects.filter((p) => ['DRAFT', 'ACTIVE'].includes(p.status));
   const completedProjects = filteredProjects.filter((p) => p.status === 'COMPLETED');
   const archivedProjects = filteredProjects.filter((p) => p.status === 'ARCHIVED');
 
@@ -244,9 +240,7 @@ export function WorkspacePage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-surface-900">Workspace</h1>
-          <p className="text-sm text-surface-500 mt-1">
-            Manage all your projects in one place
-          </p>
+          <p className="text-sm text-surface-500 mt-1">Manage all your projects in one place</p>
         </div>
         <button
           onClick={() => navigate('/chat/new')}
@@ -330,11 +324,7 @@ export function WorkspacePage() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {activeProjects.map((project) => (
-                  <ProjectCard
-                    key={project.id}
-                    project={project}
-                    onArchive={handleArchive}
-                  />
+                  <ProjectCard key={project.id} project={project} onArchive={handleArchive} />
                 ))}
               </div>
             </div>
@@ -351,11 +341,7 @@ export function WorkspacePage() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {completedProjects.map((project) => (
-                  <ProjectCard
-                    key={project.id}
-                    project={project}
-                    onArchive={handleArchive}
-                  />
+                  <ProjectCard key={project.id} project={project} onArchive={handleArchive} />
                 ))}
               </div>
             </div>
@@ -372,11 +358,7 @@ export function WorkspacePage() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {archivedProjects.map((project) => (
-                  <ProjectCard
-                    key={project.id}
-                    project={project}
-                    onArchive={handleArchive}
-                  />
+                  <ProjectCard key={project.id} project={project} onArchive={handleArchive} />
                 ))}
               </div>
             </div>

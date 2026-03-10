@@ -95,9 +95,7 @@ export async function calculatePrice(
  * Get all documents available for a project
  */
 export async function getProjectDocuments(projectId: string): Promise<ProjectDocuments> {
-  const response = await apiClient.get<ProjectDocuments>(
-    `/api/v1/documents/project/${projectId}`,
-  );
+  const response = await apiClient.get<ProjectDocuments>(`/api/v1/documents/project/${projectId}`);
   return response.data;
 }
 

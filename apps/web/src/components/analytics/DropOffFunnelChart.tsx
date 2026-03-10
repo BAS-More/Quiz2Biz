@@ -32,7 +32,6 @@ function getDropOffColor(rate: number): string {
   return 'text-success-600 bg-success-50';
 }
 
-
 export function DropOffFunnelChart({
   data,
   totalSessionsStarted,
@@ -44,11 +43,11 @@ export function DropOffFunnelChart({
 
     const totalAbandoned = data.reduce((sum, step) => sum + step.abandoned, 0);
     const avgDropOffRate = data.reduce((sum, step) => sum + step.dropOffRate, 0) / data.length;
-    
+
     // Find worst drop-off points
     const sortedByDropOff = [...data].sort((a, b) => b.dropOffRate - a.dropOffRate);
     const worstPoints = sortedByDropOff.slice(0, 3);
-    
+
     // Group by section
     const sectionStats: Record<string, { abandoned: number; reached: number }> = {};
     data.forEach((step) => {
@@ -64,7 +63,9 @@ export function DropOffFunnelChart({
       avgDropOffRate: Math.round(avgDropOffRate * 10) / 10,
       worstPoints,
       sectionStats,
-      completionRate: Math.round(((totalSessionsStarted - totalAbandoned) / totalSessionsStarted) * 100),
+      completionRate: Math.round(
+        ((totalSessionsStarted - totalAbandoned) / totalSessionsStarted) * 100,
+      ),
     };
   }, [data, totalSessionsStarted]);
 
@@ -86,9 +87,7 @@ export function DropOffFunnelChart({
             <TrendingDown className="h-5 w-5 text-danger-500" />
             Question Drop-off Analysis
           </h3>
-          <p className="text-sm text-surface-500">
-            Identify where users abandon questionnaires
-          </p>
+          <p className="text-sm text-surface-500">Identify where users abandon questionnaires</p>
         </div>
         <div className="text-right">
           <p className="text-2xl font-bold text-surface-900">{metrics.completionRate}%</p>
@@ -100,11 +99,15 @@ export function DropOffFunnelChart({
       <div className="grid grid-cols-3 gap-4 mb-6">
         <div className="p-3 bg-surface-50 rounded-lg">
           <p className="text-sm text-surface-500">Sessions Started</p>
-          <p className="text-lg font-bold text-surface-900">{totalSessionsStarted.toLocaleString()}</p>
+          <p className="text-lg font-bold text-surface-900">
+            {totalSessionsStarted.toLocaleString()}
+          </p>
         </div>
         <div className="p-3 bg-danger-50 rounded-lg">
           <p className="text-sm text-danger-600">Total Abandoned</p>
-          <p className="text-lg font-bold text-danger-700">{metrics.totalAbandoned.toLocaleString()}</p>
+          <p className="text-lg font-bold text-danger-700">
+            {metrics.totalAbandoned.toLocaleString()}
+          </p>
         </div>
         <div className="p-3 bg-surface-50 rounded-lg">
           <p className="text-sm text-surface-500">Avg Drop-off Rate</p>
@@ -137,14 +140,12 @@ export function DropOffFunnelChart({
                 <span
                   className={clsx(
                     'px-2 py-1 rounded text-xs font-medium',
-                    getDropOffColor(point.dropOffRate)
+                    getDropOffColor(point.dropOffRate),
                   )}
                 >
                   {point.dropOffRate}% drop-off
                 </span>
-                <span className="text-xs text-surface-400">
-                  ({point.abandoned} users)
-                </span>
+                <span className="text-xs text-surface-400">({point.abandoned} users)</span>
               </div>
             </div>
           ))}
@@ -153,9 +154,7 @@ export function DropOffFunnelChart({
 
       {/* Funnel Visualization */}
       <div className="mb-6">
-        <h4 className="text-sm font-medium text-surface-700 mb-3">
-          Drop-off Funnel
-        </h4>
+        <h4 className="text-sm font-medium text-surface-700 mb-3">Drop-off Funnel</h4>
         <div className="relative">
           {data.slice(0, 8).map((step, index) => {
             const widthPercent = Math.max(20, (step.totalReached / totalSessionsStarted) * 100);
@@ -177,9 +176,7 @@ export function DropOffFunnelChart({
                 {!isLast && step.abandoned > 0 && (
                   <div className="absolute -right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                     <ArrowRight className="h-3 w-3 text-danger-400" />
-                    <span className="text-xs text-danger-600 font-medium">
-                      -{step.abandoned}
-                    </span>
+                    <span className="text-xs text-danger-600 font-medium">-{step.abandoned}</span>
                   </div>
                 )}
               </div>
@@ -190,9 +187,7 @@ export function DropOffFunnelChart({
 
       {/* Drop-off by Section */}
       <div>
-        <h4 className="text-sm font-medium text-surface-700 mb-3">
-          Drop-off by Section
-        </h4>
+        <h4 className="text-sm font-medium text-surface-700 mb-3">Drop-off by Section</h4>
         <div className="space-y-2">
           {Object.entries(metrics.sectionStats).map(([section, stats]) => {
             const rate = Math.round((stats.abandoned / stats.reached) * 100);
@@ -209,7 +204,7 @@ export function DropOffFunnelChart({
                   <span
                     className={clsx(
                       'px-2 py-0.5 rounded text-xs font-medium',
-                      getDropOffColor(rate)
+                      getDropOffColor(rate),
                     )}
                   >
                     {rate}%
@@ -226,22 +221,27 @@ export function DropOffFunnelChart({
 
 // Helper to generate mock drop-off data
 export function generateMockDropOffData(): { data: DropOffStep[]; totalSessionsStarted: number } {
-  const sections = ['Business Basics', 'Market Analysis', 'Financial Planning', 'Team & Operations'];
+  const sections = [
+    'Business Basics',
+    'Market Analysis',
+    'Financial Planning',
+    'Team & Operations',
+  ];
   const questionsPerSection = 3;
   const totalSessionsStarted = 1000;
-  
+
   const data: DropOffStep[] = [];
   let remaining = totalSessionsStarted;
-  
+
   sections.forEach((sectionName, sectionIndex) => {
     for (let q = 0; q < questionsPerSection; q++) {
       const questionIndex = sectionIndex * questionsPerSection + q;
-      
+
       // Higher drop-off at beginning and end of sections
       const baseDropOff = q === 0 ? 8 : q === questionsPerSection - 1 ? 6 : 3;
       const dropOffRate = baseDropOff + Math.random() * 5;
       const abandoned = Math.floor(remaining * (dropOffRate / 100));
-      
+
       data.push({
         questionId: `q-${sectionIndex}-${q}`,
         questionText: `Question ${questionIndex + 1}: Sample question text here?`,
@@ -250,11 +250,11 @@ export function generateMockDropOffData(): { data: DropOffStep[]; totalSessionsS
         abandoned,
         dropOffRate: Math.round(dropOffRate * 10) / 10,
       });
-      
+
       remaining -= abandoned;
     }
   });
-  
+
   return { data, totalSessionsStarted };
 }
 

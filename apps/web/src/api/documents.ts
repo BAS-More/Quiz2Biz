@@ -78,9 +78,12 @@ export async function downloadDocument(documentId: string): Promise<Blob> {
 }
 
 export async function bulkDownloadSession(sessionId: string): Promise<Blob> {
-  const { data } = await apiClient.get(`${API_PREFIX}/documents/session/${sessionId}/bulk-download`, {
-    responseType: 'blob',
-  });
+  const { data } = await apiClient.get(
+    `${API_PREFIX}/documents/session/${sessionId}/bulk-download`,
+    {
+      responseType: 'blob',
+    },
+  );
   return data;
 }
 

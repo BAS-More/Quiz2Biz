@@ -161,9 +161,7 @@ const VersionItem: React.FC<VersionItemProps> = ({
         {/* Version header */}
         <div className="flex items-center justify-between gap-2 mb-2">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-surface-900">
-              Version {version.version}
-            </span>
+            <span className="font-semibold text-surface-900">Version {version.version}</span>
             {isCurrent && (
               <Badge variant="brand" size="sm">
                 Current
@@ -181,9 +179,7 @@ const VersionItem: React.FC<VersionItemProps> = ({
                 variant={isSelectedForCompare ? 'primary' : 'outline'}
                 size="sm"
                 onClick={onCompareSelect}
-                disabled={
-                  !isSelectedForCompare && compareSelections.length >= 2
-                }
+                disabled={!isSelectedForCompare && compareSelections.length >= 2}
               >
                 <GitCompare className="w-3.5 h-3.5 mr-1" />
                 {isSelectedForCompare ? 'Selected' : 'Select'}
@@ -221,16 +217,12 @@ const VersionItem: React.FC<VersionItemProps> = ({
           </div>
 
           {version.changeDescription && (
-            <p className="text-surface-600 italic">
-              "{version.changeDescription}"
-            </p>
+            <p className="text-surface-600 italic">"{version.changeDescription}"</p>
           )}
 
           {version.metadata && (
             <div className="flex items-center gap-3 text-xs text-surface-400">
-              {version.metadata.aiModel && (
-                <span>Model: {version.metadata.aiModel}</span>
-              )}
+              {version.metadata.aiModel && <span>Model: {version.metadata.aiModel}</span>}
               {version.metadata.templateVersion && (
                 <span>Template: v{version.metadata.templateVersion}</span>
               )}
@@ -252,15 +244,9 @@ interface VersionCompareProps {
   onClose: () => void;
 }
 
-const VersionCompareView: React.FC<VersionCompareProps> = ({
-  version1,
-  version2,
-  onClose,
-}) => {
+const VersionCompareView: React.FC<VersionCompareProps> = ({ version1, version2, onClose }) => {
   // Sort by version number (older first)
-  const [older, newer] = [version1, version2].sort(
-    (a, b) => a.version - b.version,
-  );
+  const [older, newer] = [version1, version2].sort((a, b) => a.version - b.version);
 
   return (
     <Card className="mt-4 bg-surface-50">
@@ -278,9 +264,7 @@ const VersionCompareView: React.FC<VersionCompareProps> = ({
         {/* Older version */}
         <div className="p-4 bg-white rounded-lg border border-surface-200">
           <div className="flex items-center justify-between mb-3">
-            <span className="font-medium text-surface-700">
-              Version {older.version}
-            </span>
+            <span className="font-medium text-surface-700">Version {older.version}</span>
             <Badge variant="secondary" size="sm">
               Older
             </Badge>
@@ -301,9 +285,7 @@ const VersionCompareView: React.FC<VersionCompareProps> = ({
         {/* Newer version */}
         <div className="p-4 bg-white rounded-lg border border-brand-200">
           <div className="flex items-center justify-between mb-3">
-            <span className="font-medium text-surface-700">
-              Version {newer.version}
-            </span>
+            <span className="font-medium text-surface-700">Version {newer.version}</span>
             <Badge variant="brand" size="sm">
               Newer
             </Badge>
@@ -324,15 +306,12 @@ const VersionCompareView: React.FC<VersionCompareProps> = ({
 
       {/* Changes summary */}
       <div className="mt-4 p-3 bg-surface-100 rounded-lg">
-        <h5 className="text-sm font-medium text-surface-700 mb-2">
-          Changes Summary
-        </h5>
+        <h5 className="text-sm font-medium text-surface-700 mb-2">Changes Summary</h5>
         <ul className="text-sm text-surface-600 space-y-1">
           <li>
             • Time between versions:{' '}
             {Math.round(
-              (new Date(newer.createdAt).getTime() -
-                new Date(older.createdAt).getTime()) /
+              (new Date(newer.createdAt).getTime() - new Date(older.createdAt).getTime()) /
                 (1000 * 60 * 60 * 24),
             )}{' '}
             days
@@ -340,12 +319,10 @@ const VersionCompareView: React.FC<VersionCompareProps> = ({
           <li>
             • File size change:{' '}
             {older.fileSize && newer.fileSize
-              ? `${((newer.fileSize - older.fileSize) / older.fileSize * 100).toFixed(1)}%`
+              ? `${(((newer.fileSize - older.fileSize) / older.fileSize) * 100).toFixed(1)}%`
               : 'N/A'}
           </li>
-          {newer.changeDescription && (
-            <li>• Change notes: {newer.changeDescription}</li>
-          )}
+          {newer.changeDescription && <li>• Change notes: {newer.changeDescription}</li>}
         </ul>
       </div>
     </Card>
@@ -431,12 +408,13 @@ export const DocumentVersionHistory: React.FC<DocumentVersionHistoryProps> = ({
   const hasMoreVersions = sortedVersions.length > 3;
 
   // Get versions for comparison view
-  const comparedVersions = compareSelections.length === 2
-    ? [
-        versions.find((v) => v.id === compareSelections[0])!,
-        versions.find((v) => v.id === compareSelections[1])!,
-      ]
-    : null;
+  const comparedVersions =
+    compareSelections.length === 2
+      ? [
+          versions.find((v) => v.id === compareSelections[0])!,
+          versions.find((v) => v.id === compareSelections[1])!,
+        ]
+      : null;
 
   return (
     <Card className={className}>
@@ -508,12 +486,7 @@ export const DocumentVersionHistory: React.FC<DocumentVersionHistoryProps> = ({
       {/* Show more/less toggle */}
       {hasMoreVersions && !isLoading && (
         <div className="mt-4 pt-4 border-t border-surface-200">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleToggleExpand}
-            className="w-full"
-          >
+          <Button variant="ghost" size="sm" onClick={handleToggleExpand} className="w-full">
             {isExpanded ? (
               <>
                 <ChevronUp className="w-4 h-4 mr-1" />

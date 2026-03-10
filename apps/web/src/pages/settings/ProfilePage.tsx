@@ -72,14 +72,16 @@ export function ProfilePage() {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [notificationPrefs, setNotificationPrefs] = useState<NotificationPreference[]>(
-    DEFAULT_NOTIFICATION_PREFS
+    DEFAULT_NOTIFICATION_PREFS,
   );
 
   // UI state
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'security' | 'appearance'>('profile');
+  const [activeTab, setActiveTab] = useState<
+    'profile' | 'notifications' | 'security' | 'appearance'
+  >('profile');
 
   const userInitials = name
     ? name
@@ -113,7 +115,7 @@ export function ProfilePage() {
 
   const toggleNotification = useCallback((id: string) => {
     setNotificationPrefs((prev) =>
-      prev.map((pref) => (pref.id === id ? { ...pref, enabled: !pref.enabled } : pref))
+      prev.map((pref) => (pref.id === id ? { ...pref, enabled: !pref.enabled } : pref)),
     );
   }, []);
 
@@ -137,7 +139,7 @@ export function ProfilePage() {
         name,
         notificationPreferences: notificationPrefs.reduce(
           (acc, pref) => ({ ...acc, [pref.id]: pref.enabled }),
-          {}
+          {},
         ),
       });
 
@@ -204,7 +206,10 @@ export function ProfilePage() {
         <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-3 text-red-700 dark:text-red-400">
           <AlertCircle className="h-5 w-5 flex-shrink-0" />
           <span>{error}</span>
-          <button onClick={() => setError(null)} className="ml-auto text-red-500 hover:text-red-700">
+          <button
+            onClick={() => setError(null)}
+            className="ml-auto text-red-500 hover:text-red-700"
+          >
             Dismiss
           </button>
         </div>

@@ -87,8 +87,7 @@ export function ReviewQueuePage() {
 
   // Reject mutation
   const rejectMutation = useMutation({
-    mutationFn: ({ id, reason }: { id: string; reason: string }) =>
-      rejectDocument(id, { reason }),
+    mutationFn: ({ id, reason }: { id: string; reason: string }) => rejectDocument(id, { reason }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'pending-review'] });
     },
@@ -120,21 +119,21 @@ export function ReviewQueuePage() {
     async (documentId: string, notes?: string) => {
       await approveMutation.mutateAsync({ id: documentId, notes });
     },
-    [approveMutation]
+    [approveMutation],
   );
 
   const handleReject = useCallback(
     async (documentId: string, reason: string) => {
       await rejectMutation.mutateAsync({ id: documentId, reason });
     },
-    [rejectMutation]
+    [rejectMutation],
   );
 
   const handleViewDocument = useCallback(
     (documentId: string) => {
       navigate(`/admin/review/${documentId}`);
     },
-    [navigate]
+    [navigate],
   );
 
   // Selection handlers
@@ -158,8 +157,7 @@ export function ReviewQueuePage() {
       doc.documentType.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       doc.session?.user?.name?.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesCategory =
-      !categoryFilter || doc.documentType.category === categoryFilter;
+    const matchesCategory = !categoryFilter || doc.documentType.category === categoryFilter;
 
     return matchesSearch && matchesCategory;
   });
@@ -218,7 +216,7 @@ export function ReviewQueuePage() {
 
   // Get unique categories for filter
   const categories = Array.from(
-    new Set(reviewQueue?.data?.map((doc) => doc.documentType.category) || [])
+    new Set(reviewQueue?.data?.map((doc) => doc.documentType.category) || []),
   );
 
   // Selection state helpers
@@ -239,24 +237,15 @@ export function ReviewQueuePage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-surface-900">Review Queue</h1>
-          <p className="text-surface-500 mt-1">
-            Review and approve pending documents
-          </p>
+          <p className="text-surface-500 mt-1">Review and approve pending documents</p>
         </div>
         <div className="flex items-center gap-3">
           <Badge variant="warning" className="px-3 py-1.5">
             <Clock className="h-4 w-4 mr-1" />
             {reviewQueue?.meta?.total || 0} Pending
           </Badge>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => refetch()}
-            disabled={isFetching}
-          >
-            <RefreshCw
-              className={clsx('h-4 w-4', isFetching && 'animate-spin')}
-            />
+          <Button variant="ghost" size="sm" onClick={() => refetch()} disabled={isFetching}>
+            <RefreshCw className={clsx('h-4 w-4', isFetching && 'animate-spin')} />
           </Button>
         </div>
       </div>
@@ -309,9 +298,7 @@ export function ReviewQueuePage() {
           {/* Batch Actions */}
           {selectedIds.size > 0 && (
             <div className="flex items-center gap-2 ml-4 pl-4 border-l border-surface-200">
-              <span className="text-sm text-surface-600">
-                {selectedIds.size} selected
-              </span>
+              <span className="text-sm text-surface-600">{selectedIds.size} selected</span>
               <Button
                 variant="primary"
                 size="sm"
@@ -355,7 +342,8 @@ export function ReviewQueuePage() {
               Reject {selectedIds.size} Document{selectedIds.size > 1 ? 's' : ''}
             </h3>
             <p className="text-sm text-surface-500 mb-4">
-              Please provide a reason for rejecting these documents. This will be sent to the document owners.
+              Please provide a reason for rejecting these documents. This will be sent to the
+              document owners.
             </p>
             <textarea
               value={batchRejectReason}
@@ -404,9 +392,7 @@ export function ReviewQueuePage() {
           <div className="flex flex-col items-center justify-center py-12 gap-4">
             <AlertCircle className="h-12 w-12 text-danger-500" />
             <div className="text-center">
-              <h3 className="font-medium text-surface-900">
-                Failed to load review queue
-              </h3>
+              <h3 className="font-medium text-surface-900">Failed to load review queue</h3>
               <p className="text-sm text-surface-500 mt-1">
                 There was an error loading the pending documents.
               </p>
@@ -424,9 +410,7 @@ export function ReviewQueuePage() {
           <div className="flex flex-col items-center justify-center py-16 gap-4">
             <Inbox className="h-16 w-16 text-surface-300" />
             <div className="text-center">
-              <h3 className="text-lg font-medium text-surface-900">
-                No Documents to Review
-              </h3>
+              <h3 className="text-lg font-medium text-surface-900">No Documents to Review</h3>
               <p className="text-surface-500 mt-1">
                 {searchQuery || categoryFilter
                   ? 'No documents match your filters'
@@ -472,24 +456,18 @@ export function ReviewQueuePage() {
                 <div
                   className={clsx(
                     'p-3 rounded-lg',
-                    CATEGORY_COLORS[doc.documentType.category] || 'bg-surface-100'
+                    CATEGORY_COLORS[doc.documentType.category] || 'bg-surface-100',
                   )}
                 >
-                  {CATEGORY_ICONS[doc.documentType.category] || (
-                    <FileText className="h-5 w-5" />
-                  )}
+                  {CATEGORY_ICONS[doc.documentType.category] || <FileText className="h-5 w-5" />}
                 </div>
 
                 {/* Document Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <h3 className="font-medium text-surface-900 truncate">
-                        {doc.fileName}
-                      </h3>
-                      <p className="text-sm text-surface-500 mt-0.5">
-                        {doc.documentType.name}
-                      </p>
+                      <h3 className="font-medium text-surface-900 truncate">{doc.fileName}</h3>
+                      <p className="text-sm text-surface-500 mt-0.5">{doc.documentType.name}</p>
                     </div>
                     <Badge variant="warning">
                       <Clock className="h-3 w-3 mr-1" />
@@ -509,19 +487,13 @@ export function ReviewQueuePage() {
                       <Clock className="h-3.5 w-3.5" />
                       {formatDate(doc.createdAt)}
                     </span>
-                    <span className="uppercase text-xs font-medium">
-                      {doc.format}
-                    </span>
+                    <span className="uppercase text-xs font-medium">{doc.format}</span>
                     <span>{formatFileSize(doc.fileSize)}</span>
                   </div>
 
                   {/* Actions */}
                   <div className="flex items-center gap-2 mt-4">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleViewDocument(doc.id)}
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => handleViewDocument(doc.id)}>
                       <Eye className="h-4 w-4 mr-1" />
                       Preview
                     </Button>
@@ -532,9 +504,7 @@ export function ReviewQueuePage() {
                       onApprove={handleApprove}
                       onReject={handleReject}
                       compact
-                      disabled={
-                        approveMutation.isPending || rejectMutation.isPending
-                      }
+                      disabled={approveMutation.isPending || rejectMutation.isPending}
                     />
                   </div>
                 </div>
@@ -548,9 +518,8 @@ export function ReviewQueuePage() {
       {reviewQueue?.meta && reviewQueue.meta.totalPages > 1 && (
         <div className="flex items-center justify-between pt-4">
           <p className="text-sm text-surface-500">
-            Showing {(page - 1) * perPage + 1} to{' '}
-            {Math.min(page * perPage, reviewQueue.meta.total)} of{' '}
-            {reviewQueue.meta.total} documents
+            Showing {(page - 1) * perPage + 1} to {Math.min(page * perPage, reviewQueue.meta.total)}{' '}
+            of {reviewQueue.meta.total} documents
           </p>
           <div className="flex items-center gap-2">
             <Button
@@ -568,9 +537,7 @@ export function ReviewQueuePage() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() =>
-                setPage((p) => Math.min(reviewQueue.meta.totalPages, p + 1))
-              }
+              onClick={() => setPage((p) => Math.min(reviewQueue.meta.totalPages, p + 1))}
               disabled={page >= reviewQueue.meta.totalPages}
             >
               Next

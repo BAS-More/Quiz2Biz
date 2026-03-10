@@ -88,7 +88,7 @@ export class SessionReminderJobService {
             id: true,
             email: true, 
             name: true,
-            notificationPreferences: true,
+            preferences: true,
           } 
         },
         questionnaire: { select: { name: true } },
@@ -165,7 +165,7 @@ export class SessionReminderJobService {
     session: {
       id: string;
       userId: string;
-      user: { id: string; email: string; name?: string | null; notificationPreferences?: unknown } | null;
+      user: { id: string; email: string; name?: string | null; preferences?: unknown } | null;
       questionnaire: { name: string } | null;
       progress?: unknown;
     },
@@ -176,8 +176,9 @@ export class SessionReminderJobService {
     }
 
     // Check user notification preferences
-    const prefs = session.user.notificationPreferences as Record<string, boolean> | null;
-    if (prefs?.email_session_complete === false) {
+    const prefs = session.user.preferences as Record<string, unknown> | null;
+    const notifPrefs = prefs?.notifications as Record<string, boolean> | undefined;
+    if (notifPrefs?.email_session_complete === false) {
       // User has opted out of session notifications
       return;
     }

@@ -5,9 +5,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import documentCommerceApi, {
-  QUALITY_LEVELS,
-} from '../../api/documentCommerce';
+import documentCommerceApi, { QUALITY_LEVELS } from '../../api/documentCommerce';
 import type {
   ProjectDocuments,
   AvailableDocument,
@@ -71,10 +69,7 @@ function QualitySlider({
         {QUALITY_LEVELS.map((l) => (
           <span
             key={l.level}
-            className={clsx(
-              'transition-colors',
-              l.level === value && 'text-brand-600 font-medium',
-            )}
+            className={clsx('transition-colors', l.level === value && 'text-brand-600 font-medium')}
           >
             {l.name}
           </span>
@@ -135,7 +130,14 @@ function DocumentCard({
     };
 
     loadPrice();
-  }, [projectId, document.slug, document.basePrice, document.name, document.isAvailable, qualityLevel]);
+  }, [
+    projectId,
+    document.slug,
+    document.basePrice,
+    document.name,
+    document.isAvailable,
+    qualityLevel,
+  ]);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -174,9 +176,7 @@ function DocumentCard({
               <p className="text-lg font-bold text-surface-900">
                 {loadingPrice ? '...' : formatPrice(pricing.finalPrice)}
               </p>
-              <p className="text-xs text-surface-400">
-                ~{pricing.estimatedPages} pages
-              </p>
+              <p className="text-xs text-surface-400">~{pricing.estimatedPages} pages</p>
             </div>
           )}
         </div>
@@ -283,9 +283,7 @@ function PurchasedDocumentCard({ purchase }: { purchase: DocumentPurchaseStatus 
             <FileText className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-surface-900">
-              {purchase.documentTypeName}
-            </h3>
+            <h3 className="text-sm font-semibold text-surface-900">{purchase.documentTypeName}</h3>
             <p className="text-xs text-surface-500">
               {QUALITY_LEVELS[purchase.qualityLevel]?.name} Quality
             </p>

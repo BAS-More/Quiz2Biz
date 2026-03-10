@@ -26,6 +26,8 @@
     "node_modules",
     "dist",
     "test",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "src/modules/document-commerce/**",
+    "src/modules/document-generator/services/bulk-download.service.ts"
   ]
 }

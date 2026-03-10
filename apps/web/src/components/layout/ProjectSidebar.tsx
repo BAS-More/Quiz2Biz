@@ -140,9 +140,7 @@ export function ProjectSidebar() {
                   style={{ width: `${chatProgress}%` }}
                 />
               </div>
-              <p className="text-xs text-surface-500 mt-1">
-                {project.messageCount}/50
-              </p>
+              <p className="text-xs text-surface-500 mt-1">{project.messageCount}/50</p>
             </div>
 
             {/* Quality Score */}

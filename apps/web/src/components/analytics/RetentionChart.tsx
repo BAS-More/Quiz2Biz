@@ -34,35 +34,40 @@ export function RetentionChart({ data, periods, className }: RetentionChartProps
   // Calculate average retention per period
   const averageRetention = useMemo(() => {
     if (!data.length) return [];
-    
-    const maxPeriods = Math.max(...data.map(d => d.retention.length));
+
+    const maxPeriods = Math.max(...data.map((d) => d.retention.length));
     const averages: number[] = [];
-    
+
     for (let i = 0; i < maxPeriods; i++) {
-      const values = data
-        .filter(d => d.retention[i] !== undefined)
-        .map(d => d.retention[i]);
-      
+      const values = data.filter((d) => d.retention[i] !== undefined).map((d) => d.retention[i]);
+
       if (values.length > 0) {
         averages.push(Math.round(values.reduce((a, b) => a + b, 0) / values.length));
       }
     }
-    
+
     return averages;
   }, [data]);
 
   // Calculate overall retention rate
   const overallRetention = useMemo(() => {
     if (!averageRetention.length) return 0;
-    const lastPeriodValues = data
-      .filter(d => d.retention.length > 0)
-      .map(d => d.retention[0]);
+    const lastPeriodValues = data.filter((d) => d.retention.length > 0).map((d) => d.retention[0]);
     if (!lastPeriodValues.length) return 0;
     return Math.round(lastPeriodValues.reduce((a, b) => a + b, 0) / lastPeriodValues.length);
   }, [averageRetention, data]);
 
   // Default period labels
-  const periodLabels = periods || ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'];
+  const periodLabels = periods || [
+    'Week 1',
+    'Week 2',
+    'Week 3',
+    'Week 4',
+    'Week 5',
+    'Week 6',
+    'Week 7',
+    'Week 8',
+  ];
 
   if (!data.length) {
     return (
@@ -93,19 +98,22 @@ export function RetentionChart({ data, periods, className }: RetentionChartProps
             <tr>
               <th className="text-left py-2 px-2 text-surface-500 font-medium">Cohort</th>
               <th className="text-center py-2 px-2 text-surface-500 font-medium">Users</th>
-              {periodLabels.slice(0, Math.max(...data.map(d => d.retention.length), 4)).map((label, i) => (
-                <th key={i} className="text-center py-2 px-2 text-surface-500 font-medium min-w-[60px]">
-                  {label}
-                </th>
-              ))}
+              {periodLabels
+                .slice(0, Math.max(...data.map((d) => d.retention.length), 4))
+                .map((label, i) => (
+                  <th
+                    key={i}
+                    className="text-center py-2 px-2 text-surface-500 font-medium min-w-[60px]"
+                  >
+                    {label}
+                  </th>
+                ))}
             </tr>
           </thead>
           <tbody>
             {data.map((row, rowIndex) => (
               <tr key={rowIndex} className="border-t border-surface-100">
-                <td className="py-2 px-2 font-medium text-surface-700">
-                  {row.cohort}
-                </td>
+                <td className="py-2 px-2 font-medium text-surface-700">{row.cohort}</td>
                 <td className="py-2 px-2 text-center text-surface-600">
                   {row.size.toLocaleString()}
                 </td>
@@ -114,7 +122,7 @@ export function RetentionChart({ data, periods, className }: RetentionChartProps
                     <span
                       className={clsx(
                         'inline-block w-12 py-1 rounded text-xs font-medium',
-                        getRetentionColor(value)
+                        getRetentionColor(value),
                       )}
                     >
                       {value}%
@@ -142,7 +150,7 @@ export function RetentionChart({ data, periods, className }: RetentionChartProps
                   <span
                     className={clsx(
                       'inline-block w-12 py-1 rounded text-xs font-semibold',
-                      getRetentionColor(value)
+                      getRetentionColor(value),
                     )}
                   >
                     {value}%
@@ -179,13 +187,19 @@ export function RetentionChart({ data, periods, className }: RetentionChartProps
 
 // Helper to generate mock retention data
 export function generateMockRetentionData(): RetentionData[] {
-  const weeks = ['Week of Jan 1', 'Week of Jan 8', 'Week of Jan 15', 'Week of Jan 22', 'Week of Jan 29'];
-  
+  const weeks = [
+    'Week of Jan 1',
+    'Week of Jan 8',
+    'Week of Jan 15',
+    'Week of Jan 22',
+    'Week of Jan 29',
+  ];
+
   return weeks.map((cohort, index) => {
     const size = Math.floor(Math.random() * 200) + 100;
     const maxRetention = weeks.length - index;
     const retention: number[] = [];
-    
+
     let lastValue = 100;
     for (let i = 0; i < maxRetention; i++) {
       // Natural decay with some randomness
@@ -193,7 +207,7 @@ export function generateMockRetentionData(): RetentionData[] {
       lastValue = Math.max(0, Math.round(lastValue - decay));
       retention.push(i === 0 ? 100 : lastValue);
     }
-    
+
     return { cohort, size, retention };
   });
 }

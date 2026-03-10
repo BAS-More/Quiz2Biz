@@ -157,7 +157,7 @@ export class ClaudeAdapter implements AiAdapter {
         usedFallback: false,
       };
     } catch (error) {
-      this.logger.error(`Claude generation failed: ${error}`);
+      this.logger.error(`Claude generation failed: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
   }
@@ -232,7 +232,7 @@ export class ClaudeAdapter implements AiAdapter {
         cost: this.calculateCost(usage),
       };
     } catch (error) {
-      this.logger.error(`Claude stream failed: ${error}`);
+      this.logger.error(`Claude stream failed: ${error instanceof Error ? error.message : String(error)}`);
       yield {
         content: '',
         done: true,

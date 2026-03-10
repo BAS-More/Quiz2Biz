@@ -6,15 +6,25 @@ import { toHaveNoViolations } from 'jest-axe';
 
 // Polyfill localStorage for Node.js 25+ which provides a broken built-in localStorage
 // without --localstorage-file flag, overriding jsdom's working implementation
-if (typeof globalThis.localStorage === 'undefined' ||
-    typeof globalThis.localStorage.getItem !== 'function') {
+if (
+  typeof globalThis.localStorage === 'undefined' ||
+  typeof globalThis.localStorage.getItem !== 'function'
+) {
   const store: Record<string, string> = {};
   const localStoragePolyfill = {
     getItem: (key: string) => store[key] ?? null,
-    setItem: (key: string, value: string) => { store[key] = value; },
-    removeItem: (key: string) => { delete store[key]; },
-    clear: () => { Object.keys(store).forEach((k) => delete store[k]); },
-    get length() { return Object.keys(store).length; },
+    setItem: (key: string, value: string) => {
+      store[key] = value;
+    },
+    removeItem: (key: string) => {
+      delete store[key];
+    },
+    clear: () => {
+      Object.keys(store).forEach((k) => delete store[k]);
+    },
+    get length() {
+      return Object.keys(store).length;
+    },
     key: (i: number) => Object.keys(store)[i] ?? null,
   };
   Object.defineProperty(globalThis, 'localStorage', {

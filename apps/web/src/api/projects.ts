@@ -70,9 +70,7 @@ export async function createProject(request: CreateProjectRequest): Promise<Proj
  * Get quality score for a project
  */
 export async function getProjectQualityScore(projectId: string): Promise<ProjectQualityScore> {
-  const response = await apiClient.get<ProjectQualityScore>(
-    `/api/v1/quality/${projectId}/score`,
-  );
+  const response = await apiClient.get<ProjectQualityScore>(`/api/v1/quality/${projectId}/score`);
   return response.data;
 }
 

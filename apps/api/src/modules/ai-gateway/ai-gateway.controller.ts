@@ -54,7 +54,7 @@ export class AiGatewayController {
 
       return response;
     } catch (error) {
-      this.logger.error(`Generate failed: ${error}`);
+      this.logger.error(`Generate failed: ${error instanceof Error ? error.message : String(error)}`);
       throw new HttpException(
         error instanceof Error ? error.message : 'AI generation failed',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -101,7 +101,7 @@ export class AiGatewayController {
         }
       }
     } catch (error) {
-      this.logger.error(`Stream failed: ${error}`);
+      this.logger.error(`Stream failed: ${error instanceof Error ? error.message : String(error)}`);
       res.write(
         `event: error\ndata: ${JSON.stringify({
           error: error instanceof Error ? error.message : 'Stream failed',

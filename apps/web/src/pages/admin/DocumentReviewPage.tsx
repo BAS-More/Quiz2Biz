@@ -70,8 +70,7 @@ export function DocumentReviewPage() {
 
   // Reject mutation
   const rejectMutation = useMutation({
-    mutationFn: ({ id, reason }: { id: string; reason: string }) =>
-      rejectDocument(id, { reason }),
+    mutationFn: ({ id, reason }: { id: string; reason: string }) => rejectDocument(id, { reason }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'pending-review'] });
       setReviewComplete('rejected');
@@ -82,14 +81,14 @@ export function DocumentReviewPage() {
     async (docId: string, notes?: string) => {
       await approveMutation.mutateAsync({ id: docId, notes });
     },
-    [approveMutation]
+    [approveMutation],
   );
 
   const handleReject = useCallback(
     async (docId: string, reason: string) => {
       await rejectMutation.mutateAsync({ id: docId, reason });
     },
-    [rejectMutation]
+    [rejectMutation],
   );
 
   const handleDownload = useCallback(async () => {
@@ -150,9 +149,7 @@ export function DocumentReviewPage() {
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
         <AlertCircle className="h-12 w-12 text-danger-500" />
         <div className="text-center">
-          <h2 className="text-lg font-semibold text-surface-900">
-            Document Not Found
-          </h2>
+          <h2 className="text-lg font-semibold text-surface-900">Document Not Found</h2>
           <p className="text-surface-500 mt-1">
             This document may have already been reviewed or doesn't exist.
           </p>
@@ -182,9 +179,7 @@ export function DocumentReviewPage() {
           <h2 className="text-2xl font-bold text-surface-900">
             Document {reviewComplete === 'approved' ? 'Approved' : 'Rejected'}
           </h2>
-          <p className="text-surface-500 mt-2">
-            The client has been notified about this decision.
-          </p>
+          <p className="text-surface-500 mt-2">The client has been notified about this decision.</p>
         </div>
         <div className="flex items-center gap-3">
           <Button variant="primary" onClick={handleBackToQueue}>
@@ -213,11 +208,7 @@ export function DocumentReviewPage() {
           </div>
         </div>
 
-        <Button
-          variant="secondary"
-          onClick={handleDownload}
-          loading={isDownloading}
-        >
+        <Button variant="secondary" onClick={handleDownload} loading={isDownloading}>
           <Download className="h-4 w-4 mr-2" />
           Download
         </Button>
@@ -240,19 +231,12 @@ export function DocumentReviewPage() {
               <div className="flex flex-col items-center justify-center py-16 gap-4">
                 <FileText className="h-16 w-16 text-brand-400" />
                 <div className="text-center">
-                  <h3 className="text-lg font-medium text-surface-900">
-                    DOCX Document
-                  </h3>
+                  <h3 className="text-lg font-medium text-surface-900">DOCX Document</h3>
                   <p className="text-surface-500 mt-1">
-                    Preview is not available for DOCX files.
-                    Download to view in Microsoft Word.
+                    Preview is not available for DOCX files. Download to view in Microsoft Word.
                   </p>
                 </div>
-                <Button
-                  variant="primary"
-                  onClick={handleDownload}
-                  loading={isDownloading}
-                >
+                <Button variant="primary" onClick={handleDownload} loading={isDownloading}>
                   <Download className="h-4 w-4 mr-2" />
                   Download to Review
                 </Button>
@@ -272,9 +256,7 @@ export function DocumentReviewPage() {
         <div className="space-y-6">
           {/* Document Info */}
           <Card>
-            <h3 className="font-semibold text-surface-900 mb-4">
-              Document Details
-            </h3>
+            <h3 className="font-semibold text-surface-900 mb-4">Document Details</h3>
             <dl className="space-y-3 text-sm">
               <div className="flex items-start justify-between">
                 <dt className="text-surface-500">Type</dt>
@@ -285,16 +267,12 @@ export function DocumentReviewPage() {
               <div className="flex items-start justify-between">
                 <dt className="text-surface-500">Category</dt>
                 <dd>
-                  <Badge variant="secondary">
-                    {document.documentType.category}
-                  </Badge>
+                  <Badge variant="secondary">{document.documentType.category}</Badge>
                 </dd>
               </div>
               <div className="flex items-start justify-between">
                 <dt className="text-surface-500">Format</dt>
-                <dd className="font-medium text-surface-900 uppercase">
-                  {document.format}
-                </dd>
+                <dd className="font-medium text-surface-900 uppercase">{document.format}</dd>
               </div>
               <div className="flex items-start justify-between">
                 <dt className="text-surface-500">File Size</dt>
@@ -304,15 +282,11 @@ export function DocumentReviewPage() {
               </div>
               <div className="flex items-start justify-between">
                 <dt className="text-surface-500">Version</dt>
-                <dd className="font-medium text-surface-900">
-                  v{document.version}
-                </dd>
+                <dd className="font-medium text-surface-900">v{document.version}</dd>
               </div>
               <div className="flex items-start justify-between">
                 <dt className="text-surface-500">Submitted</dt>
-                <dd className="font-medium text-surface-900">
-                  {formatDate(document.createdAt)}
-                </dd>
+                <dd className="font-medium text-surface-900">{formatDate(document.createdAt)}</dd>
               </div>
             </dl>
           </Card>
@@ -327,22 +301,16 @@ export function DocumentReviewPage() {
               <dl className="space-y-3 text-sm">
                 <div className="flex items-start justify-between">
                   <dt className="text-surface-500">Name</dt>
-                  <dd className="font-medium text-surface-900">
-                    {document.session.user.name}
-                  </dd>
+                  <dd className="font-medium text-surface-900">{document.session.user.name}</dd>
                 </div>
                 <div className="flex items-start justify-between">
                   <dt className="text-surface-500">Email</dt>
-                  <dd className="font-medium text-surface-900">
-                    {document.session.user.email}
-                  </dd>
+                  <dd className="font-medium text-surface-900">{document.session.user.email}</dd>
                 </div>
                 {document.session.projectName && (
                   <div className="flex items-start justify-between">
                     <dt className="text-surface-500">Project</dt>
-                    <dd className="font-medium text-surface-900">
-                      {document.session.projectName}
-                    </dd>
+                    <dd className="font-medium text-surface-900">{document.session.projectName}</dd>
                   </div>
                 )}
               </dl>
@@ -351,9 +319,7 @@ export function DocumentReviewPage() {
 
           {/* Review Actions */}
           <Card>
-            <h3 className="font-semibold text-surface-900 mb-4">
-              Review Actions
-            </h3>
+            <h3 className="font-semibold text-surface-900 mb-4">Review Actions</h3>
             <ReviewActions
               documentId={document.id}
               documentName={document.fileName}

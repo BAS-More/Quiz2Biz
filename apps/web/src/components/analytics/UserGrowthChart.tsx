@@ -14,10 +14,7 @@ interface UserGrowthChartProps {
   height?: number;
 }
 
-export function UserGrowthChart({
-  data,
-  height = 250,
-}: UserGrowthChartProps) {
+export function UserGrowthChart({ data, height = 250 }: UserGrowthChartProps) {
   // Calculate chart dimensions and scales
   const chartData = useMemo(() => {
     if (!data.length) return { maxUsers: 0, maxNew: 0, points: [] };
@@ -51,10 +48,7 @@ export function UserGrowthChart({
 
   if (!data.length) {
     return (
-      <div
-        style={{ height }}
-        className="flex items-center justify-center text-surface-400"
-      >
+      <div style={{ height }} className="flex items-center justify-center text-surface-400">
         No data available
       </div>
     );
@@ -85,15 +79,11 @@ export function UserGrowthChart({
         <div className="flex items-center gap-4 text-sm">
           <div>
             <span className="text-surface-500">Total: </span>
-            <span className="font-semibold text-surface-900">
-              {latestUsers.toLocaleString()}
-            </span>
+            <span className="font-semibold text-surface-900">{latestUsers.toLocaleString()}</span>
           </div>
           <div>
             <span className="text-surface-500">New: </span>
-            <span className="font-semibold text-brand-600">
-              +{totalNewUsers.toLocaleString()}
-            </span>
+            <span className="font-semibold text-brand-600">+{totalNewUsers.toLocaleString()}</span>
           </div>
         </div>
       </div>
@@ -156,10 +146,7 @@ export function UserGrowthChart({
         {/* New Users Bar Overlay */}
         <div className="absolute left-8 right-0 bottom-6 top-0 flex items-end pointer-events-none">
           {chartData.points.map((point) => {
-            const barHeight =
-              chartData.maxNew > 0
-                ? (point.newUsers / chartData.maxNew) * 30
-                : 0;
+            const barHeight = chartData.maxNew > 0 ? (point.newUsers / chartData.maxNew) * 30 : 0;
             return (
               <div
                 key={point.date}
@@ -178,10 +165,7 @@ export function UserGrowthChart({
         {/* Hover tooltips */}
         <div className="absolute left-8 right-0 bottom-6 top-0 flex">
           {chartData.points.map((point) => (
-            <div
-              key={point.date}
-              className="flex-1 relative group"
-            >
+            <div key={point.date} className="flex-1 relative group">
               <div className="absolute inset-0 hover:bg-surface-100/50 transition-colors" />
               <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                 <div className="bg-surface-800 text-white text-xs rounded-lg px-3 py-2 shadow-lg whitespace-nowrap">

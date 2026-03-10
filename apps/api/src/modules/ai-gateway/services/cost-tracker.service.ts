@@ -134,7 +134,7 @@ export class CostTrackerService {
             });
           }
         } catch (error) {
-          this.logger.error(`Failed to update project ${projectId} costs: ${error}`);
+          this.logger.error(`Failed to update project ${projectId} costs: ${error instanceof Error ? error.message : String(error)}`);
         }
       }
 
@@ -142,7 +142,7 @@ export class CostTrackerService {
     } catch (error) {
       // Put records back on failure
       this.costBuffer = [...records, ...this.costBuffer];
-      this.logger.error(`Failed to flush cost buffer: ${error}`);
+      this.logger.error(`Failed to flush cost buffer: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
@@ -198,7 +198,7 @@ export class CostTrackerService {
         },
       };
     } catch (error) {
-      this.logger.error(`Failed to get project cost summary: ${error}`);
+      this.logger.error(`Failed to get project cost summary: ${error instanceof Error ? error.message : String(error)}`);
       return null;
     }
   }

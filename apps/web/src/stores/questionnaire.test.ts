@@ -164,9 +164,7 @@ describe('useQuestionnaireStore', () => {
     });
 
     it('handles error', async () => {
-      vi.mocked(questionnaireApi.getSession).mockRejectedValueOnce(
-        new Error('Not found'),
-      );
+      vi.mocked(questionnaireApi.getSession).mockRejectedValueOnce(new Error('Not found'));
 
       await act(async () => {
         await useQuestionnaireStore.getState().loadSession('bad-id');
@@ -192,9 +190,7 @@ describe('useQuestionnaireStore', () => {
     });
 
     it('handles error', async () => {
-      vi.mocked(questionnaireApi.listSessions).mockRejectedValueOnce(
-        new Error('Server error'),
-      );
+      vi.mocked(questionnaireApi.listSessions).mockRejectedValueOnce(new Error('Server error'));
 
       await act(async () => {
         await useQuestionnaireStore.getState().loadSessions();
@@ -280,9 +276,7 @@ describe('useQuestionnaireStore', () => {
 
       await expect(
         act(async () => {
-          await useQuestionnaireStore
-            .getState()
-            .submitResponse('sess-1', 'question-1', 'bad');
+          await useQuestionnaireStore.getState().submitResponse('sess-1', 'question-1', 'bad');
         }),
       ).rejects.toThrow('Validation failed');
 
@@ -338,9 +332,7 @@ describe('useQuestionnaireStore', () => {
 
     it('logs warning on failure (non-critical)', async () => {
       const { logger } = await import('../lib/logger');
-      vi.mocked(questionnaireApi.getScore).mockRejectedValueOnce(
-        new Error('Service down'),
-      );
+      vi.mocked(questionnaireApi.getScore).mockRejectedValueOnce(new Error('Service down'));
 
       await act(async () => {
         await useQuestionnaireStore.getState().loadScore('sess-1');
@@ -348,10 +340,7 @@ describe('useQuestionnaireStore', () => {
 
       // Should not set error (non-critical)
       expect(useQuestionnaireStore.getState().error).toBeNull();
-      expect(logger.warn).toHaveBeenCalledWith(
-        'Failed to load score:',
-        expect.any(Error),
-      );
+      expect(logger.warn).toHaveBeenCalledWith('Failed to load score:', expect.any(Error));
     });
   });
 
@@ -430,10 +419,18 @@ describe('useQuestionnaireStore', () => {
         setupHistoryState();
 
         // Go all the way back
-        act(() => { useQuestionnaireStore.getState().goToPrevious(); }); // 2
-        act(() => { useQuestionnaireStore.getState().goToPrevious(); }); // 1
-        act(() => { useQuestionnaireStore.getState().goToPrevious(); }); // 0
-        act(() => { useQuestionnaireStore.getState().goToPrevious(); }); // still 0
+        act(() => {
+          useQuestionnaireStore.getState().goToPrevious();
+        }); // 2
+        act(() => {
+          useQuestionnaireStore.getState().goToPrevious();
+        }); // 1
+        act(() => {
+          useQuestionnaireStore.getState().goToPrevious();
+        }); // 0
+        act(() => {
+          useQuestionnaireStore.getState().goToPrevious();
+        }); // still 0
 
         expect(useQuestionnaireStore.getState().reviewIndex).toBe(0);
       });
@@ -444,8 +441,12 @@ describe('useQuestionnaireStore', () => {
         setupHistoryState();
 
         // Enter review mode and go back
-        act(() => { useQuestionnaireStore.getState().goToPrevious(); }); // 2
-        act(() => { useQuestionnaireStore.getState().goToPrevious(); }); // 1
+        act(() => {
+          useQuestionnaireStore.getState().goToPrevious();
+        }); // 2
+        act(() => {
+          useQuestionnaireStore.getState().goToPrevious();
+        }); // 1
 
         act(() => {
           useQuestionnaireStore.getState().goToNext(); // 2
@@ -458,7 +459,9 @@ describe('useQuestionnaireStore', () => {
         setupHistoryState();
         vi.mocked(questionnaireApi.continueSession).mockResolvedValueOnce(mockContinueResponse);
 
-        act(() => { useQuestionnaireStore.getState().goToPrevious(); }); // 2
+        act(() => {
+          useQuestionnaireStore.getState().goToPrevious();
+        }); // 2
 
         await act(async () => {
           useQuestionnaireStore.getState().goToNext(); // exits review
@@ -492,9 +495,15 @@ describe('useQuestionnaireStore', () => {
 
       it('returns false when at index 0 in review mode', () => {
         setupHistoryState();
-        act(() => { useQuestionnaireStore.getState().goToPrevious(); });
-        act(() => { useQuestionnaireStore.getState().goToPrevious(); });
-        act(() => { useQuestionnaireStore.getState().goToPrevious(); });
+        act(() => {
+          useQuestionnaireStore.getState().goToPrevious();
+        });
+        act(() => {
+          useQuestionnaireStore.getState().goToPrevious();
+        });
+        act(() => {
+          useQuestionnaireStore.getState().goToPrevious();
+        });
 
         expect(useQuestionnaireStore.getState().reviewIndex).toBe(0);
         expect(useQuestionnaireStore.getState().canGoBack()).toBe(false);
@@ -524,7 +533,9 @@ describe('useQuestionnaireStore', () => {
     describe('skipQuestion', () => {
       it('calls goToNext when reviewing', () => {
         setupHistoryState();
-        act(() => { useQuestionnaireStore.getState().goToPrevious(); }); // enter review
+        act(() => {
+          useQuestionnaireStore.getState().goToPrevious();
+        }); // enter review
 
         // Set optional question
         act(() => {

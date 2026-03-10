@@ -306,9 +306,7 @@ describe('billingApi', () => {
         return Promise.reject(new Error(`Unmocked GET: ${url}`));
       });
 
-      await expect(billingApi.createPortalSession()).rejects.toThrow(
-        'No Stripe customer found',
-      );
+      await expect(billingApi.createPortalSession()).rejects.toThrow('No Stripe customer found');
     });
   });
 

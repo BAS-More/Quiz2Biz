@@ -51,7 +51,7 @@ export function TOTPVerification({
     (index: number, value: string) => {
       // Only allow digits
       const digit = value.replace(/\D/g, '').slice(-1);
-      
+
       const newCode = [...code];
       newCode[index] = digit;
       setCode(newCode);
@@ -66,7 +66,7 @@ export function TOTPVerification({
         handleSubmit(newCode.join(''));
       }
     },
-    [code]
+    [code],
   );
 
   // Handle key events
@@ -80,27 +80,30 @@ export function TOTPVerification({
         inputRefs.current[index + 1]?.focus();
       }
     },
-    [code]
+    [code],
   );
 
   // Handle paste
-  const handlePaste = useCallback((e: React.ClipboardEvent) => {
-    e.preventDefault();
-    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
-    const newCode = [...code];
-    for (let i = 0; i < pasted.length; i++) {
-      newCode[i] = pasted[i];
-    }
-    setCode(newCode);
+  const handlePaste = useCallback(
+    (e: React.ClipboardEvent) => {
+      e.preventDefault();
+      const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+      const newCode = [...code];
+      for (let i = 0; i < pasted.length; i++) {
+        newCode[i] = pasted[i];
+      }
+      setCode(newCode);
 
-    // Focus appropriate input
-    if (pasted.length < 6) {
-      inputRefs.current[pasted.length]?.focus();
-    } else {
-      inputRefs.current[5]?.focus();
-      handleSubmit(pasted);
-    }
-  }, [code]);
+      // Focus appropriate input
+      if (pasted.length < 6) {
+        inputRefs.current[pasted.length]?.focus();
+      } else {
+        inputRefs.current[5]?.focus();
+        handleSubmit(pasted);
+      }
+    },
+    [code],
+  );
 
   // Submit handler
   const handleSubmit = useCallback(
@@ -114,7 +117,7 @@ export function TOTPVerification({
         setIsSubmitting(false);
       }
     },
-    [onVerify, isSubmitting, isLoading]
+    [onVerify, isSubmitting, isLoading],
   );
 
   // Manual submit button
@@ -142,7 +145,9 @@ export function TOTPVerification({
         {code.map((digit, index) => (
           <input
             key={index}
-            ref={(el) => { inputRefs.current[index] = el; }}
+            ref={(el) => {
+              inputRefs.current[index] = el;
+            }}
             type="text"
             inputMode="numeric"
             maxLength={1}
@@ -156,7 +161,7 @@ export function TOTPVerification({
               'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500',
               'transition-colors',
               error ? 'border-danger-300 bg-danger-50' : 'border-surface-300 bg-white',
-              loading && 'opacity-50 cursor-not-allowed'
+              loading && 'opacity-50 cursor-not-allowed',
             )}
             autoComplete="one-time-code"
           />

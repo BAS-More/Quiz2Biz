@@ -140,8 +140,7 @@ export function NewProjectFlow() {
         <div>
           <h1 className="text-xl font-bold text-surface-900">New Project</h1>
           <p className="text-sm text-surface-500">
-            Step {step} of 2:{' '}
-            {step === 1 ? 'Choose project type' : 'Name your project'}
+            Step {step} of 2: {step === 1 ? 'Choose project type' : 'Name your project'}
           </p>
         </div>
       </div>
@@ -166,8 +165,8 @@ export function NewProjectFlow() {
       {step === 1 && (
         <div className="space-y-6">
           <p className="text-sm text-surface-600">
-            What kind of project are you working on? This helps us tailor the
-            conversation and documents to your needs.
+            What kind of project are you working on? This helps us tailor the conversation and
+            documents to your needs.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -185,20 +184,14 @@ export function NewProjectFlow() {
                 <div
                   className={clsx(
                     'w-10 h-10 rounded-xl flex items-center justify-center',
-                    selectedType === type.slug
-                      ? 'bg-white/80'
-                      : 'bg-white',
+                    selectedType === type.slug ? 'bg-white/80' : 'bg-white',
                   )}
                 >
                   <type.icon className="h-5 w-5" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-sm font-semibold text-surface-900">
-                    {type.name}
-                  </h3>
-                  <p className="text-xs text-surface-500 mt-0.5">
-                    {type.description}
-                  </p>
+                  <h3 className="text-sm font-semibold text-surface-900">{type.name}</h3>
+                  <p className="text-xs text-surface-500 mt-0.5">{type.description}</p>
                 </div>
               </button>
             ))}
@@ -232,12 +225,8 @@ export function NewProjectFlow() {
                 <selectedTypeInfo.icon className="h-5 w-5 text-brand-600" />
               </div>
               <div>
-                <p className="text-sm font-medium text-surface-900">
-                  {selectedTypeInfo.name}
-                </p>
-                <p className="text-xs text-surface-500">
-                  {selectedTypeInfo.description}
-                </p>
+                <p className="text-sm font-medium text-surface-900">{selectedTypeInfo.name}</p>
+                <p className="text-xs text-surface-500">{selectedTypeInfo.description}</p>
               </div>
             </div>
           </Card>

@@ -77,23 +77,19 @@ export async function sendMessage(
  * SSE streaming chat message
  * Returns an EventSource that emits chunks
  */
-export function streamMessage(
-  projectId: string,
-  content: string,
-  provider?: string,
-): EventSource {
+export function streamMessage(projectId: string, content: string, provider?: string): EventSource {
   const params = new URLSearchParams({ content });
   if (provider) {
     params.append('provider', provider);
   }
-  
+
   // Get the base URL from the API client
   const baseUrl = apiClient.defaults.baseURL || '';
   const url = `${baseUrl}/api/v1/chat/${projectId}/stream?${params.toString()}`;
-  
+
   // Create EventSource with credentials
   const eventSource = new EventSource(url, { withCredentials: true });
-  
+
   return eventSource;
 }
 
@@ -107,12 +103,12 @@ export async function* streamMessageGenerator(
   provider?: string,
 ): AsyncGenerator<{ type: string; content?: string; done?: boolean; error?: string }> {
   const eventSource = streamMessage(projectId, content, provider);
-  
+
   const queue: Array<{ type: string; content?: string; done?: boolean; error?: string }> = [];
   let resolveNext: (() => void) | null = null;
   let isDone = false;
   let error: Error | null = null;
-  
+
   eventSource.onmessage = (event) => {
     try {
       const data = JSON.parse(event.data);
@@ -131,7 +127,7 @@ export async function* streamMessageGenerator(
       eventSource.close();
     }
   };
-  
+
   eventSource.onerror = () => {
     if (!isDone) {
       error = new Error('SSE connection error');
@@ -143,7 +139,7 @@ export async function* streamMessageGenerator(
       }
     }
   };
-  
+
   while (!isDone || queue.length > 0) {
     if (queue.length > 0) {
       yield queue.shift()!;
@@ -153,7 +149,7 @@ export async function* streamMessageGenerator(
       });
     }
   }
-  
+
   if (error) {
     throw error;
   }

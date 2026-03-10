@@ -14,14 +14,9 @@ import { clsx } from 'clsx';
 /** Message bubble component */
 function MessageBubble({ message }: { message: ChatMessage }) {
   const isUser = message.role === 'user';
-  
+
   return (
-    <div
-      className={clsx(
-        'flex gap-3 animate-slide-up',
-        isUser ? 'flex-row-reverse' : 'flex-row',
-      )}
-    >
+    <div className={clsx('flex gap-3 animate-slide-up', isUser ? 'flex-row-reverse' : 'flex-row')}>
       {/* Avatar */}
       <div
         className={clsx(
@@ -33,7 +28,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
       >
         {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
       </div>
-      
+
       {/* Message content */}
       <div
         className={clsx(
@@ -44,12 +39,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
         )}
       >
         <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-        <p
-          className={clsx(
-            'text-xs mt-1.5',
-            isUser ? 'text-brand-200' : 'text-surface-400',
-          )}
-        >
+        <p className={clsx('text-xs mt-1.5', isUser ? 'text-brand-200' : 'text-surface-400')}>
           {new Date(message.createdAt).toLocaleTimeString('en-US', {
             hour: 'numeric',
             minute: '2-digit',
@@ -69,9 +59,18 @@ function TypingIndicator() {
       </div>
       <div className="bg-surface-100 rounded-2xl rounded-tl-md px-4 py-3">
         <div className="flex gap-1">
-          <span className="w-2 h-2 bg-surface-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-          <span className="w-2 h-2 bg-surface-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-          <span className="w-2 h-2 bg-surface-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+          <span
+            className="w-2 h-2 bg-surface-400 rounded-full animate-bounce"
+            style={{ animationDelay: '0ms' }}
+          />
+          <span
+            className="w-2 h-2 bg-surface-400 rounded-full animate-bounce"
+            style={{ animationDelay: '150ms' }}
+          />
+          <span
+            className="w-2 h-2 bg-surface-400 rounded-full animate-bounce"
+            style={{ animationDelay: '300ms' }}
+          />
         </div>
       </div>
     </div>
@@ -98,7 +97,7 @@ function StreamingMessage({ content }: { content: string }) {
 export function ChatPage() {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
-  
+
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [status, setStatus] = useState<ChatStatus | null>(null);
   const [input, setInput] = useState('');
@@ -106,23 +105,23 @@ export function ChatPage() {
   const [isSending, setIsSending] = useState(false);
   const [streamingContent, setStreamingContent] = useState('');
   const [error, setError] = useState<string | null>(null);
-  
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  
+
   // Scroll to bottom when messages change
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
-  
+
   useEffect(() => {
     scrollToBottom();
   }, [messages, streamingContent, scrollToBottom]);
-  
+
   // Load chat history
   useEffect(() => {
     if (!projectId) return;
-    
+
     const loadChat = async () => {
       try {
         setIsLoading(true);
@@ -137,20 +136,20 @@ export function ChatPage() {
         setIsLoading(false);
       }
     };
-    
+
     loadChat();
   }, [projectId]);
-  
+
   // Handle sending message with streaming
   const handleSend = useCallback(async () => {
     if (!projectId || !input.trim() || isSending || status?.isLimitReached) return;
-    
+
     const content = input.trim();
     setInput('');
     setIsSending(true);
     setError(null);
     setStreamingContent('');
-    
+
     // Optimistically add user message
     const userMessage: ChatMessage = {
       id: `temp-${Date.now()}`,
@@ -160,11 +159,11 @@ export function ChatPage() {
       createdAt: new Date().toISOString(),
     };
     setMessages((prev) => [...prev, userMessage]);
-    
+
     try {
       // Use streaming
       let fullContent = '';
-      
+
       for await (const chunk of chatApi.streamMessageGenerator(projectId, content)) {
         if (chunk.type === 'chunk' && chunk.content) {
           fullContent += chunk.content;
@@ -180,7 +179,7 @@ export function ChatPage() {
           };
           setMessages((prev) => [...prev, assistantMessage]);
           setStreamingContent('');
-          
+
           // Update status
           const newStatus = await chatApi.getChatStatus(projectId);
           setStatus(newStatus);
@@ -200,7 +199,7 @@ export function ChatPage() {
       inputRef.current?.focus();
     }
   }, [projectId, input, isSending, status?.isLimitReached]);
-  
+
   // Handle Enter key
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -208,14 +207,14 @@ export function ChatPage() {
       handleSend();
     }
   };
-  
+
   // Auto-resize textarea
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
     e.target.style.height = 'auto';
     e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`;
   };
-  
+
   if (!projectId) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -227,7 +226,7 @@ export function ChatPage() {
       </div>
     );
   }
-  
+
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)]">
       {/* Header */}
@@ -252,15 +251,18 @@ export function ChatPage() {
             </div>
           </div>
         </div>
-        
+
         {status && (
           <div className="flex items-center gap-2">
             <div className="h-2 w-24 bg-surface-100 rounded-full overflow-hidden">
               <div
                 className={clsx(
                   'h-full rounded-full transition-all',
-                  status.remainingMessages > 20 ? 'bg-success-500' :
-                  status.remainingMessages > 10 ? 'bg-warning-500' : 'bg-danger-500',
+                  status.remainingMessages > 20
+                    ? 'bg-success-500'
+                    : status.remainingMessages > 10
+                      ? 'bg-warning-500'
+                      : 'bg-danger-500',
                 )}
                 style={{ width: `${(status.remainingMessages / status.messageLimit) * 100}%` }}
               />
@@ -271,7 +273,7 @@ export function ChatPage() {
           </div>
         )}
       </div>
-      
+
       {/* Messages area */}
       <div className="flex-1 overflow-y-auto py-4 space-y-4">
         {isLoading ? (
@@ -285,11 +287,15 @@ export function ChatPage() {
             </div>
             <h2 className="text-lg font-semibold text-surface-900">Start the conversation</h2>
             <p className="text-sm text-surface-500 mt-2 max-w-md">
-              Tell me about your business idea. I&apos;ll ask follow-up questions to understand 
-              your vision and help you build comprehensive documentation.
+              Tell me about your business idea. I&apos;ll ask follow-up questions to understand your
+              vision and help you build comprehensive documentation.
             </p>
             <div className="mt-6 flex flex-wrap gap-2 justify-center">
-              {['Tell me about your business', 'I have a startup idea', 'Help me with my business plan'].map((suggestion) => (
+              {[
+                'Tell me about your business',
+                'I have a startup idea',
+                'Help me with my business plan',
+              ].map((suggestion) => (
                 <button
                   key={suggestion}
                   onClick={() => setInput(suggestion)}
@@ -311,7 +317,7 @@ export function ChatPage() {
         )}
         <div ref={messagesEndRef} />
       </div>
-      
+
       {/* Error display */}
       {error && (
         <div className="px-4 py-2 bg-danger-50 border border-danger-200 rounded-lg text-sm text-danger-700 flex items-center gap-2">
@@ -325,15 +331,15 @@ export function ChatPage() {
           </button>
         </div>
       )}
-      
+
       {/* Input area */}
       <div className="pt-4 border-t border-surface-100">
         {status?.isLimitReached ? (
           <div className="bg-warning-50 border border-warning-200 rounded-xl p-4 text-center">
             <p className="text-sm text-warning-700 font-medium">Message limit reached</p>
             <p className="text-xs text-warning-600 mt-1">
-              You&apos;ve used all {status.messageLimit} messages for this project.
-              Review your extracted facts and proceed to document generation.
+              You&apos;ve used all {status.messageLimit} messages for this project. Review your
+              extracted facts and proceed to document generation.
             </p>
             <button
               onClick={() => navigate(`/project/${projectId}/documents`)}

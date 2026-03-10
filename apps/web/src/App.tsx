@@ -65,9 +65,7 @@ const HelpPage = lazy(() => import('./pages/help/HelpPage').then((m) => ({ defau
 const IdeaCapturePage = lazy(() =>
   import('./pages/idea-capture/IdeaCapturePage').then((m) => ({ default: m.IdeaCapturePage })),
 );
-const ChatPage = lazy(() =>
-  import('./pages/chat/ChatPage').then((m) => ({ default: m.ChatPage })),
-);
+const ChatPage = lazy(() => import('./pages/chat/ChatPage').then((m) => ({ default: m.ChatPage })));
 const DocumentMenuPage = lazy(() =>
   import('./pages/document-menu/DocumentMenuPage').then((m) => ({ default: m.DocumentMenuPage })),
 );
@@ -96,10 +94,14 @@ const ProfilePage = lazy(() =>
   import('./pages/settings/ProfilePage').then((m) => ({ default: m.ProfilePage })),
 );
 const AnalyticsDashboardPage = lazy(() =>
-  import('./pages/analytics/AnalyticsDashboardPage').then((m) => ({ default: m.AnalyticsDashboardPage })),
+  import('./pages/analytics/AnalyticsDashboardPage').then((m) => ({
+    default: m.AnalyticsDashboardPage,
+  })),
 );
 const SessionComparisonPage = lazy(() =>
-  import('./pages/sessions/SessionComparisonPage').then((m) => ({ default: m.SessionComparisonPage })),
+  import('./pages/sessions/SessionComparisonPage').then((m) => ({
+    default: m.SessionComparisonPage,
+  })),
 );
 
 // Loading fallback for lazy-loaded routes

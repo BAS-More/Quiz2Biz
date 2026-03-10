@@ -77,7 +77,7 @@ export interface RejectDocumentRequest {
  */
 export async function getPendingReviewDocuments(
   page = 1,
-  perPage = 20
+  perPage = 20,
 ): Promise<PaginatedResponse<PendingReviewDocument>> {
   const { data } = await apiClient.get(`${API_PREFIX}/documents/pending-review`, {
     params: { page, perPage },
@@ -88,9 +88,7 @@ export async function getPendingReviewDocuments(
 /**
  * Get a single document for review
  */
-export async function getDocumentForReview(
-  documentId: string
-): Promise<PendingReviewDocument> {
+export async function getDocumentForReview(documentId: string): Promise<PendingReviewDocument> {
   const { data } = await apiClient.get(`${API_PREFIX}/documents/${documentId}`);
   return data;
 }
@@ -100,11 +98,11 @@ export async function getDocumentForReview(
  */
 export async function approveDocument(
   documentId: string,
-  request?: ApproveDocumentRequest
+  request?: ApproveDocumentRequest,
 ): Promise<ReviewDocumentResponse> {
   const { data } = await apiClient.patch(
     `${API_PREFIX}/documents/${documentId}/approve`,
-    request || {}
+    request || {},
   );
   return data;
 }
@@ -114,12 +112,9 @@ export async function approveDocument(
  */
 export async function rejectDocument(
   documentId: string,
-  request: RejectDocumentRequest
+  request: RejectDocumentRequest,
 ): Promise<ReviewDocumentResponse> {
-  const { data } = await apiClient.patch(
-    `${API_PREFIX}/documents/${documentId}/reject`,
-    request
-  );
+  const { data } = await apiClient.patch(`${API_PREFIX}/documents/${documentId}/reject`, request);
   return data;
 }
 
@@ -128,7 +123,7 @@ export async function rejectDocument(
  */
 export async function getDocumentPreviewUrl(documentId: string): Promise<string> {
   const { data } = await apiClient.get<{ url: string }>(
-    `${API_PREFIX}/documents/${documentId}/preview`
+    `${API_PREFIX}/documents/${documentId}/preview`,
   );
   return data.url;
 }
@@ -137,10 +132,9 @@ export async function getDocumentPreviewUrl(documentId: string): Promise<string>
  * Get document download URL
  */
 export async function downloadDocumentForReview(documentId: string): Promise<Blob> {
-  const { data } = await apiClient.get(
-    `${API_PREFIX}/documents/${documentId}/download`,
-    { responseType: 'blob' }
-  );
+  const { data } = await apiClient.get(`${API_PREFIX}/documents/${documentId}/download`, {
+    responseType: 'blob',
+  });
   return data;
 }
 
@@ -158,12 +152,12 @@ export interface BatchReviewResult {
  */
 export async function batchApproveDocuments(
   documentIds: string[],
-  notes?: string
+  notes?: string,
 ): Promise<BatchReviewResult> {
-  const { data } = await apiClient.post(
-    `${API_PREFIX}/documents/batch-approve`,
-    { documentIds, notes }
-  );
+  const { data } = await apiClient.post(`${API_PREFIX}/documents/batch-approve`, {
+    documentIds,
+    notes,
+  });
   return data;
 }
 
@@ -172,11 +166,11 @@ export async function batchApproveDocuments(
  */
 export async function batchRejectDocuments(
   documentIds: string[],
-  reason: string
+  reason: string,
 ): Promise<BatchReviewResult> {
-  const { data } = await apiClient.post(
-    `${API_PREFIX}/documents/batch-reject`,
-    { documentIds, reason }
-  );
+  const { data } = await apiClient.post(`${API_PREFIX}/documents/batch-reject`, {
+    documentIds,
+    reason,
+  });
   return data;
 }

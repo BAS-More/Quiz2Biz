@@ -92,9 +92,7 @@ export const ThemeSection: React.FC<{ className?: string }> = ({ className = '' 
 
   return (
     <div className={`bg-white dark:bg-gray-900 rounded-lg shadow p-6 ${className}`}>
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-        Appearance
-      </h3>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Appearance</h3>
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">

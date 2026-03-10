@@ -170,7 +170,7 @@ export class OpenAIAdapter implements AiAdapter {
         usedFallback: false,
       };
     } catch (error) {
-      this.logger.error(`OpenAI generation failed: ${error}`);
+      this.logger.error(`OpenAI generation failed: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
   }
@@ -245,7 +245,7 @@ export class OpenAIAdapter implements AiAdapter {
         cost: this.calculateCost(usage),
       };
     } catch (error) {
-      this.logger.error(`OpenAI stream failed: ${error}`);
+      this.logger.error(`OpenAI stream failed: ${error instanceof Error ? error.message : String(error)}`);
       yield {
         content: '',
         done: true,

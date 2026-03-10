@@ -48,7 +48,7 @@ export function useTheme(): UseThemeReturn {
   // Listen for system theme changes
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
+
     const handleChange = (e: MediaQueryListEvent) => {
       setSystemPrefersDark(e.matches);
     };
@@ -70,7 +70,7 @@ export function useTheme(): UseThemeReturn {
   // Apply theme to document
   useEffect(() => {
     const root = document.documentElement;
-    
+
     if (resolvedTheme === 'dark') {
       root.classList.add('dark');
       root.style.colorScheme = 'dark';
@@ -113,7 +113,7 @@ export function usePrefersDarkMode(): boolean {
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
+
     const handleChange = (e: MediaQueryListEvent) => {
       setPrefersDark(e.matches);
     };

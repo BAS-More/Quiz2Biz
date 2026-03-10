@@ -202,7 +202,12 @@ apiClient.interceptors.response.use(
   (response) => {
     // Unwrap API response wrapper { success, data, meta } -> data
     // This normalizes backend responses to what frontend expects
-    if (response.data && typeof response.data === 'object' && 'success' in response.data && 'data' in response.data) {
+    if (
+      response.data &&
+      typeof response.data === 'object' &&
+      'success' in response.data &&
+      'data' in response.data
+    ) {
       response.data = response.data.data;
     }
     return response;
@@ -242,7 +247,7 @@ apiClient.interceptors.response.use(
       // This can happen immediately after login due to state synchronization
       if (!originalRequest._authRetry) {
         originalRequest._authRetry = true;
-        
+
         // Try to get token from localStorage directly
         const token = getAuthToken();
         if (token && !originalRequest.headers.Authorization) {

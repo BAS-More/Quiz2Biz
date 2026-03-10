@@ -14,8 +14,8 @@ import {
   UseGuards,
   NotFoundException,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { CurrentUser } from '../../common/decorators/user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/user.decorator';
 import { PrismaService } from '@libs/database';
 import { IsString, IsOptional, IsBoolean } from 'class-validator';
 
@@ -71,9 +71,9 @@ export class FactsController {
     @Param('projectId') projectId: string,
     @CurrentUser() user: JwtUser,
   ): Promise<FactsListResponse> {
-    // Verify project belongs to user
+    // Verify project belongs to user's organization
     const project = await this.prisma.project.findFirst({
-      where: { id: projectId, userId: user.id },
+      where: { id: projectId, organization: { users: { some: { id: user.id } } } },
     });
 
     if (!project) {
@@ -95,7 +95,7 @@ export class FactsController {
       category: f.category ?? 'general',
       confidence: this.decimalToConfidence(f.confidence.toNumber()),
       sourceMessageId: f.sourceMessageId ?? undefined,
-      isVerified: f.isVerified,
+      isVerified: f.confirmedByUser,
       createdAt: f.createdAt,
       updatedAt: f.updatedAt,
     }));
@@ -130,13 +130,16 @@ export class FactsController {
     @Body() dto: UpdateFactDto,
     @CurrentUser() user: JwtUser,
   ): Promise<FactResponse> {
-    // Get fact and verify ownership
-    const fact = await this.prisma.extractedFact.findUnique({
-      where: { id: factId },
+    // Get fact and verify ownership through organization membership
+    const fact = await this.prisma.extractedFact.findFirst({
+      where: {
+        id: factId,
+        project: { organization: { users: { some: { id: user.id } } } },
+      },
       include: { project: true },
     });
 
-    if (!fact || fact.project.userId !== user.id) {
+    if (!fact) {
       throw new NotFoundException('Fact not found');
     }
 
@@ -145,7 +148,7 @@ export class FactsController {
       where: { id: factId },
       data: {
         ...(dto.fieldValue !== undefined && { fieldValue: dto.fieldValue }),
-        ...(dto.isVerified !== undefined && { isVerified: dto.isVerified }),
+        ...(dto.isVerified !== undefined && { confirmedByUser: dto.isVerified }),
       },
     });
 
@@ -157,7 +160,7 @@ export class FactsController {
       category: updated.category ?? 'general',
       confidence: this.decimalToConfidence(updated.confidence.toNumber()),
       sourceMessageId: updated.sourceMessageId ?? undefined,
-      isVerified: updated.isVerified,
+      isVerified: updated.confirmedByUser,
       createdAt: updated.createdAt,
       updatedAt: updated.updatedAt,
     };
@@ -172,13 +175,15 @@ export class FactsController {
     @Param('factId') factId: string,
     @CurrentUser() user: JwtUser,
   ): Promise<void> {
-    // Get fact and verify ownership
-    const fact = await this.prisma.extractedFact.findUnique({
-      where: { id: factId },
-      include: { project: true },
+    // Get fact and verify ownership through organization membership
+    const fact = await this.prisma.extractedFact.findFirst({
+      where: {
+        id: factId,
+        project: { organization: { users: { some: { id: user.id } } } },
+      },
     });
 
-    if (!fact || fact.project.userId !== user.id) {
+    if (!fact) {
       throw new NotFoundException('Fact not found');
     }
 
@@ -196,9 +201,9 @@ export class FactsController {
     @Param('projectId') projectId: string,
     @CurrentUser() user: JwtUser,
   ): Promise<void> {
-    // Verify project belongs to user
+    // Verify project belongs to user's organization
     const project = await this.prisma.project.findFirst({
-      where: { id: projectId, userId: user.id },
+      where: { id: projectId, organization: { users: { some: { id: user.id } } } },
     });
 
     if (!project) {
@@ -207,7 +212,7 @@ export class FactsController {
 
     await this.prisma.extractedFact.updateMany({
       where: { projectId },
-      data: { isVerified: true },
+      data: { confirmedByUser: true },
     });
   }
 

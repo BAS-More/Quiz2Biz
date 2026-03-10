@@ -173,7 +173,8 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
   },
 
   submitResponse: async (sessionId, questionId, value, timeSpent) => {
-    const { currentQuestions, currentSection, questionHistory, isReviewingPrevious, reviewIndex } = get();
+    const { currentQuestions, currentSection, questionHistory, isReviewingPrevious, reviewIndex } =
+      get();
     const currentQuestion = currentQuestions[0];
 
     set({ isLoading: true, error: null });

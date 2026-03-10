@@ -4,18 +4,23 @@ import {
   Get,
   Body,
   Headers,
+  Param,
   Req,
   Query,
   HttpCode,
   HttpStatus,
   BadRequestException,
+  ForbiddenException,
   Logger,
   RawBodyRequest,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/user.decorator';
+import { AuthenticatedUser } from '../auth/auth.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
+import { PrismaService } from '@libs/database';
 import { Request } from 'express';
 import { PaymentService, SubscriptionTier, SUBSCRIPTION_TIERS } from './payment.service';
 import { SubscriptionService } from './subscription.service';
@@ -42,8 +47,27 @@ export class PaymentController {
     private subscriptionService: SubscriptionService,
     private billingService: BillingService,
     private configService: ConfigService,
+    private prisma: PrismaService,
   ) {
     this.webhookSecret = this.configService.get<string>('STRIPE_WEBHOOK_SECRET') || '';
+  }
+
+  /**
+   * Validate that the authenticated user belongs to the specified organization.
+   * Throws ForbiddenException if the user does not have access.
+   */
+  private async validateOrganizationAccess(
+    userId: string,
+    organizationId: string,
+  ): Promise<void> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { organizationId: true },
+    });
+
+    if (!user || user.organizationId !== organizationId) {
+      throw new ForbiddenException('You do not have access to this organization');
+    }
   }
 
   /**
@@ -58,9 +82,14 @@ export class PaymentController {
    * Create checkout session for subscription
    */
   @Post('checkout')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   async createCheckout(
+    @CurrentUser() user: AuthenticatedUser,
     @Body() dto: CreateCheckoutDto,
   ): Promise<{ sessionId: string; url: string }> {
+    await this.validateOrganizationAccess(user.id, dto.organizationId);
+
     return this.paymentService.createCheckoutSession({
       organizationId: dto.organizationId,
       tier: dto.tier as SubscriptionTier,
@@ -74,7 +103,30 @@ export class PaymentController {
    * Create customer portal session
    */
   @Post('portal')
-  async createPortalSession(@Body() dto: CreatePortalSessionDto): Promise<{ url: string }> {
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  async createPortalSession(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: CreatePortalSessionDto,
+  ): Promise<{ url: string }> {
+    // Validate the customer belongs to user's organization via subscription lookup
+    const dbUser = await this.prisma.user.findUnique({
+      where: { id: user.id },
+      select: { organizationId: true },
+    });
+
+    if (!dbUser?.organizationId) {
+      throw new ForbiddenException('User is not associated with an organization');
+    }
+
+    const subscription = await this.subscriptionService.getOrganizationSubscription(
+      dbUser.organizationId,
+    );
+
+    if (subscription.stripeCustomerId !== dto.customerId) {
+      throw new ForbiddenException('You do not have access to this billing account');
+    }
+
     const url = await this.paymentService.createPortalSession(dto.customerId, dto.returnUrl);
     return { url };
   }
@@ -86,12 +138,11 @@ export class PaymentController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   async getSubscription(
-    @Req() req: Request & { params: { organizationId: string } },
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('organizationId') organizationId: string,
   ): Promise<SubscriptionResponseDto> {
-    const subscription = await this.subscriptionService.getOrganizationSubscription(
-      req.params.organizationId,
-    );
-    return subscription;
+    await this.validateOrganizationAccess(user.id, organizationId);
+    return this.subscriptionService.getOrganizationSubscription(organizationId);
   }
 
   /**
@@ -101,12 +152,31 @@ export class PaymentController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   async getInvoices(
-    @Req() req: Request & { params: { customerId: string } },
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('customerId') customerId: string,
     @Query('limit') limit?: string,
   ): Promise<InvoiceResponseDto[]> {
+    // Validate user owns this customer via their organization's subscription
+    const dbUser = await this.prisma.user.findUnique({
+      where: { id: user.id },
+      select: { organizationId: true },
+    });
+
+    if (!dbUser?.organizationId) {
+      throw new ForbiddenException('User is not associated with an organization');
+    }
+
+    const subscription = await this.subscriptionService.getOrganizationSubscription(
+      dbUser.organizationId,
+    );
+
+    if (subscription.stripeCustomerId !== customerId) {
+      throw new ForbiddenException('You do not have access to this billing account');
+    }
+
     const parsedLimit = limit ? parseInt(limit, 10) : undefined;
     const safeLimit = Number.isFinite(parsedLimit) ? parsedLimit : undefined;
-    return this.billingService.getInvoices(req.params.customerId, safeLimit);
+    return this.billingService.getInvoices(customerId, safeLimit);
   }
 
   /**
@@ -115,13 +185,16 @@ export class PaymentController {
   @Get('usage/:organizationId')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
-  async getUsage(@Req() req: Request & { params: { organizationId: string } }): Promise<{
+  async getUsage(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('organizationId') organizationId: string,
+  ): Promise<{
     questionnaires: { used: number; limit: number };
     responses: { used: number; limit: number };
     documents: { used: number; limit: number };
     apiCalls: { used: number; limit: number };
   }> {
-    const organizationId = req.params.organizationId;
+    await this.validateOrganizationAccess(user.id, organizationId);
 
     const [usage, subscription] = await Promise.all([
       this.billingService.getUsageStats(organizationId),
@@ -157,9 +230,11 @@ export class PaymentController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   async cancelSubscription(
-    @Req() req: Request & { params: { organizationId: string } },
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('organizationId') organizationId: string,
   ): Promise<{ message: string }> {
-    const organizationId = req.params.organizationId;
+    await this.validateOrganizationAccess(user.id, organizationId);
+
     const subscription = await this.subscriptionService.getOrganizationSubscription(organizationId);
 
     if (!subscription.stripeSubscriptionId) {
@@ -178,9 +253,11 @@ export class PaymentController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   async resumeSubscription(
-    @Req() req: Request & { params: { organizationId: string } },
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('organizationId') organizationId: string,
   ): Promise<{ message: string }> {
-    const organizationId = req.params.organizationId;
+    await this.validateOrganizationAccess(user.id, organizationId);
+
     const subscription = await this.subscriptionService.getOrganizationSubscription(organizationId);
 
     if (!subscription.stripeSubscriptionId) {

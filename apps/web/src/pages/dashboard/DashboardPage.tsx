@@ -175,9 +175,7 @@ export function DashboardPage() {
   }, [loadProjects]);
 
   // Filter projects by status
-  const activeProjects = projects.filter(
-    (p) => p.status === 'DRAFT' || p.status === 'ACTIVE',
-  );
+  const activeProjects = projects.filter((p) => p.status === 'DRAFT' || p.status === 'ACTIVE');
   const completedProjects = projects.filter((p) => p.status === 'COMPLETED');
 
   // Calculate quality scores
@@ -339,7 +337,9 @@ export function DashboardPage() {
                       <div className="flex items-center gap-4 flex-1 min-w-0">
                         {/* Project type avatar */}
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-100 to-accent-100 flex items-center justify-center text-brand-700 text-xs font-bold shrink-0">
-                          {(project.projectTypeName ?? project.name ?? 'P').slice(0, 2).toUpperCase()}
+                          {(project.projectTypeName ?? project.name ?? 'P')
+                            .slice(0, 2)
+                            .toUpperCase()}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">

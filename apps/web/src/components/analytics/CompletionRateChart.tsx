@@ -14,24 +14,19 @@ interface CompletionRateChartProps {
   height?: number;
 }
 
-export function CompletionRateChart({
-  data,
-  height = 250,
-}: CompletionRateChartProps) {
+export function CompletionRateChart({ data, height = 250 }: CompletionRateChartProps) {
   // Calculate chart dimensions and scales
   const chartData = useMemo(() => {
     if (!data.length) return { maxValue: 0, bars: [] };
 
-    const maxValue = Math.max(
-      ...data.map((d) => d.completed + d.abandoned)
-    );
+    const maxValue = Math.max(...data.map((d) => d.completed + d.abandoned));
 
     const bars = data.map((d) => ({
       date: d.date,
       completed: d.completed,
       abandoned: d.abandoned,
       total: d.completed + d.abandoned,
-      completionRate: d.completed / (d.completed + d.abandoned) * 100,
+      completionRate: (d.completed / (d.completed + d.abandoned)) * 100,
     }));
 
     return { maxValue, bars };
@@ -52,10 +47,7 @@ export function CompletionRateChart({
 
   if (!data.length) {
     return (
-      <div
-        style={{ height }}
-        className="flex items-center justify-center text-surface-400"
-      >
+      <div style={{ height }} className="flex items-center justify-center text-surface-400">
         No data available
       </div>
     );
@@ -80,9 +72,7 @@ export function CompletionRateChart({
         </div>
         <div className="text-sm">
           <span className="text-surface-500">Avg. Rate: </span>
-          <span className="font-semibold text-success-600">
-            {avgCompletionRate.toFixed(1)}%
-          </span>
+          <span className="font-semibold text-success-600">{avgCompletionRate.toFixed(1)}%</span>
         </div>
       </div>
 
@@ -91,11 +81,7 @@ export function CompletionRateChart({
         {/* Y-axis grid lines */}
         <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
           {[100, 75, 50, 25, 0].map((pct) => (
-            <div
-              key={pct}
-              className="flex items-center"
-              style={{ height: 0 }}
-            >
+            <div key={pct} className="flex items-center" style={{ height: 0 }}>
               <span className="w-8 text-xs text-surface-400 text-right pr-2">
                 {Math.round((chartData.maxValue * pct) / 100)}
               </span>
@@ -105,16 +91,10 @@ export function CompletionRateChart({
         </div>
 
         {/* Bars */}
-        <div
-          className="absolute left-8 right-0 bottom-6 top-0 flex items-end"
-        >
+        <div className="absolute left-8 right-0 bottom-6 top-0 flex items-end">
           {chartData.bars.map((bar, _index) => {
-            const totalHeight =
-              chartData.maxValue > 0
-                ? (bar.total / chartData.maxValue) * 100
-                : 0;
-            const completedHeight =
-              bar.total > 0 ? (bar.completed / bar.total) * 100 : 0;
+            const totalHeight = chartData.maxValue > 0 ? (bar.total / chartData.maxValue) * 100 : 0;
+            const completedHeight = bar.total > 0 ? (bar.completed / bar.total) * 100 : 0;
 
             return (
               <div
@@ -164,11 +144,7 @@ export function CompletionRateChart({
         {/* X-axis labels */}
         <div className="absolute left-8 right-0 bottom-0 flex text-xs text-surface-400">
           {chartData.bars.map((bar, index) => (
-            <div
-              key={bar.date}
-              className="text-center truncate"
-              style={{ width: `${barWidth}%` }}
-            >
+            <div key={bar.date} className="text-center truncate" style={{ width: `${barWidth}%` }}>
               {index % Math.ceil(data.length / 7) === 0 && formatDate(bar.date)}
             </div>
           ))}

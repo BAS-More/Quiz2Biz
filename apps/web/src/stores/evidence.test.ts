@@ -113,9 +113,7 @@ describe('useEvidenceStore', () => {
     });
 
     it('handles Error object', async () => {
-      vi.mocked(questionnaireApi.listEvidence).mockRejectedValueOnce(
-        new Error('Timeout'),
-      );
+      vi.mocked(questionnaireApi.listEvidence).mockRejectedValueOnce(new Error('Timeout'));
 
       await act(async () => {
         await useEvidenceStore.getState().loadEvidence('session-1');
@@ -149,19 +147,14 @@ describe('useEvidenceStore', () => {
 
     it('logs warning on stats load failure', async () => {
       const { logger } = await import('../lib/logger');
-      vi.mocked(questionnaireApi.getEvidenceStats).mockRejectedValueOnce(
-        new Error('Not found'),
-      );
+      vi.mocked(questionnaireApi.getEvidenceStats).mockRejectedValueOnce(new Error('Not found'));
 
       await act(async () => {
         await useEvidenceStore.getState().loadStats('session-1');
       });
 
       expect(useEvidenceStore.getState().stats).toBeNull();
-      expect(logger.warn).toHaveBeenCalledWith(
-        'Failed to load evidence stats:',
-        expect.any(Error),
-      );
+      expect(logger.warn).toHaveBeenCalledWith('Failed to load evidence stats:', expect.any(Error));
     });
   });
 

@@ -19,8 +19,14 @@ import {
 import { Card, Badge } from '../../components/ui';
 import { CompletionRateChart } from '../../components/analytics/CompletionRateChart';
 import { UserGrowthChart } from '../../components/analytics/UserGrowthChart';
-import { RetentionChart, generateMockRetentionData } from '../../components/analytics/RetentionChart';
-import { DropOffFunnelChart, generateMockDropOffData } from '../../components/analytics/DropOffFunnelChart';
+import {
+  RetentionChart,
+  generateMockRetentionData,
+} from '../../components/analytics/RetentionChart';
+import {
+  DropOffFunnelChart,
+  generateMockDropOffData,
+} from '../../components/analytics/DropOffFunnelChart';
 import clsx from 'clsx';
 import { apiClient } from '../../api/client';
 
@@ -147,9 +153,7 @@ function MetricCard({
         <div>
           <p className="text-sm text-surface-500 font-medium">{title}</p>
           <p className="text-2xl font-bold text-surface-900 mt-1">{value}</p>
-          {subtitle && (
-            <p className="text-xs text-surface-400 mt-1">{subtitle}</p>
-          )}
+          {subtitle && <p className="text-xs text-surface-400 mt-1">{subtitle}</p>}
         </div>
         <div className={clsx('p-2 rounded-lg bg-surface-100', iconColor)}>
           <Icon className="h-5 w-5" />
@@ -165,7 +169,7 @@ function MetricCard({
           <span
             className={clsx(
               'text-sm font-medium',
-              isPositive ? 'text-success-600' : 'text-danger-600'
+              isPositive ? 'text-success-600' : 'text-danger-600',
             )}
           >
             {isPositive ? '+' : ''}
@@ -204,7 +208,7 @@ function TimeRangeSelector({ value, onChange }: TimeRangeSelectorProps) {
             'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
             value === key
               ? 'bg-white text-surface-900 shadow-sm'
-              : 'text-surface-500 hover:text-surface-700'
+              : 'text-surface-500 hover:text-surface-700',
           )}
         >
           {label}
@@ -236,27 +240,17 @@ function DocumentMetricsTable({ data }: DocumentMetricsTableProps) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-surface-200">
-              <th className="text-left py-3 px-2 font-medium text-surface-600">
-                Document Type
-              </th>
-              <th className="text-right py-3 px-2 font-medium text-surface-600">
-                Generated
-              </th>
-              <th className="text-right py-3 px-2 font-medium text-surface-600">
-                Revenue
-              </th>
-              <th className="text-right py-3 px-2 font-medium text-surface-600">
-                Share
-              </th>
+              <th className="text-left py-3 px-2 font-medium text-surface-600">Document Type</th>
+              <th className="text-right py-3 px-2 font-medium text-surface-600">Generated</th>
+              <th className="text-right py-3 px-2 font-medium text-surface-600">Revenue</th>
+              <th className="text-right py-3 px-2 font-medium text-surface-600">Share</th>
             </tr>
           </thead>
           <tbody>
             {data.map((item, index) => (
               <tr
                 key={item.type}
-                className={clsx(
-                  index !== data.length - 1 && 'border-b border-surface-100'
-                )}
+                className={clsx(index !== data.length - 1 && 'border-b border-surface-100')}
               >
                 <td className="py-3 px-2 text-surface-900">{item.type}</td>
                 <td className="py-3 px-2 text-right text-surface-700">
@@ -332,9 +326,7 @@ export function AnalyticsDashboardPage() {
             <BarChart3 className="h-6 w-6 text-brand-600" />
             Analytics Dashboard
           </h1>
-          <p className="text-surface-500 mt-1">
-            Track your key metrics and business performance
-          </p>
+          <p className="text-surface-500 mt-1">Track your key metrics and business performance</p>
         </div>
         <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
       </div>
@@ -414,12 +406,14 @@ export function AnalyticsDashboardPage() {
           </div>
           <div className="p-4 bg-surface-50 rounded-lg">
             <p className="text-sm text-surface-500">Week over Week</p>
-            <p className={clsx(
-              'text-xl font-bold',
-              analytics.userRegistrationTrends.weekOverWeekChange >= 0
-                ? 'text-success-600'
-                : 'text-danger-600'
-            )}>
+            <p
+              className={clsx(
+                'text-xl font-bold',
+                analytics.userRegistrationTrends.weekOverWeekChange >= 0
+                  ? 'text-success-600'
+                  : 'text-danger-600',
+              )}
+            >
               {analytics.userRegistrationTrends.weekOverWeekChange >= 0 ? '+' : ''}
               {analytics.userRegistrationTrends.weekOverWeekChange}%
             </p>
@@ -427,12 +421,14 @@ export function AnalyticsDashboardPage() {
           </div>
           <div className="p-4 bg-surface-50 rounded-lg">
             <p className="text-sm text-surface-500">Month over Month</p>
-            <p className={clsx(
-              'text-xl font-bold',
-              analytics.userRegistrationTrends.monthOverMonthChange >= 0
-                ? 'text-success-600'
-                : 'text-danger-600'
-            )}>
+            <p
+              className={clsx(
+                'text-xl font-bold',
+                analytics.userRegistrationTrends.monthOverMonthChange >= 0
+                  ? 'text-success-600'
+                  : 'text-danger-600',
+              )}
+            >
               {analytics.userRegistrationTrends.monthOverMonthChange >= 0 ? '+' : ''}
               {analytics.userRegistrationTrends.monthOverMonthChange}%
             </p>

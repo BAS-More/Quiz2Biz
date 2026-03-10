@@ -82,7 +82,7 @@ export class AiGatewayService implements OnModuleInit {
         `Loaded ${providers.length} provider configs, default: ${this.defaultProvider}`,
       );
     } catch (error) {
-      this.logger.error(`Failed to load provider configs: ${error}`);
+      this.logger.error(`Failed to load provider configs: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
