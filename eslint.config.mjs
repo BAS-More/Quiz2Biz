@@ -75,9 +75,9 @@ export default tseslint.config(
       'curly': ['error', 'all'],
 
       // Complexity enforcement (ISO/IEC 5055 compliance)
-      'complexity': ['warn', { max: 15 }],  // Cyclomatic complexity
+      'complexity': ['error', { max: 15 }],  // Cyclomatic complexity
       'max-depth': ['warn', { max: 4 }],    // Max nesting depth
-      'max-lines-per-function': ['warn', { max: 50, skipBlankLines: true, skipComments: true }],
+      'max-lines-per-function': ['error', { max: 50, skipBlankLines: true, skipComments: true }],
       'max-params': ['warn', { max: 4 }],   // Max function parameters
 
       // Naming conventions
@@ -98,7 +98,7 @@ export default tseslint.config(
 
   // Test files - relaxed rules
   {
-    files: ['**/*.spec.ts', '**/*.e2e-spec.ts', '**/*.test.ts', '**/*.test.tsx', '**/test/**/*.ts', '**/e2e/**/*.ts', '**/tests/**/*.ts'],
+    files: ['**/*.spec.ts', '**/*.e2e-spec.ts', '**/*.test.ts', '**/*.test.tsx', '**/test/**/*.ts', '**/e2e/**/*.ts', '**/tests/**/*.ts', '**/__tests__/**/*.ts'],
     rules: {
       ...relaxedTypeCheckRules,
       '@typescript-eslint/unbound-method': 'off',
@@ -108,6 +108,8 @@ export default tseslint.config(
       '@typescript-eslint/await-thenable': 'off',
       'no-console': 'off',
       'no-duplicate-imports': 'off',
+      'max-lines-per-function': 'off',  // Test files are legitimately large
+      'complexity': 'off',              // Test setup can be complex
     },
   },
 
@@ -120,19 +122,19 @@ export default tseslint.config(
     },
   },
 
-  // API - relaxed rules
+  // API - targeted relaxations (type-safety rules restored to base config warn level)
   {
     files: ['apps/api/**/*.ts'],
     rules: {
-      ...relaxedTypeCheckRules,
+      // Keep only rules that are legitimately needed for NestJS patterns
       '@typescript-eslint/no-misused-promises': 'off',
       '@typescript-eslint/prefer-as-const': 'off',
       '@typescript-eslint/await-thenable': 'off',
+      '@typescript-eslint/no-require-imports': 'off', // Dynamic require for legacy modules
       'no-console': 'off',
       'no-duplicate-imports': 'off',
       'no-constant-condition': 'off',
       'no-useless-assignment': 'off',
-      '@typescript-eslint/no-require-imports': 'off',
     },
   },
 

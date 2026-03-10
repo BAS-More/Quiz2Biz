@@ -17,6 +17,7 @@ export const nqsCommand = new Command('nqs')
   .option('-d, --dimension <key>', 'Filter by dimension')
   .option('-p, --persona <type>', 'Filter by persona (CTO, CFO, CEO, BA, POLICY)')
   .option('-j, --json', 'Output as JSON')
+  // eslint-disable-next-line max-lines-per-function -- CLI command handler, refactor tracked in GAP-A5
   .action(async (sessionId: string | undefined, options) => {
     const config = new Config();
     const targetSessionId = sessionId || config.get('defaultSession');

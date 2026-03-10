@@ -95,7 +95,9 @@
       "^.+\\.(t|j)s$": [
         "ts-jest",
         {
-          "diagnostics": false,
+          "diagnostics": {
+            "warnOnly": true
+          },
           "isolatedModules": true
         }
       ]
