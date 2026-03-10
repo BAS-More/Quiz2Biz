@@ -14,7 +14,7 @@ export class CreateIdeaDto {
     message: 'Please provide at least a brief description of your idea (10+ characters).',
   })
   @MaxLength(10000)
-  rawInput: string;
+  rawInput!: string;
 
   @ApiPropertyOptional({
     description: 'Optional title for the idea',

@@ -57,7 +57,7 @@ export const HeatmapColors = {
 export class GenerateHeatmapDto {
   @ApiProperty({ description: 'Session ID to generate heatmap for' })
   @IsUUID()
-  sessionId: string;
+  sessionId!: string;
 }
 
 /**
@@ -80,22 +80,22 @@ export class HeatmapCellsQueryDto {
  */
 export class HeatmapCellDto {
   @ApiProperty({ description: 'Dimension ID' })
-  dimensionId: string;
+  dimensionId!: string;
 
   @ApiProperty({ description: 'Dimension key' })
-  dimensionKey: string;
+  dimensionKey!: string;
 
   @ApiProperty({ description: 'Severity bucket (Low, Medium, High, Critical)' })
-  severityBucket: SeverityBucket;
+  severityBucket!: SeverityBucket;
 
   @ApiProperty({ description: 'Cell value: Sum(Severity × (1 - Coverage))' })
-  cellValue: number;
+  cellValue!: number;
 
   @ApiProperty({ description: 'Color code based on residual risk' })
-  colorCode: HeatmapColor;
+  colorCode!: HeatmapColor;
 
   @ApiProperty({ description: 'Number of questions in this cell' })
-  questionCount: number;
+  questionCount!: number;
 
   constructor(data: Partial<HeatmapCellDto>) {
     Object.assign(this, data);
@@ -107,22 +107,22 @@ export class HeatmapCellDto {
  */
 export class HeatmapSummaryDto {
   @ApiProperty({ description: 'Total number of cells in heatmap' })
-  totalCells: number;
+  totalCells!: number;
 
   @ApiProperty({ description: 'Count of green cells (low risk)' })
-  greenCells: number;
+  greenCells!: number;
 
   @ApiProperty({ description: 'Count of amber cells (moderate risk)' })
-  amberCells: number;
+  amberCells!: number;
 
   @ApiProperty({ description: 'Count of red cells (high risk)' })
-  redCells: number;
+  redCells!: number;
 
   @ApiProperty({ description: 'Count of critical severity gaps with red color' })
-  criticalGapCount: number;
+  criticalGapCount!: number;
 
   @ApiProperty({ description: 'Overall risk score (sum of all cell values)' })
-  overallRiskScore: number;
+  overallRiskScore!: number;
 }
 
 /**
@@ -130,22 +130,22 @@ export class HeatmapSummaryDto {
  */
 export class HeatmapResultDto {
   @ApiProperty({ description: 'Session ID' })
-  sessionId: string;
+  sessionId!: string;
 
   @ApiProperty({ type: [HeatmapCellDto], description: 'Heatmap cells' })
-  cells: HeatmapCellDto[];
+  cells!: HeatmapCellDto[];
 
   @ApiProperty({ type: [String], description: 'List of dimension names' })
-  dimensions: string[];
+  dimensions!: string[];
 
   @ApiProperty({ type: [String], description: 'Severity bucket order' })
-  severityBuckets: string[];
+  severityBuckets!: string[];
 
   @ApiProperty({ type: HeatmapSummaryDto, description: 'Summary statistics' })
-  summary: HeatmapSummaryDto;
+  summary!: HeatmapSummaryDto;
 
   @ApiProperty({ description: 'Timestamp when heatmap was generated' })
-  generatedAt: Date;
+  generatedAt!: Date;
 }
 
 /**
@@ -153,25 +153,25 @@ export class HeatmapResultDto {
  */
 export class HeatmapDrilldownDto {
   @ApiProperty({ description: 'Dimension key' })
-  dimensionKey: string;
+  dimensionKey!: string;
 
   @ApiProperty({ description: 'Dimension display name' })
-  dimensionName: string;
+  dimensionName!: string;
 
   @ApiProperty({ description: 'Severity bucket (Low, Medium, High, Critical)' })
-  severityBucket: SeverityBucket | string;
+  severityBucket!: SeverityBucket | string;
 
   @ApiProperty({ description: 'Cell value: Sum(Severity × (1 - Coverage))' })
-  cellValue: number;
+  cellValue!: number;
 
   @ApiProperty({ description: 'Color code based on residual risk' })
-  colorCode: HeatmapColor;
+  colorCode!: HeatmapColor;
 
   @ApiProperty({ description: 'Number of questions in this cell' })
-  questionCount: number;
+  questionCount!: number;
 
   @ApiProperty({ description: 'Questions contributing to this cell' })
-  questions: Array<{
+  questions!: Array<{
     questionId: string;
     questionText: string;
     severity: number;

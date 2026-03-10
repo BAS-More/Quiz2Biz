@@ -61,7 +61,7 @@ export function decimalToCoverageLevel(value: number): CoverageLevelDto {
 export class QuestionCoverageInput {
   @ApiProperty({ description: 'Question ID' })
   @IsUUID()
-  questionId: string;
+  questionId!: string;
 
   @ApiPropertyOptional({
     description: 'Coverage level (5-level discrete scale) - PREFERRED over numeric coverage',
@@ -92,7 +92,7 @@ export class QuestionCoverageInput {
     // Otherwise normalize the decimal to nearest level
     return COVERAGE_LEVEL_VALUES[decimalToCoverageLevel(value)];
   })
-  coverage: number;
+  coverage!: number;
 }
 
 /**
@@ -101,7 +101,7 @@ export class QuestionCoverageInput {
 export class CalculateScoreDto {
   @ApiProperty({ description: 'Session ID to calculate score for' })
   @IsUUID()
-  sessionId: string;
+  sessionId!: string;
 
   @ApiPropertyOptional({
     description: 'Optional override of coverage values (for simulations)',
@@ -119,16 +119,16 @@ export class CalculateScoreDto {
  */
 export class DimensionResidual {
   @ApiProperty({ description: 'Dimension key', example: 'arch_sec' })
-  dimensionKey: string;
+  dimensionKey!: string;
 
   @ApiProperty({ description: 'Dimension display name', example: 'Architecture & Security' })
-  displayName: string;
+  displayName!: string;
 
   @ApiProperty({
     description: 'Dimension weight W_d',
     example: 0.15,
   })
-  weight: number;
+  weight!: number;
 
   @ApiProperty({
     description: 'Residual risk R_d = Σ(S_i × (1-C_i)) / (Σ S_i + ε)',
@@ -136,22 +136,22 @@ export class DimensionResidual {
     maximum: 1,
     example: 0.234,
   })
-  residualRisk: number;
+  residualRisk!: number;
 
   @ApiProperty({
     description: 'Weighted contribution to portfolio risk: W_d × R_d',
     example: 0.0351,
   })
-  weightedContribution: number;
+  weightedContribution!: number;
 
   @ApiProperty({ description: 'Number of questions in this dimension' })
-  questionCount: number;
+  questionCount!: number;
 
   @ApiProperty({ description: 'Number of answered questions' })
-  answeredCount: number;
+  answeredCount!: number;
 
   @ApiProperty({ description: 'Average coverage across dimension' })
-  averageCoverage: number;
+  averageCoverage!: number;
 }
 
 /**
@@ -159,7 +159,7 @@ export class DimensionResidual {
  */
 export class ReadinessScoreResult {
   @ApiProperty({ description: 'Session ID' })
-  sessionId: string;
+  sessionId!: string;
 
   @ApiProperty({
     description: 'Overall readiness score: 100 × (1 - R)',
@@ -167,7 +167,7 @@ export class ReadinessScoreResult {
     maximum: 100,
     example: 78.5,
   })
-  score: number;
+  score!: number;
 
   @ApiProperty({
     description: 'Portfolio residual risk R = Σ(W_d × R_d)',
@@ -175,32 +175,32 @@ export class ReadinessScoreResult {
     maximum: 1,
     example: 0.215,
   })
-  portfolioResidual: number;
+  portfolioResidual!: number;
 
   @ApiProperty({
     description: 'Per-dimension breakdown',
     type: [DimensionResidual],
   })
-  dimensions: DimensionResidual[];
+  dimensions!: DimensionResidual[];
 
   @ApiProperty({ description: 'Total questions in questionnaire' })
-  totalQuestions: number;
+  totalQuestions!: number;
 
   @ApiProperty({ description: 'Total answered questions' })
-  answeredQuestions: number;
+  answeredQuestions!: number;
 
   @ApiProperty({ description: 'Overall completion percentage' })
-  completionPercentage: number;
+  completionPercentage!: number;
 
   @ApiProperty({ description: 'Timestamp when score was calculated' })
-  calculatedAt: Date;
+  calculatedAt!: Date;
 
   @ApiProperty({
     description: 'Score trend compared to previous calculation',
     enum: ['UP', 'DOWN', 'STABLE', 'FIRST'],
     example: 'UP',
   })
-  trend: 'UP' | 'DOWN' | 'STABLE' | 'FIRST';
+  trend!: 'UP' | 'DOWN' | 'STABLE' | 'FIRST';
 }
 
 /**
@@ -209,7 +209,7 @@ export class ReadinessScoreResult {
 export class NextQuestionsDto {
   @ApiProperty({ description: 'Session ID' })
   @IsUUID()
-  sessionId: string;
+  sessionId!: string;
 
   @ApiPropertyOptional({
     description: 'Maximum number of questions to return',
@@ -226,52 +226,52 @@ export class NextQuestionsDto {
  */
 export class PrioritizedQuestion {
   @ApiProperty({ description: 'Question ID' })
-  questionId: string;
+  questionId!: string;
 
   @ApiProperty({ description: 'Question text' })
-  text: string;
+  text!: string;
 
   @ApiProperty({ description: 'Dimension key' })
-  dimensionKey: string;
+  dimensionKey!: string;
 
   @ApiProperty({ description: 'Dimension display name' })
-  dimensionName: string;
+  dimensionName!: string;
 
   @ApiProperty({
     description: 'Severity S_i of this question',
     minimum: 0,
     maximum: 1,
   })
-  severity: number;
+  severity!: number;
 
   @ApiProperty({
     description: 'Current coverage C_i (decimal)',
     minimum: 0,
     maximum: 1,
   })
-  currentCoverage: number;
+  currentCoverage!: number;
 
   @ApiProperty({
     description: 'Current coverage level (5-level discrete scale)',
     enum: CoverageLevelDto,
   })
-  currentCoverageLevel: CoverageLevelDto;
+  currentCoverageLevel!: CoverageLevelDto;
 
   @ApiProperty({
     description: 'Expected score improvement if C_i reaches 1.0 (ΔScore)',
     example: 2.5,
   })
-  expectedScoreLift: number;
+  expectedScoreLift!: number;
 
   @ApiProperty({
     description: 'Human-readable rationale for prioritization',
   })
-  rationale: string;
+  rationale!: string;
 
   @ApiProperty({
     description: 'Priority rank (1 = highest priority)',
   })
-  rank: number;
+  rank!: number;
 }
 
 /**
@@ -279,19 +279,19 @@ export class PrioritizedQuestion {
  */
 export class NextQuestionsResult {
   @ApiProperty({ description: 'Session ID' })
-  sessionId: string;
+  sessionId!: string;
 
   @ApiProperty({ description: 'Current readiness score' })
-  currentScore: number;
+  currentScore!: number;
 
   @ApiProperty({
     description: 'Prioritized questions by score impact',
     type: [PrioritizedQuestion],
   })
-  questions: PrioritizedQuestion[];
+  questions!: PrioritizedQuestion[];
 
   @ApiProperty({
     description: 'Maximum possible score if all returned questions reach full coverage',
   })
-  maxPotentialScore: number;
+  maxPotentialScore!: number;
 }

@@ -18,11 +18,11 @@ const QuestionTypeValues = Object.values(QuestionType);
 export class QuestionOptionDto {
   @ApiProperty({ example: 'option_1' })
   @IsString()
-  value: string;
+  value!: string;
 
   @ApiProperty({ example: 'Option 1' })
   @IsString()
-  label: string;
+  label!: string;
 
   @ApiPropertyOptional({ example: 'Additional description for option' })
   @IsOptional()
@@ -34,11 +34,11 @@ export class CreateQuestionDto {
   @ApiProperty({ example: 'What is your company name?' })
   @IsString()
   @MaxLength(1000)
-  text: string;
+  text!: string;
 
   @ApiProperty({ enum: QuestionTypeValues, enumName: 'QuestionType', example: 'TEXT' })
   @IsEnum(QuestionType)
-  type: QuestionType;
+  type!: QuestionType;
 
   @ApiPropertyOptional({ example: 'Enter the legal name of your company' })
   @IsOptional()

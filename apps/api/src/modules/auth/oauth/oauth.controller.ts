@@ -25,15 +25,15 @@ interface AuthenticatedRequest extends Request {
  * DTOs for OAuth operations
  */
 class GoogleAuthDto {
-  idToken: string;
+  idToken!: string;
 }
 
 class MicrosoftAuthDto {
-  accessToken: string;
+  accessToken!: string;
 }
 
 class LinkAccountDto {
-  provider: OAuthProvider;
+  provider!: OAuthProvider;
   idToken?: string;
   accessToken?: string;
 }

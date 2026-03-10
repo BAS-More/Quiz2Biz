@@ -8,16 +8,16 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CriteriaScoreDto {
   @ApiProperty({ description: 'Criterion key' })
-  criterionKey: string;
+  criterionKey!: string;
 
   @ApiProperty({ description: 'Criterion description' })
-  criterionDescription: string;
+  criterionDescription!: string;
 
   @ApiProperty({ description: 'Whether criterion is met' })
-  met: boolean;
+  met!: boolean;
 
   @ApiProperty({ description: 'Confidence level (0-1)' })
-  confidence: number;
+  confidence!: number;
 
   @ApiPropertyOptional({ description: 'Source fact key' })
   sourceFactKey?: string;
@@ -25,75 +25,75 @@ export class CriteriaScoreDto {
 
 export class DimensionScoreDto {
   @ApiProperty({ description: 'Dimension ID' })
-  dimensionId: string;
+  dimensionId!: string;
 
   @ApiProperty({ description: 'Dimension name' })
-  dimensionName: string;
+  dimensionName!: string;
 
   @ApiProperty({ description: 'Dimension weight' })
-  weight: number;
+  weight!: number;
 
   @ApiProperty({ description: 'Dimension score (0-100)' })
-  score: number;
+  score!: number;
 
   @ApiProperty({ description: 'Completeness (0-1)' })
-  completeness: number;
+  completeness!: number;
 
   @ApiProperty({ description: 'Criteria scores', type: [CriteriaScoreDto] })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CriteriaScoreDto)
-  criteriaScores: CriteriaScoreDto[];
+  criteriaScores!: CriteriaScoreDto[];
 }
 
 export class ProjectQualityScoreDto {
   @ApiProperty({ description: 'Project ID' })
-  projectId: string;
+  projectId!: string;
 
   @ApiProperty({ description: 'Overall quality score (0-100)' })
-  overallScore: number;
+  overallScore!: number;
 
   @ApiProperty({ description: 'Completeness score (0-100)' })
-  completenessScore: number;
+  completenessScore!: number;
 
   @ApiProperty({ description: 'Confidence score (0-100)' })
-  confidenceScore: number;
+  confidenceScore!: number;
 
   @ApiProperty({ description: 'Dimension scores', type: [DimensionScoreDto] })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => DimensionScoreDto)
-  dimensionScores: DimensionScoreDto[];
+  dimensionScores!: DimensionScoreDto[];
 
   @ApiProperty({ description: 'Improvement recommendations' })
   @IsArray()
   @IsString({ each: true })
-  recommendations: string[];
+  recommendations!: string[];
 
   @ApiProperty({ description: 'Score calculation timestamp' })
-  scoredAt: Date;
+  scoredAt!: Date;
 }
 
 export class QualityImprovementDto {
   @ApiProperty({ description: 'Dimension ID' })
-  dimensionId: string;
+  dimensionId!: string;
 
   @ApiProperty({ description: 'Dimension name' })
-  dimensionName: string;
+  dimensionName!: string;
 
   @ApiProperty({ description: 'Current score (0-100)' })
-  currentScore: number;
+  currentScore!: number;
 
   @ApiProperty({ description: 'Potential score after improvement' })
-  potentialScore: number;
+  potentialScore!: number;
 
   @ApiProperty({ description: 'Missing criteria descriptions' })
   @IsArray()
   @IsString({ each: true })
-  missingCriteria: string[];
+  missingCriteria!: string[];
 
   @ApiProperty({ description: 'Suggested follow-up questions' })
   @IsArray()
   @IsString({ each: true })
-  suggestedQuestions: string[];
+  suggestedQuestions!: string[];
 }

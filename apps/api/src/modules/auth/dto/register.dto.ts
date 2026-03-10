@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class RegisterDto {
   @ApiProperty({ example: 'user@example.com' })
   @IsEmail({}, { message: 'Invalid email format' })
-  email: string;
+  email!: string;
 
   @ApiProperty({ example: 'SecureP@ss123!', minLength: 12 })
   @IsString()
@@ -14,11 +14,11 @@ export class RegisterDto {
     message:
       'Password must contain at least one lowercase letter, one uppercase letter, and one number',
   })
-  password: string;
+  password!: string;
 
   @ApiProperty({ example: 'John Doe' })
   @IsString()
   @MinLength(2, { message: 'Name must be at least 2 characters long' })
   @MaxLength(100)
-  name: string;
+  name!: string;
 }

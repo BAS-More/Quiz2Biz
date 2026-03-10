@@ -15,15 +15,15 @@ export enum EmailType {
 export class SendEmailDto {
   @ApiProperty({ description: 'Recipient email address' })
   @IsEmail()
-  to: string;
+  to!: string;
 
   @ApiProperty({ description: 'Email subject' })
   @IsString()
-  subject: string;
+  subject!: string;
 
   @ApiProperty({ enum: EmailType, description: 'Type of email template to use' })
   @IsEnum(EmailType)
-  type: EmailType;
+  type!: EmailType;
 
   @ApiPropertyOptional({ description: 'Dynamic data to populate the template' })
   @IsOptional()
@@ -43,12 +43,12 @@ export class SendEmailDto {
 
 export class BulkSendEmailDto {
   @ApiProperty({ type: [SendEmailDto], description: 'Array of emails to send' })
-  emails: SendEmailDto[];
+  emails!: SendEmailDto[];
 }
 
 export class EmailResponseDto {
   @ApiProperty({ description: 'Whether the email was sent successfully' })
-  success: boolean;
+  success!: boolean;
 
   @ApiPropertyOptional({ description: 'Message ID from email provider' })
   messageId?: string;
@@ -57,8 +57,8 @@ export class EmailResponseDto {
   error?: string;
 
   @ApiProperty({ description: 'Recipient email address' })
-  to: string;
+  to!: string;
 
   @ApiProperty({ description: 'Timestamp when email was sent/attempted' })
-  timestamp: Date;
+  timestamp!: Date;
 }

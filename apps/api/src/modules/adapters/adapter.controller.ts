@@ -32,10 +32,10 @@ import { AdapterConfigService, AdapterType, AdapterConfig, GitHubAdapterConfig, 
 
 // DTOs
 class CreateAdapterConfigDto {
-  type: AdapterType;
-  name: string;
-  enabled: boolean;
-  config: Record<string, unknown>;
+  type!: AdapterType;
+  name!: string;
+  enabled!: boolean;
+  config!: Record<string, unknown>;
 }
 
 class UpdateAdapterConfigDto {
@@ -45,13 +45,13 @@ class UpdateAdapterConfigDto {
 }
 
 class SyncAdapterDto {
-  sessionId: string;
+  sessionId!: string;
   options?: Record<string, unknown>;
 }
 
 class TestAdapterConnectionDto {
-  type: AdapterType;
-  config: Record<string, unknown>;
+  type!: AdapterType;
+  config!: Record<string, unknown>;
 }
 
 @ApiTags('Adapters')

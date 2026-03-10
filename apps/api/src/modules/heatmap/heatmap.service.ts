@@ -346,7 +346,7 @@ export class HeatmapService {
     const responses = await this.prisma.response.findMany({
       where: { sessionId },
       take: 500,
-      orderBy: { createdAt: 'asc' },
+      orderBy: { answeredAt: 'asc' },
     });
 
     return { session, dimensions, questions, responses };

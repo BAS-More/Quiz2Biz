@@ -8,15 +8,15 @@ import {
 } from '../services/conversation.service';
 
 class SubmitAnswerDto {
-  questionId: string;
-  questionText: string;
-  answerText: string;
-  dimensionContext: string;
+  questionId!: string;
+  questionText!: string;
+  answerText!: string;
+  dimensionContext!: string;
 }
 
 class FollowUpAnswerDto {
-  questionId: string;
-  content: string;
+  questionId!: string;
+  content!: string;
 }
 
 @ApiTags('conversation')

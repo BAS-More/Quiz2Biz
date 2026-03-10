@@ -133,7 +133,8 @@ export class ApprovalGuard implements CanActivate {
 
     // Check route params
     if (request.params?.[paramName]) {
-      return request.params[paramName];
+      const value = request.params[paramName];
+      return Array.isArray(value) ? value[0] : value;
     }
 
     // Check body

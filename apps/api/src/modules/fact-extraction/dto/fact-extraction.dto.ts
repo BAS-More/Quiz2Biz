@@ -9,11 +9,11 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class ExtractedFactDto {
   @ApiProperty({ description: 'Fact key/identifier' })
   @IsString()
-  key: string;
+  key!: string;
 
   @ApiProperty({ description: 'Extracted fact value' })
   @IsString()
-  value: string;
+  value!: string;
 
   @ApiProperty({ 
     description: 'Fact category',
@@ -21,14 +21,14 @@ export class ExtractedFactDto {
            'product_service', 'strategy', 'risk_assessment', 'technology', 'legal_compliance'],
   })
   @IsString()
-  category: string;
+  category!: string;
 
   @ApiProperty({ 
     description: 'Confidence level',
     enum: ['high', 'medium', 'low'],
   })
   @IsString()
-  confidence: string;
+  confidence!: string;
 
   @ApiPropertyOptional({ description: 'Source message ID' })
   @IsOptional()
@@ -46,25 +46,25 @@ export class TriggerExtractionDto {
 export class UpdateFactDto {
   @ApiProperty({ description: 'New fact value' })
   @IsString()
-  value: string;
+  value!: string;
 }
 
 export class FactValidationResultDto {
   @ApiProperty({ description: 'Whether all required facts are present' })
-  isValid: boolean;
+  isValid!: boolean;
 
   @ApiProperty({ description: 'List of missing required fact keys' })
   @IsArray()
   @IsString({ each: true })
-  missingRequired: string[];
+  missingRequired!: string[];
 
   @ApiProperty({ description: 'List of low confidence fact keys' })
   @IsArray()
   @IsString({ each: true })
-  lowConfidenceFacts: string[];
+  lowConfidenceFacts!: string[];
 
   @ApiProperty({ description: 'Completeness score (0-100)' })
-  completenessScore: number;
+  completenessScore!: number;
 }
 
 export class ExtractFactsResponseDto {
@@ -72,11 +72,11 @@ export class ExtractFactsResponseDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ExtractedFactDto)
-  facts: ExtractedFactDto[];
+  facts!: ExtractedFactDto[];
 
   @ApiProperty({ description: 'Processing time in milliseconds' })
-  processingTimeMs: number;
+  processingTimeMs!: number;
 
   @ApiProperty({ description: 'Tokens used for extraction' })
-  tokensUsed: number;
+  tokensUsed!: number;
 }

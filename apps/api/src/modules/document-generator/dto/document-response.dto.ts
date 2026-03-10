@@ -7,45 +7,45 @@ const DocumentStatusValues = Object.values(DocumentStatus);
 
 export class DocumentTypeResponseDto {
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty()
-  name: string;
+  name!: string;
 
   @ApiProperty()
-  slug: string;
+  slug!: string;
 
   @ApiPropertyOptional({ nullable: true })
-  description: string | null;
+  description!: string | null;
 
   @ApiProperty({ enum: DocumentCategoryValues, enumName: 'DocumentCategory' })
-  category: DocumentCategory;
+  category!: DocumentCategory;
 
   @ApiProperty({ type: [String], description: 'Supported output formats' })
-  outputFormats: string[];
+  outputFormats!: string[];
 
   @ApiPropertyOptional({ nullable: true })
-  estimatedPages: number | null;
+  estimatedPages!: number | null;
 
   @ApiProperty()
-  isActive: boolean;
+  isActive!: boolean;
 }
 
 export class DocumentResponseDto {
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty()
-  sessionId: string;
+  sessionId!: string;
 
   @ApiProperty()
-  documentTypeId: string;
+  documentTypeId!: string;
 
   @ApiProperty({ enum: DocumentStatusValues, enumName: 'DocumentStatus' })
-  status: DocumentStatus;
+  status!: DocumentStatus;
 
   @ApiProperty()
-  format: string;
+  format!: string;
 
   @ApiPropertyOptional()
   fileName?: string;
@@ -54,16 +54,16 @@ export class DocumentResponseDto {
   fileSize?: string;
 
   @ApiProperty()
-  version: number;
+  version!: number;
 
   @ApiPropertyOptional()
   generatedAt?: Date;
 
   @ApiProperty()
-  createdAt: Date;
+  createdAt!: Date;
 
   @ApiProperty()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @ApiPropertyOptional({ type: DocumentTypeResponseDto })
   documentType?: DocumentTypeResponseDto;
@@ -74,10 +74,10 @@ export class DownloadUrlResponseDto {
     description: 'Secure download URL with SAS token',
     example: 'https://storage.blob.core.windows.net/documents/...',
   })
-  url: string;
+  url!: string;
 
   @ApiProperty({
     description: 'URL expiration time',
   })
-  expiresAt: Date;
+  expiresAt!: Date;
 }

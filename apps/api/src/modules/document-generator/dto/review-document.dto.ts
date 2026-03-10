@@ -8,7 +8,7 @@ export class RejectDocumentDto {
   })
   @IsString()
   @MaxLength(1000)
-  reason: string;
+  reason!: string;
 }
 
 export class ApproveDocumentDto {

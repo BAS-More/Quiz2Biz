@@ -16,18 +16,18 @@ export class VerifyMfaCodeDto {
   @Matches(/^[A-Z0-9]{6,8}$/i, {
     message: 'Code must be 6 digits (TOTP) or 8 characters (backup code)',
   })
-  code: string;
+  code!: string;
 }
 
 export class MfaSetupResponseDto {
   @ApiProperty({ description: 'Base32 encoded TOTP secret' })
-  secret: string;
+  secret!: string;
 
   @ApiProperty({ description: 'QR code as data URL for scanning' })
-  qrCodeDataUrl: string;
+  qrCodeDataUrl!: string;
 
   @ApiProperty({ description: 'Secret formatted for manual entry' })
-  manualEntryKey: string;
+  manualEntryKey!: string;
 }
 
 export class BackupCodesResponseDto {
@@ -36,21 +36,21 @@ export class BackupCodesResponseDto {
     type: [String],
     example: ['ABC12345', 'DEF67890'],
   })
-  backupCodes: string[];
+  backupCodes!: string[];
 }
 
 export class MfaStatusResponseDto {
   @ApiProperty({ description: 'Whether MFA is enabled' })
-  enabled: boolean;
+  enabled!: boolean;
 
   @ApiProperty({ description: 'Number of remaining backup codes' })
-  backupCodesCount: number;
+  backupCodesCount!: number;
 }
 
 export class MfaLoginRequiredDto {
   @ApiProperty({ description: 'Temporary token for MFA verification' })
-  mfaToken: string;
+  mfaToken!: string;
 
   @ApiProperty({ description: 'Message indicating MFA is required' })
-  message: string;
+  message!: string;
 }
