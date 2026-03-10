@@ -84,6 +84,7 @@ export class FactsController {
     const facts = await this.prisma.extractedFact.findMany({
       where: { projectId },
       orderBy: [{ category: 'asc' }, { fieldName: 'asc' }],
+      take: 1000,
     });
 
     // Transform to response format

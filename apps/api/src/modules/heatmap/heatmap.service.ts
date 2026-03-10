@@ -311,6 +311,7 @@ export class HeatmapService {
     const dimensions = await this.prisma.dimensionCatalog.findMany({
       where: dimensionWhere,
       orderBy: { orderIndex: 'asc' },
+      take: 200,
     });
 
     // Filter questions by session persona
@@ -322,10 +323,14 @@ export class HeatmapService {
         dimensionKey: { not: null },
         ...(session.persona && { persona: session.persona }),
       },
+      take: 500,
+      orderBy: { id: 'asc' },
     });
 
     const responses = await this.prisma.response.findMany({
       where: { sessionId },
+      take: 500,
+      orderBy: { createdAt: 'asc' },
     });
 
     return { session, dimensions, questions, responses };

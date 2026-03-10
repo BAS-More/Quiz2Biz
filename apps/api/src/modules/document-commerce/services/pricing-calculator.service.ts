@@ -113,12 +113,15 @@ export class PricingCalculatorService {
     const documentTypes = await this.prisma.documentType.findMany({
       where: { isActive: true },
       orderBy: { sortOrder: 'asc' },
+      take: 100,
     });
 
     // Get purchased documents for this project
     const purchases = await this.prisma.documentPurchase.findMany({
       where: { projectId },
       include: { documentType: true, generatedDocument: true },
+      take: 200,
+      orderBy: { createdAt: 'desc' },
     });
 
     // Calculate quality score from project

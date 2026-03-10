@@ -37,7 +37,7 @@ export function getAppInsightsConfig(): AppInsightsConfig {
     instrumentationKey: process.env.APPINSIGHTS_INSTRUMENTATIONKEY || '',
     cloudRole: process.env.AZURE_CLOUD_ROLE || 'quiz-to-build-api',
     cloudRoleInstance: process.env.HOSTNAME || 'local-dev',
-    samplingPercentage: isProd ? 100 : 50, // Sample all requests in prod
+    samplingPercentage: isProd ? 75 : 50, // 75% in prod for cost optimization (GAP-P5)
     enableAutoCollect: {
       requests: true,
       performance: true,

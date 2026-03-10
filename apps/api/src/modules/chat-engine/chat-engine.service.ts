@@ -311,6 +311,7 @@ export class ChatEngineService {
         role: true,
         content: true,
       },
+      take: 200,
     });
 
     return messages.map((m: { role: string; content: string }) => ({

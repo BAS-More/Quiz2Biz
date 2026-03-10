@@ -364,7 +364,7 @@ model Questionnaire {
   publishedAt   DateTime? @map("published_at")
 
   projectType ProjectType? @relation(fields: [projectTypeId], references: [id], onDelete: SetNull)
-  createdBy   User?        @relation("QuestionnaireCreator", fields: [createdById], references: [id])
+  createdBy   User?        @relation("QuestionnaireCreator", fields: [createdById], references: [id], onDelete: SetNull)
   sections    Section[]
   sessions    Session[]
 
@@ -473,7 +473,7 @@ model Question {
   updatedAt        DateTime     @updatedAt @map("updated_at")
 
   section          Section          @relation(fields: [sectionId], references: [id], onDelete: Cascade)
-  dimension        DimensionCatalog? @relation(fields: [dimensionKey], references: [key])
+  dimension        DimensionCatalog? @relation(fields: [dimensionKey], references: [key], onDelete: SetNull)
   visibilityRules  VisibilityRule[]
   responses        Response[]
   currentSessions  Session[]        @relation("CurrentQuestion")
@@ -529,6 +529,7 @@ model Session {
   lastScoreCalculation DateTime?     @map("last_score_calculation")
   
   startedAt            DateTime      @default(now()) @map("started_at")
+  updatedAt            DateTime      @updatedAt @map("updated_at")
   lastActivityAt       DateTime      @default(now()) @map("last_activity_at")
   completedAt          DateTime?     @map("completed_at")
   expiresAt            DateTime?     @map("expires_at")
@@ -536,9 +537,9 @@ model Session {
   user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   projectType     ProjectType?  @relation(fields: [projectTypeId], references: [id], onDelete: SetNull)
   ideaCapture     IdeaCapture?  @relation(fields: [ideaCaptureId], references: [id], onDelete: SetNull)
-  questionnaire   Questionnaire @relation(fields: [questionnaireId], references: [id])
-  currentSection  Section?      @relation("CurrentSection", fields: [currentSectionId], references: [id])
-  currentQuestion Question?     @relation("CurrentQuestion", fields: [currentQuestionId], references: [id])
+  questionnaire   Questionnaire @relation(fields: [questionnaireId], references: [id], onDelete: Restrict)
+  currentSection  Section?      @relation("CurrentSection", fields: [currentSectionId], references: [id], onDelete: SetNull)
+  currentQuestion Question?     @relation("CurrentQuestion", fields: [currentQuestionId], references: [id], onDelete: SetNull)
   responses       Response[]
   documents       Document[]
   evidenceItems   EvidenceRegistry[]
@@ -594,7 +595,7 @@ model Response {
   updatedAt        DateTime @updatedAt @map("updated_at")
 
   session  Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  question Question @relation(fields: [questionId], references: [id])
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
   @@unique([sessionId, questionId])
   @@index([sessionId])
@@ -660,8 +661,8 @@ model EvidenceRegistry {
   updatedAt     DateTime     @updatedAt @map("updated_at")
 
   session  Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  question Question @relation(fields: [questionId], references: [id])
-  verifier User?    @relation("EvidenceVerifier", fields: [verifierId], references: [id])
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  verifier User?    @relation("EvidenceVerifier", fields: [verifierId], references: [id], onDelete: SetNull)
   ciArtifacts CIArtifact[]
 
   @@index([sessionId])
@@ -692,7 +693,7 @@ model DecisionLog {
   // Note: No updatedAt - append-only, decisions are never modified
 
   session    Session      @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  owner      User         @relation("DecisionOwner", fields: [ownerId], references: [id])
+  owner      User         @relation("DecisionOwner", fields: [ownerId], references: [id], onDelete: SetNull)
   supersedes DecisionLog? @relation("DecisionSupersession", fields: [supersedesDecisionId], references: [id])
   supersededBy DecisionLog[] @relation("DecisionSupersession")
 
@@ -761,8 +762,8 @@ model Document {
   updatedAt          DateTime       @updatedAt @map("updated_at")
 
   session      Session      @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  documentType DocumentType @relation(fields: [documentTypeId], references: [id])
-  approvedBy   User?        @relation("DocumentApprover", fields: [approvedById], references: [id])
+  documentType DocumentType @relation(fields: [documentTypeId], references: [id], onDelete: Restrict)
+  approvedBy   User?        @relation("DocumentApprover", fields: [approvedById], references: [id], onDelete: SetNull)
 
   @@index([sessionId])
   @@index([documentTypeId])
@@ -787,7 +788,7 @@ model AuditLog {
   requestId    String?  @map("request_id")
   createdAt    DateTime @default(now()) @map("created_at")
 
-  user User? @relation(fields: [userId], references: [id])
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([action])
@@ -1067,7 +1068,7 @@ model GeneratedDocument {
   updatedAt       DateTime       @updatedAt @map("updated_at")
 
   project      Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  documentType DocumentType @relation("Quiz2BizDocuments", fields: [documentTypeId], references: [id])
+  documentType DocumentType @relation("Quiz2BizDocuments", fields: [documentTypeId], references: [id], onDelete: Restrict)
   aiProvider   AiProvider?  @relation(fields: [aiProviderId], references: [id], onDelete: SetNull)
   payment      Payment?
 

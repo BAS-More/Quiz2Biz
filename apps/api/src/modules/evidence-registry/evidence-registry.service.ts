@@ -281,6 +281,7 @@ export class EvidenceRegistryService {
     const evidenceList = await this.prisma.evidenceRegistry.findMany({
       where,
       orderBy: { createdAt: 'desc' },
+      take: 500,
     });
 
     return evidenceList.map((e: EvidenceRegistry) => this.mapToResponse(e));
@@ -298,6 +299,7 @@ export class EvidenceRegistryService {
     const evidence = await this.prisma.evidenceRegistry.findMany({
       where: { sessionId },
       select: { verified: true, artifactType: true },
+      take: 500,
     });
 
     const byType: Record<string, number> = {};
@@ -609,6 +611,7 @@ export class EvidenceRegistryService {
         createdAt: true,
         status: true,
       },
+      take: 500,
     });
 
     const auditTrail: EvidenceAuditEntry[] = [
@@ -716,6 +719,8 @@ export class EvidenceRegistryService {
           },
         },
       },
+      take: 500,
+      orderBy: { createdAt: 'asc' },
     });
 
     const byDimension = new Map<string, DimensionEvidenceSummary>();

@@ -111,6 +111,8 @@ export class FactExtractionService {
     // Get existing facts to avoid duplicates
     const existingFactRecords = await this.prisma.extractedFact.findMany({
       where: { projectId },
+      take: 1000,
+      orderBy: { createdAt: 'asc' },
     });
 
     const existingFacts: ExtractedFactData[] = existingFactRecords.map((f: ExtractedFact) => ({
@@ -187,6 +189,7 @@ export class FactExtractionService {
     const facts = await this.prisma.extractedFact.findMany({
       where: { projectId },
       orderBy: [{ category: 'asc' }, { fieldName: 'asc' }],
+      take: 1000,
     });
 
     return facts.map((f: ExtractedFact) => ({

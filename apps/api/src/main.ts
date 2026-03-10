@@ -13,8 +13,9 @@ import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { Logger as PinoLogger } from 'nestjs-pino';
 import helmet from 'helmet';
+import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, json, urlencoded } from 'express';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
@@ -38,6 +39,9 @@ async function bootstrap(): Promise<void> {
   const port = configService.get<number>('PORT', 3000);
   const apiPrefix = configService.get<string>('API_PREFIX', 'api/v1');
   const nodeEnv = configService.get<string>('NODE_ENV', 'development');
+
+  // HTTP compression middleware (GAP-P2) — gzip/brotli for response bodies
+  app.use(compression());
 
   // Security middleware with CSP configuration for React SPA
   app.use(
@@ -80,6 +84,7 @@ async function bootstrap(): Promise<void> {
           baseUri: ["'self'"],
           formAction: ["'self'"],
           frameAncestors: ["'self'"],
+          reportUri: ['/api/v1/csp-report'],
           upgradeInsecureRequests: nodeEnv === 'production' ? [] : null,
         },
       },
@@ -145,6 +150,10 @@ async function bootstrap(): Promise<void> {
 
   // Cookie parser for CSRF tokens
   app.use(cookieParser());
+
+  // Request body size limits (GAP-S2) — prevent oversized payload attacks
+  app.use(json({ limit: '1mb' }));
+  app.use(urlencoded({ limit: '1mb', extended: true }));
 
   // CORS configuration - parse comma-separated origins and handle credentials properly
   const corsOrigin = configService.get<string>('CORS_ORIGIN', '*');

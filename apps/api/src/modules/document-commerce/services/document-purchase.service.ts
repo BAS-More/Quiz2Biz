@@ -218,6 +218,7 @@ export class DocumentPurchaseService {
         project: true,
       },
       orderBy: { createdAt: 'desc' },
+      take: 200,
     });
 
     return purchases.map((p) => ({

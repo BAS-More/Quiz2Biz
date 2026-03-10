@@ -479,6 +479,8 @@ export class AuthService {
         userId,
         revokedAt: null,
       },
+      take: 100,
+      orderBy: { createdAt: 'desc' },
     });
 
     // Remove from Redis and mark as revoked in DB

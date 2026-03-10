@@ -50,6 +50,8 @@ export class AiGatewayService implements OnModuleInit {
     try {
       const providers = await this.prisma.aiProvider.findMany({
         where: { isActive: true },
+        take: 50,
+        orderBy: { slug: 'asc' },
       });
 
       for (const provider of providers) {

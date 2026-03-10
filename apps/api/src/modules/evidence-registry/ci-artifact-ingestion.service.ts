@@ -603,6 +603,7 @@ export class CIArtifactIngestionService {
     const evidenceItems = await this.prisma.evidenceRegistry.findMany({
       where: { sessionId },
       orderBy: { createdAt: 'desc' },
+      take: 500,
     });
 
     // Filter and map evidence items that have CI artifact metadata
@@ -641,6 +642,8 @@ export class CIArtifactIngestionService {
     // Query evidence records and filter by buildId in metadata
     const evidenceItems = await this.prisma.evidenceRegistry.findMany({
       where: { sessionId },
+      take: 500,
+      orderBy: { createdAt: 'desc' },
     });
 
     // Type assertion for metadata access

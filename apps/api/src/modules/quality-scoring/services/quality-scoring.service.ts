@@ -53,6 +53,7 @@ export class QualityScoringService {
     const dimensions = await this.prisma.qualityDimension.findMany({
       where: { projectTypeId: projectType.id },
       orderBy: { weight: 'desc' },
+      take: 200,
     });
 
     if (dimensions.length === 0) {
@@ -63,6 +64,8 @@ export class QualityScoringService {
     // Get extracted facts for the project
     const facts = await this.prisma.extractedFact.findMany({
       where: { projectId },
+      take: 1000,
+      orderBy: { createdAt: 'asc' },
     });
 
     // Calculate dimension scores
