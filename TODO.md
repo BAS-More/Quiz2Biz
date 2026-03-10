@@ -938,6 +938,13 @@ Alternatively: Visit https://github.com/Avi-Bendetsky/Quiz-to-build/settings/sec
   - Resolve security vulnerabilities
   - Test for breaking changes
   - Update Prisma to latest version
+  - [ ] **NestJS Major Version Upgrade (v10 -> v11)** -- Future Sprint
+    - **Trigger:** When `@nestjs/swagger` releases a version compatible with NestJS 10, OR when the team is ready to migrate to NestJS 11
+    - **Current state:** `@nestjs/common@10.4.22`, `@nestjs/core@10.4.22`, `@nestjs/swagger@7.4.2`
+    - **Target:** `@nestjs/common@^11`, `@nestjs/core@^11`, `@nestjs/swagger@11.2.6`, `@nestjs/schematics@11.0.9`
+    - **Why deferred:** Swagger 11.x requires NestJS 11 (`@nestjs/common@^11.0.1`). Upgrading is a full framework migration (2-5 days), not justified while lodash/ajv vulns are resolved via overrides.
+    - **Interim fix applied:** `package.json` overrides pin `lodash@4.17.23` and `ajv@8.18.0` (0 audit vulnerabilities)
+    - **Effort:** 2-5 days (framework migration + full regression)
 
 - [ ] **Architecture Refactoring**
   - Evaluate microservices split opportunities

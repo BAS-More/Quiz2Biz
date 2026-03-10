@@ -96,8 +96,24 @@ jobs:
           fi
       
       - name: Hardcoded Secrets Scan
+        run: |
+          echo "Scanning for hardcoded secrets..."
+          SECRETS_FOUND=0
+
+          # Check for AWS access keys
+          if grep -rn 'AKIA[0-9A-Z]\{16\}' apps/ libs/ --include='*.ts' --include='*.js' 2>/dev/null; then
+            echo "::warning::Potential AWS access key found"
+            SECRETS_FOUND=$((SECRETS_FOUND + 1))
+          fi
+
+          # Check for hardcoded passwords (exclude test files)
+          if grep -rn 'password\s*=\s*[\x27"][^\x27"]*[\x27"]' apps/ libs/ --include='*.ts' --include='*.js' 2>/dev/null | grep -v 'test' | grep -v 'spec' | grep -v 'mock'; then
+            echo "::warning::Potential hardcoded password found"
+            SECRETS_FOUND=$((SECRETS_FOUND + 1))
+          fi
+
           echo "Secrets scan complete."
-          
+
           if [ "$SECRETS_FOUND" -gt 0 ]; then
             echo "::error::Security scan failed: potential secrets or cloud credentials detected."
             exit 1
