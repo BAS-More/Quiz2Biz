@@ -211,9 +211,7 @@ describe('FeatureFlagService', () => {
   });
 
   it('should initialize with default flags', () => {
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('Initialized with'),
-    );
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Initialized with'));
   });
 
   describe('getBooleanFlag', () => {

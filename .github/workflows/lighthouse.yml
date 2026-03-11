@@ -57,20 +57,20 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            
+
             // Find the manifest file
             const manifestPath = '.lighthouseci/manifest.json';
             if (!fs.existsSync(manifestPath)) {
               console.log('No manifest found');
               return;
             }
-            
+
             const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-            
+
             let comment = '## Lighthouse Performance Report\n\n';
             comment += '| URL | Performance | Accessibility | Best Practices | SEO |\n';
             comment += '|-----|-------------|---------------|----------------|-----|\n';
-            
+
             for (const result of manifest) {
               const summary = result.summary;
               const url = new URL(result.url).pathname || '/';
@@ -84,10 +84,10 @@ jobs:
               
               comment += `| ${url} | ${emoji(perf)} ${perf} | ${emoji(a11y)} ${a11y} | ${emoji(bp)} ${bp} | ${emoji(seo)} ${seo} |\n`;
             }
-            
+
             comment += '\n**Targets:** Performance ≥90, Accessibility ≥90, Best Practices ≥90, SEO ≥85\n';
             comment += '\n[Full Report](https://htmlpreview.github.io/?https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.lighthouseci/report.html)';
-            
+
             // Post as PR comment if this is a PR
             if (context.payload.pull_request) {
               await github.rest.issues.createComment({
@@ -97,7 +97,7 @@ jobs:
                 body: comment
               });
             }
-            
+
             // Always output to summary
             await core.summary.addRaw(comment).write();
 

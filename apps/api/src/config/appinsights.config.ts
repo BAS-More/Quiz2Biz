@@ -109,7 +109,10 @@ export function initializeAppInsights(): void {
       `Application Insights initialized: role=${config.cloudRole}, instance=${config.cloudRoleInstance}`,
     );
   } catch (error) {
-    logger.error('Failed to initialize Application Insights:', error instanceof Error ? error.stack : String(error));
+    logger.error(
+      'Failed to initialize Application Insights:',
+      error instanceof Error ? error.stack : String(error),
+    );
   }
 }
 
@@ -565,7 +568,13 @@ export function createRequestTrackingMiddleware() {
       const durationMs = Date.now() - startTime;
       const userId = req.user?.id;
 
-      trackEndpointUsage({ endpoint: req.path, method: req.method, statusCode: res.statusCode, durationMs, userId });
+      trackEndpointUsage({
+        endpoint: req.path,
+        method: req.method,
+        statusCode: res.statusCode,
+        durationMs,
+        userId,
+      });
 
       // Track slow requests (>500ms)
       if (durationMs > 500) {

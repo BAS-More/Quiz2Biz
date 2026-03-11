@@ -5,11 +5,7 @@
  * under various failure conditions.
  */
 
-import {
-  ChaosMeshExperiment,
-  ChaosMeshKind,
-  ExperimentResult,
-} from './chaos-engineering.config';
+import { ChaosMeshExperiment, ChaosMeshKind, ExperimentResult } from './chaos-engineering.config';
 
 // =============================================================================
 // FAILURE INJECTION TYPES

@@ -18,7 +18,7 @@ jobs:
   dora-metrics:
     name: Calculate DORA Metrics
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -48,7 +48,7 @@ jobs:
     name: SonarQube Analysis
     runs-on: ubuntu-latest
     if: ${{ vars.SONAR_ENABLED == 'true' }}
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -85,7 +85,7 @@ jobs:
   maintainability-check:
     name: Maintainability Index Check
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -103,12 +103,12 @@ jobs:
         run: |
           echo "## Maintainability Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           # Run ESLint complexity check
           npx eslint apps/api/src --rule '{"complexity": ["warn", 15]}' --format json > complexity-report.json 2>/dev/null || true
-          
+
           COMPLEX_COUNT=$(jq '[.[] | .messages[] | select(.ruleId == "complexity")] | length' complexity-report.json 2>/dev/null || echo "0")
-          
+
           echo "| Metric | Value | Threshold | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|--------|-------|-----------|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| High Complexity Functions | ${COMPLEX_COUNT:-0} | 0 | $([ "${COMPLEX_COUNT:-0}" -eq 0 ] && echo '✅' || echo '⚠️') |" >> $GITHUB_STEP_SUMMARY

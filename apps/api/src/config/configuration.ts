@@ -33,9 +33,7 @@ function validateJwtSecrets(): void {
   const jwtSecret = process.env.JWT_SECRET || '';
   const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET || '';
   if (jwtSecret.includes('change-in-production') || jwtSecret.length < 32) {
-    throw new Error(
-      'FATAL: JWT_SECRET must be a strong random value (>=32 chars) in production',
-    );
+    throw new Error('FATAL: JWT_SECRET must be a strong random value (>=32 chars) in production');
   }
   if (jwtRefreshSecret.includes('change-in-production') || jwtRefreshSecret.length < 32) {
     throw new Error(

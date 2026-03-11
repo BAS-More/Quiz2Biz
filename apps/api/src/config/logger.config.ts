@@ -8,7 +8,10 @@ import { Params } from 'nestjs-pino';
  */
 export function buildLoggerConfig(configService: ConfigService): Params {
   const nodeEnv = configService.get<string>('NODE_ENV', 'development');
-  const logLevel = configService.get<string>('LOG_LEVEL', nodeEnv === 'production' ? 'info' : 'debug');
+  const logLevel = configService.get<string>(
+    'LOG_LEVEL',
+    nodeEnv === 'production' ? 'info' : 'debug',
+  );
   const isProduction = nodeEnv === 'production';
 
   return {

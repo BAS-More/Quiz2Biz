@@ -37,7 +37,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -101,9 +101,9 @@ jobs:
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --query properties.configuration.ingress.fqdn \
             -o tsv)
-          
+
           echo "Application URL: https://${APP_URL}"
-          
+
           # Wait for app to be ready
           ATTEMPT=1
           MAX_ATTEMPTS=10
@@ -123,18 +123,18 @@ jobs:
             echo "❌ Deployment verification failed after retries"
             exit 1
           fi
-          
+
           # Verify OAuth callback routes are accessible
           echo "Verifying OAuth callback routes..."
           OAUTH_MS=$(curl -s -o /dev/null -w "%{http_code}" "https://${APP_URL}/auth/callback/microsoft")
           OAUTH_GOOGLE=$(curl -s -o /dev/null -w "%{http_code}" "https://${APP_URL}/auth/callback/google")
-          
+
           if [ "$OAUTH_MS" = "200" ] && [ "$OAUTH_GOOGLE" = "200" ]; then
             echo "✅ OAuth callback routes are accessible"
           else
             echo "⚠️ OAuth callback routes returned: Microsoft=$OAUTH_MS, Google=$OAUTH_GOOGLE"
           fi
-          
+
           # Verify API proxy is working
           API_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://${APP_URL}/api/v1/health")
           if [ "$API_STATUS" = "200" ]; then
@@ -151,7 +151,7 @@ jobs:
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --query properties.configuration.ingress.fqdn \
             -o tsv)
-          
+
           echo "## Web Deployment Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Image**: ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}" >> $GITHUB_STEP_SUMMARY

@@ -28,7 +28,15 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { GitHubAdapter } from './github.adapter';
 import { GitLabAdapter } from './gitlab.adapter';
 import { JiraConfluenceAdapter } from './jira-confluence.adapter';
-import { AdapterConfigService, AdapterType, AdapterConfig, GitHubAdapterConfig, GitLabAdapterConfig, JiraAdapterConfig, ConfluenceAdapterConfig } from './adapter-config.service';
+import {
+  AdapterConfigService,
+  AdapterType,
+  AdapterConfig,
+  GitHubAdapterConfig,
+  GitLabAdapterConfig,
+  JiraAdapterConfig,
+  ConfluenceAdapterConfig,
+} from './adapter-config.service';
 
 // DTOs
 class CreateAdapterConfigDto {
@@ -314,7 +322,9 @@ export class AdapterController {
 
         case 'jira':
         case 'confluence': {
-          const atlassianConfig = config.config as unknown as JiraAdapterConfig & { spaceKey?: string };
+          const atlassianConfig = config.config as unknown as JiraAdapterConfig & {
+            spaceKey?: string;
+          };
           const confluenceConfig =
             config.type === 'confluence' || atlassianConfig.spaceKey
               ? {
@@ -415,8 +425,10 @@ export class AdapterController {
    */
   private verifyGitHubSignature(payload: string, signature: string, secret: string): boolean {
     const expected = 'sha256=' + crypto.createHmac('sha256', secret).update(payload).digest('hex');
-    return signature.length === expected.length &&
-      crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+    return (
+      signature.length === expected.length &&
+      crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))
+    );
   }
 
   @Post('webhooks/github')

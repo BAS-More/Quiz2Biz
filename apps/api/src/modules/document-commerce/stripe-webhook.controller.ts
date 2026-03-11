@@ -32,7 +32,7 @@ export class StripeWebhookController {
   ) {
     const stripeSecretKey = this.configService.get<string>('STRIPE_SECRET_KEY');
     this.webhookSecret = this.configService.get<string>('STRIPE_WEBHOOK_SECRET');
-    
+
     if (!stripeSecretKey) {
       this.logger.warn('STRIPE_SECRET_KEY not configured - payments disabled');
     }
@@ -63,7 +63,7 @@ export class StripeWebhookController {
     try {
       // Get raw body for signature verification
       const rawBody = (request as Request & { rawBody?: Buffer }).rawBody;
-      
+
       if (!rawBody) {
         throw new BadRequestException('Raw body not available for webhook');
       }
@@ -111,7 +111,7 @@ export class StripeWebhookController {
    */
   private async handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent): Promise<void> {
     this.logger.log(`Payment succeeded: ${paymentIntent.id}`);
-    
+
     try {
       await this.purchaseService.handlePaymentSuccess(paymentIntent.id);
     } catch (error) {
@@ -124,7 +124,7 @@ export class StripeWebhookController {
    */
   private async handlePaymentFailure(paymentIntent: Stripe.PaymentIntent): Promise<void> {
     this.logger.log(`Payment failed: ${paymentIntent.id}`);
-    
+
     try {
       await this.purchaseService.handlePaymentFailure(paymentIntent.id);
     } catch (error) {
@@ -137,7 +137,7 @@ export class StripeWebhookController {
    */
   private async handlePaymentCanceled(paymentIntent: Stripe.PaymentIntent): Promise<void> {
     this.logger.log(`Payment canceled: ${paymentIntent.id}`);
-    
+
     try {
       await this.purchaseService.handlePaymentFailure(paymentIntent.id);
     } catch (error) {

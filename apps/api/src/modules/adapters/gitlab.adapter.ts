@@ -718,7 +718,13 @@ export class GitLabAdapter {
     results: Record<string, number>;
   }> {
     const results: Record<string, number> = {
-      pipelines: 0, jobs: 0, test_reports: 0, merge_requests: 0, releases: 0, vulnerabilities: 0, coverage: 0,
+      pipelines: 0,
+      jobs: 0,
+      test_reports: 0,
+      merge_requests: 0,
+      releases: 0,
+      vulnerabilities: 0,
+      coverage: 0,
     };
     const errors: string[] = [];
     let totalIngested = 0;
@@ -734,7 +740,9 @@ export class GitLabAdapter {
     // Fetch merge requests
     totalIngested += await this.ingestResource(sessionId, errors, 'Merge requests', async () => {
       const mrs = await this.fetchMergeRequests(config, { state: 'all', perPage: 30 });
-      for (const mr of mrs) { await this.saveEvidence(sessionId, mr); }
+      for (const mr of mrs) {
+        await this.saveEvidence(sessionId, mr);
+      }
       results.merge_requests = mrs.length;
       return mrs.length;
     });
@@ -742,7 +750,9 @@ export class GitLabAdapter {
     // Fetch releases
     totalIngested += await this.ingestResource(sessionId, errors, 'Releases', async () => {
       const releases = await this.fetchReleases(config, { perPage: 10 });
-      for (const release of releases) { await this.saveEvidence(sessionId, release); }
+      for (const release of releases) {
+        await this.saveEvidence(sessionId, release);
+      }
       results.releases = releases.length;
       return releases.length;
     });
@@ -750,7 +760,9 @@ export class GitLabAdapter {
     // Fetch vulnerabilities
     totalIngested += await this.ingestResource(sessionId, errors, 'Vulnerabilities', async () => {
       const vulns = await this.fetchVulnerabilities(config);
-      for (const vuln of vulns) { await this.saveEvidence(sessionId, vuln); }
+      for (const vuln of vulns) {
+        await this.saveEvidence(sessionId, vuln);
+      }
       results.vulnerabilities = vulns.length;
       return vulns.length;
     });
@@ -766,12 +778,17 @@ export class GitLabAdapter {
       return 0;
     });
 
-    this.logger.log(`GitLab ingestion complete: ${totalIngested} items from project ${config.projectId}`);
+    this.logger.log(
+      `GitLab ingestion complete: ${totalIngested} items from project ${config.projectId}`,
+    );
     return { ingested: totalIngested, errors, results };
   }
 
   private async ingestResource(
-    _sessionId: string, errors: string[], label: string, fetcher: () => Promise<number>,
+    _sessionId: string,
+    errors: string[],
+    label: string,
+    fetcher: () => Promise<number>,
   ): Promise<number> {
     try {
       return await fetcher();
@@ -782,8 +799,15 @@ export class GitLabAdapter {
   }
 
   private async ingestPipelinesAndArtifacts(
-    config: GitLabConfig, sessionId: string,
-  ): Promise<{ ingested: number; errors: string[]; pipelines: number; jobs: number; testReports: number }> {
+    config: GitLabConfig,
+    sessionId: string,
+  ): Promise<{
+    ingested: number;
+    errors: string[];
+    pipelines: number;
+    jobs: number;
+    testReports: number;
+  }> {
     const errors: string[] = [];
     let ingested = 0;
     let jobCount = 0;
@@ -800,7 +824,10 @@ export class GitLabAdapter {
         const pipelineId = pipeline.data.id as number;
         try {
           const jobs = await this.fetchPipelineJobs(config, pipelineId);
-          for (const job of jobs) { await this.saveEvidence(sessionId, job); ingested++; }
+          for (const job of jobs) {
+            await this.saveEvidence(sessionId, job);
+            ingested++;
+          }
           jobCount += jobs.length;
         } catch (error) {
           errors.push(`Jobs for pipeline ${pipelineId}: ${getErrorMessage(error)}`);
@@ -808,13 +835,23 @@ export class GitLabAdapter {
 
         try {
           const testReport = await this.fetchTestReport(config, pipelineId);
-          if (testReport) { await this.saveEvidence(sessionId, testReport); ingested++; testReportCount++; }
+          if (testReport) {
+            await this.saveEvidence(sessionId, testReport);
+            ingested++;
+            testReportCount++;
+          }
         } catch (error) {
           errors.push(`Test report for pipeline ${pipelineId}: ${getErrorMessage(error)}`);
         }
       }
 
-      return { ingested, errors, pipelines: pipelines.length, jobs: jobCount, testReports: testReportCount };
+      return {
+        ingested,
+        errors,
+        pipelines: pipelines.length,
+        jobs: jobCount,
+        testReports: testReportCount,
+      };
     } catch (error) {
       errors.push(`Pipelines: ${getErrorMessage(error)}`);
       return { ingested, errors, pipelines: 0, jobs: 0, testReports: 0 };

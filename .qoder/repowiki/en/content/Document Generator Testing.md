@@ -17,6 +17,7 @@
 </cite>
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Testing Architecture Overview](#testing-architecture-overview)
 3. [Core Testing Components](#core-testing-components)
@@ -71,6 +72,7 @@ E2ETests --> ResponseValidationSpec
 ```
 
 **Diagram sources**
+
 - [template-engine.service.spec.ts](file://apps/api/src/modules/document-generator/tests/template-engine.service.spec.ts#L1-L243)
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L1-L360)
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L1-L163)
@@ -99,10 +101,12 @@ ModuleMapping --> SharedLib[@libs/shared]
 ```
 
 **Diagram sources**
+
 - [package.json](file://apps/api/package.json#L62-L85)
 - [jest-e2e.json](file://apps/api/test/jest-e2e.json#L1-L15)
 
 **Section sources**
+
 - [package.json](file://apps/api/package.json#L1-L87)
 - [jest-e2e.json](file://apps/api/test/jest-e2e.json#L1-L15)
 
@@ -117,6 +121,7 @@ The project leverages a comprehensive set of testing dependencies including:
 - **Class Validator**: DTO validation testing
 
 **Section sources**
+
 - [package.json](file://apps/api/package.json#L41-L61)
 
 ## Template Engine Testing
@@ -145,6 +150,7 @@ Note over Test,Service : Processes document mappings
 ```
 
 **Diagram sources**
+
 - [template-engine.service.spec.ts](file://apps/api/src/modules/document-generator/tests/template-engine.service.spec.ts#L101-L155)
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L35-L99)
 
@@ -152,16 +158,17 @@ Note over Test,Service : Processes document mappings
 
 The template engine tests cover extraction of values from different question types:
 
-| Question Type | Expected Behavior | Test Coverage |
-|---------------|-------------------|---------------|
-| TEXT/TEXTAREA | Returns text value or empty string | Value extraction validation |
-| NUMBER | Returns numeric value or zero | Numeric type handling |
-| SINGLE_CHOICE | Returns selected option label | Option lookup validation |
-| MULTIPLE_CHOICE | Returns array of selected labels | Array processing |
-| DATE | Returns date value or null | Date type handling |
-| FILE_UPLOAD | Returns file URL or null | File handling |
+| Question Type   | Expected Behavior                  | Test Coverage               |
+| --------------- | ---------------------------------- | --------------------------- |
+| TEXT/TEXTAREA   | Returns text value or empty string | Value extraction validation |
+| NUMBER          | Returns numeric value or zero      | Numeric type handling       |
+| SINGLE_CHOICE   | Returns selected option label      | Option lookup validation    |
+| MULTIPLE_CHOICE | Returns array of selected labels   | Array processing            |
+| DATE            | Returns date value or null         | Date type handling          |
+| FILE_UPLOAD     | Returns file URL or null           | File handling               |
 
 **Section sources**
+
 - [template-engine.service.spec.ts](file://apps/api/src/modules/document-generator/tests/template-engine.service.spec.ts#L157-L193)
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L141-L200)
 
@@ -185,10 +192,12 @@ NextField --> ValidationComplete[Validation Complete]
 ```
 
 **Diagram sources**
+
 - [template-engine.service.spec.ts](file://apps/api/src/modules/document-generator/tests/template-engine.service.spec.ts#L195-L241)
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L271-L288)
 
 **Section sources**
+
 - [template-engine.service.spec.ts](file://apps/api/src/modules/document-generator/tests/template-engine.service.spec.ts#L195-L241)
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L254-L288)
 
@@ -224,6 +233,7 @@ Controller-->>Client : DocumentResponseDto
 ```
 
 **Diagram sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L42-L139)
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L38-L54)
 
@@ -231,15 +241,16 @@ Controller-->>Client : DocumentResponseDto
 
 The testing framework validates document status transitions and access controls:
 
-| Status Transition | Valid? | Validation Point |
-|-------------------|--------|------------------|
-| PENDING → GENERATING | Yes | Process initiation |
-| GENERATING → GENERATED | Yes | Successful completion |
-| GENERATING → FAILED | Yes | Error handling |
-| PENDING → APPROVED | No | Admin-only transition |
-| Generated → Approved | Yes | Admin approval |
+| Status Transition      | Valid? | Validation Point      |
+| ---------------------- | ------ | --------------------- |
+| PENDING → GENERATING   | Yes    | Process initiation    |
+| GENERATING → GENERATED | Yes    | Successful completion |
+| GENERATING → FAILED    | Yes    | Error handling        |
+| PENDING → APPROVED     | No     | Admin-only transition |
+| Generated → Approved   | Yes    | Admin approval        |
 
 **Section sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L144-L194)
 
 ## Service Layer Testing
@@ -278,6 +289,7 @@ DocumentBuilderService --> DocumentTypeInfo : "uses"
 ```
 
 **Diagram sources**
+
 - [document-builder.service.ts](file://apps/api/src/modules/document-generator/services/document-builder.service.ts#L28-L487)
 
 ### Storage Service Testing
@@ -300,9 +312,11 @@ ContainerTest --> ExistenceTest[Existence Checking]
 ```
 
 **Diagram sources**
+
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L65-L136)
 
 **Section sources**
+
 - [document-builder.service.ts](file://apps/api/src/modules/document-generator/services/document-builder.service.ts#L1-L487)
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L1-L160)
 
@@ -330,6 +344,7 @@ Note over Client,Controller : Handles pagination
 ```
 
 **Diagram sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L63-L77)
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L91-L113)
 
@@ -361,9 +376,11 @@ DocumentAdminController --> DocumentGeneratorService : "delegates to"
 ```
 
 **Diagram sources**
+
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L39-L230)
 
 **Section sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L1-L163)
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L1-L230)
 
@@ -389,22 +406,24 @@ DocumentTypeData --> OutputFormats[Output Formats]
 ```
 
 **Diagram sources**
+
 - [template-engine.service.spec.ts](file://apps/api/src/modules/document-generator/tests/template-engine.service.spec.ts#L11-L74)
 
 ### Error Handling Testing
 
 The integration tests validate comprehensive error handling scenarios:
 
-| Error Scenario | Expected Behavior | Test Coverage |
-|----------------|-------------------|---------------|
-| Invalid Session ID | NotFoundException | Session validation |
-| Incomplete Session | BadRequestException | Status validation |
-| Invalid Document Type | NotFoundException | Type validation |
-| Missing Required Questions | BadRequestException | Requirement validation |
-| Unauthorized Access | BadRequestException | Access control |
-| Storage Failure | Failed Document Status | Error recovery |
+| Error Scenario             | Expected Behavior      | Test Coverage          |
+| -------------------------- | ---------------------- | ---------------------- |
+| Invalid Session ID         | NotFoundException      | Session validation     |
+| Incomplete Session         | BadRequestException    | Status validation      |
+| Invalid Document Type      | NotFoundException      | Type validation        |
+| Missing Required Questions | BadRequestException    | Requirement validation |
+| Unauthorized Access        | BadRequestException    | Access control         |
+| Storage Failure            | Failed Document Status | Error recovery         |
 
 **Section sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L54-L103)
 
 ## Testing Best Practices
@@ -434,6 +453,7 @@ TemplateMock --> IntegrationTest
 ```
 
 **Diagram sources**
+
 - [template-engine.service.spec.ts](file://apps/api/src/modules/document-generator/tests/template-engine.service.spec.ts#L76-L95)
 
 ### Test Organization Principles
@@ -447,19 +467,20 @@ The testing organization follows these principles:
 5. **DTO Validation**: Input validation is tested through DTO specifications
 
 **Section sources**
+
 - [template-engine.service.spec.ts](file://apps/api/src/modules/document-generator/tests/template-engine.service.spec.ts#L1-L243)
 
 ## Troubleshooting Guide
 
 ### Common Testing Issues
 
-| Issue | Symptoms | Solution |
-|-------|----------|----------|
-| Test Timeout | Tests hang or timeout | Check async operations and promises |
-| Mock Not Working | Real dependencies called | Verify mock setup in beforeEach |
-| Coverage Low | Coverage below threshold | Add tests for uncovered branches |
-| Type Errors | TypeScript compilation errors | Fix type definitions in test files |
-| Environment Variables | Storage failures | Configure test environment variables |
+| Issue                 | Symptoms                      | Solution                             |
+| --------------------- | ----------------------------- | ------------------------------------ |
+| Test Timeout          | Tests hang or timeout         | Check async operations and promises  |
+| Mock Not Working      | Real dependencies called      | Verify mock setup in beforeEach      |
+| Coverage Low          | Coverage below threshold      | Add tests for uncovered branches     |
+| Type Errors           | TypeScript compilation errors | Fix type definitions in test files   |
+| Environment Variables | Storage failures              | Configure test environment variables |
 
 ### Debugging Strategies
 
@@ -470,6 +491,7 @@ The testing organization follows these principles:
 5. **Review Error Messages**: Analyze test failure messages for specific causes
 
 **Section sources**
+
 - [package.json](file://apps/api/package.json#L13-L17)
 
 ## Conclusion

@@ -19,6 +19,7 @@
 </cite>
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
@@ -31,9 +32,11 @@
 10. [Appendices](#appendices)
 
 ## Introduction
+
 This document describes the Azure DevOps CI/CD pipeline for the Quiz-to-build system. It covers the pipeline configuration, build and test stages, artifact management, security scanning, infrastructure provisioning with Terraform, and deployment to Azure Container Apps. It also documents the automated deployment scripts for environment initialization, production deployment, and resource cleanup. Guidance is included for triggers, branch policies, approvals, environment management, testing automation, code quality, security scanning, customization, manual deployment, rollback strategies, monitoring, failure handling, performance optimization, secrets management, environment variables, and notifications.
 
 ## Project Structure
+
 The CI/CD implementation spans the Azure DevOps YAML pipeline, Bash deployment scripts, Docker configuration, NestJS API application, and Terraform infrastructure modules.
 
 ```mermaid
@@ -67,6 +70,7 @@ MT --> HC
 ```
 
 **Diagram sources**
+
 - [azure-pipelines.yml](file://azure-pipelines.yml#L1-L391)
 - [deploy.sh](file://scripts/deploy.sh#L1-L152)
 - [setup-azure.sh](file://scripts/setup-azure.sh#L1-L142)
@@ -78,10 +82,12 @@ MT --> HC
 - [main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L1-L192)
 
 **Section sources**
+
 - [azure-pipelines.yml](file://azure-pipelines.yml#L1-L391)
 - [package.json](file://package.json#L1-L65)
 
 ## Core Components
+
 - Azure DevOps pipeline orchestrates build, linting, type checking, unit tests, Docker image creation, artifact publishing, security scanning, Terraform infrastructure provisioning, and deployment to Azure Container Apps.
 - Automated deployment scripts initialize Azure resources, deploy infrastructure and application images, and clean up resources.
 - Dockerfile defines multi-stage builds for production and development, including health checks.
@@ -89,6 +95,7 @@ MT --> HC
 - Application bootstrapping sets global prefix, CORS, Swagger documentation, and health endpoints.
 
 **Section sources**
+
 - [azure-pipelines.yml](file://azure-pipelines.yml#L4-L391)
 - [deploy.sh](file://scripts/deploy.sh#L1-L152)
 - [setup-azure.sh](file://scripts/setup-azure.sh#L1-L142)
@@ -98,6 +105,7 @@ MT --> HC
 - [main.ts](file://apps/api/src/main.ts#L1-L93)
 
 ## Architecture Overview
+
 The pipeline follows a staged flow: build and test, security scanning, infrastructure provisioning, deployment, and verification. Artifacts are published and consumed across stages. Deployment updates the Container Apps image and runs database migrations.
 
 ```mermaid
@@ -121,11 +129,13 @@ Verify-->>ADO : Results
 ```
 
 **Diagram sources**
+
 - [azure-pipelines.yml](file://azure-pipelines.yml#L4-L391)
 
 ## Detailed Component Analysis
 
 ### Azure DevOps Pipeline Configuration
+
 - Triggers and PRs: Builds run on main and develop; Markdown/docs paths excluded. Pull requests target main and develop.
 - Variables: Azure subscription, resource group, Container Apps name, ACR name, Node version, image name/tag, Terraform version, working directory.
 - Pool: Ubuntu latest.
@@ -147,14 +157,17 @@ VerifyStage --> End(["Complete"])
 ```
 
 **Diagram sources**
+
 - [azure-pipelines.yml](file://azure-pipelines.yml#L4-L391)
 
 **Section sources**
+
 - [azure-pipelines.yml](file://azure-pipelines.yml#L4-L391)
 
 ### Automated Deployment Scripts
 
 #### setup-azure.sh
+
 - Validates prerequisites (Azure CLI, Terraform, Docker).
 - Ensures Azure login.
 - Creates Terraform state resource group, storage account, and blob container.
@@ -177,12 +190,15 @@ S9 --> S10["End"]
 ```
 
 **Diagram sources**
+
 - [setup-azure.sh](file://scripts/setup-azure.sh#L1-L142)
 
 **Section sources**
+
 - [setup-azure.sh](file://scripts/setup-azure.sh#L1-L142)
 
 #### deploy.sh
+
 - Checks prerequisites (login and terraform.tfvars).
 - Initializes and validates Terraform, plans with out, prompts for confirmation, applies plan.
 - Builds Docker image, logs into ACR, pushes image.
@@ -208,12 +224,15 @@ D14 --> D15["End"]
 ```
 
 **Diagram sources**
+
 - [deploy.sh](file://scripts/deploy.sh#L1-L152)
 
 **Section sources**
+
 - [deploy.sh](file://scripts/deploy.sh#L1-L152)
 
 #### cleanup.sh
+
 - Confirms destructive action, destroys Terraform-managed resources, optionally deletes state storage resource group.
 
 ```mermaid
@@ -228,12 +247,15 @@ C6 --> C7["Exit"]
 ```
 
 **Diagram sources**
+
 - [cleanup.sh](file://scripts/cleanup.sh#L1-L52)
 
 **Section sources**
+
 - [cleanup.sh](file://scripts/cleanup.sh#L1-L52)
 
 ### Docker Image Build and Probes
+
 - Multi-stage Dockerfile builds the application, generates Prisma client, and runs a production image with non-root user, exposed port, and health checks.
 - Health endpoints are defined in the application and used by Container Apps probes and pipeline verification.
 
@@ -253,14 +275,17 @@ P4 --> P5["Start with node dist/main.js"]
 ```
 
 **Diagram sources**
+
 - [Dockerfile](file://docker/api/Dockerfile#L1-L72)
 - [health.controller.ts](file://apps/api/src/health.controller.ts#L1-L42)
 
 **Section sources**
+
 - [Dockerfile](file://docker/api/Dockerfile#L1-L72)
 - [health.controller.ts](file://apps/api/src/health.controller.ts#L1-L42)
 
 ### Infrastructure Provisioning with Terraform
+
 - Variables define project, environment, location, tags, networking, database, Redis, container CPU/memory, replicas, and ACR SKU.
 - Container Apps module provisions environment, API service, secrets, registry credentials, and health/readiness/startup probes.
 - Environment variables are injected via secret names resolved by Azure Key Vault-backed managed identities.
@@ -276,14 +301,17 @@ APP --> REG["ACR Registry Credentials"]
 ```
 
 **Diagram sources**
+
 - [variables.tf](file://infrastructure/terraform/variables.tf#L1-L129)
 - [main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L1-L192)
 
 **Section sources**
+
 - [variables.tf](file://infrastructure/terraform/variables.tf#L1-L129)
 - [main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L1-L192)
 
 ### Application Bootstrapping and Health Endpoints
+
 - Bootstrap configures security middleware, CORS, global prefix, validation pipe, global filters/interceptors, and Swagger documentation in non-production environments.
 - Health endpoints expose status, readiness, and liveness checks used by Container Apps and pipeline verification.
 
@@ -308,14 +336,17 @@ MainBootstrap --> HealthController : "exposes /health endpoints"
 ```
 
 **Diagram sources**
+
 - [main.ts](file://apps/api/src/main.ts#L1-L93)
 - [health.controller.ts](file://apps/api/src/health.controller.ts#L1-L42)
 
 **Section sources**
+
 - [main.ts](file://apps/api/src/main.ts#L1-L93)
 - [health.controller.ts](file://apps/api/src/health.controller.ts#L1-L42)
 
 ## Dependency Analysis
+
 - Pipeline depends on scripts for infrastructure provisioning and deployment.
 - Scripts depend on Terraform modules and Azure CLI.
 - Application depends on Docker image produced by the pipeline/build stage.
@@ -335,6 +366,7 @@ APP --> HC["apps/api/src/health.controller.ts"]
 ```
 
 **Diagram sources**
+
 - [azure-pipelines.yml](file://azure-pipelines.yml#L1-L391)
 - [deploy.sh](file://scripts/deploy.sh#L1-L152)
 - [setup-azure.sh](file://scripts/setup-azure.sh#L1-L142)
@@ -345,6 +377,7 @@ APP --> HC["apps/api/src/health.controller.ts"]
 - [health.controller.ts](file://apps/api/src/health.controller.ts#L1-L42)
 
 **Section sources**
+
 - [azure-pipelines.yml](file://azure-pipelines.yml#L1-L391)
 - [deploy.sh](file://scripts/deploy.sh#L1-L152)
 - [setup-azure.sh](file://scripts/setup-azure.sh#L1-L142)
@@ -355,6 +388,7 @@ APP --> HC["apps/api/src/health.controller.ts"]
 - [health.controller.ts](file://apps/api/src/health.controller.ts#L1-L42)
 
 ## Performance Considerations
+
 - Parallelization: The pipeline stages are designed to minimize unnecessary waits; security and infrastructure stages depend on successful completion of earlier stages.
 - Caching: npm cache is used during build to reduce installation time.
 - Artifact reuse: Docker image and Terraform files are published and reused across stages.
@@ -364,6 +398,7 @@ APP --> HC["apps/api/src/health.controller.ts"]
 [No sources needed since this section provides general guidance]
 
 ## Troubleshooting Guide
+
 - Pipeline failures:
   - Build/Test: Review test results and coverage artifacts; ensure lint/type checks pass.
   - Security: NPM audit and Trivy are configured to continue on error; review logs for high/Critical severity findings.
@@ -379,6 +414,7 @@ APP --> HC["apps/api/src/health.controller.ts"]
   - Validate environment variables in Container Apps template align with application expectations.
 
 **Section sources**
+
 - [azure-pipelines.yml](file://azure-pipelines.yml#L140-L391)
 - [deploy.sh](file://scripts/deploy.sh#L1-L152)
 - [setup-azure.sh](file://scripts/setup-azure.sh#L1-L142)
@@ -386,6 +422,7 @@ APP --> HC["apps/api/src/health.controller.ts"]
 - [main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L35-L192)
 
 ## Conclusion
+
 The CI/CD pipeline automates building, testing, securing, provisioning, deploying, and verifying the Quiz-to-build system on Azure. The scripts streamline environment initialization, production deployment, and cleanup. The combination of Docker multi-stage builds, Terraform-managed infrastructure, and robust health checks ensures reliable deployments. Adhering to the documented customization, manual deployment, rollback, monitoring, failure handling, and performance practices will maintain a resilient and efficient pipeline.
 
 [No sources needed since this section summarizes without analyzing specific files]
@@ -393,30 +430,36 @@ The CI/CD pipeline automates building, testing, securing, provisioning, deployin
 ## Appendices
 
 ### Pipeline Triggers, Branch Policies, and Approval Workflows
+
 - Triggers: Build runs on main and develop; docs and Markdown paths excluded.
 - Pull Requests: PRs target main and develop.
 - Branch policies: Enforced at the repository level for main (e.g., required reviewers, status checks).
 - Approvals: Manual approval can be added to the Terraform apply job/environment to gate production changes.
 
 **Section sources**
+
 - [azure-pipelines.yml](file://azure-pipelines.yml#L4-L19)
 
 ### Environment Management (Development, Staging, Production)
+
 - Environment variable: The pipeline targets development by default; modify the environment variable and Terraform variables to support staging and production.
 - Resource naming: Container Apps, ACR, and resource groups follow naming conventions suitable for each environment.
 - Secrets: Managed via Azure Key Vault-backed managed identities; ensure appropriate vault URIs and permissions per environment.
 
 **Section sources**
+
 - [azure-pipelines.yml](file://azure-pipelines.yml#L20-L35)
 - [variables.tf](file://infrastructure/terraform/variables.tf#L1-L129)
 - [main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L1-L192)
 
 ### Testing Automation, Code Quality, and Security Scanning
+
 - Testing: Unit tests with coverage via Turbo; E2E configuration available.
 - Code quality: ESLint with TypeScript and Prettier configurations; pre-commit hooks via Husky and lint-staged.
 - Security scanning: NPM audit and Trivy filesystem scan configured to continue on error.
 
 **Section sources**
+
 - [package.json](file://package.json#L10-L34)
 - [turbo.json](file://turbo.json#L1-L46)
 - [.eslintrc.js](file://.eslintrc.js#L1-L96)
@@ -425,6 +468,7 @@ The CI/CD pipeline automates building, testing, securing, provisioning, deployin
 - [azure-pipelines.yml](file://azure-pipelines.yml#L149-L159)
 
 ### Pipeline Customization, Manual Deployment, and Rollback Strategies
+
 - Customize pipeline:
   - Modify variables for Azure resources and Terraform versions.
   - Adjust stages and conditions for branching strategies.
@@ -437,11 +481,13 @@ The CI/CD pipeline automates building, testing, securing, provisioning, deployin
   - Re-run Terraform apply with a previously captured plan if applicable.
 
 **Section sources**
+
 - [azure-pipelines.yml](file://azure-pipelines.yml#L20-L391)
 - [deploy.sh](file://scripts/deploy.sh#L1-L152)
 - [setup-azure.sh](file://scripts/setup-azure.sh#L1-L142)
 
 ### Monitoring, Failure Handling, and Notifications
+
 - Monitoring:
   - Enable Application Insights via environment variable in Container Apps.
   - Use Azure Monitor and Container Apps logs for runtime insights.
@@ -452,10 +498,12 @@ The CI/CD pipeline automates building, testing, securing, provisioning, deployin
   - Configure Azure DevOps pipeline notifications for build failures and approvals.
 
 **Section sources**
+
 - [main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L102-L104)
 - [azure-pipelines.yml](file://azure-pipelines.yml#L346-L391)
 
 ### Secrets Management and Environment Variable Handling
+
 - Secrets:
   - Managed via Azure Key Vault-backed managed identities; referenced by secret names in Terraform module.
 - Environment variables:
@@ -463,5 +511,6 @@ The CI/CD pipeline automates building, testing, securing, provisioning, deployin
   - Production-specific values should be provided via .env.production and mapped to environment variables.
 
 **Section sources**
+
 - [main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L35-L104)
 - [.env.production.example](file://.env.production.example#L1-L66)

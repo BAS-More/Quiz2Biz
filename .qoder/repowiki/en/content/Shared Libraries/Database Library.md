@@ -20,6 +20,7 @@
 </cite>
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
@@ -32,9 +33,11 @@
 10. [Appendices](#appendices)
 
 ## Introduction
+
 This document describes the Database library that provides a Prisma service abstraction and connection management for the Quiz-to-build system. It explains how the PrismaModule integrates with NestJS dependency injection, how PrismaService wraps the Prisma client with lifecycle hooks, connection pooling, and development-time query logging. It also covers how the library is consumed across application modules, configuration options, error handling strategies, and operational guidance for migrations and schema updates.
 
 ## Project Structure
+
 The Database library is a small, focused NestJS library that exposes a globally available PrismaModule and PrismaService. The main application registers the module and injects PrismaService into domain services.
 
 ```mermaid
@@ -68,6 +71,7 @@ ENV --> AM
 ```
 
 **Diagram sources**
+
 - [index.ts](file://libs/database/src/index.ts#L1-L3)
 - [prisma.module.ts](file://libs/database/src/prisma.module.ts#L1-L10)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
@@ -81,6 +85,7 @@ ENV --> AM
 - [.env.production.example](file://.env.production.example#L1-L23)
 
 **Section sources**
+
 - [index.ts](file://libs/database/src/index.ts#L1-L3)
 - [prisma.module.ts](file://libs/database/src/prisma.module.ts#L1-L10)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
@@ -88,19 +93,23 @@ ENV --> AM
 - [app.module.ts](file://apps/api/src/app.module.ts#L1-L67)
 
 ## Core Components
+
 - PrismaModule: A global NestJS module that provides and exports a singleton PrismaService instance. This ensures the Prisma client is available application-wide without manual wiring.
 - PrismaService: An injectable service extending PrismaClient. It manages connection lifecycle via OnModuleInit and OnModuleDestroy hooks, logs slow queries in development, and provides a cleanDatabase helper for tests.
 
 Key behaviors:
+
 - Connection lifecycle: Connects on module initialization and disconnects on shutdown.
 - Development diagnostics: Subscribes to query events to warn about slow queries (>100ms).
 - Test isolation: Provides a cleanDatabase method to truncate tables during tests (guarded by environment checks).
 
 **Section sources**
+
 - [prisma.module.ts](file://libs/database/src/prisma.module.ts#L1-L10)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
 
 ## Architecture Overview
+
 The library abstracts direct Prisma client usage behind a single, globally available service. Application modules import PrismaModule once and inject PrismaService wherever database operations are needed.
 
 ```mermaid
@@ -117,6 +126,7 @@ PS-->>Svc : Return results
 ```
 
 **Diagram sources**
+
 - [app.module.ts](file://apps/api/src/app.module.ts#L44-L45)
 - [prisma.module.ts](file://libs/database/src/prisma.module.ts#L4-L8)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L20-L40)
@@ -125,17 +135,21 @@ PS-->>Svc : Return results
 ## Detailed Component Analysis
 
 ### PrismaModule
+
 - Purpose: Provide a globally available PrismaService singleton.
 - Behavior: Uses NestJS @Global() decorator to make the provider available across the entire application graph. Exports PrismaService so consumers can inject it without importing the module directly.
 
 Best practices:
+
 - Keep this module imported once in the root application module.
 - Do not re-declare PrismaService elsewhere to avoid conflicts.
 
 **Section sources**
+
 - [prisma.module.ts](file://libs/database/src/prisma.module.ts#L1-L10)
 
 ### PrismaService
+
 - Extends PrismaClient and implements lifecycle hooks.
 - Constructor configuration:
   - Enables logging for query, info, warn, and error events.
@@ -165,12 +179,15 @@ PrismaService --|> PrismaClient : "extends"
 ```
 
 **Diagram sources**
+
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L5-L40)
 
 **Section sources**
+
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
 
 ### Integration with Application Modules
+
 - AppModule imports PrismaModule globally.
 - Domain services inject PrismaService to perform database operations:
   - UsersService: Reads/writes users, counts related documents, paginates users.
@@ -189,6 +206,7 @@ SDS["StandardsService"] --> PS
 ```
 
 **Diagram sources**
+
 - [app.module.ts](file://apps/api/src/app.module.ts#L44-L45)
 - [users.service.ts](file://apps/api/src/modules/users/users.service.ts#L39-L73)
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L42-L52)
@@ -196,6 +214,7 @@ SDS["StandardsService"] --> PS
 - [standards.service.ts](file://apps/api/src/modules/standards/standards.service.ts#L14-L35)
 
 **Section sources**
+
 - [app.module.ts](file://apps/api/src/app.module.ts#L44-L45)
 - [users.service.ts](file://apps/api/src/modules/users/users.service.ts#L1-L200)
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L1-L278)
@@ -203,6 +222,7 @@ SDS["StandardsService"] --> PS
 - [standards.service.ts](file://apps/api/src/modules/standards/standards.service.ts#L1-L197)
 
 ### Practical Usage Examples
+
 - Injecting PrismaService in a controller or service:
   - Use constructor injection with the PrismaService type.
   - Access generated Prisma client methods (e.g., model.findUnique, model.create, model.update, model.count).
@@ -215,12 +235,14 @@ SDS["StandardsService"] --> PS
 Note: For concrete code paths, see the service files listed above.
 
 **Section sources**
+
 - [users.service.ts](file://apps/api/src/modules/users/users.service.ts#L39-L127)
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L42-L232)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L89-L386)
 - [standards.service.ts](file://apps/api/src/modules/standards/standards.service.ts#L14-L103)
 
 ### Configuration Options and Connection Settings
+
 - Database URL:
   - Provided via DATABASE_URL environment variable.
   - Loaded by Prisma schema datasource and exposed through application configuration.
@@ -242,6 +264,7 @@ AppModule --> Services["Services inject PrismaService"]
 ```
 
 **Diagram sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L8-L11)
 - [configuration.ts](file://apps/api/src/config/configuration.ts#L7-L10)
 - [app.module.ts](file://apps/api/src/app.module.ts#L19-L23)
@@ -250,6 +273,7 @@ AppModule --> Services["Services inject PrismaService"]
 - [.env.production.example](file://.env.production.example#L14-L15)
 
 **Section sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L8-L11)
 - [configuration.ts](file://apps/api/src/config/configuration.ts#L7-L10)
 - [app.module.ts](file://apps/api/src/app.module.ts#L19-L23)
@@ -258,6 +282,7 @@ AppModule --> Services["Services inject PrismaService"]
 - [.env.production.example](file://.env.production.example#L14-L15)
 
 ### Error Handling Strategies
+
 - Development diagnostics:
   - Slow query warnings are logged when a query exceeds a threshold in development.
 - Guarded test utilities:
@@ -268,12 +293,14 @@ AppModule --> Services["Services inject PrismaService"]
   - Proper connect/disconnect ensures graceful shutdown and avoids hanging connections.
 
 **Section sources**
+
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L25-L40)
 - [users.service.ts](file://apps/api/src/modules/users/users.service.ts#L58-L88)
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L90-L125)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L147-L153)
 
 ### Migrations and Schema Updates
+
 - Prisma schema defines the canonical data model and datasource configuration.
 - Seeding script demonstrates initial data creation and can be used to bootstrap test or staging environments.
 - Migration workflow:
@@ -289,14 +316,17 @@ Apply --> Deploy["Deploy DATABASE_URL to runtime"]
 ```
 
 **Diagram sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L1-L447)
 - [seed.ts](file://prisma/seed.ts#L1-L495)
 
 **Section sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L1-L447)
 - [seed.ts](file://prisma/seed.ts#L1-L495)
 
 ## Dependency Analysis
+
 - Internal dependencies:
   - index.ts re-exports PrismaModule and PrismaService for external consumption.
   - package.json declares @prisma/client and prisma as dependencies for client generation and migrations.
@@ -316,18 +346,21 @@ PKG --> PR["prisma"]
 ```
 
 **Diagram sources**
+
 - [index.ts](file://libs/database/src/index.ts#L1-L3)
 - [prisma.module.ts](file://libs/database/src/prisma.module.ts#L1-L2)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L2)
 - [package.json](file://libs/database/package.json#L12-L18)
 
 **Section sources**
+
 - [index.ts](file://libs/database/src/index.ts#L1-L3)
 - [prisma.module.ts](file://libs/database/src/prisma.module.ts#L1-L2)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L2)
 - [package.json](file://libs/database/package.json#L12-L18)
 
 ## Performance Considerations
+
 - Connection pooling:
   - PrismaClient manages internal connection pooling; ensure DATABASE_URL is configured for your environment.
 - Query performance:
@@ -343,7 +376,9 @@ PKG --> PR["prisma"]
 [No sources needed since this section provides general guidance]
 
 ## Troubleshooting Guide
+
 Common issues and resolutions:
+
 - Connection failures:
   - Verify DATABASE_URL is present and correct in the environment.
   - Confirm the database server is reachable and credentials are valid.
@@ -356,12 +391,14 @@ Common issues and resolutions:
   - Inspect service-level exceptions (e.g., NotFoundException, ForbiddenException) and ensure proper authorization and data existence checks.
 
 **Section sources**
+
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L25-L40)
 - [users.service.ts](file://apps/api/src/modules/users/users.service.ts#L58-L88)
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L90-L125)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L147-L153)
 
 ## Conclusion
+
 The Database library provides a clean, centralized abstraction over Prisma for the Quiz-to-build application. By exporting a globally available PrismaService, it simplifies dependency injection, enforces consistent connection lifecycle management, and offers helpful development-time diagnostics. Application modules consume PrismaService through standard NestJS injection, enabling robust, maintainable database operations across the system.
 
 [No sources needed since this section summarizes without analyzing specific files]
@@ -369,6 +406,7 @@ The Database library provides a clean, centralized abstraction over Prisma for t
 ## Appendices
 
 ### Appendix A: Environment Variables Reference
+
 - DATABASE_URL: Database connection string for PostgreSQL.
 - REDIS_HOST, REDIS_PORT, REDIS_PASSWORD: Redis cache configuration.
 - JWT_SECRET, JWT_REFRESH_SECRET, JWT_EXPIRES_IN, JWT_REFRESH_EXPIRES_IN: Authentication settings.
@@ -376,6 +414,7 @@ The Database library provides a clean, centralized abstraction over Prisma for t
 - BCRYPT_ROUNDS: Password hashing cost factor.
 
 **Section sources**
+
 - [configuration.ts](file://apps/api/src/config/configuration.ts#L7-L30)
 - [.env.production.example](file://.env.production.example#L1-L23)
 - [main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L67-L98)

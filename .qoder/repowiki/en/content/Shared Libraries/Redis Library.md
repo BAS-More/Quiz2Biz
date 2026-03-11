@@ -15,6 +15,7 @@
 </cite>
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
@@ -27,9 +28,11 @@
 10. [Appendices](#appendices)
 
 ## Introduction
+
 This document describes the Redis library used by the Quiz-to-build system to provide cache management and connection pooling. It explains how the RedisModule integrates Redis connection management into the NestJS dependency injection system, and how the RedisService wrapper exposes a concise set of cache operations while managing the underlying Redis client lifecycle. The library supports session state management, adaptive logic caching, and other performance-critical operations. Practical usage examples show how to cache questionnaire sessions, user preferences, and frequently accessed data. We also document connection configuration, cluster support considerations, failover mechanisms, cache invalidation strategies, TTL management, memory optimization, error handling, reconnection logic, monitoring, and best practices.
 
 ## Project Structure
+
 The Redis library is implemented as a NestJS module and service packaged as an internal library. The application module imports the Redis module globally so that RedisService is available application-wide. Configuration is centralized in the application’s configuration loader and environment variables.
 
 ```mermaid
@@ -54,6 +57,7 @@ PKG --> RS
 ```
 
 **Diagram sources**
+
 - [app.module.ts](file://apps/api/src/app.module.ts#L1-L67)
 - [configuration.ts](file://apps/api/src/config/configuration.ts#L1-L49)
 - [.env.example](file://.env.example#L1-L33)
@@ -63,6 +67,7 @@ PKG --> RS
 - [package.json](file://libs/redis/package.json#L1-L20)
 
 **Section sources**
+
 - [redis.module.ts](file://libs/redis/src/redis.module.ts#L1-L10)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 - [index.ts](file://libs/redis/src/index.ts#L1-L3)
@@ -72,23 +77,27 @@ PKG --> RS
 - [.env.example](file://.env.example#L1-L33)
 
 ## Core Components
+
 - RedisModule: A global NestJS module that provides and exports a single RedisService instance application-wide.
 - RedisService: A wrapper around the Redis client that manages connection lifecycle, exposes basic cache operations, and logs connection events and errors.
 - Index and package metadata: Export the module and service and declare the Redis client dependency.
 
 Key capabilities:
+
 - Connection configuration via environment variables and configuration loader
 - Automatic reconnection with a retry strategy
 - Basic cache operations: get, set, setex, del, exists, incr, expire, hset, hget, hgetall, hdel, keys
 - Graceful shutdown via quit()
 
 **Section sources**
+
 - [redis.module.ts](file://libs/redis/src/redis.module.ts#L1-L10)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 - [index.ts](file://libs/redis/src/index.ts#L1-L3)
 - [package.json](file://libs/redis/package.json#L1-L20)
 
 ## Architecture Overview
+
 The Redis library integrates with the application through a global module. RedisService is constructed with configuration values and maintains a persistent client instance. Modules throughout the application can inject RedisService to perform caching operations.
 
 ```mermaid
@@ -107,6 +116,7 @@ RedisSvc-->>App : Exported singleton
 ```
 
 **Diagram sources**
+
 - [app.module.ts](file://apps/api/src/app.module.ts#L1-L67)
 - [redis.module.ts](file://libs/redis/src/redis.module.ts#L1-L10)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
@@ -116,6 +126,7 @@ RedisSvc-->>App : Exported singleton
 ## Detailed Component Analysis
 
 ### RedisModule
+
 - Purpose: Provides a globally available RedisService instance.
 - Behavior: Declares RedisService as a provider and exports it for injection across the application.
 
@@ -144,13 +155,16 @@ RedisModule --> RedisService : "provides/export"
 ```
 
 **Diagram sources**
+
 - [redis.module.ts](file://libs/redis/src/redis.module.ts#L1-L10)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 
 **Section sources**
+
 - [redis.module.ts](file://libs/redis/src/redis.module.ts#L1-L10)
 
 ### RedisService
+
 - Connection management:
   - Reads redis.host, redis.port, redis.password from configuration.
   - Initializes a Redis client with a retry strategy that caps delays.
@@ -177,12 +191,15 @@ Quit --> End(["Closed"])
 ```
 
 **Diagram sources**
+
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 
 **Section sources**
+
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 
 ### Integration with Application Modules
+
 - AppModule imports RedisModule globally, making RedisService available application-wide.
 - Example usage in AuthService:
   - Stores refresh tokens under keys prefixed with refresh:, with TTL derived from configuration.
@@ -202,15 +219,18 @@ Auth->>Redis : del("refresh : <token>") on logout
 ```
 
 **Diagram sources**
+
 - [app.module.ts](file://apps/api/src/app.module.ts#L1-L67)
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L1-L278)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 
 **Section sources**
+
 - [app.module.ts](file://apps/api/src/app.module.ts#L1-L67)
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L1-L278)
 
 ### Practical Usage Examples
+
 Below are practical examples of how to use RedisService for caching questionnaire sessions, user preferences, and frequently accessed data. These examples reference the RedisService API and typical key naming patterns.
 
 - Cache questionnaire session state
@@ -233,11 +253,13 @@ Below are practical examples of how to use RedisService for caching questionnair
 Note: The above examples illustrate recommended patterns. The actual implementation should align with your domain model and key naming conventions.
 
 **Section sources**
+
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L1-L278)
 - [quest-prompts.md](file://docs/quest-prompts.md#L1211-L1269)
 
 ## Dependency Analysis
+
 - Internal dependencies:
   - RedisService depends on NestJS ConfigService and ioredis.
   - RedisModule depends on RedisService.
@@ -255,18 +277,21 @@ AM["apps/api/src/app.module.ts"] --> RM
 ```
 
 **Diagram sources**
+
 - [package.json](file://libs/redis/package.json#L1-L20)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 - [redis.module.ts](file://libs/redis/src/redis.module.ts#L1-L10)
 - [app.module.ts](file://apps/api/src/app.module.ts#L1-L67)
 
 **Section sources**
+
 - [package.json](file://libs/redis/package.json#L1-L20)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 - [redis.module.ts](file://libs/redis/src/redis.module.ts#L1-L10)
 - [app.module.ts](file://apps/api/src/app.module.ts#L1-L67)
 
 ## Performance Considerations
+
 - Connection pooling:
   - The current implementation creates a single Redis client per process. For high concurrency, consider a pool abstraction or multiple clients per shard if scaling horizontally.
 - Retry strategy:
@@ -282,6 +307,7 @@ AM["apps/api/src/app.module.ts"] --> RM
 [No sources needed since this section provides general guidance]
 
 ## Troubleshooting Guide
+
 - Connection failures:
   - Verify REDIS_HOST, REDIS_PORT, and REDIS_PASSWORD in environment variables and configuration loader.
   - Check network connectivity and firewall rules.
@@ -295,11 +321,13 @@ AM["apps/api/src/app.module.ts"] --> RM
   - Inspect logs for Redis error messages emitted by the service.
 
 **Section sources**
+
 - [configuration.ts](file://apps/api/src/config/configuration.ts#L1-L49)
 - [.env.example](file://.env.example#L1-L33)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 
 ## Conclusion
+
 The Redis library provides a focused, reliable foundation for caching and session state management in the Quiz-to-build system. By integrating RedisService through a global module and leveraging its basic cache primitives, the application can implement efficient, scalable caching strategies for sessions, preferences, and adaptive logic. Proper configuration, TTL management, and monitoring will ensure robust performance and reliability.
 
 [No sources needed since this section summarizes without analyzing specific files]
@@ -307,6 +335,7 @@ The Redis library provides a focused, reliable foundation for caching and sessio
 ## Appendices
 
 ### Connection Configuration
+
 - Environment variables:
   - REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
 - Configuration loader:
@@ -315,11 +344,13 @@ The Redis library provides a focused, reliable foundation for caching and sessio
   - AppModule imports RedisModule to enable global RedisService availability
 
 **Section sources**
+
 - [.env.example](file://.env.example#L1-L33)
 - [configuration.ts](file://apps/api/src/config/configuration.ts#L1-L49)
 - [app.module.ts](file://apps/api/src/app.module.ts#L1-L67)
 
 ### Cluster Support and Failover
+
 - Current implementation:
   - Single-node Redis client instantiation.
 - Recommendations:
@@ -329,6 +360,7 @@ The Redis library provides a focused, reliable foundation for caching and sessio
 [No sources needed since this section provides general guidance]
 
 ### Cache Invalidation Strategies
+
 - Pattern-based invalidation:
   - Use keys(pattern) to discover related keys and del them when data changes.
 - TTL-driven expiry:
@@ -337,9 +369,11 @@ The Redis library provides a focused, reliable foundation for caching and sessio
   - Maintain auxiliary indexes (e.g., user:<userId>:sessions) to quickly locate and remove dependent entries.
 
 **Section sources**
+
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 
 ### TTL Management and Memory Optimization
+
 - Choose appropriate TTLs:
   - Sessions: medium TTL; Tokens: configured TTL; Metadata: longer TTL.
 - Optimize data structures:
@@ -350,6 +384,7 @@ The Redis library provides a focused, reliable foundation for caching and sessio
 [No sources needed since this section provides general guidance]
 
 ### Error Handling and Reconnection Logic
+
 - Built-in behavior:
   - Retry strategy with capped delays; error events logged; graceful quit on shutdown.
 - Best practices:
@@ -357,9 +392,11 @@ The Redis library provides a focused, reliable foundation for caching and sessio
   - Consider circuit breaker patterns for degraded resilience.
 
 **Section sources**
+
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 
 ### Monitoring Redis Performance Metrics
+
 - Recommended metrics:
   - Latency, connected clients, blocked clients, memory usage, hit ratio, rejected connections.
 - Tools:
@@ -368,6 +405,7 @@ The Redis library provides a focused, reliable foundation for caching and sessio
 [No sources needed since this section provides general guidance]
 
 ### Choosing Cache Strategies and Avoiding Pitfalls
+
 - Strategy selection:
   - Hot data: short TTL with frequent updates; Cold data: longer TTL or no TTL.
   - Use hash maps for structured data; strings for serialized objects.

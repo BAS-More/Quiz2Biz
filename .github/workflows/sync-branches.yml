@@ -1,7 +1,7 @@
 name: Sync All Branches with Main
 
 on:
-  workflow_dispatch:  # Allows manual trigger from GitHub Actions tab
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
     inputs:
       dry_run:
         description: 'Dry run (do not push changes)'
@@ -15,24 +15,24 @@ permissions:
 jobs:
   sync-branches:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch all history for all branches
+          fetch-depth: 0 # Fetch all history for all branches
           token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Configure Git
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
-      
+
       - name: Fetch all branches
         run: |
           git fetch origin
           git fetch --all
-      
+
       - name: Sync branches with main
         env:
           DRY_RUN: ${{ inputs.dry_run }}
@@ -46,7 +46,7 @@ jobs:
             "qoder/quiz-builder-kBVnJv"
             "claude/repository-analysis-4puQN"
           )
-          
+
           echo "========================================="
           echo "Branch Synchronization Workflow"
           echo "========================================="
@@ -54,12 +54,12 @@ jobs:
           echo "Dry run mode: $DRY_RUN"
           echo "Branches to sync: ${#BRANCHES[@]}"
           echo ""
-          
+
           SUCCESSFUL_SYNCS=()
           FAILED_SYNCS=()
           ALREADY_SYNCED=()
           SKIPPED_BRANCHES=()
-          
+
           for branch in "${BRANCHES[@]}"; do
             echo "========================================="
             echo "Processing: $branch"
@@ -127,23 +127,23 @@ jobs:
             
             echo ""
           done
-          
+
           # Return to main
           git checkout main
-          
+
           # Print summary
           echo ""
           echo "========================================="
           echo "Synchronization Summary"
           echo "========================================="
           echo ""
-          
+
           if [ ${#ALREADY_SYNCED[@]} -gt 0 ]; then
             echo "Already synced (${#ALREADY_SYNCED[@]}):"
             printf '%s\n' "${ALREADY_SYNCED[@]}" | sed 's/^/  ✓ /'
             echo ""
           fi
-          
+
           if [ ${#SUCCESSFUL_SYNCS[@]} -gt 0 ]; then
             echo "Successfully synced (${#SUCCESSFUL_SYNCS[@]}):"
             printf '%s\n' "${SUCCESSFUL_SYNCS[@]}" | sed 's/^/  ✓ /'
@@ -155,21 +155,21 @@ jobs:
             printf '%s\n' "${SKIPPED_BRANCHES[@]}" | sed 's/^/  - /'
             echo ""
           fi
-          
+
           if [ ${#FAILED_SYNCS[@]} -gt 0 ]; then
             echo "Failed to sync (${#FAILED_SYNCS[@]}):"
             printf '%s\n' "${FAILED_SYNCS[@]}" | sed 's/^/  ✗ /'
             echo ""
             exit 1
           fi
-          
+
           echo "Total: ${#BRANCHES[@]} branches"
           echo "Already synced: ${#ALREADY_SYNCED[@]}"
           echo "Newly synced: ${#SUCCESSFUL_SYNCS[@]}"
           echo "Skipped: ${#SKIPPED_BRANCHES[@]}"
           echo "Failed: ${#FAILED_SYNCS[@]}"
           echo ""
-          
+
           if [ ${#FAILED_SYNCS[@]} -eq 0 ]; then
             echo "✓ All branches are now synced with main! 🎉"
           fi

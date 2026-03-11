@@ -21,6 +21,7 @@
 </cite>
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
@@ -33,10 +34,13 @@
 10. [Appendices](#appendices)
 
 ## Introduction
+
 This document explains how to deploy and manage the Quiz-to-build system across environments using Docker containerization, Terraform-managed Azure infrastructure, and an Azure DevOps CI/CD pipeline. It covers multi-stage builds, environment configuration, container orchestration with Azure Container Apps, infrastructure provisioning for PostgreSQL and Redis, CI/CD stages, deployment and rollback strategies, monitoring, scaling, and troubleshooting.
 
 ## Project Structure
+
 The repository organizes deployment assets around three pillars:
+
 - Containerization: Multi-stage Dockerfile for the API service and a local docker-compose stack for development.
 - Infrastructure as Code: Terraform modules for networking, monitoring, registry, database, cache, key vault, and container apps.
 - CI/CD: Azure DevOps YAML pipeline orchestrating build, security scanning, Terraform infrastructure, and deployment to Azure Container Apps.
@@ -78,6 +82,7 @@ PKG --> ADP
 ```
 
 **Diagram sources**
+
 - [docker-compose.yml](file://docker-compose.yml#L1-L77)
 - [Dockerfile](file://docker/api/Dockerfile#L1-L72)
 - [azure-pipelines.yml](file://azure-pipelines.yml#L1-L391)
@@ -93,6 +98,7 @@ PKG --> ADP
 - [package.json](file://package.json#L1-L65)
 
 **Section sources**
+
 - [docker-compose.yml](file://docker-compose.yml#L1-L77)
 - [Dockerfile](file://docker/api/Dockerfile#L1-L72)
 - [azure-pipelines.yml](file://azure-pipelines.yml#L1-L391)
@@ -109,6 +115,7 @@ PKG --> ADP
 - [package.json](file://package.json#L1-L65)
 
 ## Core Components
+
 - Docker containerization
   - Multi-stage Dockerfile builds a secure production image with a non-root user, exposes port 3000, defines health checks, and supports a development stage.
   - docker-compose sets up Postgres, Redis, and the API service locally with environment variables and volume mounts.
@@ -122,6 +129,7 @@ PKG --> ADP
   - apps/api/src/health.controller.ts exposes health, readiness, and liveness endpoints used by Kubernetes-style probes and CI/CD verification.
 
 **Section sources**
+
 - [Dockerfile](file://docker/api/Dockerfile#L1-L72)
 - [docker-compose.yml](file://docker-compose.yml#L1-L77)
 - [main.tf](file://infrastructure/terraform/main.tf#L1-L151)
@@ -132,6 +140,7 @@ PKG --> ADP
 - [apps/api/src/health.controller.ts](file://apps/api/src/health.controller.ts#L1-L42)
 
 ## Architecture Overview
+
 The system runs as a containerized API behind Azure Container Apps, integrated with managed services for compute, storage, caching, secrets, and observability.
 
 ```mermaid
@@ -171,6 +180,7 @@ APP -. telemetry .-> APPINSIGHTS
 ```
 
 **Diagram sources**
+
 - [main.tf](file://infrastructure/terraform/main.tf#L1-L151)
 - [modules/container-apps/main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L1-L192)
 - [modules/database/main.tf](file://infrastructure/terraform/modules/database/main.tf#L1-L62)
@@ -181,6 +191,7 @@ APP -. telemetry .-> APPINSIGHTS
 ## Detailed Component Analysis
 
 ### Docker Containerization
+
 - Multi-stage build
   - Builder stage installs dependencies, generates Prisma client, and builds the NestJS app.
   - Production stage copies artifacts, creates a non-root user, exposes port 3000, defines health checks, and starts the app.
@@ -198,13 +209,16 @@ StageDev --> End(["Ready"])
 ```
 
 **Diagram sources**
+
 - [Dockerfile](file://docker/api/Dockerfile#L1-L72)
 
 **Section sources**
+
 - [Dockerfile](file://docker/api/Dockerfile#L1-L72)
 - [docker-compose.yml](file://docker-compose.yml#L1-L77)
 
 ### Terraform Infrastructure as Code
+
 - Central composition
   - main.tf composes modules for networking, monitoring, registry, database, cache, key vault, and container apps, wiring outputs and dependencies.
 - Container Apps module
@@ -233,6 +247,7 @@ CA-->>Dev : "FQDN for API"
 ```
 
 **Diagram sources**
+
 - [main.tf](file://infrastructure/terraform/main.tf#L1-L151)
 - [modules/container-apps/main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L1-L192)
 - [modules/database/main.tf](file://infrastructure/terraform/modules/database/main.tf#L1-L62)
@@ -241,6 +256,7 @@ CA-->>Dev : "FQDN for API"
 - [modules/monitoring/main.tf](file://infrastructure/terraform/modules/monitoring/main.tf#L1-L22)
 
 **Section sources**
+
 - [main.tf](file://infrastructure/terraform/main.tf#L1-L151)
 - [modules/container-apps/main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L1-L192)
 - [modules/database/main.tf](file://infrastructure/terraform/modules/database/main.tf#L1-L62)
@@ -250,6 +266,7 @@ CA-->>Dev : "FQDN for API"
 - [variables.tf](file://infrastructure/terraform/variables.tf#L1-L129)
 
 ### CI/CD Pipeline with Azure DevOps
+
 - Triggers and pools
   - Builds on main and develop branches, excluding docs and Markdown files.
 - Build and Test stage
@@ -280,12 +297,15 @@ ADO->>CA : "Health/Readiness Checks"
 ```
 
 **Diagram sources**
+
 - [azure-pipelines.yml](file://azure-pipelines.yml#L1-L391)
 
 **Section sources**
+
 - [azure-pipelines.yml](file://azure-pipelines.yml#L1-L391)
 
 ### Application Configuration and Health Endpoints
+
 - Environment variables
   - NODE_ENV, PORT, API_PREFIX, DATABASE_URL, REDIS_HOST, REDIS_PORT, JWT secrets, BCRYPT_ROUNDS, throttling, CORS, LOG_LEVEL.
 - Configuration loader
@@ -304,16 +324,19 @@ HC --> EP3["GET /health/live"]
 ```
 
 **Diagram sources**
+
 - [.env.example](file://.env.example#L1-L33)
 - [apps/api/src/config/configuration.ts](file://apps/api/src/config/configuration.ts#L1-L49)
 - [apps/api/src/health.controller.ts](file://apps/api/src/health.controller.ts#L1-L42)
 
 **Section sources**
+
 - [.env.example](file://.env.example#L1-L33)
 - [apps/api/src/config/configuration.ts](file://apps/api/src/config/configuration.ts#L1-L49)
 - [apps/api/src/health.controller.ts](file://apps/api/src/health.controller.ts#L1-L42)
 
 ## Dependency Analysis
+
 - Internal dependencies
   - API app depends on database and Redis; configuration sources environment variables; health endpoints support container probes.
 - External dependencies
@@ -337,18 +360,21 @@ TF --> CA["Container Apps"]
 ```
 
 **Diagram sources**
+
 - [apps/api/src/config/configuration.ts](file://apps/api/src/config/configuration.ts#L1-L49)
 - [apps/api/src/health.controller.ts](file://apps/api/src/health.controller.ts#L1-L42)
 - [azure-pipelines.yml](file://azure-pipelines.yml#L1-L391)
 - [main.tf](file://infrastructure/terraform/main.tf#L1-L151)
 
 **Section sources**
+
 - [apps/api/src/config/configuration.ts](file://apps/api/src/config/configuration.ts#L1-L49)
 - [apps/api/src/health.controller.ts](file://apps/api/src/health.controller.ts#L1-L42)
 - [azure-pipelines.yml](file://azure-pipelines.yml#L1-L391)
 - [main.tf](file://infrastructure/terraform/main.tf#L1-L151)
 
 ## Performance Considerations
+
 - Container sizing and autoscaling
   - Adjust CPU/memory and min/max replicas per environment via variables to balance cost and responsiveness.
 - Database and cache tuning
@@ -361,6 +387,7 @@ TF --> CA["Container Apps"]
 [No sources needed since this section provides general guidance]
 
 ## Troubleshooting Guide
+
 - Health/readiness failures
   - Use the verification stage or manual curl against /health and /health/ready to confirm service status.
 - Container logs and revisions
@@ -371,11 +398,13 @@ TF --> CA["Container Apps"]
   - Ensure docker-compose health checks pass for Postgres and Redis; verify environment variables match service names and ports.
 
 **Section sources**
+
 - [scripts/deploy.sh](file://scripts/deploy.sh#L105-L133)
 - [apps/api/src/health.controller.ts](file://apps/api/src/health.controller.ts#L1-L42)
 - [azure-pipelines.yml](file://azure-pipelines.yml#L338-L391)
 
 ## Conclusion
+
 The Quiz-to-build system integrates a multi-stage Dockerized API with robust CI/CD and Terraform-managed Azure infrastructure. The design emphasizes modularity, observability, and operational safety through health probes, secrets management, and staged deployments. Scaling and high availability can be tuned via container replicas and database HA settings, while monitoring and logs provide operational insights.
 
 [No sources needed since this section summarizes without analyzing specific files]
@@ -407,12 +436,14 @@ The Quiz-to-build system integrates a multi-stage Dockerized API with robust CI/
   - View logs, telemetry, and set up alerts in Log Analytics and Application Insights.
 
 **Section sources**
+
 - [scripts/setup-azure.sh](file://scripts/setup-azure.sh#L1-L142)
 - [scripts/deploy.sh](file://scripts/deploy.sh#L1-L152)
 - [azure-pipelines.yml](file://azure-pipelines.yml#L164-L391)
 - [main.tf](file://infrastructure/terraform/main.tf#L1-L151)
 
 ### Cloud Infrastructure Components
+
 - PostgreSQL database
   - Flexible Server in a dedicated subnet with private DNS and performance settings.
 - Redis cache
@@ -421,11 +452,13 @@ The Quiz-to-build system integrates a multi-stage Dockerized API with robust CI/
   - Single-revision environment hosting the API with probes, secrets, and registry credentials.
 
 **Section sources**
+
 - [modules/database/main.tf](file://infrastructure/terraform/modules/database/main.tf#L1-L62)
 - [modules/cache/main.tf](file://infrastructure/terraform/modules/cache/main.tf#L1-L21)
 - [modules/container-apps/main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L1-L192)
 
 ### Scaling, Load Balancing, and High Availability
+
 - Autoscaling
   - Tune min/max replicas via variables to scale with demand.
 - Load balancing
@@ -434,11 +467,13 @@ The Quiz-to-build system integrates a multi-stage Dockerized API with robust CI/
   - Consider enabling PostgreSQL HA and increasing Redis capacity for production.
 
 **Section sources**
+
 - [variables.tf](file://infrastructure/terraform/variables.tf#L111-L121)
 - [modules/container-apps/main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L142-L151)
 - [modules/database/main.tf](file://infrastructure/terraform/modules/database/main.tf#L23-L25)
 
 ### Environment Configuration Reference
+
 - Application
   - NODE_ENV, PORT, API_PREFIX
 - Database
@@ -455,5 +490,6 @@ The Quiz-to-build system integrates a multi-stage Dockerized API with robust CI/
   - CORS_ORIGIN
 
 **Section sources**
+
 - [.env.example](file://.env.example#L1-L33)
 - [apps/api/src/config/configuration.ts](file://apps/api/src/config/configuration.ts#L1-L49)

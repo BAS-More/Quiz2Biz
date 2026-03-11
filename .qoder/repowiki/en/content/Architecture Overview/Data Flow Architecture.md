@@ -20,6 +20,7 @@
 </cite>
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
@@ -31,10 +32,13 @@
 9. [Conclusion](#conclusion)
 
 ## Introduction
+
 This document describes the end-to-end data flow architecture for the Quiz-to-build system. It covers how HTTP requests traverse the application via global interceptors and guards, how controllers delegate to services, how services interact with the database using Prisma ORM, and how Redis is used for session-related state and refresh tokens. It also explains request/response transformation, error handling via exception filters, and logging/metrics integration through interceptors.
 
 ## Project Structure
+
 The application is organized as a NestJS monorepo with:
+
 - An API application module that wires global pipes, filters, and interceptors
 - Feature modules for authentication, questionnaires, sessions, and standards
 - Shared libraries for database (Prisma) and cache (Redis)
@@ -83,6 +87,7 @@ RD_SRV --> RD_SRV
 ```
 
 **Diagram sources**
+
 - [main.ts](file://apps/api/src/main.ts#L11-L86)
 - [app.module.ts](file://apps/api/src/app.module.ts#L16-L66)
 - [logging.interceptor.ts](file://apps/api/src/common/interceptors/logging.interceptor.ts#L16-L60)
@@ -98,10 +103,12 @@ RD_SRV --> RD_SRV
 - [schema.prisma](file://prisma/schema.prisma#L1-L12)
 
 **Section sources**
+
 - [main.ts](file://apps/api/src/main.ts#L11-L86)
 - [app.module.ts](file://apps/api/src/app.module.ts#L16-L66)
 
 ## Core Components
+
 - Bootstrap and global middleware:
   - Helmet security headers, CORS, global prefix, validation pipe, global exception filter, and global interceptors are configured at startup.
 - Interceptors:
@@ -115,6 +122,7 @@ RD_SRV --> RD_SRV
   - Database and Redis modules provide PrismaClient and Redis client instances with lifecycle hooks.
 
 **Section sources**
+
 - [main.ts](file://apps/api/src/main.ts#L20-L49)
 - [logging.interceptor.ts](file://apps/api/src/common/interceptors/logging.interceptor.ts#L16-L60)
 - [transform.interceptor.ts](file://apps/api/src/common/interceptors/transform.interceptor.ts#L21-L35)
@@ -123,7 +131,9 @@ RD_SRV --> RD_SRV
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L87-L94)
 
 ## Architecture Overview
+
 The system follows a layered architecture:
+
 - Transport layer: Express-based NestJS with global middleware and guards
 - Presentation layer: Controllers expose endpoints and enforce auth guards
 - Domain layer: Services encapsulate business logic and orchestration
@@ -172,6 +182,7 @@ Redis --> Cache
 ```
 
 **Diagram sources**
+
 - [main.ts](file://apps/api/src/main.ts#L20-L49)
 - [auth.controller.ts](file://apps/api/src/modules/auth/auth.controller.ts#L24-L73)
 - [session.controller.ts](file://apps/api/src/modules/session/session.controller.ts#L30-L152)
@@ -187,6 +198,7 @@ Redis --> Cache
 ## Detailed Component Analysis
 
 ### Authentication Data Flow
+
 This flow covers user registration, login, token refresh, logout, and protected profile retrieval.
 
 ```mermaid
@@ -237,18 +249,21 @@ AC-->>C : 200 {success : true, data : user}
 ```
 
 **Diagram sources**
+
 - [auth.controller.ts](file://apps/api/src/modules/auth/auth.controller.ts#L31-L72)
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L54-L232)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L8-L40)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L40-L59)
 
 **Section sources**
+
 - [auth.controller.ts](file://apps/api/src/modules/auth/auth.controller.ts#L27-L72)
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L54-L232)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L20-L40)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L40-L59)
 
 ### Session Management Data Flow
+
 This flow covers creating sessions, retrieving next questions, submitting responses, continuing sessions, and completing sessions.
 
 ```mermaid
@@ -293,15 +308,18 @@ SC-->>C : 200 {success : true, data : ...}
 ```
 
 **Diagram sources**
+
 - [session.controller.ts](file://apps/api/src/modules/session/session.controller.ts#L39-L151)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L96-L546)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L8-L40)
 
 **Section sources**
+
 - [session.controller.ts](file://apps/api/src/modules/session/session.controller.ts#L36-L152)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L96-L546)
 
 ### Request/Response Transformation Pipeline
+
 The transform interceptor wraps all successful responses into a consistent envelope. The logging interceptor records request metadata and timing. The exception filter ensures all errors are normalized.
 
 ```mermaid
@@ -320,16 +338,19 @@ Respond --> Log["LoggingInterceptor<br/>Log method/url/status/duration/ip/userAg
 ```
 
 **Diagram sources**
+
 - [transform.interceptor.ts](file://apps/api/src/common/interceptors/transform.interceptor.ts#L21-L35)
 - [logging.interceptor.ts](file://apps/api/src/common/interceptors/logging.interceptor.ts#L16-L60)
 - [http-exception.filter.ts](file://apps/api/src/common/filters/http-exception.filter.ts#L26-L82)
 
 **Section sources**
+
 - [transform.interceptor.ts](file://apps/api/src/common/interceptors/transform.interceptor.ts#L21-L35)
 - [logging.interceptor.ts](file://apps/api/src/common/interceptors/logging.interceptor.ts#L16-L60)
 - [http-exception.filter.ts](file://apps/api/src/common/filters/http-exception.filter.ts#L26-L82)
 
 ### Database Interaction Patterns Using Prisma ORM
+
 - Initialization and lifecycle:
   - PrismaService extends PrismaClient and connects/disconnects on module init/destroy.
   - In development, slow queries are logged for performance tuning.
@@ -377,16 +398,19 @@ Session "1" --> "*" Response : "contains"
 ```
 
 **Diagram sources**
+
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L8-L40)
 - [schema.prisma](file://prisma/schema.prisma#L99-L147)
 - [schema.prisma](file://prisma/schema.prisma#L270-L322)
 
 **Section sources**
+
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L20-L40)
 - [schema.prisma](file://prisma/schema.prisma#L99-L147)
 - [schema.prisma](file://prisma/schema.prisma#L270-L322)
 
 ### Caching Strategy Using Redis
+
 - Refresh token storage:
   - On login/register, refresh tokens are stored in Redis with TTL derived from configuration.
   - Token verification during refresh reads the token key; logout deletes the key.
@@ -407,16 +431,19 @@ I["AuthService: logout(refreshToken)"] --> J["RedisService.del(refresh:<token>)"
 ```
 
 **Diagram sources**
+
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L192-L232)
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L128-L164)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L40-L59)
 
 **Section sources**
+
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L192-L232)
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L128-L164)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L40-L59)
 
 ### Error Handling Throughout the Data Flow
+
 - Centralized exception filter:
   - Converts HttpException and unhandled errors into a consistent error envelope with code, message, details, requestId, and timestamp.
   - Logs structured error entries with stack traces for debugging.
@@ -439,16 +466,19 @@ EX --> Res
 ```
 
 **Diagram sources**
+
 - [main.ts](file://apps/api/src/main.ts#L34-L43)
 - [auth.controller.ts](file://apps/api/src/modules/auth/auth.controller.ts#L64-L72)
 - [http-exception.filter.ts](file://apps/api/src/common/filters/http-exception.filter.ts#L26-L82)
 - [transform.interceptor.ts](file://apps/api/src/common/interceptors/transform.interceptor.ts#L21-L35)
 
 **Section sources**
+
 - [main.ts](file://apps/api/src/main.ts#L34-L43)
 - [http-exception.filter.ts](file://apps/api/src/common/filters/http-exception.filter.ts#L26-L82)
 
 ### Logging and Monitoring Integration
+
 - Logging interceptor:
   - Captures method, URL, status code, duration, IP, user agent, and request ID; logs both success and error outcomes.
 - Prisma query logging:
@@ -466,14 +496,17 @@ L->>L : log(JSON with metadata)
 ```
 
 **Diagram sources**
+
 - [logging.interceptor.ts](file://apps/api/src/common/interceptors/logging.interceptor.ts#L25-L59)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L25-L33)
 
 **Section sources**
+
 - [logging.interceptor.ts](file://apps/api/src/common/interceptors/logging.interceptor.ts#L16-L60)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L25-L33)
 
 ## Dependency Analysis
+
 - AppModule aggregates:
   - ConfigModule, ThrottlerModule, PrismaModule, RedisModule, and feature modules.
   - Registers global throttling guard and exposes guards via APP_GUARD.
@@ -502,6 +535,7 @@ AuthService --> RedisService
 ```
 
 **Diagram sources**
+
 - [app.module.ts](file://apps/api/src/app.module.ts#L16-L66)
 - [auth.controller.ts](file://apps/api/src/modules/auth/auth.controller.ts#L24-L73)
 - [session.controller.ts](file://apps/api/src/modules/session/session.controller.ts#L30-L152)
@@ -510,9 +544,11 @@ AuthService --> RedisService
 - [redis.module.ts](file://libs/redis/src/redis.module.ts#L4-L9)
 
 **Section sources**
+
 - [app.module.ts](file://apps/api/src/app.module.ts#L16-L66)
 
 ## Performance Considerations
+
 - Interceptors:
   - Logging adds minimal overhead; ensure requestId propagation for tracing across services.
 - Prisma:
@@ -524,6 +560,7 @@ AuthService --> RedisService
   - ValidationPipe transforms inputs; keep DTOs concise to reduce unnecessary conversions.
 
 ## Troubleshooting Guide
+
 - Unhandled errors:
   - Inspect the exception filter logs for stack traces and error envelopes.
 - Authentication failures:
@@ -534,10 +571,12 @@ AuthService --> RedisService
   - Confirm PrismaService lifecycle logs and slow query warnings in development.
 
 **Section sources**
+
 - [http-exception.filter.ts](file://apps/api/src/common/filters/http-exception.filter.ts#L56-L82)
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L128-L164)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L270-L359)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L20-L40)
 
 ## Conclusion
+
 The Quiz-to-build system implements a robust, layered architecture with clear separation of concerns. Global interceptors and filters ensure consistent request/response handling and error normalization. Prisma ORM provides reliable persistence, while Redis supports secure, time-bound refresh tokens. The session service coordinates adaptive logic and progress tracking, enabling dynamic questionnaire experiences. The documented flows and diagrams serve as a blueprint for extending functionality, optimizing performance, and maintaining reliability.

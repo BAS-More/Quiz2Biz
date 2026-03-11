@@ -53,7 +53,6 @@ interface ReadinessResponse {
 @Controller()
 @SkipThrottle()
 export class HealthController {
-
   constructor(
     @Optional() @Inject(PrismaService) private readonly prisma?: PrismaService,
     @Optional() @Inject(RedisService) private readonly redis?: RedisService,
@@ -364,9 +363,7 @@ export class HealthController {
     try {
       const health = await this.aiGateway.getHealth();
       const responseTime = Date.now() - startTime;
-      const availableProviders = health.providers
-        .filter((p) => p.available)
-        .map((p) => p.provider);
+      const availableProviders = health.providers.filter((p) => p.available).map((p) => p.provider);
 
       let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
       let message = `${availableProviders.length}/${health.providers.length} providers available`;

@@ -135,7 +135,7 @@ export class JiraConfluenceAdapter {
   constructor(
     private readonly configService: ConfigService,
     _prisma: PrismaService,
-  ) { }
+  ) {}
 
   private getTrustedJiraDomain(): string {
     const trustedDomain = (this.configService.get<string>('JIRA_DOMAIN') || '')

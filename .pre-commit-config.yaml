@@ -8,7 +8,7 @@ repos:
     rev: v1.5.0
     hooks:
       - id: detect-secrets
-        args: ["--baseline", ".secrets.baseline"]
+        args: ['--baseline', '.secrets.baseline']
         exclude: |
           (?x)^(
             package-lock\.json|
@@ -34,8 +34,8 @@ repos:
         types: [file]
         additional_dependencies:
           - eslint@8.56.0
-          - "@typescript-eslint/parser@6.21.0"
-          - "@typescript-eslint/eslint-plugin@6.21.0"
+          - '@typescript-eslint/parser@6.21.0'
+          - '@typescript-eslint/eslint-plugin@6.21.0'
 
   # Prettier - Code Formatting
   - repo: https://github.com/pre-commit/mirrors-prettier
@@ -55,7 +55,7 @@ repos:
     hooks:
       # Prevent large files from being committed
       - id: check-added-large-files
-        args: ["--maxkb=1000"]
+        args: ['--maxkb=1000']
 
       # Check for files that would conflict on case-insensitive filesystems
       - id: check-case-conflict
@@ -86,7 +86,7 @@ repos:
 
       # Check YAML syntax
       - id: check-yaml
-        args: ["--allow-multiple-documents"]
+        args: ['--allow-multiple-documents']
 
       # Detect private keys
       - id: detect-private-key
@@ -99,7 +99,7 @@ repos:
     rev: 1.7.7
     hooks:
       - id: bandit
-        args: ["-ll"]
+        args: ['-ll']
         files: \.py$
 
 # CI configuration
@@ -108,7 +108,7 @@ ci:
     [pre-commit.ci] auto fixes from pre-commit.com hooks
     for more information, see https://pre-commit.ci
   autofix_prs: true
-  autoupdate_commit_msg: "[pre-commit.ci] pre-commit autoupdate"
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
   autoupdate_schedule: weekly
   skip: []
   submodules: false

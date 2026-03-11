@@ -18,7 +18,9 @@
 </cite>
 
 ## Update Summary
+
 **Changes Made**
+
 - Enhanced document generation capabilities with improved formatting options and advanced template support
 - Added comprehensive error handling mechanisms throughout the document generation pipeline
 - Implemented sophisticated content processing with enhanced template data handling
@@ -26,6 +28,7 @@
 - Enhanced storage service with robust error handling and validation mechanisms
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
@@ -88,11 +91,13 @@ SS --> PRISMA
 ```
 
 **Diagram sources**
+
 - [document-generator.module.ts](file://apps/api/src/modules/document-generator/document-generator.module.ts#L1-L23)
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L1-L163)
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L1-L230)
 
 **Section sources**
+
 - [document-generator.module.ts](file://apps/api/src/modules/document-generator/document-generator.module.ts#L1-L23)
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L1-L163)
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L1-L230)
@@ -102,20 +107,25 @@ SS --> PRISMA
 The Document Generator Services consists of four primary services working in concert:
 
 ### DocumentGeneratorService
+
 The central orchestrator that manages the entire document generation workflow, handling validation, coordination between services, and document lifecycle management with comprehensive error handling.
 
 ### TemplateEngineService
+
 Processes raw questionnaire responses and transforms them into structured template data based on document mappings defined in the questionnaire questions, with enhanced validation and error handling.
 
 ### DocumentBuilderService
+
 Converts template data into professionally formatted DOCX documents using the docx library, applying appropriate styling and structure based on document categories with advanced formatting options.
 
 ### StorageService
+
 Manages document storage and retrieval using Azure Blob Storage, providing secure access through SAS tokens and maintaining organized file hierarchies with robust error handling.
 
 **Enhanced** Improved error handling mechanisms throughout all services with comprehensive validation and fallback strategies.
 
 **Section sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L28-L360)
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L26-L290)
 - [document-builder.service.ts](file://apps/api/src/modules/document-generator/services/document-builder.service.ts#L28-L487)
@@ -156,6 +166,7 @@ Note over Service,Storage : Error handling with status updates
 ```
 
 **Diagram sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L38-L54)
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L42-L139)
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L35-L99)
@@ -207,6 +218,7 @@ End --> End
 ```
 
 **Diagram sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L42-L194)
 
 **Enhanced** Added comprehensive error handling with proper status updates and fallback mechanisms for each step of the document generation process.
@@ -247,6 +259,7 @@ TemplateEngineService --> Response : "processes"
 ```
 
 **Diagram sources**
+
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L26-L290)
 
 **Enhanced** Improved template data validation and error handling for missing or malformed responses.
@@ -285,6 +298,7 @@ DocumentBuilderService --> DocumentTypeInfo : "formats"
 ```
 
 **Diagram sources**
+
 - [document-builder.service.ts](file://apps/api/src/modules/document-generator/services/document-builder.service.ts#L28-L487)
 
 **Enhanced** Added advanced formatting options including improved heading levels, paragraph spacing, table formatting, and enhanced content processing with better error handling.
@@ -321,11 +335,13 @@ Permissions --> Expiration
 ```
 
 **Diagram sources**
+
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L65-L136)
 
 **Enhanced** Complete Azure Blob Storage integration with hierarchical organization, secure SAS token generation, automatic content type setting for DOCX files, and comprehensive error handling.
 
 **Section sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L42-L360)
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L35-L290)
 - [document-builder.service.ts](file://apps/api/src/modules/document-generator/services/document-builder.service.ts#L35-L487)
@@ -337,31 +353,32 @@ Permissions --> Expiration
 
 The DocumentController provides comprehensive document management capabilities:
 
-| Endpoint | Method | Description | Authentication |
-|----------|--------|-------------|----------------|
-| `/documents/generate` | POST | Request document generation for a session | JWT Required |
-| `/documents/types` | GET | List available document types | JWT Required |
-| `/documents/session/:sessionId` | GET | List all documents for a session | JWT Required |
-| `/documents/:id` | GET | Get document details | JWT Required |
-| `/documents/:id/download` | GET | Get secure download URL | JWT Required |
+| Endpoint                        | Method | Description                               | Authentication |
+| ------------------------------- | ------ | ----------------------------------------- | -------------- |
+| `/documents/generate`           | POST   | Request document generation for a session | JWT Required   |
+| `/documents/types`              | GET    | List available document types             | JWT Required   |
+| `/documents/session/:sessionId` | GET    | List all documents for a session          | JWT Required   |
+| `/documents/:id`                | GET    | Get document details                      | JWT Required   |
+| `/documents/:id/download`       | GET    | Get secure download URL                   | JWT Required   |
 
 ### Admin Document API
 
 The DocumentAdminController provides administrative capabilities:
 
-| Endpoint | Method | Description | Authentication |
-|----------|--------|-------------|----------------|
-| `/admin/document-types` | GET | List all document types | JWT + Admin Role |
-| `/admin/document-types/:id` | GET | Get document type details | JWT + Admin Role |
-| `/admin/document-types` | POST | Create document type | JWT + Admin Role |
-| `/admin/document-types/:id` | PATCH | Update document type | JWT + Admin Role |
-| `/admin/documents/pending-review` | GET | List documents pending review | JWT + Admin Role |
-| `/admin/documents/:id/approve` | PATCH | Approve a document | JWT + Admin Role |
-| `/admin/documents/:id/reject` | PATCH | Reject a document | JWT + Admin Role |
+| Endpoint                          | Method | Description                   | Authentication   |
+| --------------------------------- | ------ | ----------------------------- | ---------------- |
+| `/admin/document-types`           | GET    | List all document types       | JWT + Admin Role |
+| `/admin/document-types/:id`       | GET    | Get document type details     | JWT + Admin Role |
+| `/admin/document-types`           | POST   | Create document type          | JWT + Admin Role |
+| `/admin/document-types/:id`       | PATCH  | Update document type          | JWT + Admin Role |
+| `/admin/documents/pending-review` | GET    | List documents pending review | JWT + Admin Role |
+| `/admin/documents/:id/approve`    | PATCH  | Approve a document            | JWT + Admin Role |
+| `/admin/documents/:id/reject`     | PATCH  | Reject a document             | JWT + Admin Role |
 
 **Enhanced** Improved response typing with enhanced DTO validation and comprehensive error handling throughout the API endpoints.
 
 **Section sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L38-L113)
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L49-L228)
 
@@ -464,6 +481,7 @@ DOCUMENT_TYPE ||--o{ DOCUMENT : "defines"
 ```
 
 **Diagram sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L328-L381)
 
 ### Document Status Lifecycle
@@ -488,11 +506,13 @@ note right of REJECTED : Document Returned for Revision
 ```
 
 **Diagram sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L58-L66)
 
 **Enhanced** Comprehensive error handling with proper status updates and fallback mechanisms throughout the document lifecycle.
 
 **Section sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L328-L381)
 
 ## Integration Points
@@ -533,6 +553,7 @@ Resp -.-> TE
 ```
 
 **Diagram sources**
+
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L104-L136)
 - [schema.prisma](file://prisma/schema.prisma#L233-L247)
 
@@ -574,11 +595,13 @@ DocumentTypeStandard --> EngineeringStandard : "references"
 ```
 
 **Diagram sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L412-L446)
 
 **Enhanced** Enhanced integration with improved JSON field handling for flexible standards data storage and comprehensive validation.
 
 **Section sources**
+
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L227-L249)
 - [schema.prisma](file://prisma/schema.prisma#L412-L446)
 
@@ -619,30 +642,35 @@ The system implements comprehensive error handling:
 ### Common Issues and Solutions
 
 **Document Generation Failures**
+
 - Verify session completion status before generation
 - Check required questions are answered for the specific document type
 - Ensure document type is active and properly configured
 - Validate storage service connectivity and credentials
 
 **Storage Access Problems**
+
 - Confirm Azure Storage connection string configuration
 - Verify container existence and permissions
 - Check SAS token generation and expiration settings
 - Validate file path formatting and hierarchy
 
 **Template Processing Errors**
+
 - Review document mappings in questionnaire questions
 - Verify response data types match expected formats
 - Check template data structure consistency
 - Validate required fields presence
 
 **Performance Issues**
+
 - Monitor database query performance
 - Check memory usage during document generation
 - Verify network latency for storage operations
 - Review concurrent request handling capacity
 
 **DOCX Generation Issues**
+
 - Verify document builder service initialization
 - Check template data structure validity
 - Validate document category support
@@ -662,6 +690,7 @@ The system provides comprehensive logging and monitoring capabilities:
 **Enhanced** Enhanced logging for Azure Blob Storage operations, DOCX document generation processes, and comprehensive error handling mechanisms.
 
 **Section sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L117-L132)
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L45-L55)
 

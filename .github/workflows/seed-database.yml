@@ -23,7 +23,7 @@ jobs:
     name: Seed Database
     runs-on: ubuntu-latest
     if: github.event.inputs.confirm == 'CONFIRM'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
