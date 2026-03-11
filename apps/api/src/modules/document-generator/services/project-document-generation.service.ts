@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck — WIP module: references Prisma models/fields not yet in schema
 /**
  * Project Document Generation Service

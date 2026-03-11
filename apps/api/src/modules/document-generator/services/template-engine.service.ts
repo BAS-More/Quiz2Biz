@@ -149,55 +149,50 @@ export class TemplateEngineService {
     const { value, question } = response;
     const responseValue = value as Record<string, unknown>;
 
-    switch (question.type) {
-      case 'TEXT':
-      case 'TEXTAREA':
-      case 'EMAIL':
-      case 'URL':
-        return responseValue.text ?? '';
+    const handler = this.responseValueExtractors[question.type];
+    return handler ? handler(responseValue, question) : value;
+  }
 
-      case 'NUMBER':
-        return responseValue.number ?? 0;
+  /** Dispatch map for question-type-specific value extraction */
+  private readonly responseValueExtractors: Record<
+    string,
+    (responseValue: Record<string, unknown>, question: { type: string; options: unknown }) => unknown
+  > = {
+    TEXT: (rv) => rv.text ?? '',
+    TEXTAREA: (rv) => rv.text ?? '',
+    EMAIL: (rv) => rv.text ?? '',
+    URL: (rv) => rv.text ?? '',
+    NUMBER: (rv) => rv.number ?? 0,
+    DATE: (rv) => rv.date ?? null,
+    SCALE: (rv) => rv.rating ?? 0,
+    SINGLE_CHOICE: (rv, q) => this.extractSingleChoice(rv, q),
+    MULTIPLE_CHOICE: (rv, q) => this.extractMultipleChoice(rv, q),
+    FILE_UPLOAD: (rv) => rv.fileUrl ?? null,
+    MATRIX: (rv) => rv.matrix ?? {},
+  };
 
-      case 'DATE':
-        return responseValue.date ?? null;
+  private extractSingleChoice(
+    responseValue: Record<string, unknown>,
+    question: { options: unknown },
+  ): unknown {
+    const selectedId = responseValue.selectedOptionId as string;
+    const options = question.options as Array<{ value: string; label: string }> | null;
+    const selected = options?.find((o) => o.value === selectedId);
+    return selected?.label ?? selectedId;
+  }
 
-      case 'SCALE':
-        return responseValue.rating ?? 0;
-
-      case 'SINGLE_CHOICE': {
-        const selectedId = responseValue.selectedOptionId as string;
-        const options = question.options as Array<{
-          value: string;
-          label: string;
-        }> | null;
-        const selected = options?.find((o) => o.value === selectedId);
-        return selected?.label ?? selectedId;
-      }
-
-      case 'MULTIPLE_CHOICE': {
-        const selectedIds = responseValue.selectedOptionIds as string[];
-        const options = question.options as Array<{
-          value: string;
-          label: string;
-        }> | null;
-        return (
-          selectedIds?.map((id) => {
-            const option = options?.find((o) => o.value === id);
-            return option?.label ?? id;
-          }) ?? []
-        );
-      }
-
-      case 'FILE_UPLOAD':
-        return responseValue.fileUrl ?? null;
-
-      case 'MATRIX':
-        return responseValue.matrix ?? {};
-
-      default:
-        return value;
-    }
+  private extractMultipleChoice(
+    responseValue: Record<string, unknown>,
+    question: { options: unknown },
+  ): unknown {
+    const selectedIds = responseValue.selectedOptionIds as string[];
+    const options = question.options as Array<{ value: string; label: string }> | null;
+    return (
+      selectedIds?.map((id) => {
+        const option = options?.find((o) => o.value === id);
+        return option?.label ?? id;
+      }) ?? []
+    );
   }
 
   /**

@@ -713,21 +713,7 @@ export class JiraConfluenceAdapter {
       type: 'confluence_page' as const,
       sourceId: `confluence-page-${page.id}`,
       sourceUrl: `https://${config.domain}/wiki${page._links.webui}`,
-      data: {
-        id: page.id,
-        title: page.title,
-        type: page.type,
-        status: page.status,
-        spaceKey: page.space?.key,
-        spaceName: page.space?.name,
-        version: page.version?.number,
-        versionDate: page.version?.when,
-        versionAuthor: page.version?.by?.displayName,
-        ancestors: page.ancestors?.map((a) => ({ id: a.id, title: a.title })),
-        childPageCount: page.children?.page?.results?.length || 0,
-        attachmentCount: page.children?.attachment?.results?.length || 0,
-        content: page.body?.storage?.value || page.body?.view?.value,
-      },
+      data: this.extractConfluencePageData(page),
       hash: this.calculateHash(page),
       timestamp: new Date(page.version?.when || new Date()),
       metadata: {
@@ -736,6 +722,24 @@ export class JiraConfluenceAdapter {
         spaceKey: config.spaceKey,
         resourceType: 'page',
       },
+    };
+  }
+
+  private extractConfluencePageData(page: ConfluencePage): Record<string, unknown> {
+    return {
+      id: page.id,
+      title: page.title,
+      type: page.type,
+      status: page.status,
+      spaceKey: page.space?.key,
+      spaceName: page.space?.name,
+      version: page.version?.number,
+      versionDate: page.version?.when,
+      versionAuthor: page.version?.by?.displayName,
+      ancestors: page.ancestors?.map((a) => ({ id: a.id, title: a.title })),
+      childPageCount: page.children?.page?.results?.length || 0,
+      attachmentCount: page.children?.attachment?.results?.length || 0,
+      content: page.body?.storage?.value || page.body?.view?.value,
     };
   }
 

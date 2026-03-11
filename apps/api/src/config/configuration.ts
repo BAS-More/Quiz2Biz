@@ -1,42 +1,55 @@
+/**
+ * Fail-fast validation for production environment.
+ * Ensures critical secrets are set and strong enough.
+ */
+function validateProductionEnvironment(): void {
+  const required: Record<string, string | undefined> = {
+    JWT_SECRET: process.env.JWT_SECRET,
+    JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
+    DATABASE_URL: process.env.DATABASE_URL,
+  };
+  const missing = Object.entries(required)
+    .filter(([, v]) => !v)
+    .map(([k]) => k);
+  if (missing.length > 0) {
+    throw new Error(
+      `FATAL: Missing required environment variables in production: ${missing.join(', ')}`,
+    );
+  }
+
+  validateJwtSecrets();
+
+  if (!process.env.CORS_ORIGIN || process.env.CORS_ORIGIN === '*') {
+    throw new Error(
+      'FATAL: CORS_ORIGIN must be set to an explicit allowlist in production (not "*")',
+    );
+  }
+}
+
+/**
+ * Validate JWT secrets are strong enough for production use.
+ */
+function validateJwtSecrets(): void {
+  const jwtSecret = process.env.JWT_SECRET || '';
+  const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET || '';
+  if (jwtSecret.includes('change-in-production') || jwtSecret.length < 32) {
+    throw new Error(
+      'FATAL: JWT_SECRET must be a strong random value (>=32 chars) in production',
+    );
+  }
+  if (jwtRefreshSecret.includes('change-in-production') || jwtRefreshSecret.length < 32) {
+    throw new Error(
+      'FATAL: JWT_REFRESH_SECRET must be a strong random value (>=32 chars) in production',
+    );
+  }
+}
+
 export default (): Record<string, unknown> => {
   const nodeEnv = process.env.NODE_ENV || 'development';
   const isProduction = nodeEnv === 'production';
 
-  // Fail-fast: critical secrets MUST be set in production
   if (isProduction) {
-    const required: Record<string, string | undefined> = {
-      JWT_SECRET: process.env.JWT_SECRET,
-      JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
-      DATABASE_URL: process.env.DATABASE_URL,
-    };
-    const missing = Object.entries(required)
-      .filter(([, v]) => !v)
-      .map(([k]) => k);
-    if (missing.length > 0) {
-      throw new Error(
-        `FATAL: Missing required environment variables in production: ${missing.join(', ')}`,
-      );
-    }
-
-    // Reject default/weak JWT secrets in production
-    const jwtSecret = process.env.JWT_SECRET || '';
-    const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET || '';
-    if (jwtSecret.includes('change-in-production') || jwtSecret.length < 32) {
-      throw new Error(
-        'FATAL: JWT_SECRET must be a strong random value (>=32 chars) in production',
-      );
-    }
-    if (jwtRefreshSecret.includes('change-in-production') || jwtRefreshSecret.length < 32) {
-      throw new Error(
-        'FATAL: JWT_REFRESH_SECRET must be a strong random value (>=32 chars) in production',
-      );
-    }
-
-    if (!process.env.CORS_ORIGIN || process.env.CORS_ORIGIN === '*') {
-      throw new Error(
-        'FATAL: CORS_ORIGIN must be set to an explicit allowlist in production (not "*")',
-      );
-    }
+    validateProductionEnvironment();
   }
 
   return {

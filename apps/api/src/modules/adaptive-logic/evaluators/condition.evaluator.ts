@@ -38,6 +38,34 @@ export class ConditionEvaluator {
     }
   }
 
+  /** Dispatch map for operator evaluation — reduces cyclomatic complexity */
+  private readonly operatorHandlers: Record<string, (actual: unknown, expected: unknown) => boolean> = {
+    equals: (a, e) => this.equals(a, e),
+    eq: (a, e) => this.equals(a, e),
+    not_equals: (a, e) => !this.equals(a, e),
+    ne: (a, e) => !this.equals(a, e),
+    includes: (a, e) => this.includes(a, e),
+    contains: (a, e) => this.includes(a, e),
+    not_includes: (a, e) => !this.includes(a, e),
+    not_contains: (a, e) => !this.includes(a, e),
+    in: (a, e) => this.isIn(a, e),
+    not_in: (a, e) => !this.isIn(a, e),
+    greater_than: (a, e) => this.greaterThan(a, e),
+    gt: (a, e) => this.greaterThan(a, e),
+    less_than: (a, e) => this.lessThan(a, e),
+    lt: (a, e) => this.lessThan(a, e),
+    greater_than_or_equal: (a, e) => this.greaterThanOrEqual(a, e),
+    gte: (a, e) => this.greaterThanOrEqual(a, e),
+    less_than_or_equal: (a, e) => this.lessThanOrEqual(a, e),
+    lte: (a, e) => this.lessThanOrEqual(a, e),
+    between: (a, e) => this.between(a, e),
+    is_empty: (a) => this.isEmpty(a),
+    is_not_empty: (a) => !this.isEmpty(a),
+    starts_with: (a, e) => this.startsWith(a, e),
+    ends_with: (a, e) => this.endsWith(a, e),
+    matches: (a, e) => this.matches(a, e),
+  };
+
   /**
    * Evaluate a single operator
    */
@@ -46,66 +74,8 @@ export class ConditionEvaluator {
     actualValue: unknown,
     expectedValue: unknown,
   ): boolean {
-    switch (operator) {
-      case 'equals':
-      case 'eq':
-        return this.equals(actualValue, expectedValue);
-
-      case 'not_equals':
-      case 'ne':
-        return !this.equals(actualValue, expectedValue);
-
-      case 'includes':
-      case 'contains':
-        return this.includes(actualValue, expectedValue);
-
-      case 'not_includes':
-      case 'not_contains':
-        return !this.includes(actualValue, expectedValue);
-
-      case 'in':
-        return this.isIn(actualValue, expectedValue);
-
-      case 'not_in':
-        return !this.isIn(actualValue, expectedValue);
-
-      case 'greater_than':
-      case 'gt':
-        return this.greaterThan(actualValue, expectedValue);
-
-      case 'less_than':
-      case 'lt':
-        return this.lessThan(actualValue, expectedValue);
-
-      case 'greater_than_or_equal':
-      case 'gte':
-        return this.greaterThanOrEqual(actualValue, expectedValue);
-
-      case 'less_than_or_equal':
-      case 'lte':
-        return this.lessThanOrEqual(actualValue, expectedValue);
-
-      case 'between':
-        return this.between(actualValue, expectedValue);
-
-      case 'is_empty':
-        return this.isEmpty(actualValue);
-
-      case 'is_not_empty':
-        return !this.isEmpty(actualValue);
-
-      case 'starts_with':
-        return this.startsWith(actualValue, expectedValue);
-
-      case 'ends_with':
-        return this.endsWith(actualValue, expectedValue);
-
-      case 'matches':
-        return this.matches(actualValue, expectedValue);
-
-      default:
-        return false;
-    }
+    const handler = this.operatorHandlers[operator];
+    return handler ? handler(actualValue, expectedValue) : false;
   }
 
   /**

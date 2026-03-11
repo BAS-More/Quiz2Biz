@@ -166,9 +166,11 @@ export class QualityScoringService {
 
     return json.map((item: unknown) => {
       const criterion = item as Record<string, unknown>;
+      const key = typeof criterion.key === 'string' ? criterion.key : '';
+      const description = typeof criterion.description === 'string' ? criterion.description : '';
       return {
-        key: String(criterion.key ?? ''),
-        description: String(criterion.description ?? ''),
+        key,
+        description,
         weight: Number(criterion.weight || 1),
       };
     });

@@ -7,7 +7,7 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
-import { SessionStatus, Prisma } from '@prisma/client';
+import { SessionStatus, Prisma, Question } from '@prisma/client';
 import { PrismaService } from '@libs/database';
 import { QuestionnaireService, QuestionResponse } from '../../questionnaire/questionnaire.service';
 import { AdaptiveLogicService } from '../../adaptive-logic/adaptive-logic.service';
@@ -248,57 +248,23 @@ export class SessionMutationService {
     const skippedCount = totalQuestionsInQuestionnaire - visibleQuestions.length;
 
     // Find next unanswered questions
-    const nextQuestions: QuestionResponse[] = [];
-    if (!isComplete && session.currentQuestionId) {
-      const currentIndex = visibleQuestions.findIndex((q) => q.id === session.currentQuestionId);
-      for (
-        let i = Math.max(0, currentIndex);
-        i < visibleQuestions.length && nextQuestions.length < questionCount;
-        i++
-      ) {
-        if (!responseMap.has(visibleQuestions[i].id)) {
-          nextQuestions.push(mapQuestionToResponse(visibleQuestions[i]));
-        }
-      }
-      if (nextQuestions.length < questionCount) {
-        for (let i = 0; i < currentIndex && nextQuestions.length < questionCount; i++) {
-          if (!responseMap.has(visibleQuestions[i].id)) {
-            nextQuestions.push(mapQuestionToResponse(visibleQuestions[i]));
-          }
-        }
-      }
-    }
+    const nextQuestions = this.findNextUnansweredBatch(
+      visibleQuestions, session.currentQuestionId, responseMap, isComplete, questionCount,
+    );
 
     // Section completion
     const allSections = session.questionnaire.sections;
-    const sectionCompletionStatus = allSections.map((section) => {
-      const sq = visibleQuestions.filter((q) => q.sectionId === section.id);
-      const sa = sq.filter((q) => responseMap.has(q.id)).length;
-      return { sectionId: section.id, total: sq.length, answered: sa, isComplete: sq.length > 0 && sa === sq.length };
-    });
-    const completedSectionsCount = sectionCompletionStatus.filter((s) => s.isComplete).length;
+    const { completedSectionsCount } =
+      this.buildSectionCompletionStatus(allSections, visibleQuestions, responseMap);
     const progress = calculateProgress(responses.length, visibleQuestions.length, {
       totalSections: allSections.length,
       completedSections: completedSectionsCount,
     });
 
     // Current section info
-    let currentSectionInfo = {
-      id: '', name: '', description: undefined as string | undefined,
-      progress: 0, questionsInSection: 0, answeredInSection: 0,
-    };
-    if (session.currentSection) {
-      const sq = visibleQuestions.filter((q) => q.sectionId === session.currentSection!.id);
-      const sa = sq.filter((q) => responseMap.has(q.id)).length;
-      currentSectionInfo = {
-        id: session.currentSection.id,
-        name: session.currentSection.name,
-        description: (session.currentSection as { description?: string | null }).description ?? undefined,
-        progress: sq.length > 0 ? Math.round((sa / sq.length) * 100) : 0,
-        questionsInSection: sq.length,
-        answeredInSection: sa,
-      };
-    }
+    const currentSectionInfo = this.buildCurrentSectionInfo(
+      session.currentSection, visibleQuestions, responseMap,
+    );
 
     // Readiness score
     let readinessScore: number | undefined;
@@ -433,5 +399,79 @@ export class SessionMutationService {
       }
     }
     return result;
+  }
+
+  /**
+   * Find next batch of unanswered questions starting from current position.
+   */
+  private findNextUnansweredBatch(
+    visibleQuestions: Question[],
+    currentQuestionId: string | null,
+    responseMap: Map<string, unknown>,
+    isComplete: boolean,
+    questionCount: number,
+  ): QuestionResponse[] {
+    const result: QuestionResponse[] = [];
+    if (isComplete || !currentQuestionId) {
+      return result;
+    }
+    const currentIndex = visibleQuestions.findIndex((q) => q.id === currentQuestionId);
+    for (
+      let i = Math.max(0, currentIndex);
+      i < visibleQuestions.length && result.length < questionCount;
+      i++
+    ) {
+      if (!responseMap.has(visibleQuestions[i].id)) {
+        result.push(mapQuestionToResponse(visibleQuestions[i]));
+      }
+    }
+    if (result.length < questionCount) {
+      for (let i = 0; i < currentIndex && result.length < questionCount; i++) {
+        if (!responseMap.has(visibleQuestions[i].id)) {
+          result.push(mapQuestionToResponse(visibleQuestions[i]));
+        }
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Build section completion status for all sections.
+   */
+  private buildSectionCompletionStatus(
+    allSections: { id: string }[],
+    visibleQuestions: { id: string; sectionId: string }[],
+    responseMap: Map<string, unknown>,
+  ): { sectionCompletionStatus: { sectionId: string; total: number; answered: number; isComplete: boolean }[]; completedSectionsCount: number } {
+    const sectionCompletionStatus = allSections.map((section) => {
+      const sq = visibleQuestions.filter((q) => q.sectionId === section.id);
+      const sa = sq.filter((q) => responseMap.has(q.id)).length;
+      return { sectionId: section.id, total: sq.length, answered: sa, isComplete: sq.length > 0 && sa === sq.length };
+    });
+    const completedSectionsCount = sectionCompletionStatus.filter((s) => s.isComplete).length;
+    return { sectionCompletionStatus, completedSectionsCount };
+  }
+
+  /**
+   * Build current section info for the session response.
+   */
+  private buildCurrentSectionInfo(
+    currentSection: { id: string; name: string } | null,
+    visibleQuestions: { id: string; sectionId: string }[],
+    responseMap: Map<string, unknown>,
+  ): { id: string; name: string; description: string | undefined; progress: number; questionsInSection: number; answeredInSection: number } {
+    if (!currentSection) {
+      return { id: '', name: '', description: undefined, progress: 0, questionsInSection: 0, answeredInSection: 0 };
+    }
+    const sq = visibleQuestions.filter((q) => q.sectionId === currentSection.id);
+    const sa = sq.filter((q) => responseMap.has(q.id)).length;
+    return {
+      id: currentSection.id,
+      name: currentSection.name,
+      description: (currentSection as { description?: string | null }).description ?? undefined,
+      progress: sq.length > 0 ? Math.round((sa / sq.length) * 100) : 0,
+      questionsInSection: sq.length,
+      answeredInSection: sa,
+    };
   }
 }

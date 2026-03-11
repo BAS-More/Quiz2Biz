@@ -6,14 +6,6 @@ import { ConfigService } from '@nestjs/config';
 import * as archiver from 'archiver';
 import { PassThrough } from 'stream';
 
-interface _DocumentInfo {
-  id: string;
-  name: string;
-  type: string;
-  url: string;
-  size?: number;
-}
-
 export interface BulkDownloadResult {
   filename: string;
   stream: PassThrough;

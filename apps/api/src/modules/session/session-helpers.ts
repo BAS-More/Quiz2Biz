@@ -62,14 +62,7 @@ export function mapToSessionResponse(
   totalQuestions: number,
   sectionInfo?: { totalSections: number; completedSections: number },
 ): SessionResponse {
-  const progress = session.progress as {
-    percentage: number;
-    answered: number;
-    total: number;
-  };
-  const questionsLeft = (progress.total || totalQuestions) - progress.answered;
-  const sectionsLeft =
-    (sectionInfo?.totalSections ?? 0) - (sectionInfo?.completedSections ?? 0);
+  const progress = buildProgressFromSession(session, totalQuestions, sectionInfo);
 
   return {
     id: session.id,
@@ -83,21 +76,38 @@ export function mapToSessionResponse(
     readinessScore: session.readinessScore
       ? Number(session.readinessScore)
       : undefined,
-    progress: {
-      percentage: progress.percentage ?? 0,
-      answeredQuestions: progress.answered ?? 0,
-      totalQuestions: progress.total || totalQuestions,
-      estimatedTimeRemaining: questionsLeft > 0 ? Math.ceil(questionsLeft * 1.5) : 0,
-      sectionsLeft,
-      questionsLeft,
-      totalSections: sectionInfo?.totalSections ?? 0,
-      completedSections: sectionInfo?.completedSections ?? 0,
-    },
+    progress,
     currentSection: session.currentSection
       ? { id: session.currentSection.id, name: session.currentSection.name }
       : undefined,
     createdAt: session.startedAt,
     lastActivityAt: session.lastActivityAt,
+  };
+}
+
+function buildProgressFromSession(
+  session: Session,
+  totalQuestions: number,
+  sectionInfo?: { totalSections: number; completedSections: number },
+): ProgressInfo {
+  const raw = session.progress as {
+    percentage: number;
+    answered: number;
+    total: number;
+  };
+  const questionsLeft = (raw.total || totalQuestions) - raw.answered;
+  const sectionsLeft =
+    (sectionInfo?.totalSections ?? 0) - (sectionInfo?.completedSections ?? 0);
+
+  return {
+    percentage: raw.percentage ?? 0,
+    answeredQuestions: raw.answered ?? 0,
+    totalQuestions: raw.total || totalQuestions,
+    estimatedTimeRemaining: questionsLeft > 0 ? Math.ceil(questionsLeft * 1.5) : 0,
+    sectionsLeft,
+    questionsLeft,
+    totalSections: sectionInfo?.totalSections ?? 0,
+    completedSections: sectionInfo?.completedSections ?? 0,
   };
 }
 
@@ -155,34 +165,50 @@ export function validateResponse(
 
   // Type-specific validation
   if (value !== null && value !== undefined && validation) {
-    const minLength = typeof validation.minLength === 'number' ? validation.minLength : undefined;
-    const maxLength = typeof validation.maxLength === 'number' ? validation.maxLength : undefined;
-    const min = typeof validation.min === 'number' ? validation.min : undefined;
-    const max = typeof validation.max === 'number' ? validation.max : undefined;
-
-    if (typeof value === 'string') {
-      if (minLength !== undefined && value.length < minLength) {
-        errors.push(`Minimum length is ${minLength} characters`);
-      }
-      if (maxLength !== undefined && value.length > maxLength) {
-        errors.push(`Maximum length is ${maxLength} characters`);
-      }
-    }
-
-    if (typeof value === 'number') {
-      if (min !== undefined && value < min) {
-        errors.push(`Minimum value is ${min}`);
-      }
-      if (max !== undefined && value > max) {
-        errors.push(`Maximum value is ${max}`);
-      }
-    }
+    validateStringConstraints(value, validation, errors);
+    validateNumericConstraints(value, validation, errors);
   }
 
   return {
     isValid: errors.length === 0,
     errors: errors.length > 0 ? errors : undefined,
   };
+}
+
+function validateStringConstraints(
+  value: unknown,
+  validation: Record<string, unknown>,
+  errors: string[],
+): void {
+  if (typeof value !== 'string') {
+    return;
+  }
+  const minLength = typeof validation.minLength === 'number' ? validation.minLength : undefined;
+  const maxLength = typeof validation.maxLength === 'number' ? validation.maxLength : undefined;
+  if (minLength !== undefined && value.length < minLength) {
+    errors.push(`Minimum length is ${minLength} characters`);
+  }
+  if (maxLength !== undefined && value.length > maxLength) {
+    errors.push(`Maximum length is ${maxLength} characters`);
+  }
+}
+
+function validateNumericConstraints(
+  value: unknown,
+  validation: Record<string, unknown>,
+  errors: string[],
+): void {
+  if (typeof value !== 'number') {
+    return;
+  }
+  const min = typeof validation.min === 'number' ? validation.min : undefined;
+  const max = typeof validation.max === 'number' ? validation.max : undefined;
+  if (min !== undefined && value < min) {
+    errors.push(`Minimum value is ${min}`);
+  }
+  if (max !== undefined && value > max) {
+    errors.push(`Maximum value is ${max}`);
+  }
 }
 
 export function findNextUnansweredQuestion(
