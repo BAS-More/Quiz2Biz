@@ -165,46 +165,44 @@ export class JiraConfluenceAdapter {
    */
   private validateDomain(config: JiraConfig): void {
     const rawDomain = (config.domain || '').trim().toLowerCase();
-
-    // Must be non-empty and reasonably short
+  
     if (!rawDomain || rawDomain.length > 255) {
       throw new HttpException('Invalid Jira domain', HttpStatus.BAD_REQUEST);
     }
-
-    // Disallow schemes, paths, ports, credentials, and backslashes
-    if (
-      rawDomain.includes('://') ||
-      rawDomain.includes('/') ||
-      rawDomain.includes('\\') ||
-      rawDomain.includes('@') ||
-      rawDomain.includes(':')
-    ) {
-      throw new HttpException('Invalid Jira domain format', HttpStatus.BAD_REQUEST);
-    }
-
-    // Disallow localhost and common loopback variants
-    if (
-      rawDomain === 'localhost' ||
-      rawDomain.endsWith('.localhost') ||
-      rawDomain === '127.0.0.1' ||
-      rawDomain.startsWith('127.') ||
-      rawDomain === '::1'
-    ) {
-      throw new HttpException('Jira domain not allowed', HttpStatus.BAD_REQUEST);
-    }
-
-    // Disallow common private IPv4 ranges by simple prefix match
-    if (
-      rawDomain.startsWith('10.') ||
-      rawDomain.startsWith('192.168.') ||
-      rawDomain.match(/^172\.(1[6-9]|2[0-9]|3[0-1])\./)
-    ) {
-      throw new HttpException('Jira domain not allowed', HttpStatus.BAD_REQUEST);
-    }
-
-    // Enforce Atlassian cloud domains (adjust if self-hosted Jira must be supported)
+  
+    this.rejectUnsafeDomainChars(rawDomain);
+    this.rejectPrivateAddresses(rawDomain);
+  
     if (!rawDomain.endsWith('.atlassian.net')) {
       throw new HttpException('Unsupported Jira domain', HttpStatus.BAD_REQUEST);
+    }
+  }
+  
+  /** Reject domains containing scheme, path, port, credential, or backslash chars */
+  private rejectUnsafeDomainChars(domain: string): void {
+    const unsafePatterns = ['://', '/', '\\', '@', ':'];
+    if (unsafePatterns.some((p) => domain.includes(p))) {
+      throw new HttpException('Invalid Jira domain format', HttpStatus.BAD_REQUEST);
+    }
+  }
+  
+  /** Reject localhost, loopback, and private-range addresses */
+  private rejectPrivateAddresses(domain: string): void {
+    const loopbackPatterns = ['localhost', '127.0.0.1', '::1'];
+    if (
+      loopbackPatterns.includes(domain) ||
+      domain.endsWith('.localhost') ||
+      domain.startsWith('127.')
+    ) {
+      throw new HttpException('Jira domain not allowed', HttpStatus.BAD_REQUEST);
+    }
+  
+    const privateRangePrefixes = ['10.', '192.168.'];
+    if (
+      privateRangePrefixes.some((p) => domain.startsWith(p)) ||
+      /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(domain)
+    ) {
+      throw new HttpException('Jira domain not allowed', HttpStatus.BAD_REQUEST);
     }
   }
 
