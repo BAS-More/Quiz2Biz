@@ -193,16 +193,7 @@ export class ScoringEngineService {
     });
     const dimensionWeightMap = new Map(dimensions.map((d) => [d.key, Number(d.weight)]));
 
-    const dimensionSeveritySum = new Map<string, number>();
-    questions.forEach((q) => {
-      if (q.dimensionKey) {
-        const current = dimensionSeveritySum.get(q.dimensionKey) || 0;
-        dimensionSeveritySum.set(
-          q.dimensionKey,
-          current + (q.severity ? Number(q.severity) : DEFAULT_SEVERITY),
-        );
-      }
-    });
+    const dimensionSeveritySum = this.buildDimensionSeverityMap(questions);
 
     const prioritizedQuestions: PrioritizedQuestion[] = [];
 
@@ -253,6 +244,20 @@ export class ScoringEngineService {
       questions: topQuestions,
       maxPotentialScore: Math.round(maxPotentialScore * 100) / 100,
     };
+  }
+
+  /** Build a map of dimensionKey → total severity for NQS calculation */
+  private buildDimensionSeverityMap(
+    questions: Array<{ dimensionKey: string | null; severity: unknown }>,
+  ): Map<string, number> {
+    const map = new Map<string, number>();
+    for (const q of questions) {
+      if (q.dimensionKey) {
+        const current = map.get(q.dimensionKey) || 0;
+        map.set(q.dimensionKey, current + (q.severity ? Number(q.severity) : DEFAULT_SEVERITY));
+      }
+    }
+    return map;
   }
 
   /** Invalidate cached score for a session */

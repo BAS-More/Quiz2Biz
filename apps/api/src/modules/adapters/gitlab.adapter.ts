@@ -718,112 +718,107 @@ export class GitLabAdapter {
     results: Record<string, number>;
   }> {
     const results: Record<string, number> = {
-      pipelines: 0,
-      jobs: 0,
-      test_reports: 0,
-      merge_requests: 0,
-      releases: 0,
-      vulnerabilities: 0,
-      coverage: 0,
+      pipelines: 0, jobs: 0, test_reports: 0, merge_requests: 0, releases: 0, vulnerabilities: 0, coverage: 0,
     };
     const errors: string[] = [];
     let totalIngested = 0;
 
-    // Fetch pipelines
+    // Fetch pipelines and related artifacts
+    const pipelineResult = await this.ingestPipelinesAndArtifacts(config, sessionId);
+    totalIngested += pipelineResult.ingested;
+    errors.push(...pipelineResult.errors);
+    results.pipelines = pipelineResult.pipelines;
+    results.jobs = pipelineResult.jobs;
+    results.test_reports = pipelineResult.testReports;
+
+    // Fetch merge requests
+    totalIngested += await this.ingestResource(sessionId, errors, 'Merge requests', async () => {
+      const mrs = await this.fetchMergeRequests(config, { state: 'all', perPage: 30 });
+      for (const mr of mrs) { await this.saveEvidence(sessionId, mr); }
+      results.merge_requests = mrs.length;
+      return mrs.length;
+    });
+
+    // Fetch releases
+    totalIngested += await this.ingestResource(sessionId, errors, 'Releases', async () => {
+      const releases = await this.fetchReleases(config, { perPage: 10 });
+      for (const release of releases) { await this.saveEvidence(sessionId, release); }
+      results.releases = releases.length;
+      return releases.length;
+    });
+
+    // Fetch vulnerabilities
+    totalIngested += await this.ingestResource(sessionId, errors, 'Vulnerabilities', async () => {
+      const vulns = await this.fetchVulnerabilities(config);
+      for (const vuln of vulns) { await this.saveEvidence(sessionId, vuln); }
+      results.vulnerabilities = vulns.length;
+      return vulns.length;
+    });
+
+    // Fetch coverage history
+    totalIngested += await this.ingestResource(sessionId, errors, 'Coverage', async () => {
+      const coverage = await this.fetchCoverageHistory(config);
+      if (coverage) {
+        await this.saveEvidence(sessionId, coverage);
+        results.coverage = 1;
+        return 1;
+      }
+      return 0;
+    });
+
+    this.logger.log(`GitLab ingestion complete: ${totalIngested} items from project ${config.projectId}`);
+    return { ingested: totalIngested, errors, results };
+  }
+
+  private async ingestResource(
+    _sessionId: string, errors: string[], label: string, fetcher: () => Promise<number>,
+  ): Promise<number> {
+    try {
+      return await fetcher();
+    } catch (error) {
+      errors.push(`${label}: ${getErrorMessage(error)}`);
+      return 0;
+    }
+  }
+
+  private async ingestPipelinesAndArtifacts(
+    config: GitLabConfig, sessionId: string,
+  ): Promise<{ ingested: number; errors: string[]; pipelines: number; jobs: number; testReports: number }> {
+    const errors: string[] = [];
+    let ingested = 0;
+    let jobCount = 0;
+    let testReportCount = 0;
+
     try {
       const pipelines = await this.fetchPipelines(config, { perPage: 20 });
       for (const pipeline of pipelines) {
         await this.saveEvidence(sessionId, pipeline);
-        totalIngested++;
+        ingested++;
       }
-      results.pipelines = pipelines.length;
 
-      // Fetch jobs and test reports for recent pipelines
       for (const pipeline of pipelines.slice(0, 5)) {
         const pipelineId = pipeline.data.id as number;
         try {
           const jobs = await this.fetchPipelineJobs(config, pipelineId);
-          for (const job of jobs) {
-            await this.saveEvidence(sessionId, job);
-            totalIngested++;
-          }
-          results.jobs += jobs.length;
+          for (const job of jobs) { await this.saveEvidence(sessionId, job); ingested++; }
+          jobCount += jobs.length;
         } catch (error) {
           errors.push(`Jobs for pipeline ${pipelineId}: ${getErrorMessage(error)}`);
         }
 
         try {
           const testReport = await this.fetchTestReport(config, pipelineId);
-          if (testReport) {
-            await this.saveEvidence(sessionId, testReport);
-            totalIngested++;
-            results.test_reports++;
-          }
+          if (testReport) { await this.saveEvidence(sessionId, testReport); ingested++; testReportCount++; }
         } catch (error) {
           errors.push(`Test report for pipeline ${pipelineId}: ${getErrorMessage(error)}`);
         }
       }
+
+      return { ingested, errors, pipelines: pipelines.length, jobs: jobCount, testReports: testReportCount };
     } catch (error) {
       errors.push(`Pipelines: ${getErrorMessage(error)}`);
+      return { ingested, errors, pipelines: 0, jobs: 0, testReports: 0 };
     }
-
-    // Fetch merge requests
-    try {
-      const mrs = await this.fetchMergeRequests(config, { state: 'all', perPage: 30 });
-      for (const mr of mrs) {
-        await this.saveEvidence(sessionId, mr);
-        totalIngested++;
-      }
-      results.merge_requests = mrs.length;
-    } catch (error) {
-      errors.push(`Merge requests: ${getErrorMessage(error)}`);
-    }
-
-    // Fetch releases
-    try {
-      const releases = await this.fetchReleases(config, { perPage: 10 });
-      for (const release of releases) {
-        await this.saveEvidence(sessionId, release);
-        totalIngested++;
-      }
-      results.releases = releases.length;
-    } catch (error) {
-      errors.push(`Releases: ${getErrorMessage(error)}`);
-    }
-
-    // Fetch vulnerabilities
-    try {
-      const vulns = await this.fetchVulnerabilities(config);
-      for (const vuln of vulns) {
-        await this.saveEvidence(sessionId, vuln);
-        totalIngested++;
-      }
-      results.vulnerabilities = vulns.length;
-    } catch (error) {
-      errors.push(`Vulnerabilities: ${getErrorMessage(error)}`);
-    }
-
-    // Fetch coverage history
-    try {
-      const coverage = await this.fetchCoverageHistory(config);
-      if (coverage) {
-        await this.saveEvidence(sessionId, coverage);
-        totalIngested++;
-        results.coverage = 1;
-      }
-    } catch (error) {
-      errors.push(`Coverage: ${getErrorMessage(error)}`);
-    }
-
-    this.logger.log(
-      `GitLab ingestion complete: ${totalIngested} items from project ${config.projectId}`,
-    );
-
-    return {
-      ingested: totalIngested,
-      errors,
-      results,
-    };
   }
 
   /**

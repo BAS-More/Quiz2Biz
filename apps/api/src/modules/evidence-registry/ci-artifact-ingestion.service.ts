@@ -287,54 +287,38 @@ export class CIArtifactIngestionService {
    */
   private parseLcov(content: string): ParsedArtifactData {
     const lines = content.split('\n');
-    let totalLines = 0;
-    let coveredLines = 0;
-    let totalFunctions = 0;
-    let coveredFunctions = 0;
-    let totalBranches = 0;
-    let coveredBranches = 0;
+    const counters = { totalLines: 0, coveredLines: 0, totalFunctions: 0, coveredFunctions: 0, totalBranches: 0, coveredBranches: 0 };
+
+    const prefixMap: Record<string, keyof typeof counters> = {
+      'LF:': 'totalLines',
+      'LH:': 'coveredLines',
+      'FNF:': 'totalFunctions',
+      'FNH:': 'coveredFunctions',
+      'BRF:': 'totalBranches',
+      'BRH:': 'coveredBranches',
+    };
 
     for (const line of lines) {
-      if (line.startsWith('LF:')) {
-        totalLines += parseInt(line.substring(3)) || 0;
-      }
-      if (line.startsWith('LH:')) {
-        coveredLines += parseInt(line.substring(3)) || 0;
-      }
-      if (line.startsWith('FNF:')) {
-        totalFunctions += parseInt(line.substring(4)) || 0;
-      }
-      if (line.startsWith('FNH:')) {
-        coveredFunctions += parseInt(line.substring(4)) || 0;
-      }
-      if (line.startsWith('BRF:')) {
-        totalBranches += parseInt(line.substring(4)) || 0;
-      }
-      if (line.startsWith('BRH:')) {
-        coveredBranches += parseInt(line.substring(4)) || 0;
+      for (const [prefix, key] of Object.entries(prefixMap)) {
+        if (line.startsWith(prefix)) {
+          counters[key] += parseInt(line.substring(prefix.length)) || 0;
+        }
       }
     }
 
     return {
       type: 'lcov',
-      summary: {
-        lines: {
-          total: totalLines,
-          covered: coveredLines,
-          percentage: totalLines > 0 ? (coveredLines / totalLines) * 100 : 0,
-        },
-        functions: {
-          total: totalFunctions,
-          covered: coveredFunctions,
-          percentage: totalFunctions > 0 ? (coveredFunctions / totalFunctions) * 100 : 0,
-        },
-        branches: {
-          total: totalBranches,
-          covered: coveredBranches,
-          percentage: totalBranches > 0 ? (coveredBranches / totalBranches) * 100 : 0,
-        },
-        overallPercentage: totalLines > 0 ? (coveredLines / totalLines) * 100 : 0,
-      },
+      summary: this.buildLcovSummary(counters),
+    };
+  }
+
+  private buildLcovSummary(c: { totalLines: number; coveredLines: number; totalFunctions: number; coveredFunctions: number; totalBranches: number; coveredBranches: number }): Record<string, unknown> {
+    const pct = (covered: number, total: number): number => total > 0 ? (covered / total) * 100 : 0;
+    return {
+      lines: { total: c.totalLines, covered: c.coveredLines, percentage: pct(c.coveredLines, c.totalLines) },
+      functions: { total: c.totalFunctions, covered: c.coveredFunctions, percentage: pct(c.coveredFunctions, c.totalFunctions) },
+      branches: { total: c.totalBranches, covered: c.coveredBranches, percentage: pct(c.coveredBranches, c.totalBranches) },
+      overallPercentage: pct(c.coveredLines, c.totalLines),
     };
   }
 
@@ -502,47 +486,30 @@ export class CIArtifactIngestionService {
       const report = JSON.parse(content);
       const dependencies = report.dependencies || [];
 
-      let critical = 0,
-        high = 0,
-        medium = 0,
-        low = 0;
+      const severityCounts: Record<string, number> = { CRITICAL: 0, HIGH: 0, MEDIUM: 0, LOW: 0 };
       const vulnerabilities: Array<{ cve: string; severity: string; package: string }> = [];
 
       for (const dep of dependencies) {
         for (const vuln of dep.vulnerabilities || []) {
-          const severity = vuln.severity || vuln.cvssv3?.baseSeverity || 'UNKNOWN';
-          switch (severity.toUpperCase()) {
-            case 'CRITICAL':
-              critical++;
-              break;
-            case 'HIGH':
-              high++;
-              break;
-            case 'MEDIUM':
-              medium++;
-              break;
-            case 'LOW':
-              low++;
-              break;
+          const severity = (vuln.severity || vuln.cvssv3?.baseSeverity || 'UNKNOWN').toUpperCase();
+          if (severity in severityCounts) {
+            severityCounts[severity]++;
           }
 
           if (severity === 'CRITICAL' || severity === 'HIGH') {
-            vulnerabilities.push({
-              cve: vuln.name,
-              severity,
-              package: dep.fileName,
-            });
+            vulnerabilities.push({ cve: vuln.name, severity, package: dep.fileName });
           }
         }
       }
 
+      const total = severityCounts.CRITICAL + severityCounts.HIGH + severityCounts.MEDIUM + severityCounts.LOW;
       return {
         type: 'owasp',
         summary: {
           scanner: 'OWASP Dependency-Check',
           totalDependencies: dependencies.length,
-          totalVulnerabilities: critical + high + medium + low,
-          bySeverity: { critical, high, medium, low },
+          totalVulnerabilities: total,
+          bySeverity: { critical: severityCounts.CRITICAL, high: severityCounts.HIGH, medium: severityCounts.MEDIUM, low: severityCounts.LOW },
           criticalAndHigh: vulnerabilities.slice(0, 20),
           scanDate: report.projectInfo?.reportDate,
         },

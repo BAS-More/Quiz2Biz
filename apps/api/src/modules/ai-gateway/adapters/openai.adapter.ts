@@ -102,6 +102,16 @@ export class OpenAIAdapter implements AiAdapter {
     return defaults[taskType] || 0.7;
   }
 
+  private normalizeFinishReason(
+    reason: string | undefined | null,
+  ): 'stop' | 'length' | 'content_filter' | 'error' {
+    const map: Record<string, 'stop' | 'length' | 'content_filter' | 'error'> = {
+      ['length']: 'length',
+      ['content_filter']: 'content_filter',
+    };
+    return map[reason ?? ''] ?? 'stop';
+  }
+
   /**
    * Generate a non-streaming response
    */
@@ -155,9 +165,7 @@ export class OpenAIAdapter implements AiAdapter {
       );
 
       const finishReason = response.choices[0]?.finish_reason;
-      let normalizedFinishReason: 'stop' | 'length' | 'content_filter' | 'error' = 'stop';
-      if (finishReason === 'length') {normalizedFinishReason = 'length';}
-      else if (finishReason === 'content_filter') {normalizedFinishReason = 'content_filter';}
+      const normalizedFinishReason = this.normalizeFinishReason(finishReason);
 
       return {
         content,

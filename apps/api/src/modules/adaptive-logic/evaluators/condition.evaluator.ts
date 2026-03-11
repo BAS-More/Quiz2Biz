@@ -257,24 +257,27 @@ export class ConditionEvaluator {
     }
 
     if (typeof actual === 'object') {
-      const obj = actual as Record<string, unknown>;
-
-      // Check response objects
-      if ('text' in obj && (obj.text === '' || obj.text === null)) {
-        return true;
-      }
-      if ('selectedOptionId' in obj && obj.selectedOptionId === null) {
-        return true;
-      }
-      if (
-        'selectedOptionIds' in obj &&
-        Array.isArray(obj.selectedOptionIds) &&
-        obj.selectedOptionIds.length === 0
-      ) {
-        return true;
-      }
+      return this.isEmptyResponseObject(actual as Record<string, unknown>);
     }
 
+    return false;
+  }
+
+  /** Check if a response object represents an empty/unanswered state */
+  private isEmptyResponseObject(obj: Record<string, unknown>): boolean {
+    if ('text' in obj && (obj.text === '' || obj.text === null)) {
+      return true;
+    }
+    if ('selectedOptionId' in obj && obj.selectedOptionId === null) {
+      return true;
+    }
+    if (
+      'selectedOptionIds' in obj &&
+      Array.isArray(obj.selectedOptionIds) &&
+      obj.selectedOptionIds.length === 0
+    ) {
+      return true;
+    }
     return false;
   }
 

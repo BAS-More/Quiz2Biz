@@ -89,60 +89,60 @@ export class CostTrackerService {
     this.costBuffer = [];
 
     try {
-      // Store cost records in metadata of ChatMessage or a separate table
-      // For now, we'll aggregate by project and update project metadata
-      const projectCosts = new Map<string, { tokens: number; cost: number }>();
+      const projectCosts = this.aggregateProjectCosts(records);
 
-      for (const record of records) {
-        if (record.projectId) {
-          const existing = projectCosts.get(record.projectId) || { tokens: 0, cost: 0 };
-          existing.tokens += record.totalTokens;
-          existing.cost += record.totalCost;
-          projectCosts.set(record.projectId, existing);
-        }
-      }
-
-      // Update project metadata with accumulated costs
       for (const [projectId, costs] of projectCosts) {
-        try {
-          const project = await this.prisma.project.findUnique({
-            where: { id: projectId },
-            select: { metadata: true },
-          });
-
-          if (project) {
-            const metadata = (project.metadata as Record<string, unknown>) || {};
-            const costTracking = (metadata.costTracking as Record<string, number>) || {
-              totalTokens: 0,
-              totalCostUsd: 0,
-              requestCount: 0,
-            };
-
-            costTracking.totalTokens = (costTracking.totalTokens || 0) + costs.tokens;
-            costTracking.totalCostUsd = (costTracking.totalCostUsd || 0) + costs.cost;
-            costTracking.requestCount = (costTracking.requestCount || 0) + 1;
-
-            await this.prisma.project.update({
-              where: { id: projectId },
-              data: {
-                metadata: {
-                  ...metadata,
-                  costTracking,
-                  lastCostUpdate: new Date().toISOString(),
-                },
-              },
-            });
-          }
-        } catch (error) {
-          this.logger.error(`Failed to update project ${projectId} costs: ${error instanceof Error ? error.message : String(error)}`);
-        }
+        await this.persistProjectCosts(projectId, costs);
       }
 
       this.logger.debug(`Flushed ${records.length} cost records`);
     } catch (error) {
-      // Put records back on failure
       this.costBuffer = [...records, ...this.costBuffer];
       this.logger.error(`Failed to flush cost buffer: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  private aggregateProjectCosts(
+    records: Array<{ projectId?: string; totalTokens: number; totalCost: number }>,
+  ): Map<string, { tokens: number; cost: number }> {
+    const projectCosts = new Map<string, { tokens: number; cost: number }>();
+    for (const record of records) {
+      if (record.projectId) {
+        const existing = projectCosts.get(record.projectId) || { tokens: 0, cost: 0 };
+        existing.tokens += record.totalTokens;
+        existing.cost += record.totalCost;
+        projectCosts.set(record.projectId, existing);
+      }
+    }
+    return projectCosts;
+  }
+
+  private async persistProjectCosts(projectId: string, costs: { tokens: number; cost: number }): Promise<void> {
+    try {
+      const project = await this.prisma.project.findUnique({
+        where: { id: projectId },
+        select: { metadata: true },
+      });
+
+      if (project) {
+        const metadata = (project.metadata as Record<string, unknown>) || {};
+        const costTracking = (metadata.costTracking as Record<string, number>) || {
+          totalTokens: 0,
+          totalCostUsd: 0,
+          requestCount: 0,
+        };
+
+        costTracking.totalTokens = (costTracking.totalTokens || 0) + costs.tokens;
+        costTracking.totalCostUsd = (costTracking.totalCostUsd || 0) + costs.cost;
+        costTracking.requestCount = (costTracking.requestCount || 0) + 1;
+
+        await this.prisma.project.update({
+          where: { id: projectId },
+          data: { metadata: { ...metadata, costTracking, lastCostUpdate: new Date().toISOString() } },
+        });
+      }
+    } catch (error) {
+      this.logger.error(`Failed to update project ${projectId} costs: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 

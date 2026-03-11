@@ -226,6 +226,16 @@ export class JiraConfluenceAdapter {
     return candidate.startsWith('/') ? candidate.slice(1) : candidate;
   }
 
+  private buildAtlassianBaseUrl(domain: string, isConfluence: boolean, isAgile: boolean): string {
+    if (isConfluence) {
+      return `https://${domain}/wiki/rest/api`;
+    }
+    if (isAgile) {
+      return `https://${domain}/rest/agile/1.0`;
+    }
+    return `https://${domain}/rest/api/3`;
+  }
+
   private async makeRequest<T>(
     config: JiraConfig,
     endpoint: string,
@@ -244,14 +254,7 @@ export class JiraConfluenceAdapter {
     this.validateDomain({ ...config, domain: normalizedDomain });
     const safeEndpoint = this.sanitizeEndpoint(endpoint);
 
-    let baseUrl: string;
-    if (isConfluence) {
-      baseUrl = `https://${normalizedDomain}/wiki/rest/api`;
-    } else if (isAgile) {
-      baseUrl = `https://${normalizedDomain}/rest/agile/1.0`;
-    } else {
-      baseUrl = `https://${normalizedDomain}/rest/api/3`;
-    }
+    let baseUrl: string = this.buildAtlassianBaseUrl(normalizedDomain, isConfluence, isAgile);
 
     const requestUrl = new URL(safeEndpoint, `${baseUrl}/`);
     const trustedBaseUrl = new URL(`${baseUrl}/`);

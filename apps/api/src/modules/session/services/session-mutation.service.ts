@@ -267,13 +267,7 @@ export class SessionMutationService {
     );
 
     // Readiness score
-    let readinessScore: number | undefined;
-    if (responses.length > 0) {
-      try {
-        const scoreResult = await this.scoringEngineService.calculateScore({ sessionId });
-        readinessScore = scoreResult.score;
-      } catch { /* Score calculation may fail if no dimensions mapped */ }
-    }
+    const readinessScore = await this.fetchReadinessScore(sessionId, responses.length);
 
     const unansweredRequired = visibleQuestions.filter((q) => q.isRequired && !responseMap.has(q.id));
     const requiresGate = await isReadinessGatedSession(this.prisma, session);
@@ -404,6 +398,18 @@ export class SessionMutationService {
   /**
    * Find next batch of unanswered questions starting from current position.
    */
+  private async fetchReadinessScore(sessionId: string, responseCount: number): Promise<number | undefined> {
+    if (responseCount === 0) {
+      return undefined;
+    }
+    try {
+      const scoreResult = await this.scoringEngineService.calculateScore({ sessionId });
+      return scoreResult.score;
+    } catch {
+      return undefined; // Score calculation may fail if no dimensions mapped
+    }
+  }
+
   private findNextUnansweredBatch(
     visibleQuestions: Question[],
     currentQuestionId: string | null,

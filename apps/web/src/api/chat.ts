@@ -1,5 +1,4 @@
-/**
- * Chat API client for Quiz2Biz conversational interface
+`` * Chat API client for Quiz2Biz conversational interface
  * Handles chat messages, SSE streaming, and chat status
  */
 
