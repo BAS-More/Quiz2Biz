@@ -152,7 +152,12 @@
   "overrides": {
     "basic-ftp": "5.2.0",
     "lodash": "4.17.23",
-    "ajv": "8.18.0",
+    "@nestjs/cli": {
+      "ajv": "8.18.0"
+    },
+    "@nestjs/schematics": {
+      "ajv": "8.18.0"
+    },
     "minimatch": "10.2.4",
     "qs": "6.14.2",
     "tmp": "0.2.4",
