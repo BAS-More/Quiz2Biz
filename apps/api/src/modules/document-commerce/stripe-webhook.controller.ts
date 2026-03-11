@@ -33,7 +33,11 @@ export class StripeWebhookController {
     const stripeSecretKey = this.configService.get<string>('STRIPE_SECRET_KEY');
     this.webhookSecret = this.configService.get<string>('STRIPE_WEBHOOK_SECRET');
     
-    this.stripe = new Stripe(stripeSecretKey ?? 'sk_test_placeholder', {
+    if (!stripeSecretKey) {
+      this.logger.warn('STRIPE_SECRET_KEY not configured - payments disabled');
+    }
+
+    this.stripe = new Stripe(stripeSecretKey ?? 'not-configured', {
       apiVersion: '2024-06-20' as Stripe.LatestApiVersion,
     });
 
