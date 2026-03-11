@@ -1,1 +1,17 @@
+# Force LF line endings for all text files (matches .prettierrc endOfLine: "lf")
+* text=auto eol=lf
+
+# Ensure shell scripts always use LF
 *.sh text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary
