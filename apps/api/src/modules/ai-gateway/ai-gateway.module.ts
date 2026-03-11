@@ -8,7 +8,7 @@ import { CostTrackerService } from './services';
 /**
  * AI Gateway Module
  *
- * Provides unified AI capabilities across multiple providers (Claude, OpenAI, Gemini).
+ * Provides unified AI capabilities across multiple providers (Claude, OpenAI).
  * Features:
  * - Provider abstraction and routing
  * - Automatic fallback on provider failure

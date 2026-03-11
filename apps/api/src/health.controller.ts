@@ -363,7 +363,7 @@ export class HealthController {
     try {
       const health = await this.aiGateway.getHealth();
       const responseTime = Date.now() - startTime;
-      const availableProviders = health.providers.filter((p) => p.available).map((p) => p.provider);
+      const availableProviders = health.providers.filter((p) => p.available).map((p) => p.name);
 
       let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
       let message = `${availableProviders.length}/${health.providers.length} providers available`;

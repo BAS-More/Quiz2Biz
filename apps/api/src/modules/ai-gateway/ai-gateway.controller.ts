@@ -63,7 +63,7 @@ export class AiGatewayController {
   /**
    * Generate AI response with SSE streaming
    */
-  @Post('stream')
+  @Get('stream')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Generate AI response with streaming' })
