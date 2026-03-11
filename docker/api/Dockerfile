@@ -1,5 +1,5 @@
 # Build stage
-FROM node:22-alpine AS builder
+FROM node:25-alpine AS builder
 
 WORKDIR /app
 
@@ -36,7 +36,7 @@ RUN npx turbo run build --filter=api --filter=database --filter=redis --filter=s
 RUN npm prune --omit=dev --legacy-peer-deps || true
 
 # Development stage
-FROM node:22-alpine AS development
+FROM node:25-alpine AS development
 
 WORKDIR /app
 
@@ -66,7 +66,7 @@ EXPOSE 3000
 CMD ["npm", "run", "start:dev"]
 
 # Production stage (must be last for default ACR build)
-FROM node:22-alpine AS production
+FROM node:25-alpine AS production
 
 # Accept build argument for image version
 ARG IMAGE_VERSION=unknown

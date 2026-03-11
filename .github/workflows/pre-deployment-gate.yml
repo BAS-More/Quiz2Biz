@@ -22,7 +22,7 @@ permissions:
   security-events: write
 
 env:
-  NODE_VERSION: '22.x'
+  NODE_VERSION: '25.x'
 
 jobs:
   # Phase 2: Static Analysis
