@@ -158,17 +158,17 @@ export class TemplateEngineService {
     string,
     (responseValue: Record<string, unknown>, question: { type: string; options: unknown }) => unknown
   > = {
-    TEXT: (rv) => rv.text ?? '',
-    TEXTAREA: (rv) => rv.text ?? '',
-    EMAIL: (rv) => rv.text ?? '',
-    URL: (rv) => rv.text ?? '',
-    NUMBER: (rv) => rv.number ?? 0,
-    DATE: (rv) => rv.date ?? null,
-    SCALE: (rv) => rv.rating ?? 0,
-    SINGLE_CHOICE: (rv, q) => this.extractSingleChoice(rv, q),
-    MULTIPLE_CHOICE: (rv, q) => this.extractMultipleChoice(rv, q),
-    FILE_UPLOAD: (rv) => rv.fileUrl ?? null,
-    MATRIX: (rv) => rv.matrix ?? {},
+    ['TEXT']: (rv) => rv.text ?? '',
+    ['TEXTAREA']: (rv) => rv.text ?? '',
+    ['EMAIL']: (rv) => rv.text ?? '',
+    ['URL']: (rv) => rv.text ?? '',
+    ['NUMBER']: (rv) => rv.number ?? 0,
+    ['DATE']: (rv) => rv.date ?? null,
+    ['SCALE']: (rv) => rv.rating ?? 0,
+    ['SINGLE_CHOICE']: (rv, q) => this.extractSingleChoice(rv, q),
+    ['MULTIPLE_CHOICE']: (rv, q) => this.extractMultipleChoice(rv, q),
+    ['FILE_UPLOAD']: (rv) => rv.fileUrl ?? null,
+    ['MATRIX']: (rv) => rv.matrix ?? {},
   };
 
   private extractSingleChoice(

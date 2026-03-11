@@ -25,6 +25,14 @@ const mockRedisService = {
   expire: jest.fn(),
 };
 
+// Mock Prisma service — this test only exercises bcrypt and JWT, not DB
+const mockPrismaService = {
+  user: { findUnique: jest.fn(), findFirst: jest.fn(), update: jest.fn() },
+  refreshToken: { create: jest.fn(), findFirst: jest.fn(), deleteMany: jest.fn() },
+  $connect: jest.fn(),
+  $disconnect: jest.fn(),
+};
+
 describe('Authentication Security Tests', () => {
   let jwtService: JwtService;
 
@@ -39,7 +47,10 @@ describe('Authentication Security Tests', () => {
       providers: [
         AuthService,
         JwtService,
-        PrismaService,
+        {
+          provide: PrismaService,
+          useValue: mockPrismaService,
+        },
         {
           provide: 'JWT_SECRET',
           useValue: 'test-secret-key-minimum-32-characters-long',
