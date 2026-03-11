@@ -481,7 +481,19 @@ export class AdapterController {
     // Verify GitLab secret token
     const webhookSecret = (config as AdapterConfig & { webhookSecret?: string }).webhookSecret;
     if (webhookSecret) {
-      if (gitlabToken !== webhookSecret) {
+      // Use constant-time comparison to avoid timing side-channels on webhook secrets
+      if (!gitlabToken) {
+        this.webhookLogger.warn(`GitLab webhook token mismatch for adapter ${adapterId}`);
+        throw new BadRequestException('Invalid webhook token');
+      }
+
+      const webhookSecretBuffer = Buffer.from(webhookSecret, 'utf8');
+      const gitlabTokenBuffer = Buffer.from(gitlabToken, 'utf8');
+
+      if (
+        gitlabTokenBuffer.length !== webhookSecretBuffer.length ||
+        !crypto.timingSafeEqual(gitlabTokenBuffer, webhookSecretBuffer)
+      ) {
         this.webhookLogger.warn(`GitLab webhook token mismatch for adapter ${adapterId}`);
         throw new BadRequestException('Invalid webhook token');
       }
