@@ -94,8 +94,9 @@ describe('MfaController', () => {
         new BadRequestException('Invalid verification code'),
       );
 
-      await expect(controller.verifyMfaSetup(mockUser, { code: 'wrong' }))
-        .rejects.toThrow(BadRequestException);
+      await expect(controller.verifyMfaSetup(mockUser, { code: 'wrong' })).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 
@@ -114,17 +115,17 @@ describe('MfaController', () => {
         new ForbiddenException('Invalid verification code'),
       );
 
-      await expect(controller.disableMfa(mockUser, { code: 'wrong' }))
-        .rejects.toThrow(ForbiddenException);
+      await expect(controller.disableMfa(mockUser, { code: 'wrong' })).rejects.toThrow(
+        ForbiddenException,
+      );
     });
 
     it('should propagate BadRequestException when MFA not enabled', async () => {
-      mockMfaService.disableMfa.mockRejectedValue(
-        new BadRequestException('MFA is not enabled'),
-      );
+      mockMfaService.disableMfa.mockRejectedValue(new BadRequestException('MFA is not enabled'));
 
-      await expect(controller.disableMfa(mockUser, { code: '123456' }))
-        .rejects.toThrow(BadRequestException);
+      await expect(controller.disableMfa(mockUser, { code: '123456' })).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 
@@ -144,8 +145,9 @@ describe('MfaController', () => {
         new ForbiddenException('Invalid verification code'),
       );
 
-      await expect(controller.regenerateBackupCodes(mockUser, { code: 'wrong' }))
-        .rejects.toThrow(ForbiddenException);
+      await expect(controller.regenerateBackupCodes(mockUser, { code: 'wrong' })).rejects.toThrow(
+        ForbiddenException,
+      );
     });
   });
 });

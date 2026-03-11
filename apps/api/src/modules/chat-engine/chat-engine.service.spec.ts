@@ -98,9 +98,7 @@ describe('ChatEngineService', () => {
     it('should throw NotFoundException for non-existent project', async () => {
       prismaService.project.findUnique.mockResolvedValue(null);
 
-      await expect(service.getChatStatus('invalid-id')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.getChatStatus('invalid-id')).rejects.toThrow(NotFoundException);
     });
 
     it('should return limitReached true when messageCount equals messageLimit', async () => {
@@ -172,10 +170,10 @@ describe('ChatEngineService', () => {
       prismaService.chatMessage.create.mockResolvedValue(mockMessage);
       prismaService.aiProvider.findUnique.mockResolvedValue({ id: 'provider-1' });
       prismaService.project.update.mockResolvedValue(mockProject);
-      
+
       promptBuilderService.buildSystemPrompt.mockResolvedValue('System prompt');
       promptBuilderService.buildLimitApproachingPrompt.mockReturnValue('');
-      
+
       aiGatewayService.generate.mockResolvedValue({
         content: 'AI response content',
         provider: 'claude',
@@ -188,11 +186,7 @@ describe('ChatEngineService', () => {
     });
 
     it('should send message and get AI response', async () => {
-      const result = await service.sendMessage(
-        'project-123',
-        'user-123',
-        'Hello, AI!',
-      );
+      const result = await service.sendMessage('project-123', 'user-123', 'Hello, AI!');
 
       expect(result.role).toBe('assistant');
       expect(prismaService.chatMessage.create).toHaveBeenCalledTimes(2);
@@ -206,9 +200,9 @@ describe('ChatEngineService', () => {
         messageLimit: 50,
       });
 
-      await expect(
-        service.sendMessage('project-123', 'user-123', 'Hello'),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.sendMessage('project-123', 'user-123', 'Hello')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should add limit warning prompt when approaching limit', async () => {
@@ -229,9 +223,9 @@ describe('ChatEngineService', () => {
     it('should delete user message on AI failure', async () => {
       aiGatewayService.generate.mockRejectedValue(new Error('AI failed'));
 
-      await expect(
-        service.sendMessage('project-123', 'user-123', 'Hello'),
-      ).rejects.toThrow('AI failed');
+      await expect(service.sendMessage('project-123', 'user-123', 'Hello')).rejects.toThrow(
+        'AI failed',
+      );
 
       expect(prismaService.chatMessage.delete).toHaveBeenCalled();
     });

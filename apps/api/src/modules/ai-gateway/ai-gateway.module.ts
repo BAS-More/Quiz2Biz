@@ -19,12 +19,7 @@ import { CostTrackerService } from './services';
 @Module({
   imports: [PrismaModule],
   controllers: [AiGatewayController],
-  providers: [
-    AiGatewayService,
-    ClaudeAdapter,
-    OpenAIAdapter,
-    CostTrackerService,
-  ],
+  providers: [AiGatewayService, ClaudeAdapter, OpenAIAdapter, CostTrackerService],
   exports: [AiGatewayService, CostTrackerService],
 })
 export class AiGatewayModule {}

@@ -12,7 +12,6 @@ import { PrismaService } from '@libs/database';
  */
 @Injectable()
 export class PromptBuilderService {
-
   constructor(private readonly prisma: PrismaService) {}
 
   /**
@@ -104,14 +103,20 @@ Your role is to have a natural conversation to gather all the information needed
       benchmarkCriteria: unknown;
     }>,
   ): string {
-    const lines = ['## Information to Gather', 'Focus on gathering information for these key areas:', ''];
+    const lines = [
+      '## Information to Gather',
+      'Focus on gathering information for these key areas:',
+      '',
+    ];
 
     for (const dim of dimensions) {
-      const weight = typeof dim.weight === 'object' && 'toNumber' in dim.weight 
-        ? dim.weight.toNumber() 
-        : dim.weight;
-      const priority = weight > 0.15 ? '⭐ High priority' : weight > 0.10 ? 'Medium priority' : 'Lower priority';
-      
+      const weight =
+        typeof dim.weight === 'object' && 'toNumber' in dim.weight
+          ? dim.weight.toNumber()
+          : dim.weight;
+      const priority =
+        weight > 0.15 ? '⭐ High priority' : weight > 0.1 ? 'Medium priority' : 'Lower priority';
+
       lines.push(`### ${dim.name} (${priority})`);
       if (dim.description) {
         lines.push(dim.description);
@@ -142,7 +147,11 @@ Your role is to have a natural conversation to gather all the information needed
       label: string | null;
     }>,
   ): string {
-    const lines = ['## Information Already Gathered', 'The following facts have been confirmed:', ''];
+    const lines = [
+      '## Information Already Gathered',
+      'The following facts have been confirmed:',
+      '',
+    ];
 
     // Group facts by category
     const byCategory = new Map<string, typeof facts>();
@@ -163,7 +172,9 @@ Your role is to have a natural conversation to gather all the information needed
       lines.push('');
     }
 
-    lines.push('Do not re-ask for information that has already been gathered unless clarification is needed.');
+    lines.push(
+      'Do not re-ask for information that has already been gathered unless clarification is needed.',
+    );
 
     return lines.join('\n');
   }

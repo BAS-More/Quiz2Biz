@@ -6,7 +6,9 @@ import { PrismaService } from '@libs/database';
 // Mock otplib
 jest.mock('otplib', () => ({
   generateSecret: jest.fn(() => 'JBSWY3DPEHPK3PXP'),
-  generateURI: jest.fn(() => 'otpauth://totp/Quiz2Biz:user@test.com?secret=JBSWY3DPEHPK3PXP&issuer=Quiz2Biz'),
+  generateURI: jest.fn(
+    () => 'otpauth://totp/Quiz2Biz:user@test.com?secret=JBSWY3DPEHPK3PXP&issuer=Quiz2Biz',
+  ),
   verifySync: jest.fn(),
 }));
 
@@ -30,10 +32,7 @@ describe('MfaService', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        MfaService,
-        { provide: PrismaService, useValue: mockPrisma },
-      ],
+      providers: [MfaService, { provide: PrismaService, useValue: mockPrisma }],
     }).compile();
 
     service = module.get<MfaService>(MfaService);
@@ -58,8 +57,9 @@ describe('MfaService', () => {
     it('should throw if MFA already enabled', async () => {
       mockPrisma.user.findUnique.mockResolvedValue({ mfaEnabled: true });
 
-      await expect(service.generateMfaSetup('user-1', 'user@test.com'))
-        .rejects.toThrow(BadRequestException);
+      await expect(service.generateMfaSetup('user-1', 'user@test.com')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should handle user not found (null)', async () => {
@@ -92,30 +92,35 @@ describe('MfaService', () => {
     it('should throw if MFA not initiated (no secret)', async () => {
       mockPrisma.user.findUnique.mockResolvedValue({ mfaSecret: null, mfaEnabled: false });
 
-      await expect(service.verifyAndEnableMfa('user-1', '123456'))
-        .rejects.toThrow(BadRequestException);
+      await expect(service.verifyAndEnableMfa('user-1', '123456')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw if MFA already enabled', async () => {
       mockPrisma.user.findUnique.mockResolvedValue({ mfaSecret: 'secret', mfaEnabled: true });
 
-      await expect(service.verifyAndEnableMfa('user-1', '123456'))
-        .rejects.toThrow(BadRequestException);
+      await expect(service.verifyAndEnableMfa('user-1', '123456')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw on invalid verification code', async () => {
       mockPrisma.user.findUnique.mockResolvedValue({ mfaSecret: 'secret', mfaEnabled: false });
       (verifySync as jest.Mock).mockReturnValue({ valid: false });
 
-      await expect(service.verifyAndEnableMfa('user-1', 'wrong'))
-        .rejects.toThrow(BadRequestException);
+      await expect(service.verifyAndEnableMfa('user-1', 'wrong')).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 
   describe('verifyMfaCode', () => {
     it('should return true for valid TOTP code', async () => {
       mockPrisma.user.findUnique.mockResolvedValue({
-        mfaSecret: 'secret', mfaEnabled: true, mfaBackupCodes: '[]',
+        mfaSecret: 'secret',
+        mfaEnabled: true,
+        mfaBackupCodes: '[]',
       });
       (verifySync as jest.Mock).mockReturnValue({ valid: true });
 
@@ -125,7 +130,9 @@ describe('MfaService', () => {
 
     it('should return true for valid backup code and consume it', async () => {
       mockPrisma.user.findUnique.mockResolvedValue({
-        mfaSecret: 'secret', mfaEnabled: true, mfaBackupCodes: '["ABCD1234","EFGH5678"]',
+        mfaSecret: 'secret',
+        mfaEnabled: true,
+        mfaBackupCodes: '["ABCD1234","EFGH5678"]',
       });
       (verifySync as jest.Mock).mockReturnValue({ valid: false });
       mockPrisma.user.update.mockResolvedValue({});
@@ -140,7 +147,9 @@ describe('MfaService', () => {
 
     it('should return false for invalid code', async () => {
       mockPrisma.user.findUnique.mockResolvedValue({
-        mfaSecret: 'secret', mfaEnabled: true, mfaBackupCodes: '[]',
+        mfaSecret: 'secret',
+        mfaEnabled: true,
+        mfaBackupCodes: '[]',
       });
       (verifySync as jest.Mock).mockReturnValue({ valid: false });
 
@@ -150,11 +159,12 @@ describe('MfaService', () => {
 
     it('should throw if MFA not enabled', async () => {
       mockPrisma.user.findUnique.mockResolvedValue({
-        mfaSecret: null, mfaEnabled: false, mfaBackupCodes: null,
+        mfaSecret: null,
+        mfaEnabled: false,
+        mfaBackupCodes: null,
       });
 
-      await expect(service.verifyMfaCode('user-1', '123456'))
-        .rejects.toThrow(BadRequestException);
+      await expect(service.verifyMfaCode('user-1', '123456')).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -179,8 +189,7 @@ describe('MfaService', () => {
     it('should throw if MFA not enabled', async () => {
       mockPrisma.user.findUnique.mockResolvedValue({ mfaEnabled: false });
 
-      await expect(service.disableMfa('user-1', '123456'))
-        .rejects.toThrow(BadRequestException);
+      await expect(service.disableMfa('user-1', '123456')).rejects.toThrow(BadRequestException);
     });
 
     it('should throw ForbiddenException on invalid code', async () => {
@@ -189,8 +198,7 @@ describe('MfaService', () => {
         .mockResolvedValueOnce({ mfaSecret: 'secret', mfaEnabled: true, mfaBackupCodes: '[]' });
       (verifySync as jest.Mock).mockReturnValue({ valid: false });
 
-      await expect(service.disableMfa('user-1', 'wrong'))
-        .rejects.toThrow(ForbiddenException);
+      await expect(service.disableMfa('user-1', 'wrong')).rejects.toThrow(ForbiddenException);
     });
   });
 
@@ -212,15 +220,17 @@ describe('MfaService', () => {
     it('should throw if MFA not enabled', async () => {
       mockPrisma.user.findUnique.mockResolvedValue({ mfaEnabled: false });
 
-      await expect(service.regenerateBackupCodes('user-1', '123456'))
-        .rejects.toThrow(BadRequestException);
+      await expect(service.regenerateBackupCodes('user-1', '123456')).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 
   describe('getMfaStatus', () => {
     it('should return enabled status with backup code count', async () => {
       mockPrisma.user.findUnique.mockResolvedValue({
-        mfaEnabled: true, mfaBackupCodes: '["A","B","C"]',
+        mfaEnabled: true,
+        mfaBackupCodes: '["A","B","C"]',
       });
 
       const result = await service.getMfaStatus('user-1');
@@ -229,7 +239,8 @@ describe('MfaService', () => {
 
     it('should return disabled status when MFA off', async () => {
       mockPrisma.user.findUnique.mockResolvedValue({
-        mfaEnabled: false, mfaBackupCodes: null,
+        mfaEnabled: false,
+        mfaBackupCodes: null,
       });
 
       const result = await service.getMfaStatus('user-1');

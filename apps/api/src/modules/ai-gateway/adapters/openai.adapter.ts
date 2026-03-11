@@ -72,7 +72,9 @@ export class OpenAIAdapter implements AiAdapter {
    * Get max tokens for a task type
    */
   private getMaxTokens(taskType: string, requested?: number): number {
-    if (requested) {return requested;}
+    if (requested) {
+      return requested;
+    }
     if (this.config?.config?.maxTokens?.[taskType as keyof typeof this.config.config.maxTokens]) {
       return this.config.config.maxTokens[taskType as keyof typeof this.config.config.maxTokens];
     }
@@ -89,9 +91,15 @@ export class OpenAIAdapter implements AiAdapter {
    * Get temperature for a task type
    */
   private getTemperature(taskType: string, requested?: number): number {
-    if (requested !== undefined) {return requested;}
-    if (this.config?.config?.temperature?.[taskType as keyof typeof this.config.config.temperature]) {
-      return this.config.config.temperature[taskType as keyof typeof this.config.config.temperature];
+    if (requested !== undefined) {
+      return requested;
+    }
+    if (
+      this.config?.config?.temperature?.[taskType as keyof typeof this.config.config.temperature]
+    ) {
+      return this.config.config.temperature[
+        taskType as keyof typeof this.config.config.temperature
+      ];
     }
     // Default temperatures
     const defaults: Record<string, number> = {
@@ -178,7 +186,9 @@ export class OpenAIAdapter implements AiAdapter {
         usedFallback: false,
       };
     } catch (error) {
-      this.logger.error(`OpenAI generation failed: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.error(
+        `OpenAI generation failed: ${error instanceof Error ? error.message : String(error)}`,
+      );
       throw error;
     }
   }
@@ -186,9 +196,7 @@ export class OpenAIAdapter implements AiAdapter {
   /**
    * Generate a streaming response
    */
-  async *generateStream(
-    request: AiGatewayRequest,
-  ): AsyncGenerator<AiStreamChunk, void, unknown> {
+  async *generateStream(request: AiGatewayRequest): AsyncGenerator<AiStreamChunk, void, unknown> {
     if (!this.client) {
       throw new Error('OpenAI adapter not available');
     }
@@ -253,7 +261,9 @@ export class OpenAIAdapter implements AiAdapter {
         cost: this.calculateCost(usage),
       };
     } catch (error) {
-      this.logger.error(`OpenAI stream failed: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.error(
+        `OpenAI stream failed: ${error instanceof Error ? error.message : String(error)}`,
+      );
       yield {
         content: '',
         done: true,

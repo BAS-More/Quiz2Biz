@@ -130,7 +130,10 @@ describe('DocumentPurchaseService', () => {
       prismaService.documentType.findUnique.mockResolvedValue(mockDocumentType as never);
       prismaService.documentPurchase.findFirst.mockResolvedValue(null);
       prismaService.user.findUnique.mockResolvedValue(mockUser as never);
-      prismaService.user.update.mockResolvedValue({ ...mockUser, stripeCustomerId: 'cus_test123' } as never);
+      prismaService.user.update.mockResolvedValue({
+        ...mockUser,
+        stripeCustomerId: 'cus_test123',
+      } as never);
       prismaService.documentPurchase.create.mockResolvedValue(mockPurchase as never);
 
       const result = await service.createPurchase(
@@ -215,9 +218,9 @@ describe('DocumentPurchaseService', () => {
     it('should throw NotFoundException when purchase not found', async () => {
       prismaService.documentPurchase.findFirst.mockResolvedValue(null);
 
-      await expect(
-        service.getPurchaseStatus('missing', 'user-1'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.getPurchaseStatus('missing', 'user-1')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 

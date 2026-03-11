@@ -84,7 +84,9 @@ export class AiGatewayService implements OnModuleInit {
         `Loaded ${providers.length} provider configs, default: ${this.defaultProvider}`,
       );
     } catch (error) {
-      this.logger.error(`Failed to load provider configs: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.error(
+        `Failed to load provider configs: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -182,17 +184,13 @@ export class AiGatewayService implements OnModuleInit {
     }
 
     // All providers failed
-    throw new Error(
-      `All providers failed. Last error: ${lastError?.message || 'Unknown error'}`,
-    );
+    throw new Error(`All providers failed. Last error: ${lastError?.message || 'Unknown error'}`);
   }
 
   /**
    * Generate a streaming response with fallback
    */
-  async *generateStream(
-    request: AiGatewayRequest,
-  ): AsyncGenerator<AiStreamChunk, void, unknown> {
+  async *generateStream(request: AiGatewayRequest): AsyncGenerator<AiStreamChunk, void, unknown> {
     const providers = this.getFallbackOrder(request.provider);
     let lastError: Error | null = null;
 
@@ -270,9 +268,17 @@ export class AiGatewayService implements OnModuleInit {
 
     // Defaults
     const defaults: Record<AiProviderType, Record<string, string>> = {
-      claude: { chat: 'claude-sonnet-4-20250514', extract: 'claude-sonnet-4-20250514', generate: 'claude-sonnet-4-20250514' },
+      claude: {
+        chat: 'claude-sonnet-4-20250514',
+        extract: 'claude-sonnet-4-20250514',
+        generate: 'claude-sonnet-4-20250514',
+      },
       openai: { chat: 'gpt-4o', extract: 'gpt-4o-mini', generate: 'gpt-4o' },
-      gemini: { chat: 'gemini-2.0-flash', extract: 'gemini-2.0-flash', generate: 'gemini-2.0-flash' },
+      gemini: {
+        chat: 'gemini-2.0-flash',
+        extract: 'gemini-2.0-flash',
+        generate: 'gemini-2.0-flash',
+      },
     };
 
     return defaults[provider]?.[taskType] || 'unknown';

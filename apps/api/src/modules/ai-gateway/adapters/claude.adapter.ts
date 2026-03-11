@@ -72,7 +72,9 @@ export class ClaudeAdapter implements AiAdapter {
    * Get max tokens for a task type
    */
   private getMaxTokens(taskType: string, requested?: number): number {
-    if (requested) {return requested;}
+    if (requested) {
+      return requested;
+    }
     if (this.config?.config?.maxTokens?.[taskType as keyof typeof this.config.config.maxTokens]) {
       return this.config.config.maxTokens[taskType as keyof typeof this.config.config.maxTokens];
     }
@@ -89,9 +91,15 @@ export class ClaudeAdapter implements AiAdapter {
    * Get temperature for a task type
    */
   private getTemperature(taskType: string, requested?: number): number {
-    if (requested !== undefined) {return requested;}
-    if (this.config?.config?.temperature?.[taskType as keyof typeof this.config.config.temperature]) {
-      return this.config.config.temperature[taskType as keyof typeof this.config.config.temperature];
+    if (requested !== undefined) {
+      return requested;
+    }
+    if (
+      this.config?.config?.temperature?.[taskType as keyof typeof this.config.config.temperature]
+    ) {
+      return this.config.config.temperature[
+        taskType as keyof typeof this.config.config.temperature
+      ];
     }
     // Default temperatures
     const defaults: Record<string, number> = {
@@ -131,8 +139,7 @@ export class ClaudeAdapter implements AiAdapter {
       });
 
       const latencyMs = Date.now() - startTime;
-      const content =
-        response.content[0].type === 'text' ? response.content[0].text : '';
+      const content = response.content[0].type === 'text' ? response.content[0].text : '';
 
       const usage: TokenUsage = {
         inputTokens: response.usage.input_tokens,
@@ -157,7 +164,9 @@ export class ClaudeAdapter implements AiAdapter {
         usedFallback: false,
       };
     } catch (error) {
-      this.logger.error(`Claude generation failed: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.error(
+        `Claude generation failed: ${error instanceof Error ? error.message : String(error)}`,
+      );
       throw error;
     }
   }
@@ -165,9 +174,7 @@ export class ClaudeAdapter implements AiAdapter {
   /**
    * Generate a streaming response
    */
-  async *generateStream(
-    request: AiGatewayRequest,
-  ): AsyncGenerator<AiStreamChunk, void, unknown> {
+  async *generateStream(request: AiGatewayRequest): AsyncGenerator<AiStreamChunk, void, unknown> {
     if (!this.client) {
       throw new Error('Claude adapter not available');
     }
@@ -232,7 +239,9 @@ export class ClaudeAdapter implements AiAdapter {
         cost: this.calculateCost(usage),
       };
     } catch (error) {
-      this.logger.error(`Claude stream failed: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.error(
+        `Claude stream failed: ${error instanceof Error ? error.message : String(error)}`,
+      );
       yield {
         content: '',
         done: true,

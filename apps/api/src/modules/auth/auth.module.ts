@@ -39,6 +39,14 @@ import { CsrfService, CsrfGuard } from '../../common/guards/csrf.guard';
     CsrfService,
     CsrfGuard,
   ],
-  exports: [AuthService, JwtAuthGuard, RolesGuard, OAuthService, MfaService, CsrfService, CsrfGuard],
+  exports: [
+    AuthService,
+    JwtAuthGuard,
+    RolesGuard,
+    OAuthService,
+    MfaService,
+    CsrfService,
+    CsrfGuard,
+  ],
 })
 export class AuthModule {}

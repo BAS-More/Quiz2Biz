@@ -3,12 +3,7 @@
  * Handles per-document purchases with Stripe PaymentIntents
  */
 
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-  Logger,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@libs/database';
 import Stripe from 'stripe';
@@ -41,10 +36,7 @@ export class DocumentPurchaseService {
   /**
    * Create a new document purchase with PaymentIntent
    */
-  async createPurchase(
-    dto: CreatePurchaseDto,
-    userId: string,
-  ): Promise<PurchaseResponseDto> {
+  async createPurchase(dto: CreatePurchaseDto, userId: string): Promise<PurchaseResponseDto> {
     // Calculate price first
     const priceInfo = await this.pricingCalculator.calculatePrice({
       projectId: dto.projectId,
@@ -81,9 +73,7 @@ export class DocumentPurchaseService {
     });
 
     if (existingPurchase) {
-      throw new BadRequestException(
-        'Document already purchased at this or higher quality level',
-      );
+      throw new BadRequestException('Document already purchased at this or higher quality level');
     }
 
     // Get user for Stripe customer
@@ -173,10 +163,7 @@ export class DocumentPurchaseService {
   /**
    * Get purchase status
    */
-  async getPurchaseStatus(
-    purchaseId: string,
-    userId: string,
-  ): Promise<DocumentPurchaseStatusDto> {
+  async getPurchaseStatus(purchaseId: string, userId: string): Promise<DocumentPurchaseStatusDto> {
     const purchase = await this.prisma.documentPurchase.findFirst({
       where: { id: purchaseId, userId },
       include: {

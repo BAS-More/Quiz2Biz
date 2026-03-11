@@ -13,11 +13,7 @@ import { Response } from 'express';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AiGatewayService } from './ai-gateway.service';
-import {
-  AiGatewayRequestDto,
-  AiGatewayResponseDto,
-  GatewayHealthDto,
-} from './dto';
+import { AiGatewayRequestDto, AiGatewayResponseDto, GatewayHealthDto } from './dto';
 import { CurrentUser } from '../auth/decorators/user.decorator';
 
 /**
@@ -54,7 +50,9 @@ export class AiGatewayController {
 
       return response;
     } catch (error) {
-      this.logger.error(`Generate failed: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.error(
+        `Generate failed: ${error instanceof Error ? error.message : String(error)}`,
+      );
       throw new HttpException(
         error instanceof Error ? error.message : 'AI generation failed',
         HttpStatus.INTERNAL_SERVER_ERROR,

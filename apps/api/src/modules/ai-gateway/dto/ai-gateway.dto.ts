@@ -38,7 +38,10 @@ export class AiGatewayRequestDto {
   @IsEnum(['chat', 'extract', 'generate'])
   taskType!: 'chat' | 'extract' | 'generate';
 
-  @ApiPropertyOptional({ enum: ['claude', 'openai', 'gemini'], description: 'Preferred AI provider' })
+  @ApiPropertyOptional({
+    enum: ['claude', 'openai', 'gemini'],
+    description: 'Preferred AI provider',
+  })
   @IsOptional()
   @IsEnum(['claude', 'openai', 'gemini'])
   provider?: 'claude' | 'openai' | 'gemini';
@@ -121,7 +124,10 @@ export class AiGatewayResponseDto {
   @ApiProperty({ description: 'Generated content' })
   content!: string;
 
-  @ApiProperty({ enum: ['claude', 'openai', 'gemini'], description: 'Provider that generated the response' })
+  @ApiProperty({
+    enum: ['claude', 'openai', 'gemini'],
+    description: 'Provider that generated the response',
+  })
   provider!: 'claude' | 'openai' | 'gemini';
 
   @ApiProperty({ description: 'Model used for generation' })
@@ -136,13 +142,19 @@ export class AiGatewayResponseDto {
   @ApiProperty({ description: 'Response latency in milliseconds' })
   latencyMs!: number;
 
-  @ApiProperty({ enum: ['stop', 'length', 'content_filter', 'error'], description: 'Finish reason' })
+  @ApiProperty({
+    enum: ['stop', 'length', 'content_filter', 'error'],
+    description: 'Finish reason',
+  })
   finishReason!: 'stop' | 'length' | 'content_filter' | 'error';
 
   @ApiProperty({ description: 'Whether the response was from a fallback provider' })
   usedFallback!: boolean;
 
-  @ApiPropertyOptional({ enum: ['claude', 'openai', 'gemini'], description: 'Original provider if fallback was used' })
+  @ApiPropertyOptional({
+    enum: ['claude', 'openai', 'gemini'],
+    description: 'Original provider if fallback was used',
+  })
   originalProvider?: 'claude' | 'openai' | 'gemini';
 }
 

@@ -3,21 +3,8 @@
  * Handles MFA setup, verification, and management endpoints
  */
 
-import {
-  Controller,
-  Post,
-  Get,
-  Delete,
-  Body,
-  UseGuards,
-  HttpStatus,
-} from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiBearerAuth,
-} from '@nestjs/swagger';
+import { Controller, Post, Get, Delete, Body, UseGuards, HttpStatus } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { CurrentUser } from '../decorators/user.decorator';
 import { MfaService } from './mfa.service';

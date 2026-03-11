@@ -171,9 +171,7 @@ describe('AiGatewayService', () => {
       openAIAdapter.isAvailable.mockReturnValue(true);
       openAIAdapter.generate.mockRejectedValue(new Error('OpenAI failed'));
 
-      await expect(service.generate(mockRequest)).rejects.toThrow(
-        'All providers failed',
-      );
+      await expect(service.generate(mockRequest)).rejects.toThrow('All providers failed');
     });
 
     it('should skip unavailable providers', async () => {

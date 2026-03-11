@@ -32,10 +32,7 @@ describe('CostTrackerService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        CostTrackerService,
-        { provide: PrismaService, useValue: mockPrismaService },
-      ],
+      providers: [CostTrackerService, { provide: PrismaService, useValue: mockPrismaService }],
     }).compile();
 
     service = module.get<CostTrackerService>(CostTrackerService);
@@ -150,7 +147,7 @@ describe('CostTrackerService', () => {
     it('should return cost summary from project metadata', async () => {
       prismaService.project.findUnique.mockResolvedValue({
         metadata: {
-          costTracking: { totalTokens: 5000, totalCostUsd: 0.50, requestCount: 10 },
+          costTracking: { totalTokens: 5000, totalCostUsd: 0.5, requestCount: 10 },
         },
       });
 
@@ -158,7 +155,7 @@ describe('CostTrackerService', () => {
 
       expect(result).toBeDefined();
       expect(result!.projectId).toBe('project-123');
-      expect(result!.totalCost).toBe(0.50);
+      expect(result!.totalCost).toBe(0.5);
       expect(result!.totalTokens).toBe(5000);
       expect(result!.requestCount).toBe(10);
     });

@@ -43,9 +43,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       const request = context.switchToHttp().getRequest();
       const authHeader = request.headers?.authorization;
       const hasAuthHeader = !!authHeader;
-      const tokenPreview = hasAuthHeader
-        ? `${authHeader.substring(0, 20)}...`
-        : 'none';
+      const tokenPreview = hasAuthHeader ? `${authHeader.substring(0, 20)}...` : 'none';
 
       // Log authentication failure with context
       this.logger.warn(

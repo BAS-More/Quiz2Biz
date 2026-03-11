@@ -18,8 +18,22 @@ const QUALITY_FEATURES: Record<number, string[]> = {
   0: ['Basic content', 'Standard formatting', '~5-10 pages'],
   1: ['Expanded content', 'Professional formatting', 'Basic citations', '~10-15 pages'],
   2: ['Comprehensive content', 'Enhanced formatting', 'Full citations', 'Charts', '~15-25 pages'],
-  3: ['Premium content', 'Executive formatting', 'Full citations', 'Charts', 'SWOT', '~25-40 pages'],
-  4: ['Enterprise content', 'Board-ready formatting', 'Full citations', 'All visuals', 'Appendices', '~40-60 pages'],
+  3: [
+    'Premium content',
+    'Executive formatting',
+    'Full citations',
+    'Charts',
+    'SWOT',
+    '~25-40 pages',
+  ],
+  4: [
+    'Enterprise content',
+    'Board-ready formatting',
+    'Full citations',
+    'All visuals',
+    'Appendices',
+    '~40-60 pages',
+  ],
 };
 
 /** Quality level names */
@@ -144,8 +158,8 @@ export class PricingCalculatorService {
         requiredFactCount: requiredFacts,
         currentFactCount: factCount,
         isAvailable,
-        unavailableReason: isAvailable 
-          ? undefined 
+        unavailableReason: isAvailable
+          ? undefined
           : `Need ${requiredFacts - factCount} more facts from chat`,
       };
     });
@@ -162,8 +176,8 @@ export class PricingCalculatorService {
       status: p.status as 'pending' | 'processing' | 'completed' | 'failed',
       documentId: p.generatedDocument?.id,
       generatedAt: p.generatedDocument?.createdAt,
-      downloadUrl: p.generatedDocument 
-        ? `/api/v1/documents/${p.generatedDocument.id}/download` 
+      downloadUrl: p.generatedDocument
+        ? `/api/v1/documents/${p.generatedDocument.id}/download`
         : undefined,
     }));
 

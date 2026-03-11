@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Post,
-  Get,
-  Body,
-  Param,
-  Query,
-  Res,
-  UseGuards,
-  Logger,
-} from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, Query, Res, UseGuards, Logger } from '@nestjs/common';
 import { Response } from 'express';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -42,9 +32,7 @@ export class ChatEngineController {
   @ApiOperation({ summary: 'Get chat status and limits' })
   @ApiParam({ name: 'projectId', description: 'Project ID' })
   @ApiResponse({ status: 200, type: ChatStatusDto })
-  async getStatus(
-    @Param('projectId') projectId: string,
-  ): Promise<ChatStatusDto> {
+  async getStatus(@Param('projectId') projectId: string): Promise<ChatStatusDto> {
     return this.chatEngine.getChatStatus(projectId);
   }
 
@@ -59,11 +47,7 @@ export class ChatEngineController {
     @Param('projectId') projectId: string,
     @Query() query: ListMessagesQueryDto,
   ): Promise<ChatMessageDto[]> {
-    return this.chatEngine.getMessages(
-      projectId,
-      query.skip || 0,
-      query.take || 50,
-    );
+    return this.chatEngine.getMessages(projectId, query.skip || 0, query.take || 50);
   }
 
   /**
@@ -79,12 +63,7 @@ export class ChatEngineController {
     @Body() dto: CreateMessageDto,
     @CurrentUser() user: { sub: string },
   ): Promise<ChatMessageDto> {
-    return this.chatEngine.sendMessage(
-      projectId,
-      user.sub,
-      dto.content,
-      dto.provider,
-    );
+    return this.chatEngine.sendMessage(projectId, user.sub, dto.content, dto.provider);
   }
 
   /**

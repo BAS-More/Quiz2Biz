@@ -123,9 +123,7 @@ export class MfaService {
     }
 
     // Check if it's a backup code
-    const backupCodes: string[] = user.mfaBackupCodes
-      ? JSON.parse(user.mfaBackupCodes)
-      : [];
+    const backupCodes: string[] = user.mfaBackupCodes ? JSON.parse(user.mfaBackupCodes) : [];
 
     const codeIndex = backupCodes.indexOf(code.toUpperCase());
     if (codeIndex !== -1) {
@@ -209,9 +207,7 @@ export class MfaService {
       select: { mfaEnabled: true, mfaBackupCodes: true },
     });
 
-    const backupCodes: string[] = user?.mfaBackupCodes
-      ? JSON.parse(user.mfaBackupCodes)
-      : [];
+    const backupCodes: string[] = user?.mfaBackupCodes ? JSON.parse(user.mfaBackupCodes) : [];
 
     return {
       enabled: user?.mfaEnabled ?? false,
@@ -237,10 +233,7 @@ export class MfaService {
     const codes: string[] = [];
     for (let i = 0; i < count; i++) {
       // Generate 8-character alphanumeric codes
-      const code = randomBytes(4)
-        .toString('hex')
-        .toUpperCase()
-        .slice(0, 8);
+      const code = randomBytes(4).toString('hex').toUpperCase().slice(0, 8);
       codes.push(code);
     }
     return codes;

@@ -60,11 +60,7 @@ export class ChatEngineService {
   /**
    * Get messages for a project
    */
-  async getMessages(
-    projectId: string,
-    skip = 0,
-    take = 50,
-  ): Promise<ChatMessageDto[]> {
+  async getMessages(projectId: string, skip = 0, take = 50): Promise<ChatMessageDto[]> {
     const messages = await this.prisma.chatMessage.findMany({
       where: { projectId },
       orderBy: { createdAt: 'asc' },
@@ -177,11 +173,13 @@ export class ChatEngineService {
         createdAt: assistantMessage.createdAt,
       };
     } catch (error) {
-      this.logger.error(`Failed to generate response: ${error instanceof Error ? error.message : String(error)}`);
-      
+      this.logger.error(
+        `Failed to generate response: ${error instanceof Error ? error.message : String(error)}`,
+      );
+
       // Delete user message on failure
       await this.prisma.chatMessage.delete({ where: { id: userMessage.id } });
-      
+
       throw error;
     }
   }
@@ -249,8 +247,12 @@ export class ChatEngineService {
           fullContent += chunk.content;
         } else {
           // Final chunk with usage info
-          if (chunk.usage) {finalUsage = chunk.usage;}
-          if (chunk.cost) {finalCost = chunk.cost;}
+          if (chunk.usage) {
+            finalUsage = chunk.usage;
+          }
+          if (chunk.cost) {
+            finalCost = chunk.cost;
+          }
           usedProvider = chunk.provider;
         }
 
@@ -287,10 +289,10 @@ export class ChatEngineService {
       });
     } catch (error) {
       this.logger.error(`Stream failed: ${error instanceof Error ? error.message : String(error)}`);
-      
+
       // Delete user message on failure
       await this.prisma.chatMessage.delete({ where: { id: userMessage.id } });
-      
+
       yield {
         content: '',
         done: true,
@@ -329,7 +331,7 @@ export class ChatEngineService {
     message?: string;
   }> {
     const status = await this.getChatStatus(projectId);
-    
+
     if (status.limitReached) {
       return {
         canSend: false,

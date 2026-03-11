@@ -46,10 +46,7 @@ describe('PricingCalculatorService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        PricingCalculatorService,
-        { provide: PrismaService, useValue: mockPrisma },
-      ],
+      providers: [PricingCalculatorService, { provide: PrismaService, useValue: mockPrisma }],
     }).compile();
 
     service = module.get<PricingCalculatorService>(PricingCalculatorService);

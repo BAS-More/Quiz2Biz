@@ -13,7 +13,7 @@ describe('PromptBuilderService', () => {
     {
       name: 'Market Analysis',
       description: 'Analysis of target market',
-      weight: 0.20,
+      weight: 0.2,
       benchmarkCriteria: [
         { criterion: 'What is the total addressable market?' },
         { criterion: 'Who are your competitors?' },
@@ -79,10 +79,7 @@ describe('PromptBuilderService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        PromptBuilderService,
-        { provide: PrismaService, useValue: mockPrismaService },
-      ],
+      providers: [PromptBuilderService, { provide: PrismaService, useValue: mockPrismaService }],
     }).compile();
 
     service = module.get<PromptBuilderService>(PromptBuilderService);
@@ -264,7 +261,7 @@ describe('PromptBuilderService', () => {
         {
           name: 'Big Dim',
           description: 'Many criteria',
-          weight: 0.20,
+          weight: 0.2,
           benchmarkCriteria: [
             { criterion: 'Q1' },
             { criterion: 'Q2' },

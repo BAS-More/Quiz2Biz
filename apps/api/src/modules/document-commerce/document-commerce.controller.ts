@@ -45,9 +45,7 @@ export class DocumentCommerceController {
    */
   @Post('price')
   @HttpCode(HttpStatus.OK)
-  async calculatePrice(
-    @Body() dto: PriceCalculationDto,
-  ): Promise<PriceCalculationResponseDto> {
+  async calculatePrice(@Body() dto: PriceCalculationDto): Promise<PriceCalculationResponseDto> {
     return this.pricingCalculator.calculatePrice(dto);
   }
 
@@ -93,9 +91,7 @@ export class DocumentCommerceController {
    * GET /api/v1/documents/purchases
    */
   @Get('purchases')
-  async getUserPurchases(
-    @CurrentUser() user: JwtUser,
-  ): Promise<DocumentPurchaseStatusDto[]> {
+  async getUserPurchases(@CurrentUser() user: JwtUser): Promise<DocumentPurchaseStatusDto[]> {
     return this.purchaseService.getUserPurchases(user.id);
   }
 }

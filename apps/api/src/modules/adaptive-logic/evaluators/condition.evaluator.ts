@@ -39,7 +39,10 @@ export class ConditionEvaluator {
   }
 
   /** Dispatch map for operator evaluation — reduces cyclomatic complexity */
-  private readonly operatorHandlers: Record<string, (actual: unknown, expected: unknown) => boolean> = {
+  private readonly operatorHandlers: Record<
+    string,
+    (actual: unknown, expected: unknown) => boolean
+  > = {
     ['equals']: (a, e) => this.equals(a, e),
     ['eq']: (a, e) => this.equals(a, e),
     ['not_equals']: (a, e) => !this.equals(a, e),

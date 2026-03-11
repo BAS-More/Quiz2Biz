@@ -44,9 +44,7 @@ describe('ChatEngineController', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ChatEngineController],
-      providers: [
-        { provide: ChatEngineService, useValue: mockService },
-      ],
+      providers: [{ provide: ChatEngineService, useValue: mockService }],
     }).compile();
 
     controller = module.get<ChatEngineController>(ChatEngineController);
@@ -127,11 +125,7 @@ describe('ChatEngineController', () => {
     it('should send message without specifying provider', async () => {
       chatEngineService.sendMessage.mockResolvedValue(mockMessage);
 
-      await controller.sendMessage(
-        'project-123',
-        { content: 'Hello AI' },
-        mockUser,
-      );
+      await controller.sendMessage('project-123', { content: 'Hello AI' }, mockUser);
 
       expect(chatEngineService.sendMessage).toHaveBeenCalledWith(
         'project-123',
@@ -207,12 +201,8 @@ describe('ChatEngineController', () => {
         mockUser,
       );
 
-      expect(mockRes.write).toHaveBeenCalledWith(
-        expect.stringContaining('event: error'),
-      );
-      expect(mockRes.write).toHaveBeenCalledWith(
-        expect.stringContaining('Stream failed'),
-      );
+      expect(mockRes.write).toHaveBeenCalledWith(expect.stringContaining('event: error'));
+      expect(mockRes.write).toHaveBeenCalledWith(expect.stringContaining('Stream failed'));
       expect(mockRes.end).toHaveBeenCalled();
     });
 
@@ -232,9 +222,7 @@ describe('ChatEngineController', () => {
         mockUser,
       );
 
-      expect(mockRes.write).toHaveBeenCalledWith(
-        expect.stringContaining('Stream failed'),
-      );
+      expect(mockRes.write).toHaveBeenCalledWith(expect.stringContaining('Stream failed'));
       expect(mockRes.end).toHaveBeenCalled();
     });
 

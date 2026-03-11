@@ -155,9 +155,7 @@ export interface AiAdapter {
   generate(request: AiGatewayRequest): Promise<AiGatewayResponse>;
 
   /** Generate a streaming response */
-  generateStream(
-    request: AiGatewayRequest,
-  ): AsyncGenerator<AiStreamChunk, void, unknown>;
+  generateStream(request: AiGatewayRequest): AsyncGenerator<AiStreamChunk, void, unknown>;
 
   /** Estimate token count for a message */
   estimateTokens(text: string): number;

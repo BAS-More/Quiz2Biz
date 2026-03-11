@@ -30,16 +30,22 @@ export interface ProjectCostSummary {
   totalCost: number;
   totalTokens: number;
   requestCount: number;
-  byProvider: Record<AiProviderType, {
-    cost: number;
-    tokens: number;
-    requests: number;
-  }>;
-  byTaskType: Record<AiTaskType, {
-    cost: number;
-    tokens: number;
-    requests: number;
-  }>;
+  byProvider: Record<
+    AiProviderType,
+    {
+      cost: number;
+      tokens: number;
+      requests: number;
+    }
+  >;
+  byTaskType: Record<
+    AiTaskType,
+    {
+      cost: number;
+      tokens: number;
+      requests: number;
+    }
+  >;
 }
 
 /**
@@ -69,8 +75,8 @@ export class CostTrackerService {
     // Log for debugging
     this.logger.debug(
       `Cost tracked: ${record.provider}/${record.taskType} - ` +
-      `${record.totalTokens} tokens, $${record.totalCost.toFixed(4)} ` +
-      `[project: ${record.projectId || 'N/A'}]`,
+        `${record.totalTokens} tokens, $${record.totalCost.toFixed(4)} ` +
+        `[project: ${record.projectId || 'N/A'}]`,
     );
 
     // Flush if buffer is large
@@ -83,7 +89,9 @@ export class CostTrackerService {
    * Flush cost buffer to database
    */
   async flushCostBuffer(): Promise<void> {
-    if (this.costBuffer.length === 0) {return;}
+    if (this.costBuffer.length === 0) {
+      return;
+    }
 
     const records = [...this.costBuffer];
     this.costBuffer = [];
@@ -98,7 +106,9 @@ export class CostTrackerService {
       this.logger.debug(`Flushed ${records.length} cost records`);
     } catch (error) {
       this.costBuffer = [...records, ...this.costBuffer];
-      this.logger.error(`Failed to flush cost buffer: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.error(
+        `Failed to flush cost buffer: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -117,7 +127,10 @@ export class CostTrackerService {
     return projectCosts;
   }
 
-  private async persistProjectCosts(projectId: string, costs: { tokens: number; cost: number }): Promise<void> {
+  private async persistProjectCosts(
+    projectId: string,
+    costs: { tokens: number; cost: number },
+  ): Promise<void> {
     try {
       const project = await this.prisma.project.findUnique({
         where: { id: projectId },
@@ -138,11 +151,15 @@ export class CostTrackerService {
 
         await this.prisma.project.update({
           where: { id: projectId },
-          data: { metadata: { ...metadata, costTracking, lastCostUpdate: new Date().toISOString() } },
+          data: {
+            metadata: { ...metadata, costTracking, lastCostUpdate: new Date().toISOString() },
+          },
         });
       }
     } catch (error) {
-      this.logger.error(`Failed to update project ${projectId} costs: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.error(
+        `Failed to update project ${projectId} costs: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -176,7 +193,9 @@ export class CostTrackerService {
         select: { metadata: true },
       });
 
-      if (!project) {return null;}
+      if (!project) {
+        return null;
+      }
 
       const metadata = (project.metadata as Record<string, unknown>) || {};
       const costTracking = (metadata.costTracking as Record<string, number>) || {};
@@ -198,7 +217,9 @@ export class CostTrackerService {
         },
       };
     } catch (error) {
-      this.logger.error(`Failed to get project cost summary: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.error(
+        `Failed to get project cost summary: ${error instanceof Error ? error.message : String(error)}`,
+      );
       return null;
     }
   }

@@ -95,7 +95,12 @@ describe('AiGatewayController', () => {
     it('should set SSE headers and stream chunks', async () => {
       const chunks = [
         { content: 'Hello', done: false, provider: 'claude' },
-        { content: '', done: true, provider: 'claude', usage: { inputTokens: 10, outputTokens: 5, totalTokens: 15 } },
+        {
+          content: '',
+          done: true,
+          provider: 'claude',
+          usage: { inputTokens: 10, outputTokens: 5, totalTokens: 15 },
+        },
       ];
 
       async function* mockStream() {
