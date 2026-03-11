@@ -102,7 +102,7 @@ describe('DocumentPurchaseService', () => {
     };
 
     const mockConfig = {
-      get: jest.fn().mockReturnValue('sk_test_fake'),
+      get: jest.fn().mockReturnValue('test_stripe_key_fake'),
     };
 
     const module: TestingModule = await Test.createTestingModule({

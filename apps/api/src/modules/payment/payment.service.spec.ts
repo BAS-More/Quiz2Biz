@@ -51,7 +51,7 @@ describe('PaymentService', () => {
           useValue: {
             get: jest.fn((key: string, defaultValue?: string) => {
               if (key === 'STRIPE_SECRET_KEY') {
-                return 'sk_test_123';
+                return 'test_stripe_key_123';
               }
               if (key === 'STRIPE_PRICE_PROFESSIONAL') {
                 return defaultValue || 'price_professional';
@@ -553,7 +553,7 @@ describe('PaymentService', () => {
             useValue: {
               get: jest.fn((key: string, defaultValue?: string) => {
                 if (key === 'STRIPE_SECRET_KEY') {
-                  return 'sk_test_123';
+                  return 'test_stripe_key_123';
                 }
                 if (key === 'STRIPE_PRICE_PROFESSIONAL') {
                   return defaultValue;

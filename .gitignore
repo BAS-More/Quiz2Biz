@@ -79,3 +79,8 @@ actionlint
 .jest-cache/
 **/.jest-cache/
 *.tsbuildinfo
+
+# Lint artifacts
+eslint-output*.json
+lint-errors.txt
+checks.json
