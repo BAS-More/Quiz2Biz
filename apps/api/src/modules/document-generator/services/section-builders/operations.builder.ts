@@ -2,7 +2,12 @@
  * Operations section builders: Observability Guide, Finance & Economics.
  */
 import { CompiledDocument, DocumentSection, DeliverableCategory } from '../compiler-types';
-import { generateId, processAndCountWords, sumWordCounts, countSubSections } from '../compiler-utils';
+import {
+  generateId,
+  processAndCountWords,
+  sumWordCounts,
+  countSubSections,
+} from '../compiler-utils';
 
 // === Observability Document ===
 

@@ -1,7 +1,7 @@
 /**
  * Quality Calibrator Service
  * Adjusts document generation parameters based on quality level
- * 
+ *
  * Quality Levels:
  * 0 = Basic (1x): Essential content, minimal formatting
  * 1 = Standard (2x): Expanded content, professional formatting
@@ -64,9 +64,7 @@ const QUALITY_CONFIGS: Record<number, Omit<QualityParameters, 'level'>> = {
     temperature: 0.7,
     targetPages: 8,
     sections: ['overview', 'description', 'next_steps'],
-    features: [
-      { ...FEATURES.executiveSummary, enabled: true },
-    ],
+    features: [{ ...FEATURES.executiveSummary, enabled: true }],
     promptModifiers: [
       'Keep content concise and focused on essentials',
       'Use simple formatting',
@@ -97,8 +95,13 @@ const QUALITY_CONFIGS: Record<number, Omit<QualityParameters, 'level'>> = {
     temperature: 0.5,
     targetPages: 20,
     sections: [
-      'executive_summary', 'overview', 'market_analysis', 
-      'description', 'analysis', 'financial_overview', 'next_steps',
+      'executive_summary',
+      'overview',
+      'market_analysis',
+      'description',
+      'analysis',
+      'financial_overview',
+      'next_steps',
     ],
     features: [
       { ...FEATURES.executiveSummary, enabled: true },
@@ -120,9 +123,16 @@ const QUALITY_CONFIGS: Record<number, Omit<QualityParameters, 'level'>> = {
     temperature: 0.4,
     targetPages: 32,
     sections: [
-      'executive_summary', 'overview', 'market_analysis',
-      'competitive_landscape', 'swot_analysis', 'description',
-      'analysis', 'financial_projections', 'risk_assessment', 'next_steps',
+      'executive_summary',
+      'overview',
+      'market_analysis',
+      'competitive_landscape',
+      'swot_analysis',
+      'description',
+      'analysis',
+      'financial_projections',
+      'risk_assessment',
+      'next_steps',
     ],
     features: [
       { ...FEATURES.executiveSummary, enabled: true },
@@ -148,10 +158,19 @@ const QUALITY_CONFIGS: Record<number, Omit<QualityParameters, 'level'>> = {
     temperature: 0.3,
     targetPages: 50,
     sections: [
-      'executive_summary', 'overview', 'market_analysis',
-      'competitive_landscape', 'swot_analysis', 'description',
-      'analysis', 'financial_projections', 'risk_assessment',
-      'implementation_plan', 'appendices', 'references', 'next_steps',
+      'executive_summary',
+      'overview',
+      'market_analysis',
+      'competitive_landscape',
+      'swot_analysis',
+      'description',
+      'analysis',
+      'financial_projections',
+      'risk_assessment',
+      'implementation_plan',
+      'appendices',
+      'references',
+      'next_steps',
     ],
     features: [
       { ...FEATURES.executiveSummary, enabled: true },
@@ -187,7 +206,7 @@ export class QualityCalibratorService {
   getParameters(qualityLevel: number): QualityParameters {
     const level = Math.max(0, Math.min(4, qualityLevel));
     const config = QUALITY_CONFIGS[level];
-    
+
     if (!config) {
       this.logger.warn(`Invalid quality level ${qualityLevel}, defaulting to 0`);
       return { level: 0, ...QUALITY_CONFIGS[0] };
@@ -206,16 +225,16 @@ export class QualityCalibratorService {
     documentType: string,
   ): string {
     const params = this.getParameters(qualityLevel);
-    
+
     // Build facts section
     const factsSection = this.formatFacts(facts);
-    
+
     // Build quality modifiers
     const modifiers = params.promptModifiers.join('\n- ');
-    
+
     // Build sections list
     const sections = params.sections.map((s) => this.formatSectionName(s)).join(', ');
-    
+
     // Build enabled features list
     const features = params.features
       .filter((f) => f.enabled)
@@ -252,7 +271,7 @@ Ensure all required sections are included and features are properly integrated.`
    */
   getSystemPrompt(qualityLevel: number): string {
     const params = this.getParameters(qualityLevel);
-    
+
     const systemPrompts: Record<string, string> = {
       basic: `You are a business document generator. Create clear, concise documents focused on essential information.`,
       professional: `You are a professional business document generator. Create well-structured, comprehensive documents with proper citations and formatting.`,

@@ -74,23 +74,41 @@ export class DeliverablesCompilerService {
     const documents: CompiledDocument[] = [];
 
     // Core documents (always included)
-    documents.push(compileArchitectureDossier(session, responses, dimensions, autoSection, maxWordsPerSection));
-    documents.push(compileSDLCPlaybook(session, responses, dimensions, autoSection, maxWordsPerSection));
-    documents.push(compileTestStrategy(session, responses, dimensions, autoSection, maxWordsPerSection));
-    documents.push(compileDevSecOpsDocument(session, responses, dimensions, autoSection, maxWordsPerSection));
-    documents.push(compilePrivacyDocument(session, responses, dimensions, autoSection, maxWordsPerSection));
-    documents.push(compileObservabilityDocument(session, responses, dimensions, autoSection, maxWordsPerSection));
-    documents.push(compileFinanceDocument(session, responses, dimensions, autoSection, maxWordsPerSection));
+    documents.push(
+      compileArchitectureDossier(session, responses, dimensions, autoSection, maxWordsPerSection),
+    );
+    documents.push(
+      compileSDLCPlaybook(session, responses, dimensions, autoSection, maxWordsPerSection),
+    );
+    documents.push(
+      compileTestStrategy(session, responses, dimensions, autoSection, maxWordsPerSection),
+    );
+    documents.push(
+      compileDevSecOpsDocument(session, responses, dimensions, autoSection, maxWordsPerSection),
+    );
+    documents.push(
+      compilePrivacyDocument(session, responses, dimensions, autoSection, maxWordsPerSection),
+    );
+    documents.push(
+      compileObservabilityDocument(session, responses, dimensions, autoSection, maxWordsPerSection),
+    );
+    documents.push(
+      compileFinanceDocument(session, responses, dimensions, autoSection, maxWordsPerSection),
+    );
 
     // Optional documents
     if (includePolicyPack) {
-      documents.push(compilePolicyDocument(session, responses, dimensions, autoSection, maxWordsPerSection));
+      documents.push(
+        compilePolicyDocument(session, responses, dimensions, autoSection, maxWordsPerSection),
+      );
     }
     if (includeDecisionLog && decisions.length > 0) {
       documents.push(compileDecisionLog(session, decisions, autoSection, maxWordsPerSection));
     }
     if (includeReadinessReport) {
-      documents.push(compileReadinessReport(session, dimensions, evidenceItems, autoSection, maxWordsPerSection));
+      documents.push(
+        compileReadinessReport(session, dimensions, evidenceItems, autoSection, maxWordsPerSection),
+      );
     }
 
     const readinessScore = session.readinessScore ? Number(session.readinessScore) : 0;

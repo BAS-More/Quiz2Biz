@@ -123,9 +123,7 @@ describe('PdfRendererService', () => {
       const markdown = '# Test';
       const options = { title: 'Error Test' };
 
-      await expect(
-        service.generateFromMarkdown(markdown, options),
-      ).rejects.toThrow('PDF error');
+      await expect(service.generateFromMarkdown(markdown, options)).rejects.toThrow('PDF error');
 
       expect(mockBrowser.close).toHaveBeenCalled();
     });

@@ -56,10 +56,7 @@ export class PaymentController {
    * Validate that the authenticated user belongs to the specified organization.
    * Throws ForbiddenException if the user does not have access.
    */
-  private async validateOrganizationAccess(
-    userId: string,
-    organizationId: string,
-  ): Promise<void> {
+  private async validateOrganizationAccess(userId: string, organizationId: string): Promise<void> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: { organizationId: true },

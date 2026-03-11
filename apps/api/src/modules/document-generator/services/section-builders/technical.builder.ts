@@ -2,7 +2,12 @@
  * Technical section builders: Architecture Dossier, SDLC Playbook, Test Strategy.
  */
 import { CompiledDocument, DocumentSection, DeliverableCategory } from '../compiler-types';
-import { generateId, processAndCountWords, sumWordCounts, countSubSections } from '../compiler-utils';
+import {
+  generateId,
+  processAndCountWords,
+  sumWordCounts,
+  countSubSections,
+} from '../compiler-utils';
 
 // === Architecture Dossier ===
 

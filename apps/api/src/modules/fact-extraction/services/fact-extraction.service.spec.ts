@@ -15,9 +15,24 @@ jest.mock('../schemas/extraction-schemas', () => ({
         projectTypeSlug: 'business-plan',
         projectTypeName: 'Business Plan',
         fields: [
-          { key: 'company_name', description: 'Company name', category: 'business_overview', required: true },
-          { key: 'target_market', description: 'Target market', category: 'market_analysis', required: true },
-          { key: 'revenue_model', description: 'Revenue model', category: 'financial_data', required: false },
+          {
+            key: 'company_name',
+            description: 'Company name',
+            category: 'business_overview',
+            required: true,
+          },
+          {
+            key: 'target_market',
+            description: 'Target market',
+            category: 'market_analysis',
+            required: true,
+          },
+          {
+            key: 'revenue_model',
+            description: 'Revenue model',
+            category: 'financial_data',
+            required: false,
+          },
         ],
         systemPromptAddition: 'Focus on business planning facts.',
       };
@@ -54,7 +69,12 @@ describe('FactExtractionService', () => {
   const mockAiResponse = {
     content: JSON.stringify({
       facts: [
-        { key: 'company_name', value: 'Acme Corp', category: 'business_overview', confidence: 'high' },
+        {
+          key: 'company_name',
+          value: 'Acme Corp',
+          category: 'business_overview',
+          confidence: 'high',
+        },
         { key: 'target_market', value: 'SMBs', category: 'market_analysis', confidence: 'medium' },
       ],
     }),
@@ -164,7 +184,8 @@ describe('FactExtractionService', () => {
     it('should handle AI response wrapped in markdown code blocks', async () => {
       aiGatewayService.generate.mockResolvedValue({
         ...mockAiResponse,
-        content: '```json\n{"facts":[{"key":"company_name","value":"Test","category":"business_overview","confidence":"high"}]}\n```',
+        content:
+          '```json\n{"facts":[{"key":"company_name","value":"Test","category":"business_overview","confidence":"high"}]}\n```',
       });
 
       const result = await service.extractFacts({

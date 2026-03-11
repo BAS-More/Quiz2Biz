@@ -1,7 +1,12 @@
 /**
  * Markdown Renderer Service Unit Tests
  */
-import { MarkdownRendererService, MarkdownDocument, DocumentSection, TableData } from './markdown-renderer.service';
+import {
+  MarkdownRendererService,
+  MarkdownDocument,
+  DocumentSection,
+  TableData,
+} from './markdown-renderer.service';
 
 describe('MarkdownRendererService', () => {
   let service: MarkdownRendererService;
@@ -90,9 +95,7 @@ describe('MarkdownRendererService', () => {
         title: 'Business Plan',
         subtitle: 'TechCorp Inc.',
         metadata: { Version: '1.0' },
-        sections: [
-          { title: 'Executive Summary', content: 'This is the summary.', level: 2 },
-        ],
+        sections: [{ title: 'Executive Summary', content: 'This is the summary.', level: 2 }],
         footer: 'Confidential',
       };
       const result = service.renderDocument(doc);
@@ -127,9 +130,7 @@ describe('MarkdownRendererService', () => {
         title: 'Parent',
         content: 'Parent content',
         level: 2,
-        subsections: [
-          { title: 'Child', content: 'Child content', level: 3 },
-        ],
+        subsections: [{ title: 'Child', content: 'Child content', level: 3 }],
       };
       const result = service.renderSection(section);
 
@@ -176,7 +177,10 @@ describe('MarkdownRendererService', () => {
     it('should render table with headers and rows', () => {
       const data: TableData = {
         headers: ['Name', 'Value'],
-        rows: [['Revenue', '$1M'], ['Costs', '$500K']],
+        rows: [
+          ['Revenue', '$1M'],
+          ['Costs', '$500K'],
+        ],
       };
       const result = service.renderTable(data);
 

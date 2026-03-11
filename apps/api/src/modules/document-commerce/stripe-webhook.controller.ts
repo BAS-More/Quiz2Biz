@@ -75,11 +75,7 @@ export class StripeWebhookController {
       }
 
       // Always verify webhook signature — no dev bypass
-      event = this.stripe.webhooks.constructEvent(
-        rawBody,
-        signature,
-        this.webhookSecret,
-      );
+      event = this.stripe.webhooks.constructEvent(rawBody, signature, this.webhookSecret);
     } catch (err) {
       this.logger.error('Webhook signature verification failed', err);
       throw new BadRequestException('Invalid webhook signature');

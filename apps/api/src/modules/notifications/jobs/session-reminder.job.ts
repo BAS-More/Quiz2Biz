@@ -7,8 +7,8 @@ import { NotificationService } from '../notification.service';
  * Reminder intervals for abandoned sessions
  */
 const REMINDER_INTERVALS = {
-  FIRST: 24 * 60 * 60 * 1000,    // 24 hours
-  SECOND: 72 * 60 * 60 * 1000,   // 72 hours (3 days)
+  FIRST: 24 * 60 * 60 * 1000, // 24 hours
+  SECOND: 72 * 60 * 60 * 1000, // 72 hours (3 days)
   FINAL: 7 * 24 * 60 * 60 * 1000, // 7 days
 };
 
@@ -83,13 +83,13 @@ export class SessionReminderJobService {
         },
       },
       include: {
-        user: { 
-          select: { 
+        user: {
+          select: {
             id: true,
-            email: true, 
+            email: true,
             name: true,
             preferences: true,
-          } 
+          },
         },
         questionnaire: { select: { name: true } },
       },
@@ -122,9 +122,10 @@ export class SessionReminderJobService {
     }
 
     // Calculate minimum time for next reminder
-    const nextReminderThreshold = remindersSent === 1
-      ? REMINDER_INTERVALS.SECOND  // After 1st reminder, wait until 72h mark
-      : REMINDER_INTERVALS.FINAL;  // After 2nd reminder, wait until 7d mark
+    const nextReminderThreshold =
+      remindersSent === 1
+        ? REMINDER_INTERVALS.SECOND // After 1st reminder, wait until 72h mark
+        : REMINDER_INTERVALS.FINAL; // After 2nd reminder, wait until 7d mark
 
     // Check if enough time has passed since last activity
     return timeSinceLastActivity >= nextReminderThreshold;

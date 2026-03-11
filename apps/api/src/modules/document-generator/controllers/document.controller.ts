@@ -10,7 +10,14 @@ import {
   Res,
   StreamableFile,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiQuery,
+  ApiBody,
+} from '@nestjs/swagger';
 import { Response } from 'express';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
@@ -142,10 +149,7 @@ export class DocumentController {
     @CurrentUser() user: AuthenticatedUser,
     @Res({ passthrough: true }) res: Response,
   ): Promise<StreamableFile> {
-    const result = await this.bulkDownloadService.createSessionDocumentsZip(
-      sessionId,
-      user.id,
-    );
+    const result = await this.bulkDownloadService.createSessionDocumentsZip(sessionId, user.id);
 
     res.set({
       'Content-Type': 'application/zip',

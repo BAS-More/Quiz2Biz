@@ -1,6 +1,6 @@
 /**
  * Fact Extraction Interfaces
- * 
+ *
  * Types for the fact extraction system that analyzes chat conversations
  * to extract structured business facts for document generation.
  */

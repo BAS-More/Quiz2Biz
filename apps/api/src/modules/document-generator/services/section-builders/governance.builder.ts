@@ -3,7 +3,12 @@
  */
 import { DecisionStatus } from '@prisma/client';
 import { CompiledDocument, DocumentSection, DeliverableCategory } from '../compiler-types';
-import { generateId, processAndCountWords, sumWordCounts, countSubSections } from '../compiler-utils';
+import {
+  generateId,
+  processAndCountWords,
+  sumWordCounts,
+  countSubSections,
+} from '../compiler-utils';
 
 // === Policy Document ===
 

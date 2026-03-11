@@ -3,7 +3,7 @@
 /**
  * Project Document Generation Service
  * Generates documents using extracted facts and quality calibration
- * 
+ *
  * This service integrates:
  * - Extracted facts from chat conversations
  * - Quality calibrator for tier-based generation
@@ -171,7 +171,9 @@ export class ProjectDocumentGenerationService {
       'grant-application': `Generate content for a grant application including project overview, objectives, methodology, budget, and expected outcomes.`,
     };
 
-    return prompts[slug] ?? `Generate a professional ${name} document based on the provided information.`;
+    return (
+      prompts[slug] ?? `Generate a professional ${name} document based on the provided information.`
+    );
   }
 
   /**
@@ -188,13 +190,15 @@ export class ProjectDocumentGenerationService {
   ): Promise<string> {
     // For now, generate structured content based on facts
     // In production, this would call the AI gateway
-    
+
     const sections: string[] = [];
-    
+
     // Executive Summary
     sections.push(`# ${documentType}\n`);
     sections.push(`## Executive Summary\n`);
-    sections.push(`This document presents a comprehensive ${documentType.toLowerCase()} based on the information gathered through detailed consultation.\n`);
+    sections.push(
+      `This document presents a comprehensive ${documentType.toLowerCase()} based on the information gathered through detailed consultation.\n`,
+    );
 
     // Group facts by category
     const factsByCategory: Record<string, ExtractedFact[]> = {};
@@ -210,7 +214,7 @@ export class ProjectDocumentGenerationService {
     for (const [category, categoryFacts] of Object.entries(factsByCategory)) {
       const sectionTitle = this.formatCategoryTitle(category);
       sections.push(`## ${sectionTitle}\n`);
-      
+
       for (const fact of categoryFacts) {
         const fieldName = this.formatFieldName(fact.fieldName);
         sections.push(`**${fieldName}:** ${fact.fieldValue}\n`);
@@ -225,7 +229,9 @@ export class ProjectDocumentGenerationService {
     sections.push(`2. Identify areas requiring additional detail\n`);
     sections.push(`3. Proceed with implementation planning\n`);
 
-    this.logger.debug(`Generated content with ${facts.length} facts, max ${maxTokens} tokens, temp ${temperature}`);
+    this.logger.debug(
+      `Generated content with ${facts.length} facts, max ${maxTokens} tokens, temp ${temperature}`,
+    );
     this.logger.debug(`System: ${systemPrompt.slice(0, 100)}...`);
 
     return sections.join('\n');
@@ -244,10 +250,10 @@ export class ProjectDocumentGenerationService {
       title: `${projectName} - ${documentTypeName}`,
       subtitle: `Generated with ${qualityLevel} quality`,
       metadata: {
-        'Project': projectName,
+        Project: projectName,
         'Document Type': documentTypeName,
         'Quality Level': qualityLevel,
-        'Generated': new Date().toLocaleDateString('en-US', {
+        Generated: new Date().toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',
           day: 'numeric',

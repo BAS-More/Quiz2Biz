@@ -251,9 +251,7 @@ describe('IdeaCaptureService', () => {
         {
           id: 's-1',
           orderIndex: 0,
-          questions: [
-            { id: 'question-1', orderIndex: 0, text: 'First question', type: 'TEXT' },
-          ],
+          questions: [{ id: 'question-1', orderIndex: 0, text: 'First question', type: 'TEXT' }],
         },
       ],
     };
@@ -545,9 +543,7 @@ describe('IdeaCaptureService', () => {
           {
             id: 's-1',
             orderIndex: 0,
-            questions: [
-              { id: 'question-1', orderIndex: 0, text: 'First question', type: 'TEXT' },
-            ],
+            questions: [{ id: 'question-1', orderIndex: 0, text: 'First question', type: 'TEXT' }],
           },
         ],
       });

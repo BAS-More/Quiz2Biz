@@ -30,7 +30,14 @@ describe('DocumentController', () => {
       controllers: [DocumentController],
       providers: [
         { provide: DocumentGeneratorService, useValue: mockDocumentService },
-        { provide: BulkDownloadService, useValue: { createSessionDocumentsZip: jest.fn(), createSelectedDocumentsZip: jest.fn(), getDownloadStats: jest.fn() } },
+        {
+          provide: BulkDownloadService,
+          useValue: {
+            createSessionDocumentsZip: jest.fn(),
+            createSelectedDocumentsZip: jest.fn(),
+            getDownloadStats: jest.fn(),
+          },
+        },
       ],
     }).compile();
 

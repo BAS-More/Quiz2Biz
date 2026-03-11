@@ -172,10 +172,7 @@ export class FactsController {
    * DELETE /api/v1/facts/:factId
    */
   @Delete(':factId')
-  async deleteFact(
-    @Param('factId') factId: string,
-    @CurrentUser() user: JwtUser,
-  ): Promise<void> {
+  async deleteFact(@Param('factId') factId: string, @CurrentUser() user: JwtUser): Promise<void> {
     // Get fact and verify ownership through organization membership
     const fact = await this.prisma.extractedFact.findFirst({
       where: {
@@ -221,8 +218,12 @@ export class FactsController {
    * Convert decimal confidence to level string
    */
   private decimalToConfidence(value: number): 'high' | 'medium' | 'low' {
-    if (value >= 0.8) {return 'high';}
-    if (value >= 0.5) {return 'medium';}
+    if (value >= 0.8) {
+      return 'high';
+    }
+    if (value >= 0.5) {
+      return 'medium';
+    }
     return 'low';
   }
 }

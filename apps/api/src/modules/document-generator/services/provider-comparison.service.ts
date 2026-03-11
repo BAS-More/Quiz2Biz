@@ -92,13 +92,16 @@ export class ProviderComparisonService {
     const baseTime = [3, 5, 8, 12, 18][qualityLevel] ?? 5;
 
     // Provider-specific adjustments
-    const providerConfigs: Record<string, {
-      speedMultiplier: number;
-      costPer1kTokens: number;
-      qualityBonus: number;
-      strengths: string[];
-      weaknesses: string[];
-    }> = {
+    const providerConfigs: Record<
+      string,
+      {
+        speedMultiplier: number;
+        costPer1kTokens: number;
+        qualityBonus: number;
+        strengths: string[];
+        weaknesses: string[];
+      }
+    > = {
       claude: {
         speedMultiplier: 1.0,
         costPer1kTokens: 0.015,
@@ -109,10 +112,7 @@ export class ProviderComparisonService {
           'Strong at complex documents',
           'Good at maintaining context',
         ],
-        weaknesses: [
-          'Slightly higher latency',
-          'May be verbose',
-        ],
+        weaknesses: ['Slightly higher latency', 'May be verbose'],
       },
       openai: {
         speedMultiplier: 0.8,
@@ -124,10 +124,7 @@ export class ProviderComparisonService {
           'Consistent output format',
           'Wide knowledge base',
         ],
-        weaknesses: [
-          'May need more guidance',
-          'Less nuanced analysis',
-        ],
+        weaknesses: ['May need more guidance', 'Less nuanced analysis'],
       },
       'gpt-4': {
         speedMultiplier: 1.2,
@@ -139,10 +136,7 @@ export class ProviderComparisonService {
           'Best for premium documents',
           'Strong accuracy',
         ],
-        weaknesses: [
-          'Higher cost',
-          'Slower response time',
-        ],
+        weaknesses: ['Higher cost', 'Slower response time'],
       },
     };
 
@@ -158,9 +152,9 @@ export class ProviderComparisonService {
     const responseTime = Math.round(baseTime * config.speedMultiplier);
     const tokenCount = baseTokens;
     const estimatedCost = (tokenCount / 1000) * config.costPer1kTokens;
-    
+
     // Quality score: base 70 + quality level bonus + provider bonus
-    const qualityScore = 70 + (qualityLevel * 5) + config.qualityBonus;
+    const qualityScore = 70 + qualityLevel * 5 + config.qualityBonus;
 
     return {
       responseTime,
@@ -179,14 +173,17 @@ export class ProviderComparisonService {
     recommended: ProviderComparison,
     all: ProviderComparison[],
   ): string {
-    const costDiff = all.length > 1 
-      ? `${Math.round(((all[1].estimatedCost - recommended.estimatedCost) / recommended.estimatedCost) * 100)}% savings compared to alternatives`
-      : '';
+    const costDiff =
+      all.length > 1
+        ? `${Math.round(((all[1].estimatedCost - recommended.estimatedCost) / recommended.estimatedCost) * 100)}% savings compared to alternatives`
+        : '';
 
-    return `${recommended.providerName} is recommended for this document. ` +
+    return (
+      `${recommended.providerName} is recommended for this document. ` +
       `It offers a quality score of ${recommended.qualityScore}% ` +
       `with an estimated cost of $${recommended.estimatedCost.toFixed(2)}. ` +
-      (costDiff ? costDiff : 'It provides the best balance of quality and cost.');
+      (costDiff ? costDiff : 'It provides the best balance of quality and cost.')
+    );
   }
 
   /**

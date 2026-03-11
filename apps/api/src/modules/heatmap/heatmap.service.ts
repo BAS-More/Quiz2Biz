@@ -247,9 +247,7 @@ export class HeatmapService {
     }
 
     // Build response lookup
-    const responseLookup = new Map(
-      responses.map((r: HeatmapResponse) => [r.questionId, r]),
-    );
+    const responseLookup = new Map(responses.map((r: HeatmapResponse) => [r.questionId, r]));
 
     // Get questions for this cell
     const bucket = severityBucket as SeverityBucket;
@@ -547,12 +545,13 @@ export class HeatmapService {
 
     // Get dimension weights
     const dimensionWeights = new Map(
-      dimensions.map((d: { key: string; weight: Prisma.Decimal | null }) => [d.key, Number(d.weight || 0.1)]),
+      dimensions.map((d: { key: string; weight: Prisma.Decimal | null }) => [
+        d.key,
+        Number(d.weight || 0.1),
+      ]),
     );
 
-    const responseLookup = new Map(
-      responses.map((r: HeatmapResponse) => [r.questionId, r]),
-    );
+    const responseLookup = new Map(responses.map((r: HeatmapResponse) => [r.questionId, r]));
 
     // Calculate priority score for each cell
     const priorityGaps: PriorityGap[] = [];

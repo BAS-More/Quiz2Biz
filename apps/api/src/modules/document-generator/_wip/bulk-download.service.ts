@@ -25,10 +25,7 @@ export class BulkDownloadService {
   /**
    * Create a ZIP archive containing all documents for a session
    */
-  async createSessionDocumentsZip(
-    sessionId: string,
-    userId: string,
-  ): Promise<BulkDownloadResult> {
+  async createSessionDocumentsZip(sessionId: string, userId: string): Promise<BulkDownloadResult> {
     // Verify session ownership
     const session = await this.prisma.session.findFirst({
       where: {

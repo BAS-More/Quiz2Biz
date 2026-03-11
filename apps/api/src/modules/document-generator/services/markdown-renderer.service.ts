@@ -28,7 +28,6 @@ export interface TableData {
 
 @Injectable()
 export class MarkdownRendererService {
-
   /**
    * Render a full document to Markdown
    */
@@ -80,7 +79,7 @@ export class MarkdownRendererService {
   renderSection(section: DocumentSection): string {
     const parts: string[] = [];
     const heading = '#'.repeat(section.level);
-    
+
     parts.push(`${heading} ${section.title}\n`);
     parts.push(this.formatContent(section.content));
 
@@ -103,7 +102,7 @@ export class MarkdownRendererService {
     for (const section of sections) {
       const slug = this.slugify(section.title);
       lines.push(`${indent}- [${section.title}](#${slug})`);
-      
+
       if (section.subsections && section.subsections.length > 0) {
         lines.push(this.generateToc(section.subsections, depth + 1));
       }
@@ -138,9 +137,7 @@ export class MarkdownRendererService {
    * Render a bullet list
    */
   renderList(items: string[], ordered = false): string {
-    return items
-      .map((item, i) => (ordered ? `${i + 1}. ${item}` : `- ${item}`))
-      .join('\n') + '\n';
+    return items.map((item, i) => (ordered ? `${i + 1}. ${item}` : `- ${item}`)).join('\n') + '\n';
   }
 
   /**
@@ -154,10 +151,12 @@ export class MarkdownRendererService {
    * Render a blockquote
    */
   renderBlockquote(text: string): string {
-    return text
-      .split('\n')
-      .map((line) => `> ${line}`)
-      .join('\n') + '\n';
+    return (
+      text
+        .split('\n')
+        .map((line) => `> ${line}`)
+        .join('\n') + '\n'
+    );
   }
 
   /**
@@ -218,14 +217,14 @@ export class MarkdownRendererService {
     for (const line of lines) {
       // Check for headers
       const headerMatch = line.match(/^(#{1,4})\s+(.+)$/);
-      
+
       if (headerMatch) {
         // Save previous section
         if (currentSection) {
           currentSection.content = contentBuffer.join('\n').trim();
           sections.push(currentSection);
         }
-        
+
         const level = headerMatch[1].length as 1 | 2 | 3 | 4;
         currentSection = {
           title: headerMatch[2].trim(),

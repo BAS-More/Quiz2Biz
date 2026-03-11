@@ -2,7 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 import { ConfigService } from '@nestjs/config';
-import { ProjectDocumentGenerationService, GenerationRequest } from './project-document-generation.service';
+import {
+  ProjectDocumentGenerationService,
+  GenerationRequest,
+} from './project-document-generation.service';
 import { QualityCalibratorService } from './quality-calibrator.service';
 import { MarkdownRendererService, DocumentSection } from './markdown-renderer.service';
 
@@ -161,9 +164,9 @@ describe('ProjectDocumentGenerationService', () => {
 
     it('should validate project ownership', async () => {
       expect(prisma.project.findFirst).not.toHaveBeenCalled();
-      
+
       await service.generateDocument(validRequest);
-      
+
       expect(prisma.project.findFirst).toHaveBeenCalledWith({
         where: { id: 'project-123', userId: 'user-123' },
         include: { projectType: true },
@@ -173,17 +176,13 @@ describe('ProjectDocumentGenerationService', () => {
     it('should throw NotFoundException if project not found', async () => {
       prisma.project.findFirst.mockResolvedValue(null);
 
-      await expect(service.generateDocument(validRequest))
-        .rejects
-        .toThrow(NotFoundException);
+      await expect(service.generateDocument(validRequest)).rejects.toThrow(NotFoundException);
     });
 
     it('should throw NotFoundException if document type not found', async () => {
       prisma.documentType.findUnique.mockResolvedValue(null);
 
-      await expect(service.generateDocument(validRequest))
-        .rejects
-        .toThrow(NotFoundException);
+      await expect(service.generateDocument(validRequest)).rejects.toThrow(NotFoundException);
     });
 
     it('should fetch facts for the project', async () => {
@@ -592,12 +591,14 @@ describe('ProjectDocumentGenerationService', () => {
     it('should propagate database errors', async () => {
       prisma.project.findFirst.mockRejectedValue(new Error('Database error'));
 
-      await expect(service.generateDocument({
-        projectId: 'project-123',
-        documentTypeSlug: 'business-plan',
-        qualityLevel: 2,
-        userId: 'user-123',
-      })).rejects.toThrow('Database error');
+      await expect(
+        service.generateDocument({
+          projectId: 'project-123',
+          documentTypeSlug: 'business-plan',
+          qualityLevel: 2,
+          userId: 'user-123',
+        }),
+      ).rejects.toThrow('Database error');
     });
 
     it('should handle fact extraction failure', async () => {
@@ -605,12 +606,14 @@ describe('ProjectDocumentGenerationService', () => {
       prisma.documentType.findUnique.mockResolvedValue(mockDocumentType as any);
       prisma.extractedFact.findMany.mockRejectedValue(new Error('Fact error'));
 
-      await expect(service.generateDocument({
-        projectId: 'project-123',
-        documentTypeSlug: 'business-plan',
-        qualityLevel: 2,
-        userId: 'user-123',
-      })).rejects.toThrow('Fact error');
+      await expect(
+        service.generateDocument({
+          projectId: 'project-123',
+          documentTypeSlug: 'business-plan',
+          qualityLevel: 2,
+          userId: 'user-123',
+        }),
+      ).rejects.toThrow('Fact error');
     });
 
     it('should handle document save failure', async () => {
@@ -624,12 +627,14 @@ describe('ProjectDocumentGenerationService', () => {
       markdownRenderer.renderDocument.mockReturnValue('# Markdown');
       prisma.generatedDocument.create.mockRejectedValue(new Error('Save error'));
 
-      await expect(service.generateDocument({
-        projectId: 'project-123',
-        documentTypeSlug: 'business-plan',
-        qualityLevel: 2,
-        userId: 'user-123',
-      })).rejects.toThrow('Save error');
+      await expect(
+        service.generateDocument({
+          projectId: 'project-123',
+          documentTypeSlug: 'business-plan',
+          qualityLevel: 2,
+          userId: 'user-123',
+        }),
+      ).rejects.toThrow('Save error');
     });
   });
 });

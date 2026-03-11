@@ -156,7 +156,10 @@ export class TemplateEngineService {
   /** Dispatch map for question-type-specific value extraction */
   private readonly responseValueExtractors: Record<
     string,
-    (responseValue: Record<string, unknown>, question: { type: string; options: unknown }) => unknown
+    (
+      responseValue: Record<string, unknown>,
+      question: { type: string; options: unknown },
+    ) => unknown
   > = {
     ['TEXT']: (rv) => rv.text ?? '',
     ['TEXTAREA']: (rv) => rv.text ?? '',

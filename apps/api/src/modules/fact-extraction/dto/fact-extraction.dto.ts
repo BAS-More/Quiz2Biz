@@ -15,15 +15,24 @@ export class ExtractedFactDto {
   @IsString()
   value!: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Fact category',
-    enum: ['business_overview', 'market_analysis', 'financial_data', 'team_and_operations', 
-           'product_service', 'strategy', 'risk_assessment', 'technology', 'legal_compliance'],
+    enum: [
+      'business_overview',
+      'market_analysis',
+      'financial_data',
+      'team_and_operations',
+      'product_service',
+      'strategy',
+      'risk_assessment',
+      'technology',
+      'legal_compliance',
+    ],
   })
   @IsString()
   category!: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Confidence level',
     enum: ['high', 'medium', 'low'],
   })

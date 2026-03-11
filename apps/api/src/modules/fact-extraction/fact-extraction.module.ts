@@ -1,6 +1,6 @@
 /**
  * Fact Extraction Module
- * 
+ *
  * Module for extracting structured business facts from chat conversations.
  * Features:
  * - AI-powered fact extraction

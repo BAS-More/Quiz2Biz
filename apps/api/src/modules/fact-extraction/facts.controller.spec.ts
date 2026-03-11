@@ -71,9 +71,9 @@ describe('FactsController', () => {
     it('should throw NotFoundException when project not found', async () => {
       prismaService.project.findFirst.mockResolvedValue(null);
 
-      await expect(
-        controller.getProjectFacts('nonexistent', mockUser),
-      ).rejects.toThrow(NotFoundException);
+      await expect(controller.getProjectFacts('nonexistent', mockUser)).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should return correct verified and high confidence counts', async () => {
@@ -116,11 +116,7 @@ describe('FactsController', () => {
         fieldValue: 'New Value',
       });
 
-      const result = await controller.updateFact(
-        'fact-1',
-        { fieldValue: 'New Value' },
-        mockUser,
-      );
+      const result = await controller.updateFact('fact-1', { fieldValue: 'New Value' }, mockUser);
 
       expect(result.fieldValue).toBe('New Value');
       expect(prismaService.extractedFact.update).toHaveBeenCalledWith({
@@ -139,11 +135,7 @@ describe('FactsController', () => {
         confirmedByUser: true,
       });
 
-      const result = await controller.updateFact(
-        'fact-1',
-        { isVerified: true },
-        mockUser,
-      );
+      const result = await controller.updateFact('fact-1', { isVerified: true }, mockUser);
 
       expect(result.isVerified).toBe(true);
     });
@@ -194,9 +186,9 @@ describe('FactsController', () => {
     it('should throw NotFoundException when project not found', async () => {
       prismaService.project.findFirst.mockResolvedValue(null);
 
-      await expect(
-        controller.verifyAllFacts('nonexistent', mockUser),
-      ).rejects.toThrow(NotFoundException);
+      await expect(controller.verifyAllFacts('nonexistent', mockUser)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

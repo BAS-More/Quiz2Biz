@@ -2,7 +2,12 @@
  * Security & privacy section builders: DevSecOps Guide, Privacy & Data Protection.
  */
 import { CompiledDocument, DocumentSection, DeliverableCategory } from '../compiler-types';
-import { generateId, processAndCountWords, sumWordCounts, countSubSections } from '../compiler-utils';
+import {
+  generateId,
+  processAndCountWords,
+  sumWordCounts,
+  countSubSections,
+} from '../compiler-utils';
 
 // === DevSecOps Document ===
 

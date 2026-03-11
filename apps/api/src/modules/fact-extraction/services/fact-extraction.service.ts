@@ -1,6 +1,6 @@
 /**
  * Fact Extraction Service
- * 
+ *
  * Analyzes chat conversations to extract structured business facts
  * for use in document generation. Uses AI Gateway for extraction.
  */
@@ -69,7 +69,9 @@ export class FactExtractionService {
         tokensUsed: response.usage.totalTokens,
       };
     } catch (error) {
-      this.logger.error(`Fact extraction failed: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.error(
+        `Fact extraction failed: ${error instanceof Error ? error.message : String(error)}`,
+      );
       return { facts: [], processingTimeMs: Date.now() - startTime, tokensUsed: 0 };
     }
   }
@@ -174,7 +176,9 @@ export class FactExtractionService {
 
         savedFacts.push(fact);
       } catch (error) {
-        this.logger.error(`Failed to save fact ${fact.key}: ${error instanceof Error ? error.message : String(error)}`);
+        this.logger.error(
+          `Failed to save fact ${fact.key}: ${error instanceof Error ? error.message : String(error)}`,
+        );
       }
     }
 
@@ -204,10 +208,7 @@ export class FactExtractionService {
   /**
    * Validate facts against schema requirements
    */
-  async validateFacts(
-    projectId: string,
-    projectTypeSlug: string,
-  ): Promise<FactValidationResult> {
+  async validateFacts(projectId: string, projectTypeSlug: string): Promise<FactValidationResult> {
     const schema = getSchemaForProjectType(projectTypeSlug);
     if (!schema) {
       return {
@@ -223,14 +224,10 @@ export class FactExtractionService {
 
     // Find missing required fields
     const requiredFields = schema.fields.filter((f) => f.required);
-    const missingRequired = requiredFields
-      .filter((f) => !factKeys.has(f.key))
-      .map((f) => f.key);
+    const missingRequired = requiredFields.filter((f) => !factKeys.has(f.key)).map((f) => f.key);
 
     // Find low confidence facts
-    const lowConfidenceFacts = facts
-      .filter((f) => f.confidence === 'low')
-      .map((f) => f.key);
+    const lowConfidenceFacts = facts.filter((f) => f.confidence === 'low').map((f) => f.key);
 
     // Calculate completeness score
     const totalFields = schema.fields.length;
@@ -259,7 +256,9 @@ export class FactExtractionService {
         },
       });
     } catch (error) {
-      this.logger.error(`Failed to delete fact ${fieldName} for project ${projectId}: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.error(
+        `Failed to delete fact ${fieldName} for project ${projectId}: ${error instanceof Error ? error.message : String(error)}`,
+      );
       throw error;
     }
   }
@@ -300,8 +299,12 @@ export class FactExtractionService {
    */
   private decimalToConfidence(decimal: Prisma.Decimal): ConfidenceLevel {
     const value = decimal.toNumber();
-    if (value >= 0.8) {return 'high';}
-    if (value >= 0.5) {return 'medium';}
+    if (value >= 0.8) {
+      return 'high';
+    }
+    if (value >= 0.5) {
+      return 'medium';
+    }
     return 'low';
   }
 
@@ -310,10 +313,14 @@ export class FactExtractionService {
    */
   private confidenceToDecimal(confidence: ConfidenceLevel): Prisma.Decimal {
     switch (confidence) {
-      case 'high': return new Prisma.Decimal(0.9);
-      case 'medium': return new Prisma.Decimal(0.6);
-      case 'low': return new Prisma.Decimal(0.3);
-      default: return new Prisma.Decimal(0.5);
+      case 'high':
+        return new Prisma.Decimal(0.9);
+      case 'medium':
+        return new Prisma.Decimal(0.6);
+      case 'low':
+        return new Prisma.Decimal(0.3);
+      default:
+        return new Prisma.Decimal(0.5);
     }
   }
 
@@ -325,7 +332,10 @@ export class FactExtractionService {
     existingFacts?: ExtractedFactData[],
   ): string {
     const fieldsList = schema.fields
-      .map((f: SchemaField) => `- ${f.key}: ${f.description} (${f.required ? 'REQUIRED' : 'optional'})`)
+      .map(
+        (f: SchemaField) =>
+          `- ${f.key}: ${f.description} (${f.required ? 'REQUIRED' : 'optional'})`,
+      )
       .join('\n');
 
     const existingList = existingFacts?.length
@@ -365,10 +375,7 @@ OUTPUT FORMAT (JSON):
   /**
    * Build user prompt with conversation content
    */
-  private buildUserPrompt(
-    conversationContent: string,
-    schema: ExtractionSchema,
-  ): string {
+  private buildUserPrompt(conversationContent: string, schema: ExtractionSchema): string {
     return `Extract ${schema.projectTypeName} facts from this conversation:
 
 ---CONVERSATION START---
@@ -390,20 +397,24 @@ Return ONLY a valid JSON object with the extracted facts.`;
       }
 
       const parsed = JSON.parse(cleaned);
-      
+
       if (!parsed.facts || !Array.isArray(parsed.facts)) {
         this.logger.warn('Invalid extraction response structure');
         return [];
       }
 
-      return parsed.facts.map((f: { category: string; key: string; value: string; confidence?: string }) => ({
-        category: f.category as ExtractionCategory,
-        key: f.key,
-        value: f.value,
-        confidence: (f.confidence || 'medium') as ConfidenceLevel,
-      }));
+      return parsed.facts.map(
+        (f: { category: string; key: string; value: string; confidence?: string }) => ({
+          category: f.category as ExtractionCategory,
+          key: f.key,
+          value: f.value,
+          confidence: (f.confidence || 'medium') as ConfidenceLevel,
+        }),
+      );
     } catch (error) {
-      this.logger.error(`Failed to parse extraction response: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.error(
+        `Failed to parse extraction response: ${error instanceof Error ? error.message : String(error)}`,
+      );
       return [];
     }
   }

@@ -88,7 +88,7 @@ export class CIArtifactIngestionService {
   constructor(
     private readonly prisma: PrismaService,
     _configService: ConfigService,
-  ) { }
+  ) {}
 
   /**
    * Ingest a CI artifact as evidence
@@ -287,7 +287,14 @@ export class CIArtifactIngestionService {
    */
   private parseLcov(content: string): ParsedArtifactData {
     const lines = content.split('\n');
-    const counters = { totalLines: 0, coveredLines: 0, totalFunctions: 0, coveredFunctions: 0, totalBranches: 0, coveredBranches: 0 };
+    const counters = {
+      totalLines: 0,
+      coveredLines: 0,
+      totalFunctions: 0,
+      coveredFunctions: 0,
+      totalBranches: 0,
+      coveredBranches: 0,
+    };
 
     const prefixMap: Record<string, keyof typeof counters> = {
       'LF:': 'totalLines',
@@ -312,12 +319,32 @@ export class CIArtifactIngestionService {
     };
   }
 
-  private buildLcovSummary(c: { totalLines: number; coveredLines: number; totalFunctions: number; coveredFunctions: number; totalBranches: number; coveredBranches: number }): Record<string, unknown> {
-    const pct = (covered: number, total: number): number => total > 0 ? (covered / total) * 100 : 0;
+  private buildLcovSummary(c: {
+    totalLines: number;
+    coveredLines: number;
+    totalFunctions: number;
+    coveredFunctions: number;
+    totalBranches: number;
+    coveredBranches: number;
+  }): Record<string, unknown> {
+    const pct = (covered: number, total: number): number =>
+      total > 0 ? (covered / total) * 100 : 0;
     return {
-      lines: { total: c.totalLines, covered: c.coveredLines, percentage: pct(c.coveredLines, c.totalLines) },
-      functions: { total: c.totalFunctions, covered: c.coveredFunctions, percentage: pct(c.coveredFunctions, c.totalFunctions) },
-      branches: { total: c.totalBranches, covered: c.coveredBranches, percentage: pct(c.coveredBranches, c.totalBranches) },
+      lines: {
+        total: c.totalLines,
+        covered: c.coveredLines,
+        percentage: pct(c.coveredLines, c.totalLines),
+      },
+      functions: {
+        total: c.totalFunctions,
+        covered: c.coveredFunctions,
+        percentage: pct(c.coveredFunctions, c.totalFunctions),
+      },
+      branches: {
+        total: c.totalBranches,
+        covered: c.coveredBranches,
+        percentage: pct(c.coveredBranches, c.totalBranches),
+      },
       overallPercentage: pct(c.coveredLines, c.totalLines),
     };
   }
@@ -511,14 +538,20 @@ export class CIArtifactIngestionService {
         }
       }
 
-      const total = severityCounts.CRITICAL + severityCounts.HIGH + severityCounts.MEDIUM + severityCounts.LOW;
+      const total =
+        severityCounts.CRITICAL + severityCounts.HIGH + severityCounts.MEDIUM + severityCounts.LOW;
       return {
         type: 'owasp',
         summary: {
           scanner: 'OWASP Dependency-Check',
           totalDependencies: dependencies.length,
           totalVulnerabilities: total,
-          bySeverity: { critical: severityCounts.CRITICAL, high: severityCounts.HIGH, medium: severityCounts.MEDIUM, low: severityCounts.LOW },
+          bySeverity: {
+            critical: severityCounts.CRITICAL,
+            high: severityCounts.HIGH,
+            medium: severityCounts.MEDIUM,
+            low: severityCounts.LOW,
+          },
           criticalAndHigh: vulnerabilities.slice(0, 20),
           scanDate: report.projectInfo?.reportDate,
         },
