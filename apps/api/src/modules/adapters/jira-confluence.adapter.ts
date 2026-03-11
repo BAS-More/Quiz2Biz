@@ -729,15 +729,27 @@ export class JiraConfluenceAdapter {
       title: page.title,
       type: page.type,
       status: page.status,
+      ...this.extractConfluenceVersionInfo(page),
+      ...this.extractConfluenceHierarchyInfo(page),
+      content: page.body?.storage?.value || page.body?.view?.value,
+    };
+  }
+
+  private extractConfluenceVersionInfo(page: ConfluencePage): Record<string, unknown> {
+    return {
       spaceKey: page.space?.key,
       spaceName: page.space?.name,
       version: page.version?.number,
       versionDate: page.version?.when,
       versionAuthor: page.version?.by?.displayName,
+    };
+  }
+
+  private extractConfluenceHierarchyInfo(page: ConfluencePage): Record<string, unknown> {
+    return {
       ancestors: page.ancestors?.map((a) => ({ id: a.id, title: a.title })),
       childPageCount: page.children?.page?.results?.length || 0,
       attachmentCount: page.children?.attachment?.results?.length || 0,
-      content: page.body?.storage?.value || page.body?.view?.value,
     };
   }
 
