@@ -158,10 +158,7 @@ describe('QualityScoringController', () => {
       const result = await controller.recalculateScore('project-123');
 
       expect(result.overallScore).toBe(75);
-      expect(qualityScoringService.saveProjectScore).toHaveBeenCalledWith(
-        'project-123',
-        mockScore,
-      );
+      expect(qualityScoringService.saveProjectScore).toHaveBeenCalledWith('project-123', mockScore);
     });
 
     it('should return empty score when project not found', async () => {

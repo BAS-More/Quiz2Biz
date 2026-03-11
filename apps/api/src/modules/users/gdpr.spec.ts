@@ -33,10 +33,7 @@ describe('GdprService', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        GdprService,
-        { provide: PrismaService, useValue: mockPrisma },
-      ],
+      providers: [GdprService, { provide: PrismaService, useValue: mockPrisma }],
     }).compile();
 
     service = module.get<GdprService>(GdprService);
@@ -68,9 +65,7 @@ describe('GdprService', () => {
     it('should throw NotFoundException for missing user', async () => {
       mockPrisma.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.exportUserData('missing')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.exportUserData('missing')).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -104,9 +99,7 @@ describe('GdprService', () => {
     it('should throw NotFoundException for missing user', async () => {
       mockPrisma.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.deleteUserData('missing')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.deleteUserData('missing')).rejects.toThrow(NotFoundException);
     });
 
     it('should propagate database errors with logging', async () => {
@@ -141,10 +134,20 @@ describe('GdprController', () => {
   });
 
   it('exportData delegates to GdprService.exportUserData', async () => {
-    const mockExport = { exportedAt: new Date(), user: mockUser, sessions: [], documents: [], auditLogs: [] };
+    const mockExport = {
+      exportedAt: new Date(),
+      user: mockUser,
+      sessions: [],
+      documents: [],
+      auditLogs: [],
+    };
     gdprService.exportUserData.mockResolvedValue(mockExport as any);
 
-    const result = await controller.exportData({ id: 'user-1', email: 'a@b.com', role: 'USER' } as any);
+    const result = await controller.exportData({
+      id: 'user-1',
+      email: 'a@b.com',
+      role: 'USER',
+    } as any);
 
     expect(gdprService.exportUserData).toHaveBeenCalledWith('user-1');
     expect(result.user.id).toBe('user-1');
@@ -154,7 +157,11 @@ describe('GdprController', () => {
     const mockResult = { deletedAt: new Date(), itemsRemoved: 5 };
     gdprService.deleteUserData.mockResolvedValue(mockResult);
 
-    const result = await controller.deleteData({ id: 'user-1', email: 'a@b.com', role: 'USER' } as any);
+    const result = await controller.deleteData({
+      id: 'user-1',
+      email: 'a@b.com',
+      role: 'USER',
+    } as any);
 
     expect(gdprService.deleteUserData).toHaveBeenCalledWith('user-1');
     expect(result.itemsRemoved).toBe(5);

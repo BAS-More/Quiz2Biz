@@ -1,6 +1,6 @@
 /**
  * Quality Scoring Service
- * 
+ *
  * Evaluates project facts against quality dimensions and benchmark criteria
  * to produce quality scores for document generation pricing.
  */
@@ -69,15 +69,12 @@ export class QualityScoringService {
     });
 
     // Calculate dimension scores
-    const dimensionScores = dimensions.map((dim) =>
-      this.scoreDimension(dim, facts),
-    );
+    const dimensionScores = dimensions.map((dim) => this.scoreDimension(dim, facts));
 
     // Calculate overall scores
     const totalWeight = dimensionScores.reduce((sum, d) => sum + d.weight, 0);
     const weightedScore =
-      dimensionScores.reduce((sum, d) => sum + d.score * d.weight, 0) /
-      (totalWeight || 1);
+      dimensionScores.reduce((sum, d) => sum + d.score * d.weight, 0) / (totalWeight || 1);
 
     const completenessScore = this.calculateCompleteness(facts, dimensions);
     const confidenceScore = this.calculateConfidence(facts);
@@ -99,13 +96,10 @@ export class QualityScoringService {
   /**
    * Score a single dimension based on facts
    */
-  private scoreDimension(
-    dimension: QualityDimension,
-    facts: ExtractedFact[],
-  ): DimensionScore {
+  private scoreDimension(dimension: QualityDimension, facts: ExtractedFact[]): DimensionScore {
     // Parse benchmark criteria from JSON
     const criteria = this.parseBenchmarkCriteria(dimension.benchmarkCriteria);
-    
+
     if (criteria.length === 0) {
       return {
         dimensionId: dimension.id,
@@ -121,7 +115,7 @@ export class QualityScoringService {
     const criteriaScores: CriteriaScore[] = criteria.map((criterion) => {
       // Find a fact that matches this criterion
       const matchingFact = this.findMatchingFact(criterion, facts);
-      
+
       return {
         criterionKey: criterion.key,
         criterionDescription: criterion.description,
@@ -134,17 +128,17 @@ export class QualityScoringService {
     // Calculate dimension score
     const metCriteria = criteriaScores.filter((c) => c.met);
     const completeness = metCriteria.length / criteria.length;
-    
+
     // Score is weighted average of met criteria confidence
     const totalWeight = criteria.reduce((sum, c) => sum + c.weight, 0);
     const weightedConfidence = criteriaScores.reduce((sum, cs, i) => {
-      if (!cs.met) {return sum;}
+      if (!cs.met) {
+        return sum;
+      }
       return sum + cs.confidence * criteria[i].weight;
     }, 0);
-    
-    const score = totalWeight > 0 
-      ? (weightedConfidence / totalWeight) * 100
-      : 0;
+
+    const score = totalWeight > 0 ? (weightedConfidence / totalWeight) * 100 : 0;
 
     return {
       dimensionId: dimension.id,
@@ -184,17 +178,20 @@ export class QualityScoringService {
     facts: ExtractedFact[],
   ): ExtractedFact | null {
     // Try exact key match first
-    const exactMatch = facts.find(
-      (f) => f.fieldName.toLowerCase() === criterion.key.toLowerCase(),
-    );
-    if (exactMatch) {return exactMatch;}
+    const exactMatch = facts.find((f) => f.fieldName.toLowerCase() === criterion.key.toLowerCase());
+    if (exactMatch) {
+      return exactMatch;
+    }
 
     // Try partial key match (criterion key might be part of fact field name)
-    const partialMatch = facts.find((f) =>
-      f.fieldName.toLowerCase().includes(criterion.key.toLowerCase()) ||
-      criterion.key.toLowerCase().includes(f.fieldName.toLowerCase()),
+    const partialMatch = facts.find(
+      (f) =>
+        f.fieldName.toLowerCase().includes(criterion.key.toLowerCase()) ||
+        criterion.key.toLowerCase().includes(f.fieldName.toLowerCase()),
     );
-    if (partialMatch) {return partialMatch;}
+    if (partialMatch) {
+      return partialMatch;
+    }
 
     // Try matching based on category or description keywords
     const keywordMatch = facts.find((f) => {
@@ -202,8 +199,7 @@ export class QualityScoringService {
       return keywords.some(
         (kw) =>
           kw.length > 4 &&
-          (f.fieldName.toLowerCase().includes(kw) ||
-            f.fieldValue.toLowerCase().includes(kw)),
+          (f.fieldName.toLowerCase().includes(kw) || f.fieldValue.toLowerCase().includes(kw)),
       );
     });
 
@@ -213,10 +209,7 @@ export class QualityScoringService {
   /**
    * Calculate overall completeness score
    */
-  private calculateCompleteness(
-    facts: ExtractedFact[],
-    dimensions: QualityDimension[],
-  ): number {
+  private calculateCompleteness(facts: ExtractedFact[], dimensions: QualityDimension[]): number {
     // Count total expected criteria across all dimensions
     let totalCriteria = 0;
     let metCriteria = 0;
@@ -224,7 +217,7 @@ export class QualityScoringService {
     for (const dim of dimensions) {
       const criteria = this.parseBenchmarkCriteria(dim.benchmarkCriteria);
       totalCriteria += criteria.length;
-      
+
       for (const criterion of criteria) {
         if (this.findMatchingFact(criterion, facts)) {
           metCriteria++;
@@ -232,19 +225,18 @@ export class QualityScoringService {
       }
     }
 
-    return totalCriteria > 0
-      ? Math.round((metCriteria / totalCriteria) * 100)
-      : 0;
+    return totalCriteria > 0 ? Math.round((metCriteria / totalCriteria) * 100) : 0;
   }
 
   /**
    * Calculate average confidence score
    */
   private calculateConfidence(facts: ExtractedFact[]): number {
-    if (facts.length === 0) {return 0;}
+    if (facts.length === 0) {
+      return 0;
+    }
 
-    const avgConfidence =
-      facts.reduce((sum, f) => sum + f.confidence.toNumber(), 0) / facts.length;
+    const avgConfidence = facts.reduce((sum, f) => sum + f.confidence.toNumber(), 0) / facts.length;
 
     return Math.round(avgConfidence * 100);
   }
@@ -252,26 +244,18 @@ export class QualityScoringService {
   /**
    * Generate improvement recommendations
    */
-  private generateRecommendations(
-    dimensionScores: DimensionScore[],
-  ): string[] {
+  private generateRecommendations(dimensionScores: DimensionScore[]): string[] {
     const recommendations: string[] = [];
 
     // Sort by score (lowest first) to prioritize improvement areas
-    const sortedDimensions = [...dimensionScores].sort(
-      (a, b) => a.score - b.score,
-    );
+    const sortedDimensions = [...dimensionScores].sort((a, b) => a.score - b.score);
 
     for (const dim of sortedDimensions.slice(0, 3)) {
       if (dim.score < 50) {
-        const unmetCriteria = dim.criteriaScores
-          .filter((c) => !c.met)
-          .slice(0, 2);
+        const unmetCriteria = dim.criteriaScores.filter((c) => !c.met).slice(0, 2);
 
         if (unmetCriteria.length > 0) {
-          const criteriaList = unmetCriteria
-            .map((c) => c.criterionDescription)
-            .join(', ');
+          const criteriaList = unmetCriteria.map((c) => c.criterionDescription).join(', ');
           recommendations.push(
             `Improve "${dim.dimensionName}": Add information about ${criteriaList}`,
           );
@@ -280,9 +264,7 @@ export class QualityScoringService {
     }
 
     if (recommendations.length === 0 && sortedDimensions[0]?.score < 80) {
-      recommendations.push(
-        'Continue the conversation to provide more details about your project',
-      );
+      recommendations.push('Continue the conversation to provide more details about your project');
     }
 
     return recommendations;
@@ -291,12 +273,9 @@ export class QualityScoringService {
   /**
    * Get quality improvements for a project
    */
-  async getImprovements(
-    projectId: string,
-    projectTypeSlug: string,
-  ): Promise<QualityImprovement[]> {
+  async getImprovements(projectId: string, projectTypeSlug: string): Promise<QualityImprovement[]> {
     const score = await this.calculateProjectScore(projectId, projectTypeSlug);
-    
+
     const improvements: QualityImprovement[] = score.dimensionScores
       .filter((d) => d.score < 80)
       .map((d) => {
@@ -304,9 +283,9 @@ export class QualityScoringService {
           .filter((c) => !c.met)
           .map((c) => c.criterionDescription);
 
-        const suggestedQuestions = missingCriteria.slice(0, 3).map((criterion) =>
-          `Can you tell me more about ${criterion.toLowerCase()}?`,
-        );
+        const suggestedQuestions = missingCriteria
+          .slice(0, 3)
+          .map((criterion) => `Can you tell me more about ${criterion.toLowerCase()}?`);
 
         return {
           dimensionId: d.dimensionId,
@@ -340,10 +319,7 @@ export class QualityScoringService {
   /**
    * Save quality score to project
    */
-  async saveProjectScore(
-    projectId: string,
-    score: ProjectQualityScore,
-  ): Promise<void> {
+  async saveProjectScore(projectId: string, score: ProjectQualityScore): Promise<void> {
     try {
       await this.prisma.project.update({
         where: { id: projectId },
@@ -353,7 +329,9 @@ export class QualityScoringService {
         },
       });
     } catch (error) {
-      this.logger.error(`Failed to save quality score for project ${projectId}: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.error(
+        `Failed to save quality score for project ${projectId}: ${error instanceof Error ? error.message : String(error)}`,
+      );
       throw error;
     }
   }

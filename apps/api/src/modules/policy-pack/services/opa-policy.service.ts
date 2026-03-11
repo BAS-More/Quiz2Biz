@@ -7,7 +7,6 @@ import { OpaPolicy, PolicySeverity } from '../types';
 
 @Injectable()
 export class OpaPolicyService {
-
   /**
    * OPA policy templates by dimension
    */

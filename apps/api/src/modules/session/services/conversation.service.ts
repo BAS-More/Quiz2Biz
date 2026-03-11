@@ -29,7 +29,6 @@ export interface AnswerWithFollowUpResult {
 
 @Injectable()
 export class ConversationService {
-
   constructor(
     private readonly prisma: PrismaService,
     private readonly claudeAi: ClaudeAiService,

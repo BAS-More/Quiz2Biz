@@ -2,18 +2,11 @@
  * Pure helper functions shared by session query and mutation services.
  * No injected dependencies — all state passed as arguments.
  */
-import {
-  NotFoundException,
-  ForbiddenException,
-} from '@nestjs/common';
+import { NotFoundException, ForbiddenException } from '@nestjs/common';
 import { Session, Question } from '@prisma/client';
 import { PrismaService } from '@libs/database';
 import { QuestionResponse, QuestionOption } from '../questionnaire/questionnaire.service';
-import {
-  ProgressInfo,
-  SessionResponse,
-  READINESS_GATED_PROJECT_TYPE,
-} from './session-types';
+import { ProgressInfo, SessionResponse, READINESS_GATED_PROJECT_TYPE } from './session-types';
 
 // ---------------------------------------------------------------------------
 // Async helpers (require PrismaService)
@@ -73,9 +66,7 @@ export function mapToSessionResponse(
     industry: session.industry ?? undefined,
     projectTypeName: session.projectType?.name ?? undefined,
     projectTypeSlug: session.projectType?.slug ?? undefined,
-    readinessScore: session.readinessScore
-      ? Number(session.readinessScore)
-      : undefined,
+    readinessScore: session.readinessScore ? Number(session.readinessScore) : undefined,
     progress,
     currentSection: session.currentSection
       ? { id: session.currentSection.id, name: session.currentSection.name }
@@ -96,8 +87,7 @@ function buildProgressFromSession(
     total: number;
   };
   const questionsLeft = (raw.total || totalQuestions) - raw.answered;
-  const sectionsLeft =
-    (sectionInfo?.totalSections ?? 0) - (sectionInfo?.completedSections ?? 0);
+  const sectionsLeft = (sectionInfo?.totalSections ?? 0) - (sectionInfo?.completedSections ?? 0);
 
   return {
     percentage: raw.percentage ?? 0,
@@ -121,7 +111,9 @@ export function mapQuestionToResponse(question: Question): QuestionResponse {
     explanation: question.explanation ?? undefined,
     placeholder: question.placeholder ?? undefined,
     options: question.options ? (question.options as unknown as QuestionOption[]) : undefined,
-    validation: question.validationRules ? (question.validationRules as Record<string, unknown>) : undefined,
+    validation: question.validationRules
+      ? (question.validationRules as Record<string, unknown>)
+      : undefined,
     bestPractice: question.bestPractice ?? undefined,
     practicalExplainer: question.practicalExplainer ?? undefined,
     dimensionKey: question.dimensionKey ?? undefined,
@@ -133,11 +125,9 @@ export function calculateProgress(
   totalQuestions: number,
   sectionInfo?: { totalSections: number; completedSections: number },
 ): ProgressInfo {
-  const percentage =
-    totalQuestions > 0 ? Math.round((answeredCount / totalQuestions) * 100) : 0;
+  const percentage = totalQuestions > 0 ? Math.round((answeredCount / totalQuestions) * 100) : 0;
   const questionsLeft = totalQuestions - answeredCount;
-  const sectionsLeft =
-    (sectionInfo?.totalSections ?? 0) - (sectionInfo?.completedSections ?? 0);
+  const sectionsLeft = (sectionInfo?.totalSections ?? 0) - (sectionInfo?.completedSections ?? 0);
 
   return {
     percentage,

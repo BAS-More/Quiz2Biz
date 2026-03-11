@@ -62,7 +62,15 @@ describe('StandardsService', () => {
       providers: [
         StandardsService,
         { provide: PrismaService, useValue: mockPrismaService },
-        { provide: RedisService, useValue: { get: jest.fn().mockResolvedValue(null), set: jest.fn().mockResolvedValue(undefined), keys: jest.fn().mockResolvedValue([]), del: jest.fn().mockResolvedValue(undefined) } },
+        {
+          provide: RedisService,
+          useValue: {
+            get: jest.fn().mockResolvedValue(null),
+            set: jest.fn().mockResolvedValue(undefined),
+            keys: jest.fn().mockResolvedValue([]),
+            del: jest.fn().mockResolvedValue(undefined),
+          },
+        },
       ],
     }).compile();
 

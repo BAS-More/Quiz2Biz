@@ -23,7 +23,10 @@ export default defineConfig([
       // Disable React Compiler experimental rules for react-hook-form compatibility
       'react-hooks/incompatible-library': 'off',
       // Restored: detect unused vars (prefix with _ to suppress)
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
       // TODO: Progressively fix and re-enable no-explicit-any
       '@typescript-eslint/no-explicit-any': 'off',
       'react-hooks/set-state-in-effect': 'off',

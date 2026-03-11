@@ -13,7 +13,6 @@ interface FrameworkControl {
 
 @Injectable()
 export class ControlMappingService {
-
   /**
    * Control mappings by framework
    */

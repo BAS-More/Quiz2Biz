@@ -252,9 +252,7 @@ export class SessionQueryService {
     const inProgress = sessions.filter(
       (s) => String(s.status) === String(SessionStatus.IN_PROGRESS),
     );
-    const archived = sessions.filter(
-      (s) => String(s.status) === String(SessionStatus.ABANDONED),
-    );
+    const archived = sessions.filter((s) => String(s.status) === String(SessionStatus.ABANDONED));
     const scores = completed
       .filter((s) => s.readinessScore !== null)
       .map((s) => Number(s.readinessScore));
@@ -281,9 +279,7 @@ export class SessionQueryService {
       lowestScore: Math.round(lowestScore * 100) / 100,
       averageCompletionTimeMs: Math.round(avgCompletionTime),
       scoreImprovement:
-        scores.length >= 2
-          ? Math.round((scores[scores.length - 1] - scores[0]) * 100) / 100
-          : 0,
+        scores.length >= 2 ? Math.round((scores[scores.length - 1] - scores[0]) * 100) / 100 : 0,
       analyzedAt: new Date(),
     };
   }

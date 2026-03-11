@@ -80,10 +80,7 @@ describe('QualityScoringService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        QualityScoringService,
-        { provide: PrismaService, useValue: mockPrisma },
-      ],
+      providers: [QualityScoringService, { provide: PrismaService, useValue: mockPrisma }],
     }).compile();
 
     service = module.get<QualityScoringService>(QualityScoringService);
@@ -97,7 +94,10 @@ describe('QualityScoringService', () => {
   describe('calculateProjectScore', () => {
     it('should calculate weighted score across dimensions', async () => {
       prismaService.projectType.findUnique.mockResolvedValue(mockProjectType as never);
-      prismaService.qualityDimension.findMany.mockResolvedValue([mockDimension, mockDimension2] as never);
+      prismaService.qualityDimension.findMany.mockResolvedValue([
+        mockDimension,
+        mockDimension2,
+      ] as never);
       prismaService.extractedFact.findMany.mockResolvedValue([
         mockFact('target_market', 0.9),
         mockFact('market_size', 0.7),
@@ -119,7 +119,9 @@ describe('QualityScoringService', () => {
 
       expect(result.overallScore).toBe(0);
       expect(result.dimensionScores).toHaveLength(0);
-      expect(result.recommendations).toContain('Start a conversation to begin building your project profile');
+      expect(result.recommendations).toContain(
+        'Start a conversation to begin building your project profile',
+      );
     });
 
     it('should return empty score when no dimensions exist', async () => {
@@ -134,10 +136,12 @@ describe('QualityScoringService', () => {
 
     it('should handle empty criteria in dimensions', async () => {
       prismaService.projectType.findUnique.mockResolvedValue(mockProjectType as never);
-      prismaService.qualityDimension.findMany.mockResolvedValue([{
-        ...mockDimension,
-        benchmarkCriteria: [],
-      }] as never);
+      prismaService.qualityDimension.findMany.mockResolvedValue([
+        {
+          ...mockDimension,
+          benchmarkCriteria: [],
+        },
+      ] as never);
       prismaService.extractedFact.findMany.mockResolvedValue([]);
 
       const result = await service.calculateProjectScore('project-1', 'business-plan');
@@ -190,7 +194,10 @@ describe('QualityScoringService', () => {
   describe('getImprovements', () => {
     it('should return improvements for low-scoring dimensions', async () => {
       prismaService.projectType.findUnique.mockResolvedValue(mockProjectType as never);
-      prismaService.qualityDimension.findMany.mockResolvedValue([mockDimension, mockDimension2] as never);
+      prismaService.qualityDimension.findMany.mockResolvedValue([
+        mockDimension,
+        mockDimension2,
+      ] as never);
       prismaService.extractedFact.findMany.mockResolvedValue([]);
 
       const result = await service.getImprovements('project-1', 'business-plan');
@@ -203,7 +210,10 @@ describe('QualityScoringService', () => {
 
     it('should sort improvements by lowest score first', async () => {
       prismaService.projectType.findUnique.mockResolvedValue(mockProjectType as never);
-      prismaService.qualityDimension.findMany.mockResolvedValue([mockDimension, mockDimension2] as never);
+      prismaService.qualityDimension.findMany.mockResolvedValue([
+        mockDimension,
+        mockDimension2,
+      ] as never);
       prismaService.extractedFact.findMany.mockResolvedValue([
         mockFact('target_market', 0.9),
         mockFact('market_size', 0.8),

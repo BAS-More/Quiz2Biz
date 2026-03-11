@@ -30,7 +30,6 @@ interface PolicyTemplate {
 
 @Injectable()
 export class PolicyGeneratorService {
-
   constructor(private readonly controlMappingService: ControlMappingService) {}
 
   /**

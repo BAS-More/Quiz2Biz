@@ -1,6 +1,6 @@
 /**
  * Quality Scoring Interfaces
- * 
+ *
  * Types for the Quiz2Biz quality scoring system that evaluates
  * projects against quality dimensions and benchmark criteria.
  */

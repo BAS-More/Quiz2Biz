@@ -31,7 +31,9 @@ export class StandardsService {
     try {
       // Check Redis cache first (GAP-P3)
       const cached = await this.getCached<StandardResponse[]>(StandardsService.CACHE_KEY_ALL);
-      if (cached) {return cached;}
+      if (cached) {
+        return cached;
+      }
 
       const standards = await this.prisma.engineeringStandard.findMany({
         where: { isActive: true },
@@ -55,7 +57,9 @@ export class StandardsService {
       // Check Redis cache first (GAP-P3)
       const cacheKey = `${StandardsService.CACHE_KEY_PREFIX}${category}`;
       const cached = await this.getCached<StandardResponse>(cacheKey);
-      if (cached) {return cached;}
+      if (cached) {
+        return cached;
+      }
 
       const standard = await this.prisma.engineeringStandard.findUnique({
         where: { category },
@@ -205,9 +209,7 @@ export class StandardsService {
       const standards = documentType.standardMappings.map(
         (mapping: { standard: EngineeringStandard; sectionTitle: string | null }) => ({
           category: mapping.standard.category,
-          title:
-            mapping.sectionTitle ||
-            STANDARD_CATEGORY_TITLES[mapping.standard.category],
+          title: mapping.sectionTitle || STANDARD_CATEGORY_TITLES[mapping.standard.category],
           principles: mapping.standard.principles as unknown as Principle[],
         }),
       );

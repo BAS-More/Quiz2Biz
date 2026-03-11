@@ -7,7 +7,6 @@ import { PolicyPackBundle, PolicyDocument, ProcedureDocument } from '../types';
 
 @Injectable()
 export class PolicyExportService {
-
   /**
    * Generate README content for policy pack
    */

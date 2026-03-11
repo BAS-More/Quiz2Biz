@@ -187,7 +187,10 @@ export function calculateTrendAnalysis(history: ScoreSnapshot[]): TrendAnalysis 
 }
 
 /** Generate recommendation for dimension improvement */
-export function generateDimensionRecommendation(dim: DimensionResidual, gapToAverage: number): string {
+export function generateDimensionRecommendation(
+  dim: DimensionResidual,
+  gapToAverage: number,
+): string {
   if (gapToAverage < -0.1) {
     return `${dim.displayName} is performing above industry average. Maintain current practices.`;
   }

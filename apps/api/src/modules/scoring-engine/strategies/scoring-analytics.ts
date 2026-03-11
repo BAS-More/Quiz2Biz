@@ -168,7 +168,9 @@ export class ScoringAnalyticsService {
    * Get dimension-level benchmark comparison.
    * Caller must provide current scoring result (avoids circular dependency).
    */
-  async getDimensionBenchmarks(currentResult: ReadinessScoreResult): Promise<DimensionBenchmarkResult[]> {
+  async getDimensionBenchmarks(
+    currentResult: ReadinessScoreResult,
+  ): Promise<DimensionBenchmarkResult[]> {
     const dimensionAverages = await this.prisma.$queryRaw<
       Array<{
         dimension_key: string;
@@ -226,7 +228,12 @@ export class ScoringAnalyticsService {
         currentResidual: dim.residualRisk,
         industryAverageResidual: Math.round(industryAvgResidual * 10000) / 10000,
         gapToAverage: Math.round(gapToAverage * 10000) / 10000,
-        performance: gapToAverage < -0.1 ? ('ABOVE' as const) : gapToAverage > 0.1 ? ('BELOW' as const) : ('AVERAGE' as const),
+        performance:
+          gapToAverage < -0.1
+            ? ('ABOVE' as const)
+            : gapToAverage > 0.1
+              ? ('BELOW' as const)
+              : ('AVERAGE' as const),
         recommendation: generateDimensionRecommendation(dim, gapToAverage),
       };
     });

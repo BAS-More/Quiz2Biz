@@ -1,6 +1,6 @@
 /**
  * Quality Scoring Module
- * 
+ *
  * Module for evaluating project quality against quality dimensions
  * and benchmark criteria for Quiz2Biz document generation pricing.
  */

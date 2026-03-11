@@ -157,9 +157,7 @@ export class GdprService {
       });
       itemsRemoved += 1;
 
-      this.logger.log(
-        `GDPR deletion completed for user ${userId}: ${itemsRemoved} items removed`,
-      );
+      this.logger.log(`GDPR deletion completed for user ${userId}: ${itemsRemoved} items removed`);
     } catch (error) {
       this.logger.error(
         `GDPR deletion failed for user ${userId}: ${error instanceof Error ? error.message : 'Unknown error'}`,

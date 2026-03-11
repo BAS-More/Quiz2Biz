@@ -109,12 +109,16 @@ export class ScoringEngineService {
     const coverageMap = buildCoverageMap(questions, coverageOverrides);
     const dimensionResults = calculateDimensionResiduals(dimensions, questions, coverageMap);
 
-    const portfolioResidual = dimensionResults.reduce((sum, dim) => sum + dim.weightedContribution, 0);
+    const portfolioResidual = dimensionResults.reduce(
+      (sum, dim) => sum + dim.weightedContribution,
+      0,
+    );
     const score = Math.max(0, Math.min(100, 100 * (1 - portfolioResidual)));
 
     const totalQuestions = questions.length;
     const answeredQuestions = questions.filter((q) => q.responses.length > 0).length;
-    const completionPercentage = totalQuestions > 0 ? (answeredQuestions / totalQuestions) * 100 : 0;
+    const completionPercentage =
+      totalQuestions > 0 ? (answeredQuestions / totalQuestions) * 100 : 0;
 
     // Determine trend
     let trend: 'UP' | 'DOWN' | 'STABLE' | 'FIRST';
@@ -152,7 +156,9 @@ export class ScoringEngineService {
     await this.cacheScore(sessionId, result);
 
     const elapsed = Date.now() - startTime;
-    this.logger.log(`Score calculated for session ${sessionId}: ${score.toFixed(2)} in ${elapsed}ms`);
+    this.logger.log(
+      `Score calculated for session ${sessionId}: ${score.toFixed(2)} in ${elapsed}ms`,
+    );
 
     return result;
   }
@@ -205,7 +211,9 @@ export class ScoringEngineService {
     }
 
     prioritizedQuestions.sort((a, b) => b.expectedScoreLift - a.expectedScoreLift);
-    const topQuestions = prioritizedQuestions.slice(0, limit).map((q, i) => ({ ...q, rank: i + 1 }));
+    const topQuestions = prioritizedQuestions
+      .slice(0, limit)
+      .map((q, i) => ({ ...q, rank: i + 1 }));
 
     const totalPotentialLift = topQuestions.reduce((sum, q) => sum + q.expectedScoreLift, 0);
     const maxPotentialScore = Math.min(100, currentResult.score + totalPotentialLift);
@@ -220,7 +228,14 @@ export class ScoringEngineService {
 
   /** Score a single question for NQS prioritization; returns null if fully covered */
   private scoreQuestion(
-    question: { id: string; text: string; dimensionKey: string | null; severity: unknown; responses: Array<{ coverage: unknown }>; dimension?: { displayName?: string } | null },
+    question: {
+      id: string;
+      text: string;
+      dimensionKey: string | null;
+      severity: unknown;
+      responses: Array<{ coverage: unknown }>;
+      dimension?: { displayName?: string } | null;
+    },
     dimensionWeightMap: Map<string, number>,
     dimensionSeveritySum: Map<string, number>,
   ): PrioritizedQuestion | null {

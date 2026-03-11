@@ -1,26 +1,16 @@
 /**
  * Quality Scoring Controller
- * 
+ *
  * REST endpoints for project quality scoring based on extracted facts
  * and quality dimensions.
  */
 
-import {
-  Controller,
-  Get,
-  Post,
-  Param,
-  UseGuards,
-  Logger,
-} from '@nestjs/common';
+import { Controller, Get, Post, Param, UseGuards, Logger } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PrismaService } from '@libs/database';
 import { QualityScoringService } from './services';
-import {
-  ProjectQualityScoreDto,
-  QualityImprovementDto,
-} from './dto';
+import { ProjectQualityScoreDto, QualityImprovementDto } from './dto';
 
 @ApiTags('Quality Scoring')
 @Controller('quality')
@@ -41,11 +31,9 @@ export class QualityScoringController {
   @ApiOperation({ summary: 'Get quality score for a project' })
   @ApiParam({ name: 'projectId', description: 'Project ID' })
   @ApiResponse({ status: 200, type: ProjectQualityScoreDto })
-  async getProjectScore(
-    @Param('projectId') projectId: string,
-  ): Promise<ProjectQualityScoreDto> {
+  async getProjectScore(@Param('projectId') projectId: string): Promise<ProjectQualityScoreDto> {
     this.logger.log(`Getting quality score for project ${projectId}`);
-    
+
     // Get project to determine project type
     const project = await this.prisma.project.findUnique({
       where: { id: projectId },
@@ -71,11 +59,9 @@ export class QualityScoringController {
   @ApiOperation({ summary: 'Get quality improvement suggestions' })
   @ApiParam({ name: 'projectId', description: 'Project ID' })
   @ApiResponse({ status: 200, type: [QualityImprovementDto] })
-  async getImprovements(
-    @Param('projectId') projectId: string,
-  ): Promise<QualityImprovementDto[]> {
+  async getImprovements(@Param('projectId') projectId: string): Promise<QualityImprovementDto[]> {
     this.logger.log(`Getting improvements for project ${projectId}`);
-    
+
     const project = await this.prisma.project.findUnique({
       where: { id: projectId },
       include: { projectType: true },
@@ -107,11 +93,9 @@ export class QualityScoringController {
   @ApiOperation({ summary: 'Recalculate and save project score' })
   @ApiParam({ name: 'projectId', description: 'Project ID' })
   @ApiResponse({ status: 200, type: ProjectQualityScoreDto })
-  async recalculateScore(
-    @Param('projectId') projectId: string,
-  ): Promise<ProjectQualityScoreDto> {
+  async recalculateScore(@Param('projectId') projectId: string): Promise<ProjectQualityScoreDto> {
     this.logger.log(`Recalculating score for project ${projectId}`);
-    
+
     const project = await this.prisma.project.findUnique({
       where: { id: projectId },
       include: { projectType: true },

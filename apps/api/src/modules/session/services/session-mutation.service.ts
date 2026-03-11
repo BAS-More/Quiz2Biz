@@ -2,11 +2,7 @@
  * SessionMutationService — write operations for sessions.
  * Extracted from SessionService to reduce file size.
  */
-import {
-  BadRequestException,
-  ForbiddenException,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { SessionStatus, Prisma, Question, Persona } from '@prisma/client';
 import { PrismaService } from '@libs/database';
 import { QuestionnaireService, QuestionResponse } from '../../questionnaire/questionnaire.service';
@@ -40,7 +36,7 @@ export class SessionMutationService {
     private readonly questionnaireService: QuestionnaireService,
     private readonly adaptiveLogicService: AdaptiveLogicService,
     private readonly scoringEngineService: ScoringEngineService,
-  ) { }
+  ) {}
 
   /** Called by SessionService after both sub-services are instantiated */
   setQueryService(qs: SessionQueryService): void {
@@ -153,9 +149,7 @@ export class SessionMutationService {
       };
     }
 
-    const nqsQuestion = nqsNext
-      ? visibleQuestions.find((q) => q.id === nqsNext.questionId)
-      : null;
+    const nqsQuestion = nqsNext ? visibleQuestions.find((q) => q.id === nqsNext.questionId) : null;
     const nextQuestion =
       nqsQuestion ?? findNextUnansweredQuestion(visibleQuestions, dto.questionId, responseMap);
     const progress = calculateProgress(allResponses.length, visibleQuestions.length);
@@ -196,8 +190,8 @@ export class SessionMutationService {
     if (requiresGate && scoreResult.score < READINESS_SCORE_THRESHOLD) {
       throw new BadRequestException(
         `Readiness score is ${scoreResult.score.toFixed(1)}%. ` +
-        `A minimum score of ${READINESS_SCORE_THRESHOLD}% is required to complete this assessment. ` +
-        `Please continue answering questions to improve coverage.`,
+          `A minimum score of ${READINESS_SCORE_THRESHOLD}% is required to complete this assessment. ` +
+          `Please continue answering questions to improve coverage.`,
       );
     }
     const updatedSession = await this.prisma.session.update({
@@ -224,8 +218,12 @@ export class SessionMutationService {
         questionnaire: { include: { sections: { orderBy: { orderIndex: 'asc' } } } },
       },
     });
-    if (!session) { throw new NotFoundException('Session not found'); }
-    if (session.userId !== userId) { throw new ForbiddenException('Access denied to this session'); }
+    if (!session) {
+      throw new NotFoundException('Session not found');
+    }
+    if (session.userId !== userId) {
+      throw new ForbiddenException('Access denied to this session');
+    }
 
     const isComplete = session.status === SessionStatus.COMPLETED;
     const responses = await this.prisma.response.findMany({
@@ -250,13 +248,20 @@ export class SessionMutationService {
 
     // Find next unanswered questions
     const nextQuestions = this.findNextUnansweredBatch(
-      visibleQuestions, session.currentQuestionId, responseMap, isComplete, questionCount,
+      visibleQuestions,
+      session.currentQuestionId,
+      responseMap,
+      isComplete,
+      questionCount,
     );
 
     // Section completion
     const allSections = session.questionnaire.sections;
-    const { completedSectionsCount } =
-      this.buildSectionCompletionStatus(allSections, visibleQuestions, responseMap);
+    const { completedSectionsCount } = this.buildSectionCompletionStatus(
+      allSections,
+      visibleQuestions,
+      responseMap,
+    );
     const progress = calculateProgress(responses.length, visibleQuestions.length, {
       totalSections: allSections.length,
       completedSections: completedSectionsCount,
@@ -264,43 +269,59 @@ export class SessionMutationService {
 
     // Current section info
     const currentSectionInfo = this.buildCurrentSectionInfo(
-      session.currentSection, visibleQuestions, responseMap,
+      session.currentSection,
+      visibleQuestions,
+      responseMap,
     );
 
     // Readiness score
     const readinessScore = await this.fetchReadinessScore(sessionId, responses.length);
 
-    const unansweredRequired = visibleQuestions.filter((q) => q.isRequired && !responseMap.has(q.id));
+    const unansweredRequired = visibleQuestions.filter(
+      (q) => q.isRequired && !responseMap.has(q.id),
+    );
     const requiresGate = await isReadinessGatedSession(this.prisma, session);
     const meetsReadinessGate = !requiresGate || (readinessScore ?? 0) >= READINESS_SCORE_THRESHOLD;
-    const canComplete = unansweredRequired.length === 0 && responses.length > 0 && meetsReadinessGate;
+    const canComplete =
+      unansweredRequired.length === 0 && responses.length > 0 && meetsReadinessGate;
 
-    const sessionResponse = this.buildSessionResponseObject(
-      session, progress, readinessScore,
-    );
+    const sessionResponse = this.buildSessionResponseObject(session, progress, readinessScore);
 
     if (!isComplete) {
-      await this.prisma.session.update({ where: { id: sessionId }, data: { lastActivityAt: new Date() } });
+      await this.prisma.session.update({
+        where: { id: sessionId },
+        data: { lastActivityAt: new Date() },
+      });
     }
 
     return {
-      session: sessionResponse, nextQuestions, currentSection: currentSectionInfo,
-      overallProgress: progress, readinessScore,
+      session: sessionResponse,
+      nextQuestions,
+      currentSection: currentSectionInfo,
+      overallProgress: progress,
+      readinessScore,
       adaptiveState: {
         visibleQuestionCount: visibleQuestions.length,
         skippedQuestionCount: skippedCount,
         appliedRules: adaptiveState.branchHistory || [],
       },
-      isComplete, canComplete,
+      isComplete,
+      canComplete,
     };
   }
 
   /** Build the SessionResponse object from a session entity */
   private buildSessionResponseObject(
     session: {
-      id: string; questionnaireId: string; userId: string; status: SessionStatus;
-      persona?: Persona | null; industry?: string | null;
-      readinessScore?: unknown; startedAt: Date; lastActivityAt: Date;
+      id: string;
+      questionnaireId: string;
+      userId: string;
+      status: SessionStatus;
+      persona?: Persona | null;
+      industry?: string | null;
+      readinessScore?: unknown;
+      startedAt: Date;
+      lastActivityAt: Date;
       currentSection?: { id: string; name: string } | null;
     },
     progress: ProgressInfo,
@@ -313,7 +334,8 @@ export class SessionMutationService {
       status: session.status,
       persona: session.persona ?? undefined,
       industry: session.industry ?? undefined,
-      readinessScore: readinessScore ?? (session.readinessScore ? Number(session.readinessScore) : undefined),
+      readinessScore:
+        readinessScore ?? (session.readinessScore ? Number(session.readinessScore) : undefined),
       progress,
       currentSection: session.currentSection
         ? { id: session.currentSection.id, name: session.currentSection.name }
@@ -415,7 +437,10 @@ export class SessionMutationService {
   /**
    * Find next batch of unanswered questions starting from current position.
    */
-  private async fetchReadinessScore(sessionId: string, responseCount: number): Promise<number | undefined> {
+  private async fetchReadinessScore(
+    sessionId: string,
+    responseCount: number,
+  ): Promise<number | undefined> {
     if (responseCount === 0) {
       return undefined;
     }
@@ -465,11 +490,24 @@ export class SessionMutationService {
     allSections: { id: string }[],
     visibleQuestions: { id: string; sectionId: string }[],
     responseMap: Map<string, unknown>,
-  ): { sectionCompletionStatus: { sectionId: string; total: number; answered: number; isComplete: boolean }[]; completedSectionsCount: number } {
+  ): {
+    sectionCompletionStatus: {
+      sectionId: string;
+      total: number;
+      answered: number;
+      isComplete: boolean;
+    }[];
+    completedSectionsCount: number;
+  } {
     const sectionCompletionStatus = allSections.map((section) => {
       const sq = visibleQuestions.filter((q) => q.sectionId === section.id);
       const sa = sq.filter((q) => responseMap.has(q.id)).length;
-      return { sectionId: section.id, total: sq.length, answered: sa, isComplete: sq.length > 0 && sa === sq.length };
+      return {
+        sectionId: section.id,
+        total: sq.length,
+        answered: sa,
+        isComplete: sq.length > 0 && sa === sq.length,
+      };
     });
     const completedSectionsCount = sectionCompletionStatus.filter((s) => s.isComplete).length;
     return { sectionCompletionStatus, completedSectionsCount };
@@ -482,9 +520,23 @@ export class SessionMutationService {
     currentSection: { id: string; name: string } | null,
     visibleQuestions: { id: string; sectionId: string }[],
     responseMap: Map<string, unknown>,
-  ): { id: string; name: string; description: string | undefined; progress: number; questionsInSection: number; answeredInSection: number } {
+  ): {
+    id: string;
+    name: string;
+    description: string | undefined;
+    progress: number;
+    questionsInSection: number;
+    answeredInSection: number;
+  } {
     if (!currentSection) {
-      return { id: '', name: '', description: undefined, progress: 0, questionsInSection: 0, answeredInSection: 0 };
+      return {
+        id: '',
+        name: '',
+        description: undefined,
+        progress: 0,
+        questionsInSection: 0,
+        answeredInSection: 0,
+      };
     }
     const sq = visibleQuestions.filter((q) => q.sectionId === currentSection.id);
     const sa = sq.filter((q) => responseMap.has(q.id)).length;

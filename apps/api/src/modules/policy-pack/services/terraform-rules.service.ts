@@ -14,7 +14,6 @@ export interface TerraformRule {
 
 @Injectable()
 export class TerraformRulesService {
-
   /**
    * Terraform compliance rules by dimension
    */

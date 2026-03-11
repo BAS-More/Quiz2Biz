@@ -3,11 +3,7 @@
  * and SessionMutationService. Preserves the original public API so
  * existing consumers (controller, specs) need no changes.
  */
-import {
-  Injectable,
-  Inject,
-  forwardRef,
-} from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { SessionStatus } from '@prisma/client';
 import { PrismaService } from '@libs/database';
 import { QuestionnaireService } from '../questionnaire/questionnaire.service';
@@ -43,11 +39,12 @@ export class SessionService {
     adaptiveLogicService: AdaptiveLogicService,
     scoringEngineService: ScoringEngineService,
   ) {
-    this.queries = new SessionQueryService(
-      prisma, questionnaireService, adaptiveLogicService,
-    );
+    this.queries = new SessionQueryService(prisma, questionnaireService, adaptiveLogicService);
     this.mutations = new SessionMutationService(
-      prisma, questionnaireService, adaptiveLogicService, scoringEngineService,
+      prisma,
+      questionnaireService,
+      adaptiveLogicService,
+      scoringEngineService,
     );
     this.mutations.setQueryService(this.queries);
   }
