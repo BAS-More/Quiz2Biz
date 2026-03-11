@@ -284,7 +284,7 @@ export class ProjectDocumentGenerationService {
    */
   private countWords(content: string): number {
     return content
-      .replace(/[#*_\[\]()]/g, ' ')
+      .replace(/[#*_[\]()]/g, ' ')
       .split(/\s+/)
       .filter((word) => word.length > 0).length;
   }

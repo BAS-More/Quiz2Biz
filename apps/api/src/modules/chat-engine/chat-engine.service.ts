@@ -177,7 +177,7 @@ export class ChatEngineService {
         createdAt: assistantMessage.createdAt,
       };
     } catch (error) {
-      this.logger.error(`Failed to generate response: ${error}`);
+      this.logger.error(`Failed to generate response: ${error instanceof Error ? error.message : String(error)}`);
       
       // Delete user message on failure
       await this.prisma.chatMessage.delete({ where: { id: userMessage.id } });
@@ -286,7 +286,7 @@ export class ChatEngineService {
         },
       });
     } catch (error) {
-      this.logger.error(`Stream failed: ${error}`);
+      this.logger.error(`Stream failed: ${error instanceof Error ? error.message : String(error)}`);
       
       // Delete user message on failure
       await this.prisma.chatMessage.delete({ where: { id: userMessage.id } });

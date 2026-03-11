@@ -223,8 +223,8 @@ export class SessionMutationService {
         questionnaire: { include: { sections: { orderBy: { orderIndex: 'asc' } } } },
       },
     });
-    if (!session) throw new NotFoundException('Session not found');
-    if (session.userId !== userId) throw new ForbiddenException('Access denied to this session');
+    if (!session) {throw new NotFoundException('Session not found');}
+    if (session.userId !== userId) {throw new ForbiddenException('Access denied to this session');}
 
     const isComplete = session.status === SessionStatus.COMPLETED;
     const responses = await this.prisma.response.findMany({

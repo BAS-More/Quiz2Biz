@@ -167,8 +167,8 @@ export class QualityScoringService {
     return json.map((item: unknown) => {
       const criterion = item as Record<string, unknown>;
       return {
-        key: String(criterion.key || ''),
-        description: String(criterion.description || ''),
+        key: String(criterion.key ?? ''),
+        description: String(criterion.description ?? ''),
         weight: Number(criterion.weight || 1),
       };
     });
@@ -351,7 +351,7 @@ export class QualityScoringService {
         },
       });
     } catch (error) {
-      this.logger.error(`Failed to save quality score for project ${projectId}: ${error}`);
+      this.logger.error(`Failed to save quality score for project ${projectId}: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
   }

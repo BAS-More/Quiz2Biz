@@ -218,6 +218,7 @@ describe('ChatEngineController', () => {
 
     it('should handle non-Error exceptions in stream', async () => {
       async function* failingStream() {
+        // eslint-disable-next-line @typescript-eslint/only-throw-error -- deliberately testing non-Error throw path
         throw 'string error';
         yield { content: '', done: false }; // unreachable
       }

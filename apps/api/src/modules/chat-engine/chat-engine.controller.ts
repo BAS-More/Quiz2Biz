@@ -124,7 +124,7 @@ export class ChatEngineController {
         }
       }
     } catch (error) {
-      this.logger.error(`Stream failed: ${error}`);
+      this.logger.error(`Stream failed: ${error instanceof Error ? error.message : String(error)}`);
       res.write(
         `event: error\ndata: ${JSON.stringify({
           error: error instanceof Error ? error.message : 'Stream failed',

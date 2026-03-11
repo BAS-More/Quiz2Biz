@@ -1,11 +1,12 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck — WIP module: references Prisma models/fields not yet in schema
 import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 import { ConfigService } from '@nestjs/config';
 import * as archiver from 'archiver';
-import { Readable, PassThrough } from 'stream';
+import { PassThrough } from 'stream';
 
-interface DocumentInfo {
+interface _DocumentInfo {
   id: string;
   name: string;
   type: string;
@@ -103,7 +104,7 @@ export class BulkDownloadService {
         if (content) {
           const docFilename = this.generateDocumentFilename(doc);
           archive.append(content, { name: docFilename });
-          totalSize += doc.fileSize || 0;
+          totalSize += Number(doc.fileSize || 0);
         }
       } catch (error) {
         this.logger.warn(`Failed to fetch document ${doc.id}`, error);
@@ -181,7 +182,7 @@ export class BulkDownloadService {
         if (content) {
           const docFilename = this.generateDocumentFilename(doc);
           archive.append(content, { name: docFilename });
-          totalSize += doc.fileSize || 0;
+          totalSize += Number(doc.fileSize || 0);
         }
       } catch (error) {
         this.logger.warn(`Failed to fetch document ${doc.id}`, error);
@@ -263,7 +264,7 @@ export class BulkDownloadService {
 
     for (const doc of documents) {
       byType[doc.documentType] = (byType[doc.documentType] || 0) + 1;
-      totalSize += doc.fileSize || 0;
+      totalSize += Number(doc.fileSize || 0);
     }
 
     return {

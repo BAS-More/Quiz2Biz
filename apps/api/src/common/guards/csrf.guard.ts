@@ -183,7 +183,7 @@ export class CsrfGuard implements CanActivate {
       }
 
       return crypto.timingSafeEqual(Buffer.from(providedHmac), Buffer.from(expectedHmac));
-    } catch (error) {
+    } catch (_error) {
       return false;
     }
   }

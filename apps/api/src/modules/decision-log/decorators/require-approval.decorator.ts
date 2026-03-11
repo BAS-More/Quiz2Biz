@@ -144,7 +144,7 @@ export class ApprovalGuard implements CanActivate {
 
     // Check query
     if (request.query?.[paramName]) {
-      return String(request.query[paramName]);
+      return String(request.query[paramName] as string | number);
     }
 
     return null;

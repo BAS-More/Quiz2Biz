@@ -124,6 +124,7 @@ describe('AiGatewayController', () => {
 
     it('should send error event on stream failure', async () => {
       async function* failingStream() {
+        yield { content: '', done: false }; // yield before throw to satisfy require-yield
         throw new Error('Stream failed');
       }
 

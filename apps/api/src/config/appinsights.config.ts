@@ -528,7 +528,7 @@ export function trackAvailability(
  */
 export function flush(): void {
   if (client) {
-    client.flush();
+    void client.flush();
   }
 }
 
@@ -537,7 +537,7 @@ export function flush(): void {
  */
 export async function shutdown(): Promise<void> {
   if (client) {
-    client.flush();
+    void client.flush();
     // Give time for telemetry to be sent
     await new Promise((resolve) => setTimeout(resolve, 2000));
     logger.log('Application Insights telemetry flushed');

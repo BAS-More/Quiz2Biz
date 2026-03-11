@@ -265,7 +265,7 @@ export class HeatmapService {
           SeverityBuckets.getBucket(Number(q.severity || this.DEFAULT_SEVERITY)) === bucket,
       )
       .map((q: HeatmapQuestion) => {
-        const response = responseLookup.get(q.id) as HeatmapResponse | undefined;
+        const response = responseLookup.get(q.id);
         const coverage = response?.coverage ? Number(response.coverage) : 0;
         const severity = Number(q.severity || this.DEFAULT_SEVERITY);
         return {
@@ -577,7 +577,7 @@ export class HeatmapService {
             cell.severityBucket,
         )
         .map((q: HeatmapQuestion) => {
-          const response = responseLookup.get(q.id) as HeatmapResponse | undefined;
+          const response = responseLookup.get(q.id);
           const coverage = response?.coverage ? Number(response.coverage) : 0;
           return {
             questionId: q.id,

@@ -69,7 +69,7 @@ export class FactExtractionService {
         tokensUsed: response.usage.totalTokens,
       };
     } catch (error) {
-      this.logger.error(`Fact extraction failed: ${error}`);
+      this.logger.error(`Fact extraction failed: ${error instanceof Error ? error.message : String(error)}`);
       return { facts: [], processingTimeMs: Date.now() - startTime, tokensUsed: 0 };
     }
   }
@@ -174,7 +174,7 @@ export class FactExtractionService {
 
         savedFacts.push(fact);
       } catch (error) {
-        this.logger.error(`Failed to save fact ${fact.key}: ${error}`);
+        this.logger.error(`Failed to save fact ${fact.key}: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
 
@@ -259,7 +259,7 @@ export class FactExtractionService {
         },
       });
     } catch (error) {
-      this.logger.error(`Failed to delete fact ${fieldName} for project ${projectId}: ${error}`);
+      this.logger.error(`Failed to delete fact ${fieldName} for project ${projectId}: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
   }
@@ -403,7 +403,7 @@ Return ONLY a valid JSON object with the extracted facts.`;
         confidence: (f.confidence || 'medium') as ConfidenceLevel,
       }));
     } catch (error) {
-      this.logger.error(`Failed to parse extraction response: ${error}`);
+      this.logger.error(`Failed to parse extraction response: ${error instanceof Error ? error.message : String(error)}`);
       return [];
     }
   }

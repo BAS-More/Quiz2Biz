@@ -195,7 +195,7 @@ export class PdfRendererService {
 
       return Buffer.from(pdfBuffer);
     } catch (error) {
-      this.logger.error(`PDF generation failed: ${error}`);
+      this.logger.error(`PDF generation failed: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     } finally {
       if (browser) {

@@ -307,7 +307,7 @@ export class PaymentService {
       return await this.stripe.invoices.createPreview({
         customer: customerId,
       });
-    } catch (error) {
+    } catch (_error) {
       // No upcoming invoice
       return null;
     }
