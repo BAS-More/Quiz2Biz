@@ -179,23 +179,26 @@ function runPreDeploymentChecks() {
             return false;
           }
         } else if (entry.isFile()) {
-          let stat: fs.Stats;
+          let fd: number;
           try {
-            stat = fs.statSync(fullPath);
+            fd = fs.openSync(fullPath, 'r');
           } catch {
-            continue;
-          }
-
-          if (stat.size > maxFileSizeBytes) {
             continue;
           }
 
           let content: string;
           try {
-            content = fs.readFileSync(fullPath, 'utf8');
+            const stat = fs.fstatSync(fd);
+            if (stat.size > maxFileSizeBytes) {
+              fs.closeSync(fd);
+              continue;
+            }
+            content = fs.readFileSync(fd, 'utf8');
           } catch {
+            try { fs.closeSync(fd); } catch { /* ignore close error */ }
             continue;
           }
+          fs.closeSync(fd);
 
           for (const regex of patterns) {
             if (regex.test(content)) {
@@ -244,8 +247,8 @@ function runPreDeploymentChecks() {
   }, true);
   
   test('Database connection works', () => {
-    // Check if Prisma can connect - use local binary to avoid version mismatch
-    const { success } = runCommand('./node_modules/.bin/prisma db pull --force 2>&1', true);
+    // Check if Prisma can connect
+    const { success } = runCommand('npx prisma db pull --force 2>&1', true);
     return success;
   }, true);
   
