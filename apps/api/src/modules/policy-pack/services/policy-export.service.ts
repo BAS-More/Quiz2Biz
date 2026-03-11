@@ -3,7 +3,7 @@
  * Exports policy packs as ZIP bundles with README
  */
 import { Injectable } from '@nestjs/common';
-import { PolicyPackBundle, PolicyDocument } from '../types';
+import { PolicyPackBundle, PolicyDocument, ProcedureDocument } from '../types';
 
 @Injectable()
 export class PolicyExportService {
@@ -143,20 +143,7 @@ export class PolicyExportService {
         lines.push('');
 
         if (std.procedures.length > 0) {
-          lines.push('#### Procedures');
-          lines.push('');
-          for (const proc of std.procedures) {
-            lines.push(`##### ${proc.title}`);
-            lines.push('');
-            lines.push(`**Roles:** ${proc.roles.join(', ')}`);
-            lines.push(`**Frequency:** ${proc.frequency || 'As needed'}`);
-            lines.push('');
-            lines.push('**Steps:**');
-            for (const step of proc.steps) {
-              lines.push(`${step.order}. ${step.description} *(${step.responsibleRole})*`);
-            }
-            lines.push('');
-          }
+          this.formatProcedures(std.procedures, lines);
         }
       }
     }
@@ -175,6 +162,24 @@ export class PolicyExportService {
     }
 
     return lines.join('\n');
+  }
+
+  /** Format procedure sections into markdown lines */
+  private formatProcedures(procedures: ProcedureDocument[], lines: string[]): void {
+    lines.push('#### Procedures');
+    lines.push('');
+    for (const proc of procedures) {
+      lines.push(`##### ${proc.title}`);
+      lines.push('');
+      lines.push(`**Roles:** ${proc.roles.join(', ')}`);
+      lines.push(`**Frequency:** ${proc.frequency || 'As needed'}`);
+      lines.push('');
+      lines.push('**Steps:**');
+      for (const step of proc.steps) {
+        lines.push(`${step.order}. ${step.description} *(${step.responsibleRole})*`);
+      }
+      lines.push('');
+    }
   }
 
   /**

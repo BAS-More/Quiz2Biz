@@ -198,38 +198,10 @@ export class ScoringEngineService {
     const prioritizedQuestions: PrioritizedQuestion[] = [];
 
     for (const question of questions) {
-      const response = question.responses[0];
-      const currentCoverage: number = response?.coverage ? Number(response.coverage) : 0;
-
-      if (currentCoverage >= 1.0) {
-        continue;
+      const scored = this.scoreQuestion(question, dimensionWeightMap, dimensionSeveritySum);
+      if (scored) {
+        prioritizedQuestions.push(scored);
       }
-
-      const severity: number = question.severity ? Number(question.severity) : DEFAULT_SEVERITY;
-      const dimensionKey: string = question.dimensionKey || 'unknown';
-      const dimensionWeight: number = Number(dimensionWeightMap.get(dimensionKey) ?? 0);
-      const severitySum: number = Number(dimensionSeveritySum.get(dimensionKey) ?? 1);
-
-      const deltaScore: number =
-        (100 * dimensionWeight * severity * (1 - currentCoverage)) / (severitySum + EPSILON);
-
-      prioritizedQuestions.push({
-        questionId: question.id,
-        text: question.text,
-        dimensionKey,
-        dimensionName: question.dimension?.displayName || dimensionKey,
-        severity,
-        currentCoverage,
-        currentCoverageLevel: decimalToCoverageLevel(currentCoverage) as CoverageLevelDto,
-        expectedScoreLift: Math.round(deltaScore * 100) / 100,
-        rationale: generateRationale(
-          deltaScore,
-          dimensionKey,
-          question.dimension?.displayName || dimensionKey,
-          currentCoverage,
-        ),
-        rank: 0,
-      });
     }
 
     prioritizedQuestions.sort((a, b) => b.expectedScoreLift - a.expectedScoreLift);
@@ -243,6 +215,46 @@ export class ScoringEngineService {
       currentScore: currentResult.score,
       questions: topQuestions,
       maxPotentialScore: Math.round(maxPotentialScore * 100) / 100,
+    };
+  }
+
+  /** Score a single question for NQS prioritization; returns null if fully covered */
+  private scoreQuestion(
+    question: { id: string; text: string; dimensionKey: string | null; severity: unknown; responses: Array<{ coverage: unknown }>; dimension?: { displayName?: string } | null },
+    dimensionWeightMap: Map<string, number>,
+    dimensionSeveritySum: Map<string, number>,
+  ): PrioritizedQuestion | null {
+    const response = question.responses[0];
+    const currentCoverage: number = response?.coverage ? Number(response.coverage) : 0;
+
+    if (currentCoverage >= 1.0) {
+      return null;
+    }
+
+    const severity: number = question.severity ? Number(question.severity) : DEFAULT_SEVERITY;
+    const dimensionKey: string = question.dimensionKey || 'unknown';
+    const dimensionWeight: number = Number(dimensionWeightMap.get(dimensionKey) ?? 0);
+    const severitySum: number = Number(dimensionSeveritySum.get(dimensionKey) ?? 1);
+
+    const deltaScore: number =
+      (100 * dimensionWeight * severity * (1 - currentCoverage)) / (severitySum + EPSILON);
+
+    return {
+      questionId: question.id,
+      text: question.text,
+      dimensionKey,
+      dimensionName: question.dimension?.displayName || dimensionKey,
+      severity,
+      currentCoverage,
+      currentCoverageLevel: decimalToCoverageLevel(currentCoverage) as CoverageLevelDto,
+      expectedScoreLift: Math.round(deltaScore * 100) / 100,
+      rationale: generateRationale(
+        deltaScore,
+        dimensionKey,
+        question.dimension?.displayName || dimensionKey,
+        currentCoverage,
+      ),
+      rank: 0,
     };
   }
 

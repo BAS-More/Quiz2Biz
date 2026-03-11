@@ -299,26 +299,29 @@ export function trackDocumentGeneration(
   });
 }
 
+/** Options for tracking API endpoint usage */
+export interface EndpointUsageOptions {
+  endpoint: string;
+  method: string;
+  statusCode: number;
+  durationMs: number;
+  userId?: string;
+}
+
 /**
  * Track API endpoint usage
  */
-export function trackEndpointUsage(
-  endpoint: string,
-  method: string,
-  statusCode: number,
-  durationMs: number,
-  userId?: string,
-): void {
+export function trackEndpointUsage(options: EndpointUsageOptions): void {
   trackEvent({
     name: 'api_request',
     properties: {
-      endpoint,
-      method,
-      statusCode: statusCode.toString(),
-      userId: userId || 'anonymous',
+      endpoint: options.endpoint,
+      method: options.method,
+      statusCode: options.statusCode.toString(),
+      userId: options.userId || 'anonymous',
     },
     measurements: {
-      durationMs,
+      durationMs: options.durationMs,
     },
   });
 }
@@ -495,27 +498,30 @@ export function trackPerformance(
 // Availability Tracking
 // =============================================================================
 
+/** Options for tracking availability test results */
+export interface AvailabilityOptions {
+  testName: string;
+  success: boolean;
+  durationMs: number;
+  runLocation?: string;
+  message?: string;
+}
+
 /**
  * Track an availability test result (health check)
  */
-export function trackAvailability(
-  testName: string,
-  success: boolean,
-  durationMs: number,
-  runLocation?: string,
-  message?: string,
-): void {
+export function trackAvailability(options: AvailabilityOptions): void {
   if (!client) {
     return;
   }
 
   client.trackAvailability({
-    id: `${testName}-${Date.now()}`,
-    name: testName,
-    success,
-    duration: durationMs,
-    runLocation: runLocation || 'Azure',
-    message: message || (success ? 'Available' : 'Unavailable'),
+    id: `${options.testName}-${Date.now()}`,
+    name: options.testName,
+    success: options.success,
+    duration: options.durationMs,
+    runLocation: options.runLocation || 'Azure',
+    message: options.message || (options.success ? 'Available' : 'Unavailable'),
   });
 }
 
@@ -559,7 +565,7 @@ export function createRequestTrackingMiddleware() {
       const durationMs = Date.now() - startTime;
       const userId = req.user?.id;
 
-      trackEndpointUsage(req.path, req.method, res.statusCode, durationMs, userId);
+      trackEndpointUsage({ endpoint: req.path, method: req.method, statusCode: res.statusCode, durationMs, userId });
 
       // Track slow requests (>500ms)
       if (durationMs > 500) {

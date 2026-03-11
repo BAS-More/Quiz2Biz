@@ -7,7 +7,7 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
-import { SessionStatus, Prisma, Question } from '@prisma/client';
+import { SessionStatus, Prisma, Question, Persona } from '@prisma/client';
 import { PrismaService } from '@libs/database';
 import { QuestionnaireService, QuestionResponse } from '../../questionnaire/questionnaire.service';
 import { AdaptiveLogicService } from '../../adaptive-logic/adaptive-logic.service';
@@ -18,6 +18,7 @@ import {
   SessionResponse,
   SubmitResponseResult,
   ContinueSessionResponse,
+  ProgressInfo,
   READINESS_SCORE_THRESHOLD,
 } from '../session-types';
 import {
@@ -39,7 +40,7 @@ export class SessionMutationService {
     private readonly questionnaireService: QuestionnaireService,
     private readonly adaptiveLogicService: AdaptiveLogicService,
     private readonly scoringEngineService: ScoringEngineService,
-  ) {}
+  ) { }
 
   /** Called by SessionService after both sub-services are instantiated */
   setQueryService(qs: SessionQueryService): void {
@@ -195,8 +196,8 @@ export class SessionMutationService {
     if (requiresGate && scoreResult.score < READINESS_SCORE_THRESHOLD) {
       throw new BadRequestException(
         `Readiness score is ${scoreResult.score.toFixed(1)}%. ` +
-          `A minimum score of ${READINESS_SCORE_THRESHOLD}% is required to complete this assessment. ` +
-          `Please continue answering questions to improve coverage.`,
+        `A minimum score of ${READINESS_SCORE_THRESHOLD}% is required to complete this assessment. ` +
+        `Please continue answering questions to improve coverage.`,
       );
     }
     const updatedSession = await this.prisma.session.update({
@@ -223,8 +224,8 @@ export class SessionMutationService {
         questionnaire: { include: { sections: { orderBy: { orderIndex: 'asc' } } } },
       },
     });
-    if (!session) {throw new NotFoundException('Session not found');}
-    if (session.userId !== userId) {throw new ForbiddenException('Access denied to this session');}
+    if (!session) { throw new NotFoundException('Session not found'); }
+    if (session.userId !== userId) { throw new ForbiddenException('Access denied to this session'); }
 
     const isComplete = session.status === SessionStatus.COMPLETED;
     const responses = await this.prisma.response.findMany({
@@ -274,21 +275,9 @@ export class SessionMutationService {
     const meetsReadinessGate = !requiresGate || (readinessScore ?? 0) >= READINESS_SCORE_THRESHOLD;
     const canComplete = unansweredRequired.length === 0 && responses.length > 0 && meetsReadinessGate;
 
-    const sessionResponse: SessionResponse = {
-      id: session.id,
-      questionnaireId: session.questionnaireId,
-      userId: session.userId,
-      status: session.status,
-      persona: session.persona ?? undefined,
-      industry: session.industry ?? undefined,
-      readinessScore: readinessScore ?? (session.readinessScore ? Number(session.readinessScore) : undefined),
-      progress,
-      currentSection: session.currentSection
-        ? { id: session.currentSection.id, name: session.currentSection.name }
-        : undefined,
-      createdAt: session.startedAt,
-      lastActivityAt: session.lastActivityAt,
-    };
+    const sessionResponse = this.buildSessionResponseObject(
+      session, progress, readinessScore,
+    );
 
     if (!isComplete) {
       await this.prisma.session.update({ where: { id: sessionId }, data: { lastActivityAt: new Date() } });
@@ -303,6 +292,34 @@ export class SessionMutationService {
         appliedRules: adaptiveState.branchHistory || [],
       },
       isComplete, canComplete,
+    };
+  }
+
+  /** Build the SessionResponse object from a session entity */
+  private buildSessionResponseObject(
+    session: {
+      id: string; questionnaireId: string; userId: string; status: SessionStatus;
+      persona?: Persona | null; industry?: string | null;
+      readinessScore?: unknown; startedAt: Date; lastActivityAt: Date;
+      currentSection?: { id: string; name: string } | null;
+    },
+    progress: ProgressInfo,
+    readinessScore: number | null | undefined,
+  ): SessionResponse {
+    return {
+      id: session.id,
+      questionnaireId: session.questionnaireId,
+      userId: session.userId,
+      status: session.status,
+      persona: session.persona ?? undefined,
+      industry: session.industry ?? undefined,
+      readinessScore: readinessScore ?? (session.readinessScore ? Number(session.readinessScore) : undefined),
+      progress,
+      currentSection: session.currentSection
+        ? { id: session.currentSection.id, name: session.currentSection.name }
+        : undefined,
+      createdAt: session.startedAt,
+      lastActivityAt: session.lastActivityAt,
     };
   }
 

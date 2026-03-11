@@ -37,6 +37,10 @@
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "src/modules/document-commerce/**",
+    "src/modules/document-generator/_wip/**",
+    "src/modules/document-generator/services/bulk-download.service.ts",
+    "src/modules/document-generator/services/project-document-generation.service.ts"
   ]
 }

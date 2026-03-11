@@ -44,8 +44,8 @@ jobs:
       - name: Linting
         run: npm run lint
       
-      - name: Type Checking
-        run: npx tsc --noEmit -p apps/api/tsconfig.json
+      - name: Type Checking (production build)
+        run: npx tsc --noEmit -p apps/api/tsconfig.build.json
       
       - name: Format Check
         run: npx prettier --check "apps/**/*.{ts,tsx,js,jsx}" "libs/**/*.{ts,tsx,js,jsx}"

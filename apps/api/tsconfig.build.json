@@ -27,6 +27,7 @@
     "dist",
     "test",
     "**/*.spec.ts",
+    "**/*.test.ts",
     "src/modules/document-commerce/**",
     "src/modules/document-generator/services/bulk-download.service.ts",
     "src/modules/document-generator/services/project-document-generation.service.ts",

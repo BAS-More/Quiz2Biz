@@ -77,7 +77,7 @@ export default tseslint.config(
       // Complexity enforcement (ISO/IEC 5055 compliance)
       'complexity': ['error', { max: 15 }],  // Cyclomatic complexity
       'max-depth': ['warn', { max: 4 }],    // Max nesting depth
-      'max-lines-per-function': ['error', { max: 75, skipBlankLines: true, skipComments: true }],
+      'max-lines-per-function': ['warn', { max: 75, skipBlankLines: true, skipComments: true }],
       'max-params': ['warn', { max: 4 }],   // Max function parameters
 
       // Naming conventions

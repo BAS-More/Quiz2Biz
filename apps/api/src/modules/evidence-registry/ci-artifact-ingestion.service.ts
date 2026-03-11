@@ -88,7 +88,7 @@ export class CIArtifactIngestionService {
   constructor(
     private readonly prisma: PrismaService,
     _configService: ConfigService,
-  ) {}
+  ) { }
 
   /**
    * Ingest a CI artifact as evidence
@@ -357,16 +357,7 @@ export class CIArtifactIngestionService {
 
       for (const comp of components) {
         byType[comp.type] = (byType[comp.type] || 0) + 1;
-        if (comp.licenses) {
-          for (const lic of comp.licenses) {
-            if (lic.license?.id) {
-              licenses.add(lic.license.id);
-            }
-            if (lic.license?.name) {
-              licenses.add(lic.license.name);
-            }
-          }
-        }
+        this.collectComponentLicenses(comp, licenses);
       }
 
       return {
@@ -382,6 +373,24 @@ export class CIArtifactIngestionService {
       };
     } catch {
       return { type: 'cyclonedx', error: 'Failed to parse CycloneDX SBOM' };
+    }
+  }
+
+  /** Collect license IDs and names from a CycloneDX component */
+  private collectComponentLicenses(
+    comp: { licenses?: Array<{ license?: { id?: string; name?: string } }> },
+    licenses: Set<string>,
+  ): void {
+    if (!comp.licenses) {
+      return;
+    }
+    for (const lic of comp.licenses) {
+      if (lic.license?.id) {
+        licenses.add(lic.license.id);
+      }
+      if (lic.license?.name) {
+        licenses.add(lic.license.name);
+      }
     }
   }
 

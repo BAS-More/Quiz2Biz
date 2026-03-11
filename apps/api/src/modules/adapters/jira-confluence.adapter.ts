@@ -135,7 +135,7 @@ export class JiraConfluenceAdapter {
   constructor(
     private readonly configService: ConfigService,
     _prisma: PrismaService,
-  ) {}
+  ) { }
 
   private getTrustedJiraDomain(): string {
     const trustedDomain = (this.configService.get<string>('JIRA_DOMAIN') || '')
@@ -165,19 +165,19 @@ export class JiraConfluenceAdapter {
    */
   private validateDomain(config: JiraConfig): void {
     const rawDomain = (config.domain || '').trim().toLowerCase();
-  
+
     if (!rawDomain || rawDomain.length > 255) {
       throw new HttpException('Invalid Jira domain', HttpStatus.BAD_REQUEST);
     }
-  
+
     this.rejectUnsafeDomainChars(rawDomain);
     this.rejectPrivateAddresses(rawDomain);
-  
+
     if (!rawDomain.endsWith('.atlassian.net')) {
       throw new HttpException('Unsupported Jira domain', HttpStatus.BAD_REQUEST);
     }
   }
-  
+
   /** Reject domains containing scheme, path, port, credential, or backslash chars */
   private rejectUnsafeDomainChars(domain: string): void {
     const unsafePatterns = ['://', '/', '\\', '@', ':'];
@@ -185,7 +185,7 @@ export class JiraConfluenceAdapter {
       throw new HttpException('Invalid Jira domain format', HttpStatus.BAD_REQUEST);
     }
   }
-  
+
   /** Reject localhost, loopback, and private-range addresses */
   private rejectPrivateAddresses(domain: string): void {
     const loopbackPatterns = ['localhost', '127.0.0.1', '::1'];
@@ -196,7 +196,7 @@ export class JiraConfluenceAdapter {
     ) {
       throw new HttpException('Jira domain not allowed', HttpStatus.BAD_REQUEST);
     }
-  
+
     const privateRangePrefixes = ['10.', '192.168.'];
     if (
       privateRangePrefixes.some((p) => domain.startsWith(p)) ||
@@ -254,7 +254,7 @@ export class JiraConfluenceAdapter {
     this.validateDomain({ ...config, domain: normalizedDomain });
     const safeEndpoint = this.sanitizeEndpoint(endpoint);
 
-    let baseUrl: string = this.buildAtlassianBaseUrl(normalizedDomain, isConfluence, isAgile);
+    const baseUrl: string = this.buildAtlassianBaseUrl(normalizedDomain, isConfluence, isAgile);
 
     const requestUrl = new URL(safeEndpoint, `${baseUrl}/`);
     const trustedBaseUrl = new URL(`${baseUrl}/`);

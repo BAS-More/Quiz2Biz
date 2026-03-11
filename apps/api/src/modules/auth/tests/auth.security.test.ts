@@ -66,9 +66,9 @@ describe('Authentication Security Tests', () => {
       ],
     }).compile();
 
-    module.get<AuthService>(AuthService);
+    const _authService = module.get<AuthService>(AuthService);
     jwtService = module.get<JwtService>(JwtService);
-    module.get<PrismaService>(PrismaService);
+    const _prismaService = module.get<PrismaService>(PrismaService);
   });
 
   describe('Password Hashing Security', () => {
