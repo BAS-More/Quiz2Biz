@@ -780,7 +780,7 @@ export class FeatureFlagService {
    * Track a custom event
    */
   track(eventName: string, context: FlagEvaluationContext, data?: Record<string, unknown>): void {
-    logger.log(`Track event: ${eventName}`, JSON.stringify({ context, data }));
+    logger.log(`Track event: ${eventName} ${JSON.stringify({ context, data })}`);
     // In production: this.client.track(eventName, this.contextToLDUser(context), data);
   }
 

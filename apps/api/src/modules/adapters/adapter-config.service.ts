@@ -221,7 +221,19 @@ export class AdapterConfigService {
   ): { valid: boolean; errors: string[] } {
     const requiredFields = this.adapterRequiredFields[type] ?? [];
     const errors = requiredFields
-      .filter(({ field }) => !config[field])
+      .filter(({ field }) => {
+        const value = config[field];
+
+        if (value === undefined || value === null) {
+          return true;
+        }
+
+        if (typeof value === 'string') {
+          return value.trim().length === 0;
+        }
+
+        return false;
+      })
       .map(({ label }) => `${label} is required`);
 
     return { valid: errors.length === 0, errors };

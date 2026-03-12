@@ -989,7 +989,7 @@ export class IncidentManager {
       return;
     }
 
-    logger.log(`${incident.id} escalating to level ${level}:`, JSON.stringify(path.roles));
+    logger.log(`${incident.id} escalating to level ${level}: ${JSON.stringify(path.roles)}`);
 
     incident.timeline.push({
       timestamp: new Date(),
