@@ -468,7 +468,7 @@ export class AdapterController {
     if (typeof value !== 'string') {
       return 'unknown';
     }
-    const sanitized = value.replace(/[^a-zA-Z0-9_-]/g, '');
+    const sanitized = value.replace(/[^a-zA-Z0-9_.-]/g, '');
     return sanitized.length > 0 ? sanitized.substring(0, 100) : 'unknown';
   }
 
