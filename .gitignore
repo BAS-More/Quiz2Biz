@@ -51,6 +51,7 @@ docker/postgres/data/
 tmp/
 temp/
 *.tmp
+.snapshots/snapshot-*.md
 
 # Editor directories
 *.sublime-workspace

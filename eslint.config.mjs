@@ -146,4 +146,12 @@ export default tseslint.config(
       'no-console': 'off',
     },
   },
+
+  // Config files - relaxed function length (config files are legitimately long)
+  {
+    files: ['**/*.config.ts', '**/*.config.mjs', '**/*.config.js', '**/eslint.config.*'],
+    rules: {
+      'max-lines-per-function': 'warn',
+    },
+  },
 );
