@@ -22,6 +22,7 @@ import {
   Loader,
 } from 'lucide-react';
 import { Card } from '../../components/ui';
+import { EmptyState } from '../../components/ui/EmptyState';
 import { clsx } from 'clsx';
 
 type ProjectFilter = 'all' | 'active' | 'completed' | 'archived';
@@ -150,9 +151,9 @@ function ProjectCard({
           <span className="text-xs text-surface-400">
             {project.lastActivityAt
               ? new Date(project.lastActivityAt).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                })
+                month: 'short',
+                day: 'numeric',
+              })
               : 'No activity'}
           </span>
           <div className="flex items-center gap-2">
@@ -295,22 +296,15 @@ export function WorkspacePage() {
           <Loader className="h-8 w-8 text-brand-600 animate-spin" />
         </div>
       ) : filteredProjects.length === 0 ? (
-        <Card className="text-center py-12">
-          <div className="mx-auto w-16 h-16 rounded-2xl bg-surface-100 flex items-center justify-center mb-4">
-            <MessageSquare className="h-8 w-8 text-surface-400" />
-          </div>
-          <h3 className="text-lg font-semibold text-surface-900">No projects yet</h3>
-          <p className="text-sm text-surface-500 mt-1 max-w-sm mx-auto">
-            Start your first project by chatting with our AI to build your business plan.
-          </p>
-          <button
-            onClick={() => navigate('/chat/new')}
-            className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-xl text-sm font-medium hover:bg-brand-700 transition-colors"
-          >
-            <Plus className="h-4 w-4" />
-            Start Your First Project
-          </button>
-        </Card>
+        <EmptyState
+          type="sessions"
+          title="No projects yet"
+          description="Start your first project by chatting with our AI to build your business plan."
+          action={{
+            label: 'Start Your First Project',
+            onClick: () => navigate('/chat/new'),
+          }}
+        />
       ) : (
         <div className="space-y-8">
           {/* Active projects */}

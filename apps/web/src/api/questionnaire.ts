@@ -428,6 +428,23 @@ export const questionnaireApi = {
     return data;
   },
 
+  /** Update a decision's status (e.g. DRAFT → LOCKED) */
+  async updateDecisionStatus(
+    decisionId: string,
+    status: string,
+  ): Promise<{
+    id: string;
+    sessionId: string;
+    statement: string;
+    status: string;
+    createdAt: string;
+  }> {
+    const { data } = await apiClient.patch(`${API_PREFIX}/decisions/${decisionId}/status`, {
+      status,
+    });
+    return data;
+  },
+
   /** Generate QPG prompts for a session */
   async generatePrompts(sessionId: string): Promise<{
     id: string;

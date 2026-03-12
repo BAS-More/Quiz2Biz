@@ -18,6 +18,8 @@ interface DecisionsState {
 
   loadDecisions: (sessionId: string) => Promise<void>;
   createDecision: (sessionId: string, statement: string, assumptions?: string) => Promise<void>;
+  /** Optimistic status update with automatic rollback on failure */
+  updateStatus: (decisionId: string, newStatus: string) => Promise<void>;
   reset: () => void;
 }
 
@@ -56,6 +58,30 @@ export const useDecisionsStore = create<DecisionsState>()((set, get) => ({
             ?.message ??
           (err as { message?: string })?.message ??
           'Unknown error',
+      });
+    }
+  },
+
+  updateStatus: async (decisionId, newStatus) => {
+    const previousDecisions = get().decisions;
+    // Optimistic update — immediately reflect the new status in the UI
+    set({
+      decisions: previousDecisions.map((d) =>
+        d.id === decisionId ? { ...d, status: newStatus } : d,
+      ),
+      error: null,
+    });
+    try {
+      await questionnaireApi.updateDecisionStatus(decisionId, newStatus);
+    } catch (err: unknown) {
+      // Rollback to previous state on failure
+      set({
+        decisions: previousDecisions,
+        error:
+          (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data
+            ?.message ??
+          (err as { message?: string })?.message ??
+          'Failed to update decision status',
       });
     }
   },

@@ -27,9 +27,8 @@ function UsageBar({ used, limit, label }: { used: number; limit: number; label: 
       </div>
       <div className="w-full bg-gray-200 rounded-full h-2">
         <div
-          className={`h-2 rounded-full transition-all ${
-            isNearLimit ? 'bg-red-500' : 'bg-blue-600'
-          } ${isUnlimited ? 'bg-green-500' : ''}`}
+          className={`h-2 rounded-full transition-all ${isNearLimit ? 'bg-red-500' : 'bg-blue-600'
+            } ${isUnlimited ? 'bg-green-500' : ''}`}
           style={{ width: isUnlimited ? '100%' : `${percentage}%` }}
         />
       </div>
@@ -72,13 +71,12 @@ function SubscriptionCard({ subscription }: { subscription: Subscription }) {
         <div className="flex justify-between py-2 border-b border-gray-100">
           <span className="text-gray-600">Status</span>
           <span
-            className={`font-medium ${
-              subscription.status === 'active'
+            className={`font-medium ${subscription.status === 'active'
                 ? 'text-green-600'
                 : subscription.status === 'past_due'
                   ? 'text-red-600'
                   : 'text-gray-600'
-            }`}
+              }`}
           >
             {subscription.status.replace('_', ' ').toUpperCase()}
           </span>
@@ -190,8 +188,20 @@ export function BillingPage() {
 
   if (subLoading || usageLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-gray-900">Billing & Subscription</h1>
+          <p className="text-gray-500">Loading billing data...</p>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          {[1, 2].map((i) => (
+            <div key={i} className="bg-white rounded-xl border border-gray-200 p-6 space-y-3 animate-pulse">
+              <div className="h-4 bg-gray-200 rounded w-1/3" />
+              <div className="h-8 bg-gray-200 rounded w-1/2" />
+              <div className="h-4 bg-gray-200 rounded w-2/3" />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

@@ -22,6 +22,14 @@ const RegisterPage = lazy(() =>
 const ForgotPasswordPage = lazy(() =>
   import('./pages/auth/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage })),
 );
+const ResetPasswordPage = lazy(() =>
+  import('./pages/auth/ResetPasswordPage').then((m) => ({ default: m.ResetPasswordPage })),
+);
+const EmailVerificationPage = lazy(() =>
+  import('./pages/auth/EmailVerificationPage').then((m) => ({
+    default: m.EmailVerificationPage,
+  })),
+);
 const OAuthCallbackPage = lazy(() =>
   import('./pages/auth/OAuthCallbackPage').then((m) => ({ default: m.OAuthCallbackPage })),
 );
@@ -193,6 +201,8 @@ export default function App() {
                   <Route path="login" element={<LoginPage />} />
                   <Route path="register" element={<RegisterPage />} />
                   <Route path="forgot-password" element={<ForgotPasswordPage />} />
+                  <Route path="reset-password" element={<ResetPasswordPage />} />
+                  <Route path="verify-email" element={<EmailVerificationPage />} />
                 </Route>
 
                 {/* Protected app routes */}

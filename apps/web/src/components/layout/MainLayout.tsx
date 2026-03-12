@@ -15,19 +15,57 @@ import {
   ChevronLeft,
   CreditCard,
   HelpCircle,
+  FolderKanban,
+  BarChart3,
+  Settings,
+  Bell,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { clsx } from 'clsx';
 import { ThemeToggle } from '../settings/ThemeToggle';
+import { StandaloneBreadcrumbs, DEFAULT_ROUTE_MAPPINGS } from '../ux/Breadcrumbs';
+import type { BreadcrumbItem } from '../ux/Breadcrumbs';
+import { featureFlags } from '../../config/feature-flags.config';
+import { AIChatProvider, AIChatWidget } from '../ai/AIChatWidget';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Workspace', href: '/workspace', icon: FolderKanban },
   { name: 'Assessments', href: '/questionnaire/new', icon: ClipboardList },
   { name: 'Documents', href: '/documents', icon: FileText },
+  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Billing', href: '/billing', icon: CreditCard },
 ];
 
-const bottomNav = [{ name: 'Help Center', href: '/help', icon: HelpCircle }];
+const bottomNav = [
+  { name: 'Settings', href: '/settings/profile', icon: Settings },
+  { name: 'Help Center', href: '/help', icon: HelpCircle },
+];
+
+/** Computes breadcrumbs from current route and renders them in the header */
+function HeaderBreadcrumbs({ pathname }: { pathname: string }) {
+  const items = useMemo<BreadcrumbItem[]>(() => {
+    for (const mapping of DEFAULT_ROUTE_MAPPINGS) {
+      const match = pathname.match(mapping.pattern);
+      if (match) {
+        return typeof mapping.breadcrumbs === 'function'
+          ? mapping.breadcrumbs({})
+          : mapping.breadcrumbs;
+      }
+    }
+    return [{ label: 'Home', href: '/', icon: '\u{1F3E0}' }];
+  }, [pathname]);
+
+  if (items.length <= 1) return null;
+
+  return (
+    <StandaloneBreadcrumbs
+      items={items}
+      showIcons={false}
+      className="text-sm text-surface-500"
+    />
+  );
+}
 
 export function MainLayout() {
   const { user, logout } = useAuthStore();
@@ -49,11 +87,11 @@ export function MainLayout() {
 
   const userInitials = user?.name
     ? user.name
-        .split(' ')
-        .map((n) => n[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2)
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2)
     : user?.email?.[0]?.toUpperCase() || 'U';
 
   return (
@@ -267,11 +305,22 @@ export function MainLayout() {
             <Menu className="h-5 w-5" />
           </button>
 
-          {/* Breadcrumb area - can be enhanced later */}
-          <div className="flex-1" />
+          {/* Route-based breadcrumbs */}
+          <div className="flex-1 min-w-0">
+            <HeaderBreadcrumbs pathname={location.pathname} />
+          </div>
 
           {/* User avatar in header (mobile/quick access) */}
           <div className="flex items-center gap-3">
+            {/* Notifications bell */}
+            <button
+              className="relative p-2 rounded-lg hover:bg-surface-100 text-surface-500 transition-colors"
+              aria-label="Notifications"
+              title="Notifications"
+            >
+              <Bell className="h-5 w-5" />
+            </button>
+
             {/* Theme toggle */}
             <ThemeToggle compact />
 
@@ -298,6 +347,13 @@ export function MainLayout() {
           </p>
         </footer>
       </div>
+
+      {/* Floating AI Chat Widget (feature-flagged) */}
+      {featureFlags.aiChatWidget && (
+        <AIChatProvider>
+          <AIChatWidget position="bottom-right" />
+        </AIChatProvider>
+      )}
     </div>
   );
 }

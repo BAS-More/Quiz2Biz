@@ -17,6 +17,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { Card, Badge } from '../../components/ui';
+import { StatCardSkeleton } from '../../components/ui/Skeleton';
 import { CompletionRateChart } from '../../components/analytics/CompletionRateChart';
 import { UserGrowthChart } from '../../components/analytics/UserGrowthChart';
 import {
@@ -299,22 +300,42 @@ function DocumentMetricsTable({ data }: DocumentMetricsTableProps) {
 export function AnalyticsDashboardPage() {
   const [timeRange, setTimeRange] = useState<TimeRange>('30d');
 
-  const { data: analytics, isLoading } = useQuery({
+  const { data: analytics, isLoading, isError } = useQuery({
     queryKey: ['analytics', timeRange],
     queryFn: fetchAnalyticsData,
   });
 
   if (isLoading) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
-        <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
-        <p className="text-surface-500">Loading analytics...</p>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-surface-900 flex items-center gap-3">
+              <BarChart3 className="h-6 w-6 text-brand-600" />
+              Analytics Dashboard
+            </h1>
+            <p className="text-surface-500 mt-1">Loading analytics data...</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <StatCardSkeleton key={i} />
+          ))}
+        </div>
       </div>
     );
   }
 
-  if (!analytics) {
-    return null;
+  if (!analytics || isError) {
+    return (
+      <div className="min-h-[40vh] flex flex-col items-center justify-center gap-4">
+        <BarChart3 className="h-12 w-12 text-surface-300" />
+        <h2 className="text-lg font-semibold text-surface-900">Unable to load analytics</h2>
+        <p className="text-sm text-surface-500 max-w-sm text-center">
+          Analytics data could not be loaded. Please try refreshing the page.
+        </p>
+      </div>
+    );
   }
 
   return (

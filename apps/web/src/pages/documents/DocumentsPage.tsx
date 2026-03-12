@@ -22,6 +22,7 @@ import {
   Archive,
 } from 'lucide-react';
 import { Card } from '../../components/ui';
+import { EmptyState } from '../../components/ui/EmptyState';
 import { useQuestionnaireStore } from '../../stores/questionnaire';
 import {
   listDocumentTypes,
@@ -240,17 +241,15 @@ export function DocumentsPage() {
                 <button
                   key={session.id}
                   onClick={() => handleSelectSession(session.id)}
-                  className={`flex items-center justify-between w-full p-3 rounded-xl border transition-colors text-left ${
-                    isSelected
+                  className={`flex items-center justify-between w-full p-3 rounded-xl border transition-colors text-left ${isSelected
                       ? 'border-brand-400 bg-brand-50'
                       : 'border-surface-100 hover:border-brand-200'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div
-                      className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                        isSelected ? 'bg-brand-100' : 'bg-success-50'
-                      }`}
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center ${isSelected ? 'bg-brand-100' : 'bg-success-50'
+                        }`}
                     >
                       <CheckCircle2
                         className={`w-4 h-4 ${isSelected ? 'text-brand-600' : 'text-success-600'}`}
@@ -303,14 +302,16 @@ export function DocumentsPage() {
             <span className="ml-2 text-sm text-surface-400">Loading document types...</span>
           </div>
         ) : documentTypes.length === 0 ? (
-          <div className="text-center py-8">
-            <FileText className="w-10 h-10 text-surface-300 mx-auto mb-3" />
-            <p className="text-sm text-surface-500">
-              {selectedSessionId
+          <EmptyState
+            type="documents"
+            title={selectedSessionId ? 'No document types available' : 'Select a project'}
+            description={
+              selectedSessionId
                 ? 'No document types available for this project type.'
-                : 'No document types configured. Select a project to see available documents.'}
-            </p>
-          </div>
+                : 'Select a completed project above to see available documents.'
+            }
+            size="sm"
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {documentTypes.map((docType) => {

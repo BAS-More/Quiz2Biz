@@ -26,6 +26,7 @@ export function ForgotPasswordPage() {
     formState: { errors, isSubmitting },
   } = useForm<ForgotPasswordForm>({
     resolver: zodResolver(forgotPasswordSchema),
+    mode: 'onTouched',
   });
 
   const onSubmit = async (data: ForgotPasswordForm) => {

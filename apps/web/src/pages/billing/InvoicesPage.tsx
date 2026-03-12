@@ -4,6 +4,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { billingApi, type Invoice } from '../../api/billing';
+import { EmptyState } from '../../components/ui/EmptyState';
 
 const STATUS_CONFIG = {
   draft: { label: 'Draft', className: 'bg-gray-100 text-gray-700' },
@@ -79,27 +80,14 @@ function InvoiceRow({ invoice }: { invoice: Invoice }) {
   );
 }
 
-function EmptyState() {
+function InvoiceEmptyState() {
   return (
-    <div className="text-center py-12">
-      <svg
-        className="mx-auto h-12 w-12 text-gray-400"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-        />
-      </svg>
-      <h3 className="mt-2 text-sm font-medium text-gray-900">No invoices</h3>
-      <p className="mt-1 text-sm text-gray-500">
-        You don't have any invoices yet. Invoices will appear here after your first payment.
-      </p>
-    </div>
+    <EmptyState
+      type="documents"
+      title="No invoices"
+      description="You don't have any invoices yet. Invoices will appear here after your first payment."
+      size="sm"
+    />
   );
 }
 
@@ -115,8 +103,22 @@ export function InvoicesPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-gray-900">Invoice History</h1>
+          <p className="text-gray-500">Loading invoices...</p>
+        </div>
+        <div className="bg-white shadow-md rounded-lg p-6 space-y-4">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-4 animate-pulse">
+              <div className="h-4 bg-gray-200 rounded w-24" />
+              <div className="h-4 bg-gray-200 rounded w-16" />
+              <div className="h-4 bg-gray-200 rounded w-20" />
+              <div className="flex-1" />
+              <div className="h-4 bg-gray-200 rounded w-20" />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -176,7 +178,7 @@ export function InvoicesPage() {
             </tbody>
           </table>
         ) : (
-          <EmptyState />
+          <InvoiceEmptyState />
         )}
       </div>
     </div>

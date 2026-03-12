@@ -28,6 +28,7 @@ import {
   type FollowUpResult,
 } from '../../api/conversation';
 import { QuestionnaireNavigation } from '../../components/questionnaire/QuestionnaireNavigation';
+import { EmptyState } from '../../components/ui/EmptyState';
 
 const PERSONA_OPTIONS: { value: Persona; label: string; description: string }[] = [
   { value: 'CTO', label: 'CTO', description: 'Architecture, security, DevOps, quality' },
@@ -229,11 +230,10 @@ export function QuestionnairePage() {
               <button
                 key={p.value}
                 onClick={() => setSelectedPersona(p.value)}
-                className={`p-4 rounded-lg border-2 text-left transition-all ${
-                  selectedPersona === p.value
+                className={`p-4 rounded-lg border-2 text-left transition-all ${selectedPersona === p.value
                     ? 'border-blue-600 bg-blue-50'
                     : 'border-gray-200 hover:border-gray-300'
-                }`}
+                  }`}
               >
                 <div className="font-semibold text-gray-900">{p.label}</div>
                 <div className="text-xs text-gray-500 mt-1">{p.description}</div>
@@ -248,7 +248,12 @@ export function QuestionnairePage() {
           {questionnaireLoadError ? (
             <p className="text-red-500">Failed to load questionnaires. Please refresh the page.</p>
           ) : questionnaires.length === 0 ? (
-            <p className="text-gray-500">Loading questionnaires...</p>
+            <EmptyState
+              type="sessions"
+              title="No assessments available"
+              description="No questionnaire templates are configured yet. Contact your administrator."
+              size="sm"
+            />
           ) : (
             <div className="space-y-3">
               {questionnaires.map((q) => (
@@ -360,13 +365,12 @@ export function QuestionnairePage() {
             <Target className="h-5 w-5 text-blue-600" aria-hidden="true" />
             <span className="text-sm text-gray-600">Readiness:</span>
             <span
-              className={`text-lg font-bold ${
-                readinessScore >= 95
+              className={`text-lg font-bold ${readinessScore >= 95
                   ? 'text-green-600'
                   : readinessScore >= 70
                     ? 'text-yellow-600'
                     : 'text-red-600'
-              }`}
+                }`}
             >
               {readinessScore.toFixed(1)}%
             </span>
@@ -404,7 +408,7 @@ export function QuestionnairePage() {
                 {currentSection.questionsInSection})
               </p>
               {progress.estimatedTimeRemaining !== undefined &&
-              progress.estimatedTimeRemaining > 0 ? (
+                progress.estimatedTimeRemaining > 0 ? (
                 <p className="text-xs text-gray-500 flex items-center gap-1">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
@@ -461,11 +465,10 @@ export function QuestionnairePage() {
                 {currentQuestion.options.map((opt) => (
                   <label
                     key={opt.id}
-                    className={`flex items-center p-3 rounded-lg border cursor-pointer transition-colors ${
-                      currentValue === opt.id
+                    className={`flex items-center p-3 rounded-lg border cursor-pointer transition-colors ${currentValue === opt.id
                         ? 'border-blue-600 bg-blue-50'
                         : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                      }`}
                   >
                     <input
                       type="radio"
@@ -490,11 +493,10 @@ export function QuestionnairePage() {
                   <button
                     key={n}
                     onClick={() => setCurrentValue(n)}
-                    className={`w-12 h-12 rounded-lg border-2 font-bold transition-colors ${
-                      currentValue === n
+                    className={`w-12 h-12 rounded-lg border-2 font-bold transition-colors ${currentValue === n
                         ? 'border-blue-600 bg-blue-600 text-white'
                         : 'border-gray-300 hover:border-gray-400'
-                    }`}
+                      }`}
                   >
                     {n}
                   </button>
@@ -508,11 +510,10 @@ export function QuestionnairePage() {
                   return (
                     <label
                       key={opt.id}
-                      className={`flex items-center p-3 rounded-lg border cursor-pointer transition-colors ${
-                        selected
+                      className={`flex items-center p-3 rounded-lg border cursor-pointer transition-colors ${selected
                           ? 'border-blue-600 bg-blue-50'
                           : 'border-gray-200 hover:border-gray-300'
-                      }`}
+                        }`}
                     >
                       <input
                         type="checkbox"
@@ -621,11 +622,10 @@ export function QuestionnairePage() {
               {conversationMessages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`p-2 rounded-lg text-sm ${
-                    msg.role === 'assistant'
+                  className={`p-2 rounded-lg text-sm ${msg.role === 'assistant'
                       ? 'bg-blue-50 text-blue-900 ml-4'
                       : 'bg-gray-50 text-gray-900 mr-4'
-                  }`}
+                    }`}
                 >
                   <span className="text-xs font-medium text-gray-500">
                     {msg.role === 'assistant' ? 'AI' : 'You'}:

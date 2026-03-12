@@ -23,6 +23,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { Card } from '../../components/ui';
+import { EmptyState } from '../../components/ui/EmptyState';
 import { StatCardSkeleton, ListItemSkeleton } from '../../components/ui/Skeleton';
 import { clsx } from 'clsx';
 
@@ -305,22 +306,16 @@ export function DashboardPage() {
                   ))}
                 </div>
               ) : activeProjects.length === 0 ? (
-                <div className="text-center py-10 px-4">
-                  <div className="mx-auto w-16 h-16 rounded-2xl bg-surface-50 flex items-center justify-center mb-4">
-                    <MessageSquare className="h-8 w-8 text-surface-300" />
-                  </div>
-                  <p className="text-sm font-medium text-surface-700">No active projects</p>
-                  <p className="text-sm text-surface-400 mt-1 max-w-sm mx-auto">
-                    Start a conversation to build your business plan with AI assistance.
-                  </p>
-                  <button
-                    onClick={() => navigate('/chat/new')}
-                    className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors cursor-pointer"
-                  >
-                    <Plus className="h-4 w-4" />
-                    Start your first project
-                  </button>
-                </div>
+                <EmptyState
+                  type="sessions"
+                  title="No active projects"
+                  description="Start a conversation to build your business plan with AI assistance."
+                  action={{
+                    label: 'Start your first project',
+                    onClick: () => navigate('/chat/new'),
+                  }}
+                  size="sm"
+                />
               ) : (
                 <div className="space-y-2">
                   {activeProjects.map((project) => (

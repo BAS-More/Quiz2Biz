@@ -81,9 +81,8 @@ function PricingCard({
 
   return (
     <div
-      className={`relative bg-white rounded-2xl shadow-lg ${
-        isPopular ? 'ring-2 ring-blue-600 scale-105' : 'ring-1 ring-gray-200'
-      }`}
+      className={`relative bg-white rounded-2xl shadow-lg ${isPopular ? 'ring-2 ring-blue-600 scale-105' : 'ring-1 ring-gray-200'
+        }`}
     >
       {isPopular && (
         <div className="absolute -top-4 left-1/2 -translate-x-1/2">
@@ -113,13 +112,12 @@ function PricingCard({
         <button
           onClick={onSelect}
           disabled={isCurrent || isLoading}
-          className={`mt-8 w-full py-3 px-6 rounded-lg font-medium transition-colors ${
-            isCurrent
+          className={`mt-8 w-full py-3 px-6 rounded-lg font-medium transition-colors ${isCurrent
               ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
               : isPopular
                 ? 'bg-blue-600 text-white hover:bg-blue-700'
                 : 'bg-gray-900 text-white hover:bg-gray-800'
-          }`}
+            }`}
         >
           {isLoading ? (
             <span className="flex items-center justify-center gap-2">
@@ -171,11 +169,9 @@ export function UpgradePage() {
 
   const handleSelectTier = (tier: string) => {
     if (tier === 'FREE') {
-      // Can't downgrade to free via checkout
       return;
     }
     if (tier === 'ENTERPRISE') {
-      // Enterprise requires sales contact
       window.location.href = 'mailto:sales@quiz2biz.com?subject=Enterprise Plan Inquiry';
       return;
     }
@@ -185,8 +181,27 @@ export function UpgradePage() {
 
   if (subLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+      <div className="min-h-screen bg-gray-50 py-12">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-gray-900">Choose Your Plan</h1>
+            <p className="mt-4 text-xl text-gray-600">Loading plans...</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8 items-start">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white rounded-2xl shadow-lg p-8 space-y-4 animate-pulse">
+                <div className="h-6 bg-gray-200 rounded w-1/3" />
+                <div className="h-10 bg-gray-200 rounded w-1/2" />
+                <div className="space-y-2">
+                  {Array.from({ length: 5 }).map((_, j) => (
+                    <div key={j} className="h-4 bg-gray-200 rounded w-3/4" />
+                  ))}
+                </div>
+                <div className="h-10 bg-gray-200 rounded" />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
@@ -203,6 +218,15 @@ export function UpgradePage() {
             ← Back to Billing
           </a>
         </div>
+
+        {checkoutMutation.isError && (
+          <div className="max-w-xl mx-auto mb-8 p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700" role="alert">
+            <p className="font-medium">Checkout failed</p>
+            <p className="mt-1">
+              Unable to start checkout. Please try again or contact support if the issue persists.
+            </p>
+          </div>
+        )}
 
         <div className="grid md:grid-cols-3 gap-8 items-start">
           <PricingCard

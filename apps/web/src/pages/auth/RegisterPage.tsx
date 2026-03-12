@@ -46,6 +46,7 @@ export function RegisterPage() {
     formState: { errors, isSubmitting },
   } = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
+    mode: 'onTouched',
   });
 
   const password = watch('password', '');
@@ -106,8 +107,7 @@ export function RegisterPage() {
   };
 
   const inputClass = (hasError: boolean) =>
-    `block w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm text-surface-900 placeholder:text-surface-400 hover:border-surface-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-colors ${
-      hasError ? 'border-danger-500' : 'border-surface-200'
+    `block w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm text-surface-900 placeholder:text-surface-400 hover:border-surface-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-colors ${hasError ? 'border-danger-500' : 'border-surface-200'
     }`;
 
   return (
@@ -234,15 +234,14 @@ export function RegisterPage() {
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-surface-500">Password strength</span>
                   <span
-                    className={`font-semibold ${
-                      passwordStrength.label === 'Weak'
+                    className={`font-semibold ${passwordStrength.label === 'Weak'
                         ? 'text-danger-600'
                         : passwordStrength.label === 'Fair'
                           ? 'text-warning-600'
                           : passwordStrength.label === 'Good'
                             ? 'text-brand-600'
                             : 'text-success-600'
-                    }`}
+                      }`}
                     aria-live="polite"
                   >
                     {passwordStrength.label}

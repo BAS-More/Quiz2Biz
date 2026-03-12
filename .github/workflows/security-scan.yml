@@ -194,7 +194,7 @@ jobs:
             const intervalMs = 15000;
             const start = Date.now();
             const okConclusions = new Set(["success", "neutral", "skipped"]);
-            const matchesCodeqlCheck = (name) => /^Analyze \(/.test(name) || name === "CodeQL";
+            const matchesCodeqlCheck = (name) => /^Analyze \(/.test(name);
 
             while ((Date.now() - start) / 1000 < timeoutSeconds) {
               const allRuns = await github.paginate(github.rest.checks.listForRef, {
