@@ -39,15 +39,11 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     context: ExecutionContext,
   ): TUser {
     if (err || !user) {
-      // Get request details for debugging
       const request = context.switchToHttp().getRequest();
-      const authHeader = request.headers?.authorization;
-      const hasAuthHeader = !!authHeader;
-      const tokenPreview = hasAuthHeader ? `${authHeader.substring(0, 20)}...` : 'none';
+      const hasAuthHeader = !!request.headers?.authorization;
 
-      // Log authentication failure with context
       this.logger.warn(
-        `Auth failed: ${info?.name || 'NoUser'} | Path: ${request.method} ${request.path} | HasAuth: ${hasAuthHeader} | Token: ${tokenPreview}`,
+        `Auth failed: ${info?.name || 'NoUser'} | Path: ${request.method} ${request.path} | HasAuth: ${hasAuthHeader}`,
       );
 
       if (info?.name === 'TokenExpiredError') {

@@ -112,19 +112,21 @@ describe('AiGatewayController', () => {
       aiGatewayService.generateStream.mockReturnValue(mockStream() as any);
 
       const writes: string[] = [];
+      const mockReq = { on: jest.fn() } as any;
       const mockRes = {
         setHeader: jest.fn(),
         write: jest.fn((data: string) => writes.push(data)),
         end: jest.fn(),
       } as any;
 
-      await controller.stream(mockRequest as any, mockRes, mockUser);
+      await controller.stream(mockRequest as any, mockReq, mockRes, mockUser);
 
       expect(mockRes.setHeader).toHaveBeenCalledWith('Content-Type', 'text/event-stream');
       expect(mockRes.setHeader).toHaveBeenCalledWith('Cache-Control', 'no-cache');
       expect(mockRes.setHeader).toHaveBeenCalledWith('Connection', 'keep-alive');
       expect(mockRes.end).toHaveBeenCalled();
       expect(writes.length).toBeGreaterThanOrEqual(2);
+      expect(mockReq.on).toHaveBeenCalledWith('close', expect.any(Function));
     });
 
     it('should send error event on stream failure', async () => {
@@ -136,13 +138,14 @@ describe('AiGatewayController', () => {
       aiGatewayService.generateStream.mockReturnValue(failingStream() as any);
 
       const writes: string[] = [];
+      const mockReq = { on: jest.fn() } as any;
       const mockRes = {
         setHeader: jest.fn(),
         write: jest.fn((data: string) => writes.push(data)),
         end: jest.fn(),
       } as any;
 
-      await controller.stream(mockRequest as any, mockRes, mockUser);
+      await controller.stream(mockRequest as any, mockReq, mockRes, mockUser);
 
       expect(writes.some((w) => w.includes('error'))).toBe(true);
       expect(mockRes.end).toHaveBeenCalled();

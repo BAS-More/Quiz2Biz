@@ -3,13 +3,14 @@ import {
   Post,
   Get,
   Body,
+  Req,
   Res,
   UseGuards,
   Logger,
   HttpStatus,
   HttpException,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AiGatewayService } from './ai-gateway.service';
@@ -72,6 +73,7 @@ export class AiGatewayController {
   @ApiResponse({ status: 500, description: 'AI generation failed' })
   async stream(
     @Body() request: AiGatewayRequestDto,
+    @Req() req: Request,
     @Res() res: Response,
     @CurrentUser() user: { sub: string },
   ): Promise<void> {
@@ -81,6 +83,12 @@ export class AiGatewayController {
     res.setHeader('Connection', 'keep-alive');
     res.setHeader('X-Accel-Buffering', 'no'); // Disable nginx buffering
 
+    // Handle client disconnect
+    let clientDisconnected = false;
+    req.on('close', () => {
+      clientDisconnected = true;
+    });
+
     try {
       const stream = this.aiGatewayService.generateStream({
         ...request,
@@ -89,6 +97,10 @@ export class AiGatewayController {
       });
 
       for await (const chunk of stream) {
+        if (clientDisconnected) {
+          break;
+        }
+
         // Send SSE event
         res.write(`data: ${JSON.stringify(chunk)}\n\n`);
 
@@ -99,12 +111,16 @@ export class AiGatewayController {
         }
       }
     } catch (error) {
-      this.logger.error(`Stream failed: ${error instanceof Error ? error.message : String(error)}`);
-      res.write(
-        `event: error\ndata: ${JSON.stringify({
-          error: error instanceof Error ? error.message : 'Stream failed',
-        })}\n\n`,
-      );
+      if (!clientDisconnected) {
+        this.logger.error(
+          `Stream failed: ${error instanceof Error ? error.message : String(error)}`,
+        );
+        res.write(
+          `event: error\ndata: ${JSON.stringify({
+            error: error instanceof Error ? error.message : 'Stream failed',
+          })}\n\n`,
+        );
+      }
     } finally {
       res.end();
     }

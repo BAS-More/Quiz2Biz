@@ -60,6 +60,7 @@ export class CostTrackerService {
   // In-memory buffer for cost records (flushed periodically)
   private costBuffer: CostRecord[] = [];
   private flushInterval: NodeJS.Timeout | null = null;
+  private isFlushing = false;
 
   constructor(private readonly prisma: PrismaService) {
     // Start periodic flush
@@ -89,10 +90,11 @@ export class CostTrackerService {
    * Flush cost buffer to database
    */
   async flushCostBuffer(): Promise<void> {
-    if (this.costBuffer.length === 0) {
+    if (this.costBuffer.length === 0 || this.isFlushing) {
       return;
     }
 
+    this.isFlushing = true;
     const records = [...this.costBuffer];
     this.costBuffer = [];
 
@@ -109,18 +111,21 @@ export class CostTrackerService {
       this.logger.error(
         `Failed to flush cost buffer: ${error instanceof Error ? error.message : String(error)}`,
       );
+    } finally {
+      this.isFlushing = false;
     }
   }
 
   private aggregateProjectCosts(
     records: Array<{ projectId?: string; totalTokens: number; totalCost: number }>,
-  ): Map<string, { tokens: number; cost: number }> {
-    const projectCosts = new Map<string, { tokens: number; cost: number }>();
+  ): Map<string, { tokens: number; cost: number; count: number }> {
+    const projectCosts = new Map<string, { tokens: number; cost: number; count: number }>();
     for (const record of records) {
       if (record.projectId) {
-        const existing = projectCosts.get(record.projectId) || { tokens: 0, cost: 0 };
+        const existing = projectCosts.get(record.projectId) || { tokens: 0, cost: 0, count: 0 };
         existing.tokens += record.totalTokens;
         existing.cost += record.totalCost;
+        existing.count += 1;
         projectCosts.set(record.projectId, existing);
       }
     }
@@ -129,7 +134,7 @@ export class CostTrackerService {
 
   private async persistProjectCosts(
     projectId: string,
-    costs: { tokens: number; cost: number },
+    costs: { tokens: number; cost: number; count: number },
   ): Promise<void> {
     try {
       const project = await this.prisma.project.findUnique({
@@ -147,7 +152,7 @@ export class CostTrackerService {
 
         costTracking.totalTokens = (costTracking.totalTokens || 0) + costs.tokens;
         costTracking.totalCostUsd = (costTracking.totalCostUsd || 0) + costs.cost;
-        costTracking.requestCount = (costTracking.requestCount || 0) + 1;
+        costTracking.requestCount = (costTracking.requestCount || 0) + costs.count;
 
         await this.prisma.project.update({
           where: { id: projectId },
