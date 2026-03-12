@@ -162,7 +162,7 @@ export function TOTPVerification({
               'w-12 h-14 text-center text-2xl font-bold border-2 rounded-lg',
               'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500',
               'transition-colors',
-              error ? 'border-danger-300 bg-danger-50' : 'border-surface-300 bg-white',
+              error ? 'border-danger-300 bg-danger-50' : 'border-surface-300 bg-white dark:bg-surface-800',
               loading && 'opacity-50 cursor-not-allowed',
             )}
             autoComplete="one-time-code"

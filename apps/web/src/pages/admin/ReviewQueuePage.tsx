@@ -92,38 +92,70 @@ export function ReviewQueuePage() {
     refetchInterval: 30000, // Refresh every 30 seconds
   });
 
-  // Approve mutation
+  // Optimistic helper: remove document(s) from cache and return previous snapshot
+  const optimisticRemove = async (idsToRemove: string[]) => {
+    await queryClient.cancelQueries({ queryKey: ['admin', 'pending-review'] });
+    const previous = queryClient.getQueryData(['admin', 'pending-review', page, perPage]);
+    queryClient.setQueryData(['admin', 'pending-review', page, perPage], (old: any) => {
+      if (!old) return old;
+      const idSet = new Set(idsToRemove);
+      return {
+        ...old,
+        data: old.data.filter((doc: any) => !idSet.has(doc.id)),
+        meta: { ...old.meta, total: Math.max(0, old.meta.total - idsToRemove.length) },
+      };
+    });
+    return { previous };
+  };
+
+  // Approve mutation (optimistic)
   const approveMutation = useMutation({
     mutationFn: ({ id, notes }: { id: string; notes?: string }) =>
       approveDocument(id, notes ? { notes } : undefined),
-    onSuccess: () => {
+    onMutate: ({ id }) => optimisticRemove([id]),
+    onError: (_err, _vars, context) => {
+      if (context?.previous) queryClient.setQueryData(['admin', 'pending-review', page, perPage], context.previous);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'pending-review'] });
     },
   });
 
-  // Reject mutation
+  // Reject mutation (optimistic)
   const rejectMutation = useMutation({
     mutationFn: ({ id, reason }: { id: string; reason: string }) => rejectDocument(id, { reason }),
-    onSuccess: () => {
+    onMutate: ({ id }) => optimisticRemove([id]),
+    onError: (_err, _vars, context) => {
+      if (context?.previous) queryClient.setQueryData(['admin', 'pending-review', page, perPage], context.previous);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'pending-review'] });
     },
   });
 
-  // Batch approve mutation
+  // Batch approve mutation (optimistic)
   const batchApproveMutation = useMutation({
     mutationFn: ({ ids, notes }: { ids: string[]; notes?: string }) =>
       batchApproveDocuments(ids, notes),
-    onSuccess: () => {
+    onMutate: ({ ids }) => optimisticRemove(ids),
+    onError: (_err, _vars, context) => {
+      if (context?.previous) queryClient.setQueryData(['admin', 'pending-review', page, perPage], context.previous);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'pending-review'] });
       setSelectedIds(new Set());
     },
   });
 
-  // Batch reject mutation
+  // Batch reject mutation (optimistic)
   const batchRejectMutation = useMutation({
     mutationFn: ({ ids, reason }: { ids: string[]; reason: string }) =>
       batchRejectDocuments(ids, reason),
-    onSuccess: () => {
+    onMutate: ({ ids }) => optimisticRemove(ids),
+    onError: (_err, _vars, context) => {
+      if (context?.previous) queryClient.setQueryData(['admin', 'pending-review', page, perPage], context.previous);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'pending-review'] });
       setSelectedIds(new Set());
       setShowBatchRejectModal(false);

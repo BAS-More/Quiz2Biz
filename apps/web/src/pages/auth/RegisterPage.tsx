@@ -43,7 +43,7 @@ export function RegisterPage() {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
     mode: 'onTouched',
@@ -235,12 +235,12 @@ export function RegisterPage() {
                   <span className="text-surface-500">Password strength</span>
                   <span
                     className={`font-semibold ${passwordStrength.label === 'Weak'
-                        ? 'text-danger-600'
-                        : passwordStrength.label === 'Fair'
-                          ? 'text-warning-600'
-                          : passwordStrength.label === 'Good'
-                            ? 'text-brand-600'
-                            : 'text-success-600'
+                      ? 'text-danger-600'
+                      : passwordStrength.label === 'Fair'
+                        ? 'text-warning-600'
+                        : passwordStrength.label === 'Good'
+                          ? 'text-brand-600'
+                          : 'text-success-600'
                       }`}
                     aria-live="polite"
                   >

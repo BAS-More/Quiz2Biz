@@ -924,11 +924,10 @@ export const NielsenDashboard: React.FC = () => {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-6 py-3 font-medium capitalize ${
-              activeTab === tab
+            className={`px-6 py-3 font-medium capitalize ${activeTab === tab
                 ? 'border-b-2 border-blue-500 text-blue-600'
                 : 'text-gray-500 hover:text-gray-700'
-            }`}
+              }`}
           >
             {tab === 'uat' ? 'UAT Results' : tab}
           </button>
@@ -940,33 +939,32 @@ export const NielsenDashboard: React.FC = () => {
         <div className="space-y-6">
           {/* Score Cards */}
           <div className="grid grid-cols-4 gap-4">
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white dark:bg-surface-800 p-6 rounded-lg shadow">
               <div className="text-sm text-gray-500 mb-1">Nielsen Score</div>
               <div className={`text-4xl font-bold ${getScoreColor(score)}`}>
                 {score.toFixed(0)}%
               </div>
               <div className="text-xs text-gray-400 mt-1">Target: 95%+</div>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white dark:bg-surface-800 p-6 rounded-lg shadow">
               <div className="text-sm text-gray-500 mb-1">WCAG Level</div>
               <div className="text-4xl font-bold text-green-600">AA</div>
               <div className="text-xs text-gray-400 mt-1">100% Compliant</div>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white dark:bg-surface-800 p-6 rounded-lg shadow">
               <div className="text-sm text-gray-500 mb-1">SUS Score</div>
               <div className="text-4xl font-bold text-green-600">86</div>
               <div className="text-xs text-gray-400 mt-1">Target: 85+</div>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white dark:bg-surface-800 p-6 rounded-lg shadow">
               <div className="text-sm text-gray-500 mb-1">Production Ready</div>
               <div
-                className={`text-4xl font-bold ${
-                  readiness.overall === 'ready'
+                className={`text-4xl font-bold ${readiness.overall === 'ready'
                     ? 'text-green-600'
                     : readiness.overall === 'ready-with-conditions'
                       ? 'text-yellow-600'
                       : 'text-red-600'
-                }`}
+                  }`}
               >
                 {readiness.overall === 'ready'
                   ? '✓'
@@ -981,7 +979,7 @@ export const NielsenDashboard: React.FC = () => {
           </div>
 
           {/* Readiness Checks */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white dark:bg-surface-800 rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">Production Readiness Checks</h2>
             <div className="space-y-2">
               {readiness.checks.map((check) => (
@@ -1047,13 +1045,12 @@ export const NielsenDashboard: React.FC = () => {
                 </div>
                 <div className="h-2 bg-gray-200 rounded mb-4">
                   <div
-                    className={`h-full rounded ${
-                      percentage >= 95
+                    className={`h-full rounded ${percentage >= 95
                         ? 'bg-green-500'
                         : percentage >= 85
                           ? 'bg-yellow-500'
                           : 'bg-red-500'
-                    }`}
+                      }`}
                     style={{ width: `${percentage}%` }}
                   />
                 </div>
@@ -1077,7 +1074,7 @@ export const NielsenDashboard: React.FC = () => {
       {/* UAT Tab */}
       {activeTab === 'uat' && (
         <div className="space-y-4">
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white dark:bg-surface-800 rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">User Acceptance Testing</h2>
             <div className="grid grid-cols-3 gap-4 mb-6">
               <div className="p-4 bg-gray-50 rounded">
@@ -1107,7 +1104,7 @@ export const NielsenDashboard: React.FC = () => {
       {/* Report Tab */}
       {activeTab === 'report' && report && (
         <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white dark:bg-surface-800 rounded-lg shadow p-6">
             <div className="flex justify-between items-start mb-6">
               <div>
                 <h2 className="text-lg font-semibold">UX Compliance Report</h2>
@@ -1150,23 +1147,21 @@ export const NielsenDashboard: React.FC = () => {
 
             {/* Readiness */}
             <div
-              className={`p-6 rounded-lg ${
-                report.productionReadiness.overall === 'ready'
+              className={`p-6 rounded-lg ${report.productionReadiness.overall === 'ready'
                   ? 'bg-green-50 border-green-200'
                   : report.productionReadiness.overall === 'ready-with-conditions'
                     ? 'bg-yellow-50 border-yellow-200'
                     : 'bg-red-50 border-red-200'
-              } border`}
+                } border`}
             >
               <h3 className="font-semibold mb-2">Production Readiness</h3>
               <p
-                className={`text-lg font-bold ${
-                  report.productionReadiness.overall === 'ready'
+                className={`text-lg font-bold ${report.productionReadiness.overall === 'ready'
                     ? 'text-green-600'
                     : report.productionReadiness.overall === 'ready-with-conditions'
                       ? 'text-yellow-600'
                       : 'text-red-600'
-                }`}
+                  }`}
               >
                 {report.productionReadiness.overall === 'ready'
                   ? 'APPROVED FOR LAUNCH'

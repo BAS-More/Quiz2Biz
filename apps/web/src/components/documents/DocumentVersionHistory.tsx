@@ -262,7 +262,7 @@ const VersionCompareView: React.FC<VersionCompareProps> = ({ version1, version2,
 
       <div className="grid grid-cols-2 gap-4">
         {/* Older version */}
-        <div className="p-4 bg-white rounded-lg border border-surface-200">
+        <div className="p-4 bg-white dark:bg-surface-800 rounded-lg border border-surface-200">
           <div className="flex items-center justify-between mb-3">
             <span className="font-medium text-surface-700">Version {older.version}</span>
             <Badge variant="secondary" size="sm">
@@ -283,7 +283,7 @@ const VersionCompareView: React.FC<VersionCompareProps> = ({ version1, version2,
         </div>
 
         {/* Newer version */}
-        <div className="p-4 bg-white rounded-lg border border-brand-200">
+        <div className="p-4 bg-white dark:bg-surface-800 rounded-lg border border-brand-200">
           <div className="flex items-center justify-between mb-3">
             <span className="font-medium text-surface-700">Version {newer.version}</span>
             <Badge variant="brand" size="sm">
@@ -312,7 +312,7 @@ const VersionCompareView: React.FC<VersionCompareProps> = ({ version1, version2,
             • Time between versions:{' '}
             {Math.round(
               (new Date(newer.createdAt).getTime() - new Date(older.createdAt).getTime()) /
-                (1000 * 60 * 60 * 24),
+              (1000 * 60 * 60 * 24),
             )}{' '}
             days
           </li>
@@ -411,9 +411,9 @@ export const DocumentVersionHistory: React.FC<DocumentVersionHistoryProps> = ({
   const comparedVersions =
     compareSelections.length === 2
       ? [
-          versions.find((v) => v.id === compareSelections[0])!,
-          versions.find((v) => v.id === compareSelections[1])!,
-        ]
+        versions.find((v) => v.id === compareSelections[0])!,
+        versions.find((v) => v.id === compareSelections[1])!,
+      ]
       : null;
 
   return (

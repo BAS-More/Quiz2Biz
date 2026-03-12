@@ -138,6 +138,12 @@ export function ProfilePage() {
     setError(null);
     setSaveSuccess(false);
 
+    // Optimistic: update local state immediately
+    const previousName = user?.name;
+    if (user) {
+      setUser({ ...user, name });
+    }
+
     try {
       // Upload avatar if changed
       if (avatarFile) {
@@ -157,17 +163,19 @@ export function ProfilePage() {
         ),
       });
 
-      // Update local user state
+      // Reconcile with server response
       if (data.user) {
         setUser(data.user);
-      } else if (user) {
-        setUser({ ...user, name });
       }
 
       setSaveSuccess(true);
       setIsDirty(false);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (err: any) {
+      // Rollback optimistic update
+      if (user && previousName !== undefined) {
+        setUser({ ...user, name: previousName });
+      }
       setError(err.response?.data?.message || 'Failed to update profile');
     } finally {
       setIsSaving(false);
@@ -239,6 +247,9 @@ export function ProfilePage() {
           </div>
         </div>
 
+        {isDirty && (
+          <span className="text-sm text-warning-600 font-medium">Unsaved changes</span>
+        )}
         <button
           onClick={handleSave}
           disabled={isSaving}

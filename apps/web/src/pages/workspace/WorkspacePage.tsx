@@ -210,10 +210,14 @@ export function WorkspacePage() {
   }, [loadProjects]);
 
   const handleArchive = async (projectId: string) => {
+    // Optimistic: immediately remove project from the list
+    const previousProjects = [...projects];
+    setProjects((prev) => prev.filter((p) => p.id !== projectId));
     try {
       await projectApi.archiveProject(projectId);
-      await loadProjects();
     } catch (err) {
+      // Rollback on error
+      setProjects(previousProjects);
       setError(err instanceof Error ? err.message : 'Failed to archive project');
     }
   };

@@ -37,7 +37,7 @@ const PROVIDERS = {
         />
       </svg>
     ),
-    bgColor: 'bg-white hover:bg-gray-50',
+    bgColor: 'bg-white dark:bg-surface-800 hover:bg-gray-50 dark:hover:bg-surface-700',
     textColor: 'text-gray-700',
     borderColor: 'border-gray-300',
   },
@@ -51,7 +51,7 @@ const PROVIDERS = {
         <path fill="#FFB900" d="M13 13h10v10H13z" />
       </svg>
     ),
-    bgColor: 'bg-white hover:bg-gray-50',
+    bgColor: 'bg-white dark:bg-surface-800 hover:bg-gray-50 dark:hover:bg-surface-700',
     textColor: 'text-gray-700',
     borderColor: 'border-gray-300',
   },
@@ -225,7 +225,7 @@ export function OAuthButtons({ mode, onError }: OAuthButtonsProps) {
           <div className="w-full border-t border-gray-300" />
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">
+          <span className="px-2 bg-white dark:bg-surface-800 text-gray-500">
             Or {mode === 'login' ? 'sign in' : 'sign up'} with
           </span>
         </div>

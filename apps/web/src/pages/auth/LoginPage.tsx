@@ -30,7 +30,7 @@ export function LoginPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     mode: 'onTouched',
