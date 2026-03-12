@@ -3,13 +3,14 @@ import {
   Post,
   Get,
   Body,
+  Req,
   Res,
   UseGuards,
   Logger,
   HttpStatus,
   HttpException,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AiGatewayService } from './ai-gateway.service';
@@ -72,6 +73,7 @@ export class AiGatewayController {
   @ApiResponse({ status: 500, description: 'AI generation failed' })
   async stream(
     @Body() request: AiGatewayRequestDto,
+    @Req() req: Request,
     @Res() res: Response,
     @CurrentUser() user: { sub: string },
   ): Promise<void> {
@@ -82,7 +84,6 @@ export class AiGatewayController {
     res.setHeader('X-Accel-Buffering', 'no'); // Disable nginx buffering
 
     // Handle client disconnect
-    const req = res.req;
     let clientDisconnected = false;
     req.on('close', () => {
       clientDisconnected = true;
