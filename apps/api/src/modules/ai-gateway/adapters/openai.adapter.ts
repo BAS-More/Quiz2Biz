@@ -114,10 +114,15 @@ export class OpenAIAdapter implements AiAdapter {
     reason: string | undefined | null,
   ): 'stop' | 'length' | 'content_filter' | 'error' {
     const map: Record<string, 'stop' | 'length' | 'content_filter' | 'error'> = {
-      ['length']: 'length',
-      ['content_filter']: 'content_filter',
+      stop: 'stop',
+      length: 'length',
+      content_filter: 'content_filter',
+      // Known additional OpenAI finish reasons that we do not model explicitly
+      // are treated as 'error' instead of being silently coerced to 'stop'.
+      tool_calls: 'error',
+      function_call: 'error',
     };
-    return map[reason ?? ''] ?? 'stop';
+    return map[reason ?? ''] ?? 'error';
   }
 
   /**

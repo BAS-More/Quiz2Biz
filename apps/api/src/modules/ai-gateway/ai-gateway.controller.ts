@@ -117,7 +117,7 @@ export class AiGatewayController {
         );
         res.write(
           `event: error\ndata: ${JSON.stringify({
-            error: error instanceof Error ? error.message : 'Stream failed',
+            error: 'Stream failed',
           })}\n\n`,
         );
       }
