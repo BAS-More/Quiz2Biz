@@ -463,7 +463,6 @@ describe('AdapterConfigService', () => {
       mockPrismaService.$queryRaw.mockResolvedValue(buildDbRow([cfg]));
       mockPrismaService.$executeRaw.mockResolvedValue(1);
 
-            new Date();
       await service.updateSyncStatus(TENANT_ID, 'success-cfg', 'success');
 
       // We verify through the saved data; the executeRaw should have been called
