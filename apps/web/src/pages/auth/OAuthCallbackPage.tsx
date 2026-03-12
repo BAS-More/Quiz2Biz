@@ -137,7 +137,7 @@ export function OAuthCallbackPage() {
         if (window.opener) {
           window.opener.postMessage(
             {
-              type: `${validProvider}-oauth-callback`,
+              type: validProvider ? `${validProvider}-oauth-callback` : 'oauth-callback',
               error: errorMsg,
             },
             window.location.origin,
