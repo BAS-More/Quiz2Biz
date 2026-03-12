@@ -310,7 +310,6 @@ describe('FeatureFlagService', () => {
 
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('Track event: button_click'),
-        expect.any(String),
       );
     });
   });
