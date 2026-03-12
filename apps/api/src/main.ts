@@ -41,8 +41,29 @@ async function bootstrap(): Promise<void> {
   const nodeEnv = configService.get<string>('NODE_ENV', 'development');
 
   // HTTP compression middleware (GAP-P2) — gzip/brotli for response bodies
-  app.use(compression());
+  // NOTE: Do not compress Server-Sent Events (SSE) or streaming AI gateway responses
+  app.use(
+    compression({
+      filter: (req, res) => {
+        const acceptHeader = req.headers.accept ?? '';
 
+        // Skip compression for SSE and streaming endpoints
+        if (
+          typeof req.path === 'string' &&
+          req.path.startsWith('/ai-gateway/stream')
+        ) {
+          return false;
+        }
+
+        if (acceptHeader.includes('text/event-stream')) {
+          return false;
+        }
+
+        // Fallback to default compression filter behavior
+        return compression.filter(req, res);
+      },
+    }),
+  );
   // Security middleware with CSP configuration for React SPA
   app.use(
     helmet({
