@@ -53,6 +53,7 @@ describe('AiGatewayService', () => {
     cost: { inputCost: 0.01, outputCost: 0.02, totalCost: 0.03, currency: 'USD' },
     latencyMs: 300,
     finishReason: 'stop',
+    usedFallback: false,
   };
 
   beforeEach(async () => {
