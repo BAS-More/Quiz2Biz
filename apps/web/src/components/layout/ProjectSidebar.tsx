@@ -78,7 +78,7 @@ export function ProjectSidebar() {
   const qualityScore = project?.qualityScore ?? 0;
 
   return (
-    <div className="w-64 bg-white border-r border-surface-200 flex flex-col h-full">
+    <div className="w-64 bg-white dark:bg-surface-900 border-r border-surface-200 flex flex-col h-full">
       {/* Project Header */}
       <div className="p-4 border-b border-surface-100">
         <div className="flex items-center gap-2 mb-3">

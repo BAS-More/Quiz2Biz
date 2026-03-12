@@ -3,7 +3,7 @@
  * Simple wizard for starting a new project with type selection
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import projectApi from '../../api/projects';
 import type { CreateProjectRequest } from '../../api/projects';
@@ -101,6 +101,20 @@ export function NewProjectFlow() {
   const [description, setDescription] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Detect if user has started filling the form
+  const isDirty = !!selectedType || !!projectName || !!description;
+
+  // Warn on navigation away with unsaved changes
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (isDirty && !isCreating) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [isDirty, isCreating]);
 
   const selectedTypeInfo = PROJECT_TYPES.find((t) => t.slug === selectedType);
 

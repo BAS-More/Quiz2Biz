@@ -4,6 +4,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { billingApi, type Subscription, type UsageStats } from '../../api/billing';
+import { FileText } from 'lucide-react';
 
 // Tier display config
 const TIER_CONFIG = {
@@ -224,10 +225,20 @@ export function BillingPage() {
         <p className="text-gray-500">Manage your plan and view usage</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {subscription && <SubscriptionCard subscription={subscription} />}
-        {usage && <UsageCard usage={usage} />}
-      </div>
+      {!subscription && !usage ? (
+        <div className="flex flex-col items-center justify-center py-16 gap-4">
+          <FileText className="h-12 w-12 text-gray-300" />
+          <div className="text-center">
+            <h3 className="text-lg font-medium text-gray-900">No billing data available</h3>
+            <p className="text-gray-500 mt-1">Your subscription and usage information will appear here.</p>
+          </div>
+        </div>
+      ) : (
+        <div className="grid gap-6 md:grid-cols-2">
+          {subscription && <SubscriptionCard subscription={subscription} />}
+          {usage && <UsageCard usage={usage} />}
+        </div>
+      )}
 
       <div className="mt-8">
         <a href="/billing/invoices" className="text-blue-600 hover:text-blue-700 font-medium">

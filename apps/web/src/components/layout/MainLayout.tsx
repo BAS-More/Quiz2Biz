@@ -123,7 +123,7 @@ export function MainLayout() {
       {/* Sidebar */}
       <aside
         className={clsx(
-          'fixed inset-y-0 left-0 z-50 bg-white border-r border-surface-200/80 flex flex-col transform transition-all duration-200 ease-in-out lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-50 bg-white dark:bg-surface-900 border-r border-surface-200/80 flex flex-col transform transition-all duration-200 ease-in-out lg:translate-x-0',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full',
           collapsed ? 'w-[68px]' : 'w-64',
         )}
@@ -211,6 +211,7 @@ export function MainLayout() {
                   <Link
                     to={item.href}
                     onClick={() => setSidebarOpen(false)}
+                    aria-current={active ? 'page' : undefined}
                     className={clsx(
                       'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150',
                       active
@@ -298,7 +299,7 @@ export function MainLayout() {
       {/* Main content */}
       <div className={clsx('transition-all duration-200', collapsed ? 'lg:pl-[68px]' : 'lg:pl-64')}>
         {/* Top header */}
-        <header className="sticky top-0 z-30 h-14 bg-white/80 backdrop-blur-md border-b border-surface-200/60 flex items-center px-4 lg:px-6">
+        <header className="sticky top-0 z-30 h-14 bg-white/80 dark:bg-surface-900/80 backdrop-blur-md border-b border-surface-200/60 flex items-center px-4 lg:px-6">
           <button
             className="lg:hidden p-2 rounded-lg hover:bg-surface-100 text-surface-500 mr-3 transition-colors"
             onClick={() => setSidebarOpen(true)}
@@ -341,7 +342,7 @@ export function MainLayout() {
 
         {/* Footer */}
         <footer
-          className="border-t border-surface-100 bg-white/50 px-4 lg:px-6 py-4 mt-auto"
+          className="border-t border-surface-100 bg-white/50 dark:bg-surface-900/50 px-4 lg:px-6 py-4 mt-auto"
           role="contentinfo"
         >
           <p className="text-center text-xs text-surface-400">

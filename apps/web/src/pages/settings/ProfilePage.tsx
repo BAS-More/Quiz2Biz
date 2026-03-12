@@ -3,7 +3,7 @@
  * Features: Profile editing, avatar upload, notification preferences
  */
 
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -65,6 +65,20 @@ export function ProfilePage() {
   const navigate = useNavigate();
   const { user, setUser } = useAuthStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Track unsaved changes
+  const [isDirty, setIsDirty] = useState(false);
+
+  // Warn on navigation away with unsaved changes
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (isDirty) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [isDirty]);
 
   // Form state
   const [name, setName] = useState(user?.name || '');
@@ -151,6 +165,7 @@ export function ProfilePage() {
       }
 
       setSaveSuccess(true);
+      setIsDirty(false);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to update profile');
@@ -331,7 +346,7 @@ export function ProfilePage() {
                   type="text"
                   id="name"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => { setName(e.target.value); setIsDirty(true); }}
                   placeholder="Enter your name"
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
                 />

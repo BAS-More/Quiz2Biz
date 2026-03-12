@@ -59,6 +59,14 @@ function ProjectCard({
       hover
       className="group relative cursor-pointer"
       onClick={() => navigate(`/chat/${project.id}`)}
+      tabIndex={0}
+      role="link"
+      onKeyDown={(e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          navigate(`/chat/${project.id}`);
+        }
+      }}
     >
       {/* Menu button */}
       <div className="absolute top-4 right-4 z-10">
