@@ -437,6 +437,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
     return () => {
       recognitionRef.current?.stop();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enableVoice, processVoiceCommand]);
 
   // Register default commands
@@ -533,6 +534,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
     } else {
       document.body.classList.remove('highlight-links');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.cognitive]);
 
   // Voice Navigation functions
@@ -546,7 +548,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
         console.error('[Accessibility] Failed to start recognition:', error);
       }
     }
-  }, [state.voice.isSupported]);
+  }, [state.voice.isSupported, speak]);
 
   const stopListening = useCallback(() => {
     if (recognitionRef.current) {
@@ -554,7 +556,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
       dispatch({ type: 'STOP_LISTENING' });
       speak('Voice navigation deactivated');
     }
-  }, []);
+  }, [speak]);
 
   const cancelSpeech = useCallback(() => {
     synthRef.current?.cancel();

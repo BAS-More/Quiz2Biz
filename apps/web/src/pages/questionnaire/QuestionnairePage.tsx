@@ -3,7 +3,7 @@
  * Wires to real session API, scoring engine, and NQS algorithm
  */
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -74,7 +74,7 @@ export function QuestionnairePage() {
   } = useQuestionnaireStore();
 
   // Ensure currentQuestions is always an array
-  const currentQuestions = rawCurrentQuestions ?? [];
+  const currentQuestions = useMemo(() => rawCurrentQuestions ?? [], [rawCurrentQuestions]);
 
   const [questionnaires, setQuestionnaires] = useState<QuestionnaireListItem[]>([]);
   const [questionnaireLoadError, setQuestionnaireLoadError] = useState(false);
@@ -231,8 +231,8 @@ export function QuestionnairePage() {
                 key={p.value}
                 onClick={() => setSelectedPersona(p.value)}
                 className={`p-4 rounded-lg border-2 text-left transition-all ${selectedPersona === p.value
-                    ? 'border-blue-600 bg-blue-50'
-                    : 'border-gray-200 hover:border-gray-300'
+                  ? 'border-blue-600 bg-blue-50'
+                  : 'border-gray-200 hover:border-gray-300'
                   }`}
               >
                 <div className="font-semibold text-gray-900">{p.label}</div>
@@ -366,10 +366,10 @@ export function QuestionnairePage() {
             <span className="text-sm text-gray-600">Readiness:</span>
             <span
               className={`text-lg font-bold ${readinessScore >= 95
-                  ? 'text-green-600'
-                  : readinessScore >= 70
-                    ? 'text-yellow-600'
-                    : 'text-red-600'
+                ? 'text-green-600'
+                : readinessScore >= 70
+                  ? 'text-yellow-600'
+                  : 'text-red-600'
                 }`}
             >
               {readinessScore.toFixed(1)}%
@@ -466,8 +466,8 @@ export function QuestionnairePage() {
                   <label
                     key={opt.id}
                     className={`flex items-center p-3 rounded-lg border cursor-pointer transition-colors ${currentValue === opt.id
-                        ? 'border-blue-600 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                      ? 'border-blue-600 bg-blue-50'
+                      : 'border-gray-200 hover:border-gray-300'
                       }`}
                   >
                     <input
@@ -494,8 +494,8 @@ export function QuestionnairePage() {
                     key={n}
                     onClick={() => setCurrentValue(n)}
                     className={`w-12 h-12 rounded-lg border-2 font-bold transition-colors ${currentValue === n
-                        ? 'border-blue-600 bg-blue-600 text-white'
-                        : 'border-gray-300 hover:border-gray-400'
+                      ? 'border-blue-600 bg-blue-600 text-white'
+                      : 'border-gray-300 hover:border-gray-400'
                       }`}
                   >
                     {n}
@@ -511,8 +511,8 @@ export function QuestionnairePage() {
                     <label
                       key={opt.id}
                       className={`flex items-center p-3 rounded-lg border cursor-pointer transition-colors ${selected
-                          ? 'border-blue-600 bg-blue-50'
-                          : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-blue-600 bg-blue-50'
+                        : 'border-gray-200 hover:border-gray-300'
                         }`}
                     >
                       <input
@@ -623,8 +623,8 @@ export function QuestionnairePage() {
                 <div
                   key={msg.id}
                   className={`p-2 rounded-lg text-sm ${msg.role === 'assistant'
-                      ? 'bg-blue-50 text-blue-900 ml-4'
-                      : 'bg-gray-50 text-gray-900 mr-4'
+                    ? 'bg-blue-50 text-blue-900 ml-4'
+                    : 'bg-gray-50 text-gray-900 mr-4'
                     }`}
                 >
                   <span className="text-xs font-medium text-gray-500">

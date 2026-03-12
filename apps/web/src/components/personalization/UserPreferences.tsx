@@ -509,6 +509,7 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Analyze patterns periodically
@@ -522,6 +523,7 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
     }, 60000); // Every minute
 
     return () => clearInterval(analysisInterval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enableLearning, state.interactions]);
 
   // Helper functions
@@ -848,6 +850,7 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
     enableLearning,
     state.interactions,
     state.insights,
+    state.featureUsage,
     getFrequentPaths,
     getTopFeatures,
     getQuestionDifficulties,

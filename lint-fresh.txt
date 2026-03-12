@@ -1,0 +1,81 @@
+﻿
+C:\Repos\Quiz-to-Build\apps\web\src\api\client.test.ts
+  2:8   warning  'axios' is defined but never used. Allowed unused vars must match /^_/u                       @typescript-eslint/no-unused-vars
+  2:22  warning  'AxiosRequestHeaders' is defined but never used. Allowed unused vars must match /^_/u         @typescript-eslint/no-unused-vars
+  2:48  warning  'InternalAxiosRequestConfig' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Repos\Quiz-to-Build\apps\web\src\components\accessibility\Accessibility.tsx
+  440:6  warning  React Hook useEffect has a missing dependency: 'state.voice.isListening'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  536:6  warning  React Hook useEffect has a missing dependency: 'state'. Either include it or remove the dependency array                    react-hooks/exhaustive-deps
+  549:6  warning  React Hook useCallback has a missing dependency: 'speak'. Either include it or remove the dependency array                  react-hooks/exhaustive-deps
+  557:6  warning  React Hook useCallback has a missing dependency: 'speak'. Either include it or remove the dependency array                  react-hooks/exhaustive-deps
+
+C:\Repos\Quiz-to-Build\apps\web\src\components\ai\AIPredictiveErrors.tsx
+  616:22  warning  The ref value 'debounceTimers.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'debounceTimers.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+C:\Repos\Quiz-to-Build\apps\web\src\components\ai\AISuggestions.tsx
+  170:9  warning  The 'config' object makes the dependencies of useCallback Hook (at line 247) change on every render. To fix this, wrap the initialization of 'config' in its own useMemo() Hook  react-hooks/exhaustive-deps
+  500:6  warning  React Hook useEffect has missing dependencies: 'clearSuggestions', 'context', and 'fetchSuggestions'. Either include them or remove the dependency array                         react-hooks/exhaustive-deps
+
+C:\Repos\Quiz-to-Build\apps\web\src\components\auth\TOTPVerification.tsx
+   69:5  warning  React Hook useCallback has a missing dependency: 'handleSubmit'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  105:5  warning  React Hook useCallback has a missing dependency: 'handleSubmit'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Repos\Quiz-to-Build\apps\web\src\components\collaboration\Comments.tsx
+  342:5  warning  React Hook useCallback has a missing dependency: 'clearDraft'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Repos\Quiz-to-Build\apps\web\src\components\personalization\AdaptiveNavigation.tsx
+  440:6  warning  React Hook useEffect has a missing dependency: 'generateSuggestions'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Repos\Quiz-to-Build\apps\web\src\components\personalization\Personalization.tsx
+  875:11  warning  'predictedCount' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Repos\Quiz-to-Build\apps\web\src\components\personalization\UserPreferences.tsx
+  512:6  warning  React Hook useEffect has a missing dependency: 'trackNavigation'. Either include it or remove the dependency array       react-hooks/exhaustive-deps
+  525:6  warning  React Hook useEffect has a missing dependency: 'analyzePatterns'. Either include it or remove the dependency array       react-hooks/exhaustive-deps
+  847:6  warning  React Hook useCallback has a missing dependency: 'state.featureUsage'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Repos\Quiz-to-Build\apps\web\src\components\resilience\AIErrorDiagnosis.tsx
+  724:5  warning  React Hook useCallback has a missing dependency: 'applyFix'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Repos\Quiz-to-Build\apps\web\src\components\ux\BlurValidation.tsx
+  301:18  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Repos\Quiz-to-Build\apps\web\src\components\ux\Breadcrumbs.tsx
+  245:9  warning  The 'items' logical expression could make the dependencies of useMemo Hook (at line 267) change on every render. Move it inside the useMemo callback. Alternatively, wrap the initialization of 'items' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+C:\Repos\Quiz-to-Build\apps\web\src\hooks\useDraftAutosave.test.ts
+  44:7  warning  'mockIndexedDB' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Repos\Quiz-to-Build\apps\web\src\hooks\useTheme.test.ts
+  3:45  warning  'ThemeMode' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Repos\Quiz-to-Build\apps\web\src\lib\logger.ts
+  10:1  warning  Unused eslint-disable directive (no problems were reported from 'no-console')
+
+C:\Repos\Quiz-to-Build\apps\web\src\pages\analytics\AnalyticsDashboardPage.tsx
+  17:3  warning  'Loader2' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Repos\Quiz-to-Build\apps\web\src\pages\decisions\DecisionsPage.test.tsx
+  2:26  warning  'waitFor' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Repos\Quiz-to-Build\apps\web\src\pages\idea-capture\IdeaCapturePage.test.tsx
+  188:11  warning  'resolveSubmit' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Repos\Quiz-to-Build\apps\web\src\pages\questionnaire\QuestionnairePage.tsx
+  77:9  warning  The 'currentQuestions' logical expression could make the dependencies of useCallback Hook (at line 175) change on every render. To fix this, wrap the initialization of 'currentQuestions' in its own useMemo() Hook  react-hooks/exhaustive-deps
+  77:9  warning  The 'currentQuestions' logical expression could make the dependencies of useCallback Hook (at line 195) change on every render. To fix this, wrap the initialization of 'currentQuestions' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+C:\Repos\Quiz-to-Build\apps\web\src\pages\workspace\WorkspacePage.tsx
+  12:3  warning  'MessageSquare' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Repos\Quiz-to-Build\apps\web\src\test\responsive\mobile-responsiveness.test.tsx
+   13:10  warning  'render' is defined but never used. Allowed unused vars must match /^_/u                      @typescript-eslint/no-unused-vars
+   13:18  warning  'screen' is defined but never used. Allowed unused vars must match /^_/u                      @typescript-eslint/no-unused-vars
+   72:7   warning  'TestWrapper' is assigned a value but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+  147:13  warning  'rect' is assigned a value but never used. Allowed unused vars must match /^_/u               @typescript-eslint/no-unused-vars
+  157:11  warning  'breakpointClasses' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+Ô£û 35 problems (0 errors, 35 warnings)
+  0 errors and 1 warning potentially fixable with the `--fix` option.
+

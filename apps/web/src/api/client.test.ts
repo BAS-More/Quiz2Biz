@@ -1,5 +1,4 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import axios, { type AxiosRequestHeaders, type InternalAxiosRequestConfig } from 'axios';
 
 // We need to mock modules before importing them
 

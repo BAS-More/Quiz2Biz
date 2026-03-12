@@ -339,7 +339,7 @@ export const CommentsProvider: React.FC<CommentsProviderProps> = ({
 
       return comment;
     },
-    [currentUser, teamMembers, createNotification],
+    [currentUser, teamMembers, createNotification, clearDraft],
   );
 
   const editComment = useCallback((commentId: string, content: string, mentions: Mention[]) => {

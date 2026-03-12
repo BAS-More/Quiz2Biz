@@ -9,7 +9,6 @@ import projectApi from '../../api/projects';
 import type { Project, ProjectListResponse } from '../../api/projects';
 import {
   Plus,
-  MessageSquare,
   FileText,
   Target,
   Search,

@@ -157,8 +157,8 @@ describe('ChatEngineController', () => {
 
     it('should set SSE headers and stream chunks', async () => {
       const chunks = [
-        { content: 'Hello', done: false },
-        { content: ' world', done: true },
+        { content: 'Hello', done: false, provider: 'claude' as const },
+        { content: ' world', done: true, provider: 'claude' as const },
       ];
 
       async function* streamGenerator() {
@@ -187,7 +187,7 @@ describe('ChatEngineController', () => {
     });
 
     it('should handle stream errors and write error event', async () => {
-      async function* failingStream() {
+      async function* failingStream(): AsyncGenerator<any> {
         throw new Error('Stream failed');
         yield { content: '', done: false }; // unreachable, satisfies generator type
       }
@@ -207,7 +207,7 @@ describe('ChatEngineController', () => {
     });
 
     it('should handle non-Error exceptions in stream', async () => {
-      async function* failingStream() {
+      async function* failingStream(): AsyncGenerator<any> {
         // eslint-disable-next-line @typescript-eslint/only-throw-error -- deliberately testing non-Error throw path
         throw 'string error';
         yield { content: '', done: false }; // unreachable
@@ -227,7 +227,7 @@ describe('ChatEngineController', () => {
     });
 
     it('should call res.end in finally block even on success', async () => {
-      async function* emptyStream() {
+      async function* emptyStream(): AsyncGenerator<any> {
         yield { content: 'done', done: true };
       }
 
@@ -244,7 +244,7 @@ describe('ChatEngineController', () => {
     });
 
     it('should call sendMessageStream with correct args', async () => {
-      async function* emptyStream() {
+      async function* emptyStream(): AsyncGenerator<any> {
         yield { content: 'done', done: true };
       }
 

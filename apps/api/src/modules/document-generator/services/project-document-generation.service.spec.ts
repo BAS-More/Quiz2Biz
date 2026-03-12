@@ -72,9 +72,15 @@ describe('ProjectDocumentGenerationService', () => {
   ];
 
   const mockQualityParams = {
+    level: 2,
     name: 'Standard',
     maxTokens: 4000,
     temperature: 0.7,
+    targetPages: 10,
+    sections: ['executive-summary', 'overview'],
+    features: [],
+    promptModifiers: [],
+    format: 'professional' as const,
     qualityModifiers: { detail: 'moderate', format: 'standard' },
   };
 
@@ -278,7 +284,7 @@ describe('ProjectDocumentGenerationService', () => {
         name: 'Basic',
         maxTokens: 2000,
         temperature: 0.5,
-      });
+      } as any);
 
       await service.generateDocument({ ...baseRequest, qualityLevel: 0 });
 
@@ -290,7 +296,7 @@ describe('ProjectDocumentGenerationService', () => {
         name: 'Standard',
         maxTokens: 4000,
         temperature: 0.7,
-      });
+      } as any);
 
       await service.generateDocument({ ...baseRequest, qualityLevel: 1 });
 
@@ -302,7 +308,7 @@ describe('ProjectDocumentGenerationService', () => {
         name: 'Enhanced',
         maxTokens: 6000,
         temperature: 0.7,
-      });
+      } as any);
 
       await service.generateDocument({ ...baseRequest, qualityLevel: 2 });
 
@@ -314,7 +320,7 @@ describe('ProjectDocumentGenerationService', () => {
         name: 'Premium',
         maxTokens: 8000,
         temperature: 0.8,
-      });
+      } as any);
 
       await service.generateDocument({ ...baseRequest, qualityLevel: 3 });
 
@@ -326,7 +332,7 @@ describe('ProjectDocumentGenerationService', () => {
         name: 'Professional',
         maxTokens: 12000,
         temperature: 0.8,
-      });
+      } as any);
 
       await service.generateDocument({ ...baseRequest, qualityLevel: 4 });
 

@@ -66,6 +66,7 @@ export function TOTPVerification({
         handleSubmit(newCode.join(''));
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [code],
   );
 
@@ -102,6 +103,7 @@ export function TOTPVerification({
         handleSubmit(pasted);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [code],
   );
 

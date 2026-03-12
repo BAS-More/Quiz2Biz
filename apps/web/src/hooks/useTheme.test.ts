@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { useTheme, usePrefersDarkMode, type ThemeMode } from './useTheme';
+import { useTheme, usePrefersDarkMode } from './useTheme';
 
 const THEME_STORAGE_KEY = 'quiz2biz-theme-mode';
 

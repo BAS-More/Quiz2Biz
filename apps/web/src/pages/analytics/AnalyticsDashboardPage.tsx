@@ -14,7 +14,6 @@ import {
   Clock,
   CheckCircle,
   Activity,
-  Loader2,
 } from 'lucide-react';
 import { Card, Badge } from '../../components/ui';
 import { StatCardSkeleton } from '../../components/ui/Skeleton';

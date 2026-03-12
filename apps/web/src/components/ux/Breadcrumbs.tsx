@@ -242,7 +242,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
 }) => {
   const context = useContext(BreadcrumbContext);
 
-  const items = propItems || context?.items || [];
+  const items = useMemo(() => propItems || context?.items || [], [propItems, context?.items]);
   const config: BreadcrumbConfig = {
     ...(context?.config || {}),
     ...propConfig,
@@ -413,9 +413,8 @@ const BreadcrumbLink: React.FC<BreadcrumbLinkProps> = ({ item, showIcon, positio
     </>
   );
 
-  const className = `breadcrumbs__link ${
-    isCurrent ? 'breadcrumbs__link--current' : ''
-  } ${isEllipsis ? 'breadcrumbs__link--ellipsis' : ''}`;
+  const className = `breadcrumbs__link ${isCurrent ? 'breadcrumbs__link--current' : ''
+    } ${isEllipsis ? 'breadcrumbs__link--ellipsis' : ''}`;
 
   // Schema.org position
   const meta = <meta itemProp="position" content={String(position)} />;

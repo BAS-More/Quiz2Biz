@@ -7,8 +7,7 @@
 
 const IS_DEV = import.meta.env.DEV;
 
-/* eslint-disable no-console */
-const noop = (): void => {};
+const noop = (): void => { };
 
 export const logger = {
   /** Debug-level — dev only */
@@ -23,4 +22,3 @@ export const logger = {
   /** Error-level — always active (errors should surface to monitoring) */
   error: console.error.bind(console),
 };
-/* eslint-enable no-console */

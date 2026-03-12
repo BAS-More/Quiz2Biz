@@ -70,7 +70,7 @@ describe('OAuthController', () => {
       const mockAccounts = [{ provider: 'google', email: 'test@gmail.com', linkedAt: new Date() }];
       oauthService.getLinkedAccounts.mockResolvedValue(mockAccounts);
 
-      const mockReq = { user: { sub: 'user-1' } };
+      const mockReq = { user: { sub: 'user-1' } } as any;
       const result = await controller.getLinkedAccounts(mockReq);
 
       expect(oauthService.getLinkedAccounts).toHaveBeenCalledWith('user-1');
@@ -83,7 +83,7 @@ describe('OAuthController', () => {
       oauthService.authenticateWithGoogle.mockResolvedValue(mockAuthResponse);
       oauthService.linkOAuthAccount.mockResolvedValue(undefined);
 
-      const mockReq = { user: { sub: 'user-1' } };
+      const mockReq = { user: { sub: 'user-1' } } as any;
       const result = await controller.linkAccount(mockReq, {
         provider: 'google',
         idToken: 'google-id-token',
@@ -97,7 +97,7 @@ describe('OAuthController', () => {
       oauthService.authenticateWithMicrosoft.mockResolvedValue(mockAuthResponse);
       oauthService.linkOAuthAccount.mockResolvedValue(undefined);
 
-      const mockReq = { user: { sub: 'user-1' } };
+      const mockReq = { user: { sub: 'user-1' } } as any;
       const result = await controller.linkAccount(mockReq, {
         provider: 'microsoft',
         accessToken: 'ms-access-token',
@@ -108,7 +108,7 @@ describe('OAuthController', () => {
     });
 
     it('should throw error for invalid provider', async () => {
-      const mockReq = { user: { sub: 'user-1' } };
+      const mockReq = { user: { sub: 'user-1' } } as any;
 
       await expect(
         controller.linkAccount(mockReq, {
@@ -122,7 +122,7 @@ describe('OAuthController', () => {
     it('should unlink OAuth account', async () => {
       oauthService.unlinkOAuthAccount.mockResolvedValue(undefined);
 
-      const mockReq = { user: { sub: 'user-1' } };
+      const mockReq = { user: { sub: 'user-1' } } as any;
       const result = await controller.unlinkAccount(mockReq, 'google');
 
       expect(oauthService.unlinkOAuthAccount).toHaveBeenCalledWith('user-1', 'google');

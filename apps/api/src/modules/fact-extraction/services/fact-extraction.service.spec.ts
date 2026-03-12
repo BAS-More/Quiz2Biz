@@ -83,7 +83,8 @@ describe('FactExtractionService', () => {
     usage: { inputTokens: 100, outputTokens: 50, totalTokens: 150 },
     cost: { inputCost: 0.01, outputCost: 0.02, totalCost: 0.03, currency: 'USD' },
     latencyMs: 200,
-    finishReason: 'stop',
+    finishReason: 'stop' as const,
+    usedFallback: false,
   };
 
   beforeEach(async () => {

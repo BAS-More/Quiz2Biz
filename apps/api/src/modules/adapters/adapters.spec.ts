@@ -617,6 +617,7 @@ describe('AdapterController - Branch Coverage', () => {
 
       const result = await controller.handleGitHubWebhook(
         { action: 'opened' },
+        '',
         'adapter-1',
         'tenant-1',
       );
@@ -632,6 +633,7 @@ describe('AdapterController - Branch Coverage', () => {
 
       const result = await controller.handleGitHubWebhook(
         { action: 'opened' },
+        '',
         'adapter-1',
         'tenant-1',
       );
@@ -644,6 +646,7 @@ describe('AdapterController - Branch Coverage', () => {
 
       const result = await controller.handleGitHubWebhook(
         { action: 'opened' },
+        '',
         'adapter-1',
         'tenant-1',
       );
@@ -655,7 +658,7 @@ describe('AdapterController - Branch Coverage', () => {
     it('should use "unknown" when payload.action is falsy', async () => {
       adapterConfigService.getAdapterConfig.mockResolvedValue(mockAdapterConfig);
 
-      const result = await controller.handleGitHubWebhook({}, 'adapter-1', 'tenant-1');
+      const result = await controller.handleGitHubWebhook({}, '', 'adapter-1', 'tenant-1');
 
       expect(result.event).toBe('unknown');
     });
@@ -667,6 +670,7 @@ describe('AdapterController - Branch Coverage', () => {
 
       const result = await controller.handleGitLabWebhook(
         { object_kind: 'push' },
+        '',
         'adapter-1',
         'tenant-1',
       );
@@ -679,6 +683,7 @@ describe('AdapterController - Branch Coverage', () => {
 
       const result = await controller.handleGitLabWebhook(
         { object_kind: 'push' },
+        '',
         'adapter-1',
         'tenant-1',
       );
@@ -690,7 +695,7 @@ describe('AdapterController - Branch Coverage', () => {
     it('should use "unknown" when payload.object_kind is falsy', async () => {
       adapterConfigService.getAdapterConfig.mockResolvedValue(mockAdapterConfig);
 
-      const result = await controller.handleGitLabWebhook({}, 'adapter-1', 'tenant-1');
+      const result = await controller.handleGitLabWebhook({}, '', 'adapter-1', 'tenant-1');
 
       expect(result.event).toBe('unknown');
     });

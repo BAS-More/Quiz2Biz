@@ -244,11 +244,11 @@ type PersonalizationAction =
   | { type: 'SET_ACTIVE_LAYOUT'; layoutId: string }
   | { type: 'ADD_WIDGET_INSTANCE'; layoutId: string; widget: WidgetInstance }
   | {
-      type: 'UPDATE_WIDGET_INSTANCE';
-      layoutId: string;
-      widgetInstanceId: string;
-      updates: Partial<WidgetInstance>;
-    }
+    type: 'UPDATE_WIDGET_INSTANCE';
+    layoutId: string;
+    widgetInstanceId: string;
+    updates: Partial<WidgetInstance>;
+  }
   | { type: 'REMOVE_WIDGET_INSTANCE'; layoutId: string; widgetInstanceId: string }
   | { type: 'SET_EDIT_MODE'; enabled: boolean }
 
@@ -523,12 +523,12 @@ function personalizationReducer(
       const layouts = state.layouts.map((layout) =>
         layout.id === action.layoutId
           ? {
-              ...layout,
-              widgets: layout.widgets.map((w) =>
-                w.id === action.widgetInstanceId ? { ...w, ...action.updates } : w,
-              ),
-              updatedAt: new Date(),
-            }
+            ...layout,
+            widgets: layout.widgets.map((w) =>
+              w.id === action.widgetInstanceId ? { ...w, ...action.updates } : w,
+            ),
+            updatedAt: new Date(),
+          }
           : layout,
       );
       return { ...state, layouts };
@@ -538,10 +538,10 @@ function personalizationReducer(
       const layouts = state.layouts.map((layout) =>
         layout.id === action.layoutId
           ? {
-              ...layout,
-              widgets: layout.widgets.filter((w) => w.id !== action.widgetInstanceId),
-              updatedAt: new Date(),
-            }
+            ...layout,
+            widgets: layout.widgets.filter((w) => w.id !== action.widgetInstanceId),
+            updatedAt: new Date(),
+          }
           : layout,
       );
       return { ...state, layouts };
@@ -866,13 +866,11 @@ export const PersonalizationProvider: React.FC<PersonalizationProviderProps> = (
   const predictCompletionTime = useCallback(
     (questionIds: string[]): number => {
       let totalTime = 0;
-      let predictedCount = 0;
 
       for (const questionId of questionIds) {
         const prediction = state.predictions.get(questionId);
         if (prediction) {
           totalTime += prediction.predictedTime;
-          predictedCount++;
         } else {
           // Default estimate: 2 minutes per question
           totalTime += 120000;

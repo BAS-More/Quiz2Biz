@@ -157,8 +157,8 @@ describe('AiGatewayController', () => {
       const healthStatus = {
         status: 'healthy' as const,
         providers: [
-          { provider: 'claude', available: true },
-          { provider: 'openai', available: true },
+          { provider: 'claude' as const, available: true },
+          { provider: 'openai' as const, available: true },
         ],
         timestamp: new Date(),
       };

@@ -139,7 +139,7 @@ describe('SessionReminderJobService', () => {
       // First notification fails, second succeeds
       notificationService.sendSessionReminderEmail
         .mockRejectedValueOnce(new Error('Email failed'))
-        .mockResolvedValueOnce(undefined);
+        .mockResolvedValueOnce({ success: true, to: 'test@test.com', timestamp: new Date() } as any);
 
       (prisma.session.update as jest.Mock).mockResolvedValue(session2);
 

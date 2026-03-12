@@ -721,6 +721,7 @@ export const AIErrorDiagnosisProvider: React.FC<AIErrorDiagnosisProviderProps> =
 
       return classifiedError;
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [classifyError, generateFixes, autoFixEnabled, onErrorDiagnosed],
   );
 
@@ -779,10 +780,10 @@ export const AIErrorDiagnosisProvider: React.FC<AIErrorDiagnosisProviderProps> =
       prev.map((e) =>
         e.id === errorId && e.appliedFix
           ? {
-              ...e,
-              appliedFix: { ...e.appliedFix, success, resultMessage: message },
-              resolved: success,
-            }
+            ...e,
+            appliedFix: { ...e.appliedFix, success, resultMessage: message },
+            resolved: success,
+          }
           : e,
       ),
     );

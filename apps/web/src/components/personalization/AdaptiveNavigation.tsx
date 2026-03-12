@@ -437,6 +437,7 @@ export const AdaptiveNavProvider: React.FC<AdaptiveNavProviderProps> = ({
     }, 30000);
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.history, state.itemUsage]);
 
   // Track navigation

@@ -8,7 +8,7 @@
  * - One-click answer population
  */
 
-import React, { useState, useEffect, useCallback, createContext, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, createContext, useContext } from 'react';
 
 // ============================================================================
 // Types & Interfaces
@@ -167,7 +167,7 @@ export const AISuggestionsProvider: React.FC<AISuggestionsProviderProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [currentContext, setCurrentContext] = useState<QuestionContext | null>(null);
 
-  const config = { ...DEFAULT_CONFIG, ...initialConfig };
+  const config = useMemo(() => ({ ...DEFAULT_CONFIG, ...initialConfig }), [initialConfig]);
 
   const getTemplateSuggestions = useCallback(
     (context: QuestionContext): AnswerSuggestion[] => {
@@ -497,6 +497,7 @@ export function useAutoSuggestions(context: QuestionContext | null, enabled = tr
     return () => {
       clearSuggestions();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context?.questionId, enabled]);
 }
 

@@ -10,7 +10,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
@@ -69,7 +69,7 @@ function mockMatchMedia(width: number) {
 }
 
 // Test wrapper
-const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const _TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: { retry: false },
@@ -144,7 +144,7 @@ describe('Mobile Responsiveness', () => {
       element.className = 'touch-target';
       document.body.appendChild(element);
 
-      const rect = element.getBoundingClientRect();
+      element.getBoundingClientRect();
       // In jsdom, getBoundingClientRect returns 0, so we check the style
       expect(MIN_TOUCH_TARGET).toBe(44);
 
@@ -154,7 +154,7 @@ describe('Mobile Responsiveness', () => {
   });
 
   describe('Tailwind Breakpoint Utilities', () => {
-    const breakpointClasses = [
+    const _breakpointClasses = [
       'sm:', // 640px
       'md:', // 768px
       'lg:', // 1024px

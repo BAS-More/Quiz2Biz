@@ -41,7 +41,7 @@ const createMockIDBRequest = (result: unknown = null) => {
 };
 
 // Mock IndexedDB
-const mockIndexedDB = {
+const _mockIndexedDB = {
   open: vi.fn().mockImplementation(() => {
     const mockDB = {
       transaction: vi.fn().mockReturnValue({

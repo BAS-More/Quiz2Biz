@@ -185,11 +185,11 @@ describe('IdeaCapturePage', () => {
     });
 
     it('shows analyzing state while submission is in progress', async () => {
-      let resolveSubmit: (value: unknown) => void;
+      let _resolveSubmit: (value: unknown) => void;
       vi.mocked(submitIdea).mockImplementation(
         () =>
           new Promise((resolve) => {
-            resolveSubmit = resolve;
+            _resolveSubmit = resolve;
           }),
       );
 
@@ -493,7 +493,7 @@ describe('IdeaCapturePage', () => {
     });
 
     it('shows loading state during session creation', async () => {
-      vi.mocked(createSessionFromIdea).mockImplementation(() => new Promise(() => {}));
+      vi.mocked(createSessionFromIdea).mockImplementation(() => new Promise(() => { }));
 
       renderIdeaCapturePage();
 
