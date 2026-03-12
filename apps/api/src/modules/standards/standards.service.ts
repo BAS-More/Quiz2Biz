@@ -136,7 +136,6 @@ export class StandardsService {
 
   async getStandardsForDocument(documentTypeIdOrSlug: string): Promise<StandardResponse[]> {
     try {
-      // Try to find by ID first, then by slug
       const documentType = await this.prisma.documentType.findFirst({
         where: {
           OR: [{ id: documentTypeIdOrSlug }, { slug: documentTypeIdOrSlug }],
@@ -232,7 +231,11 @@ export class StandardsService {
   }
 
   private generateMarkdown(
-    standards: { category: StandardCategory; title: string; principles: Principle[] }[],
+    standards: {
+      category: StandardCategory;
+      title: string;
+      principles: Principle[];
+    }[],
   ): string {
     if (standards.length === 0) {
       return '';

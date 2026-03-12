@@ -59,6 +59,17 @@ describe('EvidenceIntegrityService', () => {
   });
 
   describe('chainEvidence', () => {
+    beforeEach(() => {
+      // Mock requestTimestamp to avoid external HTTP calls to TSA in chainEvidence tests
+      jest.spyOn(service, 'requestTimestamp').mockResolvedValue({
+        token: 'mock-token-base64',
+        timestamp: new Date('2026-01-01T00:00:00Z'),
+        tsaUrl: 'https://freetsa.org/tsr',
+        hashAlgorithm: 'SHA-256',
+        hashedMessage: 'mock-hash',
+      });
+    });
+
     it('creates first chain entry with genesis hash', async () => {
       const mockEvidence = {
         id: 'evidence-123',
