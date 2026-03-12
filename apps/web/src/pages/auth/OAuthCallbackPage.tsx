@@ -148,7 +148,7 @@ export function OAuthCallbackPage() {
     };
 
     handleCallback();
-  }, [validProvider, login, navigate]);
+  }, [provider, validProvider, login, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface-50">
