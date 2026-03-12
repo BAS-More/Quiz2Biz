@@ -381,9 +381,9 @@ describe('AdapterController - Branch Coverage', () => {
 
     controller = module.get<AdapterController>(AdapterController);
     adapterConfigService = module.get(AdapterConfigService);
-    module.get(GitHubAdapter);
-    module.get(GitLabAdapter);
-    module.get(JiraConfluenceAdapter);
+    githubAdapter = module.get(GitHubAdapter);
+    gitlabAdapter = module.get(GitLabAdapter);
+    jiraAdapter = module.get(JiraConfluenceAdapter);
   });
 
   describe('updateConfig - branch: dto.config present vs absent', () => {

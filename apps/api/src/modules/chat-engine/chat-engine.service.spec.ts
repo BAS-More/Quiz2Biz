@@ -81,7 +81,7 @@ describe('ChatEngineService', () => {
 
   describe('getChatStatus', () => {
     it('should return chat status for existing project', async () => {
-      prismaService.project.findUnique.mockResolvedValue(mockProject);
+      (prismaService.project.findUnique as jest.Mock).mockResolvedValue(mockProject);
 
       const result = await service.getChatStatus('project-123');
 
@@ -96,13 +96,13 @@ describe('ChatEngineService', () => {
     });
 
     it('should throw NotFoundException for non-existent project', async () => {
-      prismaService.project.findUnique.mockResolvedValue(null);
+      (prismaService.project.findUnique as jest.Mock).mockResolvedValue(null);
 
       await expect(service.getChatStatus('invalid-id')).rejects.toThrow(NotFoundException);
     });
 
     it('should return limitReached true when messageCount equals messageLimit', async () => {
-      prismaService.project.findUnique.mockResolvedValue({
+      (prismaService.project.findUnique as jest.Mock).mockResolvedValue({
         ...mockProject,
         messageCount: 50,
       });
@@ -114,7 +114,7 @@ describe('ChatEngineService', () => {
     });
 
     it('should handle project without qualityScore', async () => {
-      prismaService.project.findUnique.mockResolvedValue({
+      (prismaService.project.findUnique as jest.Mock).mockResolvedValue({
         ...mockProject,
         qualityScore: null,
       });
@@ -127,7 +127,7 @@ describe('ChatEngineService', () => {
 
   describe('getMessages', () => {
     it('should return messages for project', async () => {
-      prismaService.chatMessage.findMany.mockResolvedValue([mockMessage]);
+      (prismaService.chatMessage.findMany as jest.Mock).mockResolvedValue([mockMessage]);
 
       const result = await service.getMessages('project-123');
 
@@ -137,7 +137,7 @@ describe('ChatEngineService', () => {
     });
 
     it('should apply skip and take parameters', async () => {
-      prismaService.chatMessage.findMany.mockResolvedValue([]);
+      (prismaService.chatMessage.findMany as jest.Mock).mockResolvedValue([]);
 
       await service.getMessages('project-123', 10, 20);
 
@@ -150,7 +150,7 @@ describe('ChatEngineService', () => {
     });
 
     it('should use default skip and take values', async () => {
-      prismaService.chatMessage.findMany.mockResolvedValue([]);
+      (prismaService.chatMessage.findMany as jest.Mock).mockResolvedValue([]);
 
       await service.getMessages('project-123');
 
@@ -165,11 +165,11 @@ describe('ChatEngineService', () => {
 
   describe('sendMessage', () => {
     beforeEach(() => {
-      prismaService.project.findUnique.mockResolvedValue(mockProject);
-      prismaService.chatMessage.findMany.mockResolvedValue([]);
-      prismaService.chatMessage.create.mockResolvedValue(mockMessage);
-      prismaService.aiProvider.findUnique.mockResolvedValue({ id: 'provider-1' });
-      prismaService.project.update.mockResolvedValue(mockProject);
+      (prismaService.project.findUnique as jest.Mock).mockResolvedValue(mockProject);
+      (prismaService.chatMessage.findMany as jest.Mock).mockResolvedValue([]);
+      (prismaService.chatMessage.create as jest.Mock).mockResolvedValue(mockMessage);
+      (prismaService.aiProvider.findUnique as jest.Mock).mockResolvedValue({ id: 'provider-1' });
+      (prismaService.project.update as jest.Mock).mockResolvedValue(mockProject);
 
       promptBuilderService.buildSystemPrompt.mockResolvedValue('System prompt');
       promptBuilderService.buildLimitApproachingPrompt.mockReturnValue('');
@@ -194,7 +194,7 @@ describe('ChatEngineService', () => {
     });
 
     it('should throw BadRequestException when limit reached', async () => {
-      prismaService.project.findUnique.mockResolvedValue({
+      (prismaService.project.findUnique as jest.Mock).mockResolvedValue({
         ...mockProject,
         messageCount: 50,
         messageLimit: 50,
@@ -206,7 +206,7 @@ describe('ChatEngineService', () => {
     });
 
     it('should add limit warning prompt when approaching limit', async () => {
-      prismaService.project.findUnique.mockResolvedValue({
+      (prismaService.project.findUnique as jest.Mock).mockResolvedValue({
         ...mockProject,
         messageCount: 46,
         messageLimit: 50,
@@ -233,7 +233,7 @@ describe('ChatEngineService', () => {
 
   describe('checkLimit', () => {
     it('should return canSend true when under limit', async () => {
-      prismaService.project.findUnique.mockResolvedValue(mockProject);
+      (prismaService.project.findUnique as jest.Mock).mockResolvedValue(mockProject);
 
       const result = await service.checkLimit('project-123');
 
@@ -242,7 +242,7 @@ describe('ChatEngineService', () => {
     });
 
     it('should return canSend false when limit reached', async () => {
-      prismaService.project.findUnique.mockResolvedValue({
+      (prismaService.project.findUnique as jest.Mock).mockResolvedValue({
         ...mockProject,
         messageCount: 50,
         messageLimit: 50,

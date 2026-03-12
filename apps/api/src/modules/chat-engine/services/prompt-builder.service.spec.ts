@@ -96,7 +96,7 @@ describe('PromptBuilderService', () => {
 
   describe('buildSystemPrompt', () => {
     it('should return default prompt when project not found', async () => {
-      prisma.project.findUnique.mockResolvedValue(null);
+      (prisma.project.findUnique as jest.Mock).mockResolvedValue(null);
 
       const result = await service.buildSystemPrompt('missing-id');
 
@@ -113,7 +113,7 @@ describe('PromptBuilderService', () => {
     });
 
     it('should build full prompt with project type, dimensions, and facts', async () => {
-      prisma.project.findUnique.mockResolvedValue(mockProject);
+      (prisma.project.findUnique as jest.Mock).mockResolvedValue(mockProject);
 
       const result = await service.buildSystemPrompt('project-123');
 
@@ -148,7 +148,7 @@ describe('PromptBuilderService', () => {
     });
 
     it('should build prompt without dimensions when none exist', async () => {
-      prisma.project.findUnique.mockResolvedValue({
+      (prisma.project.findUnique as jest.Mock).mockResolvedValue({
         ...mockProject,
         projectType: {
           name: 'Custom',
@@ -163,7 +163,7 @@ describe('PromptBuilderService', () => {
     });
 
     it('should build prompt without facts when none exist', async () => {
-      prisma.project.findUnique.mockResolvedValue({
+      (prisma.project.findUnique as jest.Mock).mockResolvedValue({
         ...mockProject,
         extractedFacts: [],
       });
@@ -174,7 +174,7 @@ describe('PromptBuilderService', () => {
     });
 
     it('should handle project without projectType', async () => {
-      prisma.project.findUnique.mockResolvedValue({
+      (prisma.project.findUnique as jest.Mock).mockResolvedValue({
         ...mockProject,
         projectType: null,
       });
@@ -185,7 +185,7 @@ describe('PromptBuilderService', () => {
     });
 
     it('should handle project without description', async () => {
-      prisma.project.findUnique.mockResolvedValue({
+      (prisma.project.findUnique as jest.Mock).mockResolvedValue({
         ...mockProject,
         description: null,
       });
@@ -208,7 +208,7 @@ describe('PromptBuilderService', () => {
         },
       ];
 
-      prisma.project.findUnique.mockResolvedValue({
+      (prisma.project.findUnique as jest.Mock).mockResolvedValue({
         ...mockProject,
         projectType: {
           name: 'Business Plan',
@@ -223,7 +223,7 @@ describe('PromptBuilderService', () => {
     });
 
     it('should use fieldName as label fallback and replace underscores', async () => {
-      prisma.project.findUnique.mockResolvedValue({
+      (prisma.project.findUnique as jest.Mock).mockResolvedValue({
         ...mockProject,
         extractedFacts: [
           {
@@ -242,7 +242,7 @@ describe('PromptBuilderService', () => {
     });
 
     it('should group facts by category with General fallback', async () => {
-      prisma.project.findUnique.mockResolvedValue({
+      (prisma.project.findUnique as jest.Mock).mockResolvedValue({
         ...mockProject,
         extractedFacts: [
           { fieldName: 'a', fieldValue: 'v1', category: null, label: 'A' },
@@ -274,7 +274,7 @@ describe('PromptBuilderService', () => {
         },
       ];
 
-      prisma.project.findUnique.mockResolvedValue({
+      (prisma.project.findUnique as jest.Mock).mockResolvedValue({
         ...mockProject,
         projectType: {
           name: 'Plan',

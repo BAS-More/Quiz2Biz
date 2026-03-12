@@ -21,7 +21,7 @@ describe('ConversationController', () => {
     }).compile();
 
     controller = module.get<ConversationController>(ConversationController);
-    conversationService = module.get(ConversationService);
+    module.get(ConversationService);
   });
 
   describe('submitAnswerWithAi', () => {

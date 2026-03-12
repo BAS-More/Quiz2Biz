@@ -201,13 +201,13 @@ describe('FactExtractionService', () => {
 
   describe('triggerExtractionAfterMessage', () => {
     it('should trigger extraction with correct context', async () => {
-      prismaService.project.findUnique.mockResolvedValue(mockProject as never);
-      prismaService.chatMessage.findMany.mockResolvedValue([
+      (prismaService.project.findUnique as jest.Mock).mockResolvedValue(mockProject as never);
+      (prismaService.chatMessage.findMany as jest.Mock).mockResolvedValue([
         { role: 'user', content: 'We are Acme Corp', createdAt: new Date() },
         { role: 'assistant', content: 'Great!', createdAt: new Date() },
       ] as never);
-      prismaService.extractedFact.findMany.mockResolvedValue([]);
-      prismaService.extractedFact.upsert.mockResolvedValue(mockExtractedFact);
+      (prismaService.extractedFact.findMany as jest.Mock).mockResolvedValue([]);
+      (prismaService.extractedFact.upsert as jest.Mock).mockResolvedValue(mockExtractedFact);
       aiGatewayService.generate.mockResolvedValue(mockAiResponse);
 
       const result = await service.triggerExtractionAfterMessage('project-1', 'msg-1');
@@ -217,7 +217,7 @@ describe('FactExtractionService', () => {
     });
 
     it('should return empty array when project not found', async () => {
-      prismaService.project.findUnique.mockResolvedValue(null);
+      (prismaService.project.findUnique as jest.Mock).mockResolvedValue(null);
 
       const result = await service.triggerExtractionAfterMessage('missing-project', 'msg-1');
 
@@ -225,7 +225,7 @@ describe('FactExtractionService', () => {
     });
 
     it('should return empty array when project has no type', async () => {
-      prismaService.project.findUnique.mockResolvedValue({
+      (prismaService.project.findUnique as jest.Mock).mockResolvedValue({
         ...mockProject,
         projectType: null,
       } as never);
@@ -238,7 +238,7 @@ describe('FactExtractionService', () => {
 
   describe('getProjectFacts', () => {
     it('should return mapped facts for a project', async () => {
-      prismaService.extractedFact.findMany.mockResolvedValue([mockExtractedFact] as never);
+      (prismaService.extractedFact.findMany as jest.Mock).mockResolvedValue([mockExtractedFact] as never);
 
       const result = await service.getProjectFacts('project-1');
 
@@ -249,7 +249,7 @@ describe('FactExtractionService', () => {
     });
 
     it('should return empty array when no facts exist', async () => {
-      prismaService.extractedFact.findMany.mockResolvedValue([]);
+      (prismaService.extractedFact.findMany as jest.Mock).mockResolvedValue([]);
 
       const result = await service.getProjectFacts('project-1');
 
@@ -259,7 +259,7 @@ describe('FactExtractionService', () => {
 
   describe('validateFacts', () => {
     it('should identify missing required fields', async () => {
-      prismaService.extractedFact.findMany.mockResolvedValue([mockExtractedFact] as never);
+      (prismaService.extractedFact.findMany as jest.Mock).mockResolvedValue([mockExtractedFact] as never);
 
       const result = await service.validateFacts('project-1', 'business-plan');
 
@@ -278,7 +278,7 @@ describe('FactExtractionService', () => {
 
   describe('deleteFact', () => {
     it('should delete a fact by project and field name', async () => {
-      prismaService.extractedFact.delete.mockResolvedValue(mockExtractedFact);
+      (prismaService.extractedFact.delete as jest.Mock).mockResolvedValue(mockExtractedFact);
 
       await service.deleteFact('project-1', 'company_name');
 
@@ -296,7 +296,7 @@ describe('FactExtractionService', () => {
   describe('updateFact', () => {
     it('should update fact with high confidence and user confirmation', async () => {
       const updatedFact = { ...mockExtractedFact, fieldValue: 'New Corp', confirmedByUser: true };
-      prismaService.extractedFact.update.mockResolvedValue(updatedFact);
+      (prismaService.extractedFact.update as jest.Mock).mockResolvedValue(updatedFact);
 
       const result = await service.updateFact('project-1', 'company_name', 'New Corp');
 

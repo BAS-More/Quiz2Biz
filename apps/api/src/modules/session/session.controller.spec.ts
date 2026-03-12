@@ -31,7 +31,7 @@ describe('SessionController', () => {
     }).compile();
 
     controller = module.get<SessionController>(SessionController);
-    sessionService = module.get<SessionService>(SessionService);
+    module.get<SessionService>(SessionService);
 
     jest.clearAllMocks();
   });

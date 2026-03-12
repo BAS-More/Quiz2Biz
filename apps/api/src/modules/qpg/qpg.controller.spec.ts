@@ -27,8 +27,8 @@ describe('QpgController', () => {
     }).compile();
 
     controller = module.get<QpgController>(QpgController);
-    qpgService = module.get<QpgService>(QpgService);
-    promptGenerator = module.get<PromptGeneratorService>(PromptGeneratorService);
+    module.get<QpgService>(QpgService);
+    module.get<PromptGeneratorService>(PromptGeneratorService);
 
     jest.clearAllMocks();
   });

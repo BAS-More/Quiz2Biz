@@ -135,15 +135,15 @@ describe('ProjectDocumentGenerationService', () => {
     };
 
     beforeEach(() => {
-      prisma.project.findFirst.mockResolvedValue(mockProject as any);
-      prisma.documentType.findUnique.mockResolvedValue(mockDocumentType as any);
-      prisma.extractedFact.findMany.mockResolvedValue(mockFacts as any);
+      (prisma.project.findFirst as jest.Mock).mockResolvedValue(mockProject as any);
+      (prisma.documentType.findUnique as jest.Mock).mockResolvedValue(mockDocumentType as any);
+      (prisma.extractedFact.findMany as jest.Mock).mockResolvedValue(mockFacts as any);
       qualityCalibrator.getParameters.mockReturnValue(mockQualityParams);
       qualityCalibrator.buildPrompt.mockReturnValue('Generated prompt');
       qualityCalibrator.getSystemPrompt.mockReturnValue('System prompt');
       markdownRenderer.parseAiOutput.mockReturnValue(mockSections);
       markdownRenderer.renderDocument.mockReturnValue('# Rendered Markdown');
-      prisma.generatedDocument.create.mockResolvedValue({
+      (prisma.generatedDocument.create as jest.Mock).mockResolvedValue({
         id: 'doc-123',
         title: 'Test Business - Business Plan',
         content: 'Generated content',
@@ -174,13 +174,13 @@ describe('ProjectDocumentGenerationService', () => {
     });
 
     it('should throw NotFoundException if project not found', async () => {
-      prisma.project.findFirst.mockResolvedValue(null);
+      (prisma.project.findFirst as jest.Mock).mockResolvedValue(null);
 
       await expect(service.generateDocument(validRequest)).rejects.toThrow(NotFoundException);
     });
 
     it('should throw NotFoundException if document type not found', async () => {
-      prisma.documentType.findUnique.mockResolvedValue(null);
+      (prisma.documentType.findUnique as jest.Mock).mockResolvedValue(null);
 
       await expect(service.generateDocument(validRequest)).rejects.toThrow(NotFoundException);
     });
@@ -258,14 +258,14 @@ describe('ProjectDocumentGenerationService', () => {
     };
 
     beforeEach(() => {
-      prisma.project.findFirst.mockResolvedValue(mockProject as any);
-      prisma.documentType.findUnique.mockResolvedValue(mockDocumentType as any);
-      prisma.extractedFact.findMany.mockResolvedValue(mockFacts as any);
+      (prisma.project.findFirst as jest.Mock).mockResolvedValue(mockProject as any);
+      (prisma.documentType.findUnique as jest.Mock).mockResolvedValue(mockDocumentType as any);
+      (prisma.extractedFact.findMany as jest.Mock).mockResolvedValue(mockFacts as any);
       qualityCalibrator.buildPrompt.mockReturnValue('Generated prompt');
       qualityCalibrator.getSystemPrompt.mockReturnValue('System prompt');
       markdownRenderer.parseAiOutput.mockReturnValue(mockSections);
       markdownRenderer.renderDocument.mockReturnValue('# Markdown');
-      prisma.generatedDocument.create.mockResolvedValue({
+      (prisma.generatedDocument.create as jest.Mock).mockResolvedValue({
         id: 'doc-123',
         title: 'Test',
         content: 'Content',
@@ -336,14 +336,14 @@ describe('ProjectDocumentGenerationService', () => {
 
   describe('document types', () => {
     beforeEach(() => {
-      prisma.project.findFirst.mockResolvedValue(mockProject as any);
-      prisma.extractedFact.findMany.mockResolvedValue(mockFacts as any);
+      (prisma.project.findFirst as jest.Mock).mockResolvedValue(mockProject as any);
+      (prisma.extractedFact.findMany as jest.Mock).mockResolvedValue(mockFacts as any);
       qualityCalibrator.getParameters.mockReturnValue(mockQualityParams);
       qualityCalibrator.buildPrompt.mockReturnValue('Generated prompt');
       qualityCalibrator.getSystemPrompt.mockReturnValue('System prompt');
       markdownRenderer.parseAiOutput.mockReturnValue(mockSections);
       markdownRenderer.renderDocument.mockReturnValue('# Markdown');
-      prisma.generatedDocument.create.mockResolvedValue({
+      (prisma.generatedDocument.create as jest.Mock).mockResolvedValue({
         id: 'doc-123',
         title: 'Test',
         content: 'Content',
@@ -352,7 +352,7 @@ describe('ProjectDocumentGenerationService', () => {
     });
 
     const testDocumentType = async (slug: string, name: string) => {
-      prisma.documentType.findUnique.mockResolvedValue({
+      (prisma.documentType.findUnique as jest.Mock).mockResolvedValue({
         id: `dt-${slug}`,
         slug,
         name,
@@ -412,14 +412,14 @@ describe('ProjectDocumentGenerationService', () => {
 
   describe('content generation', () => {
     beforeEach(() => {
-      prisma.project.findFirst.mockResolvedValue(mockProject as any);
-      prisma.documentType.findUnique.mockResolvedValue(mockDocumentType as any);
+      (prisma.project.findFirst as jest.Mock).mockResolvedValue(mockProject as any);
+      (prisma.documentType.findUnique as jest.Mock).mockResolvedValue(mockDocumentType as any);
       qualityCalibrator.getParameters.mockReturnValue(mockQualityParams);
       qualityCalibrator.buildPrompt.mockReturnValue('Generated prompt');
       qualityCalibrator.getSystemPrompt.mockReturnValue('System prompt');
       markdownRenderer.parseAiOutput.mockReturnValue(mockSections);
       markdownRenderer.renderDocument.mockReturnValue('# Markdown');
-      prisma.generatedDocument.create.mockResolvedValue({
+      (prisma.generatedDocument.create as jest.Mock).mockResolvedValue({
         id: 'doc-123',
         title: 'Test',
         content: 'Content',
@@ -428,7 +428,7 @@ describe('ProjectDocumentGenerationService', () => {
     });
 
     it('should generate content with facts grouped by category', async () => {
-      prisma.extractedFact.findMany.mockResolvedValue(mockFacts as any);
+      (prisma.extractedFact.findMany as jest.Mock).mockResolvedValue(mockFacts as any);
 
       await service.generateDocument({
         projectId: 'project-123',
@@ -446,7 +446,7 @@ describe('ProjectDocumentGenerationService', () => {
     });
 
     it('should handle project with no facts', async () => {
-      prisma.extractedFact.findMany.mockResolvedValue([]);
+      (prisma.extractedFact.findMany as jest.Mock).mockResolvedValue([]);
 
       const result = await service.generateDocument({
         projectId: 'project-123',
@@ -459,7 +459,7 @@ describe('ProjectDocumentGenerationService', () => {
     });
 
     it('should include next steps section', async () => {
-      prisma.extractedFact.findMany.mockResolvedValue(mockFacts as any);
+      (prisma.extractedFact.findMany as jest.Mock).mockResolvedValue(mockFacts as any);
 
       await service.generateDocument({
         projectId: 'project-123',
@@ -468,22 +468,22 @@ describe('ProjectDocumentGenerationService', () => {
         userId: 'user-123',
       });
 
-      const createCall = prisma.generatedDocument.create.mock.calls[0][0];
+      const createCall = (prisma.generatedDocument.create as jest.Mock).mock.calls[0][0];
       expect(createCall.data.content).toContain('Next Steps');
     });
   });
 
   describe('word count and page estimation', () => {
     beforeEach(() => {
-      prisma.project.findFirst.mockResolvedValue(mockProject as any);
-      prisma.documentType.findUnique.mockResolvedValue(mockDocumentType as any);
-      prisma.extractedFact.findMany.mockResolvedValue(mockFacts as any);
+      (prisma.project.findFirst as jest.Mock).mockResolvedValue(mockProject as any);
+      (prisma.documentType.findUnique as jest.Mock).mockResolvedValue(mockDocumentType as any);
+      (prisma.extractedFact.findMany as jest.Mock).mockResolvedValue(mockFacts as any);
       qualityCalibrator.getParameters.mockReturnValue(mockQualityParams);
       qualityCalibrator.buildPrompt.mockReturnValue('Generated prompt');
       qualityCalibrator.getSystemPrompt.mockReturnValue('System prompt');
       markdownRenderer.parseAiOutput.mockReturnValue(mockSections);
       markdownRenderer.renderDocument.mockReturnValue('# Markdown');
-      prisma.generatedDocument.create.mockResolvedValue({
+      (prisma.generatedDocument.create as jest.Mock).mockResolvedValue({
         id: 'doc-123',
         title: 'Test',
         content: 'Content',
@@ -519,15 +519,15 @@ describe('ProjectDocumentGenerationService', () => {
 
   describe('metadata', () => {
     beforeEach(() => {
-      prisma.project.findFirst.mockResolvedValue(mockProject as any);
-      prisma.documentType.findUnique.mockResolvedValue(mockDocumentType as any);
-      prisma.extractedFact.findMany.mockResolvedValue(mockFacts as any);
+      (prisma.project.findFirst as jest.Mock).mockResolvedValue(mockProject as any);
+      (prisma.documentType.findUnique as jest.Mock).mockResolvedValue(mockDocumentType as any);
+      (prisma.extractedFact.findMany as jest.Mock).mockResolvedValue(mockFacts as any);
       qualityCalibrator.getParameters.mockReturnValue(mockQualityParams);
       qualityCalibrator.buildPrompt.mockReturnValue('Generated prompt');
       qualityCalibrator.getSystemPrompt.mockReturnValue('System prompt');
       markdownRenderer.parseAiOutput.mockReturnValue(mockSections);
       markdownRenderer.renderDocument.mockReturnValue('# Markdown');
-      prisma.generatedDocument.create.mockResolvedValue({
+      (prisma.generatedDocument.create as jest.Mock).mockResolvedValue({
         id: 'doc-123',
         title: 'Test',
         content: 'Content',
@@ -589,7 +589,7 @@ describe('ProjectDocumentGenerationService', () => {
 
   describe('error handling', () => {
     it('should propagate database errors', async () => {
-      prisma.project.findFirst.mockRejectedValue(new Error('Database error'));
+      (prisma.project.findFirst as jest.Mock).mockRejectedValue(new Error('Database error'));
 
       await expect(
         service.generateDocument({
@@ -602,9 +602,9 @@ describe('ProjectDocumentGenerationService', () => {
     });
 
     it('should handle fact extraction failure', async () => {
-      prisma.project.findFirst.mockResolvedValue(mockProject as any);
-      prisma.documentType.findUnique.mockResolvedValue(mockDocumentType as any);
-      prisma.extractedFact.findMany.mockRejectedValue(new Error('Fact error'));
+      (prisma.project.findFirst as jest.Mock).mockResolvedValue(mockProject as any);
+      (prisma.documentType.findUnique as jest.Mock).mockResolvedValue(mockDocumentType as any);
+      (prisma.extractedFact.findMany as jest.Mock).mockRejectedValue(new Error('Fact error'));
 
       await expect(
         service.generateDocument({
@@ -617,15 +617,15 @@ describe('ProjectDocumentGenerationService', () => {
     });
 
     it('should handle document save failure', async () => {
-      prisma.project.findFirst.mockResolvedValue(mockProject as any);
-      prisma.documentType.findUnique.mockResolvedValue(mockDocumentType as any);
-      prisma.extractedFact.findMany.mockResolvedValue(mockFacts as any);
+      (prisma.project.findFirst as jest.Mock).mockResolvedValue(mockProject as any);
+      (prisma.documentType.findUnique as jest.Mock).mockResolvedValue(mockDocumentType as any);
+      (prisma.extractedFact.findMany as jest.Mock).mockResolvedValue(mockFacts as any);
       qualityCalibrator.getParameters.mockReturnValue(mockQualityParams);
       qualityCalibrator.buildPrompt.mockReturnValue('Generated prompt');
       qualityCalibrator.getSystemPrompt.mockReturnValue('System prompt');
       markdownRenderer.parseAiOutput.mockReturnValue(mockSections);
       markdownRenderer.renderDocument.mockReturnValue('# Markdown');
-      prisma.generatedDocument.create.mockRejectedValue(new Error('Save error'));
+      (prisma.generatedDocument.create as jest.Mock).mockRejectedValue(new Error('Save error'));
 
       await expect(
         service.generateDocument({

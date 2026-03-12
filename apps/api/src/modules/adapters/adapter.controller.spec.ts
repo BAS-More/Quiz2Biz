@@ -441,7 +441,7 @@ describe('AdapterController', () => {
           config: { token: 'token', projectId: 123 },
         },
       ]);
-      mockAdapterConfigService.getAdapterConfig.mockImplementation((tenantId, adapterId) => {
+      mockAdapterConfigService.getAdapterConfig.mockImplementation((_tenantId, adapterId) => {
         if (adapterId === 'adapter-1') {
           return Promise.resolve(mockConfig);
         }

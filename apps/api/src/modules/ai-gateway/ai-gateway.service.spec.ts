@@ -103,7 +103,7 @@ describe('AiGatewayService', () => {
 
   describe('onModuleInit', () => {
     it('should load provider configs on init', async () => {
-      prismaService.aiProvider.findMany.mockResolvedValue([mockProvider]);
+      (prismaService.aiProvider.findMany as jest.Mock).mockResolvedValue([mockProvider]);
 
       await service.onModuleInit();
 
@@ -116,7 +116,7 @@ describe('AiGatewayService', () => {
     });
 
     it('should handle no providers gracefully', async () => {
-      prismaService.aiProvider.findMany.mockResolvedValue([]);
+      (prismaService.aiProvider.findMany as jest.Mock).mockResolvedValue([]);
 
       await service.onModuleInit();
 
@@ -124,7 +124,7 @@ describe('AiGatewayService', () => {
     });
 
     it('should handle database error gracefully', async () => {
-      prismaService.aiProvider.findMany.mockRejectedValue(new Error('DB error'));
+      (prismaService.aiProvider.findMany as jest.Mock).mockRejectedValue(new Error('DB error'));
 
       // Should not throw
       await expect(service.onModuleInit()).resolves.not.toThrow();
@@ -133,7 +133,7 @@ describe('AiGatewayService', () => {
 
   describe('generate', () => {
     beforeEach(async () => {
-      prismaService.aiProvider.findMany.mockResolvedValue([mockProvider, mockOpenAIProvider]);
+      (prismaService.aiProvider.findMany as jest.Mock).mockResolvedValue([mockProvider, mockOpenAIProvider]);
       await service.loadProviderConfigs();
     });
 
@@ -247,7 +247,7 @@ describe('AiGatewayService', () => {
 
   describe('getDefaultProvider', () => {
     it('should return default provider', async () => {
-      prismaService.aiProvider.findMany.mockResolvedValue([mockProvider]);
+      (prismaService.aiProvider.findMany as jest.Mock).mockResolvedValue([mockProvider]);
       await service.loadProviderConfigs();
 
       const result = service.getDefaultProvider();

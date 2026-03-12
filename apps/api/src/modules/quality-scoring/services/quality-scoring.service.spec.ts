@@ -93,12 +93,12 @@ describe('QualityScoringService', () => {
 
   describe('calculateProjectScore', () => {
     it('should calculate weighted score across dimensions', async () => {
-      prismaService.projectType.findUnique.mockResolvedValue(mockProjectType as never);
-      prismaService.qualityDimension.findMany.mockResolvedValue([
+      (prismaService.projectType.findUnique as jest.Mock).mockResolvedValue(mockProjectType as never);
+      (prismaService.qualityDimension.findMany as jest.Mock).mockResolvedValue([
         mockDimension,
         mockDimension2,
       ] as never);
-      prismaService.extractedFact.findMany.mockResolvedValue([
+      (prismaService.extractedFact.findMany as jest.Mock).mockResolvedValue([
         mockFact('target_market', 0.9),
         mockFact('market_size', 0.7),
         mockFact('revenue_model', 0.8),
@@ -113,7 +113,7 @@ describe('QualityScoringService', () => {
     });
 
     it('should return empty score when project type not found', async () => {
-      prismaService.projectType.findUnique.mockResolvedValue(null);
+      (prismaService.projectType.findUnique as jest.Mock).mockResolvedValue(null);
 
       const result = await service.calculateProjectScore('project-1', 'unknown-type');
 
@@ -125,8 +125,8 @@ describe('QualityScoringService', () => {
     });
 
     it('should return empty score when no dimensions exist', async () => {
-      prismaService.projectType.findUnique.mockResolvedValue(mockProjectType as never);
-      prismaService.qualityDimension.findMany.mockResolvedValue([]);
+      (prismaService.projectType.findUnique as jest.Mock).mockResolvedValue(mockProjectType as never);
+      (prismaService.qualityDimension.findMany as jest.Mock).mockResolvedValue([]);
 
       const result = await service.calculateProjectScore('project-1', 'business-plan');
 
@@ -135,14 +135,14 @@ describe('QualityScoringService', () => {
     });
 
     it('should handle empty criteria in dimensions', async () => {
-      prismaService.projectType.findUnique.mockResolvedValue(mockProjectType as never);
-      prismaService.qualityDimension.findMany.mockResolvedValue([
+      (prismaService.projectType.findUnique as jest.Mock).mockResolvedValue(mockProjectType as never);
+      (prismaService.qualityDimension.findMany as jest.Mock).mockResolvedValue([
         {
           ...mockDimension,
           benchmarkCriteria: [],
         },
       ] as never);
-      prismaService.extractedFact.findMany.mockResolvedValue([]);
+      (prismaService.extractedFact.findMany as jest.Mock).mockResolvedValue([]);
 
       const result = await service.calculateProjectScore('project-1', 'business-plan');
 
@@ -151,9 +151,9 @@ describe('QualityScoringService', () => {
     });
 
     it('should score zero when no facts match criteria', async () => {
-      prismaService.projectType.findUnique.mockResolvedValue(mockProjectType as never);
-      prismaService.qualityDimension.findMany.mockResolvedValue([mockDimension] as never);
-      prismaService.extractedFact.findMany.mockResolvedValue([]);
+      (prismaService.projectType.findUnique as jest.Mock).mockResolvedValue(mockProjectType as never);
+      (prismaService.qualityDimension.findMany as jest.Mock).mockResolvedValue([mockDimension] as never);
+      (prismaService.extractedFact.findMany as jest.Mock).mockResolvedValue([]);
 
       const result = await service.calculateProjectScore('project-1', 'business-plan');
 
@@ -162,10 +162,10 @@ describe('QualityScoringService', () => {
     });
 
     it('should calculate completeness based on matched criteria', async () => {
-      prismaService.projectType.findUnique.mockResolvedValue(mockProjectType as never);
-      prismaService.qualityDimension.findMany.mockResolvedValue([mockDimension] as never);
+      (prismaService.projectType.findUnique as jest.Mock).mockResolvedValue(mockProjectType as never);
+      (prismaService.qualityDimension.findMany as jest.Mock).mockResolvedValue([mockDimension] as never);
       // Provide facts matching 2 of 3 criteria
-      prismaService.extractedFact.findMany.mockResolvedValue([
+      (prismaService.extractedFact.findMany as jest.Mock).mockResolvedValue([
         mockFact('target_market', 0.9),
         mockFact('market_size', 0.8),
       ] as never);
@@ -177,9 +177,9 @@ describe('QualityScoringService', () => {
     });
 
     it('should calculate confidence score from fact confidence values', async () => {
-      prismaService.projectType.findUnique.mockResolvedValue(mockProjectType as never);
-      prismaService.qualityDimension.findMany.mockResolvedValue([mockDimension] as never);
-      prismaService.extractedFact.findMany.mockResolvedValue([
+      (prismaService.projectType.findUnique as jest.Mock).mockResolvedValue(mockProjectType as never);
+      (prismaService.qualityDimension.findMany as jest.Mock).mockResolvedValue([mockDimension] as never);
+      (prismaService.extractedFact.findMany as jest.Mock).mockResolvedValue([
         mockFact('target_market', 0.9),
         mockFact('market_size', 0.5),
       ] as never);
@@ -193,12 +193,12 @@ describe('QualityScoringService', () => {
 
   describe('getImprovements', () => {
     it('should return improvements for low-scoring dimensions', async () => {
-      prismaService.projectType.findUnique.mockResolvedValue(mockProjectType as never);
-      prismaService.qualityDimension.findMany.mockResolvedValue([
+      (prismaService.projectType.findUnique as jest.Mock).mockResolvedValue(mockProjectType as never);
+      (prismaService.qualityDimension.findMany as jest.Mock).mockResolvedValue([
         mockDimension,
         mockDimension2,
       ] as never);
-      prismaService.extractedFact.findMany.mockResolvedValue([]);
+      (prismaService.extractedFact.findMany as jest.Mock).mockResolvedValue([]);
 
       const result = await service.getImprovements('project-1', 'business-plan');
 
@@ -209,12 +209,12 @@ describe('QualityScoringService', () => {
     });
 
     it('should sort improvements by lowest score first', async () => {
-      prismaService.projectType.findUnique.mockResolvedValue(mockProjectType as never);
-      prismaService.qualityDimension.findMany.mockResolvedValue([
+      (prismaService.projectType.findUnique as jest.Mock).mockResolvedValue(mockProjectType as never);
+      (prismaService.qualityDimension.findMany as jest.Mock).mockResolvedValue([
         mockDimension,
         mockDimension2,
       ] as never);
-      prismaService.extractedFact.findMany.mockResolvedValue([
+      (prismaService.extractedFact.findMany as jest.Mock).mockResolvedValue([
         mockFact('target_market', 0.9),
         mockFact('market_size', 0.8),
       ] as never);
@@ -229,7 +229,7 @@ describe('QualityScoringService', () => {
 
   describe('saveProjectScore', () => {
     it('should save score to project record', async () => {
-      prismaService.project.update.mockResolvedValue({} as never);
+      (prismaService.project.update as jest.Mock).mockResolvedValue({} as never);
 
       const score = {
         projectId: 'project-1',

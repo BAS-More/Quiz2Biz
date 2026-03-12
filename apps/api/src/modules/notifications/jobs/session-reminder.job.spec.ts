@@ -81,10 +81,10 @@ describe('SessionReminderJobService', () => {
     });
 
     it('should find abandoned sessions and send reminders', async () => {
-      prisma.session.findMany.mockResolvedValue([mockAbandonedSession]);
+      (prisma.session.findMany as jest.Mock).mockResolvedValue([mockAbandonedSession]);
       // No existing reminder record
-      prisma.session.findUnique.mockResolvedValue({ metadata: null, userId: 'user-1' });
-      prisma.session.update.mockResolvedValue(mockAbandonedSession);
+      (prisma.session.findUnique as jest.Mock).mockResolvedValue({ metadata: null, userId: 'user-1' });
+      (prisma.session.update as jest.Mock).mockResolvedValue(mockAbandonedSession);
 
       await service.processAbandonedSessionReminders();
 
@@ -111,8 +111,8 @@ describe('SessionReminderJobService', () => {
         lastActivityAt: hoursAgo(12), // Only 12 hours ago
       };
 
-      prisma.session.findMany.mockResolvedValue([recentSession]);
-      prisma.session.findUnique.mockResolvedValue({ metadata: null, userId: 'user-1' });
+      (prisma.session.findMany as jest.Mock).mockResolvedValue([recentSession]);
+      (prisma.session.findUnique as jest.Mock).mockResolvedValue({ metadata: null, userId: 'user-1' });
 
       await service.processAbandonedSessionReminders();
 
@@ -120,7 +120,7 @@ describe('SessionReminderJobService', () => {
     });
 
     it('should handle empty abandoned sessions list', async () => {
-      prisma.session.findMany.mockResolvedValue([]);
+      (prisma.session.findMany as jest.Mock).mockResolvedValue([]);
 
       await service.processAbandonedSessionReminders();
 
@@ -129,19 +129,19 @@ describe('SessionReminderJobService', () => {
 
     it('should continue processing other sessions when one fails', async () => {
       const session2 = { ...mockAbandonedSession, id: 'session-2' };
-      prisma.session.findMany.mockResolvedValue([mockAbandonedSession, session2]);
+      (prisma.session.findMany as jest.Mock).mockResolvedValue([mockAbandonedSession, session2]);
 
       // First findUnique for shouldSendReminder → null metadata (no prior reminders)
       // Then findUnique for getReminderRecord in sendReminderAndTrack → null
       // Then findUnique for getSessionMetadata → null
-      prisma.session.findUnique.mockResolvedValue({ metadata: null, userId: 'user-1' });
+      (prisma.session.findUnique as jest.Mock).mockResolvedValue({ metadata: null, userId: 'user-1' });
 
       // First notification fails, second succeeds
       notificationService.sendSessionReminderEmail
         .mockRejectedValueOnce(new Error('Email failed'))
         .mockResolvedValueOnce(undefined);
 
-      prisma.session.update.mockResolvedValue(session2);
+      (prisma.session.update as jest.Mock).mockResolvedValue(session2);
 
       await service.processAbandonedSessionReminders();
 
@@ -150,8 +150,8 @@ describe('SessionReminderJobService', () => {
     });
 
     it('should not send reminder when max 3 reminders already sent', async () => {
-      prisma.session.findMany.mockResolvedValue([mockAbandonedSession]);
-      prisma.session.findUnique.mockResolvedValue({
+      (prisma.session.findMany as jest.Mock).mockResolvedValue([mockAbandonedSession]);
+      (prisma.session.findUnique as jest.Mock).mockResolvedValue({
         metadata: { reminders: { sent: 3, lastAt: hoursAgo(48).toISOString() } },
         userId: 'user-1',
       });
@@ -166,14 +166,14 @@ describe('SessionReminderJobService', () => {
         ...mockAbandonedSession,
         lastActivityAt: hoursAgo(80), // 80 hours ago
       };
-      prisma.session.findMany.mockResolvedValue([session72h]);
+      (prisma.session.findMany as jest.Mock).mockResolvedValue([session72h]);
 
       // Already sent 1 reminder
-      prisma.session.findUnique.mockResolvedValue({
+      (prisma.session.findUnique as jest.Mock).mockResolvedValue({
         metadata: { reminders: { sent: 1, lastAt: hoursAgo(50).toISOString() } },
         userId: 'user-1',
       });
-      prisma.session.update.mockResolvedValue(session72h);
+      (prisma.session.update as jest.Mock).mockResolvedValue(session72h);
 
       await service.processAbandonedSessionReminders();
 
@@ -185,9 +185,9 @@ describe('SessionReminderJobService', () => {
         ...mockAbandonedSession,
         lastActivityAt: hoursAgo(50), // Only 50 hours ago
       };
-      prisma.session.findMany.mockResolvedValue([session50h]);
+      (prisma.session.findMany as jest.Mock).mockResolvedValue([session50h]);
 
-      prisma.session.findUnique.mockResolvedValue({
+      (prisma.session.findUnique as jest.Mock).mockResolvedValue({
         metadata: { reminders: { sent: 1, lastAt: hoursAgo(25).toISOString() } },
         userId: 'user-1',
       });
@@ -202,13 +202,13 @@ describe('SessionReminderJobService', () => {
         ...mockAbandonedSession,
         lastActivityAt: hoursAgo(170), // ~7 days ago
       };
-      prisma.session.findMany.mockResolvedValue([session7d]);
+      (prisma.session.findMany as jest.Mock).mockResolvedValue([session7d]);
 
-      prisma.session.findUnique.mockResolvedValue({
+      (prisma.session.findUnique as jest.Mock).mockResolvedValue({
         metadata: { reminders: { sent: 2, lastAt: hoursAgo(100).toISOString() } },
         userId: 'user-1',
       });
-      prisma.session.update.mockResolvedValue(session7d);
+      (prisma.session.update as jest.Mock).mockResolvedValue(session7d);
 
       await service.processAbandonedSessionReminders();
 
@@ -230,8 +230,8 @@ describe('SessionReminderJobService', () => {
         ...mockAbandonedSession,
         user: { ...mockUser, email: '' },
       };
-      prisma.session.findMany.mockResolvedValue([sessionNoEmail]);
-      prisma.session.findUnique.mockResolvedValue({ metadata: null, userId: 'user-1' });
+      (prisma.session.findMany as jest.Mock).mockResolvedValue([sessionNoEmail]);
+      (prisma.session.findUnique as jest.Mock).mockResolvedValue({ metadata: null, userId: 'user-1' });
 
       await service.processAbandonedSessionReminders();
 
@@ -243,8 +243,8 @@ describe('SessionReminderJobService', () => {
         ...mockAbandonedSession,
         user: null,
       };
-      prisma.session.findMany.mockResolvedValue([sessionNoUser]);
-      prisma.session.findUnique.mockResolvedValue({ metadata: null, userId: 'user-1' });
+      (prisma.session.findMany as jest.Mock).mockResolvedValue([sessionNoUser]);
+      (prisma.session.findUnique as jest.Mock).mockResolvedValue({ metadata: null, userId: 'user-1' });
 
       await service.processAbandonedSessionReminders();
 
@@ -259,8 +259,8 @@ describe('SessionReminderJobService', () => {
           preferences: { notifications: { email_session_complete: false } },
         },
       };
-      prisma.session.findMany.mockResolvedValue([sessionOptedOut]);
-      prisma.session.findUnique.mockResolvedValue({ metadata: null, userId: 'user-1' });
+      (prisma.session.findMany as jest.Mock).mockResolvedValue([sessionOptedOut]);
+      (prisma.session.findUnique as jest.Mock).mockResolvedValue({ metadata: null, userId: 'user-1' });
 
       await service.processAbandonedSessionReminders();
 
@@ -272,9 +272,9 @@ describe('SessionReminderJobService', () => {
         ...mockAbandonedSession,
         user: { ...mockUser, name: null },
       };
-      prisma.session.findMany.mockResolvedValue([sessionNoName]);
-      prisma.session.findUnique.mockResolvedValue({ metadata: null, userId: 'user-1' });
-      prisma.session.update.mockResolvedValue(sessionNoName);
+      (prisma.session.findMany as jest.Mock).mockResolvedValue([sessionNoName]);
+      (prisma.session.findUnique as jest.Mock).mockResolvedValue({ metadata: null, userId: 'user-1' });
+      (prisma.session.update as jest.Mock).mockResolvedValue(sessionNoName);
 
       await service.processAbandonedSessionReminders();
 
@@ -292,9 +292,9 @@ describe('SessionReminderJobService', () => {
         ...mockAbandonedSession,
         questionnaire: null,
       };
-      prisma.session.findMany.mockResolvedValue([sessionNoQ]);
-      prisma.session.findUnique.mockResolvedValue({ metadata: null, userId: 'user-1' });
-      prisma.session.update.mockResolvedValue(sessionNoQ);
+      (prisma.session.findMany as jest.Mock).mockResolvedValue([sessionNoQ]);
+      (prisma.session.findUnique as jest.Mock).mockResolvedValue({ metadata: null, userId: 'user-1' });
+      (prisma.session.update as jest.Mock).mockResolvedValue(sessionNoQ);
 
       await service.processAbandonedSessionReminders();
 
@@ -308,9 +308,9 @@ describe('SessionReminderJobService', () => {
     });
 
     it('should update session metadata with reminder tracking', async () => {
-      prisma.session.findMany.mockResolvedValue([mockAbandonedSession]);
-      prisma.session.findUnique.mockResolvedValue({ metadata: null, userId: 'user-1' });
-      prisma.session.update.mockResolvedValue(mockAbandonedSession);
+      (prisma.session.findMany as jest.Mock).mockResolvedValue([mockAbandonedSession]);
+      (prisma.session.findUnique as jest.Mock).mockResolvedValue({ metadata: null, userId: 'user-1' });
+      (prisma.session.update as jest.Mock).mockResolvedValue(mockAbandonedSession);
 
       await service.processAbandonedSessionReminders();
 

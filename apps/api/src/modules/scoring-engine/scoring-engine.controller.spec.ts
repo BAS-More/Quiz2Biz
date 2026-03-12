@@ -22,7 +22,7 @@ describe('ScoringEngineController', () => {
     }).compile();
 
     controller = module.get<ScoringEngineController>(ScoringEngineController);
-    scoringService = module.get<ScoringEngineService>(ScoringEngineService);
+    module.get<ScoringEngineService>(ScoringEngineService);
 
     jest.clearAllMocks();
   });

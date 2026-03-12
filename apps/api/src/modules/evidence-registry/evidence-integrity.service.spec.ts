@@ -941,7 +941,7 @@ describe('EvidenceIntegrityService', () => {
 
   describe('Branch coverage - requestTimestamp with non-200 status', () => {
     it('should reject when TSA returns non-200 status', async () => {
-      const server = http.createServer((req, res) => {
+      const server = http.createServer((_req, res) => {
         res.statusCode = 500;
         res.end('Internal Server Error');
       });

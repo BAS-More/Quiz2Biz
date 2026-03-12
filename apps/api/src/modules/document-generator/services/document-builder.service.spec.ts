@@ -587,12 +587,6 @@ describe('DocumentBuilderService', () => {
   // Document categories via buildDocument (template path)
   // ---------------------------------------------------------------------------
   describe('document categories via buildDocument', () => {
-        {
-      documentType: 'Test',
-      category: DocumentCategory.BA,
-      generatedAt: new Date(),
-      version: '1.0',
-    };
 
     it('should build document for BA category', async () => {
       const docType: DocumentTypeInfo = {

@@ -291,7 +291,7 @@ describe('Dependency Health Validation', () => {
       const violations: string[] = [];
       for (const { pkg } of packages) {
         if (pkg.peerDependencies) {
-          for (const [peer, peerVersion] of Object.entries(pkg.peerDependencies)) {
+          for (const [peer] of Object.entries(pkg.peerDependencies)) {
             const installed = pkg.dependencies?.[peer] || pkg.devDependencies?.[peer];
             if (!installed) {
               // Peer dependency not directly installed - might be from parent

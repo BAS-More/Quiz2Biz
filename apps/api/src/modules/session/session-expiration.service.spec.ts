@@ -29,8 +29,8 @@ describe('SessionExpirationService', () => {
     }).compile();
 
     service = module.get<SessionExpirationService>(SessionExpirationService);
-    prismaService = module.get(PrismaService);
-    notificationService = module.get(NotificationService);
+    module.get(PrismaService);
+    module.get(NotificationService);
   });
 
   describe('handleExpiredSessions', () => {

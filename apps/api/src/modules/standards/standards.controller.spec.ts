@@ -21,7 +21,7 @@ describe('StandardsController', () => {
     }).compile();
 
     controller = module.get<StandardsController>(StandardsController);
-    standardsService = module.get(StandardsService);
+    module.get(StandardsService);
   });
 
   describe('findAll', () => {

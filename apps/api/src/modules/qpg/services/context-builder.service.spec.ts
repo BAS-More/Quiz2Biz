@@ -84,7 +84,7 @@ describe('ContextBuilderService', () => {
     }).compile();
 
     service = module.get<ContextBuilderService>(ContextBuilderService);
-    prismaService = module.get(PrismaService);
+    module.get(PrismaService);
   });
 
   describe('buildGapContexts', () => {
