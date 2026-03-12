@@ -372,7 +372,13 @@ export class CIArtifactIngestionService {
       const licenses: Set<string> = new Set();
 
       for (const comp of components) {
-        if (typeof comp.type === 'string' && comp.type.length <= 100) {
+        if (
+          typeof comp.type === 'string' &&
+          comp.type.length <= 100 &&
+          comp.type !== '__proto__' &&
+          comp.type !== 'prototype' &&
+          comp.type !== 'constructor'
+        ) {
           byType.set(comp.type, (byType.get(comp.type) || 0) + 1);
         }
         if (comp.licenses) {
