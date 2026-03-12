@@ -355,10 +355,10 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
   const heights = { sm: 4, md: 8, lg: 12 };
   const colors = {
-    default: '#3182ce',
-    success: '#48bb78',
-    error: '#e53e3e',
-    warning: '#ecc94b',
+    default: 'var(--color-brand-500)',
+    success: 'var(--color-success-500)',
+    error: 'var(--color-danger-500)',
+    warning: 'var(--color-warning-500)',
   };
 
   return (
@@ -371,7 +371,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         aria-valuemax={100}
         style={{
           height: heights[size],
-          background: '#e2e8f0',
+          background: 'var(--color-surface-200)',
           borderRadius: heights[size] / 2,
           overflow: 'hidden',
         }}
@@ -392,7 +392,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           className="progress-bar-label"
           style={{
             fontSize: size === 'sm' ? 10 : size === 'lg' ? 14 : 12,
-            color: '#4a5568',
+            color: 'var(--color-surface-600)',
             marginLeft: 8,
           }}
         >
@@ -425,12 +425,21 @@ export const UploadItem: React.FC<UploadItemProps> = ({
   const eta = file.speed && file.speed > 0 ? (file.size - file.bytesUploaded) / file.speed : 0;
 
   const statusColors: Record<UploadStatus, string> = {
-    pending: '#718096',
-    uploading: '#3182ce',
-    processing: '#805ad5',
-    complete: '#48bb78',
-    error: '#e53e3e',
-    cancelled: '#a0aec0',
+    pending: 'var(--color-surface-500)',
+    uploading: 'var(--color-brand-500)',
+    processing: 'var(--color-accent-600)',
+    complete: 'var(--color-success-500)',
+    error: 'var(--color-danger-500)',
+    cancelled: 'var(--color-surface-400)',
+  };
+
+  const statusBgColors: Record<UploadStatus, string> = {
+    pending: 'var(--color-surface-100)',
+    uploading: 'var(--color-brand-50)',
+    processing: 'var(--color-accent-50)',
+    complete: 'var(--color-success-50)',
+    error: 'var(--color-danger-50)',
+    cancelled: 'var(--color-surface-100)',
   };
 
   const statusText: Record<UploadStatus, string> = {
@@ -450,9 +459,9 @@ export const UploadItem: React.FC<UploadItemProps> = ({
         flexDirection: compact ? 'row' : 'column',
         gap: compact ? 12 : 8,
         padding: compact ? 8 : 12,
-        background: '#f7fafc',
+        background: 'var(--color-surface-50)',
         borderRadius: 8,
-        border: `1px solid ${file.status === 'error' ? '#feb2b2' : '#e2e8f0'}`,
+        border: `1px solid ${file.status === 'error' ? 'var(--color-danger-300)' : 'var(--color-surface-200)'}`,
       }}
     >
       {/* File info */}
@@ -464,7 +473,7 @@ export const UploadItem: React.FC<UploadItemProps> = ({
               margin: 0,
               fontSize: compact ? 13 : 14,
               fontWeight: 500,
-              color: '#2d3748',
+              color: 'var(--color-surface-700)',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
@@ -473,7 +482,7 @@ export const UploadItem: React.FC<UploadItemProps> = ({
           >
             {file.name}
           </p>
-          <p style={{ margin: '2px 0 0', fontSize: 12, color: '#718096' }}>
+          <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--color-surface-500)' }}>
             {formatFileSize(file.size)}
             {file.status === 'uploading' && file.speed && <> • {formatSpeed(file.speed)}</>}
             {file.status === 'uploading' && eta > 0 && <> • ETA: {formatETA(eta)}</>}
@@ -501,7 +510,7 @@ export const UploadItem: React.FC<UploadItemProps> = ({
             borderRadius: 4,
             fontSize: 11,
             fontWeight: 500,
-            background: `${statusColors[file.status]}20`,
+            background: `${statusBgColors[file.status]}`,
             color: statusColors[file.status],
           }}
         >
@@ -514,7 +523,7 @@ export const UploadItem: React.FC<UploadItemProps> = ({
             style={{
               padding: '4px 8px',
               background: 'transparent',
-              border: '1px solid #e2e8f0',
+              border: '1px solid var(--color-surface-200)',
               borderRadius: 4,
               fontSize: 12,
               cursor: 'pointer',
@@ -530,7 +539,7 @@ export const UploadItem: React.FC<UploadItemProps> = ({
             onClick={onRetry}
             style={{
               padding: '4px 8px',
-              background: '#e53e3e',
+              background: 'var(--color-danger-500)',
               color: 'white',
               border: 'none',
               borderRadius: 4,
@@ -553,7 +562,7 @@ export const UploadItem: React.FC<UploadItemProps> = ({
                 border: 'none',
                 fontSize: 16,
                 cursor: 'pointer',
-                color: '#718096',
+                color: 'var(--color-surface-500)',
               }}
               aria-label={`Remove ${file.name}`}
             >
@@ -564,7 +573,7 @@ export const UploadItem: React.FC<UploadItemProps> = ({
 
       {/* Error message */}
       {file.error && (
-        <p style={{ margin: '4px 0 0', fontSize: 12, color: '#e53e3e' }}>⚠️ {file.error}</p>
+        <p style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--color-danger-500)' }}>⚠️ {file.error}</p>
       )}
     </div>
   );
@@ -603,9 +612,9 @@ export const UploadSummary: React.FC<UploadSummaryProps> = ({
       className="upload-summary"
       style={{
         padding: 12,
-        background: '#ebf8ff',
+        background: 'var(--color-brand-50)',
         borderRadius: 8,
-        border: '1px solid #90cdf4',
+        border: '1px solid var(--color-brand-300)',
       }}
     >
       <div
@@ -616,18 +625,18 @@ export const UploadSummary: React.FC<UploadSummaryProps> = ({
           marginBottom: 8,
         }}
       >
-        <h4 style={{ margin: 0, fontSize: 14, color: '#2b6cb0' }}>📤 Upload Progress</h4>
+        <h4 style={{ margin: 0, fontSize: 14, color: 'var(--color-brand-600)' }}>📤 Upload Progress</h4>
         {completed > 0 && onClearCompleted && (
           <button
             onClick={onClearCompleted}
             style={{
               padding: '4px 8px',
               background: 'transparent',
-              border: '1px solid #90cdf4',
+              border: '1px solid var(--color-brand-300)',
               borderRadius: 4,
               fontSize: 12,
               cursor: 'pointer',
-              color: '#2b6cb0',
+              color: 'var(--color-brand-600)',
             }}
           >
             Clear completed
@@ -638,14 +647,14 @@ export const UploadSummary: React.FC<UploadSummaryProps> = ({
       <ProgressBar progress={totalProgress} size="lg" />
 
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, marginTop: 12, fontSize: 13 }}>
-        {uploading > 0 && <span style={{ color: '#3182ce' }}>🔄 {uploading} uploading</span>}
-        {pending > 0 && <span style={{ color: '#718096' }}>⏳ {pending} pending</span>}
-        {completed > 0 && <span style={{ color: '#38a169' }}>✅ {completed} complete</span>}
-        {failed > 0 && <span style={{ color: '#e53e3e' }}>❌ {failed} failed</span>}
+        {uploading > 0 && <span style={{ color: 'var(--color-brand-500)' }}>🔄 {uploading} uploading</span>}
+        {pending > 0 && <span style={{ color: 'var(--color-surface-500)' }}>⏳ {pending} pending</span>}
+        {completed > 0 && <span style={{ color: 'var(--color-success-500)' }}>✅ {completed} complete</span>}
+        {failed > 0 && <span style={{ color: 'var(--color-danger-500)' }}>❌ {failed} failed</span>}
       </div>
 
       {uploading > 0 && (
-        <div style={{ marginTop: 8, fontSize: 12, color: '#4a5568' }}>
+        <div style={{ marginTop: 8, fontSize: 12, color: 'var(--color-surface-600)' }}>
           Speed: {formatSpeed(totalSpeed)} • ETA: {formatETA(totalETA)}
         </div>
       )}
@@ -676,7 +685,7 @@ export const UploadList: React.FC<UploadListProps> = ({
 }) => {
   if (files.length === 0) {
     return (
-      <div style={{ textAlign: 'center', padding: 40, color: '#718096' }}>
+      <div style={{ textAlign: 'center', padding: 40, color: 'var(--color-surface-500)' }}>
         <span style={{ fontSize: 48, display: 'block', marginBottom: 12 }} aria-hidden="true">
           📁
         </span>

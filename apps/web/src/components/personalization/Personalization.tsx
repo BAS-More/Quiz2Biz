@@ -1022,125 +1022,25 @@ export const usePersonalization = (): PersonalizationContextType => {
 // =============================================================================
 
 const styles = {
-  dashboard: {
-    display: 'grid',
-    gap: '16px',
-    padding: '24px',
-  } as React.CSSProperties,
-  widget: {
-    backgroundColor: '#ffffff',
-    borderRadius: '12px',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-    overflow: 'hidden',
-    transition: 'box-shadow 0.2s ease',
-  } as React.CSSProperties,
-  widgetHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '16px',
-    borderBottom: '1px solid #e5e7eb',
-    backgroundColor: '#f9fafb',
-  } as React.CSSProperties,
-  widgetTitle: {
-    fontSize: '14px',
-    fontWeight: 600,
-    color: '#1a1a2e',
-    margin: 0,
-    flex: 1,
-  } as React.CSSProperties,
-  widgetIcon: {
-    fontSize: '18px',
-  } as React.CSSProperties,
-  widgetActions: {
-    display: 'flex',
-    gap: '4px',
-  } as React.CSSProperties,
-  widgetAction: {
-    padding: '4px 8px',
-    backgroundColor: 'transparent',
-    border: 'none',
-    color: '#6b7280',
-    cursor: 'pointer',
-    fontSize: '12px',
-    borderRadius: '4px',
-  } as React.CSSProperties,
-  widgetContent: {
-    padding: '16px',
-    minHeight: '100px',
-  } as React.CSSProperties,
-  editOverlay: {
-    position: 'absolute' as const,
-    inset: 0,
-    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-    border: '2px dashed #3b82f6',
-    borderRadius: '12px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'move',
-  } as React.CSSProperties,
-  toolbar: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-    padding: '16px 24px',
-    backgroundColor: '#ffffff',
-    borderBottom: '1px solid #e5e7eb',
-  } as React.CSSProperties,
-  toolbarButton: {
-    padding: '8px 16px',
-    borderRadius: '8px',
-    border: 'none',
-    fontSize: '14px',
-    fontWeight: 500,
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-  } as React.CSSProperties,
-  recommendation: {
-    padding: '16px',
-    backgroundColor: '#eff6ff',
-    borderRadius: '8px',
-    marginBottom: '12px',
-    display: 'flex',
-    gap: '12px',
-  } as React.CSSProperties,
-  recommendationIcon: {
-    fontSize: '24px',
-    flexShrink: 0,
-  } as React.CSSProperties,
-  recommendationContent: {
-    flex: 1,
-  } as React.CSSProperties,
-  recommendationTitle: {
-    fontSize: '14px',
-    fontWeight: 600,
-    color: '#1e40af',
-    margin: '0 0 4px 0',
-  } as React.CSSProperties,
-  recommendationText: {
-    fontSize: '13px',
-    color: '#3b82f6',
-    margin: '0 0 8px 0',
-  } as React.CSSProperties,
-  recommendationActions: {
-    display: 'flex',
-    gap: '8px',
-  } as React.CSSProperties,
-  widgetPicker: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-    gap: '16px',
-    padding: '24px',
-  } as React.CSSProperties,
-  widgetPickerItem: {
-    padding: '16px',
-    backgroundColor: '#f9fafb',
-    borderRadius: '8px',
-    border: '1px solid #e5e7eb',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-  } as React.CSSProperties,
+  dashboard: 'grid gap-4 p-6',
+  widget: 'bg-surface-50 rounded-xl shadow-card overflow-hidden transition-shadow duration-200',
+  widgetHeader: 'flex items-center gap-2 p-4 border-b border-surface-200 bg-surface-100',
+  widgetTitle: 'text-sm font-semibold text-surface-900 m-0 flex-1',
+  widgetIcon: 'text-lg',
+  widgetActions: 'flex gap-1',
+  widgetAction: 'px-2 py-1 bg-transparent border-none text-surface-500 cursor-pointer text-xs rounded',
+  widgetContent: 'p-4 min-h-[100px]',
+  editOverlay: 'absolute inset-0 bg-brand-500/10 border-2 border-dashed border-brand-500 rounded-xl flex items-center justify-center cursor-move',
+  toolbar: 'flex items-center gap-3 px-6 py-4 bg-surface-50 border-b border-surface-200',
+  toolbarButton: 'px-4 py-2 rounded-lg border-none text-sm font-medium cursor-pointer transition-all duration-200',
+  recommendation: 'p-4 bg-brand-50 rounded-lg mb-3 flex gap-3',
+  recommendationIcon: 'text-2xl shrink-0',
+  recommendationContent: 'flex-1',
+  recommendationTitle: 'text-sm font-semibold text-brand-800 m-0 mb-1',
+  recommendationText: 'text-[13px] text-brand-500 m-0 mb-2',
+  recommendationActions: 'flex gap-2',
+  widgetPicker: 'grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4 p-6',
+  widgetPickerItem: 'p-4 bg-surface-100 rounded-lg border border-surface-200 cursor-pointer transition-all duration-200',
 };
 
 // Dashboard Toolbar Component
@@ -1158,16 +1058,11 @@ export const DashboardToolbar: React.FC = () => {
   const [_showLayoutPicker, _setShowLayoutPicker] = useState(false);
 
   return (
-    <div style={styles.toolbar}>
+    <div className={styles.toolbar}>
       <select
         value={activeLayoutId || ''}
         onChange={(e) => setActiveLayout(e.target.value)}
-        style={{
-          padding: '8px 12px',
-          borderRadius: '8px',
-          border: '1px solid #d1d5db',
-          fontSize: '14px',
-        }}
+        className="px-3 py-2 rounded-lg border border-surface-300 text-sm"
       >
         {layouts.map((layout) => (
           <option key={layout.id} value={layout.id}>
@@ -1177,22 +1072,14 @@ export const DashboardToolbar: React.FC = () => {
       </select>
 
       <button
-        style={{
-          ...styles.toolbarButton,
-          backgroundColor: isEditMode ? '#3b82f6' : '#f3f4f6',
-          color: isEditMode ? '#ffffff' : '#374151',
-        }}
+        className={`${styles.toolbarButton} ${isEditMode ? 'bg-brand-500 text-white' : 'bg-surface-100 text-surface-700'}`}
         onClick={toggleEditMode}
       >
         {isEditMode ? '✓ Done Editing' : '✏️ Edit Layout'}
       </button>
 
       <button
-        style={{
-          ...styles.toolbarButton,
-          backgroundColor: '#f3f4f6',
-          color: '#374151',
-        }}
+        className={`${styles.toolbarButton} bg-surface-100 text-surface-700`}
         onClick={() => {
           const name = prompt('Enter layout name:');
           if (name) {
@@ -1204,12 +1091,7 @@ export const DashboardToolbar: React.FC = () => {
       </button>
 
       <button
-        style={{
-          ...styles.toolbarButton,
-          backgroundColor: '#f3f4f6',
-          color: '#374151',
-          marginLeft: 'auto',
-        }}
+        className={`${styles.toolbarButton} bg-surface-100 text-surface-700 ml-auto`}
         onClick={resetToDefault}
       >
         Reset to Default
@@ -1225,14 +1107,14 @@ export const WidgetPicker: React.FC<{ onSelect: (widgetId: string) => void }> = 
   const usedWidgetIds = activeLayout?.widgets.map((w) => w.widgetId) || [];
 
   return (
-    <div style={styles.widgetPicker}>
+    <div className={styles.widgetPicker}>
       {availableWidgets
         .filter((w) => !usedWidgetIds.includes(w.id))
         .map((widget) => (
-          <div key={widget.id} style={styles.widgetPickerItem} onClick={() => onSelect(widget.id)}>
-            <div style={{ fontSize: '24px', marginBottom: '8px' }}>{widget.icon}</div>
-            <h4 style={{ margin: '0 0 4px 0', fontSize: '14px' }}>{widget.title}</h4>
-            <p style={{ margin: 0, fontSize: '12px', color: '#6b7280' }}>{widget.description}</p>
+          <div key={widget.id} className={styles.widgetPickerItem} onClick={() => onSelect(widget.id)}>
+            <div className="text-2xl mb-2">{widget.icon}</div>
+            <h4 className="m-0 mb-1 text-sm">{widget.title}</h4>
+            <p className="m-0 text-xs text-surface-500">{widget.description}</p>
           </div>
         ))}
     </div>
@@ -1251,34 +1133,33 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({ instance, widg
 
   return (
     <div
+      className={`${styles.widget} relative`}
       style={{
-        ...styles.widget,
         gridColumn: `span ${instance.size.width}`,
         gridRow: `span ${instance.size.height}`,
-        position: 'relative',
       }}
     >
-      <div style={styles.widgetHeader}>
-        <span style={styles.widgetIcon}>{widget.icon}</span>
-        <h3 style={styles.widgetTitle}>{widget.title}</h3>
-        <div style={styles.widgetActions}>
+      <div className={styles.widgetHeader}>
+        <span className={styles.widgetIcon}>{widget.icon}</span>
+        <h3 className={styles.widgetTitle}>{widget.title}</h3>
+        <div className={styles.widgetActions}>
           <button
-            style={styles.widgetAction}
+            className={styles.widgetAction}
             onClick={() => updateWidget(instance.id, { collapsed: !instance.collapsed })}
           >
             {instance.collapsed ? '▼' : '▲'}
           </button>
           {isEditMode && (
-            <button style={styles.widgetAction} onClick={() => removeWidget(instance.id)}>
+            <button className={styles.widgetAction} onClick={() => removeWidget(instance.id)}>
               ✕
             </button>
           )}
         </div>
       </div>
 
-      {!instance.collapsed && <div style={styles.widgetContent}>{children}</div>}
+      {!instance.collapsed && <div className={styles.widgetContent}>{children}</div>}
 
-      {isEditMode && <div style={styles.editOverlay}>Drag to reposition</div>}
+      {isEditMode && <div className={styles.editOverlay}>Drag to reposition</div>}
     </div>
   );
 };
@@ -1290,9 +1171,9 @@ export const RecommendationsWidget: React.FC = () => {
 
   if (recommendations.length === 0) {
     return (
-      <div style={{ padding: '20px', textAlign: 'center', color: '#6b7280' }}>
-        <p style={{ margin: 0 }}>No recommendations right now</p>
-        <p style={{ margin: '8px 0 0 0', fontSize: '13px' }}>
+      <div className="p-5 text-center text-surface-500">
+        <p className="m-0">No recommendations right now</p>
+        <p className="mt-2 mb-0 text-[13px]">
           Keep using the app and we'll provide personalized suggestions
         </p>
       </div>
@@ -1302,8 +1183,8 @@ export const RecommendationsWidget: React.FC = () => {
   return (
     <div>
       {recommendations.slice(0, 3).map((rec) => (
-        <div key={rec.id} style={styles.recommendation}>
-          <span style={styles.recommendationIcon}>
+        <div key={rec.id} className={styles.recommendation}>
+          <span className={styles.recommendationIcon}>
             {rec.type === 'next_question'
               ? '❓'
               : rec.type === 'completion_reminder'
@@ -1312,30 +1193,17 @@ export const RecommendationsWidget: React.FC = () => {
                   ? '⚡'
                   : '💡'}
           </span>
-          <div style={styles.recommendationContent}>
-            <h4 style={styles.recommendationTitle}>{rec.title}</h4>
-            <p style={styles.recommendationText}>{rec.description}</p>
-            <div style={styles.recommendationActions}>
+          <div className={styles.recommendationContent}>
+            <h4 className={styles.recommendationTitle}>{rec.title}</h4>
+            <p className={styles.recommendationText}>{rec.description}</p>
+            <div className={styles.recommendationActions}>
               <button
-                style={{
-                  ...styles.toolbarButton,
-                  backgroundColor: '#3b82f6',
-                  color: '#ffffff',
-                  padding: '6px 12px',
-                  fontSize: '12px',
-                }}
+                className={`${styles.toolbarButton} bg-brand-500 text-white px-3 py-1.5 text-xs`}
               >
                 Take Action
               </button>
               <button
-                style={{
-                  ...styles.toolbarButton,
-                  backgroundColor: 'transparent',
-                  color: '#6b7280',
-                  border: '1px solid #d1d5db',
-                  padding: '6px 12px',
-                  fontSize: '12px',
-                }}
+                className={`${styles.toolbarButton} bg-transparent text-surface-500 border border-surface-300 px-3 py-1.5 text-xs`}
                 onClick={() => dismissRecommendation(rec.id)}
               >
                 Dismiss
@@ -1364,23 +1232,14 @@ export const PersonalizedDashboard: React.FC = () => {
 
       {isEditMode && (
         <div
-          style={{
-            padding: '16px 24px',
-            backgroundColor: '#fef3c7',
-            borderBottom: '1px solid #fcd34d',
-          }}
+          className="px-6 py-4 bg-warning-100 border-b border-warning-300"
         >
-          <p style={{ margin: 0, fontSize: '14px', color: '#92400e' }}>
+          <p className="m-0 text-sm text-warning-800">
             ✏️ Edit mode active. Drag widgets to reposition or click the + button to add new
             widgets.
           </p>
           <button
-            style={{
-              ...styles.toolbarButton,
-              backgroundColor: '#f59e0b',
-              color: '#ffffff',
-              marginTop: '8px',
-            }}
+            className={`${styles.toolbarButton} bg-warning-500 text-white mt-2`}
             onClick={() => setShowWidgetPicker(true)}
           >
             + Add Widget
@@ -1390,29 +1249,15 @@ export const PersonalizedDashboard: React.FC = () => {
 
       {showWidgetPicker && (
         <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-          }}
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-[1000]"
           onClick={() => setShowWidgetPicker(false)}
         >
           <div
-            style={{
-              backgroundColor: '#ffffff',
-              borderRadius: '12px',
-              maxWidth: '600px',
-              maxHeight: '80vh',
-              overflow: 'auto',
-            }}
+            className="bg-surface-50 rounded-xl max-w-[600px] max-h-[80vh] overflow-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ padding: '16px 24px', borderBottom: '1px solid #e5e7eb' }}>
-              <h2 style={{ margin: 0, fontSize: '18px' }}>Add Widget</h2>
+            <div className="px-6 py-4 border-b border-surface-200">
+              <h2 className="m-0 text-lg">Add Widget</h2>
             </div>
             <WidgetPicker
               onSelect={(widgetId) => {
@@ -1425,10 +1270,8 @@ export const PersonalizedDashboard: React.FC = () => {
       )}
 
       <div
-        style={{
-          ...styles.dashboard,
-          gridTemplateColumns: `repeat(${layout.gridColumns}, 1fr)`,
-        }}
+        className={styles.dashboard}
+        style={{ gridTemplateColumns: `repeat(${layout.gridColumns}, 1fr)` }}
       >
         {layout.widgets
           .filter((w) => w.visible)
@@ -1443,7 +1286,7 @@ export const PersonalizedDashboard: React.FC = () => {
                 {widget.type === 'recommendations' ? (
                   <RecommendationsWidget />
                 ) : (
-                  <div style={{ color: '#6b7280', fontSize: '14px' }}>{widget.description}</div>
+                  <div className="text-surface-500 text-sm">{widget.description}</div>
                 )}
               </WidgetComponent>
             );
@@ -1513,17 +1356,7 @@ export const CompletionTimePredictor: React.FC<CompletionTimePredictorProps> = (
 
   return (
     <div
-      className={className}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        padding: '8px 12px',
-        backgroundColor: '#f3f4f6',
-        borderRadius: '8px',
-        fontSize: '13px',
-        color: '#6b7280',
-      }}
+      className={`${className || ''} flex items-center gap-2 px-3 py-2 bg-surface-100 rounded-lg text-[13px] text-surface-500`}
     >
       <span>⏱️</span>
       <span>

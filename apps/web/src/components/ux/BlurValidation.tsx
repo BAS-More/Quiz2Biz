@@ -554,69 +554,38 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
   const helperId = `${name}-helper`;
 
   return (
-    <div className={`validated-field ${className}`} style={{ marginBottom: 16 }}>
+    <div className={`validated-field ${className} mb-4`}>
       {label && (
         <label
           htmlFor={name}
-          style={{
-            display: 'block',
-            marginBottom: 6,
-            fontSize: 14,
-            fontWeight: 500,
-            color: '#2d3748',
-          }}
+          className="block mb-1.5 text-sm font-medium text-surface-700"
         >
           {label}
-          {required && <span style={{ color: '#e53e3e', marginLeft: 2 }}>*</span>}
+          {required && <span className="text-danger-500 ml-0.5">*</span>}
         </label>
       )}
 
-      <div style={{ position: 'relative' }}>
+      <div className="relative">
         <input
           id={name}
           name={name}
           {...inputProps}
           {...validationInputProps}
           aria-describedby={`${errorId} ${helperId}`}
-          style={{
-            width: '100%',
-            padding: '10px 12px',
-            paddingRight: showSuccessIcon && touched ? 36 : 12,
-            border: `1px solid ${error ? '#e53e3e' : touched && valid ? '#48bb78' : '#e2e8f0'}`,
-            borderRadius: 6,
-            fontSize: 14,
-            outline: 'none',
-            transition: 'border-color 0.15s, box-shadow 0.15s',
-            ...inputProps.style,
-          }}
+          className={`w-full py-2.5 px-3 ${showSuccessIcon && touched ? 'pr-9' : ''} border ${error ? 'border-danger-500' : touched && valid ? 'border-success-500' : 'border-surface-200'} rounded-md text-sm outline-none transition-[border-color,box-shadow] duration-150`}
+          style={inputProps.style}
         />
 
         {/* Status icon */}
         {showSuccessIcon && touched && !validating && (
-          <span
-            style={{
-              position: 'absolute',
-              right: 12,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              fontSize: 16,
-            }}
-          >
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-base">
             {error ? '❌' : valid ? '✓' : null}
           </span>
         )}
 
         {/* Loading indicator */}
         {validating && (
-          <span
-            style={{
-              position: 'absolute',
-              right: 12,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              fontSize: 14,
-            }}
-          >
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm">
             ⏳
           </span>
         )}
@@ -627,14 +596,7 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
         <p
           id={errorId}
           role="alert"
-          style={{
-            margin: '6px 0 0',
-            fontSize: 13,
-            color: '#e53e3e',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 4,
-          }}
+          className="mt-1.5 text-[13px] text-danger-500 flex items-center gap-1"
         >
           <span aria-hidden="true">⚠️</span>
           {error}
@@ -645,11 +607,7 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
       {helperText && !error && (
         <p
           id={helperId}
-          style={{
-            margin: '6px 0 0',
-            fontSize: 12,
-            color: '#718096',
-          }}
+          className="mt-1.5 text-xs text-surface-500"
         >
           {helperText}
         </p>
@@ -703,20 +661,14 @@ export const ValidatedTextarea: React.FC<ValidatedTextareaProps> = ({
   const charCountDisplay = maxLength ? `${charCount}/${maxLength}` : charCount.toString();
 
   return (
-    <div className={`validated-field ${className}`} style={{ marginBottom: 16 }}>
+    <div className={`validated-field ${className} mb-4`}>
       {label && (
         <label
           htmlFor={name}
-          style={{
-            display: 'block',
-            marginBottom: 6,
-            fontSize: 14,
-            fontWeight: 500,
-            color: '#2d3748',
-          }}
+          className="block mb-1.5 text-sm font-medium text-surface-700"
         >
           {label}
-          {required && <span style={{ color: '#e53e3e', marginLeft: 2 }}>*</span>}
+          {required && <span className="text-danger-500 ml-0.5">*</span>}
         </label>
       )}
 
@@ -726,51 +678,31 @@ export const ValidatedTextarea: React.FC<ValidatedTextareaProps> = ({
         {...textareaProps}
         {...validationInputProps}
         aria-describedby={error ? errorId : undefined}
-        style={{
-          width: '100%',
-          padding: '10px 12px',
-          border: `1px solid ${error ? '#e53e3e' : touched && valid ? '#48bb78' : '#e2e8f0'}`,
-          borderRadius: 6,
-          fontSize: 14,
-          outline: 'none',
-          resize: 'vertical',
-          minHeight: 100,
-          transition: 'border-color 0.15s',
-          ...textareaProps.style,
-        }}
+        className={`w-full py-2.5 px-3 border ${error ? 'border-danger-500' : touched && valid ? 'border-success-500' : 'border-surface-200'} rounded-md text-sm outline-none resize-y min-h-[100px] transition-[border-color] duration-150`}
+        style={textareaProps.style}
       />
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
+      <div className="flex justify-between mt-1.5">
         {/* Error or helper */}
         <div>
           {error && touched ? (
             <p
               id={errorId}
               role="alert"
-              style={{
-                margin: 0,
-                fontSize: 13,
-                color: '#e53e3e',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 4,
-              }}
+              className="m-0 text-[13px] text-danger-500 flex items-center gap-1"
             >
               <span aria-hidden="true">⚠️</span>
               {error}
             </p>
           ) : helperText ? (
-            <p style={{ margin: 0, fontSize: 12, color: '#718096' }}>{helperText}</p>
+            <p className="m-0 text-xs text-surface-500">{helperText}</p>
           ) : null}
         </div>
 
         {/* Character count */}
         {showCharCount && (
           <span
-            style={{
-              fontSize: 12,
-              color: maxLength && charCount > maxLength ? '#e53e3e' : '#718096',
-            }}
+            className={`text-xs ${maxLength && charCount > maxLength ? 'text-danger-500' : 'text-surface-500'}`}
           >
             {charCountDisplay}
           </span>
@@ -800,36 +732,21 @@ export const FormErrorSummary: React.FC<FormErrorSummaryProps> = ({ errors, clas
     <div
       role="alert"
       aria-labelledby="error-summary-title"
-      className={`form-error-summary ${className}`}
-      style={{
-        padding: 16,
-        background: '#fff5f5',
-        border: '1px solid #feb2b2',
-        borderRadius: 8,
-        marginBottom: 20,
-      }}
+      className={`form-error-summary ${className} p-4 bg-danger-50 border border-danger-300 rounded-lg mb-5`}
     >
       <h3
         id="error-summary-title"
-        style={{
-          margin: '0 0 12px',
-          fontSize: 14,
-          fontWeight: 600,
-          color: '#c53030',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-        }}
+        className="m-0 mb-3 text-sm font-semibold text-danger-700 flex items-center gap-2"
       >
         <span aria-hidden="true">⚠️</span>
         Please fix the following errors:
       </h3>
-      <ul style={{ margin: 0, paddingLeft: 20 }}>
+      <ul className="m-0 pl-5">
         {errorList.map(([field, error]) => (
-          <li key={field} style={{ fontSize: 13, color: '#c53030', marginBottom: 4 }}>
+          <li key={field} className="text-[13px] text-danger-700 mb-1">
             <a
               href={`#${field}`}
-              style={{ color: 'inherit', textDecoration: 'underline' }}
+              className="text-inherit underline"
               onClick={(e) => {
                 e.preventDefault();
                 document.getElementById(field)?.focus();

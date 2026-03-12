@@ -700,161 +700,26 @@ export const useAdaptiveNav = (): AdaptiveNavContextType => {
 // =============================================================================
 
 const styles = {
-  sidebar: {
-    width: '260px',
-    backgroundColor: '#1a1a2e',
-    color: '#ffffff',
-    height: '100vh',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    boxShadow: '2px 0 8px rgba(0, 0, 0, 0.1)',
-  } as React.CSSProperties,
-  sidebarHeader: {
-    padding: '20px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-  } as React.CSSProperties,
-  logo: {
-    fontSize: '20px',
-    fontWeight: 700,
-    color: '#ffffff',
-    margin: 0,
-  } as React.CSSProperties,
-  navSection: {
-    padding: '12px 0',
-  } as React.CSSProperties,
-  sectionLabel: {
-    fontSize: '11px',
-    fontWeight: 600,
-    color: 'rgba(255, 255, 255, 0.5)',
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.1em',
-    padding: '8px 20px',
-    margin: 0,
-  } as React.CSSProperties,
-  navItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-    padding: '12px 20px',
-    color: 'rgba(255, 255, 255, 0.7)',
-    textDecoration: 'none',
-    fontSize: '14px',
-    fontWeight: 500,
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-    border: 'none',
-    backgroundColor: 'transparent',
-    width: '100%',
-    textAlign: 'left' as const,
-  } as React.CSSProperties,
-  navItemActive: {
-    backgroundColor: 'rgba(59, 130, 246, 0.2)',
-    color: '#3b82f6',
-    borderRight: '3px solid #3b82f6',
-  } as React.CSSProperties,
-  navItemHover: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    color: '#ffffff',
-  } as React.CSSProperties,
-  navIcon: {
-    fontSize: '18px',
-    width: '24px',
-    textAlign: 'center' as const,
-  } as React.CSSProperties,
-  badge: {
-    marginLeft: 'auto',
-    backgroundColor: '#ef4444',
-    color: '#ffffff',
-    fontSize: '11px',
-    fontWeight: 600,
-    padding: '2px 6px',
-    borderRadius: '10px',
-  } as React.CSSProperties,
-  newBadge: {
-    marginLeft: 'auto',
-    backgroundColor: '#10b981',
-    color: '#ffffff',
-    fontSize: '10px',
-    fontWeight: 600,
-    padding: '2px 6px',
-    borderRadius: '4px',
-  } as React.CSSProperties,
-  suggestionBox: {
-    margin: '12px',
-    padding: '16px',
-    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-    borderRadius: '8px',
-    border: '1px solid rgba(59, 130, 246, 0.3)',
-  } as React.CSSProperties,
-  suggestionTitle: {
-    fontSize: '12px',
-    fontWeight: 600,
-    color: 'rgba(255, 255, 255, 0.9)',
-    margin: '0 0 8px 0',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-  } as React.CSSProperties,
-  suggestionText: {
-    fontSize: '13px',
-    color: 'rgba(255, 255, 255, 0.7)',
-    margin: '0 0 12px 0',
-    lineHeight: 1.4,
-  } as React.CSSProperties,
-  suggestionButton: {
-    padding: '8px 16px',
-    backgroundColor: '#3b82f6',
-    color: '#ffffff',
-    border: 'none',
-    borderRadius: '6px',
-    fontSize: '12px',
-    fontWeight: 500,
-    cursor: 'pointer',
-    marginRight: '8px',
-  } as React.CSSProperties,
-  suggestionDismiss: {
-    padding: '8px 12px',
-    backgroundColor: 'transparent',
-    color: 'rgba(255, 255, 255, 0.6)',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    borderRadius: '6px',
-    fontSize: '12px',
-    cursor: 'pointer',
-  } as React.CSSProperties,
-  quickAccessItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '8px 12px',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: '6px',
-    marginBottom: '4px',
-    cursor: 'pointer',
-    fontSize: '13px',
-  } as React.CSSProperties,
-  removeButton: {
-    marginLeft: 'auto',
-    padding: '4px',
-    backgroundColor: 'transparent',
-    border: 'none',
-    color: 'rgba(255, 255, 255, 0.4)',
-    cursor: 'pointer',
-    fontSize: '12px',
-    opacity: 0,
-    transition: 'opacity 0.2s ease',
-  } as React.CSSProperties,
-  footer: {
-    marginTop: 'auto',
-    padding: '16px 20px',
-    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-  } as React.CSSProperties,
-  adaptiveToggle: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    fontSize: '12px',
-    color: 'rgba(255, 255, 255, 0.6)',
-  } as React.CSSProperties,
+  sidebar: 'w-[260px] bg-surface-900 text-white h-screen flex flex-col shadow-lg',
+  sidebarHeader: 'p-5 border-b border-white/10',
+  logo: 'text-xl font-bold text-white m-0',
+  navSection: 'py-3',
+  sectionLabel: 'text-[11px] font-semibold text-white/50 uppercase tracking-widest px-5 py-2 m-0',
+  navItem: 'flex items-center gap-3 px-5 py-3 text-white/70 no-underline text-sm font-medium cursor-pointer transition-all duration-200 border-none bg-transparent w-full text-left',
+  navItemActive: 'bg-brand-500/20 text-brand-500 border-r-[3px] border-r-brand-500',
+  navItemHover: 'bg-white/5 text-white',
+  navIcon: 'text-lg w-6 text-center',
+  badge: 'ml-auto bg-danger-500 text-white text-[11px] font-semibold px-1.5 py-0.5 rounded-full',
+  newBadge: 'ml-auto bg-success-500 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded',
+  suggestionBox: 'm-3 p-4 bg-brand-500/10 rounded-lg border border-brand-500/30',
+  suggestionTitle: 'text-xs font-semibold text-white/90 m-0 mb-2 flex items-center gap-1.5',
+  suggestionText: 'text-[13px] text-white/70 m-0 mb-3 leading-snug',
+  suggestionButton: 'px-4 py-2 bg-brand-500 text-white border-none rounded-md text-xs font-medium cursor-pointer mr-2',
+  suggestionDismiss: 'px-3 py-2 bg-transparent text-white/60 border border-white/20 rounded-md text-xs cursor-pointer',
+  quickAccessItem: 'flex items-center gap-2 px-3 py-2 bg-white/5 rounded-md mb-1 cursor-pointer text-[13px]',
+  removeButton: 'ml-auto p-1 bg-transparent border-none text-white/40 cursor-pointer text-xs opacity-0 transition-opacity duration-200',
+  footer: 'mt-auto px-5 py-4 border-t border-white/10',
+  adaptiveToggle: 'flex items-center gap-2 text-xs text-white/60',
 };
 
 // Navigation Item Component
@@ -869,19 +734,15 @@ const NavItemComponent: React.FC<NavItemComponentProps> = ({ item, isActive, onC
 
   return (
     <button
-      style={{
-        ...styles.navItem,
-        ...(isActive ? styles.navItemActive : {}),
-        ...(isHovered && !isActive ? styles.navItemHover : {}),
-      }}
+      className={`${styles.navItem} ${isActive ? styles.navItemActive : ''} ${isHovered && !isActive ? styles.navItemHover : ''}`}
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <span style={styles.navIcon}>{item.icon}</span>
+      <span className={styles.navIcon}>{item.icon}</span>
       <span>{item.label}</span>
-      {item.badge && <span style={styles.badge}>{item.badge}</span>}
-      {item.isNew && <span style={styles.newBadge}>NEW</span>}
+      {item.badge && <span className={styles.badge}>{item.badge}</span>}
+      {item.isNew && <span className={styles.newBadge}>NEW</span>}
     </button>
   );
 };
@@ -894,17 +755,17 @@ interface SuggestionBoxProps {
 }
 
 const SuggestionBox: React.FC<SuggestionBoxProps> = ({ suggestion, onAccept, onDismiss }) => (
-  <div style={styles.suggestionBox}>
-    <p style={styles.suggestionTitle}>
+  <div className={styles.suggestionBox}>
+    <p className={styles.suggestionTitle}>
       <span aria-hidden="true">💡</span>
       Suggestion
     </p>
-    <p style={styles.suggestionText}>{suggestion.reason}</p>
+    <p className={styles.suggestionText}>{suggestion.reason}</p>
     <div>
-      <button style={styles.suggestionButton} onClick={onAccept}>
+      <button className={styles.suggestionButton} onClick={onAccept}>
         Go to {suggestion.targetItem.label}
       </button>
-      <button style={styles.suggestionDismiss} onClick={onDismiss}>
+      <button className={styles.suggestionDismiss} onClick={onDismiss}>
         Dismiss
       </button>
     </div>
@@ -946,9 +807,9 @@ export const AdaptiveSidebar: React.FC<AdaptiveSidebarProps> = ({
   const recentItems = getRecentItems(3);
 
   return (
-    <nav className={className} style={{ ...styles.sidebar, ...style }}>
-      <div style={styles.sidebarHeader}>
-        <h1 style={styles.logo}>Quiz2Biz</h1>
+    <nav className={`${className || ''} ${styles.sidebar}`} style={style}>
+      <div className={styles.sidebarHeader}>
+        <h1 className={styles.logo}>Quiz2Biz</h1>
       </div>
 
       {showSuggestions && suggestions.length > 0 && (
@@ -960,23 +821,23 @@ export const AdaptiveSidebar: React.FC<AdaptiveSidebarProps> = ({
       )}
 
       {showQuickAccess && quickAccess.length > 0 && (
-        <div style={styles.navSection}>
-          <p style={styles.sectionLabel}>Quick Access</p>
+        <div className={styles.navSection}>
+          <p className={styles.sectionLabel}>Quick Access</p>
           {quickAccess.map((qa) => (
             <div
               key={qa.navItem.id}
-              style={styles.quickAccessItem}
+              className={styles.quickAccessItem}
               onClick={() => navigateTo(qa.navItem.path)}
             >
               <span>{qa.navItem.icon}</span>
               <span>{qa.navItem.label}</span>
               {qa.pinned && (
-                <span style={{ fontSize: '10px' }} aria-hidden="true">
+                <span className="text-[10px]" aria-hidden="true">
                   📌
                 </span>
               )}
               <button
-                style={styles.removeButton}
+                className={styles.removeButton}
                 onClick={(e) => {
                   e.stopPropagation();
                   removeFromQuickAccess(qa.navItem.id);
@@ -990,8 +851,8 @@ export const AdaptiveSidebar: React.FC<AdaptiveSidebarProps> = ({
       )}
 
       {frequentItems.length > 0 && isAdaptive && (
-        <div style={styles.navSection}>
-          <p style={styles.sectionLabel}>Frequently Used</p>
+        <div className={styles.navSection}>
+          <p className={styles.sectionLabel}>Frequently Used</p>
           {frequentItems.map((item) => (
             <NavItemComponent
               key={item.id}
@@ -1003,8 +864,8 @@ export const AdaptiveSidebar: React.FC<AdaptiveSidebarProps> = ({
         </div>
       )}
 
-      <div style={styles.navSection}>
-        <p style={styles.sectionLabel}>Navigation</p>
+      <div className={styles.navSection}>
+        <p className={styles.sectionLabel}>Navigation</p>
         {menuItems.map((item) => (
           <NavItemComponent
             key={item.id}
@@ -1016,8 +877,8 @@ export const AdaptiveSidebar: React.FC<AdaptiveSidebarProps> = ({
       </div>
 
       {recentItems.length > 0 && (
-        <div style={styles.navSection}>
-          <p style={styles.sectionLabel}>Recent</p>
+        <div className={styles.navSection}>
+          <p className={styles.sectionLabel}>Recent</p>
           {recentItems.map((item) => (
             <NavItemComponent
               key={`recent-${item.id}`}
@@ -1029,8 +890,8 @@ export const AdaptiveSidebar: React.FC<AdaptiveSidebarProps> = ({
         </div>
       )}
 
-      <div style={styles.footer}>
-        <label style={styles.adaptiveToggle}>
+      <div className={styles.footer}>
+        <label className={styles.adaptiveToggle}>
           <input
             type="checkbox"
             checked={isAdaptive}
@@ -1056,7 +917,7 @@ export const NextActionSuggestion: React.FC = () => {
     <div
       style={{
         padding: '12px 16px',
-        backgroundColor: '#eff6ff',
+        backgroundColor: 'var(--color-brand-50)',
         borderRadius: '8px',
         display: 'flex',
         alignItems: 'center',
@@ -1067,12 +928,12 @@ export const NextActionSuggestion: React.FC = () => {
     >
       <span style={{ fontSize: '20px' }}>{predictedItem.icon}</span>
       <div>
-        <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>Suggested next</p>
-        <p style={{ fontSize: '14px', fontWeight: 500, color: '#1e40af', margin: 0 }}>
+        <p style={{ fontSize: '12px', color: 'var(--color-surface-500)', margin: 0 }}>Suggested next</p>
+        <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--color-brand-800)', margin: 0 }}>
           {predictedItem.label}
         </p>
       </div>
-      <span style={{ marginLeft: 'auto', color: '#3b82f6' }}>→</span>
+      <span style={{ marginLeft: 'auto', color: 'var(--color-brand-500)' }}>→</span>
     </div>
   );
 };
@@ -1099,13 +960,13 @@ export const AdaptiveBreadcrumb: React.FC<AdaptiveBreadcrumbProps> = ({ items, c
     >
       {items.map((item, index) => (
         <React.Fragment key={item.path}>
-          {index > 0 && <span style={{ color: '#9ca3af' }}>/</span>}
+          {index > 0 && <span style={{ color: 'var(--color-surface-400)' }}>/</span>}
           <button
             onClick={() => navigateTo(item.path)}
             style={{
               backgroundColor: 'transparent',
               border: 'none',
-              color: index === items.length - 1 ? '#1a1a2e' : '#6b7280',
+              color: index === items.length - 1 ? 'var(--color-surface-900)' : 'var(--color-surface-500)',
               fontWeight: index === items.length - 1 ? 600 : 400,
               fontSize: '14px',
               cursor: 'pointer',
@@ -1126,11 +987,11 @@ export const AdaptiveBreadcrumb: React.FC<AdaptiveBreadcrumbProps> = ({ items, c
               onClick={() => navigateTo(item.path)}
               style={{
                 padding: '4px 12px',
-                backgroundColor: '#f3f4f6',
+                backgroundColor: 'var(--color-surface-100)',
                 border: 'none',
                 borderRadius: '12px',
                 fontSize: '12px',
-                color: '#6b7280',
+                color: 'var(--color-surface-500)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',

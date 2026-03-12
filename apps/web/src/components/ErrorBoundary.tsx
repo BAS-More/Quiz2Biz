@@ -33,16 +33,16 @@ export class ErrorBoundary extends Component<Props, State> {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: '#f9fafb',
+            background: 'var(--color-surface-50)',
           }}
         >
           <div style={{ maxWidth: '500px', textAlign: 'center', padding: '40px' }}>
             <h1
-              style={{ fontSize: '24px', fontWeight: 700, color: '#1f2937', marginBottom: '12px' }}
+              style={{ fontSize: '24px', fontWeight: 700, color: 'var(--color-surface-800)', marginBottom: '12px' }}
             >
               Something went wrong
             </h1>
-            <p style={{ color: '#6b7280', marginBottom: '20px' }}>
+            <p style={{ color: 'var(--color-surface-500)', marginBottom: '20px' }}>
               {this.state.error?.message || 'An unexpected error occurred.'}
             </p>
             <button
@@ -51,7 +51,7 @@ export class ErrorBoundary extends Component<Props, State> {
               }}
               style={{
                 padding: '10px 24px',
-                background: '#3b82f6',
+                background: 'var(--color-brand-500)',
                 color: '#fff',
                 border: 'none',
                 borderRadius: '6px',

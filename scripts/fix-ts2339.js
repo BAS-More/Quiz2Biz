@@ -32,61 +32,71 @@ const manualList = [];
 
 for (const [relFile, fileErrors] of Object.entries(byFile)) {
     const absPath = path.join(apiDir, relFile);
-    if (!fs.existsSync(absPath)) {
-        console.log(`SKIP (not found): ${relFile}`);
-        continue;
-    }
-
-    let content = fs.readFileSync(absPath, 'utf8');
-    const lines = content.split('\n');
-    let modified = false;
-
-    // Sort errors by line number descending to avoid offset issues  
-    const sorted = [...fileErrors].sort((a, b) => b.line - a.line);
-
-    for (const err of sorted) {
-        const lineIdx = err.line - 1;
-        if (lineIdx >= lines.length) continue;
-
-        const line = lines[lineIdx];
-        const prop = err.prop; // e.g., 'mockResolvedValue', 'mockRejectedValue', 'mock'
-        const col = err.col - 1; // 0-based column
-
-        // Find the property access: everything before `.prop` at the error column
-        // The col points to the property name after the dot
-        // We need to find the start of the chain: `something.model.method`
-        const beforeProp = line.substring(0, col - 1); // -1 for the dot
-
-        // Find the chain start: walk back from col to find the beginning of the expression
-        // The chain looks like: prismaService.model.method or mockPrismaService.model.method
-        // We need to wrap just the chain part: (chain as jest.Mock).prop(...)
-
-        // Strategy: use regex to find the chain ending at col-1
-        // Match: word.word.word pattern ending right before the dot
-        const chainMatch = beforeProp.match(/(\w+(?:\.\w+)+)\s*$/);
-        if (!chainMatch) {
-            manualList.push(`${relFile}:${err.line} - .${prop} - no chain match: ${line.trim().substring(0, 100)}`);
+    let fd;
+    try {
+        fd = fs.openSync(absPath, 'r+');
+    } catch (error) {
+        if (error && error.code === 'ENOENT') {
+            console.log(`SKIP (not found): ${relFile}`);
             continue;
         }
-
-        const chain = chainMatch[1];
-        const chainStart = beforeProp.lastIndexOf(chain);
-        const chainEnd = chainStart + chain.length;
-
-        // Build the new line:
-        // before_chain + (chain as jest.Mock) + .prop + rest
-        const prefix = line.substring(0, chainStart);
-        const suffix = line.substring(col - 1); // from the dot onward: .mockResolvedValue(...)
-
-        const newLine = `${prefix}(${chain} as jest.Mock)${suffix}`;
-        lines[lineIdx] = newLine;
-        modified = true;
-        totalFixed++;
+        throw error;
     }
 
-    if (modified) {
-        fs.writeFileSync(absPath, lines.join('\n'), 'utf8');
-        console.log(`FIXED: ${relFile} (${fileErrors.length} errors)`);
+    try {
+        let content = fs.readFileSync(fd, 'utf8');
+        const lines = content.split('\n');
+        let modified = false;
+
+        // Sort errors by line number descending to avoid offset issues
+        const sorted = [...fileErrors].sort((a, b) => b.line - a.line);
+
+        for (const err of sorted) {
+            const lineIdx = err.line - 1;
+            if (lineIdx >= lines.length) continue;
+
+            const line = lines[lineIdx];
+            const prop = err.prop; // e.g., 'mockResolvedValue', 'mockRejectedValue', 'mock'
+            const col = err.col - 1; // 0-based column
+
+            // Find the property access: everything before `.prop` at the error column
+            // The col points to the property name after the dot
+            // We need to find the start of the chain: `something.model.method`
+            const beforeProp = line.substring(0, col - 1); // -1 for the dot
+
+            // Find the chain start: walk back from col to find the beginning of the expression
+            // The chain looks like: prismaService.model.method or mockPrismaService.model.method
+            // We need to wrap just the chain part: (chain as jest.Mock).prop(...)
+
+            // Strategy: use regex to find the chain ending at col-1
+            // Match: word.word.word pattern ending right before the dot
+            const chainMatch = beforeProp.match(/(\w+(?:\.\w+)+)\s*$/);
+            if (!chainMatch) {
+                manualList.push(`${relFile}:${err.line} - .${prop} - no chain match: ${line.trim().substring(0, 100)}`);
+                continue;
+            }
+
+            const chain = chainMatch[1];
+            const chainStart = beforeProp.lastIndexOf(chain);
+            const chainEnd = chainStart + chain.length;
+
+            // Build the new line:
+            // before_chain + (chain as jest.Mock) + .prop + rest
+            const prefix = line.substring(0, chainStart);
+            const suffix = line.substring(col - 1); // from the dot onward: .mockResolvedValue(...)
+
+            const newLine = `${prefix}(${chain} as jest.Mock)${suffix}`;
+            lines[lineIdx] = newLine;
+            modified = true;
+            totalFixed++;
+        }
+
+        if (modified) {
+            overwriteFile(fd, lines.join('\n'));
+            console.log(`FIXED: ${relFile} (${fileErrors.length} errors)`);
+        }
+    } finally {
+        fs.closeSync(fd);
     }
 }
 
@@ -96,4 +106,10 @@ if (manualList.length > 0) {
     for (const m of manualList) {
         console.log(`  ${m}`);
     }
+}
+
+function overwriteFile(fd, content) {
+    fs.ftruncateSync(fd, 0);
+    fs.writeSync(fd, content, 0, 'utf8');
+    fs.fsyncSync(fd);
 }

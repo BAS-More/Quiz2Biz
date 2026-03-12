@@ -302,9 +302,9 @@ const styles = {
     alignItems: 'center',
     gap: '4px',
     padding: '4px 8px',
-    backgroundColor: '#f8fafc',
+    backgroundColor: 'var(--color-surface-50)',
     borderRadius: '8px',
-    border: '1px solid #e2e8f0',
+    border: '1px solid var(--color-surface-200)',
   },
   button: {
     display: 'flex',
@@ -317,7 +317,7 @@ const styles = {
     border: 'none',
     borderRadius: '6px',
     cursor: 'pointer',
-    color: '#64748b',
+    color: 'var(--color-surface-500)',
     transition: 'all 0.15s',
   },
   buttonDisabled: {
@@ -325,13 +325,13 @@ const styles = {
     cursor: 'not-allowed',
   },
   buttonHover: {
-    backgroundColor: '#e2e8f0',
-    color: '#1e293b',
+    backgroundColor: 'var(--color-surface-200)',
+    color: 'var(--color-surface-900)',
   },
   separator: {
     width: '1px',
     height: '20px',
-    backgroundColor: '#e2e8f0',
+    backgroundColor: 'var(--color-surface-200)',
     margin: '0 4px',
   },
   historyPanel: {
@@ -341,7 +341,7 @@ const styles = {
     marginTop: '8px',
     width: '320px',
     maxHeight: '400px',
-    backgroundColor: '#fff',
+    backgroundColor: 'var(--color-surface-50)',
     borderRadius: '12px',
     boxShadow: '0 10px 40px rgba(0, 0, 0, 0.15)',
     overflow: 'hidden',
@@ -349,8 +349,8 @@ const styles = {
   },
   historyHeader: {
     padding: '12px 16px',
-    backgroundColor: '#f8fafc',
-    borderBottom: '1px solid #e2e8f0',
+    backgroundColor: 'var(--color-surface-50)',
+    borderBottom: '1px solid var(--color-surface-200)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -358,7 +358,7 @@ const styles = {
   historyTitle: {
     fontSize: '14px',
     fontWeight: 600,
-    color: '#1e293b',
+    color: 'var(--color-surface-900)',
     margin: 0,
   },
   clearButton: {
@@ -366,7 +366,7 @@ const styles = {
     fontSize: '12px',
     backgroundColor: 'transparent',
     border: 'none',
-    color: '#64748b',
+    color: 'var(--color-surface-500)',
     cursor: 'pointer',
     borderRadius: '4px',
   },
@@ -381,7 +381,7 @@ const styles = {
     padding: '4px 16px',
     fontSize: '11px',
     fontWeight: 600,
-    color: '#94a3b8',
+    color: 'var(--color-surface-400)',
     textTransform: 'uppercase' as const,
     letterSpacing: '0.5px',
   },
@@ -394,26 +394,26 @@ const styles = {
     transition: 'background-color 0.15s',
   },
   historyItemHover: {
-    backgroundColor: '#f1f5f9',
+    backgroundColor: 'var(--color-surface-100)',
   },
   historyItemIcon: {
     width: '24px',
     height: '24px',
     borderRadius: '6px',
-    backgroundColor: '#e2e8f0',
+    backgroundColor: 'var(--color-surface-200)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
-    color: '#64748b',
+    color: 'var(--color-surface-500)',
   },
   historyItemIconUndo: {
-    backgroundColor: '#dbeafe',
-    color: '#2563eb',
+    backgroundColor: 'var(--color-brand-100)',
+    color: 'var(--color-brand-500)',
   },
   historyItemIconRedo: {
-    backgroundColor: '#dcfce7',
-    color: '#16a34a',
+    backgroundColor: 'var(--color-success-50)',
+    color: 'var(--color-success-500)',
   },
   historyItemContent: {
     flex: 1,
@@ -421,7 +421,7 @@ const styles = {
   },
   historyItemDescription: {
     fontSize: '13px',
-    color: '#1e293b',
+    color: 'var(--color-surface-900)',
     margin: 0,
     whiteSpace: 'nowrap' as const,
     overflow: 'hidden',
@@ -429,13 +429,13 @@ const styles = {
   },
   historyItemTime: {
     fontSize: '11px',
-    color: '#94a3b8',
+    color: 'var(--color-surface-400)',
     margin: 0,
   },
   emptyHistory: {
     padding: '32px 16px',
     textAlign: 'center' as const,
-    color: '#94a3b8',
+    color: 'var(--color-surface-400)',
     fontSize: '13px',
   },
   tooltip: {
@@ -445,7 +445,7 @@ const styles = {
     transform: 'translateX(-50%)',
     marginBottom: '8px',
     padding: '6px 10px',
-    backgroundColor: '#1e293b',
+    backgroundColor: 'var(--color-surface-900)',
     color: '#fff',
     fontSize: '12px',
     borderRadius: '6px',
@@ -675,7 +675,7 @@ export const UndoRedoToolbar: React.FC<UndoRedoToolbarProps> = ({
               <button
                 onClick={clearHistory}
                 style={styles.clearButton}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e2e8f0')}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-surface-200)')}
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
               >
                 Clear
@@ -767,12 +767,12 @@ export const UndoRedoShortcuts: React.FC = () => {
   const modifier = isMac ? '⌘' : 'Ctrl';
 
   return (
-    <div style={{ display: 'flex', gap: '16px', fontSize: '12px', color: '#64748b' }}>
+    <div style={{ display: 'flex', gap: '16px', fontSize: '12px', color: 'var(--color-surface-500)' }}>
       <span>
         <kbd
           style={{
             padding: '2px 6px',
-            backgroundColor: '#f1f5f9',
+            backgroundColor: 'var(--color-surface-100)',
             borderRadius: '4px',
             marginRight: '4px',
           }}
@@ -785,7 +785,7 @@ export const UndoRedoShortcuts: React.FC = () => {
         <kbd
           style={{
             padding: '2px 6px',
-            backgroundColor: '#f1f5f9',
+            backgroundColor: 'var(--color-surface-100)',
             borderRadius: '4px',
             marginRight: '4px',
           }}

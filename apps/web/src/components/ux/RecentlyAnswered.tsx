@@ -269,8 +269,8 @@ export const RecentBadge: React.FC<RecentBadgeProps> = ({
         alignItems: 'center',
         gap: 4,
         ...sizeStyles[size],
-        background: isVery ? '#c6f6d5' : '#fefcbf',
-        color: isVery ? '#22543d' : '#744210',
+        background: isVery ? 'var(--color-success-100)' : 'var(--color-warning-100)',
+        color: isVery ? 'var(--color-success-800)' : 'var(--color-warning-800)',
         borderRadius: 12,
         fontWeight: 500,
         whiteSpace: 'nowrap',
@@ -330,8 +330,8 @@ export const QuestionNavItem: React.FC<QuestionNavItemProps> = ({
         gap: 12,
         width: '100%',
         padding: '10px 12px',
-        background: isCurrent ? '#ebf8ff' : 'transparent',
-        border: isCurrent ? '2px solid #3182ce' : '1px solid #e2e8f0',
+        background: isCurrent ? 'var(--color-brand-50)' : 'transparent',
+        border: isCurrent ? '2px solid var(--color-brand-500)' : '1px solid var(--color-surface-200)',
         borderRadius: 8,
         textAlign: 'left',
         cursor: 'pointer',
@@ -352,12 +352,12 @@ export const QuestionNavItem: React.FC<QuestionNavItemProps> = ({
           fontWeight: 600,
           background: isAnswered
             ? isRecent
-              ? '#c6f6d5'
-              : '#9ae6b4'
+              ? 'var(--color-success-100)'
+              : 'var(--color-success-200)'
             : isSkipped
-              ? '#fefcbf'
-              : '#edf2f7',
-          color: isAnswered ? '#22543d' : isSkipped ? '#744210' : '#4a5568',
+              ? 'var(--color-warning-100)'
+              : 'var(--color-surface-100)',
+          color: isAnswered ? 'var(--color-success-800)' : isSkipped ? 'var(--color-warning-800)' : 'var(--color-surface-600)',
         }}
       >
         {isAnswered ? '✓' : isSkipped ? '○' : questionNumber}
@@ -368,7 +368,7 @@ export const QuestionNavItem: React.FC<QuestionNavItemProps> = ({
         style={{
           flex: 1,
           fontSize: 14,
-          color: '#2d3748',
+          color: 'var(--color-surface-700)',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
@@ -402,26 +402,26 @@ export const RecentActivitySummary: React.FC<RecentActivitySummaryProps> = ({ cl
 
   return (
     <div className={`recent-activity ${className}`}>
-      <h4 style={{ margin: '0 0 12px', fontSize: 14, color: '#4a5568' }}>📊 Recent Activity</h4>
+      <h4 style={{ margin: '0 0 12px', fontSize: 14, color: 'var(--color-surface-600)' }}>📊 Recent Activity</h4>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
           <span>Last minute:</span>
-          <span style={{ fontWeight: 600, color: '#22543d' }}>{veryRecent.length} answered</span>
+          <span style={{ fontWeight: 600, color: 'var(--color-success-800)' }}>{veryRecent.length} answered</span>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
           <span>Last 5 minutes:</span>
-          <span style={{ fontWeight: 600, color: '#2b6cb0' }}>{recent.length} answered</span>
+          <span style={{ fontWeight: 600, color: 'var(--color-brand-600)' }}>{recent.length} answered</span>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
           <span>Last hour:</span>
-          <span style={{ fontWeight: 600, color: '#4a5568' }}>{lastHour.length} answered</span>
+          <span style={{ fontWeight: 600, color: 'var(--color-surface-600)' }}>{lastHour.length} answered</span>
         </div>
       </div>
 
       {veryRecent.length > 0 && (
-        <div style={{ marginTop: 16, paddingTop: 12, borderTop: '1px solid #e2e8f0' }}>
-          <p style={{ margin: 0, fontSize: 12, color: '#718096' }}>
+        <div style={{ marginTop: 16, paddingTop: 12, borderTop: '1px solid var(--color-surface-200)' }}>
+          <p style={{ margin: 0, fontSize: 12, color: 'var(--color-surface-500)' }}>
             ✨ Great momentum! Keep going!
           </p>
         </div>
@@ -455,7 +455,7 @@ export const RecentAnswersTimeline: React.FC<RecentAnswersTimelineProps> = ({
     return (
       <div
         className={`recent-timeline ${className}`}
-        style={{ textAlign: 'center', padding: 20, color: '#718096' }}
+        style={{ textAlign: 'center', padding: 20, color: 'var(--color-surface-500)' }}
       >
         <p>No recent answers yet.</p>
         <p style={{ fontSize: 13 }}>Start answering questions to see your progress here!</p>
@@ -465,7 +465,7 @@ export const RecentAnswersTimeline: React.FC<RecentAnswersTimelineProps> = ({
 
   return (
     <div className={`recent-timeline ${className}`}>
-      <h4 style={{ margin: '0 0 16px', fontSize: 14, color: '#4a5568' }}>🕐 Recent Answers</h4>
+      <h4 style={{ margin: '0 0 16px', fontSize: 14, color: 'var(--color-surface-600)' }}>🕐 Recent Answers</h4>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {recentAnswers.map((answer) => (
@@ -476,17 +476,17 @@ export const RecentAnswersTimeline: React.FC<RecentAnswersTimelineProps> = ({
               alignItems: 'flex-start',
               gap: 12,
               padding: 12,
-              background: '#f7fafc',
+              background: 'var(--color-surface-50)',
               borderRadius: 8,
-              borderLeft: `3px solid ${isVeryRecent(answer.answeredAt) ? '#48bb78' : '#ecc94b'}`,
+              borderLeft: `3px solid ${isVeryRecent(answer.answeredAt) ? 'var(--color-success-500)' : 'var(--color-warning-500)'}`,
             }}
           >
             <div style={{ flex: 1 }}>
-              <p style={{ margin: 0, fontSize: 14, color: '#2d3748' }}>
+              <p style={{ margin: 0, fontSize: 14, color: 'var(--color-surface-700)' }}>
                 {answer.questionText || `Question ${answer.questionId}`}
               </p>
               {answer.sectionId && (
-                <p style={{ margin: '4px 0 0', fontSize: 12, color: '#718096' }}>
+                <p style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--color-surface-500)' }}>
                   Section: {answer.sectionId}
                 </p>
               )}

@@ -350,33 +350,33 @@ export const NetworkBanner: React.FC<NetworkBannerProps> = ({
       icon: '📡',
       message: 'You are currently offline',
       description: 'Changes will be saved when you reconnect',
-      color: '#e53e3e',
-      bg: '#fff5f5',
-      border: '#feb2b2',
+      color: 'var(--color-danger-500)',
+      bg: 'var(--color-danger-50)',
+      border: 'var(--color-danger-300)',
     },
     slow: {
       icon: '🐢',
       message: 'Slow network detected',
       description: 'Some features may be delayed',
-      color: '#dd6b20',
-      bg: '#fffaf0',
-      border: '#fbd38d',
+      color: 'var(--color-warning-600)',
+      bg: 'var(--color-warning-50)',
+      border: 'var(--color-warning-300)',
     },
     reconnecting: {
       icon: '🔄',
       message: `Reconnecting... (attempt ${networkInfo.reconnectAttempts})`,
       description: 'Trying to restore connection',
-      color: '#3182ce',
-      bg: '#ebf8ff',
-      border: '#90cdf4',
+      color: 'var(--color-brand-500)',
+      bg: 'var(--color-brand-50)',
+      border: 'var(--color-brand-300)',
     },
     online: {
       icon: '✅',
       message: 'Back online',
       description: '',
-      color: '#38a169',
-      bg: '#f0fff4',
-      border: '#9ae6b4',
+      color: 'var(--color-success-500)',
+      bg: 'var(--color-success-50)',
+      border: 'var(--color-success-300)',
     },
   };
 
@@ -410,7 +410,7 @@ export const NetworkBanner: React.FC<NetworkBannerProps> = ({
       <div>
         <strong style={{ color: config.color, fontSize: 14 }}>{config.message}</strong>
         {config.description && (
-          <p style={{ margin: '2px 0 0', fontSize: 12, color: '#4a5568' }}>{config.description}</p>
+          <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--color-surface-600)' }}>{config.description}</p>
         )}
       </div>
 
@@ -454,7 +454,7 @@ export const NetworkBanner: React.FC<NetworkBannerProps> = ({
           border: 'none',
           fontSize: 16,
           cursor: 'pointer',
-          color: '#718096',
+          color: 'var(--color-surface-500)',
         }}
         aria-label="Dismiss network status banner"
       >
@@ -499,10 +499,10 @@ export const NetworkIndicator: React.FC<NetworkIndicatorProps> = ({
   };
 
   const statusConfig = {
-    online: { color: '#48bb78', label: 'Online', pulse: false },
-    offline: { color: '#e53e3e', label: 'Offline', pulse: true },
-    slow: { color: '#ecc94b', label: 'Slow', pulse: true },
-    reconnecting: { color: '#3182ce', label: 'Reconnecting', pulse: true },
+    online: { color: 'var(--color-success-500)', bg: 'var(--color-success-50)', label: 'Online', pulse: false },
+    offline: { color: 'var(--color-danger-500)', bg: 'var(--color-danger-50)', label: 'Offline', pulse: true },
+    slow: { color: 'var(--color-warning-500)', bg: 'var(--color-warning-50)', label: 'Slow', pulse: true },
+    reconnecting: { color: 'var(--color-brand-500)', bg: 'var(--color-brand-50)', label: 'Reconnecting', pulse: true },
   };
 
   const config = statusConfig[networkInfo.status];
@@ -516,7 +516,7 @@ export const NetworkIndicator: React.FC<NetworkIndicatorProps> = ({
         alignItems: 'center',
         gap: 6,
         padding: sizeConfig.padding,
-        background: `${config.color}15`,
+        background: config.bg,
         borderRadius: 20,
       }}
       title={`Network: ${config.label}${pendingCount > 0 ? ` (${pendingCount} pending)` : ''}`}
@@ -597,8 +597,8 @@ export const PendingRequestsDropdown: React.FC<PendingRequestsDropdownProps> = (
           alignItems: 'center',
           gap: 6,
           padding: '6px 10px',
-          background: '#ebf8ff',
-          border: '1px solid #90cdf4',
+          background: 'var(--color-brand-50)',
+          border: '1px solid var(--color-brand-300)',
           borderRadius: 6,
           fontSize: 13,
           cursor: 'pointer',
@@ -616,15 +616,15 @@ export const PendingRequestsDropdown: React.FC<PendingRequestsDropdownProps> = (
             right: 0,
             marginTop: 4,
             width: 280,
-            background: 'white',
-            border: '1px solid #e2e8f0',
+            background: 'var(--color-surface-50)',
+            border: '1px solid var(--color-surface-200)',
             borderRadius: 8,
             boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
             zIndex: 1000,
           }}
         >
-          <div style={{ padding: 12, borderBottom: '1px solid #e2e8f0' }}>
-            <h4 style={{ margin: 0, fontSize: 13, color: '#2d3748' }}>Active Requests</h4>
+          <div style={{ padding: 12, borderBottom: '1px solid var(--color-surface-200)' }}>
+            <h4 style={{ margin: 0, fontSize: 13, color: 'var(--color-surface-700)' }}>Active Requests</h4>
           </div>
           <div style={{ maxHeight: 200, overflowY: 'auto', padding: 8 }}>
             {pendingItems.slice(0, maxVisible).map((req) => (
@@ -636,7 +636,7 @@ export const PendingRequestsDropdown: React.FC<PendingRequestsDropdownProps> = (
                   gap: 8,
                   padding: 8,
                   borderRadius: 4,
-                  background: '#f7fafc',
+                  background: 'var(--color-surface-50)',
                   marginBottom: 4,
                 }}
               >
@@ -645,7 +645,7 @@ export const PendingRequestsDropdown: React.FC<PendingRequestsDropdownProps> = (
                     width: 8,
                     height: 8,
                     borderRadius: '50%',
-                    background: '#3182ce',
+                    background: 'var(--color-brand-500)',
                     animation: 'pulse 1s infinite',
                   }}
                 />
@@ -655,7 +655,7 @@ export const PendingRequestsDropdown: React.FC<PendingRequestsDropdownProps> = (
                     style={{
                       margin: 0,
                       fontSize: 11,
-                      color: '#718096',
+                      color: 'var(--color-surface-500)',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       whiteSpace: 'nowrap',

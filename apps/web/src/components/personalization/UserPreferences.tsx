@@ -902,127 +902,24 @@ export const useUserPreferences = (): UserPreferencesContextType => {
 // =============================================================================
 
 const styles = {
-  panel: {
-    backgroundColor: '#ffffff',
-    borderRadius: '12px',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-    padding: '24px',
-  } as React.CSSProperties,
-  title: {
-    fontSize: '18px',
-    fontWeight: 600,
-    color: '#1a1a2e',
-    marginBottom: '16px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-  } as React.CSSProperties,
-  section: {
-    marginBottom: '24px',
-  } as React.CSSProperties,
-  sectionTitle: {
-    fontSize: '14px',
-    fontWeight: 600,
-    color: '#6b7280',
-    marginBottom: '12px',
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.05em',
-  } as React.CSSProperties,
-  toggle: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '12px 0',
-    borderBottom: '1px solid #e5e7eb',
-  } as React.CSSProperties,
-  toggleLabel: {
-    fontSize: '14px',
-    color: '#374151',
-  } as React.CSSProperties,
-  toggleSwitch: {
-    width: '44px',
-    height: '24px',
-    borderRadius: '12px',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s ease',
-    position: 'relative' as const,
-  } as React.CSSProperties,
-  toggleKnob: {
-    width: '20px',
-    height: '20px',
-    borderRadius: '50%',
-    backgroundColor: '#ffffff',
-    position: 'absolute' as const,
-    top: '2px',
-    transition: 'left 0.2s ease',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
-  } as React.CSSProperties,
-  select: {
-    padding: '8px 12px',
-    borderRadius: '8px',
-    border: '1px solid #d1d5db',
-    fontSize: '14px',
-    backgroundColor: '#ffffff',
-    cursor: 'pointer',
-    minWidth: '120px',
-  } as React.CSSProperties,
-  insight: {
-    padding: '16px',
-    backgroundColor: '#eff6ff',
-    borderRadius: '8px',
-    marginBottom: '12px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    gap: '12px',
-  } as React.CSSProperties,
-  insightIcon: {
-    fontSize: '20px',
-    flexShrink: 0,
-  } as React.CSSProperties,
-  insightContent: {
-    flex: 1,
-  } as React.CSSProperties,
-  insightText: {
-    fontSize: '14px',
-    color: '#1e40af',
-    margin: '0 0 8px 0',
-  } as React.CSSProperties,
-  insightAction: {
-    padding: '6px 12px',
-    backgroundColor: '#3b82f6',
-    color: '#ffffff',
-    border: 'none',
-    borderRadius: '6px',
-    fontSize: '12px',
-    fontWeight: 500,
-    cursor: 'pointer',
-    marginRight: '8px',
-  } as React.CSSProperties,
-  dismissButton: {
-    padding: '6px 12px',
-    backgroundColor: 'transparent',
-    color: '#6b7280',
-    border: '1px solid #d1d5db',
-    borderRadius: '6px',
-    fontSize: '12px',
-    cursor: 'pointer',
-  } as React.CSSProperties,
-  stat: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '8px 0',
-  } as React.CSSProperties,
-  statLabel: {
-    fontSize: '14px',
-    color: '#6b7280',
-  } as React.CSSProperties,
-  statValue: {
-    fontSize: '14px',
-    fontWeight: 600,
-    color: '#1a1a2e',
-  } as React.CSSProperties,
+  panel: 'bg-surface-50 rounded-xl shadow-card p-6',
+  title: 'text-lg font-semibold text-surface-900 mb-4 flex items-center gap-2',
+  section: 'mb-6',
+  sectionTitle: 'text-sm font-semibold text-surface-500 mb-3 uppercase tracking-wide',
+  toggle: 'flex justify-between items-center py-3 border-b border-surface-200',
+  toggleLabel: 'text-sm text-surface-700',
+  toggleSwitch: 'w-11 h-6 rounded-full cursor-pointer transition-colors duration-200 relative',
+  toggleKnob: 'w-5 h-5 rounded-full bg-white absolute top-0.5 transition-[left] duration-200 shadow-sm',
+  select: 'px-3 py-2 rounded-lg border border-surface-300 text-sm bg-surface-50 cursor-pointer min-w-[120px]',
+  insight: 'p-4 bg-brand-50 rounded-lg mb-3 flex justify-between items-start gap-3',
+  insightIcon: 'text-xl shrink-0',
+  insightContent: 'flex-1',
+  insightText: 'text-sm text-brand-800 m-0 mb-2',
+  insightAction: 'px-3 py-1.5 bg-brand-500 text-white border-none rounded-md text-xs font-medium cursor-pointer mr-2',
+  dismissButton: 'px-3 py-1.5 bg-transparent text-surface-500 border border-surface-300 rounded-md text-xs cursor-pointer',
+  stat: 'flex justify-between items-center py-2',
+  statLabel: 'text-sm text-surface-500',
+  statValue: 'text-sm font-semibold text-surface-900',
 };
 
 // Toggle Switch Component
@@ -1033,13 +930,10 @@ interface ToggleSwitchProps {
 }
 
 const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ checked, onChange, label }) => (
-  <div style={styles.toggle}>
-    <span style={styles.toggleLabel}>{label}</span>
+  <div className={styles.toggle}>
+    <span className={styles.toggleLabel}>{label}</span>
     <div
-      style={{
-        ...styles.toggleSwitch,
-        backgroundColor: checked ? '#3b82f6' : '#d1d5db',
-      }}
+      className={`${styles.toggleSwitch} ${checked ? 'bg-brand-500' : 'bg-surface-300'}`}
       onClick={() => onChange(!checked)}
       role="switch"
       aria-checked={checked}
@@ -1047,10 +941,8 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ checked, onChange, label })
       onKeyDown={(e) => e.key === 'Enter' && onChange(!checked)}
     >
       <div
-        style={{
-          ...styles.toggleKnob,
-          left: checked ? '22px' : '2px',
-        }}
+        className={styles.toggleKnob}
+        style={{ left: checked ? '22px' : '2px' }}
       />
     </div>
   </div>
@@ -1061,19 +953,19 @@ export const PreferencesPanel: React.FC = () => {
   const { preferences, updatePreference } = useUserPreferences();
 
   return (
-    <div style={styles.panel}>
-      <h2 style={styles.title}>
+    <div className={styles.panel}>
+      <h2 className={styles.title}>
         <span>⚙️</span>
         Preferences
       </h2>
 
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Display</h3>
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>Display</h3>
 
-        <div style={styles.toggle}>
-          <span style={styles.toggleLabel}>Theme</span>
+        <div className={styles.toggle}>
+          <span className={styles.toggleLabel}>Theme</span>
           <select
-            style={styles.select}
+            className={styles.select}
             value={preferences.colorTheme}
             onChange={(e) =>
               updatePreference('colorTheme', e.target.value as 'light' | 'dark' | 'system')
@@ -1085,10 +977,10 @@ export const PreferencesPanel: React.FC = () => {
           </select>
         </div>
 
-        <div style={styles.toggle}>
-          <span style={styles.toggleLabel}>Font Size</span>
+        <div className={styles.toggle}>
+          <span className={styles.toggleLabel}>Font Size</span>
           <select
-            style={styles.select}
+            className={styles.select}
             value={preferences.fontSize}
             onChange={(e) =>
               updatePreference('fontSize', e.target.value as 'small' | 'medium' | 'large')
@@ -1100,10 +992,10 @@ export const PreferencesPanel: React.FC = () => {
           </select>
         </div>
 
-        <div style={styles.toggle}>
-          <span style={styles.toggleLabel}>View Mode</span>
+        <div className={styles.toggle}>
+          <span className={styles.toggleLabel}>View Mode</span>
           <select
-            style={styles.select}
+            className={styles.select}
             value={preferences.preferredView}
             onChange={(e) =>
               updatePreference('preferredView', e.target.value as 'grid' | 'list' | 'compact')
@@ -1122,8 +1014,8 @@ export const PreferencesPanel: React.FC = () => {
         />
       </div>
 
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Behavior</h3>
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>Behavior</h3>
 
         <ToggleSwitch
           label="Auto-save Responses"
@@ -1162,8 +1054,8 @@ export const PreferencesPanel: React.FC = () => {
         />
       </div>
 
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Sidebar</h3>
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>Sidebar</h3>
 
         <ToggleSwitch
           label="Collapse Sidebar"
@@ -1188,12 +1080,12 @@ export const InsightsPanel: React.FC = () => {
 
   if (insights.length === 0) {
     return (
-      <div style={styles.panel}>
-        <h2 style={styles.title}>
+      <div className={styles.panel}>
+        <h2 className={styles.title}>
           <span aria-hidden="true">💡</span>
           Personalized Insights
         </h2>
-        <p style={{ color: '#6b7280', fontSize: '14px' }}>
+        <p className="text-surface-500 text-sm">
           Keep using the app and we'll learn your preferences to provide personalized suggestions.
         </p>
       </div>
@@ -1201,15 +1093,15 @@ export const InsightsPanel: React.FC = () => {
   }
 
   return (
-    <div style={styles.panel}>
-      <h2 style={styles.title}>
+    <div className={styles.panel}>
+      <h2 className={styles.title}>
         <span aria-hidden="true">💡</span>
         Personalized Insights
       </h2>
 
       {insights.map((insight) => (
-        <div key={insight.id} style={styles.insight}>
-          <span style={styles.insightIcon}>
+        <div key={insight.id} className={styles.insight}>
+          <span className={styles.insightIcon}>
             {insight.type === 'navigation_shortcut'
               ? '🚀'
               : insight.type === 'feature_discovery'
@@ -1218,13 +1110,13 @@ export const InsightsPanel: React.FC = () => {
                   ? '⚡'
                   : '💡'}
           </span>
-          <div style={styles.insightContent}>
-            <p style={styles.insightText}>{insight.description}</p>
+          <div className={styles.insightContent}>
+            <p className={styles.insightText}>{insight.description}</p>
             <div>
               {insight.suggestedAction && (
-                <button style={styles.insightAction}>{insight.suggestedAction}</button>
+                <button className={styles.insightAction}>{insight.suggestedAction}</button>
               )}
-              <button style={styles.dismissButton} onClick={() => dismissInsight(insight.id)}>
+              <button className={styles.dismissButton} onClick={() => dismissInsight(insight.id)}>
                 Dismiss
               </button>
             </div>
@@ -1245,59 +1137,59 @@ export const UsageStatsPanel: React.FC = () => {
   const shortcuts = getPreferredShortcuts();
 
   return (
-    <div style={styles.panel}>
-      <h2 style={styles.title}>
+    <div className={styles.panel}>
+      <h2 className={styles.title}>
         <span aria-hidden="true">📊</span>
         Usage Statistics
       </h2>
 
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Session Stats</h3>
-        <div style={styles.stat}>
-          <span style={styles.statLabel}>Total Interactions</span>
-          <span style={styles.statValue}>{interactions.length}</span>
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>Session Stats</h3>
+        <div className={styles.stat}>
+          <span className={styles.statLabel}>Total Interactions</span>
+          <span className={styles.statValue}>{interactions.length}</span>
         </div>
       </div>
 
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Top Features</h3>
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>Top Features</h3>
         {topFeatures.length === 0 ? (
-          <p style={{ color: '#6b7280', fontSize: '14px' }}>No data yet</p>
+          <p className="text-surface-500 text-sm">No data yet</p>
         ) : (
           topFeatures.map((feature) => (
-            <div key={feature.featureId} style={styles.stat}>
-              <span style={styles.statLabel}>{feature.featureId}</span>
-              <span style={styles.statValue}>{feature.usageCount} uses</span>
+            <div key={feature.featureId} className={styles.stat}>
+              <span className={styles.statLabel}>{feature.featureId}</span>
+              <span className={styles.statValue}>{feature.usageCount} uses</span>
             </div>
           ))
         )}
       </div>
 
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Frequent Paths</h3>
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>Frequent Paths</h3>
         {frequentPaths.length === 0 ? (
-          <p style={{ color: '#6b7280', fontSize: '14px' }}>No data yet</p>
+          <p className="text-surface-500 text-sm">No data yet</p>
         ) : (
           frequentPaths.map((path, i) => (
-            <div key={i} style={styles.stat}>
-              <span style={styles.statLabel}>
+            <div key={i} className={styles.stat}>
+              <span className={styles.statLabel}>
                 {path.from} → {path.to}
               </span>
-              <span style={styles.statValue}>{path.count}x</span>
+              <span className={styles.statValue}>{path.count}x</span>
             </div>
           ))
         )}
       </div>
 
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Preferred Shortcuts</h3>
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>Preferred Shortcuts</h3>
         {shortcuts.length === 0 ? (
-          <p style={{ color: '#6b7280', fontSize: '14px' }}>No shortcuts used yet</p>
+          <p className="text-surface-500 text-sm">No shortcuts used yet</p>
         ) : (
           shortcuts.map((shortcut) => (
-            <div key={shortcut.shortcut} style={styles.stat}>
-              <span style={styles.statLabel}>{shortcut.shortcut}</span>
-              <span style={styles.statValue}>
+            <div key={shortcut.shortcut} className={styles.stat}>
+              <span className={styles.statLabel}>{shortcut.shortcut}</span>
+              <span className={styles.statValue}>
                 {shortcut.usageCount}x ({Math.round(shortcut.successRate * 100)}%)
               </span>
             </div>

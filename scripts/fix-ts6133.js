@@ -37,98 +37,108 @@ const manualList = [];
 
 for (const [relFile, fileErrors] of Object.entries(byFile)) {
     const absPath = path.join(apiDir, relFile);
-    if (!fs.existsSync(absPath)) {
-        console.log(`SKIP (not found): ${relFile}`);
-        continue;
+    let fd;
+    try {
+        fd = fs.openSync(absPath, 'r+');
+    } catch (error) {
+        if (error && error.code === 'ENOENT') {
+            console.log(`SKIP (not found): ${relFile}`);
+            continue;
+        }
+        throw error;
     }
 
-    let content = fs.readFileSync(absPath, 'utf8');
-    let lines = content.split('\n');
-    let modified = false;
-    const linesToRemove = new Set();
+    try {
+        let content = fs.readFileSync(fd, 'utf8');
+        let lines = content.split('\n');
+        let modified = false;
+        const linesToRemove = new Set();
 
-    // Sort errors by line number descending to process from bottom up
-    const sorted = [...fileErrors].sort((a, b) => b.line - a.line);
+        // Sort errors by line number descending to process from bottom up
+        const sorted = [...fileErrors].sort((a, b) => b.line - a.line);
 
-    for (const err of sorted) {
-        const lineIdx = err.line - 1;
-        if (lineIdx >= lines.length) continue;
+        for (const err of sorted) {
+            const lineIdx = err.line - 1;
+            if (lineIdx >= lines.length) continue;
 
-        const line = lines[lineIdx];
-        const varName = err.name;
+            const line = lines[lineIdx];
+            const varName = err.name;
 
-        // PATTERN 1: Unused import
-        if (isImportLine(lines, lineIdx, varName)) {
-            const removed = removeFromImport(lines, lineIdx, varName);
-            if (removed) {
+            // PATTERN 1: Unused import
+            if (isImportLine(lines, lineIdx, varName)) {
+                const removed = removeFromImport(lines, lineIdx, varName);
+                if (removed) {
+                    modified = true;
+                    totalFixed++;
+                    continue;
+                }
+            }
+
+            // PATTERN 2: `let varName` or `let _varName` (module-level test setup variable)
+            const letMatch = line.match(new RegExp(`\\blet\\s+${esc(varName)}\\b`));
+            if (letMatch) {
+                // Remove the declaration line
+                linesToRemove.add(lineIdx);
+                // Find and fix all assignments: `varName = ...` → just the RHS expression
+                removeAssignments(lines, varName, lineIdx, linesToRemove);
                 modified = true;
                 totalFixed++;
                 continue;
             }
-        }
 
-        // PATTERN 2: `let varName` or `let _varName` (module-level test setup variable)
-        const letMatch = line.match(new RegExp(`\\blet\\s+${esc(varName)}\\b`));
-        if (letMatch) {
-            // Remove the declaration line
-            linesToRemove.add(lineIdx);
-            // Find and fix all assignments: `varName = ...` → just the RHS expression
-            removeAssignments(lines, varName, lineIdx, linesToRemove);
-            modified = true;
-            totalFixed++;
-            continue;
-        }
-
-        // PATTERN 3: `const varName = expr` (local, not import)
-        const constMatch = line.match(new RegExp(`\\bconst\\s+${esc(varName)}\\s*=\\s*`));
-        if (constMatch && !line.includes('import')) {
-            // Replace `const varName = expr;` with just `expr;`
-            const newLine = line.replace(
-                new RegExp(`\\bconst\\s+${esc(varName)}\\s*=\\s*`),
-                line.match(/^\s*/)[0] // keep indentation
-            );
-            // If the RHS is just a value literal (not a function call), remove the whole line
-            const rhs = newLine.trim();
-            if (rhs === '' || rhs === ';') {
-                linesToRemove.add(lineIdx);
-            } else if (isSideEffectFree(rhs)) {
-                // Pure value like `Date.now`, `'string'`, `{ ... }` - remove entire line
-                linesToRemove.add(lineIdx);
-            } else {
-                lines[lineIdx] = newLine;
-            }
-            modified = true;
-            totalFixed++;
-            continue;
-        }
-
-        // PATTERN 4: Destructured variable `{ ..., varName, ... }` or `{ ..., varName: alias, ... }`
-        // Also handles for...of destructuring
-        if (isDestructured(line, varName)) {
-            const fixed = removeFromDestructuring(lines, lineIdx, varName);
-            if (fixed) {
+            // PATTERN 3: `const varName = expr` (local, not import)
+            const constMatch = line.match(new RegExp(`\\bconst\\s+${esc(varName)}\\s*=\\s*`));
+            if (constMatch && !line.includes('import')) {
+                // Replace `const varName = expr;` with just `expr;`
+                const newLine = line.replace(
+                    new RegExp(`\\bconst\\s+${esc(varName)}\\s*=\\s*`),
+                    line.match(/^\s*/)[0] // keep indentation
+                );
+                // If the RHS is just a value literal (not a function call), remove the whole line
+                const rhs = newLine.trim();
+                if (rhs === '' || rhs === ';') {
+                    linesToRemove.add(lineIdx);
+                } else if (isSideEffectFree(rhs)) {
+                    // Pure value like `Date.now`, `'string'`, `{ ... }` - remove entire line
+                    linesToRemove.add(lineIdx);
+                } else {
+                    lines[lineIdx] = newLine;
+                }
                 modified = true;
                 totalFixed++;
                 continue;
             }
+
+            // PATTERN 4: Destructured variable `{ ..., varName, ... }` or `{ ..., varName: alias, ... }`
+            // Also handles for...of destructuring
+            if (isDestructured(line, varName)) {
+                const fixed = removeFromDestructuring(lines, lineIdx, varName);
+                if (fixed) {
+                    modified = true;
+                    totalFixed++;
+                    continue;
+                }
+            }
+
+            // Unhandled
+            totalManual++;
+            manualList.push(`${relFile}:${err.line} - '${varName}' - ${line.trim().substring(0, 100)}`);
         }
 
-        // Unhandled
-        totalManual++;
-        manualList.push(`${relFile}:${err.line} - '${varName}' - ${line.trim().substring(0, 100)}`);
-    }
+        // Remove marked lines (bottom-up to preserve indices)
+        const sortedRemoves = [...linesToRemove].sort((a, b) => b - a);
+        for (const idx of sortedRemoves) {
+            lines.splice(idx, 1);
+        }
 
-    // Remove marked lines (bottom-up to preserve indices)
-    const sortedRemoves = [...linesToRemove].sort((a, b) => b - a);
-    for (const idx of sortedRemoves) {
-        lines.splice(idx, 1);
-    }
-
-    if (modified) {
-        // Clean up double blank lines
-        let result = lines.join('\n').replace(/\n{3,}/g, '\n\n');
-        fs.writeFileSync(absPath, result, 'utf8');
-        console.log(`FIXED: ${relFile} (${fileErrors.length} errors)`);
+        if (modified) {
+            // Clean up double blank lines
+            let result = lines.join('\n').replace(/\n{3,}/g, '\n\n');
+            overwriteFile(fd, result);
+            console.log(`FIXED: ${relFile} (${fileErrors.length} errors)`);
+        }
+    } finally {
+        fs.closeSync(fd);
     }
 }
 
@@ -144,6 +154,12 @@ if (manualList.length > 0) {
 
 function esc(s) {
     return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function overwriteFile(fd, content) {
+    fs.ftruncateSync(fd, 0);
+    fs.writeSync(fd, content, 0, 'utf8');
+    fs.fsyncSync(fd);
 }
 
 function isImportLine(lines, lineIdx, varName) {

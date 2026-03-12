@@ -268,12 +268,12 @@ export const ScoreDashboard: React.FC<ScoreDashboardProps> = ({
                 style={{
                   stroke:
                     scoreData.score >= 80
-                      ? '#22C55E'
+                      ? 'var(--color-success-500)'
                       : scoreData.score >= 60
-                        ? '#EAB308'
+                        ? 'var(--color-warning-500)'
                         : scoreData.score >= 40
-                          ? '#F97316'
-                          : '#EF4444',
+                          ? 'var(--color-warning-600)'
+                          : 'var(--color-danger-500)',
                 }}
               />
             </svg>

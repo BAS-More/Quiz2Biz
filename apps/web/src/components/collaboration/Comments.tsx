@@ -635,314 +635,55 @@ export const CommentsProvider: React.FC<CommentsProviderProps> = ({
 // Styles
 // ============================================================================
 
-const styles: Record<string, React.CSSProperties> = {
-  commentSection: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '16px',
-    padding: '16px',
-    backgroundColor: '#f8f9fa',
-    borderRadius: '8px',
-  },
-  commentHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '8px',
-  },
-  commentTitle: {
-    fontSize: '16px',
-    fontWeight: 600,
-    color: '#333',
-    margin: 0,
-  },
-  commentCount: {
-    fontSize: '14px',
-    color: '#666',
-    backgroundColor: '#e9ecef',
-    padding: '2px 8px',
-    borderRadius: '12px',
-  },
-  thread: {
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    border: '1px solid #e0e0e0',
-    overflow: 'hidden',
-  },
-  threadResolved: {
-    opacity: 0.7,
-    borderColor: '#28a745',
-  },
-  threadPinned: {
-    borderColor: '#ffc107',
-    borderWidth: '2px',
-  },
-  comment: {
-    padding: '12px 16px',
-  },
-  commentMeta: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    marginBottom: '8px',
-  },
-  avatar: {
-    width: '32px',
-    height: '32px',
-    borderRadius: '50%',
-    backgroundColor: '#6366f1',
-    color: '#fff',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '14px',
-    fontWeight: 600,
-  },
-  authorName: {
-    fontWeight: 600,
-    color: '#333',
-    fontSize: '14px',
-  },
-  timestamp: {
-    fontSize: '12px',
-    color: '#888',
-  },
-  editedBadge: {
-    fontSize: '11px',
-    color: '#888',
-    fontStyle: 'italic',
-  },
-  pinnedBadge: {
-    fontSize: '11px',
-    color: '#ffc107',
-    backgroundColor: '#fff3cd',
-    padding: '2px 6px',
-    borderRadius: '4px',
-  },
-  resolvedBadge: {
-    fontSize: '11px',
-    color: '#28a745',
-    backgroundColor: '#d4edda',
-    padding: '2px 6px',
-    borderRadius: '4px',
-  },
-  commentContent: {
-    fontSize: '14px',
-    lineHeight: 1.6,
-    color: '#333',
-    marginBottom: '8px',
-    whiteSpace: 'pre-wrap',
-  },
-  mention: {
-    color: '#6366f1',
-    fontWeight: 500,
-    backgroundColor: '#e0e7ff',
-    padding: '1px 4px',
-    borderRadius: '4px',
-  },
-  reactions: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '4px',
-    marginBottom: '8px',
-  },
-  reaction: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '4px',
-    padding: '2px 8px',
-    backgroundColor: '#f0f0f0',
-    borderRadius: '12px',
-    fontSize: '12px',
-    cursor: 'pointer',
-    border: 'none',
-    transition: 'background-color 0.2s',
-  },
-  reactionActive: {
-    backgroundColor: '#e0e7ff',
-    border: '1px solid #6366f1',
-  },
-  reactionCount: {
-    color: '#666',
-  },
-  commentActions: {
-    display: 'flex',
-    gap: '8px',
-    marginTop: '8px',
-  },
-  actionButton: {
-    fontSize: '12px',
-    color: '#666',
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
-    padding: '4px 8px',
-    borderRadius: '4px',
-    transition: 'background-color 0.2s',
-  },
-  replies: {
-    marginLeft: '32px',
-    borderLeft: '2px solid #e0e0e0',
-    paddingLeft: '16px',
-  },
-  reply: {
-    padding: '12px 0',
-    borderBottom: '1px solid #f0f0f0',
-  },
-  replyLast: {
-    borderBottom: 'none',
-  },
-  inputContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
-  },
-  textarea: {
-    width: '100%',
-    minHeight: '80px',
-    padding: '12px',
-    borderRadius: '8px',
-    border: '1px solid #ddd',
-    fontSize: '14px',
-    fontFamily: 'inherit',
-    resize: 'vertical',
-    outline: 'none',
-  },
-  textareaFocused: {
-    borderColor: '#6366f1',
-    boxShadow: '0 0 0 2px rgba(99, 102, 241, 0.1)',
-  },
-  inputActions: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  mentionHint: {
-    fontSize: '12px',
-    color: '#888',
-  },
-  submitButton: {
-    padding: '8px 16px',
-    backgroundColor: '#6366f1',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '6px',
-    fontSize: '14px',
-    fontWeight: 500,
-    cursor: 'pointer',
-    transition: 'background-color 0.2s',
-  },
-  submitButtonDisabled: {
-    backgroundColor: '#ccc',
-    cursor: 'not-allowed',
-  },
-  mentionDropdown: {
-    position: 'absolute',
-    backgroundColor: '#fff',
-    border: '1px solid #e0e0e0',
-    borderRadius: '8px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-    maxHeight: '200px',
-    overflowY: 'auto',
-    zIndex: 1000,
-  },
-  mentionOption: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '8px 12px',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s',
-  },
-  mentionOptionHighlighted: {
-    backgroundColor: '#f0f0f0',
-  },
-  notificationBell: {
-    position: 'relative',
-    cursor: 'pointer',
-    padding: '8px',
-  },
-  notificationBadge: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    backgroundColor: '#ef4444',
-    color: '#fff',
-    fontSize: '10px',
-    fontWeight: 600,
-    padding: '2px 6px',
-    borderRadius: '10px',
-    minWidth: '16px',
-    textAlign: 'center',
-  },
-  notificationPanel: {
-    position: 'absolute',
-    top: '100%',
-    right: 0,
-    width: '320px',
-    maxHeight: '400px',
-    backgroundColor: '#fff',
-    border: '1px solid #e0e0e0',
-    borderRadius: '8px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-    overflowY: 'auto',
-    zIndex: 1000,
-  },
-  notificationHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '12px 16px',
-    borderBottom: '1px solid #e0e0e0',
-  },
-  notificationItem: {
-    display: 'flex',
-    gap: '12px',
-    padding: '12px 16px',
-    borderBottom: '1px solid #f0f0f0',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s',
-  },
-  notificationUnread: {
-    backgroundColor: '#f0f4ff',
-  },
-  notificationMessage: {
-    fontSize: '13px',
-    color: '#333',
-    lineHeight: 1.4,
-  },
-  notificationTime: {
-    fontSize: '11px',
-    color: '#888',
-    marginTop: '4px',
-  },
-  emojiPicker: {
-    display: 'flex',
-    gap: '4px',
-    padding: '8px',
-    backgroundColor: '#fff',
-    border: '1px solid #e0e0e0',
-    borderRadius: '8px',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  },
-  emojiButton: {
-    fontSize: '16px',
-    padding: '4px',
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
-    borderRadius: '4px',
-    transition: 'background-color 0.2s',
-  },
-  emptyState: {
-    textAlign: 'center',
-    padding: '32px',
-    color: '#888',
-  },
-  emptyIcon: {
-    fontSize: '48px',
-    marginBottom: '16px',
-  },
+const styles = {
+  commentSection: 'flex flex-col gap-4 p-4 bg-surface-100 rounded-lg',
+  commentHeader: 'flex justify-between items-center mb-2',
+  commentTitle: 'text-base font-semibold text-surface-800 m-0',
+  commentCount: 'text-sm text-surface-500 bg-surface-200 px-2 py-0.5 rounded-xl',
+  thread: 'bg-surface-50 rounded-lg border border-surface-200 overflow-hidden',
+  threadResolved: 'opacity-70 border-success-500',
+  threadPinned: 'border-warning-500 border-2',
+  comment: 'py-3 px-4',
+  commentMeta: 'flex items-center gap-2 mb-2',
+  avatar: 'w-8 h-8 rounded-full bg-brand-500 text-white flex items-center justify-center text-sm font-semibold',
+  authorName: 'font-semibold text-surface-800 text-sm',
+  timestamp: 'text-xs text-surface-500',
+  editedBadge: 'text-[11px] text-surface-500 italic',
+  pinnedBadge: 'text-[11px] text-warning-600 bg-warning-50 px-1.5 py-0.5 rounded',
+  resolvedBadge: 'text-[11px] text-success-600 bg-success-50 px-1.5 py-0.5 rounded',
+  commentContent: 'text-sm leading-relaxed text-surface-800 mb-2 whitespace-pre-wrap',
+  mention: 'text-brand-600 font-medium bg-brand-100 px-1 py-px rounded',
+  reactions: 'flex flex-wrap gap-1 mb-2',
+  reaction: 'flex items-center gap-1 px-2 py-0.5 bg-surface-100 rounded-xl text-xs cursor-pointer border-none transition-colors',
+  reactionActive: 'bg-brand-100 border border-brand-500',
+  reactionCount: 'text-surface-500',
+  commentActions: 'flex gap-2 mt-2',
+  actionButton: 'text-xs text-surface-500 bg-transparent border-none cursor-pointer px-2 py-1 rounded transition-colors',
+  replies: 'ml-8 border-l-2 border-surface-200 pl-4',
+  reply: 'py-3 border-b border-surface-100',
+  replyLast: 'border-b-0',
+  inputContainer: 'flex flex-col gap-2',
+  textarea: 'w-full min-h-[80px] p-3 rounded-lg border border-surface-300 bg-surface-50 text-sm font-[inherit] resize-y outline-none',
+  textareaFocused: 'border-brand-500 ring-2 ring-brand-500/10',
+  inputActions: 'flex justify-between items-center',
+  mentionHint: 'text-xs text-surface-500',
+  submitButton: 'px-4 py-2 bg-brand-600 text-white border-none rounded-md text-sm font-medium cursor-pointer transition-colors',
+  submitButtonDisabled: 'bg-surface-300 cursor-not-allowed',
+  mentionDropdown: 'absolute bg-surface-50 border border-surface-200 rounded-lg shadow-float max-h-[200px] overflow-y-auto z-[1000]',
+  mentionOption: 'flex items-center gap-2 px-3 py-2 cursor-pointer transition-colors',
+  mentionOptionHighlighted: 'bg-surface-100',
+  notificationBell: 'relative cursor-pointer p-2',
+  notificationBadge: 'absolute top-0 right-0 bg-danger-600 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-full min-w-[16px] text-center',
+  notificationPanel: 'absolute top-full right-0 w-80 max-h-[400px] bg-surface-50 border border-surface-200 rounded-lg shadow-float overflow-y-auto z-[1000]',
+  notificationHeader: 'flex justify-between items-center px-4 py-3 border-b border-surface-200',
+  notificationItem: 'flex gap-3 px-4 py-3 border-b border-surface-100 cursor-pointer transition-colors',
+  notificationUnread: 'bg-brand-50',
+  notificationMessage: 'text-[13px] text-surface-800 leading-snug',
+  notificationTime: 'text-[11px] text-surface-500 mt-1',
+  emojiPicker: 'flex gap-1 p-2 bg-surface-50 border border-surface-200 rounded-lg shadow-elevated',
+  emojiButton: 'text-base p-1 bg-transparent border-none cursor-pointer rounded transition-colors',
+  emptyState: 'text-center p-8 text-surface-500',
+  emptyIcon: 'text-5xl mb-4',
 };
 
 // ============================================================================
@@ -1134,15 +875,15 @@ export const CommentInput: React.FC<CommentInputProps> = ({
 
   if (!currentUser) {
     return (
-      <div style={styles.emptyState}>
+      <div className={styles.emptyState}>
         <p>Please log in to add comments</p>
       </div>
     );
   }
 
   return (
-    <div style={styles.inputContainer}>
-      <div style={{ position: 'relative' }}>
+    <div className={styles.inputContainer}>
+      <div className="relative">
         <textarea
           ref={textareaRef}
           value={content}
@@ -1152,29 +893,23 @@ export const CommentInput: React.FC<CommentInputProps> = ({
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
           autoFocus={autoFocus}
-          style={{
-            ...styles.textarea,
-            ...(isFocused ? styles.textareaFocused : {}),
-          }}
+          className={`${styles.textarea} ${isFocused ? styles.textareaFocused : ''}`}
           aria-label="Comment input"
         />
 
         {showMentions && filteredMembers.length > 0 && (
-          <div style={{ ...styles.mentionDropdown, top: '100%', left: 0 }}>
+          <div className={`${styles.mentionDropdown} top-full left-0`}>
             {filteredMembers.map((member, index) => (
               <div
                 key={member.id}
-                style={{
-                  ...styles.mentionOption,
-                  ...(index === mentionIndex ? styles.mentionOptionHighlighted : {}),
-                }}
+                className={`${styles.mentionOption} ${index === mentionIndex ? styles.mentionOptionHighlighted : ''}`}
                 onClick={() => selectMention(member)}
                 onMouseEnter={() => setMentionIndex(index)}
               >
-                <div style={styles.avatar}>{getInitials(member.name)}</div>
+                <div className={styles.avatar}>{getInitials(member.name)}</div>
                 <div>
-                  <div style={{ fontWeight: 500, fontSize: '13px' }}>{member.name}</div>
-                  <div style={{ fontSize: '11px', color: '#888' }}>{member.email}</div>
+                  <div className="font-medium text-[13px]">{member.name}</div>
+                  <div className="text-[11px] text-surface-500">{member.email}</div>
                 </div>
               </div>
             ))}
@@ -1182,15 +917,12 @@ export const CommentInput: React.FC<CommentInputProps> = ({
         )}
       </div>
 
-      <div style={styles.inputActions}>
-        <span style={styles.mentionHint}>Press Ctrl+Enter to post • @ to mention</span>
+      <div className={styles.inputActions}>
+        <span className={styles.mentionHint}>Press Ctrl+Enter to post • @ to mention</span>
         <button
           onClick={handleSubmit}
           disabled={!content.trim()}
-          style={{
-            ...styles.submitButton,
-            ...(!content.trim() ? styles.submitButtonDisabled : {}),
-          }}
+          className={`${styles.submitButton} ${!content.trim() ? styles.submitButtonDisabled : ''}`}
         >
           {parentId ? 'Reply' : 'Comment'}
         </button>
@@ -1261,7 +993,7 @@ export const CommentDisplay: React.FC<CommentDisplayProps> = ({
     return parts.map((part, i) => {
       if (part.startsWith('@')) {
         return (
-          <span key={i} style={styles.mention}>
+          <span key={i} className={styles.mention}>
             {part}
           </span>
         );
@@ -1272,53 +1004,50 @@ export const CommentDisplay: React.FC<CommentDisplayProps> = ({
 
   return (
     <div
-      style={{
-        ...styles.comment,
-        ...(isReply ? styles.reply : {}),
-        ...(isReply && isLast ? styles.replyLast : {}),
-      }}
+      className={`${styles.comment} ${isReply ? styles.reply : ''} ${isReply && isLast ? styles.replyLast : ''}`}
     >
-      <div style={styles.commentMeta}>
-        <div style={styles.avatar}>
+      <div className={styles.commentMeta}>
+        <div className={styles.avatar}>
           {comment.author.avatar ? (
             <img
               src={comment.author.avatar}
               alt={comment.author.name}
-              style={{ width: '100%', height: '100%', borderRadius: '50%' }}
+              style={{ width: '100%', height: '100%' }}
+              className="rounded-full"
             />
           ) : (
             getInitials(comment.author.name)
           )}
         </div>
-        <span style={styles.authorName}>{comment.author.name}</span>
-        <span style={styles.timestamp}>{formatTimestamp(comment.createdAt)}</span>
-        {comment.isEdited && <span style={styles.editedBadge}>(edited)</span>}
+        <span className={styles.authorName}>{comment.author.name}</span>
+        <span className={styles.timestamp}>{formatTimestamp(comment.createdAt)}</span>
+        {comment.isEdited && <span className={styles.editedBadge}>(edited)</span>}
         {comment.isPinned && (
-          <span style={styles.pinnedBadge}>
+          <span className={styles.pinnedBadge}>
             <span aria-hidden="true">📌</span> Pinned
           </span>
         )}
         {comment.isResolved && (
-          <span style={styles.resolvedBadge}>
+          <span className={styles.resolvedBadge}>
             <span aria-hidden="true">✓</span> Resolved
           </span>
         )}
       </div>
 
       {isEditing ? (
-        <div style={styles.inputContainer}>
+        <div className={styles.inputContainer}>
           <textarea
             value={editContent}
             onChange={(e) => setEditContent(e.target.value)}
-            style={styles.textarea}
+            className={styles.textarea}
             autoFocus
           />
-          <div style={styles.inputActions}>
-            <button style={styles.actionButton} onClick={() => setIsEditing(false)}>
+          <div className={styles.inputActions}>
+            <button className={styles.actionButton} onClick={() => setIsEditing(false)}>
               Cancel
             </button>
             <button
-              style={styles.submitButton}
+              className={styles.submitButton}
               onClick={handleSaveEdit}
               disabled={!editContent.trim()}
             >
@@ -1327,42 +1056,39 @@ export const CommentDisplay: React.FC<CommentDisplayProps> = ({
           </div>
         </div>
       ) : (
-        <div style={styles.commentContent}>{renderContent(comment.content)}</div>
+        <div className={styles.commentContent}>{renderContent(comment.content)}</div>
       )}
 
       {groupedReactions.size > 0 && (
-        <div style={styles.reactions}>
+        <div className={styles.reactions}>
           {Array.from(groupedReactions.entries()).map(([emoji, reactions]) => {
             const hasReacted = reactions.some((r) => r.userId === currentUser?.id);
             return (
               <button
                 key={emoji}
-                style={{
-                  ...styles.reaction,
-                  ...(hasReacted ? styles.reactionActive : {}),
-                }}
+                className={`${styles.reaction} ${hasReacted ? styles.reactionActive : ''}`}
                 onClick={() => handleReaction(emoji)}
                 title={reactions.map((r) => r.userName).join(', ')}
               >
                 <span>{emoji}</span>
-                <span style={styles.reactionCount}>{reactions.length}</span>
+                <span className={styles.reactionCount}>{reactions.length}</span>
               </button>
             );
           })}
         </div>
       )}
 
-      <div style={styles.commentActions}>
-        <div style={{ position: 'relative' }}>
-          <button style={styles.actionButton} onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+      <div className={styles.commentActions}>
+        <div className="relative">
+          <button className={styles.actionButton} onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
             <span aria-hidden="true">😊</span> React
           </button>
           {showEmojiPicker && (
-            <div style={{ ...styles.emojiPicker, position: 'absolute', top: '100%', left: 0 }}>
+            <div className={`${styles.emojiPicker} absolute top-full left-0`}>
               {COMMON_REACTIONS.map((emoji) => (
                 <button
                   key={emoji}
-                  style={styles.emojiButton}
+                  className={styles.emojiButton}
                   onClick={() => handleReaction(emoji)}
                 >
                   {emoji}
@@ -1373,18 +1099,18 @@ export const CommentDisplay: React.FC<CommentDisplayProps> = ({
         </div>
 
         {!isReply && (
-          <button style={styles.actionButton} onClick={onReply}>
+          <button className={styles.actionButton} onClick={onReply}>
             <span aria-hidden="true">💬</span> Reply
           </button>
         )}
 
         {isAuthor && (
           <>
-            <button style={styles.actionButton} onClick={() => setIsEditing(true)}>
+            <button className={styles.actionButton} onClick={() => setIsEditing(true)}>
               <span aria-hidden="true">✏️</span> Edit
             </button>
             <button
-              style={styles.actionButton}
+              className={styles.actionButton}
               onClick={() => {
                 if (window.confirm('Delete this comment?')) {
                   deleteComment(comment.id);
@@ -1397,7 +1123,7 @@ export const CommentDisplay: React.FC<CommentDisplayProps> = ({
         )}
 
         {!isReply && (
-          <button style={styles.actionButton} onClick={() => pinComment(comment.id)}>
+          <button className={styles.actionButton} onClick={() => pinComment(comment.id)}>
             <span aria-hidden="true">📌</span> {comment.isPinned ? 'Unpin' : 'Pin'}
           </button>
         )}
@@ -1421,17 +1147,13 @@ export const CommentThreadDisplay: React.FC<CommentThreadProps> = ({ thread }) =
 
   return (
     <div
-      style={{
-        ...styles.thread,
-        ...(thread.rootComment.isResolved ? styles.threadResolved : {}),
-        ...(thread.rootComment.isPinned ? styles.threadPinned : {}),
-      }}
+      className={`${styles.thread} ${thread.rootComment.isResolved ? styles.threadResolved : ''} ${thread.rootComment.isPinned ? styles.threadPinned : ''}`}
     >
       <CommentDisplay comment={thread.rootComment} onReply={() => setShowReplyInput(true)} />
 
       {thread.replies.length > 0 && (
-        <div style={styles.replies}>
-          <button style={styles.actionButton} onClick={() => setIsExpanded(!isExpanded)}>
+        <div className={styles.replies}>
+          <button className={styles.actionButton} onClick={() => setIsExpanded(!isExpanded)}>
             {isExpanded ? '▼' : '▶'} {thread.replies.length} repl
             {thread.replies.length === 1 ? 'y' : 'ies'}
           </button>
@@ -1449,7 +1171,7 @@ export const CommentThreadDisplay: React.FC<CommentThreadProps> = ({ thread }) =
       )}
 
       {showReplyInput && (
-        <div style={{ padding: '0 16px 16px', marginLeft: '32px' }}>
+        <div className="pb-4 px-4 ml-8">
           <CommentInput
             questionId={thread.questionId}
             parentId={thread.rootComment.id}
@@ -1460,8 +1182,8 @@ export const CommentThreadDisplay: React.FC<CommentThreadProps> = ({ thread }) =
         </div>
       )}
 
-      <div style={{ padding: '8px 16px', borderTop: '1px solid #f0f0f0' }}>
-        <button style={styles.actionButton} onClick={() => resolveThread(thread.id)}>
+      <div className="py-2 px-4 border-t border-surface-100">
+        <button className={styles.actionButton} onClick={() => resolveThread(thread.id)}>
           {thread.rootComment.isResolved ? (
             <>
               <span aria-hidden="true">↩️</span> Reopen
@@ -1516,25 +1238,25 @@ export const QuestionComments: React.FC<QuestionCommentsProps> = ({
   }, [threads]);
 
   return (
-    <div style={styles.commentSection}>
-      <div style={styles.commentHeader}>
-        <h3 style={styles.commentTitle}>
+    <div className={styles.commentSection}>
+      <div className={styles.commentHeader}>
+        <h3 className={styles.commentTitle}>
           {questionTitle ? `Comments on: ${questionTitle}` : 'Comments'}
         </h3>
-        <span style={styles.commentCount}>{count}</span>
+        <span className={styles.commentCount}>{count}</span>
       </div>
 
       <CommentInput questionId={questionId} />
 
       {sortedThreads.length > 0 ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div className="flex flex-col gap-3">
           {sortedThreads.map((thread) => (
             <CommentThreadDisplay key={thread.id} thread={thread} />
           ))}
         </div>
       ) : (
-        <div style={styles.emptyState}>
-          <div style={styles.emptyIcon} aria-hidden="true">
+        <div className={styles.emptyState}>
+          <div className={styles.emptyIcon} aria-hidden="true">
             💬
           </div>
           <p>No comments yet. Be the first to start a discussion!</p>
@@ -1572,22 +1294,22 @@ export const NotificationBell: React.FC = () => {
   }, [isOpen]);
 
   return (
-    <div style={{ position: 'relative' }} ref={panelRef}>
+    <div className="relative" ref={panelRef}>
       <button
-        style={styles.notificationBell}
+        className={styles.notificationBell}
         onClick={() => setIsOpen(!isOpen)}
         aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
       >
         <span aria-hidden="true">🔔</span>
-        {unreadCount > 0 && <span style={styles.notificationBadge}>{unreadCount}</span>}
+        {unreadCount > 0 && <span className={styles.notificationBadge}>{unreadCount}</span>}
       </button>
 
       {isOpen && (
-        <div style={styles.notificationPanel}>
-          <div style={styles.notificationHeader}>
-            <span style={{ fontWeight: 600 }}>Notifications</span>
+        <div className={styles.notificationPanel}>
+          <div className={styles.notificationHeader}>
+            <span className="font-semibold">Notifications</span>
             {unreadCount > 0 && (
-              <button style={styles.actionButton} onClick={markAllNotificationsRead}>
+              <button className={styles.actionButton} onClick={markAllNotificationsRead}>
                 Mark all read
               </button>
             )}
@@ -1597,23 +1319,20 @@ export const NotificationBell: React.FC = () => {
             notifications.slice(0, 20).map((notification) => (
               <div
                 key={notification.id}
-                style={{
-                  ...styles.notificationItem,
-                  ...(!notification.isRead ? styles.notificationUnread : {}),
-                }}
+                className={`${styles.notificationItem} ${!notification.isRead ? styles.notificationUnread : ''}`}
                 onClick={() => markNotificationRead(notification.id)}
               >
-                <div style={styles.avatar}>{getInitials(notification.fromUser.name)}</div>
+                <div className={styles.avatar}>{getInitials(notification.fromUser.name)}</div>
                 <div>
-                  <div style={styles.notificationMessage}>{notification.message}</div>
-                  <div style={styles.notificationTime}>
+                  <div className={styles.notificationMessage}>{notification.message}</div>
+                  <div className={styles.notificationTime}>
                     {formatTimestamp(notification.createdAt)}
                   </div>
                 </div>
               </div>
             ))
           ) : (
-            <div style={{ ...styles.emptyState, padding: '24px' }}>
+            <div className="text-center p-6 text-surface-500">
               <p>No notifications</p>
             </div>
           )}
@@ -1643,19 +1362,7 @@ export const CommentCountBadge: React.FC<CommentCountBadgeProps> = ({ questionId
   return (
     <button
       onClick={onClick}
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '4px',
-        padding: '4px 8px',
-        backgroundColor: '#e0e7ff',
-        color: '#6366f1',
-        border: 'none',
-        borderRadius: '12px',
-        fontSize: '12px',
-        fontWeight: 500,
-        cursor: 'pointer',
-      }}
+      className="inline-flex items-center gap-1 px-2 py-1 bg-brand-100 text-brand-600 border-none rounded-xl text-xs font-medium cursor-pointer"
       aria-label={`${count} comment${count !== 1 ? 's' : ''}`}
     >
       <span aria-hidden="true">💬</span> {count}

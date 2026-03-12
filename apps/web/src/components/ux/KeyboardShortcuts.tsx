@@ -416,9 +416,8 @@ const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ onClose
 
         <div className="shortcuts-modal__categories">
           <button
-            className={`shortcuts-modal__category-btn ${
-              selectedCategory === null ? 'shortcuts-modal__category-btn--active' : ''
-            }`}
+            className={`shortcuts-modal__category-btn ${selectedCategory === null ? 'shortcuts-modal__category-btn--active' : ''
+              }`}
             onClick={() => setSelectedCategory(null)}
           >
             All
@@ -426,9 +425,8 @@ const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ onClose
           {SHORTCUT_CATEGORIES.map((cat) => (
             <button
               key={cat.id}
-              className={`shortcuts-modal__category-btn ${
-                selectedCategory === cat.id ? 'shortcuts-modal__category-btn--active' : ''
-              }`}
+              className={`shortcuts-modal__category-btn ${selectedCategory === cat.id ? 'shortcuts-modal__category-btn--active' : ''
+                }`}
               onClick={() => setSelectedCategory(cat.id)}
             >
               {cat.icon} {cat.name}
@@ -519,7 +517,7 @@ const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ onClose
           justify-content: space-between;
           align-items: center;
           padding: 20px 24px;
-          border-bottom: 1px solid #e2e8f0;
+          border-bottom: 1px solid var(--color-surface-200);
         }
 
         .shortcuts-modal__title {
@@ -533,30 +531,30 @@ const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ onClose
           border: none;
           font-size: 20px;
           cursor: pointer;
-          color: #718096;
+          color: var(--color-surface-500);
           padding: 4px;
         }
 
         .shortcuts-modal__close:hover {
-          color: #1a202c;
+          color: var(--color-surface-900);
         }
 
         .shortcuts-modal__search {
           padding: 16px 24px;
-          border-bottom: 1px solid #e2e8f0;
+          border-bottom: 1px solid var(--color-surface-200);
         }
 
         .shortcuts-modal__search-input {
           width: 100%;
           padding: 10px 14px;
-          border: 1px solid #e2e8f0;
+          border: 1px solid var(--color-surface-200);
           border-radius: 6px;
           font-size: 14px;
           outline: none;
         }
 
         .shortcuts-modal__search-input:focus {
-          border-color: #3182ce;
+          border-color: var(--color-brand-500);
           box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
         }
 
@@ -565,12 +563,12 @@ const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ onClose
           flex-wrap: wrap;
           gap: 8px;
           padding: 12px 24px;
-          border-bottom: 1px solid #e2e8f0;
+          border-bottom: 1px solid var(--color-surface-200);
         }
 
         .shortcuts-modal__category-btn {
           padding: 6px 12px;
-          border: 1px solid #e2e8f0;
+          border: 1px solid var(--color-surface-200);
           border-radius: 20px;
           background: white;
           font-size: 13px;
@@ -579,13 +577,13 @@ const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ onClose
         }
 
         .shortcuts-modal__category-btn:hover {
-          background: #f7fafc;
+          background: var(--color-surface-50);
         }
 
         .shortcuts-modal__category-btn--active {
-          background: #3182ce;
+          background: var(--color-brand-500);
           color: white;
-          border-color: #3182ce;
+          border-color: var(--color-brand-500);
         }
 
         .shortcuts-modal__content {
@@ -605,7 +603,7 @@ const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ onClose
         .shortcuts-section__title {
           font-size: 14px;
           font-weight: 600;
-          color: #4a5568;
+          color: var(--color-surface-600);
           margin: 0 0 12px;
           text-transform: uppercase;
           letter-spacing: 0.05em;
@@ -622,7 +620,7 @@ const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ onClose
           justify-content: space-between;
           align-items: center;
           padding: 8px 12px;
-          background: #f7fafc;
+          background: var(--color-surface-50);
           border-radius: 6px;
         }
 
@@ -640,7 +638,7 @@ const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ onClose
           height: 24px;
           padding: 0 8px;
           background: white;
-          border: 1px solid #cbd5e0;
+          border: 1px solid var(--color-surface-300);
           border-radius: 4px;
           font-family: ui-monospace, monospace;
           font-size: 12px;
@@ -649,13 +647,13 @@ const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ onClose
         }
 
         .shortcut-item__plus {
-          color: #a0aec0;
+          color: var(--color-surface-400);
           font-size: 12px;
         }
 
         .shortcut-item__description {
           font-size: 14px;
-          color: #4a5568;
+          color: var(--color-surface-600);
           display: flex;
           align-items: center;
           gap: 8px;
@@ -663,7 +661,7 @@ const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ onClose
 
         .shortcut-item__context {
           font-size: 12px;
-          color: #718096;
+          color: var(--color-surface-500);
         }
 
         .shortcut-item__global {
@@ -673,22 +671,22 @@ const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ onClose
         .shortcuts-modal__empty {
           text-align: center;
           padding: 40px 20px;
-          color: #718096;
+          color: var(--color-surface-500);
         }
 
         .shortcuts-modal__footer {
           padding: 12px 24px;
-          border-top: 1px solid #e2e8f0;
+          border-top: 1px solid var(--color-surface-200);
           text-align: center;
           font-size: 13px;
-          color: #718096;
+          color: var(--color-surface-500);
         }
 
         .shortcuts-modal__footer kbd {
           display: inline-flex;
           align-items: center;
           padding: 2px 6px;
-          background: #edf2f7;
+          background: var(--color-surface-100);
           border-radius: 3px;
           font-family: ui-monospace, monospace;
           font-size: 11px;
@@ -789,8 +787,8 @@ export const ShortcutHelpButton: React.FC<ShortcutHelpButtonProps> = ({ classNam
         justifyContent: 'center',
         width: 32,
         height: 32,
-        background: '#f7fafc',
-        border: '1px solid #e2e8f0',
+        background: 'var(--color-surface-50)',
+        border: '1px solid var(--color-surface-200)',
         borderRadius: 6,
         cursor: 'pointer',
         fontSize: 14,

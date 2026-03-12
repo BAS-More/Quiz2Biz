@@ -638,147 +638,30 @@ export const PredictiveErrorProvider: React.FC<PredictiveErrorProviderProps> = (
 // ============================================================================
 
 const styles = {
-  container: {
-    position: 'relative' as const,
-    width: '100%',
-  },
-  predictionsPanel: {
-    marginTop: '8px',
-    borderRadius: '8px',
-    overflow: 'hidden',
-    border: '1px solid #e2e8f0',
-    backgroundColor: '#fff',
-  },
-  predictionItem: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    padding: '12px',
-    gap: '12px',
-    borderBottom: '1px solid #f1f5f9',
-  },
-  predictionIcon: {
-    flexShrink: 0,
-    width: '20px',
-    height: '20px',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  predictionIconError: {
-    backgroundColor: '#fef2f2',
-    color: '#dc2626',
-  },
-  predictionIconWarning: {
-    backgroundColor: '#fefce8',
-    color: '#ca8a04',
-  },
-  predictionIconInfo: {
-    backgroundColor: '#eff6ff',
-    color: '#2563eb',
-  },
-  predictionContent: {
-    flex: 1,
-    minWidth: 0,
-  },
-  predictionMessage: {
-    fontSize: '14px',
-    fontWeight: 500,
-    color: '#1e293b',
-    margin: 0,
-    marginBottom: '4px',
-  },
-  predictionSuggestion: {
-    fontSize: '13px',
-    color: '#64748b',
-    margin: 0,
-  },
-  predictionActions: {
-    display: 'flex',
-    gap: '8px',
-    marginTop: '8px',
-  },
-  actionButton: {
-    padding: '4px 12px',
-    fontSize: '12px',
-    fontWeight: 500,
-    borderRadius: '4px',
-    border: 'none',
-    cursor: 'pointer',
-    transition: 'background-color 0.15s',
-  },
-  autoFixButton: {
-    backgroundColor: '#dbeafe',
-    color: '#1e40af',
-  },
-  dismissButton: {
-    backgroundColor: '#f1f5f9',
-    color: '#64748b',
-  },
-  qualityIndicator: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '8px 12px',
-    backgroundColor: '#f8fafc',
-    borderTop: '1px solid #e2e8f0',
-  },
-  qualityBar: {
-    flex: 1,
-    height: '6px',
-    backgroundColor: '#e2e8f0',
-    borderRadius: '3px',
-    overflow: 'hidden',
-  },
-  qualityFill: {
-    height: '100%',
-    borderRadius: '3px',
-    transition: 'width 0.3s, background-color 0.3s',
-  },
-  qualityLabel: {
-    fontSize: '12px',
-    fontWeight: 500,
-    color: '#64748b',
-    minWidth: '80px',
-    textAlign: 'right' as const,
-  },
-  inlineWarning: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-    marginTop: '4px',
-    padding: '6px 10px',
-    borderRadius: '6px',
-    fontSize: '13px',
-  },
-  inlineWarningError: {
-    backgroundColor: '#fef2f2',
-    color: '#dc2626',
-  },
-  inlineWarningWarning: {
-    backgroundColor: '#fefce8',
-    color: '#ca8a04',
-  },
-  inlineWarningInfo: {
-    backgroundColor: '#eff6ff',
-    color: '#2563eb',
-  },
-  analyzingIndicator: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '8px',
-    color: '#64748b',
-    fontSize: '13px',
-  },
-  spinner: {
-    width: '14px',
-    height: '14px',
-    border: '2px solid #e2e8f0',
-    borderTopColor: '#3b82f6',
-    borderRadius: '50%',
-    animation: 'spin 0.8s linear infinite',
-  },
+  container: 'relative w-full',
+  predictionsPanel: 'mt-2 rounded-lg overflow-hidden border border-surface-200 bg-surface-50',
+  predictionItem: 'flex items-start p-3 gap-3 border-b border-surface-100',
+  predictionIcon: 'shrink-0 w-5 h-5 rounded-full flex items-center justify-center',
+  predictionIconError: 'bg-danger-50 text-danger-600',
+  predictionIconWarning: 'bg-warning-50 text-warning-600',
+  predictionIconInfo: 'bg-brand-50 text-brand-600',
+  predictionContent: 'flex-1 min-w-0',
+  predictionMessage: 'text-sm font-medium text-surface-800 m-0 mb-1',
+  predictionSuggestion: 'text-[13px] text-surface-500 m-0',
+  predictionActions: 'flex gap-2 mt-2',
+  actionButton: 'px-3 py-1 text-xs font-medium rounded border-none cursor-pointer transition-colors duration-150',
+  autoFixButton: 'bg-brand-100 text-brand-800 hover:bg-brand-200',
+  dismissButton: 'bg-surface-100 text-surface-500 hover:bg-surface-200',
+  qualityIndicator: 'flex items-center gap-2 px-3 py-2 bg-surface-50 border-t border-surface-200',
+  qualityBar: 'flex-1 h-1.5 bg-surface-200 rounded-full overflow-hidden',
+  qualityFill: 'h-full rounded-full transition-all duration-300',
+  qualityLabel: 'text-xs font-medium text-surface-500 min-w-[80px] text-right',
+  inlineWarning: 'flex items-center gap-1.5 mt-1 px-2.5 py-1.5 rounded-md text-[13px]',
+  inlineWarningError: 'bg-danger-50 text-danger-600',
+  inlineWarningWarning: 'bg-warning-50 text-warning-600',
+  inlineWarningInfo: 'bg-brand-50 text-brand-600',
+  analyzingIndicator: 'flex items-center gap-2 p-2 text-surface-500 text-[13px]',
+  spinner: 'w-3.5 h-3.5 border-2 border-surface-200 border-t-brand-500 rounded-full animate-spin',
 };
 
 // ============================================================================
@@ -805,7 +688,7 @@ export const PredictionsPanel: React.FC<PredictionsPanelProps> = ({
     return null;
   }
 
-  const getIconStyle = (severity: PredictedError['severity']) => {
+  const getIconClass = (severity: PredictedError['severity']) => {
     switch (severity) {
       case 'error':
         return styles.predictionIconError;
@@ -817,30 +700,24 @@ export const PredictionsPanel: React.FC<PredictionsPanelProps> = ({
   };
 
   const getQualityColor = (q: number) => {
-    if (q >= 80) {
-      return '#22c55e';
-    }
-    if (q >= 60) {
-      return '#eab308';
-    }
-    if (q >= 40) {
-      return '#f97316';
-    }
-    return '#ef4444';
+    if (q >= 80) return 'var(--color-success-500)';
+    if (q >= 60) return 'var(--color-warning-500)';
+    if (q >= 40) return 'var(--color-warning-600)';
+    return 'var(--color-danger-500)';
   };
 
   return (
-    <div style={styles.predictionsPanel}>
+    <div className={styles.predictionsPanel}>
       {isAnalyzing && (
-        <div style={styles.analyzingIndicator}>
-          <div style={styles.spinner} />
+        <div className={styles.analyzingIndicator}>
+          <div className={styles.spinner} />
           Analyzing...
         </div>
       )}
 
       {fieldPredictions.map((prediction) => (
-        <div key={prediction.id} style={styles.predictionItem}>
-          <div style={{ ...styles.predictionIcon, ...getIconStyle(prediction.severity) }}>
+        <div key={prediction.id} className={styles.predictionItem}>
+          <div className={`${styles.predictionIcon} ${getIconClass(prediction.severity)}`}>
             {prediction.severity === 'error' && (
               <svg
                 width="12"
@@ -883,14 +760,14 @@ export const PredictionsPanel: React.FC<PredictionsPanelProps> = ({
             )}
           </div>
 
-          <div style={styles.predictionContent}>
-            <p style={styles.predictionMessage}>{prediction.message}</p>
-            {!compact && <p style={styles.predictionSuggestion}>{prediction.suggestion}</p>}
+          <div className={styles.predictionContent}>
+            <p className={styles.predictionMessage}>{prediction.message}</p>
+            {!compact && <p className={styles.predictionSuggestion}>{prediction.suggestion}</p>}
 
-            <div style={styles.predictionActions}>
+            <div className={styles.predictionActions}>
               {prediction.autoFixable && (
                 <button
-                  style={{ ...styles.actionButton, ...styles.autoFixButton }}
+                  className={`${styles.actionButton} ${styles.autoFixButton}`}
                   onClick={() => {
                     const fixed = applyAutoFix(fieldId, prediction.id);
                     if (fixed) {
@@ -901,17 +778,13 @@ export const PredictionsPanel: React.FC<PredictionsPanelProps> = ({
                       window.dispatchEvent(event);
                     }
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#bfdbfe')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#dbeafe')}
                 >
                   Auto-fix
                 </button>
               )}
               <button
-                style={{ ...styles.actionButton, ...styles.dismissButton }}
+                className={`${styles.actionButton} ${styles.dismissButton}`}
                 onClick={() => dismissPrediction(fieldId, prediction.id)}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e2e8f0')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#f1f5f9')}
               >
                 Dismiss
               </button>
@@ -921,18 +794,15 @@ export const PredictionsPanel: React.FC<PredictionsPanelProps> = ({
       ))}
 
       {showQuality && fieldPredictions.length > 0 && (
-        <div style={styles.qualityIndicator}>
-          <span style={{ fontSize: '12px', color: '#64748b' }}>Quality</span>
-          <div style={styles.qualityBar}>
+        <div className={styles.qualityIndicator}>
+          <span className="text-xs text-surface-500">Quality</span>
+          <div className={styles.qualityBar}>
             <div
-              style={{
-                ...styles.qualityFill,
-                width: `${quality}%`,
-                backgroundColor: getQualityColor(quality),
-              }}
+              className={styles.qualityFill}
+              style={{ width: `${quality}%`, backgroundColor: getQualityColor(quality) }}
             />
           </div>
-          <span style={styles.qualityLabel}>{quality}%</span>
+          <span className={styles.qualityLabel}>{quality}%</span>
         </div>
       )}
     </div>
@@ -956,7 +826,7 @@ export const InlineWarning: React.FC<InlineWarningProps> = ({ fieldId, showFirst
     ? fieldPredictions[0]
     : fieldPredictions.find((p) => p.severity === 'error') || fieldPredictions[0];
 
-  const getStyle = (severity: PredictedError['severity']) => {
+  const getWarningClass = (severity: PredictedError['severity']) => {
     switch (severity) {
       case 'error':
         return styles.inlineWarningError;
@@ -968,7 +838,7 @@ export const InlineWarning: React.FC<InlineWarningProps> = ({ fieldId, showFirst
   };
 
   return (
-    <div style={{ ...styles.inlineWarning, ...getStyle(prediction.severity) }}>
+    <div className={`${styles.inlineWarning} ${getWarningClass(prediction.severity)}`}>
       {prediction.severity === 'error' && (
         <svg
           width="14"

@@ -396,8 +396,8 @@ export const FilePreviewItem: React.FC<FilePreviewItemProps> = ({
         alignItems: compact ? 'center' : 'flex-start',
         gap: compact ? 8 : 12,
         padding: compact ? 8 : 12,
-        background: preview.valid ? '#f7fafc' : '#fff5f5',
-        border: `1px solid ${preview.valid ? '#e2e8f0' : '#feb2b2'}`,
+        background: preview.valid ? 'var(--color-surface-50)' : 'var(--color-danger-50)',
+        border: `1px solid ${preview.valid ? 'var(--color-surface-200)' : 'var(--color-danger-300)'}`,
         borderRadius: 8,
       }}
     >
@@ -421,7 +421,7 @@ export const FilePreviewItem: React.FC<FilePreviewItemProps> = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: preview.valid ? '#e2e8f0' : '#fed7d7',
+            background: preview.valid ? 'var(--color-surface-200)' : 'var(--color-danger-200)',
             borderRadius: 4,
             fontSize: compact ? 18 : 24,
           }}
@@ -437,7 +437,7 @@ export const FilePreviewItem: React.FC<FilePreviewItemProps> = ({
             margin: 0,
             fontSize: compact ? 13 : 14,
             fontWeight: 500,
-            color: preview.valid ? '#2d3748' : '#c53030',
+            color: preview.valid ? 'var(--color-surface-700)' : 'var(--color-danger-700)',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
@@ -446,7 +446,7 @@ export const FilePreviewItem: React.FC<FilePreviewItemProps> = ({
         >
           {preview.file.name}
         </p>
-        <p style={{ margin: '2px 0 0', fontSize: 12, color: '#718096' }}>
+        <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--color-surface-500)' }}>
           {preview.label} • {formatFileSize(preview.file.size)}
         </p>
 
@@ -459,7 +459,7 @@ export const FilePreviewItem: React.FC<FilePreviewItemProps> = ({
                 style={{
                   margin: idx > 0 ? '4px 0 0' : 0,
                   fontSize: 12,
-                  color: '#c53030',
+                  color: 'var(--color-danger-700)',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 4,
@@ -482,7 +482,7 @@ export const FilePreviewItem: React.FC<FilePreviewItemProps> = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              background: '#c6f6d5',
+              background: 'var(--color-success-100)',
               borderRadius: '50%',
               fontSize: 12,
             }}
@@ -497,7 +497,7 @@ export const FilePreviewItem: React.FC<FilePreviewItemProps> = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              background: '#fed7d7',
+              background: 'var(--color-danger-200)',
               borderRadius: '50%',
               fontSize: 12,
             }}
@@ -514,7 +514,7 @@ export const FilePreviewItem: React.FC<FilePreviewItemProps> = ({
             border: 'none',
             fontSize: 16,
             cursor: 'pointer',
-            color: '#718096',
+            color: 'var(--color-surface-500)',
           }}
           aria-label={`Remove ${preview.file.name}`}
         >
@@ -573,8 +573,8 @@ export const FileTypePicker: React.FC<FileTypePickerProps> = ({
               alignItems: 'center',
               gap: 6,
               padding: '8px 12px',
-              background: isSelected ? '#ebf8ff' : '#f7fafc',
-              border: `2px solid ${isSelected ? '#3182ce' : '#e2e8f0'}`,
+              background: isSelected ? 'var(--color-brand-50)' : 'var(--color-surface-50)',
+              border: `2px solid ${isSelected ? 'var(--color-brand-500)' : 'var(--color-surface-200)'}`,
               borderRadius: 8,
               cursor: 'pointer',
               transition: 'all 0.15s',
@@ -707,9 +707,9 @@ export const ValidatedDropzone: React.FC<ValidatedDropzoneProps> = ({
       onClick={() => inputRef.current?.click()}
       style={{
         padding: 32,
-        border: `2px dashed ${isDragging ? '#3182ce' : errors.length > 0 ? '#e53e3e' : '#cbd5e0'}`,
+        border: `2px dashed ${isDragging ? 'var(--color-brand-500)' : errors.length > 0 ? 'var(--color-danger-500)' : 'var(--color-surface-300)'}`,
         borderRadius: 12,
-        background: isDragging ? '#ebf8ff' : errors.length > 0 ? '#fff5f5' : '#f7fafc',
+        background: isDragging ? 'var(--color-brand-50)' : errors.length > 0 ? 'var(--color-danger-50)' : 'var(--color-surface-50)',
         textAlign: 'center',
         cursor: 'pointer',
         transition: 'all 0.2s',
@@ -729,17 +729,17 @@ export const ValidatedDropzone: React.FC<ValidatedDropzoneProps> = ({
           <span style={{ fontSize: 48, display: 'block', marginBottom: 12 }} aria-hidden="true">
             📁
           </span>
-          <p style={{ margin: 0, fontSize: 16, fontWeight: 500, color: '#2d3748' }}>
+          <p style={{ margin: 0, fontSize: 16, fontWeight: 500, color: 'var(--color-surface-700)' }}>
             {isDragging ? 'Drop files here' : 'Drag and drop files, or click to select'}
           </p>
           {validationOptions.allowedTypes && (
-            <p style={{ margin: '8px 0 0', fontSize: 13, color: '#718096' }}>
+            <p style={{ margin: '8px 0 0', fontSize: 13, color: 'var(--color-surface-500)' }}>
               Allowed:{' '}
               {validationOptions.allowedTypes.map((t) => FILE_TYPES[t]?.label || t).join(', ')}
             </p>
           )}
           {validationOptions.maxFileSize && (
-            <p style={{ margin: '4px 0 0', fontSize: 13, color: '#718096' }}>
+            <p style={{ margin: '4px 0 0', fontSize: 13, color: 'var(--color-surface-500)' }}>
               Max size: {formatFileSize(validationOptions.maxFileSize)}
             </p>
           )}
@@ -754,7 +754,7 @@ export const ValidatedDropzone: React.FC<ValidatedDropzoneProps> = ({
               style={{
                 margin: idx > 0 ? '4px 0 0' : 0,
                 fontSize: 13,
-                color: '#c53030',
+                color: 'var(--color-danger-700)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -765,7 +765,7 @@ export const ValidatedDropzone: React.FC<ValidatedDropzoneProps> = ({
             </p>
           ))}
           {errors.length > 3 && (
-            <p style={{ margin: '4px 0 0', fontSize: 12, color: '#718096' }}>
+            <p style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--color-surface-500)' }}>
               + {errors.length - 3} more errors
             </p>
           )}

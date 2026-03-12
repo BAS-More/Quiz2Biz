@@ -315,7 +315,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         }
 
         .breadcrumbs__separator {
-          color: #a0aec0;
+          color: var(--color-surface-400);
           margin: 0 4px;
           user-select: none;
         }
@@ -324,7 +324,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          color: #4a5568;
+          color: var(--color-surface-600);
           text-decoration: none;
           padding: 4px 8px;
           border-radius: 4px;
@@ -332,23 +332,23 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         }
 
         .breadcrumbs__link:hover {
-          color: #2b6cb0;
-          background: #ebf8ff;
+          color: var(--color-brand-600);
+          background: var(--color-brand-50);
         }
 
         .breadcrumbs__link:focus {
-          outline: 2px solid #3182ce;
+          outline: 2px solid var(--color-brand-500);
           outline-offset: 2px;
         }
 
         .breadcrumbs__link--current {
-          color: #1a202c;
+          color: var(--color-surface-900);
           font-weight: 500;
           pointer-events: none;
         }
 
         .breadcrumbs__link--ellipsis {
-          color: #a0aec0;
+          color: var(--color-surface-400);
           cursor: default;
         }
 

@@ -271,12 +271,12 @@ export const AIChatProvider: React.FC<AIChatProviderProps> = ({
           prev.map((m) =>
             m.id === assistantMessage.id
               ? {
-                  ...m,
-                  content:
-                    fullContent ||
-                    'I apologize, but I could not generate a response. Please try again.',
-                  isStreaming: false,
-                }
+                ...m,
+                content:
+                  fullContent ||
+                  'I apologize, but I could not generate a response. Please try again.',
+                isStreaming: false,
+              }
               : m,
           ),
         );
@@ -286,11 +286,11 @@ export const AIChatProvider: React.FC<AIChatProviderProps> = ({
           prev.map((m) =>
             m.id === assistantMessage.id
               ? {
-                  ...m,
-                  content: 'I apologize, but I encountered an error. Please try again.',
-                  isStreaming: false,
-                  error: errorMessage,
-                }
+                ...m,
+                content: 'I apologize, but I encountered an error. Please try again.',
+                isStreaming: false,
+                error: errorMessage,
+              }
               : m,
           ),
         );
@@ -649,7 +649,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     gap: '8px',
     padding: '12px 20px',
-    backgroundColor: '#2563EB',
+    backgroundColor: 'var(--color-brand-500)',
     color: '#FFFFFF',
     border: 'none',
     borderRadius: '24px',
@@ -675,7 +675,7 @@ const styles: Record<string, React.CSSProperties> = {
     bottom: '24px',
     width: '380px',
     height: '560px',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'var(--color-surface-50)',
     borderRadius: '16px',
     boxShadow: '0 10px 40px rgba(0, 0, 0, 0.15)',
     display: 'flex',
@@ -691,7 +691,7 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '16px',
-    background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
+    background: 'linear-gradient(135deg, var(--color-brand-500) 0%, var(--color-brand-600) 100%)',
     color: '#FFFFFF',
   },
   headerTitle: {
@@ -750,13 +750,13 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: 1.5,
   },
   userBubble: {
-    backgroundColor: '#2563EB',
+    backgroundColor: 'var(--color-brand-500)',
     color: '#FFFFFF',
     borderBottomRightRadius: '4px',
   },
   assistantBubble: {
-    backgroundColor: '#F3F4F6',
-    color: '#111827',
+    backgroundColor: 'var(--color-surface-100)',
+    color: 'var(--color-surface-900)',
     borderBottomLeftRadius: '4px',
   },
   messageHeader: {
@@ -771,7 +771,7 @@ const styles: Record<string, React.CSSProperties> = {
   assistantLabel: {
     fontSize: '11px',
     fontWeight: 600,
-    color: '#6B7280',
+    color: 'var(--color-surface-500)',
     textTransform: 'uppercase',
     letterSpacing: '0.5px',
   },
@@ -792,8 +792,8 @@ const styles: Record<string, React.CSSProperties> = {
   errorBadge: {
     marginTop: '8px',
     padding: '6px 8px',
-    backgroundColor: '#FEF2F2',
-    color: '#DC2626',
+    backgroundColor: 'var(--color-danger-50)',
+    color: 'var(--color-danger-500)',
     borderRadius: '6px',
     fontSize: '11px',
   },
@@ -815,25 +815,25 @@ const styles: Record<string, React.CSSProperties> = {
   welcomeTitle: {
     fontSize: '20px',
     fontWeight: 600,
-    color: '#111827',
+    color: 'var(--color-surface-900)',
     marginBottom: '8px',
   },
   welcomeText: {
     fontSize: '14px',
-    color: '#6B7280',
+    color: 'var(--color-surface-500)',
     lineHeight: 1.6,
   },
 
   // Quick Actions
   quickActions: {
     padding: '12px 16px',
-    borderTop: '1px solid #E5E7EB',
-    backgroundColor: '#FAFAFA',
+    borderTop: '1px solid var(--color-surface-200)',
+    backgroundColor: 'var(--color-surface-50)',
   },
   quickActionsLabel: {
     fontSize: '11px',
     fontWeight: 500,
-    color: '#6B7280',
+    color: 'var(--color-surface-500)',
     marginBottom: '8px',
     display: 'block',
   },
@@ -848,9 +848,9 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '4px',
     padding: '6px 10px',
     fontSize: '12px',
-    color: '#374151',
-    backgroundColor: '#FFFFFF',
-    border: '1px solid #D1D5DB',
+    color: 'var(--color-surface-700)',
+    backgroundColor: 'var(--color-surface-50)',
+    border: '1px solid var(--color-surface-300)',
     borderRadius: '16px',
     cursor: 'pointer',
     transition: 'all 0.15s ease',
@@ -863,16 +863,16 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'flex-end',
     gap: '8px',
     padding: '12px 16px',
-    borderTop: '1px solid #E5E7EB',
-    backgroundColor: '#FFFFFF',
+    borderTop: '1px solid var(--color-surface-200)',
+    backgroundColor: 'var(--color-surface-50)',
   },
   input: {
     flex: 1,
     padding: '10px 14px',
     fontSize: '14px',
-    color: '#111827',
-    backgroundColor: '#F9FAFB',
-    border: '1px solid #E5E7EB',
+    color: 'var(--color-surface-900)',
+    backgroundColor: 'var(--color-surface-50)',
+    border: '1px solid var(--color-surface-200)',
     borderRadius: '12px',
     resize: 'none',
     outline: 'none',
@@ -886,7 +886,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#2563EB',
+    backgroundColor: 'var(--color-brand-500)',
     color: '#FFFFFF',
     border: 'none',
     borderRadius: '12px',

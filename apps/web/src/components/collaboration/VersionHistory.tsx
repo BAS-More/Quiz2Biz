@@ -263,223 +263,41 @@ export const VersionHistoryProvider: React.FC<VersionHistoryProviderProps> = ({
 // ============================================================================
 
 const styles = {
-  modal: {
-    position: 'fixed' as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1000,
-    padding: '20px',
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    borderRadius: '16px',
-    width: '100%',
-    maxWidth: '700px',
-    maxHeight: '80vh',
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column' as const,
-  },
-  modalHeader: {
-    padding: '20px 24px',
-    borderBottom: '1px solid #e2e8f0',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  modalTitle: {
-    fontSize: '18px',
-    fontWeight: 600,
-    color: '#1e293b',
-    margin: 0,
-  },
-  closeButton: {
-    background: 'none',
-    border: 'none',
-    padding: '8px',
-    cursor: 'pointer',
-    color: '#64748b',
-    borderRadius: '8px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  modalBody: {
-    flex: 1,
-    overflow: 'auto',
-    padding: '0',
-  },
-  versionList: {
-    listStyle: 'none',
-    margin: 0,
-    padding: 0,
-  },
-  versionItem: {
-    padding: '16px 24px',
-    borderBottom: '1px solid #f1f5f9',
-    cursor: 'pointer',
-    transition: 'background-color 0.15s',
-  },
-  versionItemActive: {
-    backgroundColor: '#f0f9ff',
-    borderLeft: '3px solid #3b82f6',
-    paddingLeft: '21px',
-  },
-  versionItemHover: {
-    backgroundColor: '#f8fafc',
-  },
-  versionHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: '8px',
-  },
-  versionNumber: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-  },
-  versionBadge: {
-    padding: '2px 8px',
-    fontSize: '12px',
-    fontWeight: 600,
-    borderRadius: '12px',
-    backgroundColor: '#e2e8f0',
-    color: '#475569',
-  },
-  versionBadgeCurrent: {
-    backgroundColor: '#dbeafe',
-    color: '#1e40af',
-  },
-  versionBadgeRestore: {
-    backgroundColor: '#dcfce7',
-    color: '#166534',
-  },
-  versionTime: {
-    fontSize: '12px',
-    color: '#94a3b8',
-  },
-  versionPreview: {
-    fontSize: '14px',
-    color: '#64748b',
-    lineHeight: 1.5,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    display: '-webkit-box',
-    WebkitLineClamp: 2,
-    WebkitBoxOrient: 'vertical' as const,
-  },
-  versionActions: {
-    display: 'flex',
-    gap: '8px',
-    marginTop: '12px',
-  },
-  actionButton: {
-    padding: '6px 12px',
-    fontSize: '12px',
-    fontWeight: 500,
-    borderRadius: '6px',
-    border: 'none',
-    cursor: 'pointer',
-    transition: 'background-color 0.15s',
-  },
-  restoreButton: {
-    backgroundColor: '#dbeafe',
-    color: '#1e40af',
-  },
-  compareButton: {
-    backgroundColor: '#f1f5f9',
-    color: '#475569',
-  },
-  diffView: {
-    padding: '16px 24px',
-    backgroundColor: '#fafafa',
-    borderTop: '1px solid #e2e8f0',
-  },
-  diffHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: '12px',
-  },
-  diffTitle: {
-    fontSize: '14px',
-    fontWeight: 600,
-    color: '#1e293b',
-    margin: 0,
-  },
-  diffStats: {
-    display: 'flex',
-    gap: '12px',
-    fontSize: '12px',
-  },
-  diffStatAdded: {
-    color: '#16a34a',
-  },
-  diffStatRemoved: {
-    color: '#dc2626',
-  },
-  diffContent: {
-    fontSize: '14px',
-    lineHeight: 1.6,
-    whiteSpace: 'pre-wrap' as const,
-    wordBreak: 'break-word' as const,
-    fontFamily: 'ui-monospace, monospace',
-  },
-  diffAdded: {
-    backgroundColor: '#dcfce7',
-    color: '#166534',
-    padding: '0 2px',
-    borderRadius: '2px',
-  },
-  diffRemoved: {
-    backgroundColor: '#fee2e2',
-    color: '#991b1b',
-    padding: '0 2px',
-    borderRadius: '2px',
-    textDecoration: 'line-through',
-  },
-  emptyState: {
-    padding: '48px 24px',
-    textAlign: 'center' as const,
-    color: '#94a3b8',
-  },
-  emptyIcon: {
-    width: '48px',
-    height: '48px',
-    margin: '0 auto 16px',
-    color: '#cbd5e1',
-  },
-  emptyTitle: {
-    fontSize: '16px',
-    fontWeight: 500,
-    color: '#64748b',
-    margin: '0 0 8px',
-  },
-  emptyText: {
-    fontSize: '14px',
-    margin: 0,
-  },
-  trigger: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '6px',
-    padding: '6px 12px',
-    fontSize: '13px',
-    fontWeight: 500,
-    backgroundColor: '#f1f5f9',
-    color: '#475569',
-    border: 'none',
-    borderRadius: '6px',
-    cursor: 'pointer',
-    transition: 'background-color 0.15s',
-  },
+  modal: 'fixed inset-0 bg-black/50 flex items-center justify-center z-[1000] p-5',
+  modalContent: 'bg-surface-50 rounded-2xl w-full max-w-[700px] max-h-[80vh] overflow-hidden flex flex-col',
+  modalHeader: 'px-6 py-5 border-b border-surface-200 flex items-center justify-between',
+  modalTitle: 'text-lg font-semibold text-surface-800 m-0',
+  closeButton: 'bg-transparent border-none p-2 cursor-pointer text-surface-500 rounded-lg flex items-center justify-center',
+  modalBody: 'flex-1 overflow-auto p-0',
+  versionList: 'list-none m-0 p-0',
+  versionItem: 'px-6 py-4 border-b border-surface-100 cursor-pointer transition-colors',
+  versionItemActive: 'bg-brand-50 border-l-[3px] border-l-brand-500 pl-[21px]',
+  versionItemHover: 'bg-surface-50',
+  versionHeader: 'flex items-center justify-between mb-2',
+  versionNumber: 'flex items-center gap-2',
+  versionBadge: 'px-2 py-0.5 text-xs font-semibold rounded-xl bg-surface-200 text-surface-600',
+  versionBadgeCurrent: 'bg-brand-100 text-brand-700',
+  versionBadgeRestore: 'bg-success-50 text-success-700',
+  versionTime: 'text-xs text-surface-400',
+  versionPreview: 'text-sm text-surface-500 leading-normal overflow-hidden text-ellipsis line-clamp-2',
+  versionActions: 'flex gap-2 mt-3',
+  actionButton: 'px-3 py-1.5 text-xs font-medium rounded-md border-none cursor-pointer transition-colors',
+  restoreButton: 'bg-brand-100 text-brand-700',
+  compareButton: 'bg-surface-100 text-surface-600',
+  diffView: 'px-6 py-4 bg-surface-100 border-t border-surface-200',
+  diffHeader: 'flex items-center justify-between mb-3',
+  diffTitle: 'text-sm font-semibold text-surface-800 m-0',
+  diffStats: 'flex gap-3 text-xs',
+  diffStatAdded: 'text-success-600',
+  diffStatRemoved: 'text-danger-600',
+  diffContent: 'text-sm leading-relaxed whitespace-pre-wrap break-words font-mono',
+  diffAdded: 'bg-success-50 text-success-700 px-0.5 rounded-sm',
+  diffRemoved: 'bg-danger-50 text-danger-600 px-0.5 rounded-sm line-through',
+  emptyState: 'py-12 px-6 text-center text-surface-400',
+  emptyIcon: 'w-12 h-12 mx-auto mb-4 text-surface-300',
+  emptyTitle: 'text-base font-medium text-surface-500 mb-2 mt-0',
+  emptyText: 'text-sm m-0',
+  trigger: 'inline-flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-medium bg-surface-100 text-surface-600 border-none rounded-md cursor-pointer transition-colors',
 };
 
 // ============================================================================
@@ -561,8 +379,8 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
     });
   };
 
-  const getChangeTypeBadgeStyle = (changeType: ResponseVersion['changeType']) => {
-    switch (changeType) {
+  const getChangeTypeBadgeStyle = (_changeType: ResponseVersion['changeType']) => {
+    switch (_changeType) {
       case 'restore':
         return styles.versionBadgeRestore;
       default:
@@ -575,23 +393,20 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
   }
 
   return (
-    <div style={styles.modal} onClick={onClose}>
-      <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <div style={styles.modalHeader}>
+    <div className={styles.modal} onClick={onClose}>
+      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalHeader}>
           <div>
-            <h3 style={styles.modalTitle}>Version History</h3>
+            <h3 className={styles.modalTitle}>Version History</h3>
             {questionText && (
-              <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#64748b' }}>
+              <p className="mt-1 text-[13px] text-surface-500">
                 {questionText.slice(0, 50)}...
               </p>
             )}
           </div>
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <div className="flex gap-2 items-center">
             <button
-              style={{
-                ...styles.actionButton,
-                ...(compareMode ? styles.restoreButton : styles.compareButton),
-              }}
+              className={`${styles.actionButton} ${compareMode ? styles.restoreButton : styles.compareButton}`}
               onClick={() => {
                 setCompareMode(!compareMode);
                 setCompareVersion1(null);
@@ -600,7 +415,7 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
             >
               {compareMode ? 'Exit Compare' : 'Compare'}
             </button>
-            <button style={styles.closeButton} onClick={onClose}>
+            <button className={styles.closeButton} onClick={onClose}>
               <svg
                 width="20"
                 height="20"
@@ -616,11 +431,11 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
           </div>
         </div>
 
-        <div style={styles.modalBody}>
+        <div className={styles.modalBody}>
           {versions.length === 0 ? (
-            <div style={styles.emptyState}>
+            <div className={styles.emptyState}>
               <svg
-                style={styles.emptyIcon}
+                className={styles.emptyIcon}
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -629,11 +444,11 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="12,6 12,12 16,14" />
               </svg>
-              <h4 style={styles.emptyTitle}>No version history</h4>
-              <p style={styles.emptyText}>Changes to this response will be tracked here.</p>
+              <h4 className={styles.emptyTitle}>No version history</h4>
+              <p className={styles.emptyText}>Changes to this response will be tracked here.</p>
             </div>
           ) : (
-            <ul style={styles.versionList}>
+            <ul className={styles.versionList}>
               {[...versions].reverse().map((version, index) => {
                 const isCurrent = index === 0;
                 const isSelected = selectedVersion === version.id;
@@ -644,13 +459,7 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
                 return (
                   <li
                     key={version.id}
-                    style={{
-                      ...styles.versionItem,
-                      ...(isSelected || isCompareSelected ? styles.versionItemActive : {}),
-                      ...(isHovered && !isSelected && !isCompareSelected
-                        ? styles.versionItemHover
-                        : {}),
-                    }}
+                    className={`${styles.versionItem} ${isSelected || isCompareSelected ? styles.versionItemActive : ''} ${isHovered && !isSelected && !isCompareSelected ? styles.versionItemHover : ''}`}
                     onMouseEnter={() => setHoveredVersion(version.id)}
                     onMouseLeave={() => setHoveredVersion(null)}
                     onClick={() => {
@@ -661,50 +470,38 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
                       }
                     }}
                   >
-                    <div style={styles.versionHeader}>
-                      <div style={styles.versionNumber}>
+                    <div className={styles.versionHeader}>
+                      <div className={styles.versionNumber}>
                         <span
-                          style={{
-                            ...styles.versionBadge,
-                            ...(isCurrent ? styles.versionBadgeCurrent : {}),
-                            ...getChangeTypeBadgeStyle(version.changeType),
-                          }}
+                          className={`${styles.versionBadge} ${isCurrent ? styles.versionBadgeCurrent : ''} ${version.changeType === 'restore' ? styles.versionBadgeRestore : ''}`}
                         >
                           v{version.version}
                           {isCurrent && ' (Current)'}
                         </span>
                         {version.changeType === 'restore' && (
-                          <span style={{ fontSize: '12px', color: '#16a34a' }}>Restored</span>
+                          <span className="text-xs text-success-600">Restored</span>
                         )}
                         {compareMode && isCompareSelected && (
                           <span
-                            style={{
-                              padding: '2px 6px',
-                              fontSize: '10px',
-                              backgroundColor: '#3b82f6',
-                              color: '#fff',
-                              borderRadius: '10px',
-                            }}
+                            className="px-1.5 py-0.5 text-[10px] bg-brand-500 text-white rounded-full"
                           >
                             {compareVersion1 === version.id ? 'A' : 'B'}
                           </span>
                         )}
                       </div>
-                      <span style={styles.versionTime}>{formatDate(version.createdAt)}</span>
+                      <span className={styles.versionTime}>{formatDate(version.createdAt)}</span>
                     </div>
 
-                    <p style={styles.versionPreview}>{version.value || '(empty)'}</p>
+                    <p className={styles.versionPreview}>{version.value || '(empty)'}</p>
 
                     {isSelected && !compareMode && !isCurrent && (
-                      <div style={styles.versionActions}>
+                      <div className={styles.versionActions}>
                         <button
-                          style={{ ...styles.actionButton, ...styles.restoreButton }}
+                          className={`${styles.actionButton} ${styles.restoreButton}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleRestore(version.id);
                           }}
-                          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#bfdbfe')}
-                          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#dbeafe')}
                         >
                           Restore this version
                         </button>
@@ -718,22 +515,22 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
         </div>
 
         {compareMode && diff && (
-          <div style={styles.diffView}>
-            <div style={styles.diffHeader}>
-              <h4 style={styles.diffTitle}>Changes</h4>
-              <div style={styles.diffStats}>
-                <span style={styles.diffStatAdded}>+{diff.added.length} added</span>
-                <span style={styles.diffStatRemoved}>-{diff.removed.length} removed</span>
+          <div className={styles.diffView}>
+            <div className={styles.diffHeader}>
+              <h4 className={styles.diffTitle}>Changes</h4>
+              <div className={styles.diffStats}>
+                <span className={styles.diffStatAdded}>+{diff.added.length} added</span>
+                <span className={styles.diffStatRemoved}>-{diff.removed.length} removed</span>
               </div>
             </div>
-            <div style={styles.diffContent}>
+            <div className={styles.diffContent}>
               {diff.removed.map((word, i) => (
-                <span key={`r-${i}`} style={styles.diffRemoved}>
+                <span key={`r-${i}`} className={styles.diffRemoved}>
                   {word}{' '}
                 </span>
               ))}
               {diff.added.map((word, i) => (
-                <span key={`a-${i}`} style={styles.diffAdded}>
+                <span key={`a-${i}`} className={styles.diffAdded}>
                   {word}{' '}
                 </span>
               ))}
@@ -767,10 +564,8 @@ export const VersionHistoryTrigger: React.FC<VersionHistoryTriggerProps> = ({
   return (
     <>
       <button
-        style={styles.trigger}
+        className={styles.trigger}
         onClick={() => setIsOpen(true)}
-        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e2e8f0')}
-        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#f1f5f9')}
         title="View version history"
       >
         <svg

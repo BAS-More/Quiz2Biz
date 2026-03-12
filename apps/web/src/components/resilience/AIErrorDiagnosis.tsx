@@ -879,181 +879,35 @@ export const AIErrorDiagnosisProvider: React.FC<AIErrorDiagnosisProviderProps> =
 // Styles
 // ============================================================================
 
-const styles: Record<string, React.CSSProperties> = {
-  errorCard: {
-    padding: '16px',
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-    borderLeft: '4px solid',
-    marginBottom: '12px',
-  },
-  severityLow: {
-    borderLeftColor: '#3b82f6',
-  },
-  severityMedium: {
-    borderLeftColor: '#f59e0b',
-  },
-  severityHigh: {
-    borderLeftColor: '#ef4444',
-  },
-  severityCritical: {
-    borderLeftColor: '#7c3aed',
-  },
-  errorHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: '12px',
-  },
-  errorTitle: {
-    fontSize: '14px',
-    fontWeight: 600,
-    color: '#333',
-    margin: 0,
-  },
-  categoryBadge: {
-    fontSize: '11px',
-    padding: '2px 8px',
-    borderRadius: '12px',
-    backgroundColor: '#e5e7eb',
-    color: '#374151',
-    textTransform: 'uppercase',
-  },
-  errorMessage: {
-    fontSize: '13px',
-    color: '#666',
-    marginBottom: '12px',
-    fontFamily: 'monospace',
-    backgroundColor: '#f8f9fa',
-    padding: '8px',
-    borderRadius: '4px',
-    wordBreak: 'break-all',
-  },
-  fixList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
-  },
-  fixItem: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '8px 12px',
-    backgroundColor: '#f0fdf4',
-    borderRadius: '6px',
-    border: '1px solid #bbf7d0',
-  },
-  fixDescription: {
-    fontSize: '13px',
-    color: '#166534',
-    flex: 1,
-  },
-  fixButton: {
-    padding: '4px 12px',
-    fontSize: '12px',
-    backgroundColor: '#22c55e',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontWeight: 500,
-  },
-  fixButtonDisabled: {
-    backgroundColor: '#9ca3af',
-    cursor: 'not-allowed',
-  },
-  confidenceBadge: {
-    fontSize: '10px',
-    padding: '2px 6px',
-    borderRadius: '10px',
-    backgroundColor: '#dbeafe',
-    color: '#1e40af',
-    marginLeft: '8px',
-  },
-  resolvedBadge: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '4px',
-    fontSize: '12px',
-    color: '#16a34a',
-    backgroundColor: '#dcfce7',
-    padding: '4px 8px',
-    borderRadius: '4px',
-  },
-  dismissButton: {
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
-    color: '#9ca3af',
-    fontSize: '16px',
-    padding: '4px',
-  },
-  statsPanel: {
-    padding: '16px',
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  },
-  statsTitle: {
-    fontSize: '16px',
-    fontWeight: 600,
-    color: '#333',
-    marginBottom: '16px',
-  },
-  statsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-    gap: '12px',
-  },
-  statItem: {
-    textAlign: 'center',
-    padding: '12px',
-    backgroundColor: '#f8f9fa',
-    borderRadius: '6px',
-  },
-  statValue: {
-    fontSize: '24px',
-    fontWeight: 700,
-    color: '#333',
-  },
-  statLabel: {
-    fontSize: '12px',
-    color: '#666',
-    marginTop: '4px',
-  },
-  autoFixToggle: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    marginBottom: '16px',
-  },
-  toggle: {
-    width: '44px',
-    height: '24px',
-    backgroundColor: '#e5e7eb',
-    borderRadius: '12px',
-    position: 'relative',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s',
-  },
-  toggleActive: {
-    backgroundColor: '#22c55e',
-  },
-  toggleKnob: {
-    position: 'absolute',
-    top: '2px',
-    left: '2px',
-    width: '20px',
-    height: '20px',
-    backgroundColor: '#fff',
-    borderRadius: '50%',
-    transition: 'transform 0.2s',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
-  },
-  toggleKnobActive: {
-    transform: 'translateX(20px)',
-  },
+const styles = {
+  errorCard: 'p-4 bg-surface-50 rounded-lg shadow-card border-l-4 mb-3',
+  severityLow: 'border-l-brand-500',
+  severityMedium: 'border-l-warning-500',
+  severityHigh: 'border-l-danger-500',
+  severityCritical: 'border-l-accent-600',
+  errorHeader: 'flex justify-between items-start mb-3',
+  errorTitle: 'text-sm font-semibold text-surface-800 m-0',
+  categoryBadge: 'text-[11px] px-2 py-0.5 rounded-xl bg-surface-200 text-surface-700 uppercase',
+  errorMessage: 'text-[13px] text-surface-500 mb-3 font-mono bg-surface-100 p-2 rounded break-all',
+  fixList: 'flex flex-col gap-2',
+  fixItem: 'flex items-center justify-between px-3 py-2 bg-success-50 rounded-md border border-success-200',
+  fixDescription: 'text-[13px] text-success-800 flex-1',
+  fixButton: 'px-3 py-1 text-xs bg-success-500 text-white border-none rounded cursor-pointer font-medium',
+  fixButtonDisabled: 'bg-surface-400 cursor-not-allowed',
+  confidenceBadge: 'text-[10px] px-1.5 py-0.5 rounded-[10px] bg-brand-100 text-brand-800 ml-2',
+  resolvedBadge: 'inline-flex items-center gap-1 text-xs text-success-600 bg-success-100 px-2 py-1 rounded',
+  dismissButton: 'bg-none border-none cursor-pointer text-surface-400 text-base p-1',
+  statsPanel: 'p-4 bg-surface-50 rounded-lg shadow-card',
+  statsTitle: 'text-base font-semibold text-surface-800 mb-4',
+  statsGrid: 'grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-3',
+  statItem: 'text-center p-3 bg-surface-100 rounded-md',
+  statValue: 'text-2xl font-bold text-surface-800',
+  statLabel: 'text-xs text-surface-500 mt-1',
+  autoFixToggle: 'flex items-center gap-2 mb-4',
+  toggle: 'w-11 h-6 bg-surface-200 rounded-xl relative cursor-pointer transition-colors duration-200',
+  toggleActive: 'bg-success-500',
+  toggleKnob: 'absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform duration-200 shadow-sm',
+  toggleKnobActive: 'translate-x-5',
 };
 
 // ============================================================================
@@ -1084,17 +938,17 @@ export const ErrorCard: React.FC<ErrorCardProps> = ({ error, onApplyFix, onDismi
   };
 
   return (
-    <div style={{ ...styles.errorCard, ...getSeverityStyle() }} role="alert">
-      <div style={styles.errorHeader}>
+    <div className={`${styles.errorCard} ${getSeverityStyle()}`} role="alert">
+      <div className={styles.errorHeader}>
         <div>
-          <h4 style={styles.errorTitle}>{error.originalError.name}</h4>
-          <span style={styles.categoryBadge}>{error.category}</span>
-          <span style={styles.confidenceBadge}>
+          <h4 className={styles.errorTitle}>{error.originalError.name}</h4>
+          <span className={styles.categoryBadge}>{error.category}</span>
+          <span className={styles.confidenceBadge}>
             {Math.round(error.confidence * 100)}% confidence
           </span>
         </div>
         <button
-          style={styles.dismissButton}
+          className={styles.dismissButton}
           onClick={() => onDismiss(error.id)}
           aria-label="Dismiss error"
         >
@@ -1102,35 +956,26 @@ export const ErrorCard: React.FC<ErrorCardProps> = ({ error, onApplyFix, onDismi
         </button>
       </div>
 
-      <div style={styles.errorMessage}>{error.originalError.message}</div>
+      <div className={styles.errorMessage}>{error.originalError.message}</div>
 
       {error.resolved ? (
-        <div style={styles.resolvedBadge}>
+        <div className={styles.resolvedBadge}>
           ✓ Resolved {error.appliedFix?.autoApplied && '(auto-fixed)'}
         </div>
       ) : (
-        <div style={styles.fixList}>
+        <div className={styles.fixList}>
           {error.suggestedFixes.map((fix) => (
-            <div key={fix.id} style={styles.fixItem}>
-              <span style={styles.fixDescription}>
+            <div key={fix.id} className={styles.fixItem}>
+              <span className={styles.fixDescription}>
                 {fix.description}
                 {fix.autoApplicable && (
-                  <span
-                    style={{
-                      ...styles.confidenceBadge,
-                      backgroundColor: '#fef3c7',
-                      color: '#92400e',
-                    }}
-                  >
+                  <span className={`${styles.confidenceBadge} bg-warning-100 text-warning-800`}>
                     Auto-fixable
                   </span>
                 )}
               </span>
               <button
-                style={{
-                  ...styles.fixButton,
-                  ...(error.appliedFix ? styles.fixButtonDisabled : {}),
-                }}
+                className={`${styles.fixButton} ${error.appliedFix ? styles.fixButtonDisabled : ''}`}
                 onClick={() => onApplyFix(error.id, fix.id)}
                 disabled={!!error.appliedFix}
               >
@@ -1157,26 +1002,14 @@ export const ErrorList: React.FC = () => {
   return (
     <div>
       <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '12px',
-        }}
+        className="flex justify-between items-center mb-3"
       >
-        <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 600 }}>
+        <h3 className="m-0 text-base font-semibold">
           Recent Errors ({errors.length})
         </h3>
         <button
           onClick={clearErrors}
-          style={{
-            background: 'none',
-            border: '1px solid #e5e7eb',
-            padding: '4px 12px',
-            borderRadius: '4px',
-            fontSize: '12px',
-            cursor: 'pointer',
-          }}
+          className="bg-none border border-surface-200 px-3 py-1 rounded text-xs cursor-pointer"
         >
           Clear All
         </button>
@@ -1196,50 +1029,44 @@ export const ErrorStatsPanel: React.FC = () => {
   const stats = getErrorStats();
 
   return (
-    <div style={styles.statsPanel}>
-      <h3 style={styles.statsTitle}>Error Diagnosis Statistics</h3>
+    <div className={styles.statsPanel}>
+      <h3 className={styles.statsTitle}>Error Diagnosis Statistics</h3>
 
-      <div style={styles.autoFixToggle}>
-        <span style={{ fontSize: '14px', color: '#333' }}>Auto-fix enabled</span>
+      <div className={styles.autoFixToggle}>
+        <span className="text-sm text-surface-800">Auto-fix enabled</span>
         <div
-          style={{
-            ...styles.toggle,
-            ...(autoFixEnabled ? styles.toggleActive : {}),
-          }}
+          className={`${styles.toggle} ${autoFixEnabled ? styles.toggleActive : ''}`}
           onClick={() => setAutoFixEnabled(!autoFixEnabled)}
           role="switch"
           aria-checked={autoFixEnabled}
           tabIndex={0}
         >
           <div
-            style={{
-              ...styles.toggleKnob,
-              ...(autoFixEnabled ? styles.toggleKnobActive : {}),
-            }}
+            className={`${styles.toggleKnob} ${autoFixEnabled ? styles.toggleKnobActive : ''}`}
           />
         </div>
       </div>
 
-      <div style={styles.statsGrid}>
-        <div style={styles.statItem}>
-          <div style={styles.statValue}>{stats.totalErrors}</div>
-          <div style={styles.statLabel}>Total Errors</div>
+      <div className={styles.statsGrid}>
+        <div className={styles.statItem}>
+          <div className={styles.statValue}>{stats.totalErrors}</div>
+          <div className={styles.statLabel}>Total Errors</div>
         </div>
-        <div style={styles.statItem}>
-          <div style={{ ...styles.statValue, color: '#22c55e' }}>{stats.resolvedCount}</div>
-          <div style={styles.statLabel}>Resolved</div>
+        <div className={styles.statItem}>
+          <div className={`${styles.statValue} text-success-500`}>{stats.resolvedCount}</div>
+          <div className={styles.statLabel}>Resolved</div>
         </div>
-        <div style={styles.statItem}>
-          <div style={{ ...styles.statValue, color: '#3b82f6' }}>{stats.autoFixedCount}</div>
-          <div style={styles.statLabel}>Auto-fixed</div>
+        <div className={styles.statItem}>
+          <div className={`${styles.statValue} text-brand-500`}>{stats.autoFixedCount}</div>
+          <div className={styles.statLabel}>Auto-fixed</div>
         </div>
-        <div style={styles.statItem}>
-          <div style={styles.statValue}>
+        <div className={styles.statItem}>
+          <div className={styles.statValue}>
             {stats.averageResolutionTime > 0
               ? `${Math.round(stats.averageResolutionTime / 1000)}s`
               : '-'}
           </div>
-          <div style={styles.statLabel}>Avg Resolution</div>
+          <div className={styles.statLabel}>Avg Resolution</div>
         </div>
       </div>
     </div>

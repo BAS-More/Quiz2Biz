@@ -52,7 +52,7 @@ export const ScaleInput: React.FC<QuestionInputProps<number>> = ({
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer
                             disabled:cursor-not-allowed disabled:opacity-60"
             style={{
-              background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${percentage}%, #E5E7EB ${percentage}%, #E5E7EB 100%)`,
+              background: `linear-gradient(to right, var(--color-brand-500) 0%, var(--color-brand-500) ${percentage}%, var(--color-surface-200) ${percentage}%, var(--color-surface-200) 100%)`,
             }}
           />
 

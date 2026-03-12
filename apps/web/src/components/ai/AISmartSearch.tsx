@@ -407,256 +407,44 @@ function mergeSearchResults(semantic: SearchResult[], keyword: SearchResult[]): 
 // ============================================================================
 
 const styles = {
-  searchContainer: {
-    position: 'relative' as const,
-    width: '100%',
-  },
-  searchInputWrapper: {
-    position: 'relative' as const,
-    display: 'flex',
-    alignItems: 'center',
-  },
-  searchInput: {
-    width: '100%',
-    padding: '12px 48px 12px 16px',
-    fontSize: '16px',
-    border: '2px solid #e2e8f0',
-    borderRadius: '12px',
-    outline: 'none',
-    transition: 'border-color 0.2s, box-shadow 0.2s',
-    backgroundColor: '#fff',
-  },
-  searchInputFocused: {
-    borderColor: '#3b82f6',
-    boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.1)',
-  },
-  searchIcon: {
-    position: 'absolute' as const,
-    right: '16px',
-    color: '#64748b',
-    pointerEvents: 'none' as const,
-  },
-  clearButton: {
-    position: 'absolute' as const,
-    right: '48px',
-    background: 'none',
-    border: 'none',
-    padding: '4px',
-    cursor: 'pointer',
-    color: '#94a3b8',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  resultsContainer: {
-    position: 'absolute' as const,
-    top: '100%',
-    left: 0,
-    right: 0,
-    marginTop: '8px',
-    backgroundColor: '#fff',
-    borderRadius: '12px',
-    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.15)',
-    maxHeight: '500px',
-    overflowY: 'auto' as const,
-    zIndex: 1000,
-  },
-  aiSummaryBox: {
-    padding: '16px',
-    backgroundColor: '#f0f9ff',
-    borderBottom: '1px solid #e0f2fe',
-    borderRadius: '12px 12px 0 0',
-  },
-  aiSummaryHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    marginBottom: '8px',
-  },
-  aiSummaryTitle: {
-    fontSize: '12px',
-    fontWeight: 600,
-    color: '#0369a1',
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.5px',
-  },
-  aiSummaryText: {
-    fontSize: '14px',
-    color: '#334155',
-    lineHeight: 1.5,
-    margin: 0,
-  },
-  keyPoints: {
-    display: 'flex',
-    flexWrap: 'wrap' as const,
-    gap: '6px',
-    marginTop: '12px',
-  },
-  keyPointTag: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    padding: '4px 10px',
-    fontSize: '12px',
-    backgroundColor: '#dbeafe',
-    color: '#1e40af',
-    borderRadius: '16px',
-    fontWeight: 500,
-  },
-  resultsList: {
-    listStyle: 'none',
-    margin: 0,
-    padding: 0,
-  },
-  resultItem: {
-    padding: '14px 16px',
-    borderBottom: '1px solid #f1f5f9',
-    cursor: 'pointer',
-    transition: 'background-color 0.15s',
-  },
-  resultItemHover: {
-    backgroundColor: '#f8fafc',
-  },
-  resultHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: '4px',
-  },
-  resultTitle: {
-    fontSize: '14px',
-    fontWeight: 600,
-    color: '#1e293b',
-    margin: 0,
-  },
-  resultCategory: {
-    fontSize: '11px',
-    padding: '2px 8px',
-    borderRadius: '10px',
-    fontWeight: 500,
-    textTransform: 'uppercase' as const,
-  },
-  categoryHelp: {
-    backgroundColor: '#dcfce7',
-    color: '#166534',
-  },
-  categoryFaq: {
-    backgroundColor: '#fef3c7',
-    color: '#92400e',
-  },
-  categoryDocs: {
-    backgroundColor: '#e0e7ff',
-    color: '#3730a3',
-  },
-  resultUrl: {
-    fontSize: '12px',
-    color: '#64748b',
-    margin: 0,
-  },
-  relevanceBar: {
-    marginTop: '8px',
-    height: '3px',
-    backgroundColor: '#e2e8f0',
-    borderRadius: '2px',
-    overflow: 'hidden',
-  },
-  relevanceFill: {
-    height: '100%',
-    backgroundColor: '#3b82f6',
-    borderRadius: '2px',
-    transition: 'width 0.3s',
-  },
-  suggestionsSection: {
-    padding: '12px 16px',
-    backgroundColor: '#fafafa',
-    borderTop: '1px solid #f1f5f9',
-    borderRadius: '0 0 12px 12px',
-  },
-  suggestionTitle: {
-    fontSize: '11px',
-    fontWeight: 600,
-    color: '#64748b',
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.5px',
-    marginBottom: '8px',
-  },
-  suggestionTags: {
-    display: 'flex',
-    flexWrap: 'wrap' as const,
-    gap: '6px',
-  },
-  suggestionTag: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    padding: '6px 12px',
-    fontSize: '13px',
-    backgroundColor: '#fff',
-    border: '1px solid #e2e8f0',
-    borderRadius: '20px',
-    cursor: 'pointer',
-    transition: 'all 0.15s',
-    color: '#475569',
-  },
-  recentSearches: {
-    padding: '16px',
-  },
-  recentTitle: {
-    fontSize: '12px',
-    fontWeight: 600,
-    color: '#64748b',
-    marginBottom: '12px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-  },
-  recentList: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '4px',
-  },
-  recentItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    padding: '10px 12px',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    color: '#475569',
-    fontSize: '14px',
-    transition: 'background-color 0.15s',
-  },
-  loadingIndicator: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '24px',
-    gap: '8px',
-    color: '#64748b',
-    fontSize: '14px',
-  },
-  spinner: {
-    width: '20px',
-    height: '20px',
-    border: '2px solid #e2e8f0',
-    borderTopColor: '#3b82f6',
-    borderRadius: '50%',
-    animation: 'spin 0.8s linear infinite',
-  },
-  noResults: {
-    padding: '32px 16px',
-    textAlign: 'center' as const,
-    color: '#64748b',
-  },
-  noResultsTitle: {
-    fontSize: '16px',
-    fontWeight: 600,
-    color: '#334155',
-    marginBottom: '8px',
-  },
-  noResultsText: {
-    fontSize: '14px',
-    marginBottom: '16px',
-  },
+  searchContainer: 'relative w-full',
+  searchInputWrapper: 'relative flex items-center',
+  searchInput: 'w-full py-3 pr-12 pl-4 text-base border-2 border-surface-200 rounded-xl outline-none transition-all duration-200 bg-surface-50',
+  searchInputFocused: 'border-brand-500 shadow-[0_0_0_3px_rgba(59,130,246,0.1)]',
+  searchIcon: 'absolute right-4 text-surface-400 pointer-events-none',
+  clearButton: 'absolute right-12 bg-none border-none p-1 cursor-pointer text-surface-400 rounded-full flex items-center justify-center',
+  resultsContainer: 'absolute top-full left-0 right-0 mt-2 bg-surface-50 rounded-xl shadow-float max-h-[500px] overflow-y-auto z-[1000]',
+  aiSummaryBox: 'p-4 bg-brand-50 border-b border-brand-100 rounded-t-xl',
+  aiSummaryHeader: 'flex items-center gap-2 mb-2',
+  aiSummaryTitle: 'text-xs font-semibold text-brand-700 uppercase tracking-wider',
+  aiSummaryText: 'text-sm text-surface-700 leading-normal m-0',
+  keyPoints: 'flex flex-wrap gap-1.5 mt-3',
+  keyPointTag: 'inline-flex items-center px-2.5 py-1 text-xs bg-brand-100 text-brand-800 rounded-2xl font-medium',
+  resultsList: 'list-none m-0 p-0',
+  resultItem: 'px-4 py-3.5 border-b border-surface-100 cursor-pointer transition-colors duration-150',
+  resultItemHover: 'bg-surface-100',
+  resultHeader: 'flex items-center justify-between mb-1',
+  resultTitle: 'text-sm font-semibold text-surface-800 m-0',
+  resultCategory: 'text-[11px] px-2 py-0.5 rounded-[10px] font-medium uppercase',
+  categoryHelp: 'bg-success-100 text-success-800',
+  categoryFaq: 'bg-warning-100 text-warning-800',
+  categoryDocs: 'bg-brand-100 text-brand-800',
+  resultUrl: 'text-xs text-surface-400 m-0',
+  relevanceBar: 'mt-2 h-[3px] bg-surface-200 rounded-sm overflow-hidden',
+  relevanceFill: 'h-full bg-brand-500 rounded-sm transition-[width] duration-300',
+  suggestionsSection: 'px-4 py-3 bg-surface-100 border-t border-surface-100 rounded-b-xl',
+  suggestionTitle: 'text-[11px] font-semibold text-surface-400 uppercase tracking-wider mb-2',
+  suggestionTags: 'flex flex-wrap gap-1.5',
+  suggestionTag: 'inline-flex items-center px-3 py-1.5 text-[13px] bg-surface-50 border border-surface-200 rounded-[20px] cursor-pointer transition-all duration-150 text-surface-600',
+  recentSearches: 'p-4',
+  recentTitle: 'text-xs font-semibold text-surface-400 mb-3 flex items-center gap-1.5',
+  recentList: 'flex flex-col gap-1',
+  recentItem: 'flex items-center gap-2.5 px-3 py-2.5 rounded-lg cursor-pointer text-surface-600 text-sm transition-colors duration-150',
+  loadingIndicator: 'flex items-center justify-center p-6 gap-2 text-surface-400 text-sm',
+  spinner: 'w-5 h-5 border-2 border-surface-200 border-t-brand-500 rounded-full animate-spin',
+  noResults: 'py-8 px-4 text-center text-surface-400',
+  noResultsTitle: 'text-base font-semibold text-surface-700 mb-2',
+  noResultsText: 'text-sm mb-4',
 };
 
 // ============================================================================
@@ -712,8 +500,8 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   const showRecent = isFocused && !localQuery && recentSearches.length > 0 && showRecentOnFocus;
 
   return (
-    <div style={styles.searchContainer}>
-      <div style={styles.searchInputWrapper}>
+    <div className={styles.searchContainer}>
+      <div className={styles.searchInputWrapper}>
         <input
           ref={inputRef}
           type="text"
@@ -724,15 +512,12 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           onBlur={() => setTimeout(() => setIsFocused(false), 200)}
           placeholder={placeholder}
           autoFocus={autoFocus}
-          style={{
-            ...styles.searchInput,
-            ...(isFocused ? styles.searchInputFocused : {}),
-          }}
+          className={`${styles.searchInput} ${isFocused ? styles.searchInputFocused : ''}`}
           aria-label="Search"
           aria-describedby="search-hint"
         />
         {localQuery && (
-          <button onClick={handleClear} style={styles.clearButton} aria-label="Clear search">
+          <button onClick={handleClear} className={styles.clearButton} aria-label="Clear search">
             <svg
               width="16"
               height="16"
@@ -746,9 +531,9 @@ export const SearchInput: React.FC<SearchInputProps> = ({
             </svg>
           </button>
         )}
-        <span style={styles.searchIcon}>
+        <span className={styles.searchIcon}>
           {isSearching ? (
-            <div style={styles.spinner} />
+            <div className={styles.spinner} />
           ) : (
             <svg
               width="20"
@@ -766,9 +551,9 @@ export const SearchInput: React.FC<SearchInputProps> = ({
       </div>
 
       {showRecent && (
-        <div style={styles.resultsContainer}>
-          <div style={styles.recentSearches}>
-            <div style={styles.recentTitle}>
+        <div className={styles.resultsContainer}>
+          <div className={styles.recentSearches}>
+            <div className={styles.recentTitle}>
               <svg
                 width="14"
                 height="14"
@@ -782,14 +567,12 @@ export const SearchInput: React.FC<SearchInputProps> = ({
               </svg>
               Recent Searches
             </div>
-            <div style={styles.recentList}>
+            <div className={styles.recentList}>
               {recentSearches.slice(0, 5).map((recent, index) => (
                 <div
                   key={index}
-                  style={styles.recentItem}
+                  className={styles.recentItem}
                   onClick={() => handleRecentClick(recent)}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f1f5f9')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
                 >
                   <svg
                     width="14"
@@ -824,9 +607,9 @@ export const SearchResults: React.FC = () => {
 
   if (isSearching) {
     return (
-      <div style={styles.resultsContainer}>
-        <div style={styles.loadingIndicator}>
-          <div style={styles.spinner} />
+      <div className={styles.resultsContainer}>
+        <div className={styles.loadingIndicator}>
+          <div className={styles.spinner} />
           <span>Searching with AI...</span>
         </div>
       </div>
@@ -835,10 +618,10 @@ export const SearchResults: React.FC = () => {
 
   if (results.length === 0) {
     return (
-      <div style={styles.resultsContainer}>
-        <div style={styles.noResults}>
-          <div style={styles.noResultsTitle}>No results found</div>
-          <div style={styles.noResultsText}>
+      <div className={styles.resultsContainer}>
+        <div className={styles.noResults}>
+          <div className={styles.noResultsTitle}>No results found</div>
+          <div className={styles.noResultsText}>
             We couldn't find anything matching "{query}". Try different keywords or check your
             spelling.
           </div>
@@ -872,11 +655,11 @@ export const SearchResults: React.FC = () => {
   };
 
   return (
-    <div style={styles.resultsContainer}>
+    <div className={styles.resultsContainer}>
       {/* AI Summary */}
       {aiSummary && (
-        <div style={styles.aiSummaryBox}>
-          <div style={styles.aiSummaryHeader}>
+        <div className={styles.aiSummaryBox}>
+          <div className={styles.aiSummaryHeader}>
             <svg
               width="16"
               height="16"
@@ -888,16 +671,16 @@ export const SearchResults: React.FC = () => {
               <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
               <path d="M12 6v6l4 2" />
             </svg>
-            <span style={styles.aiSummaryTitle}>AI Summary</span>
-            <span style={{ fontSize: '11px', color: '#64748b' }}>
+            <span className={styles.aiSummaryTitle}>AI Summary</span>
+            <span className="text-[11px] text-surface-400">
               ({Math.round(aiSummary.confidence * 100)}% confident)
             </span>
           </div>
-          <p style={styles.aiSummaryText}>{aiSummary.summary}</p>
+          <p className={styles.aiSummaryText}>{aiSummary.summary}</p>
           {aiSummary.keyPoints.length > 0 && (
-            <div style={styles.keyPoints}>
+            <div className={styles.keyPoints}>
               {aiSummary.keyPoints.map((point, index) => (
-                <span key={index} style={styles.keyPointTag}>
+                <span key={index} className={styles.keyPointTag}>
                   {point}
                 </span>
               ))}
@@ -907,33 +690,28 @@ export const SearchResults: React.FC = () => {
       )}
 
       {/* Results List */}
-      <ul style={styles.resultsList} role="listbox" aria-label="Search results">
+      <ul className={styles.resultsList} role="listbox" aria-label="Search results">
         {results.map((result) => (
           <li
             key={result.id}
-            style={{
-              ...styles.resultItem,
-              ...(hoveredId === result.id ? styles.resultItemHover : {}),
-            }}
+            className={`${styles.resultItem} ${hoveredId === result.id ? styles.resultItemHover : ''}`}
             onMouseEnter={() => setHoveredId(result.id)}
             onMouseLeave={() => setHoveredId(null)}
             onClick={() => handleResultClick(result)}
             role="option"
             aria-selected={hoveredId === result.id}
           >
-            <div style={styles.resultHeader}>
-              <h4 style={styles.resultTitle}>{result.title}</h4>
-              <span style={{ ...styles.resultCategory, ...getCategoryStyle(result.category) }}>
+            <div className={styles.resultHeader}>
+              <h4 className={styles.resultTitle}>{result.title}</h4>
+              <span className={`${styles.resultCategory} ${getCategoryStyle(result.category)}`}>
                 {result.category}
               </span>
             </div>
-            <p style={styles.resultUrl}>{result.url}</p>
-            <div style={styles.relevanceBar}>
+            <p className={styles.resultUrl}>{result.url}</p>
+            <div className={styles.relevanceBar}>
               <div
-                style={{
-                  ...styles.relevanceFill,
-                  width: `${Math.round(result.relevanceScore * 100)}%`,
-                }}
+                className={styles.relevanceFill}
+                style={{ width: `${Math.round(result.relevanceScore * 100)}%` }}
               />
             </div>
           </li>
@@ -942,22 +720,14 @@ export const SearchResults: React.FC = () => {
 
       {/* Related Suggestions */}
       {suggestions.length > 0 && (
-        <div style={styles.suggestionsSection}>
-          <div style={styles.suggestionTitle}>Related Topics</div>
-          <div style={styles.suggestionTags}>
+        <div className={styles.suggestionsSection}>
+          <div className={styles.suggestionTitle}>Related Topics</div>
+          <div className={styles.suggestionTags}>
             {suggestions.map((suggestion) => (
               <button
                 key={suggestion.id}
-                style={styles.suggestionTag}
+                className={styles.suggestionTag}
                 onClick={() => handleSuggestionClick(suggestion)}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#f1f5f9';
-                  e.currentTarget.style.borderColor = '#3b82f6';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#fff';
-                  e.currentTarget.style.borderColor = '#e2e8f0';
-                }}
               >
                 {suggestion.text}
               </button>
@@ -994,7 +764,7 @@ export const SmartSearchBox: React.FC<SmartSearchBoxProps> = ({ placeholder, aut
   }, []);
 
   return (
-    <div ref={containerRef} style={{ position: 'relative' }} onFocus={() => setIsOpen(true)}>
+    <div ref={containerRef} className="relative" onFocus={() => setIsOpen(true)}>
       <SearchInput placeholder={placeholder} autoFocus={autoFocus} />
       {isOpen && <SearchResults />}
     </div>
