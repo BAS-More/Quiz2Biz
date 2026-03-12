@@ -109,9 +109,7 @@ export class StandardsService {
     }
   }
 
-  async getStandardsForDocument(
-    documentTypeIdOrSlug: string,
-  ): Promise<StandardResponse[]> {
+  async getStandardsForDocument(documentTypeIdOrSlug: string): Promise<StandardResponse[]> {
     try {
       const documentType = await this.prisma.documentType.findFirst({
         where: {
@@ -133,32 +131,24 @@ export class StandardsService {
       });
 
       if (!documentType) {
-        throw new NotFoundException(
-          `Document type ${documentTypeIdOrSlug} not found`,
-        );
+        throw new NotFoundException(`Document type ${documentTypeIdOrSlug} not found`);
       }
 
-      return documentType.standardMappings.map(
-        (mapping: { standard: EngineeringStandard }) =>
-          this.mapToResponse(mapping.standard),
+      return documentType.standardMappings.map((mapping: { standard: EngineeringStandard }) =>
+        this.mapToResponse(mapping.standard),
       );
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
       }
-      this.logger.error(
-        `Failed to fetch standards for document ${documentTypeIdOrSlug}:`,
-        error,
-      );
+      this.logger.error(`Failed to fetch standards for document ${documentTypeIdOrSlug}:`, error);
       throw new InternalServerErrorException(
         'Failed to retrieve standards for document. Please try again later.',
       );
     }
   }
 
-  async generateStandardsSection(
-    documentTypeIdOrSlug: string,
-  ): Promise<GeneratedStandardsSection> {
+  async generateStandardsSection(documentTypeIdOrSlug: string): Promise<GeneratedStandardsSection> {
     try {
       const documentType = await this.prisma.documentType.findFirst({
         where: {
@@ -180,9 +170,7 @@ export class StandardsService {
       });
 
       if (!documentType) {
-        throw new NotFoundException(
-          `Document type ${documentTypeIdOrSlug} not found`,
-        );
+        throw new NotFoundException(`Document type ${documentTypeIdOrSlug} not found`);
       }
 
       if (documentType.standardMappings.length === 0) {
@@ -193,16 +181,11 @@ export class StandardsService {
       }
 
       const standards = documentType.standardMappings.map(
-        (mapping: {
-          standard: EngineeringStandard;
-          sectionTitle: string | null;
-        }) => ({
+        (mapping: { standard: EngineeringStandard; sectionTitle: string | null }) => ({
           category: mapping.standard.category,
           title:
             mapping.sectionTitle ||
-            STANDARD_CATEGORY_TITLES[
-              mapping.standard.category as StandardCategory
-            ],
+            STANDARD_CATEGORY_TITLES[mapping.standard.category as StandardCategory],
           principles: mapping.standard.principles as unknown as Principle[],
         }),
       );
@@ -217,10 +200,7 @@ export class StandardsService {
       if (error instanceof NotFoundException) {
         throw error;
       }
-      this.logger.error(
-        `Failed to generate standards section for ${documentTypeIdOrSlug}:`,
-        error,
-      );
+      this.logger.error(`Failed to generate standards section for ${documentTypeIdOrSlug}:`, error);
       throw new InternalServerErrorException(
         'Failed to generate standards section. Please try again later.',
       );
