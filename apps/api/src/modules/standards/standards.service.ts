@@ -86,7 +86,7 @@ export class StandardsService {
         ...this.mapToResponse(standard),
         documentTypes: standard.documentMappings.map(
           (mapping: {
-            documentType: { id: string; name: string; slug: string }; 
+            documentType: { id: string; name: string; slug: string };
             sectionTitle: string | null;
             priority: number;
           }) => ({
