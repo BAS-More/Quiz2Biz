@@ -412,12 +412,14 @@ export class AdapterController {
     @Query('adapterId') adapterId: string,
     @Query('tenantId') tenantId: string,
   ) {
-    // In production, verify webhook signature
-    // const signature = headers['x-hub-signature-256'];
-    // this.githubAdapter.verifyWebhookSignature(...)
+    // Validate and sanitize event name from payload
+    const eventName = this.sanitizeWebhookEvent(payload.action);
 
     const config = await this.adapterConfigService.getAdapterConfig(tenantId, adapterId);
-    if (!config || !config.enabled) {
+    if (!config) {
+      return { status: 'ignored', reason: 'Adapter not found or disabled' };
+    }
+    if (!config.enabled) {
       return { status: 'ignored', reason: 'Adapter not found or disabled' };
     }
 
@@ -425,8 +427,8 @@ export class AdapterController {
     // This would typically trigger an async job
     return {
       status: 'received',
-      adapterId,
-      event: payload.action || 'unknown',
+      adapterId: config.id,
+      event: eventName,
     };
   }
 
@@ -438,19 +440,37 @@ export class AdapterController {
     @Query('adapterId') adapterId: string,
     @Query('tenantId') tenantId: string,
   ) {
+    // Validate and sanitize event name from payload
+    const eventName = this.sanitizeWebhookEvent(payload.object_kind);
+
     const config = await this.adapterConfigService.getAdapterConfig(tenantId, adapterId);
-    if (!config || !config.enabled) {
+    if (!config) {
+      return { status: 'ignored', reason: 'Adapter not found or disabled' };
+    }
+    if (!config.enabled) {
       return { status: 'ignored', reason: 'Adapter not found or disabled' };
     }
 
     return {
       status: 'received',
-      adapterId,
-      event: payload.object_kind || 'unknown',
+      adapterId: config.id,
+      event: eventName,
     };
   }
 
   // ==================== HELPERS ====================
+
+  /**
+   * Sanitize webhook event name to prevent injection of user-controlled values.
+   * Only allows alphanumeric characters, underscores, hyphens, and dots.
+   */
+  private sanitizeWebhookEvent(value: unknown): string {
+    if (typeof value !== 'string') {
+      return 'unknown';
+    }
+    const sanitized = value.replace(/[^a-zA-Z0-9_\-.]/g, '');
+    return sanitized.length > 0 ? sanitized.substring(0, 100) : 'unknown';
+  }
 
   private redactSensitiveFields(config: AdapterConfig): AdapterConfig {
     const redacted = { ...config, config: { ...config.config } };

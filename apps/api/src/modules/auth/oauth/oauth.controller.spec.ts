@@ -114,7 +114,7 @@ describe('OAuthController', () => {
         controller.linkAccount(mockReq, {
           provider: 'github' as any,
         }),
-      ).rejects.toThrow('Invalid provider or missing token');
+      ).rejects.toThrow('Invalid OAuth provider');
     });
   });
 
