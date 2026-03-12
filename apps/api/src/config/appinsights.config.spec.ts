@@ -29,12 +29,8 @@ jest.mock('applicationinsights', () => ({
 }));
 
 import {
-  AppInsightsConfig,
-  CustomMetricOptions,
-  CustomEventOptions,
   getAppInsightsConfig,
   initializeAppInsights,
-  getClient,
   trackMetric,
   trackResponseTime,
   trackQuestionnaireMetrics,

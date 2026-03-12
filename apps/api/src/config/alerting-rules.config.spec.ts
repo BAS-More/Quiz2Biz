@@ -13,8 +13,6 @@ import {
   shouldSendAlert,
   getAlertSummary,
   AlertingSummary,
-  Severity,
-  AlertState,
   AlertRule,
 } from './alerting-rules.config';
 

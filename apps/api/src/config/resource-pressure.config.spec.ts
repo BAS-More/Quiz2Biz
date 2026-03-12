@@ -2,16 +2,8 @@
  * Resource Pressure Configuration Tests
  */
 import {
-  ResourcePressureTest,
   ResourceType,
   PressureLevel,
-  ResourceParameters,
-  ExpectedSystemBehavior,
-  AlertConfig,
-  ValidationCheck,
-  TestExecution,
-  ValidationResult,
-  AlertResult,
   getCpuPressureTests,
   getMemoryPressureTests,
   getDiskPressureTests,

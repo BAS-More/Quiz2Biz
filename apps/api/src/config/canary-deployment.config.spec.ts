@@ -17,7 +17,6 @@ import {
   MetricSnapshot,
   RollbackTrigger,
   PromotionCriteria,
-  CanaryDeploymentConfig,
 } from './canary-deployment.config';
 
 describe('getCanaryDeploymentConfig', () => {
@@ -676,7 +675,7 @@ describe('CanaryDeploymentManager', () => {
 
     it('should transition through rolling_back status before failed', async () => {
       const statusCaptures: string[] = [];
-      const originalUpdateTrafficWeight = (manager as any).updateTrafficWeight.bind(manager);
+      const _originalUpdateTrafficWeight = (manager as any).updateTrafficWeight.bind(manager);
 
       jest.spyOn(manager as any, 'updateTrafficWeight').mockImplementation(async () => {
         // Capture status during the traffic weight update (mid-rollback)
