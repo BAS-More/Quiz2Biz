@@ -462,7 +462,7 @@ export class AdapterController {
 
   /**
    * Sanitize webhook event name to prevent injection of user-controlled values.
-   * Only allows alphanumeric characters, underscores, and hyphens.
+   * Only allows alphanumeric characters, underscores, hyphens, and dots.
    */
   private sanitizeWebhookEvent(value: unknown): string {
     if (typeof value !== 'string') {
