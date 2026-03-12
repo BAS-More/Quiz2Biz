@@ -73,10 +73,10 @@ function SubscriptionCard({ subscription }: { subscription: Subscription }) {
           <span className="text-gray-600">Status</span>
           <span
             className={`font-medium ${subscription.status === 'active'
-                ? 'text-green-600'
-                : subscription.status === 'past_due'
-                  ? 'text-red-600'
-                  : 'text-gray-600'
+              ? 'text-green-600'
+              : subscription.status === 'past_due'
+                ? 'text-red-600'
+                : 'text-gray-600'
               }`}
           >
             {subscription.status.replace('_', ' ').toUpperCase()}

@@ -253,11 +253,10 @@ export const QuestionnaireFlow: React.FC<QuestionnaireFlowProps> = ({
           onClick={goToPrevious}
           disabled={currentIndex === 0}
           className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-colors
-                        ${
-                          currentIndex === 0
-                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        }`}
+                        ${currentIndex === 0
+              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path

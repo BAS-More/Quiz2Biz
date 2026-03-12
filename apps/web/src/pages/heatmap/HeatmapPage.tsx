@@ -44,8 +44,8 @@ export function HeatmapPage() {
           setError(
             (err as { response?: { data?: { message?: string } }; message?: string })?.response
               ?.data?.message ??
-              (err as { message?: string })?.message ??
-              'Unknown error',
+            (err as { message?: string })?.message ??
+            'Unknown error',
           );
           setIsLoading(false);
         }

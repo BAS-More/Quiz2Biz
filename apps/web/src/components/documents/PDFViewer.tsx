@@ -154,7 +154,7 @@ export function PDFViewer({
       style={{ height: isFullscreen ? '100vh' : height }}
     >
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-4 py-2 bg-white border-b border-surface-200">
+      <div className="flex items-center justify-between px-4 py-2 bg-white dark:bg-surface-800 border-b border-surface-200">
         {/* Left: Title */}
         <div className="flex items-center gap-2 min-w-0">
           {title && <h3 className="text-sm font-medium text-surface-700 truncate">{title}</h3>}
