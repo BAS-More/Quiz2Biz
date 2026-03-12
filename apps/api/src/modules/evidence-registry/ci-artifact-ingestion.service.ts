@@ -373,8 +373,7 @@ export class CIArtifactIngestionService {
 
       for (const comp of components) {
         if (typeof comp.type === 'string' && comp.type.length <= 100) {
-          const sanitizedType = comp.type;
-          byType.set(sanitizedType, (byType.get(sanitizedType) || 0) + 1);
+          byType.set(comp.type, (byType.get(comp.type) || 0) + 1);
         }
         if (comp.licenses) {
           for (const lic of comp.licenses) {

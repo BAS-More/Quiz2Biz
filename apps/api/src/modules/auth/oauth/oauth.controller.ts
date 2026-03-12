@@ -103,7 +103,7 @@ export class OAuthController {
         picture: result.user.picture,
         emailVerified: true,
       };
-    } else if (dto.provider === 'microsoft') {
+    } else {
       if (!dto.accessToken) {
         throw new BadRequestException('Microsoft authentication requires an accessToken');
       }
@@ -117,8 +117,6 @@ export class OAuthController {
         picture: result.user.picture,
         emailVerified: true,
       };
-    } else {
-      throw new BadRequestException('Invalid provider or missing token');
     }
 
     // Link the account
