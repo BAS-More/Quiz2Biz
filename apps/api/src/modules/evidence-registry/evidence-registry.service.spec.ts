@@ -14,8 +14,6 @@ import { EvidenceType, CoverageLevel } from '@prisma/client';
 
 describe('EvidenceRegistryService', () => {
   let service: EvidenceRegistryService;
-  let prisma: PrismaService;
-  let configService: ConfigService;
   let module: TestingModule;
 
   const mockPrisma = {
@@ -71,8 +69,8 @@ describe('EvidenceRegistryService', () => {
     }).compile();
 
     service = module.get<EvidenceRegistryService>(EvidenceRegistryService);
-    prisma = module.get<PrismaService>(PrismaService);
-    configService = module.get<ConfigService>(ConfigService);
+    module.get<PrismaService>(PrismaService);
+    module.get<ConfigService>(ConfigService);
 
     // Reset all mocks
     jest.clearAllMocks();

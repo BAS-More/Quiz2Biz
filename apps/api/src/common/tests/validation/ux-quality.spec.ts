@@ -21,7 +21,7 @@ import * as path from 'path';
 
 describe('UX Quality Validation', () => {
   const webSrcDir = path.join(__dirname, '../../../../../../apps/web/src');
-  const apiSrcDir = path.join(__dirname, '../../../../');
+    path.join(__dirname, '../../../../');
 
   function getReactFiles(dir: string, files: string[] = []): string[] {
     if (!fs.existsSync(dir)) {

@@ -217,7 +217,6 @@ describe('API Security Tests', () => {
 
     it('should use generic error messages in production', () => {
       const productionError = 'An error occurred while processing your request';
-      const devError = 'TypeError: Cannot read property of undefined at line 42';
 
       expect(productionError).not.toContain('TypeError');
       expect(productionError).not.toContain('line');

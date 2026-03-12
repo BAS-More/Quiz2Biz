@@ -5,7 +5,6 @@ import { UserRole } from '@prisma/client';
 
 describe('UsersController', () => {
   let controller: UsersController;
-  let usersService: UsersService;
   let module: TestingModule;
 
   const mockUsersService = {
@@ -28,7 +27,7 @@ describe('UsersController', () => {
     }).compile();
 
     controller = module.get<UsersController>(UsersController);
-    usersService = module.get<UsersService>(UsersService);
+    module.get<UsersService>(UsersService);
 
     jest.clearAllMocks();
   });
@@ -67,7 +66,7 @@ describe('UsersController', () => {
 
       mockUsersService.update.mockResolvedValue(updatedProfile);
 
-      const result = await controller.updateMe(mockUser as any, updateDto);
+            await controller.updateMe(mockUser as any, updateDto);
 
       expect(mockUsersService.update).toHaveBeenCalledWith('user-123', updateDto, 'user-123');
     });

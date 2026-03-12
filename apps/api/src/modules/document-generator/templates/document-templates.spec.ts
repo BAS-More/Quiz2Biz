@@ -9,8 +9,7 @@ import {
   getDocumentTemplate,
   getAllDocumentTemplates,
   DocumentTemplate,
-  DocumentTemplateSection,
-} from './document-templates';
+  } from './document-templates';
 
 describe('documentTemplates registry', () => {
   const ALL_TEMPLATE_SLUGS = [

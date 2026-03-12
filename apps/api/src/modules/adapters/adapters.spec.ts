@@ -14,9 +14,6 @@ import { NotFoundException, BadRequestException } from '@nestjs/common';
 describe('AdapterController', () => {
   let controller: AdapterController;
   let adapterConfigService: jest.Mocked<AdapterConfigService>;
-  let githubAdapter: jest.Mocked<GitHubAdapter>;
-  let gitlabAdapter: jest.Mocked<GitLabAdapter>;
-  let jiraAdapter: jest.Mocked<JiraConfluenceAdapter>;
 
   const mockAdapterConfig = {
     id: 'adapter-1',
@@ -83,9 +80,9 @@ describe('AdapterController', () => {
 
     controller = module.get<AdapterController>(AdapterController);
     adapterConfigService = module.get(AdapterConfigService);
-    githubAdapter = module.get(GitHubAdapter);
-    gitlabAdapter = module.get(GitLabAdapter);
-    jiraAdapter = module.get(JiraConfluenceAdapter);
+    module.get(GitHubAdapter);
+    module.get(GitLabAdapter);
+    module.get(JiraConfluenceAdapter);
   });
 
   describe('getSupportedTypes', () => {
@@ -384,9 +381,9 @@ describe('AdapterController - Branch Coverage', () => {
 
     controller = module.get<AdapterController>(AdapterController);
     adapterConfigService = module.get(AdapterConfigService);
-    githubAdapter = module.get(GitHubAdapter);
-    gitlabAdapter = module.get(GitLabAdapter);
-    jiraAdapter = module.get(JiraConfluenceAdapter);
+    module.get(GitHubAdapter);
+    module.get(GitLabAdapter);
+    module.get(JiraConfluenceAdapter);
   });
 
   describe('updateConfig - branch: dto.config present vs absent', () => {

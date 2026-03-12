@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TerraformRulesService, TerraformRule } from './terraform-rules.service';
+import { TerraformRulesService } from './terraform-rules.service';
 
 describe('TerraformRulesService', () => {
   let service: TerraformRulesService;

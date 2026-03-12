@@ -8,7 +8,6 @@ jest.mock('stripe');
 
 describe('PaymentService', () => {
   let service: PaymentService;
-  let configService: ConfigService;
   let mockStripe: jest.Mocked<Stripe>;
   let module: TestingModule;
 
@@ -67,7 +66,7 @@ describe('PaymentService', () => {
     }).compile();
 
     service = module.get<PaymentService>(PaymentService);
-    configService = module.get<ConfigService>(ConfigService);
+    module.get<ConfigService>(ConfigService);
   });
 
   afterAll(async () => {

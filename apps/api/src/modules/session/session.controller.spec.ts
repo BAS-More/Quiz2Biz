@@ -5,7 +5,6 @@ import { SessionStatus } from '@prisma/client';
 
 describe('SessionController', () => {
   let controller: SessionController;
-  let sessionService: SessionService;
   let module: TestingModule;
 
   const mockSessionService = {

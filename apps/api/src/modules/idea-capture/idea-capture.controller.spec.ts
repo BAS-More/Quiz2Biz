@@ -7,7 +7,6 @@ import { AuthenticatedUser } from '../auth/auth.service';
 
 describe('IdeaCaptureController', () => {
   let controller: IdeaCaptureController;
-  let ideaCaptureService: IdeaCaptureService;
 
   const mockUser: AuthenticatedUser = {
     id: 'user-123',
@@ -42,7 +41,7 @@ describe('IdeaCaptureController', () => {
     }).compile();
 
     controller = module.get<IdeaCaptureController>(IdeaCaptureController);
-    ideaCaptureService = module.get<IdeaCaptureService>(IdeaCaptureService);
+    module.get<IdeaCaptureService>(IdeaCaptureService);
     jest.clearAllMocks();
   });
 

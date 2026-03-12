@@ -7,8 +7,6 @@ import { PrismaService } from '@libs/database';
 
 describe('EvidenceIntegrityService', () => {
   let service: EvidenceIntegrityService;
-  let prisma: PrismaService;
-  let configService: ConfigService;
   let module: TestingModule;
 
   const mockPrisma = {
@@ -48,8 +46,8 @@ describe('EvidenceIntegrityService', () => {
     }).compile();
 
     service = module.get<EvidenceIntegrityService>(EvidenceIntegrityService);
-    prisma = module.get<PrismaService>(PrismaService);
-    configService = module.get<ConfigService>(ConfigService);
+    module.get<PrismaService>(PrismaService);
+    module.get<ConfigService>(ConfigService);
 
     jest.clearAllMocks();
   });

@@ -7,7 +7,6 @@ import { BulkDownloadService } from '../services/bulk-download.service';
 // Test the core functionality with mocks
 describe('DocumentController', () => {
   let controller: DocumentController;
-  let documentService: any;
   let module: TestingModule;
 
   const mockDocumentService = {
@@ -42,7 +41,7 @@ describe('DocumentController', () => {
     }).compile();
 
     controller = module.get<DocumentController>(DocumentController);
-    documentService = module.get(DocumentGeneratorService);
+    module.get(DocumentGeneratorService);
 
     jest.clearAllMocks();
   });

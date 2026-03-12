@@ -10,7 +10,6 @@ import {
 
 describe('AdaptiveCardService', () => {
   let service: AdaptiveCardService;
-  let configService: ConfigService;
 
   const mockConfigService = {
     get: jest.fn(),
@@ -22,7 +21,7 @@ describe('AdaptiveCardService', () => {
     }).compile();
 
     service = module.get<AdaptiveCardService>(AdaptiveCardService);
-    configService = module.get<ConfigService>(ConfigService);
+    module.get<ConfigService>(ConfigService);
     jest.clearAllMocks();
   });
 

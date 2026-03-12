@@ -5,8 +5,6 @@ import { NotificationService } from '../notifications/notification.service';
 
 describe('SessionExpirationService', () => {
   let service: SessionExpirationService;
-  let prismaService: jest.Mocked<PrismaService>;
-  let notificationService: jest.Mocked<NotificationService>;
 
   const mockPrismaService = {
     session: {

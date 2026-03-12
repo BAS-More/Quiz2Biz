@@ -8,9 +8,6 @@ import { BillingService } from './billing.service';
 
 describe('PaymentController', () => {
   let controller: PaymentController;
-  let paymentService: PaymentService;
-  let subscriptionService: SubscriptionService;
-  let billingService: BillingService;
   let module: TestingModule;
 
   const mockUser = { id: 'user-1', email: 'test@example.com', role: 'user' as const };
@@ -60,9 +57,9 @@ describe('PaymentController', () => {
     }).compile();
 
     controller = module.get<PaymentController>(PaymentController);
-    paymentService = module.get<PaymentService>(PaymentService);
-    subscriptionService = module.get<SubscriptionService>(SubscriptionService);
-    billingService = module.get<BillingService>(BillingService);
+    module.get<PaymentService>(PaymentService);
+    module.get<SubscriptionService>(SubscriptionService);
+    module.get<BillingService>(BillingService);
 
     jest.clearAllMocks();
     // Re-set default mock after clearAllMocks
@@ -201,7 +198,6 @@ describe('PaymentController', () => {
         },
       });
 
-      const mockRequest = { params: { organizationId: 'org-123' } };
       const result = await controller.getUsage(mockUser as any, 'org-123');
 
       expect(result.questionnaires.used).toBe(25);
@@ -564,7 +560,6 @@ describe('PaymentController', () => {
         },
       });
 
-      const mockRequest = { params: { organizationId: 'org-123' } };
       const result = await controller.getUsage(mockUser as any, 'org-123');
 
       expect(result.questionnaires.limit).toBe(0);

@@ -4,8 +4,7 @@ import {
   AiDocumentContentService,
   GenerateDocumentContentParams,
   SessionAnswer,
-  DocumentTemplateSection,
-} from './ai-document-content.service';
+  } from './ai-document-content.service';
 
 // ---------------------------------------------------------------------------
 // Mock Anthropic SDK

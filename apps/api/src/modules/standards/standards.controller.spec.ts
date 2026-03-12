@@ -4,7 +4,6 @@ import { StandardsService } from './standards.service';
 
 describe('StandardsController', () => {
   let controller: StandardsController;
-  let standardsService: jest.Mocked<StandardsService>;
 
   const mockStandardsService = {
     findAll: jest.fn(),

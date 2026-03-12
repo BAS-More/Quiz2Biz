@@ -289,7 +289,7 @@ describe('Dependency Health Validation', () => {
       ];
 
       const violations: string[] = [];
-      for (const { name, pkg } of packages) {
+      for (const { pkg } of packages) {
         if (pkg.peerDependencies) {
           for (const [peer, peerVersion] of Object.entries(pkg.peerDependencies)) {
             const installed = pkg.dependencies?.[peer] || pkg.devDependencies?.[peer];

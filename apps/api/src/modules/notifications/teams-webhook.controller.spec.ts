@@ -10,7 +10,6 @@ import {
 
 describe('TeamsWebhookController', () => {
   let controller: TeamsWebhookController;
-  let adaptiveCardService: AdaptiveCardService;
 
   const mockCard = { type: 'AdaptiveCard', version: '1.5', body: [], actions: [] };
 
@@ -29,7 +28,7 @@ describe('TeamsWebhookController', () => {
     }).compile();
 
     controller = module.get<TeamsWebhookController>(TeamsWebhookController);
-    adaptiveCardService = module.get<AdaptiveCardService>(AdaptiveCardService);
+    module.get<AdaptiveCardService>(AdaptiveCardService);
     jest.clearAllMocks();
   });
 

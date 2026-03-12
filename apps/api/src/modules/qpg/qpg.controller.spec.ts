@@ -5,8 +5,6 @@ import { PromptGeneratorService } from './services/prompt-generator.service';
 
 describe('QpgController', () => {
   let controller: QpgController;
-  let qpgService: QpgService;
-  let promptGenerator: PromptGeneratorService;
   let module: TestingModule;
 
   const mockQpgService = {

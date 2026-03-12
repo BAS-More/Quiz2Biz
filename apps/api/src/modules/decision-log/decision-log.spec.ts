@@ -254,7 +254,6 @@ describe('DecisionLogService', () => {
 describe('DecisionLogController', () => {
   let controller: DecisionLogController;
   let decisionLogService: jest.Mocked<DecisionLogService>;
-  let approvalWorkflowService: jest.Mocked<ApprovalWorkflowService>;
 
   const mockDecisionResponse = {
     id: 'decision-1',
@@ -300,7 +299,7 @@ describe('DecisionLogController', () => {
 
     controller = module.get<DecisionLogController>(DecisionLogController);
     decisionLogService = module.get(DecisionLogService);
-    approvalWorkflowService = module.get(ApprovalWorkflowService);
+    module.get(ApprovalWorkflowService);
   });
 
   describe('createDecision', () => {
@@ -379,7 +378,6 @@ describe('DecisionLogController', () => {
 
 describe('ApprovalWorkflowService', () => {
   let service: ApprovalWorkflowService;
-  let prismaService: jest.Mocked<PrismaService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -405,7 +403,7 @@ describe('ApprovalWorkflowService', () => {
     }).compile();
 
     service = module.get<ApprovalWorkflowService>(ApprovalWorkflowService);
-    prismaService = module.get(PrismaService);
+    module.get(PrismaService);
   });
 
   it('should be defined', () => {

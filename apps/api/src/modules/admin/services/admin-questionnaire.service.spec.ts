@@ -6,9 +6,8 @@ import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 import {
   AdminQuestionnaireService,
-  PaginatedResult,
-  QuestionnaireWithDetails,
-} from './admin-questionnaire.service';
+  } from './admin-questionnaire.service';
+
 import { AdminAuditService } from './admin-audit.service';
 import { QuestionType } from '@prisma/client';
 

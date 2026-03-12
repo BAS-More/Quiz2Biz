@@ -4,7 +4,6 @@ import { ScoringEngineService } from './scoring-engine.service';
 
 describe('ScoringEngineController', () => {
   let controller: ScoringEngineController;
-  let scoringService: ScoringEngineService;
   let module: TestingModule;
 
   const mockScoringService = {

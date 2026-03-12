@@ -5,7 +5,6 @@ import { Decimal } from '@prisma/client/runtime/library';
 
 describe('ContextBuilderService', () => {
   let service: ContextBuilderService;
-  let prismaService: jest.Mocked<PrismaService>;
 
   const mockPrismaService = {
     session: {

@@ -6,8 +6,6 @@ import { PrismaService } from '@libs/database';
 
 describe('IdeaCaptureService', () => {
   let service: IdeaCaptureService;
-  let prismaService: jest.Mocked<PrismaService>;
-  let claudeAiService: jest.Mocked<ClaudeAiService>;
 
   const mockPrismaService = {
     projectType: {
@@ -65,8 +63,8 @@ describe('IdeaCaptureService', () => {
     }).compile();
 
     service = module.get<IdeaCaptureService>(IdeaCaptureService);
-    prismaService = module.get(PrismaService);
-    claudeAiService = module.get(ClaudeAiService);
+    module.get(PrismaService);
+    module.get(ClaudeAiService);
   });
 
   describe('captureAndAnalyze', () => {

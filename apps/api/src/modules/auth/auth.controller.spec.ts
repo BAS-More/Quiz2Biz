@@ -5,7 +5,6 @@ import { CsrfService } from '../../common/guards/csrf.guard';
 
 describe('AuthController', () => {
   let controller: AuthController;
-  let authService: AuthService;
   let module: TestingModule;
 
   const mockAuthService = {
@@ -43,7 +42,7 @@ describe('AuthController', () => {
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
-    authService = module.get<AuthService>(AuthService);
+    module.get<AuthService>(AuthService);
 
     jest.clearAllMocks();
   });

@@ -6,7 +6,6 @@ import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 
 describe('JwtAuthGuard', () => {
   let guard: JwtAuthGuard;
-  let reflector: jest.Mocked<Reflector>;
 
   const mockReflector = {
     getAllAndOverride: jest.fn(),
@@ -40,7 +39,7 @@ describe('JwtAuthGuard', () => {
     }).compile();
 
     guard = module.get<JwtAuthGuard>(JwtAuthGuard);
-    reflector = module.get(Reflector);
+    module.get(Reflector);
   });
 
   it('should be defined', () => {
@@ -66,7 +65,7 @@ describe('JwtAuthGuard', () => {
       mockReflector.getAllAndOverride.mockReturnValue(false);
 
       // Mock the parent's canActivate
-      const superCanActivate = jest
+            jest
         .spyOn(Object.getPrototypeOf(Object.getPrototypeOf(guard)), 'canActivate')
         .mockReturnValue(true);
 
@@ -80,7 +79,7 @@ describe('JwtAuthGuard', () => {
       mockReflector.getAllAndOverride.mockReturnValue(undefined);
 
       // The guard will call super.canActivate which returns promise/boolean
-      const result = guard.canActivate(context);
+      guard.canActivate(context);
 
       expect(mockReflector.getAllAndOverride).toHaveBeenCalled();
     });
