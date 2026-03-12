@@ -47,11 +47,12 @@ async function bootstrap(): Promise<void> {
       filter: (req, res) => {
         const acceptHeader = req.headers.accept ?? '';
 
-        // Skip compression for SSE and streaming endpoints
-        if (
-          typeof req.path === 'string' &&
-          req.path.startsWith('/ai-gateway/stream')
-        ) {
+        // Skip compression for SSE and streaming endpoints (prefix-aware)
+        const url =
+          typeof (req as any).originalUrl === 'string'
+            ? (req as any).originalUrl
+            : req.url;
+        if (typeof url === 'string' && url.includes('/ai-gateway/stream')) {
           return false;
         }
 
