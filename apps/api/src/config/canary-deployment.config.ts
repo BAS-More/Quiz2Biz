@@ -841,7 +841,7 @@ export class CanaryDeploymentManager {
     for (const channelName of eventConfig.channels) {
       const channel = this.config.notificationConfig.channels.find((c) => c.type === channelName);
       if (channel) {
-        logger.log(`Notifying ${channel.type}: ${event}`, JSON.stringify(data));
+        logger.log(`Notifying ${channel.type}: ${event} - payload=${JSON.stringify(data)}`);
         // In production, send actual notifications
       }
     }
