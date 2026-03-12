@@ -81,6 +81,13 @@ export class AiGatewayController {
     res.setHeader('Connection', 'keep-alive');
     res.setHeader('X-Accel-Buffering', 'no'); // Disable nginx buffering
 
+    // Handle client disconnect
+    const req = res.req;
+    let clientDisconnected = false;
+    req.on('close', () => {
+      clientDisconnected = true;
+    });
+
     try {
       const stream = this.aiGatewayService.generateStream({
         ...request,
@@ -89,6 +96,10 @@ export class AiGatewayController {
       });
 
       for await (const chunk of stream) {
+        if (clientDisconnected) {
+          break;
+        }
+
         // Send SSE event
         res.write(`data: ${JSON.stringify(chunk)}\n\n`);
 
@@ -99,12 +110,16 @@ export class AiGatewayController {
         }
       }
     } catch (error) {
-      this.logger.error(`Stream failed: ${error instanceof Error ? error.message : String(error)}`);
-      res.write(
-        `event: error\ndata: ${JSON.stringify({
-          error: error instanceof Error ? error.message : 'Stream failed',
-        })}\n\n`,
-      );
+      if (!clientDisconnected) {
+        this.logger.error(
+          `Stream failed: ${error instanceof Error ? error.message : String(error)}`,
+        );
+        res.write(
+          `event: error\ndata: ${JSON.stringify({
+            error: error instanceof Error ? error.message : 'Stream failed',
+          })}\n\n`,
+        );
+      }
     } finally {
       res.end();
     }
