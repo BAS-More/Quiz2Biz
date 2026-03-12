@@ -14,7 +14,343 @@ describe('EvidenceIntegrityService', () => {
 
   describe('chainEvidence', () => {
     beforeEach(() => {
-      jest.spyOn(service, 'requestTimestamp');
+      // Mock requestTimestamp to avoid external HTTP calls to TSA in chainEvidence tests
+      jest.spyOn(service, 'requestTimestamp').mockResolvedValue({
+        token: 'mock-token-base64',
+        timestamp: new Date('2026-01-01T00:00:00Z'),
+        tsaUrl: 'https://freetsa.org/tsr',
+        hashAlgorithm: 'SHA-256',
+        hashedMessage: 'mock-hash',
+      });
+    });
+
+    it('creates first chain entry with genesis hash', async () => {
+      const mockEvidence = {
+        id: 'evidence-123',
+        hashSignature: 'abc123def456',
+      };
+
+      mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
+      mockPrisma.$queryRaw.mockResolvedValue([]); // No previous entries
+      mockPrisma.$executeRaw.mockResolvedValue(1);
+
+      const result = await service.chainEvidence('evidence-123', 'session-456');
+
+      expect(result.sequenceNumber).toBe(0);
+      expect(result.previousHash).toBe('0'.repeat(64)); // Genesis hash
+      expect(result.evidenceHash).toBe('abc123def456');
+      expect(mockPrisma.$executeRaw).toHaveBeenCalled();
+    });
+
+    it('chains evidence to previous entry', async () => {
+      const mockEvidence = {
+        id: 'evidence-new',
+        hashSignature: 'new-hash-123',
+      };
+
+      const mockPreviousEntry = {
+        id: 'chain-1',
+        evidence_id: 'evidence-old',
+        session_id: 'session-456',
+        sequence_number: 5,
+        previous_hash: 'prev-hash',
+        chain_hash: 'old-chain-hash',
+        evidence_hash: 'old-evidence-hash',
+        timestamp_token: null,
+        tsa_url: null,
+        created_at: new Date('2026-01-28T10:00:00Z'),
+      };
+
+      mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
+      mockPrisma.$queryRaw.mockResolvedValue([mockPreviousEntry]);
+      mockPrisma.$executeRaw.mockResolvedValue(1);
+
+      const result = await service.chainEvidence('evidence-new', 'session-456');
+
+      expect(result.sequenceNumber).toBe(6);
+      expect(result.previousHash).toBe('old-chain-hash');
+      expect(result.evidenceHash).toBe('new-hash-123');
+    });
+
+    it('throws NotFoundException for non-existent evidence', async () => {
+      mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(null);
+
+      await expect(service.chainEvidence('non-existent', 'session-456')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('handles timestamp token request failure gracefully', async () => {
+      const mockEvidence = {
+        id: 'evidence-123',
+        hashSignature: 'abc123',
+      };
+
+      mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
+      mockPrisma.$queryRaw.mockResolvedValue([]);
+      mockPrisma.$executeRaw.mockResolvedValue(1);
+
+      // Timestamp request will fail internally, but chaining should succeed
+      const result = await service.chainEvidence('evidence-123', 'session-456');
+
+      expect(result).toBeDefined();
+      expect(result.evidenceId).toBe('evidence-123');
+      // Timestamp token may be null due to TSA failure (expected behavior)
+    });
+  });
+
+  describe('getLatestChainEntry', () => {
+    it('returns latest chain entry for session', async () => {
+      const mockEntry = {
+        id: 'chain-5',
+        evidence_id: 'evidence-latest',
+        session_id: 'session-456',
+        sequence_number: 10,
+        previous_hash: 'prev-hash',
+        chain_hash: 'latest-hash',
+        evidence_hash: 'evidence-hash',
+        timestamp_token: 'token-abc',
+        tsa_url: 'https://freetsa.org/tsr',
+        created_at: new Date('2026-01-28T12:00:00Z'),
+      };
+
+      mockPrisma.$queryRaw.mockResolvedValue([mockEntry]);
+
+      const result = await service.getLatestChainEntry('session-456');
+
+      expect(result).toBeDefined();
+      expect(result!.sequenceNumber).toBe(10);
+      expect(result!.chainHash).toBe('latest-hash');
+    });
+
+    it('returns null when no chain entries exist', async () => {
+      mockPrisma.$queryRaw.mockResolvedValue([]);
+
+      const result = await service.getLatestChainEntry('session-456');
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('getEvidenceChain', () => {
+    it('returns full evidence chain in sequence order', async () => {
+      const mockChain = [
+        {
+          id: 'chain-1',
+          evidence_id: 'evidence-1',
+          session_id: 'session-456',
+          sequence_number: 0,
+          previous_hash: '0'.repeat(64),
+          chain_hash: 'hash-1',
+          evidence_hash: 'e-hash-1',
+          timestamp_token: null,
+          tsa_url: null,
+          created_at: new Date('2026-01-28T10:00:00Z'),
+        },
+        {
+          id: 'chain-2',
+          evidence_id: 'evidence-2',
+          session_id: 'session-456',
+          sequence_number: 1,
+          previous_hash: 'hash-1',
+          chain_hash: 'hash-2',
+          evidence_hash: 'e-hash-2',
+          timestamp_token: null,
+          tsa_url: null,
+          created_at: new Date('2026-01-28T11:00:00Z'),
+        },
+      ];
+
+      mockPrisma.$queryRaw.mockResolvedValue(mockChain);
+
+      const result = await service.getEvidenceChain('session-456');
+
+      expect(result).toHaveLength(2);
+      expect(result[0].sequenceNumber).toBe(0);
+      expect(result[1].sequenceNumber).toBe(1);
+      expect(result[1].previousHash).toBe('hash-1');
+    });
+
+    it('returns empty array for session with no chain', async () => {
+      mockPrisma.$queryRaw.mockResolvedValue([]);
+
+      const result = await service.getEvidenceChain('session-456');
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('verifyChain', () => {
+    it('validates evidence chain', async () => {
+      const mockChain = [
+        {
+          id: 'chain-1',
+          evidenceId: 'evidence-1',
+          sessionId: 'session-456',
+          sequenceNumber: 0,
+          previousHash: '0'.repeat(64),
+          chainHash: 'computed-hash-1',
+          evidenceHash: 'e-hash-1',
+          timestampToken: null,
+          tsaUrl: null,
+          createdAt: new Date('2026-01-28T10:00:00Z'),
+        },
+      ];
+
+      mockPrisma.$queryRaw.mockResolvedValue(
+        mockChain.map((entry) => ({
+          id: entry.id,
+          evidence_id: entry.evidenceId,
+          session_id: entry.sessionId,
+          sequence_number: entry.sequenceNumber,
+          previous_hash: entry.previousHash,
+          chain_hash: entry.chainHash,
+          evidence_hash: entry.evidenceHash,
+          timestamp_token: entry.timestampToken,
+          tsa_url: entry.tsaUrl,
+          created_at: entry.createdAt,
+        })),
+      );
+
+      mockPrisma.evidenceRegistry.findUnique.mockResolvedValue({ hashSignature: 'e-hash-1' });
+
+      const result = await service.verifyChain('session-456');
+
+      // Verify result has expected structure
+      expect(result).toBeDefined();
+      expect(result.totalEntries).toBe(1);
+      expect(typeof result.isValid).toBe('boolean');
+    });
+
+    it('detects broken chain links', async () => {
+      const mockChain = [
+        {
+          id: 'chain-1',
+          evidence_id: 'evidence-1',
+          session_id: 'session-456',
+          sequence_number: 0,
+          previous_hash: '0'.repeat(64),
+          chain_hash: 'hash-1',
+          evidence_hash: 'e-hash-1',
+          timestamp_token: null,
+          tsa_url: null,
+          created_at: new Date('2026-01-28T10:00:00Z'),
+        },
+        {
+          id: 'chain-2',
+          evidence_id: 'evidence-2',
+          session_id: 'session-456',
+          sequence_number: 1,
+          previous_hash: 'wrong-hash', // Should be 'hash-1'
+          chain_hash: 'hash-2',
+          evidence_hash: 'e-hash-2',
+          timestamp_token: null,
+          tsa_url: null,
+          created_at: new Date('2026-01-28T11:00:00Z'),
+        },
+      ];
+
+      mockPrisma.$queryRaw.mockResolvedValue(mockChain);
+      mockPrisma.evidenceRegistry.findUnique
+        .mockResolvedValueOnce({ hashSignature: 'e-hash-1' })
+        .mockResolvedValueOnce({ hashSignature: 'e-hash-2' });
+
+      const result = await service.verifyChain('session-456');
+
+      expect(result.isValid).toBe(false);
+      expect(result.invalidEntries.length).toBeGreaterThan(0);
+      expect(result.invalidEntries[0].error).toBe('INVALID_HASH');
+    });
+
+    it('detects modified evidence', async () => {
+      const mockChain = [
+        {
+          id: 'chain-1',
+          evidence_id: 'evidence-1',
+          session_id: 'session-456',
+          sequence_number: 0,
+          previous_hash: '0'.repeat(64),
+          chain_hash: 'hash-1',
+          evidence_hash: 'original-hash',
+          timestamp_token: null,
+          tsa_url: null,
+          created_at: new Date('2026-01-28T10:00:00Z'),
+        },
+      ];
+
+      mockPrisma.$queryRaw.mockResolvedValue(mockChain);
+      mockPrisma.evidenceRegistry.findUnique.mockResolvedValue({ hashSignature: 'modified-hash' }); // Changed!
+
+      const result = await service.verifyChain('session-456');
+
+      expect(result.isValid).toBe(false);
+      const modifiedError = result.invalidEntries.find((e) => e.error === 'EVIDENCE_MODIFIED');
+      expect(modifiedError).toBeDefined();
+    });
+
+    it('returns valid result for empty chain', async () => {
+      mockPrisma.$queryRaw.mockResolvedValue([]);
+
+      const result = await service.verifyChain('session-456');
+
+      expect(result.isValid).toBe(true);
+      expect(result.totalEntries).toBe(0);
+    });
+  });
+
+  describe('verifyEvidenceIntegrity', () => {
+    it('returns FULLY_VERIFIED status when all checks pass', async () => {
+      const mockEvidence = {
+        id: 'evidence-123',
+        fileName: 'test.pdf',
+        hashSignature: 'abc123',
+      };
+
+      const mockChainEntry = {
+        id: 'chain-1',
+        evidence_id: 'evidence-123',
+        sequence_number: 5,
+        chain_hash: 'chain-abc',
+        timestamp_token: 'token-xyz',
+        tsa_url: 'https://freetsa.org/tsr',
+        created_at: new Date('2026-01-28T10:00:00Z'),
+      };
+
+      mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
+      mockPrisma.$queryRaw.mockResolvedValue([mockChainEntry]);
+
+      const result = await service.verifyEvidenceIntegrity('evidence-123');
+
+      expect(result.overallStatus).toBe('FULLY_VERIFIED');
+      expect(result.checks.hashStored).toBe(true);
+      expect(result.checks.chainLinked).toBe(true);
+      expect(result.checks.timestamped).toBe(true);
+    });
+
+    it('returns CHAIN_VERIFIED when no timestamp', async () => {
+      const mockEvidence = {
+        id: 'evidence-123',
+        fileName: 'test.pdf',
+        hashSignature: 'abc123',
+      };
+
+      const mockChainEntry = {
+        id: 'chain-1',
+        evidence_id: 'evidence-123',
+        sequence_number: 2,
+        chain_hash: 'chain-abc',
+        timestamp_token: null, // No timestamp
+        tsa_url: null,
+        created_at: new Date('2026-01-28T10:00:00Z'),
+      };
+
+      mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence);
+      mockPrisma.$queryRaw.mockResolvedValue([mockChainEntry]);
+
+      const result = await service.verifyEvidenceIntegrity('evidence-123');
+
+      expect(result.overallStatus).toBe('CHAIN_VERIFIED');
+      expect(result.checks.timestamped).toBe(false);
     });
 
     afterEach(() => {

@@ -639,7 +639,7 @@ export class EvidenceRegistryService {
     // Add any logged decisions (filter to relevant ones)
     auditLogs.forEach((log: { id: string; statement: string; createdAt: Date; status: string }) => {
       auditTrail.push({
-        action: log.status as string,
+        action: log.status,
         timestamp: log.createdAt,
         userId: null,
         details: { statement: log.statement },
