@@ -24,27 +24,35 @@ export function OAuthCallbackPage() {
   const [status, setStatus] = useState<'processing' | 'success' | 'error'>('processing');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
+  // Validate provider against known endpoints
+  const validProvider = provider && provider in OAUTH_ENDPOINTS ? provider : null;
+
   useEffect(() => {
     const handleCallback = async () => {
       try {
+        if (!validProvider) {
+          throw new Error('Unknown OAuth provider');
+        }
+
         // Get the hash fragment (contains the token for implicit flow)
         const hash = window.location.hash.substring(1);
         const params = new URLSearchParams(hash);
 
         // Check for errors from the OAuth provider
-        const error = params.get('error');
+        const oauthError = params.get('error');
         const errorDescription = params.get('error_description');
 
-        if (error) {
+        if (oauthError) {
+          const safeErrorMessage = errorDescription || oauthError;
           setStatus('error');
-          setErrorMessage(errorDescription || error);
+          setErrorMessage(safeErrorMessage);
 
           // Send error to parent window if available
           if (window.opener) {
             window.opener.postMessage(
               {
-                type: `${provider}-oauth-callback`,
-                error: errorDescription || error,
+                type: `${validProvider}-oauth-callback`,
+                error: safeErrorMessage,
               },
               window.location.origin,
             );
@@ -63,7 +71,7 @@ export function OAuthCallbackPage() {
           if (window.opener) {
             window.opener.postMessage(
               {
-                type: `${provider}-oauth-callback`,
+                type: `${validProvider}-oauth-callback`,
                 error: 'No access token received from provider',
               },
               window.location.origin,
@@ -74,17 +82,14 @@ export function OAuthCallbackPage() {
         }
 
         // Exchange token with backend
-        const endpoint = OAUTH_ENDPOINTS[provider || ''];
-        if (!endpoint) {
-          throw new Error(`Unknown OAuth provider: ${provider}`);
-        }
+        const endpoint = OAUTH_ENDPOINTS[validProvider];
 
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            accessToken: provider === 'microsoft' ? accessToken : undefined,
-            idToken: provider === 'google' ? accessToken : undefined,
+            accessToken: validProvider === 'microsoft' ? accessToken : undefined,
+            idToken: validProvider === 'google' ? accessToken : undefined,
           }),
         });
 
@@ -104,7 +109,7 @@ export function OAuthCallbackPage() {
         if (window.opener) {
           window.opener.postMessage(
             {
-              type: `${provider}-oauth-callback`,
+              type: `${validProvider}-oauth-callback`,
               accessToken: data.accessToken,
               success: true,
             },
@@ -129,7 +134,7 @@ export function OAuthCallbackPage() {
         if (window.opener) {
           window.opener.postMessage(
             {
-              type: `${provider}-oauth-callback`,
+              type: `${validProvider}-oauth-callback`,
               error: errorMsg,
             },
             window.location.origin,
@@ -140,7 +145,7 @@ export function OAuthCallbackPage() {
     };
 
     handleCallback();
-  }, [provider, login, navigate]);
+  }, [validProvider, login, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface-50">
