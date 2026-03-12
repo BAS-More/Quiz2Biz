@@ -24,8 +24,11 @@ export function OAuthCallbackPage() {
   const [status, setStatus] = useState<'processing' | 'success' | 'error'>('processing');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  // Validate provider against known endpoints
-  const validProvider = provider && provider in OAUTH_ENDPOINTS ? provider : null;
+  // Validate provider against known endpoints using own-property check
+  const validProvider =
+    provider && Object.prototype.hasOwnProperty.call(OAUTH_ENDPOINTS, provider)
+      ? provider
+      : null;
 
   useEffect(() => {
     const handleCallback = async () => {
