@@ -665,7 +665,8 @@ export const SearchResults: React.FC = () => {
               height="16"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#0369a1"
+              stroke="currentColor"
+              className="text-brand-600"
               strokeWidth="2"
             >
               <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
