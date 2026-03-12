@@ -29,6 +29,9 @@ import {
 } from '../../api/conversation';
 import { QuestionnaireNavigation } from '../../components/questionnaire/QuestionnaireNavigation';
 import { EmptyState } from '../../components/ui/EmptyState';
+import { useDraftAutosave, formatTimeSinceSave } from '../../hooks/useDraftAutosave';
+import { featureFlags } from '../../config/feature-flags.config';
+import { AISuggestionsProvider } from '../../components/ai/AISuggestions';
 
 const PERSONA_OPTIONS: { value: Persona; label: string; description: string }[] = [
   { value: 'CTO', label: 'CTO', description: 'Architecture, security, DevOps, quality' },
@@ -80,6 +83,18 @@ export function QuestionnairePage() {
   const [questionnaireLoadError, setQuestionnaireLoadError] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState<Persona>('CTO');
   const startTimeRef = useRef<number>(0);
+
+  // Draft autosave — persists answers to IndexedDB for recovery
+  const {
+    status: autosaveStatus,
+    saveDraft,
+    hasDraft,
+    draftData,
+    clearDraft: clearAutosaveDraft,
+  } = useDraftAutosave({
+    sessionId: session?.id ?? '',
+    questionnaireId: sessionIdParam ?? session?.id ?? '',
+  });
 
   // Conversational AI follow-up state
   const [followUp, setFollowUp] = useState<FollowUpResult | null>(null);
@@ -152,6 +167,17 @@ export function QuestionnairePage() {
     // Submit the answer to the scoring engine
     await submitResponse(session.id, currentQuestions[0].id, currentValue, timeSpent);
 
+    // Persist draft after each answer
+    void saveDraft({
+      responses: { [currentQuestions[0].id]: currentValue },
+      currentQuestionIndex: (session.progress?.answeredQuestions ?? 0) + 1,
+      metadata: {
+        questionnaireName: currentSection?.name ?? 'Assessment',
+        totalQuestions: session.progress?.totalQuestions ?? 0,
+        completedQuestions: (session.progress?.answeredQuestions ?? 0) + 1,
+      },
+    });
+
     // For text/textarea answers, also evaluate with AI for follow-up
     const q = currentQuestions[0];
     const isTextAnswer = q.type === 'TEXT' || q.type === 'TEXTAREA';
@@ -172,7 +198,7 @@ export function QuestionnairePage() {
         // Non-critical — if AI follow-up fails, continue normally
       }
     }
-  }, [session, currentQuestions, currentValue, isValueEmpty, submitResponse, currentSection]);
+  }, [session, currentQuestions, currentValue, isValueEmpty, submitResponse, currentSection, saveDraft]);
 
   const handleComplete = useCallback(async () => {
     if (!session) return;
@@ -347,7 +373,8 @@ export function QuestionnairePage() {
   const currentQuestion = currentQuestions[0];
   const progress = session?.progress;
 
-  return (
+  // Wrap in AISuggestions if flag enabled
+  const content = (
     <div className="space-y-6">
       {/* Header with back + score */}
       <div className="flex items-center justify-between">
@@ -378,6 +405,30 @@ export function QuestionnairePage() {
           </div>
         )}
       </div>
+
+      {/* Draft recovery banner */}
+      {hasDraft && draftData && !isComplete && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 flex items-center justify-between">
+          <span className="text-sm text-yellow-800">
+            Draft saved {formatTimeSinceSave(new Date(draftData.lastSavedAt))}
+          </span>
+          <button
+            onClick={() => void clearAutosaveDraft()}
+            className="text-xs text-yellow-600 hover:text-yellow-800 underline"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
+
+      {/* Autosave status indicator */}
+      {session && autosaveStatus.lastSaved && (
+        <div className="text-xs text-gray-400 text-right">
+          {autosaveStatus.isSaving
+            ? 'Saving...'
+            : `Auto-saved ${formatTimeSinceSave(autosaveStatus.lastSaved)}`}
+        </div>
+      )}
 
       {/* Progress bar */}
       {progress && (
@@ -682,6 +733,12 @@ export function QuestionnairePage() {
         </div>
       )}
     </div>
+  );
+
+  return featureFlags.aiSuggestions ? (
+    <AISuggestionsProvider>{content}</AISuggestionsProvider>
+  ) : (
+    content
   );
 }
 

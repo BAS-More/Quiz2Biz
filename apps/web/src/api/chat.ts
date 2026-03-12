@@ -47,7 +47,7 @@ export interface ChatHistoryResponse {
  * Get chat status for a project (message count, limit, etc.)
  */
 export async function getChatStatus(projectId: string): Promise<ChatStatus> {
-  const response = await apiClient.get<ChatStatus>(`/api/v1/chat/${projectId}/status`);
+  const response = await apiClient.get<ChatStatus>(`/api/v1/projects/${projectId}/messages/status`);
   return response.data;
 }
 
@@ -55,7 +55,7 @@ export async function getChatStatus(projectId: string): Promise<ChatStatus> {
  * Get chat history for a project
  */
 export async function getChatHistory(projectId: string): Promise<ChatHistoryResponse> {
-  const response = await apiClient.get<ChatHistoryResponse>(`/api/v1/chat/${projectId}`);
+  const response = await apiClient.get<ChatHistoryResponse>(`/api/v1/projects/${projectId}/messages`);
   return response.data;
 }
 
@@ -67,7 +67,7 @@ export async function sendMessage(
   request: SendMessageRequest,
 ): Promise<SendMessageResponse> {
   const response = await apiClient.post<SendMessageResponse>(
-    `/api/v1/chat/${projectId}/message`,
+    `/api/v1/projects/${projectId}/messages`,
     request,
   );
   return response.data;
@@ -85,7 +85,7 @@ export function streamMessage(projectId: string, content: string, provider?: str
 
   // Get the base URL from the API client
   const baseUrl = apiClient.defaults.baseURL || '';
-  const url = `${baseUrl}/api/v1/chat/${projectId}/stream?${params.toString()}`;
+  const url = `${baseUrl}/api/v1/projects/${projectId}/messages/stream?${params.toString()}`;
 
   // Create EventSource with credentials
   const eventSource = new EventSource(url, { withCredentials: true });

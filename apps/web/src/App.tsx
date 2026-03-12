@@ -11,6 +11,13 @@ import { ToastProvider } from './components/ui';
 import { useAuthStore } from './stores/auth';
 import type { ReactNode } from 'react';
 import { featureFlags } from './config/feature-flags.config';
+import { NavigationGuardProvider } from './components/ux';
+import { ConditionalProvider } from './components/ConditionalProvider';
+import { OnboardingProvider } from './components/ux/Onboarding';
+import { AccessibilityProvider } from './components/accessibility/Accessibility';
+import { I18nProvider } from './components/i18n/Internationalization';
+import { PredictiveErrorProvider } from './components/ai/AIPredictiveErrors';
+import { SmartSearchProvider } from './components/ai/AISmartSearch';
 
 // Lazy-loaded page components for code-splitting
 const LoginPage = lazy(() =>
@@ -181,83 +188,95 @@ function PublicRoute({ children }: { children: ReactNode }) {
 export default function App() {
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <ToastProvider>
-          <BrowserRouter>
-            <Suspense fallback={<PageLoader />}>
-              <Routes>
-                {/* OAuth callback routes - MUST be before /auth to ensure proper matching */}
-                <Route path="/auth/callback/:provider" element={<OAuthCallbackPage />} />
+      <ConditionalProvider flag={featureFlags.accessibility} Provider={AccessibilityProvider}>
+        <ConditionalProvider flag={featureFlags.i18n} Provider={I18nProvider}>
+          <QueryClientProvider client={queryClient}>
+            <ToastProvider>
+              <BrowserRouter>
+                <NavigationGuardProvider>
+                  <ConditionalProvider flag={featureFlags.onboarding} Provider={OnboardingProvider}>
+                    <ConditionalProvider flag={featureFlags.aiPredictiveErrors} Provider={PredictiveErrorProvider}>
+                      <ConditionalProvider flag={featureFlags.aiSmartSearch} Provider={SmartSearchProvider}>
+                        <Suspense fallback={<PageLoader />}>
+                          <Routes>
+                            {/* OAuth callback routes - MUST be before /auth to ensure proper matching */}
+                            <Route path="/auth/callback/:provider" element={<OAuthCallbackPage />} />
 
-                {/* Public auth routes */}
-                <Route
-                  path="/auth"
-                  element={
-                    <PublicRoute>
-                      <AuthLayout />
-                    </PublicRoute>
-                  }
-                >
-                  <Route path="login" element={<LoginPage />} />
-                  <Route path="register" element={<RegisterPage />} />
-                  <Route path="forgot-password" element={<ForgotPasswordPage />} />
-                  <Route path="reset-password" element={<ResetPasswordPage />} />
-                  <Route path="verify-email" element={<EmailVerificationPage />} />
-                </Route>
+                            {/* Public auth routes */}
+                            <Route
+                              path="/auth"
+                              element={
+                                <PublicRoute>
+                                  <AuthLayout />
+                                </PublicRoute>
+                              }
+                            >
+                              <Route path="login" element={<LoginPage />} />
+                              <Route path="register" element={<RegisterPage />} />
+                              <Route path="forgot-password" element={<ForgotPasswordPage />} />
+                              <Route path="reset-password" element={<ResetPasswordPage />} />
+                              <Route path="verify-email" element={<EmailVerificationPage />} />
+                            </Route>
 
-                {/* Protected app routes */}
-                <Route
-                  path="/"
-                  element={
-                    <ProtectedRoute>
-                      <MainLayout />
-                    </ProtectedRoute>
-                  }
-                >
-                  <Route index element={<Navigate to="/dashboard" replace />} />
-                  <Route path="dashboard" element={<DashboardPage />} />
-                  <Route path="workspace" element={<WorkspacePage />} />
-                  <Route path="new-project" element={<NewProjectFlow />} />
-                  <Route path="idea" element={<IdeaCapturePage />} />
-                  <Route path="questionnaire/:action?" element={<QuestionnairePage />} />
-                  <Route path="heatmap/:sessionId" element={<HeatmapPage />} />
-                  {featureFlags.legacyModules && (
-                    <>
-                      <Route path="evidence/:sessionId" element={<EvidencePage />} />
-                      <Route path="decisions/:sessionId" element={<DecisionsPage />} />
-                      <Route path="policy-pack/:sessionId" element={<PolicyPackPage />} />
-                    </>
-                  )}
-                  <Route path="documents" element={<DocumentsPage />} />
-                  <Route path="documents/:documentId" element={<DocumentPreviewPage />} />
-                  <Route path="project/:projectId/chat" element={<ChatPage />} />
-                  <Route path="project/:projectId/documents" element={<DocumentMenuPage />} />
-                  <Route path="project/:projectId/facts" element={<FactReviewPage />} />
-                  <Route path="chat/:projectId?" element={<ChatPage />} />
-                  <Route path="admin/review" element={<ReviewQueuePage />} />
-                  <Route path="admin/review/:documentId" element={<DocumentReviewPage />} />
-                  <Route path="settings/mfa" element={<MFASetupPage />} />
-                  <Route path="settings/profile" element={<ProfilePage />} />
-                  <Route path="sessions/compare" element={<SessionComparisonPage />} />
-                  <Route path="analytics" element={<AnalyticsDashboardPage />} />
-                  <Route path="billing" element={<BillingPage />} />
-                  <Route path="billing/invoices" element={<InvoicesPage />} />
-                  <Route path="billing/upgrade" element={<UpgradePage />} />
-                  {/* Add more protected routes here */}
-                </Route>
+                            {/* Protected app routes */}
+                            <Route
+                              path="/"
+                              element={
+                                <ProtectedRoute>
+                                  <MainLayout />
+                                </ProtectedRoute>
+                              }
+                            >
+                              <Route index element={<Navigate to="/dashboard" replace />} />
+                              <Route path="dashboard" element={<DashboardPage />} />
+                              <Route path="workspace" element={<WorkspacePage />} />
+                              <Route path="new-project" element={<NewProjectFlow />} />
+                              <Route path="idea" element={<IdeaCapturePage />} />
+                              <Route path="questionnaire/:action?" element={<QuestionnairePage />} />
+                              <Route path="heatmap/:sessionId" element={<HeatmapPage />} />
+                              {featureFlags.legacyModules && (
+                                <>
+                                  <Route path="evidence/:sessionId" element={<EvidencePage />} />
+                                  <Route path="decisions/:sessionId" element={<DecisionsPage />} />
+                                  <Route path="policy-pack/:sessionId" element={<PolicyPackPage />} />
+                                </>
+                              )}
+                              <Route path="documents" element={<DocumentsPage />} />
+                              <Route path="documents/:documentId" element={<DocumentPreviewPage />} />
+                              <Route path="project/:projectId/chat" element={<ChatPage />} />
+                              <Route path="project/:projectId/documents" element={<DocumentMenuPage />} />
+                              <Route path="project/:projectId/facts" element={<FactReviewPage />} />
+                              <Route path="chat/:projectId?" element={<ChatPage />} />
+                              <Route path="admin/review" element={<ReviewQueuePage />} />
+                              <Route path="admin/review/:documentId" element={<DocumentReviewPage />} />
+                              <Route path="settings/mfa" element={<MFASetupPage />} />
+                              <Route path="settings/profile" element={<ProfilePage />} />
+                              <Route path="sessions/compare" element={<SessionComparisonPage />} />
+                              <Route path="analytics" element={<AnalyticsDashboardPage />} />
+                              <Route path="billing" element={<BillingPage />} />
+                              <Route path="billing/invoices" element={<InvoicesPage />} />
+                              <Route path="billing/upgrade" element={<UpgradePage />} />
+                              {/* Add more protected routes here */}
+                            </Route>
 
-                {/* Public legal and help pages */}
-                <Route path="/privacy" element={<PrivacyPage />} />
-                <Route path="/terms" element={<TermsPage />} />
-                <Route path="/help" element={<HelpPage />} />
+                            {/* Public legal and help pages */}
+                            <Route path="/privacy" element={<PrivacyPage />} />
+                            <Route path="/terms" element={<TermsPage />} />
+                            <Route path="/help" element={<HelpPage />} />
 
-                {/* Fallback - redirect to login */}
-                <Route path="*" element={<Navigate to="/auth/login" replace />} />
-              </Routes>
-            </Suspense>
-          </BrowserRouter>
-        </ToastProvider>
-      </QueryClientProvider>
+                            {/* Fallback - redirect to login */}
+                            <Route path="*" element={<Navigate to="/auth/login" replace />} />
+                          </Routes>
+                        </Suspense>
+                      </ConditionalProvider>
+                    </ConditionalProvider>
+                  </ConditionalProvider>
+                </NavigationGuardProvider>
+              </BrowserRouter>
+            </ToastProvider>
+          </QueryClientProvider>
+        </ConditionalProvider>
+      </ConditionalProvider>
     </ErrorBoundary>
   );
 }

@@ -19,6 +19,7 @@ import {
   BarChart3,
   Settings,
   Bell,
+  ShieldCheck,
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { clsx } from 'clsx';
@@ -35,6 +36,7 @@ const navigation = [
   { name: 'Documents', href: '/documents', icon: FileText },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Billing', href: '/billing', icon: CreditCard },
+  { name: 'Admin', href: '/admin/review', icon: ShieldCheck },
 ];
 
 const bottomNav = [

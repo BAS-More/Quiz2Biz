@@ -21,4 +21,16 @@ export const featureFlags = {
   aiChatWidget: envFlag('VITE_ENABLE_AI_CHAT', false),
   /** Enable real-time collaboration */
   realTimeCollab: envFlag('VITE_ENABLE_REALTIME', false),
+  /** Enable onboarding tours for first-time users */
+  onboarding: envFlag('VITE_ENABLE_ONBOARDING', false),
+  /** Enable accessibility provider (keyboard nav, screen reader, voice) */
+  accessibility: envFlag('VITE_ENABLE_ACCESSIBILITY', false),
+  /** Enable internationalization / multi-language support */
+  i18n: envFlag('VITE_ENABLE_I18N', false),
+  /** Enable AI answer suggestions in questionnaire */
+  aiSuggestions: envFlag('VITE_ENABLE_AI_SUGGESTIONS', false),
+  /** Enable AI predictive form-error detection */
+  aiPredictiveErrors: envFlag('VITE_ENABLE_AI_PREDICTIVE_ERRORS', false),
+  /** Enable AI smart search in navigation */
+  aiSmartSearch: envFlag('VITE_ENABLE_AI_SMART_SEARCH', false),
 } as const;

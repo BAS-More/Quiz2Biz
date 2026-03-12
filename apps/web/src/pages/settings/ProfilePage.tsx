@@ -85,11 +85,11 @@ export function ProfilePage() {
 
   const userInitials = name
     ? name
-        .split(' ')
-        .map((n) => n[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2)
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2)
     : email[0]?.toUpperCase() || 'U';
 
   const handleAvatarClick = useCallback(() => {
@@ -166,6 +166,45 @@ export function ProfilePage() {
     { id: 'appearance', label: 'Appearance', icon: Camera },
   ] as const;
 
+  // Loading skeleton while user data hydrates
+  if (!user) {
+    return (
+      <div className="space-y-6 animate-pulse">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="h-5 w-16 bg-surface-200 rounded" />
+            <div>
+              <div className="h-7 w-32 bg-surface-200 rounded mb-1" />
+              <div className="h-4 w-48 bg-surface-100 rounded" />
+            </div>
+          </div>
+          <div className="h-10 w-32 bg-surface-200 rounded-lg" />
+        </div>
+        <div className="flex flex-col lg:flex-row gap-6">
+          <div className="lg:w-64 space-y-2">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-12 bg-surface-100 rounded-lg" />
+            ))}
+          </div>
+          <div className="flex-1 space-y-4">
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 space-y-4">
+              <div className="h-6 w-40 bg-surface-200 rounded" />
+              <div className="flex items-center gap-6">
+                <div className="w-20 h-20 rounded-full bg-surface-200" />
+                <div className="space-y-2">
+                  <div className="h-4 w-24 bg-surface-200 rounded" />
+                  <div className="h-3 w-36 bg-surface-100 rounded" />
+                </div>
+              </div>
+              <div className="h-10 w-full bg-surface-100 rounded-lg" />
+              <div className="h-10 w-full bg-surface-100 rounded-lg" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -222,11 +261,10 @@ export function ProfilePage() {
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activeTab === id
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${activeTab === id
                   ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
                   : 'text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800'
-              }`}
+                }`}
               aria-current={activeTab === id ? 'page' : undefined}
             >
               <Icon className="h-5 w-5" aria-hidden="true" />
@@ -358,14 +396,12 @@ export function ProfilePage() {
                       role="switch"
                       aria-checked={pref.enabled}
                       onClick={() => toggleNotification(pref.id)}
-                      className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                        pref.enabled ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
-                      }`}
+                      className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${pref.enabled ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
+                        }`}
                     >
                       <span
-                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                          pref.enabled ? 'translate-x-5' : 'translate-x-0'
-                        }`}
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${pref.enabled ? 'translate-x-5' : 'translate-x-0'
+                          }`}
                       />
                     </button>
                   </div>
