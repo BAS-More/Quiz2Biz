@@ -84,7 +84,7 @@ async function bootstrap(): Promise<void> {
           baseUri: ["'self'"],
           formAction: ["'self'"],
           frameAncestors: ["'self'"],
-          reportUri: ['/api/v1/csp-report'],
+          reportUri: [`/${apiPrefix.replace(/^\/+/, '')}/csp-report`],
           upgradeInsecureRequests: nodeEnv === 'production' ? [] : null,
         },
       },
