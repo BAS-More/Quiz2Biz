@@ -19,6 +19,7 @@
     "start:dev": "turbo run start:dev --filter=api",
     "start:prod": "turbo run start:prod --filter=api",
     "test": "turbo run test",
+    "test:api": "turbo run test --filter=api",
     "test:watch": "turbo run test:watch",
     "test:cov": "turbo run test:cov",
     "test:regression": "npx jest --config=test/regression/jest.config.js",
