@@ -2,7 +2,7 @@
 
 This checklist is a template for updates to `reward-service-prompt.md` in the Agent MVP repository (search OLD, replace with NEW).
 Source of truth: `reward-service-prompt.md` in the Agent MVP repo (this file is guidance only, not canonical).
-Status in Agent MVP repo: PENDING — replace this text with a link to the commit/PR where the checklist was applied.
+Status in Agent MVP repo: NOT TRACKED FROM THIS REPO — this checklist is archived guidance only and must not be treated as an open task. For the actual status, refer directly to `reward-service-prompt.md` and its history in the Agent MVP repo.
 
 | # | Field | OLD | NEW |
 |---|-------|-----|-----|
