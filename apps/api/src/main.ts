@@ -114,10 +114,10 @@ async function bootstrap(): Promise<void> {
       strictTransportSecurity:
         nodeEnv === 'production'
           ? {
-              maxAge: 31536000, // 1 year
-              includeSubDomains: true,
-              preload: true,
-            }
+            maxAge: 31536000, // 1 year
+            includeSubDomains: true,
+            preload: true,
+          }
           : false,
     }),
   );
@@ -319,7 +319,7 @@ For API issues, contact: support@quiz2biz.com`,
 bootstrap().catch((error) => {
   const logger = new Logger('Bootstrap');
   logger.error('Failed to start application', error);
-  console.error('Full stack trace:', error.stack);
+  logger.error('Full stack trace:', error.stack);
 
   // Capture bootstrap errors in Sentry
   captureException(error, { context: 'bootstrap' });

@@ -60,8 +60,9 @@ describe('nqsCommand', () => {
     ((chalk as any).italic as jest.Mock)?.mockImplementation?.((str: string) => `ITALIC:${str}`);
 
     // Reset Commander internal state to avoid state pollution between tests
-    (nqsCommand as any)._optionValues = {};
-    (nqsCommand as any)._optionValueSources = {};
+    // Preserve option defaults (count defaults to '5' in the command definition)
+    (nqsCommand as any)._optionValues = { count: '5' };
+    (nqsCommand as any)._optionValueSources = { count: 'default' };
     (nqsCommand as any).args = [];
     (nqsCommand as any).processedArgs = [];
 
@@ -124,7 +125,7 @@ describe('nqsCommand', () => {
       questions: [{ id: 'q1', text: 'Question 1' }],
     });
 
-    await nqsCommand.parseAsync(['node', 'test', 'nqs', 'session-123']);
+    await nqsCommand.parseAsync(['node', 'test', 'session-123']);
 
     expect(mockApiClient.getNextQuestions).toHaveBeenCalledWith('session-123', {
       count: 5,
@@ -154,7 +155,7 @@ describe('nqsCommand', () => {
       questions: [{ id: 'q1', text: 'Question 1' }],
     });
 
-    await nqsCommand.parseAsync(['node', 'test', 'nqs', '-n', '10']);
+    await nqsCommand.parseAsync(['node', 'test', '-n', '10']);
 
     expect(mockApiClient.getNextQuestions).toHaveBeenCalledWith('session-123', {
       count: 10,
@@ -169,7 +170,7 @@ describe('nqsCommand', () => {
       questions: [{ id: 'q1', text: 'Question 1' }],
     });
 
-    await nqsCommand.parseAsync(['node', 'test', 'nqs', '-d', 'security']);
+    await nqsCommand.parseAsync(['node', 'test', '-d', 'security']);
 
     expect(mockApiClient.getNextQuestions).toHaveBeenCalledWith('session-123', {
       count: 5,
@@ -184,7 +185,7 @@ describe('nqsCommand', () => {
       questions: [{ id: 'q1', text: 'Question 1' }],
     });
 
-    await nqsCommand.parseAsync(['node', 'test', 'nqs', '-p', 'CTO']);
+    await nqsCommand.parseAsync(['node', 'test', '-p', 'CTO']);
 
     expect(mockApiClient.getNextQuestions).toHaveBeenCalledWith('session-123', {
       count: 5,
@@ -214,7 +215,7 @@ describe('nqsCommand', () => {
     };
     mockApiClient.getNextQuestions.mockResolvedValue(mockResponse);
 
-    await nqsCommand.parseAsync(['node', 'test', 'nqs', '--json']);
+    await nqsCommand.parseAsync(['node', 'test', '--json']);
 
     expect(console.log).toHaveBeenCalledWith(JSON.stringify(mockResponse, null, 2));
   });

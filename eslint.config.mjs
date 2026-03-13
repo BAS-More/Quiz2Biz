@@ -131,7 +131,6 @@ export default tseslint.config(
       '@typescript-eslint/prefer-as-const': 'off',
       '@typescript-eslint/await-thenable': 'off',
       '@typescript-eslint/no-require-imports': 'off', // Dynamic require for legacy modules
-      'no-console': 'off',
       'no-duplicate-imports': 'off',
       'no-constant-condition': 'off',
       'no-useless-assignment': 'off',

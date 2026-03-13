@@ -16,15 +16,13 @@ const mockSpinner = {
   fail: jest.fn().mockReturnThis(),
 };
 
-const mockTable = jest.fn((data: unknown) => `TABLE:${JSON.stringify(data)}`);
-
 jest.mock('ora', () => ({
   __esModule: true,
   default: jest.fn(() => mockSpinner),
 }));
 
 jest.mock('table', () => ({
-  table: mockTable,
+  table: jest.fn((data: unknown) => `TABLE:${JSON.stringify(data)}`),
 }));
 
 jest.mock('chalk', () => ({
@@ -117,7 +115,7 @@ describe('scoreCommand', () => {
   it('should exit with error when no session ID and no default', async () => {
     mockConfig.get.mockReturnValue(null);
 
-    await scoreCommand.parseAsync(['node', 'test', 'score']);
+    await scoreCommand.parseAsync(['node', 'test']);
 
     expect(console.error).toHaveBeenCalledWith(
       'RED:Error: No session ID provided and no default session configured.',
@@ -133,7 +131,7 @@ describe('scoreCommand', () => {
     const mockScoreData = { overallScore: 0.85, dimensions: [] };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
 
-    await scoreCommand.parseAsync(['node', 'test', 'score', 'session-123']);
+    await scoreCommand.parseAsync(['node', 'test', 'session-123']);
 
     expect(mockApiClient.getScore).toHaveBeenCalledWith('session-123');
   });
@@ -143,7 +141,7 @@ describe('scoreCommand', () => {
     const mockScoreData = { overallScore: 0.85, dimensions: [] };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
 
-    await scoreCommand.parseAsync(['node', 'test', 'score']);
+    await scoreCommand.parseAsync(['node', 'test']);
 
     expect(mockApiClient.getScore).toHaveBeenCalledWith('default-session-456');
   });
@@ -152,7 +150,7 @@ describe('scoreCommand', () => {
     mockConfig.get.mockReturnValue('session-123');
     mockApiClient.getScore.mockResolvedValue({ overallScore: 0.85 });
 
-    await scoreCommand.parseAsync(['node', 'test', 'score']);
+    await scoreCommand.parseAsync(['node', 'test']);
 
     expect(ora).toHaveBeenCalledWith('Fetching readiness score...');
     expect(mockSpinner.start).toHaveBeenCalled();
@@ -164,7 +162,7 @@ describe('scoreCommand', () => {
     const mockScoreData = { overallScore: 0.85, dimensions: [] };
     mockApiClient.getScore.mockResolvedValue(mockScoreData);
 
-    await scoreCommand.parseAsync(['node', 'test', 'score', '--json']);
+    await scoreCommand.parseAsync(['node', 'test', '--json']);
 
     expect(console.log).toHaveBeenCalledWith(JSON.stringify(mockScoreData, null, 2));
   });
@@ -176,7 +174,7 @@ describe('scoreCommand', () => {
     };
     mockConfig.getOfflineData.mockReturnValue(mockOfflineData);
 
-    await scoreCommand.parseAsync(['node', 'test', 'score', '--offline']);
+    await scoreCommand.parseAsync(['node', 'test', '--offline']);
 
     expect(mockConfig.getOfflineData).toHaveBeenCalledWith('session-123');
   });
@@ -185,7 +183,7 @@ describe('scoreCommand', () => {
     mockConfig.get.mockReturnValue('session-123');
     mockConfig.getOfflineData.mockReturnValue(null);
 
-    await scoreCommand.parseAsync(['node', 'test', 'score', '--offline']);
+    await scoreCommand.parseAsync(['node', 'test', '--offline']);
 
     expect(mockSpinner.fail).toHaveBeenCalledWith('No offline data found for this session');
     expect(process.exit).toHaveBeenCalledWith(1);
@@ -195,7 +193,7 @@ describe('scoreCommand', () => {
     mockConfig.get.mockReturnValue('session-123');
     mockApiClient.getScore.mockRejectedValue(new Error('API Error'));
 
-    await scoreCommand.parseAsync(['node', 'test', 'score']);
+    await scoreCommand.parseAsync(['node', 'test']);
 
     // Source: spinner.fail('Failed to fetch score'), then console.error(chalk.red(message))
     expect(mockSpinner.fail).toHaveBeenCalledWith('Failed to fetch score');
@@ -207,7 +205,7 @@ describe('scoreCommand', () => {
     mockConfig.get.mockReturnValue('session-123');
     mockApiClient.getScore.mockRejectedValue('string error');
 
-    await scoreCommand.parseAsync(['node', 'test', 'score']);
+    await scoreCommand.parseAsync(['node', 'test']);
 
     expect(mockSpinner.fail).toHaveBeenCalledWith('Failed to fetch score');
     expect(console.error).toHaveBeenCalledWith('RED:Unknown error');
