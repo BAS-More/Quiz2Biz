@@ -465,7 +465,7 @@ export const InlineSuggestion: React.FC<InlineSuggestionProps> = ({
   onAccept,
   compact = false,
 }) => (
-  <div style={compact ? styles.inlineCompact : styles.inline}>
+  <div className={compact ? styles.inlineCompact : styles.inline}>
     <div className={styles.inlineContent}>
       <span className={styles.inlineIcon} aria-hidden="true">
         💡
