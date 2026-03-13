@@ -63,6 +63,7 @@ interface PricingCardProps {
   isPopular?: boolean;
   onSelect: () => void;
   isLoading?: boolean;
+  'data-testid'?: string;
 }
 
 function PricingCard({
@@ -74,6 +75,7 @@ function PricingCard({
   isPopular,
   onSelect,
   isLoading,
+  'data-testid': dataTestId,
 }: PricingCardProps) {
   const isCurrent = currentTier === tier;
   const isDowngrade =
@@ -83,6 +85,7 @@ function PricingCard({
     <div
       className={`relative bg-white rounded-2xl shadow-lg ${isPopular ? 'ring-2 ring-blue-600 scale-105' : 'ring-1 ring-gray-200'
         }`}
+      data-testid={dataTestId}
     >
       {isPopular && (
         <div className="absolute -top-4 left-1/2 -translate-x-1/2">
@@ -112,11 +115,12 @@ function PricingCard({
         <button
           onClick={onSelect}
           disabled={isCurrent || isLoading}
+          data-testid={dataTestId ? `upgrade-${tier.toLowerCase()}-button` : undefined}
           className={`mt-8 w-full py-3 px-6 rounded-lg font-medium transition-colors ${isCurrent
-              ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
-              : isPopular
-                ? 'bg-blue-600 text-white hover:bg-blue-700'
-                : 'bg-gray-900 text-white hover:bg-gray-800'
+            ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
+            : isPopular
+              ? 'bg-blue-600 text-white hover:bg-blue-700'
+              : 'bg-gray-900 text-white hover:bg-gray-800'
             }`}
         >
           {isLoading ? (
@@ -209,7 +213,7 @@ export function UpgradePage() {
   const currentTier = subscription?.tier || 'FREE';
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gray-50 py-12" data-testid="pricing-page">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900">Choose Your Plan</h1>
@@ -237,6 +241,7 @@ export function UpgradePage() {
             currentTier={currentTier}
             onSelect={() => handleSelectTier('FREE')}
             isLoading={checkoutMutation.isPending && selectedTier === 'FREE'}
+            data-testid="tier-free"
           />
 
           <PricingCard
@@ -248,6 +253,7 @@ export function UpgradePage() {
             isPopular
             onSelect={() => handleSelectTier('PROFESSIONAL')}
             isLoading={checkoutMutation.isPending && selectedTier === 'PROFESSIONAL'}
+            data-testid="tier-professional"
           />
 
           <PricingCard
@@ -258,10 +264,11 @@ export function UpgradePage() {
             currentTier={currentTier}
             onSelect={() => handleSelectTier('ENTERPRISE')}
             isLoading={checkoutMutation.isPending && selectedTier === 'ENTERPRISE'}
+            data-testid="tier-enterprise"
           />
         </div>
 
-        <div className="mt-16 text-center">
+        <div className="mt-16 text-center" data-testid="feature-comparison-table">
           <h2 className="text-2xl font-semibold text-gray-900 mb-6">Frequently Asked Questions</h2>
           <div className="max-w-3xl mx-auto grid gap-6 text-left">
             <div className="bg-white rounded-lg p-6 shadow-sm">

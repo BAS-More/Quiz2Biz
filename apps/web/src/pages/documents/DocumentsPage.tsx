@@ -163,7 +163,7 @@ export function DocumentsPage() {
   const hasDocumentsToDownload = completedDocuments.length > 0;
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in" data-testid="documents-page">
       {/* Back button */}
       <button
         onClick={() => navigate('/dashboard')}
@@ -242,8 +242,8 @@ export function DocumentsPage() {
                   key={session.id}
                   onClick={() => handleSelectSession(session.id)}
                   className={`flex items-center justify-between w-full p-3 rounded-xl border transition-colors text-left ${isSelected
-                      ? 'border-brand-400 bg-brand-50'
-                      : 'border-surface-100 hover:border-brand-200'
+                    ? 'border-brand-400 bg-brand-50'
+                    : 'border-surface-100 hover:border-brand-200'
                     }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -340,6 +340,7 @@ export function DocumentsPage() {
                     <button
                       onClick={() => handleGenerate(docType)}
                       disabled={isGenerating || !canGenerate}
+                      data-testid="generate-document-button"
                       className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-brand-600 text-white text-xs font-medium rounded-lg hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                     >
                       {isGenerating ? (

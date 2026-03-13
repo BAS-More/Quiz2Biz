@@ -203,7 +203,7 @@ export function DashboardPage() {
   const clearError = () => setError(null);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="dashboard-page">
       {/* Welcome header */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div className="animate-slide-up">
@@ -429,7 +429,7 @@ export function DashboardPage() {
         {/* Right sidebar column */}
         <div className="space-y-6">
           {/* Quality Score Ring */}
-          <Card className="animate-slide-up text-center" style={{ animationDelay: '0.15s' }}>
+          <Card className="animate-slide-up text-center" style={{ animationDelay: '0.15s' }} data-testid="readiness-score">
             <div className="flex items-center justify-center gap-2 mb-4">
               <Sparkles className="h-4 w-4 text-accent-500" />
               <h3 className="text-sm font-semibold text-surface-700">Quality Score</h3>

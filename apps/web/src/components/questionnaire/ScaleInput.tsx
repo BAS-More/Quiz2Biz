@@ -28,7 +28,7 @@ export const ScaleInput: React.FC<QuestionInputProps<number>> = ({
   const percentage = ((currentValue - min) / (max - min)) * 100;
 
   return (
-    <div className="question-input scale-input">
+    <div className="question-input scale-input" data-testid="scale-input">
       <div className="space-y-4">
         {/* Value display */}
         {showValue && (

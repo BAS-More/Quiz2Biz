@@ -38,7 +38,7 @@ export const ProgressDisplay: React.FC<ProgressDisplayProps> = ({
   const questionsLeft = total - answered;
 
   return (
-    <div className={`progress-display ${className}`}>
+    <div className={`progress-display ${className}`} data-testid="question-progress">
       {/* Main progress bar */}
       <div className="mb-4">
         <div className="flex justify-between items-center mb-1">
@@ -56,7 +56,7 @@ export const ProgressDisplay: React.FC<ProgressDisplayProps> = ({
       {/* Stats row */}
       <div className="flex flex-wrap gap-4 text-sm">
         {/* Sections left */}
-        <div className="flex items-center gap-2 px-3 py-2 bg-purple-50 rounded-lg">
+        <div className="flex items-center gap-2 px-3 py-2 bg-purple-50 rounded-lg" data-testid="sections-left">
           <svg
             className="w-4 h-4 text-purple-500"
             fill="none"
@@ -76,7 +76,7 @@ export const ProgressDisplay: React.FC<ProgressDisplayProps> = ({
         </div>
 
         {/* Questions left */}
-        <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 rounded-lg">
+        <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 rounded-lg" data-testid="questions-left">
           <svg
             className="w-4 h-4 text-orange-500"
             fill="none"
@@ -121,7 +121,7 @@ export const ProgressDisplay: React.FC<ProgressDisplayProps> = ({
 
       {/* Section progress */}
       {showDetails && sectionName && (
-        <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+        <div className="mt-4 p-3 bg-gray-50 rounded-lg" data-testid="section-progress">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-gray-600">{sectionName}</span>
             <span className="text-sm font-medium text-gray-800">

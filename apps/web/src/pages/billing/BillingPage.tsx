@@ -57,13 +57,13 @@ function SubscriptionCard({ subscription }: { subscription: Subscription }) {
   });
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-white rounded-lg shadow-md p-6" data-testid="current-plan">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-xl font-semibold text-gray-900">Current Plan</h2>
           <p className="text-gray-500 text-sm">Manage your subscription</p>
         </div>
-        <span className={`px-3 py-1 rounded-full text-sm font-medium ${tierConfig.badge}`}>
+        <span className={`px-3 py-1 rounded-full text-sm font-medium ${tierConfig.badge}`} data-testid="plan-name">
           {tierConfig.label}
         </span>
       </div>
@@ -84,11 +84,11 @@ function SubscriptionCard({ subscription }: { subscription: Subscription }) {
         </div>
 
         {subscription.currentPeriodEnd && (
-          <div className="flex justify-between py-2 border-b border-gray-100">
+          <div className="flex justify-between py-2 border-b border-gray-100" data-testid="billing-cycle">
             <span className="text-gray-600">
               {subscription.cancelAtPeriodEnd ? 'Access Until' : 'Renews On'}
             </span>
-            <span className="font-medium text-gray-900">
+            <span className="font-medium text-gray-900" data-testid="next-billing-date">
               {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
             </span>
           </div>
@@ -110,7 +110,7 @@ function SubscriptionCard({ subscription }: { subscription: Subscription }) {
         )}
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex gap-3" data-testid="upgrade-section">
         {subscription.tier !== 'ENTERPRISE' && (
           <a
             href="/billing/upgrade"
@@ -126,6 +126,7 @@ function SubscriptionCard({ subscription }: { subscription: Subscription }) {
               onClick={() => portalMutation.mutate()}
               disabled={portalMutation.isPending}
               className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              data-testid="payment-method"
             >
               Manage Billing
             </button>
@@ -219,7 +220,7 @@ export function BillingPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 py-8" data-testid="billing-page">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Billing & Subscription</h1>
         <p className="text-gray-500">Manage your plan and view usage</p>

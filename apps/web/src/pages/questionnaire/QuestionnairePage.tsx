@@ -281,7 +281,7 @@ export function QuestionnairePage() {
               size="sm"
             />
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-3" data-testid="questionnaire-list">
               {questionnaires.map((q) => (
                 <div
                   key={q.id}
@@ -297,6 +297,7 @@ export function QuestionnairePage() {
                   <button
                     onClick={() => handleStartSession(q.id)}
                     disabled={isLoading}
+                    data-testid="start-questionnaire-button"
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
                   >
                     {isLoading ? 'Starting...' : 'Start'}
@@ -342,10 +343,10 @@ export function QuestionnairePage() {
   if (isComplete && session) {
     return (
       <div className="space-y-6">
-        <div className="bg-white rounded-lg shadow p-8 text-center">
+        <div className="bg-white rounded-lg shadow p-8 text-center" data-testid="completed-session">
           <CheckCircle className="h-16 w-16 mx-auto text-green-500 mb-4" aria-hidden="true" />
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Project Complete!</h1>
-          <p className="text-gray-600 mb-4">
+          <p className="text-gray-600 mb-4" data-testid="completion-summary">
             Your score:{' '}
             <span className="text-2xl font-bold text-green-600">
               {readinessScore?.toFixed(1) ?? 'N/A'}%
@@ -432,7 +433,7 @@ export function QuestionnairePage() {
 
       {/* Progress bar */}
       {progress && (
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="bg-white rounded-lg shadow p-4" data-testid="question-progress">
           <div className="flex justify-between text-sm text-gray-600 mb-2">
             <span>
               {currentQuestion ? (
@@ -504,7 +505,7 @@ export function QuestionnairePage() {
       {/* Current question */}
       {currentQuestion ? (
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">{currentQuestion.text}</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-2" data-testid="question-text">{currentQuestion.text}</h2>
           {currentQuestion.helpText && (
             <p className="text-sm text-gray-500 mb-4">{currentQuestion.helpText}</p>
           )}
@@ -512,10 +513,11 @@ export function QuestionnairePage() {
           {/* Question input based on type */}
           <div className="mt-4">
             {currentQuestion.type === 'SINGLE_CHOICE' && currentQuestion.options ? (
-              <div className="space-y-2">
+              <div className="space-y-2" data-testid="single-choice-input">
                 {currentQuestion.options.map((opt) => (
                   <label
                     key={opt.id}
+                    data-testid={`option-${opt.id}`}
                     className={`flex items-center p-3 rounded-lg border cursor-pointer transition-colors ${currentValue === opt.id
                       ? 'border-blue-600 bg-blue-50'
                       : 'border-gray-200 hover:border-gray-300'
@@ -539,11 +541,12 @@ export function QuestionnairePage() {
                 ))}
               </div>
             ) : currentQuestion.type === 'SCALE' ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2" data-testid="scale-input">
                 {[1, 2, 3, 4, 5].map((n) => (
                   <button
                     key={n}
                     onClick={() => setCurrentValue(n)}
+                    data-testid={`scale-value-${n}`}
                     className={`w-12 h-12 rounded-lg border-2 font-bold transition-colors ${currentValue === n
                       ? 'border-blue-600 bg-blue-600 text-white'
                       : 'border-gray-300 hover:border-gray-400'
@@ -554,7 +557,7 @@ export function QuestionnairePage() {
                 ))}
               </div>
             ) : currentQuestion.type === 'MULTIPLE_CHOICE' && currentQuestion.options ? (
-              <div className="space-y-2">
+              <div className="space-y-2" data-testid="multiple-choice-input">
                 {currentQuestion.options.map((opt) => {
                   const selected =
                     Array.isArray(currentValue) && (currentValue as string[]).includes(opt.id);
@@ -591,6 +594,7 @@ export function QuestionnairePage() {
                 value={typeof currentValue === 'string' ? currentValue : ''}
                 onChange={(e) => setCurrentValue(e.target.value)}
                 placeholder={currentQuestion.placeholder ?? 'Type your answer...'}
+                data-testid="text-answer"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[100px]"
                 rows={4}
               />

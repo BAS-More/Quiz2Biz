@@ -228,7 +228,7 @@ export function ChatPage() {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)]">
+    <div className="flex flex-col h-[calc(100vh-8rem)]" data-testid="chat-page">
       {/* Header */}
       <div className="flex items-center justify-between pb-4 border-b border-surface-100">
         <div className="flex items-center gap-3">
@@ -359,6 +359,7 @@ export function ChatPage() {
                 placeholder="Type your message..."
                 rows={1}
                 disabled={isSending}
+                data-testid="chat-input"
                 className={clsx(
                   'w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl',
                   'resize-none focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent',
@@ -371,6 +372,7 @@ export function ChatPage() {
             <button
               onClick={handleSend}
               disabled={!input.trim() || isSending}
+              data-testid="send-message-button"
               className={clsx(
                 'p-3 rounded-xl transition-all',
                 input.trim() && !isSending

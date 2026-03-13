@@ -12,7 +12,7 @@ export const DateInput: React.FC<QuestionInputProps<string>> = ({
   disabled = false,
 }) => {
   return (
-    <div className="question-input date-input">
+    <div className="question-input date-input" data-testid="date-input">
       <div className="relative">
         <input
           type="date"

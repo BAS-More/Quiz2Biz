@@ -39,7 +39,7 @@ async function globalSetup(config: FullConfig) {
   if (retries >= maxRetries) {
     throw new Error(
       `❌ API health check timed out after ${maxRetries * 2}s. ` +
-        `Cannot run E2E tests without a running API at ${apiUrl}`,
+      `Cannot run E2E tests without a running API at ${apiUrl}`,
     );
   }
 

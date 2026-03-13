@@ -34,7 +34,7 @@ function InvoiceRow({ invoice }: { invoice: Invoice }) {
   const status = STATUS_CONFIG[invoice.status] ?? STATUS_CONFIG.unknown;
 
   return (
-    <tr className="hover:bg-gray-50">
+    <tr className="hover:bg-gray-50" data-testid="invoice-row">
       <td className="px-6 py-4 whitespace-nowrap">
         <span className="text-sm font-medium text-gray-900">{invoice.stripeInvoiceId}</span>
       </td>
@@ -135,7 +135,7 @@ export function InvoicesPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="max-w-6xl mx-auto px-4 py-8" data-testid="invoices-page">
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Invoice History</h1>

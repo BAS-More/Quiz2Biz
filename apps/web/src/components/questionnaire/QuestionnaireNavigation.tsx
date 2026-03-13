@@ -42,18 +42,18 @@ export const QuestionnaireNavigation: React.FC<QuestionnaireNavigationProps> = (
   totalHistory,
 }) => {
   return (
-    <div className="flex items-center justify-between mt-6">
+    <div className="flex items-center justify-between mt-6" data-testid="question-navigator">
       {/* Left side: Previous button */}
       <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={onPrevious}
           disabled={!canGoBack || isLoading}
+          data-testid="previous-question"
           className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors
-            ${
-              canGoBack && !isLoading
-                ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                : 'bg-gray-50 text-gray-300 cursor-not-allowed'
+            ${canGoBack && !isLoading
+              ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              : 'bg-gray-50 text-gray-300 cursor-not-allowed'
             }`}
           aria-label="Go to previous question"
         >
@@ -77,6 +77,7 @@ export const QuestionnaireNavigation: React.FC<QuestionnaireNavigationProps> = (
             type="button"
             onClick={onSkip}
             disabled={isLoading}
+            data-testid="skip-question"
             className="inline-flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors disabled:opacity-50"
             aria-label="Skip this optional question"
           >
@@ -90,6 +91,7 @@ export const QuestionnaireNavigation: React.FC<QuestionnaireNavigationProps> = (
           type="button"
           onClick={onSubmit}
           disabled={isSubmitDisabled || isLoading}
+          data-testid="submit-answer"
           className="inline-flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           aria-label={isReviewing ? 'Update and continue' : 'Submit answer'}
         >
