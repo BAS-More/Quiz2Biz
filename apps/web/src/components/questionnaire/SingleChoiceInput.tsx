@@ -21,11 +21,10 @@ export const SingleChoiceInput: React.FC<QuestionInputProps<string>> = ({
             key={option.value}
             data-testid={`option-${index}`}
             className={`flex items-start p-4 border rounded-lg cursor-pointer transition-all
-                            ${
-                              value === option.value
-                                ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200'
-                                : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
-                            }
+                            ${value === option.value
+                ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200'
+                : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+              }
                             ${disabled ? 'cursor-not-allowed opacity-60' : ''}`}
           >
             <input

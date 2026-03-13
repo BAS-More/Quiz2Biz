@@ -61,7 +61,7 @@ export function ReviewQueuePage() {
   // Frontend role guard
   if (user && user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') {
     return (
-      <div className="min-h-[50vh] flex flex-col items-center justify-center gap-4">
+      <div className="min-h-[50vh] flex flex-col items-center justify-center gap-4" data-testid="access-denied">
         <AlertCircle className="h-12 w-12 text-danger-500" />
         <div className="text-center">
           <h2 className="text-lg font-semibold text-surface-900">Access Denied</h2>
@@ -280,7 +280,7 @@ export function ReviewQueuePage() {
   const isBatchActionPending = batchApproveMutation.isPending || batchRejectMutation.isPending;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="admin-dashboard">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
