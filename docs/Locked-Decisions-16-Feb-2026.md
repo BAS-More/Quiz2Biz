@@ -44,18 +44,28 @@
 
 ### DEC-04: Container Apps Environment
 **Decision:** Share with Quiz2Biz (cae-questionnaire-prod, Australia Southeast)
+**Resolves:** Infra open question: which Azure Container Apps environment Quiz2Biz should use.
+**Implications:** Quiz2Biz and cae-questionnaire-prod will share a Container Apps environment in Australia Southeast, coupling region, capacity planning, and incident blast radius.
 
 ### DEC-05: PostgreSQL SKU (Dev/Staging)
 **Decision:** B1ms — 1 vCore, 2 GB RAM, ~$13 AUD/month
+**Resolves:** Infra sizing decision for dev/staging PostgreSQL.
+**Implications:** Caps dev/staging database resources to 1 vCore and 2 GB RAM, defining a low-cost, lower-capacity envelope for non-production environments.
 
 ### DEC-06: Key Vault Strategy
 **Decision:** Dedicated RewardSvcVault (6 secrets)
+**Resolves:** Secret storage approach for Reward service configuration.
+**Implications:** All Reward service secrets are isolated in a dedicated Key Vault, which must be created, monitored, and granted appropriate access policies.
 
 ### DEC-07: Audit Event Taxonomy Scope
 **Decision:** Comprehensive — log everything
+**Resolves:** Scope ambiguity for audit event coverage.
+**Implications:** Maximises observability and auditability but increases logging volume, storage needs, and potential privacy/compliance review of captured events.
 
 ### DEC-08: Platform Client Portal Timing
 **Decision:** Build in Sprint 5 (V1) — read-only dashboard for platforms
+**Resolves:** Delivery timing for the initial platform client portal (read-only) scope.
+**Implications:** Sprint 5 must allocate capacity for a V1 read-only dashboard; write/edit capabilities are explicitly deferred to a later release.
 
 ---
 

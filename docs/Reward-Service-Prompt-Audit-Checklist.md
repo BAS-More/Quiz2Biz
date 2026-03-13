@@ -1,6 +1,8 @@
 # REWARD-SERVICE-PROMPT.MD — POST-RECONCILIATION AUDIT CHECKLIST
 
-Apply to reward-service-prompt.md in Agent MVP repo. Search OLD, replace with NEW.
+This checklist is a template for updates to `reward-service-prompt.md` in the Agent MVP repository (search OLD, replace with NEW).
+Source of truth: `reward-service-prompt.md` in the Agent MVP repo (this file is guidance only, not canonical).
+Status in Agent MVP repo: PENDING — replace this text with a link to the commit/PR where the checklist was applied.
 
 | # | Field | OLD | NEW |
 |---|-------|-----|-----|
