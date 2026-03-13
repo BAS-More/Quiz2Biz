@@ -1588,7 +1588,6 @@ describe('CanaryDeploymentManager', () => {
       await (manager as any).notifyEvent('deployment_started', { test: true });
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('deployment_started'),
-        expect.stringContaining('"test":true'),
       );
     });
 

@@ -8,7 +8,6 @@ import {
   fitsWithinBudget,
   cleanupTokenizer,
   CHARS_PER_TOKEN,
-  TokenProvider,
 } from '../token-estimator';
 
 describe('Token Estimator', () => {

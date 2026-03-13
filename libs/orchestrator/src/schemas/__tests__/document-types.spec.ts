@@ -5,11 +5,9 @@
  */
 
 import {
-  DOCUMENT_SCHEMAS,
   validateDocumentStructure,
   calculateDocumentPrice,
   listDocumentSchemas,
-  type DocumentSlug,
 } from '../document-types';
 
 describe('Document Types', () => {

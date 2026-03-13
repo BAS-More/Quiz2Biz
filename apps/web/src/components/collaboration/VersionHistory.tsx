@@ -379,15 +379,6 @@ export const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
     });
   };
 
-  const getChangeTypeBadgeStyle = (_changeType: ResponseVersion['changeType']) => {
-    switch (_changeType) {
-      case 'restore':
-        return styles.versionBadgeRestore;
-      default:
-        return {};
-    }
-  };
-
   if (!isOpen) {
     return null;
   }

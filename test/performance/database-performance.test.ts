@@ -7,8 +7,6 @@
  * Run: npm run test:db:perf
  */
 
-import { performance } from 'perf_hooks';
-
 // Mock Prisma client for testing
 interface QueryResult {
   query: string;
@@ -293,7 +291,7 @@ describe('Query Plan Analysis', () => {
  */
 describe('Concurrent Write Performance', () => {
   it('should handle 100 concurrent response writes', () => {
-    const concurrentWrites = 100;
+    // concurrentWrites = 100
     const maxDuration = 5000; // 5 seconds
     const simulatedDuration = 1200; // Mock result
 
@@ -301,7 +299,7 @@ describe('Concurrent Write Performance', () => {
   });
 
   it('should handle 50 concurrent session creates', () => {
-    const concurrentCreates = 50;
+    // concurrentCreates = 50
     const maxDuration = 3000; // 3 seconds
     const simulatedDuration = 800; // Mock result
 
@@ -355,7 +353,6 @@ export function generatePerformanceSummary(results: PerformanceTestResult[]): st
 
   results.forEach((result) => {
     const status = result.passed ? '✓' : '✗';
-    const color = result.passed ? '' : '';
     summary += `║  ${status} ${result.testName.padEnd(50)} ${result.totalDuration.toFixed(0).padStart(6)}ms ║\n`;
   });
 

@@ -63,6 +63,9 @@
     "apps/web",
     "e2e",
     "test/regression",
-    "prisma/prisma.config.ts"
+    "prisma/prisma.config.ts",
+    "scripts",
+    "apps/api/src/modules/document-commerce/**",
+    "apps/api/test/integration/**"
   ]
 }

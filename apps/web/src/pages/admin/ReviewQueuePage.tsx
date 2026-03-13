@@ -58,19 +58,6 @@ export function ReviewQueuePage() {
   const queryClient = useQueryClient();
   const { user } = useAuthStore();
 
-  // Frontend role guard
-  if (user && user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') {
-    return (
-      <div className="min-h-[50vh] flex flex-col items-center justify-center gap-4" data-testid="access-denied">
-        <AlertCircle className="h-12 w-12 text-danger-500" />
-        <div className="text-center">
-          <h2 className="text-lg font-semibold text-surface-900">Access Denied</h2>
-          <p className="text-surface-500 mt-1">You do not have permission to access the review queue.</p>
-        </div>
-        <Button variant="secondary" onClick={() => navigate('/dashboard')}>Go to Dashboard</Button>
-      </div>
-    );
-  }
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
@@ -278,6 +265,20 @@ export function ReviewQueuePage() {
       : 'none';
 
   const isBatchActionPending = batchApproveMutation.isPending || batchRejectMutation.isPending;
+
+  // Frontend role guard (placed after all hooks to comply with rules-of-hooks)
+  if (user && user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') {
+    return (
+      <div className="min-h-[50vh] flex flex-col items-center justify-center gap-4" data-testid="access-denied">
+        <AlertCircle className="h-12 w-12 text-danger-500" />
+        <div className="text-center">
+          <h2 className="text-lg font-semibold text-surface-900">Access Denied</h2>
+          <p className="text-surface-500 mt-1">You do not have permission to access the review queue.</p>
+        </div>
+        <Button variant="secondary" onClick={() => navigate('/dashboard')}>Go to Dashboard</Button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6" data-testid="admin-dashboard">

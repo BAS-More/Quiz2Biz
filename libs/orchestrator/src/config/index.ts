@@ -166,17 +166,17 @@ function buildConfig(): IOrchestratorConfig {
 // ── Validation ──────────────────────────────────────────────────────────────
 
 /** Required environment variables — config key, description. */
-const REQUIRED_VARS: ReadonlyArray<{
+export const REQUIRED_VARS: ReadonlyArray<{
   key: keyof IOrchestratorConfig;
   path: string;
   description: string;
 }> = [
-  {
-    key: 'anthropic',
-    path: 'anthropic.apiKey',
-    description: 'Anthropic API key (Q2B_ANTHROPIC_API_KEY or ANTHROPIC_API_KEY)',
-  },
-];
+    {
+      key: 'anthropic',
+      path: 'anthropic.apiKey',
+      description: 'Anthropic API key (Q2B_ANTHROPIC_API_KEY or ANTHROPIC_API_KEY)',
+    },
+  ];
 
 /**
  * Validate that all required configuration values are present.

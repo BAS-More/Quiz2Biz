@@ -154,7 +154,7 @@ export async function seedAiProviders(): Promise<void> {
   console.log('\n🤖 Seeding AI Providers...');
 
   for (const provider of AI_PROVIDERS) {
-    const result = await prisma.aiProvider.upsert({
+    await prisma.aiProvider.upsert({
       where: { slug: provider.slug },
       update: {
         name: provider.name,
