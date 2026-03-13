@@ -242,6 +242,7 @@ export function OAuthButtons({ mode, onError }: OAuthButtonsProps) {
               type="button"
               onClick={() => handleOAuthClick(provider)}
               disabled={loadingProvider !== null}
+              data-testid={`${provider}-oauth-button`}
               className={`flex items-center justify-center gap-2 px-4 py-2.5 border rounded-md shadow-sm text-sm font-medium transition-colors ${config.bgColor} ${config.textColor} ${config.borderColor} disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : config.icon}

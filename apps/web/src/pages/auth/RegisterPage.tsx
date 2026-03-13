@@ -159,6 +159,7 @@ export function RegisterPage() {
               aria-required="true"
               aria-invalid={errors.name ? 'true' : 'false'}
               aria-describedby={errors.name ? 'name-error' : undefined}
+              data-testid="name-input"
               className={`${inputClass(!!errors.name)} pl-10`}
               placeholder="John Doe"
             />
@@ -188,6 +189,7 @@ export function RegisterPage() {
               aria-required="true"
               aria-invalid={errors.email ? 'true' : 'false'}
               aria-describedby={errors.email ? 'email-error' : undefined}
+              data-testid="email-input"
               className={`${inputClass(!!errors.email)} pl-10`}
               placeholder="you@example.com"
             />
@@ -214,6 +216,7 @@ export function RegisterPage() {
               aria-required="true"
               aria-invalid={errors.password ? 'true' : 'false'}
               aria-describedby="password-requirements"
+              data-testid="password-input"
               className={`${inputClass(!!errors.password)} pr-10`}
               placeholder="Create a strong password"
             />
@@ -305,6 +308,7 @@ export function RegisterPage() {
             aria-describedby={
               errors.confirmPassword || showPasswordMismatch ? 'confirmPassword-error' : undefined
             }
+            data-testid="confirm-password-input"
             className={inputClass(!!errors.confirmPassword || showPasswordMismatch)}
             placeholder="Confirm your password"
           />
@@ -330,7 +334,7 @@ export function RegisterPage() {
           )}
         </div>
 
-        <Button type="submit" loading={isSubmitting} fullWidth size="lg" className="mt-2">
+        <Button type="submit" loading={isSubmitting} fullWidth size="lg" className="mt-2" data-testid="register-button">
           {isSubmitting ? 'Creating account...' : 'Create account'}
         </Button>
       </form>

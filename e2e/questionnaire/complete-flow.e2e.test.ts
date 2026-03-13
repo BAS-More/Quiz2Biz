@@ -8,7 +8,7 @@ import { testUsers, testResponses, createTestHelpers } from '../fixtures';
 test.describe('Complete Questionnaire Flow', () => {
   test.beforeEach(async ({ page }) => {
     // Login before each test
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.fill('[data-testid="email-input"]', testUsers.user.email);
     await page.fill('[data-testid="password-input"]', testUsers.user.password);
     await page.click('[data-testid="login-button"]');
@@ -16,7 +16,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should display questionnaire list', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
 
     // Verify questionnaire list is displayed
     await expect(page.locator('[data-testid="questionnaire-list"]')).toBeVisible();
@@ -24,7 +24,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should start a new questionnaire session', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
 
     // Click start on first questionnaire
     await page.click('[data-testid="start-questionnaire-button"]');
@@ -35,7 +35,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should display progress counters', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Verify progress counters are visible
@@ -45,7 +45,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should answer BOOLEAN question type', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Wait for boolean question type
@@ -62,7 +62,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should answer SCALE question type (1-5)', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Look for scale question
@@ -75,7 +75,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should answer TEXT question type', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Look for text input question
@@ -87,7 +87,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should answer SINGLE_CHOICE question type', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Look for single choice question (radio buttons)
@@ -99,7 +99,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should answer MULTIPLE_CHOICE question type', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Look for multiple choice question (checkboxes)
@@ -112,7 +112,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should answer DROPDOWN question type', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Look for dropdown question
@@ -124,7 +124,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should answer PERCENTAGE question type', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Look for percentage question
@@ -136,7 +136,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should answer DATE question type', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Look for date question
@@ -148,7 +148,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should answer NUMBER question type', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Look for number question
@@ -160,7 +160,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should answer MATRIX question type', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Look for matrix question
@@ -173,7 +173,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should handle FILE_UPLOAD question type', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Look for file upload question
@@ -195,7 +195,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should navigate between questions', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Answer first question
@@ -215,7 +215,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should skip optional questions', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Look for skip button on optional questions
@@ -228,7 +228,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should show best practice guidance', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Check for best practice section
@@ -240,7 +240,7 @@ test.describe('Complete Questionnaire Flow', () => {
   });
 
   test('should update progress as questions are answered', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Get initial progress
@@ -261,7 +261,7 @@ test.describe('Complete Questionnaire Flow', () => {
 
 test.describe('Questionnaire Completion', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.fill('[data-testid="email-input"]', testUsers.user.email);
     await page.fill('[data-testid="password-input"]', testUsers.user.password);
     await page.click('[data-testid="login-button"]');
@@ -270,7 +270,7 @@ test.describe('Questionnaire Completion', () => {
 
   test('should show completion screen when all questions answered', async ({ page }) => {
     // Navigate to a completed questionnaire (if exists) or complete one
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
 
     // Look for completed questionnaire
     const completedSession = page.locator('[data-testid="completed-session"]').first();
@@ -318,7 +318,7 @@ test.describe('Questionnaire Completion', () => {
   });
 
   test('should save progress and resume later', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Answer some questions
@@ -330,7 +330,7 @@ test.describe('Questionnaire Completion', () => {
 
     // Leave and come back
     await page.goto('/dashboard');
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
 
     // Look for resume option
     const resumeButton = page.locator('[data-testid="resume-session"]');
@@ -344,7 +344,7 @@ test.describe('Questionnaire Completion', () => {
 
 test.describe('Question Validation', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.fill('[data-testid="email-input"]', testUsers.user.email);
     await page.fill('[data-testid="password-input"]', testUsers.user.password);
     await page.click('[data-testid="login-button"]');
@@ -352,7 +352,7 @@ test.describe('Question Validation', () => {
   });
 
   test('should validate required questions', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Try to submit without answering required question
@@ -365,7 +365,7 @@ test.describe('Question Validation', () => {
   });
 
   test('should validate percentage range (0-100)', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     const percentageInput = page.locator('[data-testid="percentage-input"]');
@@ -379,7 +379,7 @@ test.describe('Question Validation', () => {
   });
 
   test('should validate text minimum length', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     const textInput = page.locator('[data-testid="text-answer"]');

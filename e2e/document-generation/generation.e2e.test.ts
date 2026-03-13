@@ -10,7 +10,7 @@ import * as fs from 'fs';
 test.describe('Document Generation Flow', () => {
   test.beforeEach(async ({ page }) => {
     // Login before each test
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.fill('[data-testid="email-input"]', testUsers.user.email);
     await page.fill('[data-testid="password-input"]', testUsers.user.password);
     await page.click('[data-testid="login-button"]');

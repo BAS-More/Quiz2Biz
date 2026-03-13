@@ -2,19 +2,23 @@
  * Global Setup for Quiz2Biz E2E Tests
  * Runs once before all tests to set up the test environment
  */
-import { chromium, FullConfig } from '@playwright/test';
+import { FullConfig } from '@playwright/test';
+import { execSync } from 'child_process';
+import * as path from 'path';
 
 async function globalSetup(config: FullConfig) {
-  const { baseURL, storageState } = config.projects[0].use;
-  
+  const { baseURL } = config.projects[0].use;
+
   console.log('🚀 E2E Global Setup - Starting...');
   console.log(`   Base URL: ${baseURL}`);
 
-  // Wait for API to be ready
+  // -----------------------------------------------------------------------
+  // 1. Wait for API to be ready (hard-fail on timeout)
+  // -----------------------------------------------------------------------
   const maxRetries = 30;
   let retries = 0;
   const apiUrl = process.env.API_URL || 'http://localhost:3000';
-  
+
   while (retries < maxRetries) {
     try {
       const response = await fetch(`${apiUrl}/api/v1/health/live`);
@@ -33,28 +37,31 @@ async function globalSetup(config: FullConfig) {
   }
 
   if (retries >= maxRetries) {
-    console.warn('⚠️ API health check timed out, proceeding anyway...');
+    throw new Error(
+      `❌ API health check timed out after ${maxRetries * 2}s. ` +
+        `Cannot run E2E tests without a running API at ${apiUrl}`,
+    );
   }
 
-  // Create a test user for authentication tests
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
-
+  // -----------------------------------------------------------------------
+  // 2. Seed E2E test data via Prisma (idempotent)
+  // -----------------------------------------------------------------------
   try {
-    // Seed test data via API if available
-    const seedResponse = await fetch(`${apiUrl}/api/v1/test/seed`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-    }).catch(() => null);
-
-    if (seedResponse?.ok) {
-      console.log('✅ Test data seeded');
-    }
-  } catch {
-    // Seed endpoint might not exist, continue
+    const seedScript = path.resolve(__dirname, '..', 'prisma', 'seeds', 'e2e-seed.ts');
+    console.log('🌱 Seeding E2E test data...');
+    execSync(
+      `npx ts-node --compiler-options "{\\\"module\\\":\\\"CommonJS\\\"}" "${seedScript}"`,
+      {
+        cwd: path.resolve(__dirname, '..'),
+        env: { ...process.env, NODE_ENV: 'test' },
+        stdio: 'inherit',
+        timeout: 30_000,
+      },
+    );
+    console.log('✅ Test data seeded');
+  } catch (error) {
+    console.warn('⚠️  E2E seed script failed (tests may still run if data exists):', error);
   }
-
-  await browser.close();
 
   console.log('✅ E2E Global Setup - Complete');
 }

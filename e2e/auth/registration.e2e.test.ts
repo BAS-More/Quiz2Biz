@@ -16,7 +16,7 @@ const testUser = {
 
 test.describe('User Registration', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/register');
+    await page.goto('/auth/register');
   });
 
   test('should display registration form', async ({ page }) => {
@@ -29,7 +29,7 @@ test.describe('User Registration', () => {
   test('should validate required fields', async ({ page }) => {
     // Try to submit empty form
     await page.getByRole('button', { name: /register|sign up|create account/i }).click();
-    
+
     // Should show validation errors
     await expect(page.getByText(/required|email|password/i)).toBeVisible();
   });
@@ -38,7 +38,7 @@ test.describe('User Registration', () => {
     const emailInput = page.getByLabel(/email/i);
     await emailInput.fill('invalid-email');
     await emailInput.blur();
-    
+
     await expect(page.getByText(/valid email|invalid email/i)).toBeVisible();
   });
 
@@ -46,7 +46,7 @@ test.describe('User Registration', () => {
     const passwordInput = page.getByLabel(/^password$/i);
     await passwordInput.fill('weak');
     await passwordInput.blur();
-    
+
     // Should show password requirements
     await expect(page.getByText(/characters|uppercase|number|special/i)).toBeVisible();
   });
@@ -57,22 +57,22 @@ test.describe('User Registration', () => {
     await page.getByLabel(/last name/i).fill(testUser.lastName);
     await page.getByLabel(/email/i).fill(testUser.email);
     await page.getByLabel(/^password$/i).fill(testUser.password);
-    
+
     // Check for confirm password if exists
     const confirmPassword = page.getByLabel(/confirm password/i);
     if (await confirmPassword.isVisible()) {
       await confirmPassword.fill(testUser.password);
     }
-    
+
     // Accept terms if checkbox exists
     const termsCheckbox = page.getByRole('checkbox', { name: /terms|agree/i });
     if (await termsCheckbox.isVisible()) {
       await termsCheckbox.check();
     }
-    
+
     // Submit
     await page.getByRole('button', { name: /register|sign up|create account/i }).click();
-    
+
     // Should redirect to dashboard or show success
     await expect(page).toHaveURL(/dashboard|verify|success/i, { timeout: 10000 });
   });
@@ -81,14 +81,14 @@ test.describe('User Registration', () => {
     // First, try to register with an existing email
     await page.getByLabel(/email/i).fill('test@quiz2biz.com');
     await page.getByLabel(/^password$/i).fill(testUser.password);
-    
+
     const confirmPassword = page.getByLabel(/confirm password/i);
     if (await confirmPassword.isVisible()) {
       await confirmPassword.fill(testUser.password);
     }
-    
+
     await page.getByRole('button', { name: /register|sign up|create account/i }).click();
-    
+
     // Should show error about existing user
     await expect(page.getByText(/already exists|already registered|in use/i)).toBeVisible({ timeout: 10000 });
   });
@@ -96,7 +96,7 @@ test.describe('User Registration', () => {
   test('should have link to login page', async ({ page }) => {
     const loginLink = page.getByRole('link', { name: /login|sign in|already have/i });
     await expect(loginLink).toBeVisible();
-    
+
     await loginLink.click();
     await expect(page).toHaveURL(/login|signin/i);
   });
@@ -104,7 +104,7 @@ test.describe('User Registration', () => {
 
 test.describe('User Login', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/login');
+    await page.goto('/auth/login');
   });
 
   test('should display login form', async ({ page }) => {
@@ -116,7 +116,7 @@ test.describe('User Login', () => {
 
   test('should validate required fields', async ({ page }) => {
     await page.getByRole('button', { name: /login|sign in/i }).click();
-    
+
     await expect(page.getByText(/required|email|password/i)).toBeVisible();
   });
 
@@ -124,7 +124,7 @@ test.describe('User Login', () => {
     await page.getByLabel(/email/i).fill('invalid@email.com');
     await page.getByLabel(/password/i).fill('wrongpassword');
     await page.getByRole('button', { name: /login|sign in/i }).click();
-    
+
     await expect(page.getByText(/invalid|incorrect|not found|failed/i)).toBeVisible({ timeout: 10000 });
   });
 
@@ -133,7 +133,7 @@ test.describe('User Login', () => {
     await page.getByLabel(/email/i).fill('test@quiz2biz.com');
     await page.getByLabel(/password/i).fill('Test@Password123!');
     await page.getByRole('button', { name: /login|sign in/i }).click();
-    
+
     // Should redirect to dashboard
     await expect(page).toHaveURL(/dashboard|home/i, { timeout: 15000 });
   });
@@ -146,7 +146,7 @@ test.describe('User Login', () => {
   test('should have link to register page', async ({ page }) => {
     const registerLink = page.getByRole('link', { name: /register|sign up|create/i });
     await expect(registerLink).toBeVisible();
-    
+
     await registerLink.click();
     await expect(page).toHaveURL(/register|signup/i);
   });
@@ -155,7 +155,7 @@ test.describe('User Login', () => {
 test.describe('User Logout', () => {
   test.beforeEach(async ({ page }) => {
     // Login first
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.getByLabel(/email/i).fill('test@quiz2biz.com');
     await page.getByLabel(/password/i).fill('Test@Password123!');
     await page.getByRole('button', { name: /login|sign in/i }).click();
@@ -168,11 +168,11 @@ test.describe('User Logout', () => {
     if (await userMenu.isVisible()) {
       await userMenu.click();
     }
-    
+
     const logoutButton = page.getByRole('button', { name: /logout|sign out/i })
       .or(page.getByRole('link', { name: /logout|sign out/i }));
     await logoutButton.click();
-    
+
     // Should redirect to login or home
     await expect(page).toHaveURL(/login|signin|\/$/i, { timeout: 10000 });
   });
@@ -182,21 +182,21 @@ test.describe('Protected Routes', () => {
   test('should redirect unauthenticated users to login', async ({ page }) => {
     // Try to access protected route
     await page.goto('/dashboard');
-    
+
     // Should redirect to login
     await expect(page).toHaveURL(/login|signin/i, { timeout: 10000 });
   });
 
   test('should allow authenticated users to access protected routes', async ({ page }) => {
     // Login first
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.getByLabel(/email/i).fill('test@quiz2biz.com');
     await page.getByLabel(/password/i).fill('Test@Password123!');
     await page.getByRole('button', { name: /login|sign in/i }).click();
-    
+
     // Navigate to protected route
     await page.goto('/dashboard');
-    
+
     // Should stay on dashboard
     await expect(page).toHaveURL(/dashboard/i, { timeout: 10000 });
   });
@@ -205,15 +205,15 @@ test.describe('Protected Routes', () => {
 test.describe('Session Persistence', () => {
   test('should maintain session after page reload', async ({ page }) => {
     // Login
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.getByLabel(/email/i).fill('test@quiz2biz.com');
     await page.getByLabel(/password/i).fill('Test@Password123!');
     await page.getByRole('button', { name: /login|sign in/i }).click();
     await expect(page).toHaveURL(/dashboard|home/i, { timeout: 15000 });
-    
+
     // Reload page
     await page.reload();
-    
+
     // Should still be on protected page
     await expect(page).toHaveURL(/dashboard|home/i, { timeout: 10000 });
   });

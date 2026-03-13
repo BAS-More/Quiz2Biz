@@ -96,6 +96,7 @@ export function LoginPage() {
               aria-required="true"
               aria-invalid={errors.email ? 'true' : 'false'}
               aria-describedby={errors.email ? 'email-error' : undefined}
+              data-testid="email-input"
               className="block w-full rounded-lg border border-surface-200 bg-white pl-10 pr-3.5 py-2.5 text-sm text-surface-900 placeholder:text-surface-400 hover:border-surface-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-colors"
               placeholder="you@example.com"
             />
@@ -129,6 +130,7 @@ export function LoginPage() {
               aria-required="true"
               aria-invalid={errors.password ? 'true' : 'false'}
               aria-describedby={errors.password ? 'password-error' : undefined}
+              data-testid="password-input"
               className="block w-full rounded-lg border border-surface-200 bg-white px-3.5 py-2.5 text-sm text-surface-900 placeholder:text-surface-400 hover:border-surface-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 pr-10 transition-colors"
               placeholder="Enter your password"
             />
@@ -148,7 +150,7 @@ export function LoginPage() {
           )}
         </div>
 
-        <Button type="submit" loading={isSubmitting} fullWidth size="lg" className="mt-2">
+        <Button type="submit" loading={isSubmitting} fullWidth size="lg" className="mt-2" data-testid="login-button">
           {isSubmitting ? 'Signing in...' : 'Sign in'}
         </Button>
       </form>

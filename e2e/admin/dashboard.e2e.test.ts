@@ -8,7 +8,7 @@ import { testUsers } from '../fixtures';
 test.describe('Admin Dashboard', () => {
   test.beforeEach(async ({ page }) => {
     // Login as admin before each test
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.fill('[data-testid="email-input"]', testUsers.admin.email);
     await page.fill('[data-testid="password-input"]', testUsers.admin.password);
     await page.click('[data-testid="login-button"]');
@@ -17,7 +17,7 @@ test.describe('Admin Dashboard', () => {
 
   test.describe('Dashboard Overview', () => {
     test('should display admin dashboard with statistics', async ({ page }) => {
-      await page.goto('/admin');
+      await page.goto('/admin/review');
 
       // Verify admin dashboard is displayed
       await expect(page.locator('[data-testid="admin-dashboard"]')).toBeVisible();
@@ -30,7 +30,7 @@ test.describe('Admin Dashboard', () => {
     });
 
     test('should show recent activity feed', async ({ page }) => {
-      await page.goto('/admin');
+      await page.goto('/admin/review');
 
       // Verify activity feed
       await expect(page.locator('[data-testid="activity-feed"]')).toBeVisible();
@@ -38,7 +38,7 @@ test.describe('Admin Dashboard', () => {
     });
 
     test('should navigate to different admin sections', async ({ page }) => {
-      await page.goto('/admin');
+      await page.goto('/admin/review');
 
       // Test navigation to Users
       await page.click('[data-testid="nav-users"]');
@@ -380,14 +380,14 @@ test.describe('Admin Dashboard', () => {
       await page.click('[data-testid="logout-button"]');
 
       // Login as regular user
-      await page.goto('/login');
+      await page.goto('/auth/login');
       await page.fill('[data-testid="email-input"]', testUsers.user.email);
       await page.fill('[data-testid="password-input"]', testUsers.user.password);
       await page.click('[data-testid="login-button"]');
       await page.waitForURL('/dashboard');
 
       // Try to access admin page
-      await page.goto('/admin');
+      await page.goto('/admin/review');
 
       // Verify access denied
       await expect(page.locator('[data-testid="access-denied"]')).toBeVisible();
@@ -398,14 +398,14 @@ test.describe('Admin Dashboard', () => {
       await page.click('[data-testid="logout-button"]');
 
       // Login as moderator
-      await page.goto('/login');
+      await page.goto('/auth/login');
       await page.fill('[data-testid="email-input"]', testUsers.moderator.email);
       await page.fill('[data-testid="password-input"]', testUsers.moderator.password);
       await page.click('[data-testid="login-button"]');
       await page.waitForURL('/dashboard');
 
       // Access admin page
-      await page.goto('/admin');
+      await page.goto('/admin/review');
 
       // Verify limited access (can view but not manage users)
       await expect(page.locator('[data-testid="admin-dashboard"]')).toBeVisible();

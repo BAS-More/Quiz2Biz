@@ -262,6 +262,7 @@ export function MainLayout() {
         {/* User section */}
         <div
           className={clsx('border-t border-surface-100 p-3', collapsed && 'flex justify-center')}
+          data-testid="user-menu"
         >
           {!collapsed ? (
             <div className="space-y-2">
@@ -278,6 +279,7 @@ export function MainLayout() {
               </div>
               <button
                 onClick={handleLogout}
+                data-testid="logout-button"
                 className="flex items-center w-full gap-2 px-3 py-2 text-sm text-surface-500 rounded-lg hover:bg-danger-50 hover:text-danger-600 transition-colors"
               >
                 <LogOut className="h-4 w-4" />
@@ -287,6 +289,7 @@ export function MainLayout() {
           ) : (
             <button
               onClick={handleLogout}
+              data-testid="logout-button"
               className="p-2 rounded-lg text-surface-400 hover:bg-danger-50 hover:text-danger-600 transition-colors"
               title="Sign out"
             >

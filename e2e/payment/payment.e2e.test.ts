@@ -21,7 +21,7 @@ const STRIPE_TEST_CARDS = {
 test.describe('Payment Flow', () => {
   test.beforeEach(async ({ page }) => {
     // Login before each test
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.fill('[data-testid="email-input"]', testUsers.user.email);
     await page.fill('[data-testid="password-input"]', testUsers.user.password);
     await page.click('[data-testid="login-button"]');
@@ -64,7 +64,7 @@ test.describe('Payment Flow', () => {
 
   test.describe('Upgrade Flow', () => {
     test('should display pricing page with all tiers', async ({ page }) => {
-      await page.goto('/pricing');
+      await page.goto('/billing/upgrade');
 
       // Verify pricing tiers
       await expect(page.locator('[data-testid="pricing-page"]')).toBeVisible();
@@ -74,7 +74,7 @@ test.describe('Payment Flow', () => {
     });
 
     test('should show feature comparison table', async ({ page }) => {
-      await page.goto('/pricing');
+      await page.goto('/billing/upgrade');
 
       // Verify feature comparison
       await expect(page.locator('[data-testid="feature-comparison-table"]')).toBeVisible();
@@ -87,7 +87,7 @@ test.describe('Payment Flow', () => {
     });
 
     test('should initiate upgrade to Professional plan', async ({ page }) => {
-      await page.goto('/pricing');
+      await page.goto('/billing/upgrade');
 
       // Click upgrade on Professional plan
       await page.click('[data-testid="upgrade-professional-button"]');
@@ -99,7 +99,7 @@ test.describe('Payment Flow', () => {
     });
 
     test('should toggle between monthly and yearly billing', async ({ page }) => {
-      await page.goto('/pricing');
+      await page.goto('/billing/upgrade');
 
       // Get monthly price
       const monthlyPrice = await page
@@ -415,7 +415,7 @@ test.describe('Payment Flow', () => {
 
   test.describe('Enterprise Contact', () => {
     test('should display enterprise contact form', async ({ page }) => {
-      await page.goto('/pricing');
+      await page.goto('/billing/upgrade');
 
       // Click on Enterprise contact
       await page.click('[data-testid="enterprise-contact-button"]');
@@ -427,7 +427,7 @@ test.describe('Payment Flow', () => {
     });
 
     test('should submit enterprise inquiry', async ({ page }) => {
-      await page.goto('/pricing');
+      await page.goto('/billing/upgrade');
 
       // Click on Enterprise contact
       await page.click('[data-testid="enterprise-contact-button"]');
