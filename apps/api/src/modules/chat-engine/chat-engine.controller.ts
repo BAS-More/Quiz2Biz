@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param, Query, Res, UseGuards, Logger } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, Query, Res, UseGuards, Logger, ParseUUIDPipe } from '@nestjs/common';
 import { Response } from 'express';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -32,7 +32,7 @@ export class ChatEngineController {
   @ApiOperation({ summary: 'Get chat status and limits' })
   @ApiParam({ name: 'projectId', description: 'Project ID' })
   @ApiResponse({ status: 200, type: ChatStatusDto })
-  async getStatus(@Param('projectId') projectId: string): Promise<ChatStatusDto> {
+  async getStatus(@Param('projectId', ParseUUIDPipe) projectId: string): Promise<ChatStatusDto> {
     return this.chatEngine.getChatStatus(projectId);
   }
 
@@ -44,7 +44,7 @@ export class ChatEngineController {
   @ApiParam({ name: 'projectId', description: 'Project ID' })
   @ApiResponse({ status: 200, type: [ChatMessageDto] })
   async listMessages(
-    @Param('projectId') projectId: string,
+    @Param('projectId', ParseUUIDPipe) projectId: string,
     @Query() query: ListMessagesQueryDto,
   ): Promise<ChatMessageDto[]> {
     return this.chatEngine.getMessages(projectId, query.skip || 0, query.take || 50);
@@ -59,7 +59,7 @@ export class ChatEngineController {
   @ApiResponse({ status: 201, type: ChatMessageDto })
   @ApiResponse({ status: 400, description: 'Message limit reached' })
   async sendMessage(
-    @Param('projectId') projectId: string,
+    @Param('projectId', ParseUUIDPipe) projectId: string,
     @Body() dto: CreateMessageDto,
     @CurrentUser() user: { sub: string },
   ): Promise<ChatMessageDto> {
@@ -75,7 +75,7 @@ export class ChatEngineController {
   @ApiResponse({ status: 200, description: 'SSE stream of response chunks' })
   @ApiResponse({ status: 400, description: 'Message limit reached' })
   async sendMessageStream(
-    @Param('projectId') projectId: string,
+    @Param('projectId', ParseUUIDPipe) projectId: string,
     @Body() dto: CreateMessageDto,
     @Res() res: Response,
     @CurrentUser() user: { sub: string },
@@ -122,7 +122,7 @@ export class ChatEngineController {
   @ApiParam({ name: 'projectId', description: 'Project ID' })
   @ApiResponse({ status: 200, description: 'Can send status' })
   async canSend(
-    @Param('projectId') projectId: string,
+    @Param('projectId', ParseUUIDPipe) projectId: string,
   ): Promise<{ canSend: boolean; remaining: number; message?: string }> {
     return this.chatEngine.checkLimit(projectId);
   }

@@ -24,6 +24,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import * as crypto from 'crypto';
+import { IsString, IsBoolean, IsEnum, IsObject, IsOptional, IsUUID } from 'class-validator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Public } from '../auth/decorators/public.decorator';
 import { GitHubAdapter } from './github.adapter';
@@ -39,27 +40,49 @@ import {
   ConfluenceAdapterConfig,
 } from './adapter-config.service';
 
-// DTOs
+// DTOs with class-validator decorators for input validation (GAP-001 fix)
 class CreateAdapterConfigDto {
+  @IsEnum(['github', 'gitlab', 'jira', 'confluence', 'azure_devops'])
   type!: AdapterType;
+
+  @IsString()
   name!: string;
+
+  @IsBoolean()
   enabled!: boolean;
+
+  @IsObject()
   config!: Record<string, unknown>;
 }
 
 class UpdateAdapterConfigDto {
+  @IsOptional()
+  @IsString()
   name?: string;
+
+  @IsOptional()
+  @IsBoolean()
   enabled?: boolean;
+
+  @IsOptional()
+  @IsObject()
   config?: Record<string, unknown>;
 }
 
 class SyncAdapterDto {
+  @IsUUID()
   sessionId!: string;
+
+  @IsOptional()
+  @IsObject()
   options?: Record<string, unknown>;
 }
 
 class TestAdapterConnectionDto {
+  @IsEnum(['github', 'gitlab', 'jira', 'confluence', 'azure_devops'])
   type!: AdapterType;
+
+  @IsObject()
   config!: Record<string, unknown>;
 }
 

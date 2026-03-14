@@ -12,6 +12,7 @@ const logger = new Logger('Sentry');
 
 // Profiling is optional - only load if available
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Dynamic require for optional profiling integration
 let nodeProfilingIntegration: (() => any) | null = null;
 try {
   nodeProfilingIntegration = require('@sentry/profiling-node').nodeProfilingIntegration;

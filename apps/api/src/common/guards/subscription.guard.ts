@@ -83,6 +83,7 @@ export class SubscriptionGuard implements CanActivate {
    * Extract organization ID from request
    * Supports: JWT token, query param, header, body
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- NestJS ExecutionContext provides untyped request
   private extractOrganizationId(request: any): string | null {
     // From JWT user context (set by auth guard)
     if (request.user?.organizationId) {
@@ -134,6 +135,7 @@ export class SubscriptionGuard implements CanActivate {
   private async checkFeatureAccess(
     organizationId: string,
     config: FeatureCheckConfig,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- NestJS ExecutionContext request
     request: any,
   ): Promise<void> {
     const currentUsage = config.getUsage ? await config.getUsage(request) : 0;
@@ -169,6 +171,7 @@ export class FeatureUsageMiddleware {
     private subscriptionService: SubscriptionService,
   ) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Express middleware signature
   async use(request: any, response: any, next: () => void): Promise<void> {
     const organizationId =
       request.user?.organizationId ||

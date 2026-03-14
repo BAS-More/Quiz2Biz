@@ -561,6 +561,7 @@ export async function shutdown(): Promise<void> {
  * Create a request tracking middleware for NestJS
  */
 export function createRequestTrackingMiddleware() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Express middleware signature requires any
   return (req: any, res: any, next: () => void) => {
     const startTime = Date.now();
 

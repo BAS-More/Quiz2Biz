@@ -865,7 +865,7 @@ describe('JiraConfluenceAdapter', () => {
 
       const calledUrl = mockFetch.mock.calls[0][0] as string;
       expect(calledUrl).toContain('/content/search');
-      expect(calledUrl).toContain(encodeURIComponent(`space = TEST AND text ~ "architecture"`));
+      expect(calledUrl).toContain(encodeURIComponent(`space = "TEST" AND text ~ "architecture"`));
     });
 
     it('should use content endpoint with spaceKey when neither cql nor query is provided', async () => {

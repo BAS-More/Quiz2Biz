@@ -48,6 +48,7 @@ async function bootstrap(): Promise<void> {
         const acceptHeader = req.headers.accept ?? '';
 
         // Skip compression for SSE and streaming endpoints (prefix-aware)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Express IncomingMessage may have originalUrl
         const url =
           typeof (req as any).originalUrl === 'string'
             ? (req as any).originalUrl

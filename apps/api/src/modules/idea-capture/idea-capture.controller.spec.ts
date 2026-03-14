@@ -62,15 +62,21 @@ describe('IdeaCaptureController', () => {
       expect(mockIdeaCaptureService.captureAndAnalyze).toHaveBeenCalledWith(dto, mockUser.id);
     });
 
-    it('should capture idea without authenticated user', async () => {
+    it('should capture idea with another authenticated user', async () => {
       const dto: CreateIdeaDto = {
         rawInput: 'Another business idea for testing',
       };
 
-      const result = await controller.captureIdea(dto, undefined);
+      const anotherUser: AuthenticatedUser = {
+        id: 'user-456',
+        email: 'other@example.com',
+        role: 'CLIENT' as any,
+      };
+
+      const result = await controller.captureIdea(dto, anotherUser);
 
       expect(result).toEqual(mockIdeaResponse);
-      expect(mockIdeaCaptureService.captureAndAnalyze).toHaveBeenCalledWith(dto, undefined);
+      expect(mockIdeaCaptureService.captureAndAnalyze).toHaveBeenCalledWith(dto, anotherUser.id);
     });
 
     it('should capture idea with optional projectTypeId', async () => {

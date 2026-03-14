@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, ParseEnumPipe } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { StandardCategory } from '@prisma/client';
 
@@ -43,8 +43,10 @@ export class StandardsController {
     type: StandardWithMappingsDto,
   })
   @ApiResponse({ status: 404, description: 'Standard category not found' })
-  async findByCategory(@Param('category') category: string): Promise<StandardWithMappingsDto> {
-    return this.standardsService.findWithMappings(category as StandardCategory);
+  async findByCategory(
+    @Param('category', new ParseEnumPipe(StandardCategory)) category: StandardCategory,
+  ): Promise<StandardWithMappingsDto> {
+    return this.standardsService.findWithMappings(category);
   }
 
   @Get('document/:documentTypeId')

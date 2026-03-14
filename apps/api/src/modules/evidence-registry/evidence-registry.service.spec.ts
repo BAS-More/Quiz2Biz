@@ -22,6 +22,7 @@ describe('EvidenceRegistryService', () => {
       findUnique: jest.fn(),
       findMany: jest.fn(),
       update: jest.fn(),
+      updateMany: jest.fn(),
       delete: jest.fn(),
       count: jest.fn(),
     },
@@ -38,6 +39,7 @@ describe('EvidenceRegistryService', () => {
     decisionLog: {
       findMany: jest.fn(),
     },
+    $transaction: jest.fn((fn: (prisma: typeof mockPrisma) => Promise<void>): Promise<void> => fn(mockPrisma)),
   };
 
   const mockConfigService = {
@@ -485,13 +487,8 @@ describe('EvidenceRegistryService', () => {
         verified: false,
       } as any;
 
-      mockPrisma.evidenceRegistry.findUnique
-        .mockResolvedValueOnce(mockEvidence1)
-        .mockResolvedValueOnce(mockEvidence2);
-
-      mockPrisma.evidenceRegistry.update
-        .mockResolvedValueOnce({ ...mockEvidence1, verified: true })
-        .mockResolvedValueOnce({ ...mockEvidence2, verified: true });
+      mockPrisma.evidenceRegistry.findMany.mockResolvedValueOnce([mockEvidence1, mockEvidence2]);
+      mockPrisma.evidenceRegistry.updateMany.mockResolvedValue({ count: 2 });
 
       const result = await service.bulkVerifyEvidence(['evidence-1', 'evidence-2'], 'verifier-999');
 
@@ -501,14 +498,11 @@ describe('EvidenceRegistryService', () => {
     });
 
     it('handles partial failures gracefully', async () => {
-      mockPrisma.evidenceRegistry.findUnique
-        .mockResolvedValueOnce({ id: 'evidence-1' } as any)
-        .mockResolvedValueOnce(null); // Second evidence not found
-
-      mockPrisma.evidenceRegistry.update.mockResolvedValue({
-        id: 'evidence-1',
-        verified: true,
-      } as any);
+      // findMany only returns evidence-1 (evidence-2 not found)
+      mockPrisma.evidenceRegistry.findMany.mockResolvedValueOnce([
+        { id: 'evidence-1', sessionId: 's1', questionId: 'q1' } as any,
+      ]);
+      mockPrisma.evidenceRegistry.updateMany.mockResolvedValue({ count: 1 });
 
       const result = await service.bulkVerifyEvidence(['evidence-1', 'evidence-2'], 'verifier-999');
 
@@ -1013,6 +1007,8 @@ describe('EvidenceRegistryService', () => {
 
   describe('bulkVerifyEvidence - additional cases', () => {
     it('handles empty array of evidence IDs', async () => {
+      mockPrisma.evidenceRegistry.findMany.mockResolvedValueOnce([]);
+
       const result = await service.bulkVerifyEvidence([], 'verifier-999');
 
       expect(result.successful).toHaveLength(0);
@@ -1028,8 +1024,8 @@ describe('EvidenceRegistryService', () => {
         verified: false,
       } as any;
 
-      mockPrisma.evidenceRegistry.findUnique.mockResolvedValue(mockEvidence1);
-      mockPrisma.evidenceRegistry.update.mockResolvedValue({ ...mockEvidence1, verified: true });
+      mockPrisma.evidenceRegistry.findMany.mockResolvedValueOnce([mockEvidence1]);
+      mockPrisma.evidenceRegistry.updateMany.mockResolvedValue({ count: 1 });
       mockPrisma.response.findFirst.mockResolvedValue({ coverageLevel: 'NONE' });
       mockPrisma.response.updateMany.mockResolvedValue({ count: 1 });
 
@@ -1039,16 +1035,20 @@ describe('EvidenceRegistryService', () => {
       expect(mockPrisma.response.updateMany).toHaveBeenCalled();
     });
 
-    it('captures error message for non-Error exceptions', async () => {
-      mockPrisma.evidenceRegistry.findUnique.mockRejectedValue('string-error');
+    it('captures error when transaction fails', async () => {
+      mockPrisma.evidenceRegistry.findMany.mockResolvedValueOnce([
+        { id: 'evidence-1', sessionId: 's1', questionId: 'q1' } as any,
+      ]);
+      mockPrisma.$transaction.mockRejectedValueOnce(new Error('Transaction failed'));
 
       const result = await service.bulkVerifyEvidence(['evidence-1'], 'verifier-999');
 
       expect(result.failed).toHaveLength(1);
-      expect(result.failed[0].error).toBe('Unknown error');
+      expect(result.failed[0].error).toBe('Transaction failed');
     });
 
     it('continues processing remaining items after a failure', async () => {
+      // findMany returns only evidence-2 (evidence-1 not found)
       const mockEvidence2 = {
         id: 'evidence-2',
         sessionId: 's1',
@@ -1056,11 +1056,8 @@ describe('EvidenceRegistryService', () => {
         verified: false,
       } as any;
 
-      mockPrisma.evidenceRegistry.findUnique
-        .mockResolvedValueOnce(null) // First one fails (not found)
-        .mockResolvedValueOnce(mockEvidence2); // Second one succeeds
-
-      mockPrisma.evidenceRegistry.update.mockResolvedValue({ ...mockEvidence2, verified: true });
+      mockPrisma.evidenceRegistry.findMany.mockResolvedValueOnce([mockEvidence2]);
+      mockPrisma.evidenceRegistry.updateMany.mockResolvedValue({ count: 1 });
 
       const result = await service.bulkVerifyEvidence(['evidence-1', 'evidence-2'], 'verifier-999');
 

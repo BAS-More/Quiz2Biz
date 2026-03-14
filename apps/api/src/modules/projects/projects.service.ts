@@ -136,9 +136,9 @@ export class ProjectsService {
     }
 
     const data: Prisma.ProjectUpdateInput = {};
-    if (dto.name !== undefined) data.name = dto.name;
-    if (dto.description !== undefined) data.description = dto.description;
-    if (dto.status !== undefined) data.status = dto.status;
+      if (dto.name !== undefined) { data.name = dto.name; }
+      if (dto.description !== undefined) { data.description = dto.description; }
+      if (dto.status !== undefined) { data.status = dto.status; }
 
     const updated = await this.prisma.project.update({
       where: { id: projectId },

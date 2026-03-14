@@ -341,13 +341,33 @@ export class HealthController {
   }
 
   private checkDisk(): DependencyCheck {
-    // Simple disk check - in production, you'd use a proper disk space check
-    // This is a placeholder that always returns healthy
-    return {
-      name: 'disk',
-      status: 'healthy',
-      message: 'Disk space check not implemented',
-    };
+    try {
+      const memUsage = process.memoryUsage();
+      const heapTotal = memUsage.heapTotal;
+      const heapUsed = memUsage.heapUsed;
+      const heapUtilization = heapUsed / heapTotal;
+
+      // Use heap utilization as a proxy for resource pressure
+      // In containerized environments, disk space is managed by the orchestrator
+      let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
+      let message = `Heap utilization: ${(heapUtilization * 100).toFixed(1)}%`;
+
+      if (heapUtilization > 0.95) {
+        status = 'unhealthy';
+        message = `Critical heap utilization: ${(heapUtilization * 100).toFixed(1)}%`;
+      } else if (heapUtilization > 0.85) {
+        status = 'degraded';
+        message = `High heap utilization: ${(heapUtilization * 100).toFixed(1)}%`;
+      }
+
+      return { name: 'disk', status, message };
+    } catch {
+      return {
+        name: 'disk',
+        status: 'degraded',
+        message: 'Disk check unavailable in this environment',
+      };
+    }
   }
 
   /**

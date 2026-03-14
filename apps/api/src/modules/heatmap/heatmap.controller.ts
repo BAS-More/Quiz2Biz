@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, Res, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, Res, HttpStatus, UseGuards, ParseUUIDPipe } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -63,7 +63,7 @@ export class HeatmapController {
     type: HeatmapResultDto,
   })
   @ApiResponse({ status: 404, description: 'Session not found' })
-  async getHeatmap(@Param('sessionId') sessionId: string): Promise<HeatmapResultDto> {
+  async getHeatmap(@Param('sessionId', ParseUUIDPipe) sessionId: string): Promise<HeatmapResultDto> {
     return this.heatmapService.generateHeatmap(sessionId);
   }
 
@@ -82,7 +82,7 @@ export class HeatmapController {
     type: HeatmapSummaryDto,
   })
   @ApiResponse({ status: 404, description: 'Session not found' })
-  async getSummary(@Param('sessionId') sessionId: string): Promise<HeatmapSummaryDto> {
+  async getSummary(@Param('sessionId', ParseUUIDPipe) sessionId: string): Promise<HeatmapSummaryDto> {
     return this.heatmapService.getSummary(sessionId);
   }
 
@@ -97,7 +97,7 @@ export class HeatmapController {
   @ApiParam({ name: 'sessionId', description: 'Session UUID' })
   @ApiResponse({ status: 200, description: 'CSV file generated' })
   @ApiResponse({ status: 404, description: 'Session not found' })
-  async exportToCsv(@Param('sessionId') sessionId: string, @Res() res: Response): Promise<void> {
+  async exportToCsv(@Param('sessionId', ParseUUIDPipe) sessionId: string, @Res() res: Response): Promise<void> {
     const csv = await this.heatmapService.exportToCsv(sessionId);
     const safeSessionId = this.sanitizeFilenameSegment(sessionId);
     res.setHeader('Content-Type', 'text/csv');
@@ -117,7 +117,7 @@ export class HeatmapController {
   @ApiResponse({ status: 200, description: 'Markdown file generated' })
   @ApiResponse({ status: 404, description: 'Session not found' })
   async exportToMarkdown(
-    @Param('sessionId') sessionId: string,
+    @Param('sessionId', ParseUUIDPipe) sessionId: string,
     @Res() res: Response,
   ): Promise<void> {
     const markdown = await this.heatmapService.exportToMarkdown(sessionId);
@@ -149,7 +149,7 @@ export class HeatmapController {
   })
   @ApiResponse({ status: 404, description: 'Session not found' })
   async getCells(
-    @Param('sessionId') sessionId: string,
+    @Param('sessionId', ParseUUIDPipe) sessionId: string,
     @Query() query: HeatmapCellsQueryDto,
   ): Promise<HeatmapCellDto[]> {
     return this.heatmapService.getCells(sessionId, query.dimension, query.severity);
@@ -176,7 +176,7 @@ export class HeatmapController {
   })
   @ApiResponse({ status: 404, description: 'Session or cell not found' })
   async drilldown(
-    @Param('sessionId') sessionId: string,
+    @Param('sessionId', ParseUUIDPipe) sessionId: string,
     @Param('dimensionKey') dimensionKey: string,
     @Param('severityBucket') severityBucket: string,
   ): Promise<HeatmapDrilldownDto> {
