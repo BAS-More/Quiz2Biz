@@ -414,7 +414,7 @@ export class HeatmapService {
       const cacheKey = `heatmap:${sessionId}`;
       const cached = await this.redis.get(cacheKey);
       if (cached) {
-        const result = JSON.parse(cached);
+        const result = JSON.parse(cached) as HeatmapResultDto;
         result.generatedAt = new Date(result.generatedAt);
         return result;
       }

@@ -6,8 +6,8 @@ export const CurrentUser = createParamDecorator(
     data: keyof AuthenticatedUser | undefined,
     ctx: ExecutionContext,
   ): AuthenticatedUser | AuthenticatedUser[keyof AuthenticatedUser] => {
-    const request = ctx.switchToHttp().getRequest();
-    const user = request.user as AuthenticatedUser;
+    const request = ctx.switchToHttp().getRequest<{ user: AuthenticatedUser }>();
+    const user = request.user;
 
     if (data) {
       return user[data];

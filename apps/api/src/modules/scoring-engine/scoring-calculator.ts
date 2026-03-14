@@ -11,6 +11,7 @@ import {
   ScoreSnapshot,
   TrendAnalysis,
   coverageLevelToDecimal,
+  decimalToCoverageLevel,
 } from './scoring-types';
 
 // Re-export for convenience
@@ -48,7 +49,6 @@ export function buildCoverageMap(
   });
 
   if (overrides) {
-    const { decimalToCoverageLevel } = require('./scoring-types');
     overrides.forEach((override) => {
       if (coverageMap.has(override.questionId)) {
         const level = decimalToCoverageLevel(override.coverage);

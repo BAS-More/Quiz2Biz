@@ -396,7 +396,8 @@ Return ONLY a valid JSON object with the extracted facts.`;
         cleaned = cleaned.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
       }
 
-      const parsed = JSON.parse(cleaned);
+      const parsed: { facts?: Array<{ category: string; key: string; value: string; confidence?: string }> } =
+        JSON.parse(cleaned) as { facts?: Array<{ category: string; key: string; value: string; confidence?: string }> };
 
       if (!parsed.facts || !Array.isArray(parsed.facts)) {
         this.logger.warn('Invalid extraction response structure');
@@ -404,7 +405,7 @@ Return ONLY a valid JSON object with the extracted facts.`;
       }
 
       return parsed.facts.map(
-        (f: { category: string; key: string; value: string; confidence?: string }) => ({
+        (f) => ({
           category: f.category as ExtractionCategory,
           key: f.key,
           value: f.value,

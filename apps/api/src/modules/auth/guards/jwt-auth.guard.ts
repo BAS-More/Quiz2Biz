@@ -39,7 +39,11 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     context: ExecutionContext,
   ): TUser {
     if (err || !user) {
-      const request = context.switchToHttp().getRequest();
+      const request = context.switchToHttp().getRequest<{
+        headers?: { authorization?: string };
+        method?: string;
+        path?: string;
+      }>();
       const hasAuthHeader = !!request.headers?.authorization;
 
       this.logger.warn(

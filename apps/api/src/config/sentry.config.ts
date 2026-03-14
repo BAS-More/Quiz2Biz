@@ -11,14 +11,14 @@ import { Logger } from '@nestjs/common';
 const logger = new Logger('Sentry');
 
 // Profiling is optional - only load if available
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Dynamic require for optional profiling integration
-let nodeProfilingIntegration: (() => any) | null = null;
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access -- Dynamic require for optional @sentry/profiling-node integration */
+let nodeProfilingIntegration: (() => ReturnType<typeof Sentry.httpIntegration>) | null = null;
 try {
   nodeProfilingIntegration = require('@sentry/profiling-node').nodeProfilingIntegration;
 } catch {
   // Profiling not available
 }
+/* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 
 export interface SentryConfig {
   dsn: string;

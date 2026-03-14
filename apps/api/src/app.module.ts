@@ -35,14 +35,17 @@ import configuration from './config/configuration';
  */
 function getLegacyModules(): Array<Type | DynamicModule> {
   if (process.env.ENABLE_LEGACY_MODULES === 'true') {
+    // Dynamic imports for feature-flagged legacy modules to avoid loading unused code
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment -- Dynamic require for conditional module loading */
     const {
       EvidenceRegistryModule,
     } = require('./modules/evidence-registry/evidence-registry.module');
     const { DecisionLogModule } = require('./modules/decision-log/decision-log.module');
     const { QpgModule } = require('./modules/qpg/qpg.module');
     const { PolicyPackModule } = require('./modules/policy-pack/policy-pack.module');
+    /* eslint-enable @typescript-eslint/no-unsafe-assignment */
 
-    return [EvidenceRegistryModule, DecisionLogModule, QpgModule, PolicyPackModule];
+    return [EvidenceRegistryModule, DecisionLogModule, QpgModule, PolicyPackModule] as Array<Type | DynamicModule>;
   }
   return [];
 }

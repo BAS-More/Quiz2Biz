@@ -83,7 +83,7 @@ export class ApprovalGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<Request & { user?: { role?: string } }>();
     const user = request.user;
 
     if (!user) {

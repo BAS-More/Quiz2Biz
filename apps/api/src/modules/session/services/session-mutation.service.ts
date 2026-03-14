@@ -106,13 +106,13 @@ export class SessionMutationService {
       create: {
         sessionId,
         questionId: dto.questionId,
-        value: JSON.parse(JSON.stringify(dto.value)),
+        value: JSON.parse(JSON.stringify(dto.value)) as Prisma.InputJsonValue,
         isValid: validation.isValid,
         validationErrors: validation.errors ? { errors: validation.errors } : Prisma.JsonNull,
         timeSpentSeconds: dto.timeSpentSeconds,
       },
       update: {
-        value: JSON.parse(JSON.stringify(dto.value)),
+        value: JSON.parse(JSON.stringify(dto.value)) as Prisma.InputJsonValue,
         isValid: validation.isValid,
         validationErrors: validation.errors ? { errors: validation.errors } : Prisma.JsonNull,
         timeSpentSeconds: dto.timeSpentSeconds,
