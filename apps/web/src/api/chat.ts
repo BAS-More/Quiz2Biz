@@ -24,7 +24,7 @@ export interface ChatStatus {
   messageCount: number;
   messageLimit: number;
   remainingMessages: number;
-  isLimitReached: boolean;
+  limitReached: boolean;
   lastMessageAt?: string;
 }
 

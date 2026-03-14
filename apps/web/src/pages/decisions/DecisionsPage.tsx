@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Lock, Unlock, ArrowLeft } from 'lucide-react';
+import { Lock, Unlock, ArrowLeft, RefreshCw } from 'lucide-react';
 import { useDecisionsStore } from '../../stores/decisions';
 import { EmptyState } from '../../components/ui/EmptyState';
 
@@ -19,10 +19,14 @@ export function DecisionsPage() {
   const [assumptions, setAssumptions] = useState('');
   const [showForm, setShowForm] = useState(false);
 
-  useEffect(() => {
+  const reload = useCallback(() => {
     if (!sessionId) return;
     loadDecisions(sessionId);
   }, [sessionId, loadDecisions]);
+
+  useEffect(() => {
+    reload();
+  }, [reload]);
 
   const handleCreate = async () => {
     if (!sessionId || !statement.trim()) return;
@@ -67,10 +71,18 @@ export function DecisionsPage() {
 
       {error && (
         <div
-          className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300"
+          className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300 flex items-center gap-2"
           role="alert"
         >
-          {error}
+          <span className="flex-1">{error}</span>
+          <button
+            onClick={reload}
+            disabled={isLoading}
+            className="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium rounded-md bg-red-100 hover:bg-red-200 dark:bg-red-800 dark:hover:bg-red-700 transition-colors disabled:opacity-50"
+          >
+            <RefreshCw className={`h-3 w-3 ${isLoading ? 'animate-spin' : ''}`} />
+            Retry
+          </button>
         </div>
       )}
 

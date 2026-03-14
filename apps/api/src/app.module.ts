@@ -25,6 +25,7 @@ import { AiGatewayModule } from './modules/ai-gateway/ai-gateway.module';
 import { ChatEngineModule } from './modules/chat-engine/chat-engine.module';
 import { FactExtractionModule } from './modules/fact-extraction/fact-extraction.module';
 import { QualityScoringModule } from './modules/quality-scoring/quality-scoring.module';
+import { ProjectsModule } from './modules/projects/projects.module';
 import { HealthController } from './health.controller';
 import configuration from './config/configuration';
 
@@ -105,6 +106,7 @@ function getLegacyModules(): Array<Type | DynamicModule> {
     ChatEngineModule,
     FactExtractionModule,
     QualityScoringModule,
+    ProjectsModule,
 
     // Legacy modules (feature-flagged via ENABLE_LEGACY_MODULES env var)
     ...getLegacyModules(),

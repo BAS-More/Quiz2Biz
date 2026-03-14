@@ -125,6 +125,7 @@ enum CoverageLevel {
 
 // Project status for multi-project workspace
 enum ProjectStatus {
+  DRAFT
   ACTIVE
   ARCHIVED
   COMPLETED

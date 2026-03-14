@@ -7,6 +7,7 @@ import {
   Query,
   UseGuards,
   ParseUUIDPipe,
+  ParseIntPipe,
   Res,
   StreamableFile,
 } from '@nestjs/common';
@@ -205,6 +206,23 @@ export class DocumentController {
   ): Promise<DocumentResponseDto[]> {
     const versions = await this.documentGeneratorService.getDocumentVersionHistory(id, user.id);
     return versions.map((doc) => this.mapToResponse(doc));
+  }
+
+  @Get(':id/versions/:version/download')
+  @ApiOperation({ summary: 'Download a specific document version' })
+  @ApiResponse({ status: 200, description: 'Download URL for the version', type: DownloadUrlResponseDto })
+  @ApiResponse({ status: 404, description: 'Version not found' })
+  @ApiResponse({ status: 400, description: 'Version not available for download' })
+  async downloadDocumentVersion(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('version', ParseIntPipe) version: number,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<DownloadUrlResponseDto> {
+    const url = await this.documentGeneratorService.getVersionDownloadUrl(id, version, user.id);
+    return {
+      url,
+      expiresAt: new Date(Date.now() + 60 * 60000),
+    };
   }
 
   private mapToResponse(document: {

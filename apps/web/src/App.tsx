@@ -18,6 +18,7 @@ import { AccessibilityProvider } from './components/accessibility/Accessibility'
 import { I18nProvider } from './components/i18n/Internationalization';
 import { PredictiveErrorProvider } from './components/ai/AIPredictiveErrors';
 import { SmartSearchProvider } from './components/ai/AISmartSearch';
+import { RequireRole } from './components/auth/RequireRole';
 
 // Lazy-loaded page components for code-splitting
 const LoginPage = lazy(() =>
@@ -247,8 +248,8 @@ export default function App() {
                               <Route path="project/:projectId/documents" element={<DocumentMenuPage />} />
                               <Route path="project/:projectId/facts" element={<FactReviewPage />} />
                               <Route path="chat/:projectId?" element={<ChatPage />} />
-                              <Route path="admin/review" element={<ReviewQueuePage />} />
-                              <Route path="admin/review/:documentId" element={<DocumentReviewPage />} />
+                              <Route path="admin/review" element={<RequireRole allowed={['ADMIN', 'SUPER_ADMIN']}><ReviewQueuePage /></RequireRole>} />
+                              <Route path="admin/review/:documentId" element={<RequireRole allowed={['ADMIN', 'SUPER_ADMIN']}><DocumentReviewPage /></RequireRole>} />
                               <Route path="settings/mfa" element={<MFASetupPage />} />
                               <Route path="settings/profile" element={<ProfilePage />} />
                               <Route path="sessions/compare" element={<SessionComparisonPage />} />

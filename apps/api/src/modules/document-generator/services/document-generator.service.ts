@@ -325,6 +325,47 @@ export class DocumentGeneratorService {
   }
 
   /**
+   * Get download URL for a specific document version
+   */
+  async getVersionDownloadUrl(
+    documentId: string,
+    version: number,
+    userId: string,
+    expiresInMinutes: number = 60,
+  ): Promise<string> {
+    // First verify access via the base document
+    const baseDocument = await this.getDocument(documentId, userId);
+
+    // Find the specific version
+    const versionDoc = await this.prisma.document.findFirst({
+      where: {
+        sessionId: baseDocument.sessionId,
+        documentTypeId: baseDocument.documentTypeId,
+        version,
+      },
+    });
+
+    if (!versionDoc) {
+      throw new NotFoundException(`Version ${version} not found for document ${documentId}`);
+    }
+
+    if (
+      versionDoc.status !== DocumentStatus.GENERATED &&
+      versionDoc.status !== DocumentStatus.APPROVED
+    ) {
+      throw new BadRequestException(
+        `Document version is not available for download. Status: ${versionDoc.status}`,
+      );
+    }
+
+    if (!versionDoc.storageUrl) {
+      throw new BadRequestException('Document version file not found');
+    }
+
+    return this.storage.getDownloadUrl(versionDoc.storageUrl, expiresInMinutes);
+  }
+
+  /**
    * Get download URL for a document
    */
   async getDownloadUrl(id: string, userId: string, expiresInMinutes: number = 60): Promise<string> {

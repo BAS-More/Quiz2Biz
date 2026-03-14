@@ -142,7 +142,7 @@ export function ChatPage() {
 
   // Handle sending message with streaming
   const handleSend = useCallback(async () => {
-    if (!projectId || !input.trim() || isSending || status?.isLimitReached) return;
+    if (!projectId || !input.trim() || isSending || status?.limitReached) return;
 
     const content = input.trim();
     setInput('');
@@ -198,7 +198,7 @@ export function ChatPage() {
       setStreamingContent('');
       inputRef.current?.focus();
     }
-  }, [projectId, input, isSending, status?.isLimitReached]);
+  }, [projectId, input, isSending, status?.limitReached]);
 
   // Handle Enter key
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -334,7 +334,7 @@ export function ChatPage() {
 
       {/* Input area */}
       <div className="pt-4 border-t border-surface-100">
-        {status?.isLimitReached ? (
+        {status?.limitReached ? (
           <div className="bg-warning-50 border border-warning-200 rounded-xl p-4 text-center">
             <p className="text-sm text-warning-700 font-medium">Message limit reached</p>
             <p className="text-xs text-warning-600 mt-1">

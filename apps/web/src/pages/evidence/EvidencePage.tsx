@@ -1,18 +1,22 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useEvidenceStore } from '../../stores/evidence';
 import { EmptyState } from '../../components/ui/EmptyState';
-import { Loader2, AlertCircle } from 'lucide-react';
+import { Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 
 export function EvidencePage() {
   const { sessionId } = useParams<{ sessionId: string }>();
   const { items, stats, isLoading, error, loadEvidence, loadStats } = useEvidenceStore();
 
-  useEffect(() => {
+  const reload = useCallback(() => {
     if (!sessionId) return;
     loadEvidence(sessionId);
     loadStats(sessionId);
   }, [sessionId, loadEvidence, loadStats]);
+
+  useEffect(() => {
+    reload();
+  }, [reload]);
 
   if (isLoading && items.length === 0) {
     return (
@@ -34,7 +38,15 @@ export function EvidencePage() {
       {error && (
         <div className="p-4 bg-danger-50 border border-danger-200 rounded-xl text-sm text-danger-700 mb-4 flex items-center gap-2">
           <AlertCircle className="h-5 w-5 shrink-0" />
-          {error}
+          <span className="flex-1">{error}</span>
+          <button
+            onClick={reload}
+            disabled={isLoading}
+            className="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium rounded-md bg-danger-100 hover:bg-danger-200 transition-colors disabled:opacity-50"
+          >
+            <RefreshCw className={`h-3 w-3 ${isLoading ? 'animate-spin' : ''}`} />
+            Retry
+          </button>
         </div>
       )}
 
