@@ -47,7 +47,7 @@ TypeScript strict mode, React 19, NestJS, PostgreSQL 16, Redis, Prisma ORM, Azur
 Before executing ANY task, audit ALL dependencies and failure points first. Never do incremental "fix and see." Diagnose the full problem, validate the complete plan, then execute once.
 
 ## Coding Quality
-All code must comply with ISO 25010/5055, OWASP Top 10:2025, SOLID, Clean Code. TypeScript strict mode, no `any`, 80% test coverage, zero hardcoded secrets, structured error handling.
+All code must comply with ISO 25010/5055, OWASP Top 10:2021, SOLID, Clean Code. TypeScript strict mode, no `any`, 80% test coverage, zero hardcoded secrets, structured error handling.
 
 ## Repository Structure
 - `apps/api/` — NestJS API (port 3000, prefix /api/v1)
