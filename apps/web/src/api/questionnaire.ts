@@ -467,7 +467,7 @@ export const questionnaireApi = {
     terraformRules: string;
     generatedAt: string;
   }> {
-    const { data } = await apiClient.post(`${API_PREFIX}/policy-pack/generate/${sessionId}`);
+    const { data } = await apiClient.post(`${API_PREFIX}/policy-pack/generate/${sessionId}`, {}, { timeout: 120000 });
     return data;
   },
 };

@@ -7,6 +7,9 @@ import { apiClient } from './client';
 
 const API_PREFIX = '/api/v1';
 
+/** Extended timeout for long-running operations (2 minutes) */
+const LONG_TIMEOUT = 120_000;
+
 export interface DocumentType {
   id: string;
   slug: string;
@@ -57,11 +60,11 @@ export async function requestDocumentGeneration(
   documentTypeId: string,
   format: 'DOCX' | 'PDF' = 'DOCX',
 ): Promise<DocumentResponse> {
-  const { data } = await apiClient.post(`${API_PREFIX}/documents/generate`, {
-    sessionId,
-    documentTypeId,
-    format,
-  });
+  const { data } = await apiClient.post(
+    `${API_PREFIX}/documents/generate`,
+    { sessionId, documentTypeId, format },
+    { timeout: LONG_TIMEOUT },
+  );
   return data.data ?? data;
 }
 
@@ -73,6 +76,7 @@ export async function getSessionDocuments(sessionId: string): Promise<DocumentRe
 export async function downloadDocument(documentId: string): Promise<Blob> {
   const { data } = await apiClient.get(`${API_PREFIX}/documents/${documentId}/download`, {
     responseType: 'blob',
+    timeout: LONG_TIMEOUT,
   });
   return data;
 }
@@ -82,6 +86,7 @@ export async function bulkDownloadSession(sessionId: string): Promise<Blob> {
     `${API_PREFIX}/documents/session/${sessionId}/bulk-download`,
     {
       responseType: 'blob',
+      timeout: LONG_TIMEOUT,
     },
   );
   return data;
@@ -91,7 +96,7 @@ export async function bulkDownloadSelected(documentIds: string[]): Promise<Blob>
   const { data } = await apiClient.post(
     `${API_PREFIX}/documents/bulk-download`,
     { documentIds },
-    { responseType: 'blob' },
+    { responseType: 'blob', timeout: LONG_TIMEOUT },
   );
   return data;
 }
