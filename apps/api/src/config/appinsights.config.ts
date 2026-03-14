@@ -557,12 +557,24 @@ export async function shutdown(): Promise<void> {
 // NestJS Middleware Helper
 // =============================================================================
 
+/** Minimal Express Request shape for tracking middleware */
+interface TrackingRequest {
+  path: string;
+  method: string;
+  user?: { id?: string };
+}
+
+/** Minimal Express Response shape for tracking middleware */
+interface TrackingResponse {
+  statusCode: number;
+  on(event: string, listener: () => void): void;
+}
+
 /**
  * Create a request tracking middleware for NestJS
  */
 export function createRequestTrackingMiddleware() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Express middleware signature requires any
-  return (req: any, res: any, next: () => void) => {
+  return (req: TrackingRequest, res: TrackingResponse, next: () => void) => {
     const startTime = Date.now();
 
     res.on('finish', () => {

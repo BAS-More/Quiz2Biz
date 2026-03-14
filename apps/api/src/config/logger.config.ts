@@ -32,14 +32,14 @@ export function buildLoggerConfig(configService: ConfigService): Params {
 
       // Serializers for structured output
       serializers: {
-        req: (req) => ({
+        req: (req: { method: string; url: string; query: unknown; remoteAddress: string; id: string }) => ({
           method: req.method,
           url: req.url,
           query: req.query,
           remoteAddress: req.remoteAddress,
           requestId: req.id,
         }),
-        res: (res) => ({
+        res: (res: { statusCode: number }) => ({
           statusCode: res.statusCode,
         }),
       },

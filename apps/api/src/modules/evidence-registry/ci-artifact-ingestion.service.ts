@@ -259,22 +259,23 @@ export class CIArtifactIngestionService {
    */
   private parseJest(content: string): ParsedArtifactData {
     try {
-      const report = JSON.parse(content);
+      const report: JestJsonReport = JSON.parse(content) as JestJsonReport;
+      const totalTests = report.numTotalTests ?? 0;
+      const passedTests = report.numPassedTests ?? 0;
       return {
         type: 'jest',
         summary: {
-          totalTests: report.numTotalTests || 0,
-          passed: report.numPassedTests || 0,
-          failed: report.numFailedTests || 0,
-          pending: report.numPendingTests || 0,
+          totalTests,
+          passed: passedTests,
+          failed: report.numFailedTests ?? 0,
+          pending: report.numPendingTests ?? 0,
           duration:
             report.testResults?.reduce(
-              (sum: number, r: { duration?: number }) => sum + (r.duration || 0),
+              (sum: number, r: { duration?: number }) => sum + (r.duration ?? 0),
               0,
-            ) || 0,
-          passRate:
-            report.numTotalTests > 0 ? (report.numPassedTests / report.numTotalTests) * 100 : 0,
-          testSuites: report.numTotalTestSuites || 0,
+            ) ?? 0,
+          passRate: totalTests > 0 ? (passedTests / totalTests) * 100 : 0,
+          testSuites: report.numTotalTestSuites ?? 0,
         },
       };
     } catch {
@@ -376,8 +377,8 @@ export class CIArtifactIngestionService {
    */
   private parseCycloneDX(content: string): ParsedArtifactData {
     try {
-      const sbom = JSON.parse(content);
-      const components = sbom.components || [];
+      const sbom: CycloneDXSbom = JSON.parse(content) as CycloneDXSbom;
+      const components = sbom.components ?? [];
 
       const byType: Record<string, number> = {};
       const licenses: Set<string> = new Set();
@@ -390,7 +391,7 @@ export class CIArtifactIngestionService {
       return {
         type: 'cyclonedx',
         summary: {
-          specVersion: sbom.specVersion || 'unknown',
+          specVersion: sbom.specVersion ?? 'unknown',
           format: 'CycloneDX',
           totalComponents: components.length,
           componentsByType: byType,
@@ -426,8 +427,8 @@ export class CIArtifactIngestionService {
    */
   private parseSPDX(content: string): ParsedArtifactData {
     try {
-      const sbom = JSON.parse(content);
-      const packages = sbom.packages || [];
+      const sbom: SPDXSbom = JSON.parse(content) as SPDXSbom;
+      const packages = sbom.packages ?? [];
 
       const licenses: Set<string> = new Set();
       for (const pkg of packages) {
@@ -442,7 +443,7 @@ export class CIArtifactIngestionService {
       return {
         type: 'spdx',
         summary: {
-          spdxVersion: sbom.spdxVersion || 'unknown',
+          spdxVersion: sbom.spdxVersion ?? 'unknown',
           format: 'SPDX',
           totalPackages: packages.length,
           creationInfo: sbom.creationInfo,
@@ -460,8 +461,8 @@ export class CIArtifactIngestionService {
    */
   private parseTrivy(content: string): ParsedArtifactData {
     try {
-      const report = JSON.parse(content);
-      const results = report.Results || [];
+      const report: TrivyReport = JSON.parse(content) as TrivyReport;
+      const results = report.Results ?? [];
 
       let critical = 0,
         high = 0,
@@ -471,7 +472,7 @@ export class CIArtifactIngestionService {
       const vulnerabilities: Array<{ id: string; severity: string; package: string }> = [];
 
       for (const result of results) {
-        for (const vuln of result.Vulnerabilities || []) {
+        for (const vuln of result.Vulnerabilities ?? []) {
           switch (vuln.Severity?.toUpperCase()) {
             case 'CRITICAL':
               critical++;
@@ -493,7 +494,7 @@ export class CIArtifactIngestionService {
             vulnerabilities.push({
               id: vuln.VulnerabilityID,
               severity: vuln.Severity,
-              package: vuln.PkgName,
+              package: vuln.PkgName ?? 'unknown',
             });
           }
         }
@@ -519,21 +520,25 @@ export class CIArtifactIngestionService {
    */
   private parseOWASP(content: string): ParsedArtifactData {
     try {
-      const report = JSON.parse(content);
-      const dependencies = report.dependencies || [];
+      const report: OWASPReport = JSON.parse(content) as OWASPReport;
+      const dependencies = report.dependencies ?? [];
 
       const severityCounts: Record<string, number> = { CRITICAL: 0, HIGH: 0, MEDIUM: 0, LOW: 0 };
       const vulnerabilities: Array<{ cve: string; severity: string; package: string }> = [];
 
       for (const dep of dependencies) {
-        for (const vuln of dep.vulnerabilities || []) {
-          const severity = (vuln.severity || vuln.cvssv3?.baseSeverity || 'UNKNOWN').toUpperCase();
+        for (const vuln of dep.vulnerabilities ?? []) {
+          const severity = (vuln.severity ?? vuln.cvssv3?.baseSeverity ?? 'UNKNOWN').toUpperCase();
           if (severity in severityCounts) {
             severityCounts[severity]++;
           }
 
           if (severity === 'CRITICAL' || severity === 'HIGH') {
-            vulnerabilities.push({ cve: vuln.name, severity, package: dep.fileName });
+            vulnerabilities.push({
+              cve: vuln.name ?? 'unknown',
+              severity,
+              package: dep.fileName ?? 'unknown',
+            });
           }
         }
       }
@@ -802,4 +807,64 @@ export interface BuildSummary {
   artifactTypes: string[];
   metrics: Record<string, unknown>;
   createdAt: Date;
+}
+
+// ============================================================
+// EXTERNAL JSON FORMAT INTERFACES (for type-safe JSON.parse)
+// ============================================================
+
+/** Shape of Jest JSON reporter output */
+interface JestJsonReport {
+  numTotalTests?: number;
+  numPassedTests?: number;
+  numFailedTests?: number;
+  numPendingTests?: number;
+  numTotalTestSuites?: number;
+  testResults?: Array<{ duration?: number }>;
+}
+
+/** Shape of CycloneDX SBOM JSON */
+interface CycloneDXSbom {
+  specVersion?: string;
+  serialNumber?: string;
+  components?: Array<{
+    type: string;
+    licenses?: Array<{ license?: { id?: string; name?: string } }>;
+  }>;
+}
+
+/** Shape of SPDX SBOM JSON */
+interface SPDXSbom {
+  spdxVersion?: string;
+  name?: string;
+  creationInfo?: Record<string, unknown>;
+  packages?: Array<{
+    licenseConcluded?: string;
+    licenseDeclared?: string;
+  }>;
+}
+
+/** Shape of Trivy JSON report */
+interface TrivyReport {
+  ArtifactName?: string;
+  Results?: Array<{
+    Vulnerabilities?: Array<{
+      VulnerabilityID: string;
+      Severity?: string;
+      PkgName?: string;
+    }>;
+  }>;
+}
+
+/** Shape of OWASP Dependency-Check JSON report */
+interface OWASPReport {
+  projectInfo?: { reportDate?: string };
+  dependencies?: Array<{
+    fileName?: string;
+    vulnerabilities?: Array<{
+      name?: string;
+      severity?: string;
+      cvssv3?: { baseSeverity?: string };
+    }>;
+  }>;
 }
