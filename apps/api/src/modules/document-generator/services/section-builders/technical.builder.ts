@@ -1,7 +1,7 @@
 /**
  * Technical section builders: Architecture Dossier, SDLC Playbook, Test Strategy.
  */
-import { CompiledDocument, DocumentSection, DeliverableCategory } from '../compiler-types';
+import { CompiledDocument, DocumentSection, DeliverableCategory, CompilerSession, CompilerResponse } from '../compiler-types';
 import {
   generateId,
   processAndCountWords,
@@ -12,8 +12,8 @@ import {
 // === Architecture Dossier ===
 
 export function compileArchitectureDossier(
-  session: any,
-  responses: any[],
+  session: CompilerSession,
+  responses: CompilerResponse[],
   _dimensions: Record<string, number>,
   autoSection: boolean,
   maxWords: number,
@@ -64,7 +64,7 @@ export function compileArchitectureDossier(
   };
 }
 
-function generateSystemOverview(session: any, responses: any[]): string {
+function generateSystemOverview(session: CompilerSession, responses: CompilerResponse[]): string {
   const questionnaireName = session.questionnaire?.name || 'Assessment';
   const industry = session.industry || 'General';
 
@@ -85,7 +85,7 @@ Based on ${responses.length} architecture-related responses, this document outli
     `.trim();
 }
 
-function generateArchitectureDecisions(responses: any[]): string {
+function generateArchitectureDecisions(responses: CompilerResponse[]): string {
   const decisions = responses.filter(
     (r) =>
       r.question.text.toLowerCase().includes('decision') ||
@@ -109,7 +109,7 @@ function generateArchitectureDecisions(responses: any[]): string {
   return content.trim();
 }
 
-function generateSecurityArchitecture(_responses: any[]): string {
+function generateSecurityArchitecture(_responses: CompilerResponse[]): string {
   return `
 ## Security Architecture
 
@@ -127,7 +127,7 @@ Continuous security monitoring and alerting capabilities are configured.
     `.trim();
 }
 
-function generateTechnologyStack(_responses: any[]): string {
+function generateTechnologyStack(_responses: CompilerResponse[]): string {
   return `
 ## Technology Stack
 
@@ -148,8 +148,8 @@ Cloud and infrastructure components as documented.
 // === SDLC Playbook ===
 
 export function compileSDLCPlaybook(
-  _session: any,
-  responses: any[],
+  _session: CompilerSession,
+  responses: CompilerResponse[],
   _dimensions: Record<string, number>,
   autoSection: boolean,
   maxWords: number,
@@ -203,7 +203,7 @@ export function compileSDLCPlaybook(
   };
 }
 
-function generateDevelopmentProcess(_responses: any[]): string {
+function generateDevelopmentProcess(_responses: CompilerResponse[]): string {
   return `
 ## Development Process
 
@@ -218,7 +218,7 @@ Automated quality checks and CI/CD integration.
     `.trim();
 }
 
-function generateCICDPipeline(_responses: any[]): string {
+function generateCICDPipeline(_responses: CompilerResponse[]): string {
   return `
 ## CI/CD Pipeline
 
@@ -236,19 +236,19 @@ SAST, DAST, and SCA scanning integration.
     `.trim();
 }
 
-function generateBranchingStrategy(_responses: any[]): string {
+function generateBranchingStrategy(_responses: CompilerResponse[]): string {
   return '## Branching Strategy\n\nGit flow or trunk-based development as appropriate.';
 }
 
-function generateReleaseManagement(_responses: any[]): string {
+function generateReleaseManagement(_responses: CompilerResponse[]): string {
   return '## Release Management\n\nRelease planning and version control processes.';
 }
 
 // === Test Strategy ===
 
 export function compileTestStrategy(
-  _session: any,
-  responses: any[],
+  _session: CompilerSession,
+  responses: CompilerResponse[],
   _dimensions: Record<string, number>,
   autoSection: boolean,
   maxWords: number,
@@ -299,18 +299,18 @@ export function compileTestStrategy(
   };
 }
 
-function generateTestObjectives(_responses: any[]): string {
+function generateTestObjectives(_responses: CompilerResponse[]): string {
   return '## Test Objectives\n\nQuality assurance goals and coverage targets.';
 }
 
-function generateTestTypesCoverage(_responses: any[]): string {
+function generateTestTypesCoverage(_responses: CompilerResponse[]): string {
   return '## Test Types & Coverage\n\nUnit, integration, E2E, and performance testing requirements.';
 }
 
-function generateTestAutomation(_responses: any[]): string {
+function generateTestAutomation(_responses: CompilerResponse[]): string {
   return '## Test Automation\n\nAutomated testing framework and tooling.';
 }
 
-function generatePerformanceTesting(_responses: any[]): string {
+function generatePerformanceTesting(_responses: CompilerResponse[]): string {
   return '## Performance Testing\n\nLoad testing, stress testing, and benchmarking requirements.';
 }

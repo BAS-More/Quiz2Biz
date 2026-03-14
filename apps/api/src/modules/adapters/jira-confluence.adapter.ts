@@ -562,7 +562,10 @@ export class JiraConfluenceAdapter {
     if (cql) {
       endpoint = `/content/search?cql=${encodeURIComponent(cql)}&limit=${limit}&start=${start}&expand=${expand.join(',')}`;
     } else if (query) {
-      endpoint = `/content/search?cql=${encodeURIComponent(`space = ${config.spaceKey} AND text ~ "${query}"`)}&limit=${limit}&start=${start}&expand=${expand.join(',')}`;
+      // Sanitize inputs to prevent CQL injection
+      const safeSpaceKey = config.spaceKey.replace(/['"\\]/g, '');
+      const safeQuery = query.replace(/['"\\]/g, '');
+      endpoint = `/content/search?cql=${encodeURIComponent(`space = "${safeSpaceKey}" AND text ~ "${safeQuery}"`)}&limit=${limit}&start=${start}&expand=${expand.join(',')}`;
     } else {
       endpoint = `/content?spaceKey=${config.spaceKey}&limit=${limit}&start=${start}&expand=${expand.join(',')}`;
     }

@@ -21,6 +21,8 @@ import { ConfirmProjectTypeDto } from './dto/confirm-project-type.dto';
 import { IdeaCaptureResponseDto } from './dto/idea-response.dto';
 
 @ApiTags('idea-capture')
+@ApiBearerAuth('JWT-auth')
+@UseGuards(JwtAuthGuard)
 @Controller('sessions/idea')
 export class IdeaCaptureController {
   constructor(private readonly ideaCaptureService: IdeaCaptureService) {}
@@ -40,9 +42,9 @@ export class IdeaCaptureController {
   })
   async captureIdea(
     @Body() dto: CreateIdeaDto,
-    @CurrentUser() user?: AuthenticatedUser,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<IdeaCaptureResponseDto> {
-    return this.ideaCaptureService.captureAndAnalyze(dto, user?.id);
+    return this.ideaCaptureService.captureAndAnalyze(dto, user.id);
   }
 
   @Get(':id')
@@ -54,8 +56,6 @@ export class IdeaCaptureController {
   }
 
   @Patch(':id/confirm')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('JWT-auth')
   @ApiOperation({
     summary: 'Confirm project type selection for an idea',
     description:
@@ -70,8 +70,6 @@ export class IdeaCaptureController {
   }
 
   @Post(':id/session')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('JWT-auth')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Create a questionnaire session from a confirmed idea',

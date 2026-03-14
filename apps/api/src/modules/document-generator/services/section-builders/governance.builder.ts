@@ -2,7 +2,15 @@
  * Governance section builders: Policy & Governance Pack, Decision Log, Readiness Report.
  */
 import { DecisionStatus } from '@prisma/client';
-import { CompiledDocument, DocumentSection, DeliverableCategory } from '../compiler-types';
+import {
+  CompiledDocument,
+  DocumentSection,
+  DeliverableCategory,
+  CompilerSession,
+  CompilerResponse,
+  CompilerDecision,
+  CompilerEvidence,
+} from '../compiler-types';
 import {
   generateId,
   processAndCountWords,
@@ -13,8 +21,8 @@ import {
 // === Policy Document ===
 
 export function compilePolicyDocument(
-  _session: any,
-  responses: any[],
+  _session: CompilerSession,
+  responses: CompilerResponse[],
   _dimensions: Record<string, number>,
   autoSection: boolean,
   maxWords: number,
@@ -69,27 +77,27 @@ export function compilePolicyDocument(
   };
 }
 
-function generatePolicies(_responses: any[]): string {
+function generatePolicies(_responses: CompilerResponse[]): string {
   return '## Policies\n\nHigh-level governance policies and principles.';
 }
 
-function generateStandards(_responses: any[]): string {
+function generateStandards(_responses: CompilerResponse[]): string {
   return '## Standards\n\nTechnical and operational standards.';
 }
 
-function generateProcedures(_responses: any[]): string {
+function generateProcedures(_responses: CompilerResponse[]): string {
   return '## Procedures\n\nOperational procedures and work instructions.';
 }
 
-function generateControlMappings(_responses: any[]): string {
+function generateControlMappings(_responses: CompilerResponse[]): string {
   return '## Control Mappings\n\nISO 27001, NIST CSF, and OWASP control mappings.';
 }
 
 // === Decision Log ===
 
 export function compileDecisionLog(
-  _session: any,
-  decisions: any[],
+  _session: CompilerSession,
+  decisions: CompilerDecision[],
   autoSection: boolean,
   maxWords: number,
 ): CompiledDocument {
@@ -135,14 +143,14 @@ export function compileDecisionLog(
   };
 }
 
-function formatDecisions(decisions: any[]): string {
+function formatDecisions(decisions: CompilerDecision[]): string {
   if (decisions.length === 0) {
     return 'No decisions in this category.\n';
   }
 
   let content = '';
   for (const decision of decisions) {
-    content += `### ${decision.title}\n`;
+    content += `### ${decision.statement}\n`;
     content += `**Status:** ${decision.status}\n`;
     content += `**Created:** ${decision.createdAt.toISOString()}\n`;
     content += `**Description:** ${decision.description || 'N/A'}\n\n`;
@@ -150,7 +158,7 @@ function formatDecisions(decisions: any[]): string {
   return content;
 }
 
-function generateDecisionTimeline(decisions: any[]): string {
+function generateDecisionTimeline(decisions: CompilerDecision[]): string {
   if (decisions.length === 0) {
     return 'No decisions recorded.\n';
   }
@@ -159,7 +167,7 @@ function generateDecisionTimeline(decisions: any[]): string {
   const sorted = [...decisions].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
 
   for (const decision of sorted) {
-    content += `- **${decision.createdAt.toISOString().split('T')[0]}:** ${decision.title} (${decision.status})\n`;
+    content += `- **${decision.createdAt.toISOString().split('T')[0]}:** ${decision.statement} (${decision.status})\n`;
   }
   return content;
 }
@@ -167,9 +175,9 @@ function generateDecisionTimeline(decisions: any[]): string {
 // === Readiness Report ===
 
 export function compileReadinessReport(
-  session: any,
+  session: CompilerSession,
   dimensions: Record<string, number>,
-  evidenceItems: any[],
+  evidenceItems: CompilerEvidence[],
   autoSection: boolean,
   maxWords: number,
 ): CompiledDocument {
@@ -224,7 +232,7 @@ export function compileReadinessReport(
   };
 }
 
-function generateExecutiveSummary(session: any, dimensions: Record<string, number>): string {
+function generateExecutiveSummary(session: CompilerSession, dimensions: Record<string, number>): string {
   const score = session.readinessScore ? Number(session.readinessScore) : 0;
   const dimensionCount = Object.keys(dimensions).length;
 
@@ -256,7 +264,7 @@ function generateDimensionAnalysis(dimensions: Record<string, number>): string {
   return content;
 }
 
-function generateEvidenceSummary(evidenceItems: any[]): string {
+function generateEvidenceSummary(evidenceItems: CompilerEvidence[]): string {
   const verified = evidenceItems.filter((e) => e.verified).length;
   const pending = evidenceItems.length - verified;
 

@@ -1,7 +1,7 @@
 /**
  * Security & privacy section builders: DevSecOps Guide, Privacy & Data Protection.
  */
-import { CompiledDocument, DocumentSection, DeliverableCategory } from '../compiler-types';
+import { CompiledDocument, DocumentSection, DeliverableCategory, CompilerSession, CompilerResponse } from '../compiler-types';
 import {
   generateId,
   processAndCountWords,
@@ -12,8 +12,8 @@ import {
 // === DevSecOps Document ===
 
 export function compileDevSecOpsDocument(
-  _session: any,
-  responses: any[],
+  _session: CompilerSession,
+  responses: CompilerResponse[],
   _dimensions: Record<string, number>,
   autoSection: boolean,
   maxWords: number,
@@ -66,27 +66,27 @@ export function compileDevSecOpsDocument(
   };
 }
 
-function generateSecurityIntegration(_responses: any[]): string {
+function generateSecurityIntegration(_responses: CompilerResponse[]): string {
   return '## Security Integration\n\nShift-left security practices and DevSecOps integration.';
 }
 
-function generateVulnerabilityManagement(_responses: any[]): string {
+function generateVulnerabilityManagement(_responses: CompilerResponse[]): string {
   return '## Vulnerability Management\n\nVulnerability scanning and remediation processes.';
 }
 
-function generateComplianceAutomation(_responses: any[]): string {
+function generateComplianceAutomation(_responses: CompilerResponse[]): string {
   return '## Compliance Automation\n\nAutomated compliance checking and reporting.';
 }
 
-function generateIncidentResponse(_responses: any[]): string {
+function generateIncidentResponse(_responses: CompilerResponse[]): string {
   return '## Incident Response\n\nSecurity incident detection and response procedures.';
 }
 
 // === Privacy & Data Protection Document ===
 
 export function compilePrivacyDocument(
-  _session: any,
-  responses: any[],
+  _session: CompilerSession,
+  responses: CompilerResponse[],
   _dimensions: Record<string, number>,
   autoSection: boolean,
   maxWords: number,
@@ -137,18 +137,18 @@ export function compilePrivacyDocument(
   };
 }
 
-function generateDataClassification(_responses: any[]): string {
+function generateDataClassification(_responses: CompilerResponse[]): string {
   return '## Data Classification\n\nData sensitivity levels and handling requirements.';
 }
 
-function generatePrivacyControls(_responses: any[]): string {
+function generatePrivacyControls(_responses: CompilerResponse[]): string {
   return '## Privacy Controls\n\nPrivacy protection mechanisms and controls.';
 }
 
-function generateDataRetention(_responses: any[]): string {
+function generateDataRetention(_responses: CompilerResponse[]): string {
   return '## Data Retention\n\nData lifecycle management and retention policies.';
 }
 
-function generateGDPRCompliance(_responses: any[]): string {
+function generateGDPRCompliance(_responses: CompilerResponse[]): string {
   return '## GDPR Compliance\n\nGDPR requirements and compliance measures.';
 }

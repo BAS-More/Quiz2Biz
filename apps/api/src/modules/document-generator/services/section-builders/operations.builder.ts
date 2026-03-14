@@ -1,7 +1,7 @@
 /**
  * Operations section builders: Observability Guide, Finance & Economics.
  */
-import { CompiledDocument, DocumentSection, DeliverableCategory } from '../compiler-types';
+import { CompiledDocument, DocumentSection, DeliverableCategory, CompilerSession, CompilerResponse } from '../compiler-types';
 import {
   generateId,
   processAndCountWords,
@@ -12,8 +12,8 @@ import {
 // === Observability Document ===
 
 export function compileObservabilityDocument(
-  _session: any,
-  responses: any[],
+  _session: CompilerSession,
+  responses: CompilerResponse[],
   _dimensions: Record<string, number>,
   autoSection: boolean,
   maxWords: number,
@@ -64,27 +64,27 @@ export function compileObservabilityDocument(
   };
 }
 
-function generateMonitoringStrategy(_responses: any[]): string {
+function generateMonitoringStrategy(_responses: CompilerResponse[]): string {
   return '## Monitoring Strategy\n\nApplication and infrastructure monitoring approach.';
 }
 
-function generateLoggingArchitecture(_responses: any[]): string {
+function generateLoggingArchitecture(_responses: CompilerResponse[]): string {
   return '## Logging Architecture\n\nCentralized logging and log management.';
 }
 
-function generateAlertingRunbooks(_responses: any[]): string {
+function generateAlertingRunbooks(_responses: CompilerResponse[]): string {
   return '## Alerting & Runbooks\n\nAlert configuration and incident runbooks.';
 }
 
-function generateSLOsErrorBudgets(_responses: any[]): string {
+function generateSLOsErrorBudgets(_responses: CompilerResponse[]): string {
   return '## SLOs & Error Budgets\n\nService level objectives and error budget policies.';
 }
 
 // === Finance Document ===
 
 export function compileFinanceDocument(
-  _session: any,
-  responses: any[],
+  _session: CompilerSession,
+  responses: CompilerResponse[],
   _dimensions: Record<string, number>,
   autoSection: boolean,
   maxWords: number,
@@ -135,18 +135,18 @@ export function compileFinanceDocument(
   };
 }
 
-function generateCostAnalysis(_responses: any[]): string {
+function generateCostAnalysis(_responses: CompilerResponse[]): string {
   return '## Cost Analysis\n\nTotal cost of ownership and cost optimization.';
 }
 
-function generateUnitEconomics(_responses: any[]): string {
+function generateUnitEconomics(_responses: CompilerResponse[]): string {
   return '## Unit Economics\n\nPer-unit cost analysis and profitability metrics.';
 }
 
-function generateBudgetAllocation(_responses: any[]): string {
+function generateBudgetAllocation(_responses: CompilerResponse[]): string {
   return '## Budget Allocation\n\nResource allocation and budget planning.';
 }
 
-function generateROIProjections(_responses: any[]): string {
+function generateROIProjections(_responses: CompilerResponse[]): string {
   return '## ROI Projections\n\nReturn on investment analysis and projections.';
 }

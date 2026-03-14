@@ -25,6 +25,7 @@ import {
 } from '@nestjs/swagger';
 import * as crypto from 'crypto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Public } from '../auth/decorators/public.decorator';
 import { GitHubAdapter } from './github.adapter';
 import { GitLabAdapter } from './gitlab.adapter';
 import { JiraConfluenceAdapter } from './jira-confluence.adapter';
@@ -431,9 +432,10 @@ export class AdapterController {
     );
   }
 
+  @Public()
   @Post('webhooks/github')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'GitHub webhook endpoint' })
+  @ApiOperation({ summary: 'GitHub webhook endpoint — authenticated via HMAC signature, not JWT' })
   async handleGitHubWebhook(
     @Body() payload: Record<string, unknown>,
     @Headers('x-hub-signature-256') signature: string,
@@ -464,9 +466,10 @@ export class AdapterController {
     };
   }
 
+  @Public()
   @Post('webhooks/gitlab')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'GitLab webhook endpoint' })
+  @ApiOperation({ summary: 'GitLab webhook endpoint — authenticated via secret token, not JWT' })
   async handleGitLabWebhook(
     @Body() payload: Record<string, unknown>,
     @Headers('x-gitlab-token') gitlabToken: string,

@@ -25,6 +25,10 @@ import {
   CompiledDocument,
   PackMetadata,
   CompilerOptions,
+  CompilerSession,
+  CompilerResponse,
+  CompilerDecision,
+  CompilerEvidence,
 } from './compiler-types';
 import { buildPackSummary } from './compiler-utils';
 import {
@@ -134,7 +138,7 @@ export class DeliverablesCompilerService {
 
   // === Data-fetching helpers (require PrismaService) ===
 
-  private async validateSession(sessionId: string, userId: string): Promise<any> {
+  private async validateSession(sessionId: string, userId: string): Promise<CompilerSession> {
     const session = await this.prisma.session.findUnique({
       where: { id: sessionId },
       include: { questionnaire: { select: { name: true, version: true } } },
@@ -155,7 +159,7 @@ export class DeliverablesCompilerService {
     return session;
   }
 
-  private async getSessionResponses(sessionId: string): Promise<any[]> {
+  private async getSessionResponses(sessionId: string): Promise<CompilerResponse[]> {
     return this.prisma.response.findMany({
       where: { sessionId, isValid: true },
       include: { question: { include: { section: true, dimension: true } } },
@@ -189,14 +193,14 @@ export class DeliverablesCompilerService {
     return result;
   }
 
-  private async getDecisions(sessionId: string): Promise<any[]> {
+  private async getDecisions(sessionId: string): Promise<CompilerDecision[]> {
     return this.prisma.decisionLog.findMany({
       where: { sessionId },
       orderBy: { createdAt: 'asc' },
     });
   }
 
-  private async getEvidenceItems(sessionId: string): Promise<any[]> {
+  private async getEvidenceItems(sessionId: string): Promise<CompilerEvidence[]> {
     return this.prisma.evidenceRegistry.findMany({
       where: { sessionId },
       include: { question: true },
