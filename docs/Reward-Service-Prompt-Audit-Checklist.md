@@ -8,7 +8,7 @@ Apply to reward-service-prompt.md in Agent MVP repo. Search OLD, replace with NE
 | 2 | Coverage | 90% overall | Target 100%, floor 95% |
 | 3 | Modules | 26 | 25 |
 | 4 | Tables | 20+ | 17 |
-| 5 | IaC | Terraform | Bicep |
+| 5 | IaC | Terraform | Terraform |
 | 6 | RTO | < 1 hour | < 4 hours |
 | 7 | RPO | < 15 minutes | < 1 hour |
 | 8 | Score format | 0-100 integer | 0.0-1.0 decimal |
