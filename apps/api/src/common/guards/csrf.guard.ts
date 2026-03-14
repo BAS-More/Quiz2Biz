@@ -21,7 +21,7 @@ export const CSRF_SKIP_KEY = 'skipCsrf';
 export const SkipCsrf = () => {
   return (target: object, _propertyKey?: string, descriptor?: PropertyDescriptor) => {
     if (descriptor) {
-      Reflect.defineMetadata(CSRF_SKIP_KEY, true, descriptor.value);
+      Reflect.defineMetadata(CSRF_SKIP_KEY, true, descriptor.value as object);
     } else {
       Reflect.defineMetadata(CSRF_SKIP_KEY, true, target);
     }

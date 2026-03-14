@@ -138,8 +138,9 @@ export class ApprovalGuard implements CanActivate {
     }
 
     // Check body
-    if (request.body?.[paramName]) {
-      return String(request.body[paramName]);
+    const body = request.body as Record<string, string | number | undefined> | undefined;
+    if (body?.[paramName] !== undefined) {
+      return String(body[paramName]);
     }
 
     // Check query

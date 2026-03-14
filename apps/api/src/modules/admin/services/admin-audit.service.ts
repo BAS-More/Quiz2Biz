@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '@libs/database';
 import { Request } from 'express';
 
@@ -28,7 +29,7 @@ export class AdminAuditService {
           action,
           resourceType,
           resourceId,
-          changes: changes ? JSON.parse(JSON.stringify(changes)) : null,
+          changes: changes ? (JSON.parse(JSON.stringify(changes)) as Prisma.InputJsonValue) : Prisma.JsonNull,
           ...requestMeta,
         },
       });

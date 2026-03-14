@@ -123,7 +123,7 @@ export class MfaService {
     }
 
     // Check if it's a backup code
-    const backupCodes: string[] = user.mfaBackupCodes ? JSON.parse(user.mfaBackupCodes) : [];
+    const backupCodes: string[] = user.mfaBackupCodes ? (JSON.parse(user.mfaBackupCodes) as string[]) : [];
 
     const codeIndex = backupCodes.indexOf(code.toUpperCase());
     if (codeIndex !== -1) {
@@ -207,7 +207,7 @@ export class MfaService {
       select: { mfaEnabled: true, mfaBackupCodes: true },
     });
 
-    const backupCodes: string[] = user?.mfaBackupCodes ? JSON.parse(user.mfaBackupCodes) : [];
+    const backupCodes: string[] = user?.mfaBackupCodes ? (JSON.parse(user.mfaBackupCodes) as string[]) : [];
 
     return {
       enabled: user?.mfaEnabled ?? false,

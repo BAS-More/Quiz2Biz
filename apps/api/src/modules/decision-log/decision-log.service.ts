@@ -361,7 +361,7 @@ export class DecisionLogService {
         action: `DECISION_${action}`,
         resourceType: 'DecisionLog',
         resourceId: decisionId,
-        changes: metadata ? JSON.parse(JSON.stringify(metadata)) : {},
+        changes: metadata ? (JSON.parse(JSON.stringify(metadata)) as Prisma.InputJsonValue) : {},
       },
     });
   }

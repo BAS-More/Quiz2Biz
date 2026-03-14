@@ -89,7 +89,7 @@ export class PromptGeneratorService {
    * Interpolate template string with context variables
    */
   private interpolate(template: string, context: Record<string, string>): string {
-    return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+    return template.replace(/\{\{(\w+)\}\}/g, (match, key: string) => {
       return context[key] || match;
     });
   }

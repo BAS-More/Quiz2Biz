@@ -88,9 +88,9 @@ export class ContextBuilderService {
 
     try {
       // Try JSON parse first
-      const parsed = JSON.parse(refs);
+      const parsed: unknown = JSON.parse(refs);
       if (Array.isArray(parsed)) {
-        return parsed;
+        return parsed as string[];
       }
     } catch {
       // Fall back to comma-separated

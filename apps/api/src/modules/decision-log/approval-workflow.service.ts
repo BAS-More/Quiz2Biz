@@ -6,7 +6,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
-import { DecisionStatus, UserRole } from '@prisma/client';
+import { DecisionStatus, Prisma, UserRole } from '@prisma/client';
 import * as crypto from 'crypto';
 
 /**
@@ -510,7 +510,7 @@ export class ApprovalWorkflowService {
         action,
         resourceType,
         resourceId,
-        changes: changes ? JSON.parse(JSON.stringify(changes)) : {},
+        changes: changes ? (JSON.parse(JSON.stringify(changes)) as Prisma.InputJsonValue) : {},
       },
     });
   }
