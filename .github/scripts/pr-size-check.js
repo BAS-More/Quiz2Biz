@@ -1,0 +1,121 @@
+// @ts-check
+
+/**
+ * PR Size Check Script
+ * Calculates PR size, posts a comment with size classification, and adds a label.
+ *
+ * @param {object} params
+ * @param {import('@octokit/rest').Octokit & import('@actions/github/lib/utils').GitHub} params.github
+ * @param {import('@actions/github').context} params.context
+ * @param {import('@actions/core')} params.core
+ */
+module.exports = async ({ github, context, core }) => {
+  const { owner, repo } = context.repo;
+  const pull_number = context.payload.pull_request.number;
+
+  // Get PR files
+  const { data: files } = await github.rest.pulls.listFiles({
+    owner,
+    repo,
+    pull_number,
+    per_page: 100,
+  });
+
+  // Calculate total changes
+  let additions = 0;
+  let deletions = 0;
+
+  for (const file of files) {
+    // Skip generated files, lockfiles, and test snapshots
+    if (
+      file.filename.includes('package-lock.json') ||
+      file.filename.includes('yarn.lock') ||
+      file.filename.includes('.snap') ||
+      file.filename.includes('dist/') ||
+      file.filename.includes('coverage/')
+    ) {
+      continue;
+    }
+    additions += file.additions;
+    deletions += file.deletions;
+  }
+
+  const totalChanges = additions + deletions;
+
+  // Size thresholds (based on DORA research)
+  const SMALL = 100;
+  const MEDIUM = 200;
+  const LARGE = 300;
+  const MAX = 500;
+
+  let label, message, emoji;
+
+  if (totalChanges <= SMALL) {
+    label = 'size/S';
+    emoji = '🟢';
+    message = `Small PR (${totalChanges} lines) - Excellent for review quality!`;
+  } else if (totalChanges <= MEDIUM) {
+    label = 'size/M';
+    emoji = '🟡';
+    message = `Medium PR (${totalChanges} lines) - Good size for thorough review.`;
+  } else if (totalChanges <= LARGE) {
+    label = 'size/L';
+    emoji = '🟠';
+    message = `Large PR (${totalChanges} lines) - Consider splitting if possible.`;
+  } else if (totalChanges <= MAX) {
+    label = 'size/XL';
+    emoji = '🔴';
+    message = `Extra Large PR (${totalChanges} lines) - Review quality may suffer. Please consider splitting.`;
+  } else {
+    label = 'size/XXL';
+    emoji = '⛔';
+    message = `PR too large (${totalChanges} lines > ${MAX}). Split required for proper review.`;
+  }
+
+  // Create comment
+  const body = [
+    `## ${emoji} PR Size Check`,
+    '',
+    `**Total changes:** ${totalChanges} lines (+${additions} / -${deletions})`,
+    `**Files changed:** ${files.length}`,
+    '',
+    message,
+    '',
+    '### Size Guidelines',
+    '| Size | Lines | Review Quality |',
+    '|------|-------|---------------|',
+    '| 🟢 Small | < 100 | Excellent |',
+    '| 🟡 Medium | 100-200 | Good |',
+    '| 🟠 Large | 200-300 | Acceptable |',
+    '| 🔴 XL | 300-500 | Reduced |',
+    '| ⛔ XXL | > 500 | Split Required |',
+    '',
+    '*70% of PRs should be under 200 lines for optimal review quality.*',
+  ].join('\n');
+
+  // Post comment
+  await github.rest.issues.createComment({
+    owner,
+    repo,
+    issue_number: pull_number,
+    body,
+  });
+
+  // Add label
+  try {
+    await github.rest.issues.addLabels({
+      owner,
+      repo,
+      issue_number: pull_number,
+      labels: [label],
+    });
+  } catch (e) {
+    console.log('Could not add label:', e.message);
+  }
+
+  if (totalChanges > MAX) {
+    core.warning(
+      `PR is too large (${totalChanges} > ${MAX} lines). Consider splitting into smaller PRs.`,
+    );
+  }
+};
