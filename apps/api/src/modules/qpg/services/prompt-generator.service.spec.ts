@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PromptGeneratorService } from './prompt-generator.service';
-import { GapContext, PromptTemplate, QuestModePrompt, EvidenceType } from '../types';
+import { GapContext, PromptTemplate, EvidenceType } from '../types';
 
 describe('PromptGeneratorService', () => {
   let service: PromptGeneratorService;

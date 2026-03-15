@@ -19,6 +19,7 @@
 </cite>
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
@@ -31,10 +32,13 @@
 10. [Appendices](#appendices)
 
 ## Introduction
+
 This document provides a comprehensive performance optimization guide for a large-scale questionnaire system. It focuses on caching strategies using Redis, database optimization via Prisma, session management scaling, monitoring and profiling, memory optimization, and benchmarking/validation methodologies. The goal is to improve throughput, reduce latency, and maintain responsiveness under high load while preserving correctness of adaptive logic evaluation, questionnaire rendering, and response processing.
 
 ## Project Structure
+
 The system is organized as a NestJS monorepo with modularized concerns:
+
 - API application with modules for session, questionnaire, adaptive logic, auth, standards, and users
 - Shared libraries for database (Prisma) and Redis
 - Infrastructure-as-Code for cloud deployment (Terraform)
@@ -71,6 +75,7 @@ DC_API --> DC_Redis
 ```
 
 **Diagram sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L88-L94)
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L23-L26)
 - [condition.evaluator.ts](file://apps/api/src/modules/adaptive-logic/evaluators/condition.evaluator.ts#L9-L22)
@@ -81,6 +86,7 @@ DC_API --> DC_Redis
 - [main.tf](file://infrastructure/terraform/modules/cache/main.tf#L3-L20)
 
 **Section sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L88-L94)
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L23-L26)
 - [questionnaire.service.ts](file://apps/api/src/modules/questionnaire/questionnaire.service.ts#L64-L65)
@@ -90,6 +96,7 @@ DC_API --> DC_Redis
 - [main.tf](file://infrastructure/terraform/modules/cache/main.tf#L3-L20)
 
 ## Core Components
+
 - SessionService orchestrates session lifecycle, response submission, progress calculation, and adaptive logic integration. It performs frequent database reads/writes and interacts with Redis for caching.
 - AdaptiveLogicService evaluates visibility rules and determines visible questions per session. It is central to adaptive logic performance.
 - ConditionEvaluator executes rule conditions against response maps, handling nested conditions and diverse operators.
@@ -98,11 +105,13 @@ DC_API --> DC_Redis
 - RedisService exposes Redis client operations for caching.
 
 Key performance hotspots:
+
 - Adaptive rule evaluation loops over all questions and rules per request
 - Response upserts and visibility recalculations
 - Database round trips for questionnaire metadata and responses
 
 **Section sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L198-L268)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L270-L359)
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L31-L66)
@@ -112,6 +121,7 @@ Key performance hotspots:
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L40-L50)
 
 ## Architecture Overview
+
 High-level runtime flow for questionnaire rendering and response processing:
 
 ```mermaid
@@ -140,6 +150,7 @@ SessionSvc-->>Client : "next questions / progress"
 ```
 
 **Diagram sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L198-L268)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L270-L359)
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L31-L66)
@@ -150,11 +161,13 @@ SessionSvc-->>Client : "next questions / progress"
 ## Detailed Component Analysis
 
 ### Adaptive Logic Evaluation Engine
+
 - Evaluates visibility rules per question, applying actions (show/hide/require/unrequire) with priority ordering.
 - Supports nested conditions with AND/OR operators.
 - Uses a Map-based responses lookup for O(1) access during evaluation.
 
 Optimization opportunities:
+
 - Cache evaluation results keyed by questionnaireId and a hash of the responses map to avoid recomputation.
 - Precompute dependency graph to invalidate only affected cached entries on response changes.
 - Limit rule evaluation to changed dependencies when possible.
@@ -180,20 +193,24 @@ ReturnState --> End
 ```
 
 **Diagram sources**
+
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L71-L153)
 - [condition.evaluator.ts](file://apps/api/src/modules/adaptive-logic/evaluators/condition.evaluator.ts#L9-L22)
 
 **Section sources**
+
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L71-L153)
 - [condition.evaluator.ts](file://apps/api/src/modules/adaptive-logic/evaluators/condition.evaluator.ts#L9-L22)
 - [rule.types.ts](file://apps/api/src/modules/adaptive-logic/types/rule.types.ts#L3-L28)
 
 ### Session Management and Response Processing
+
 - Retrieves session, validates access, builds response map, and computes progress.
 - Submits responses with validation, updates session state, and determines next question.
 - Calculates progress using answered count vs. visible question count.
 
 Bottlenecks:
+
 - Re-fetching all responses per operation
 - Recomputing visibility on each request
 - Updating session progress and timestamps
@@ -217,14 +234,17 @@ SessionSvc-->>Client : "progress + validation result"
 ```
 
 **Diagram sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L270-L359)
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L31-L66)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L20-L33)
 
 **Section sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L270-L359)
 
 ### Caching Strategy Using Redis
+
 - RedisService exposes get/set/del/exists/incr/expiry/hash operations with a configurable retry strategy.
 - Recommended caches:
   - Session state cache: key pattern “session:{sessionId}:state” with TTL aligned to session timeout
@@ -233,17 +253,20 @@ SessionSvc-->>Client : "progress + validation result"
   - Response map cache: key pattern “session:{sessionId}:responses” for fast visibility recomputation
 
 Implementation guidance:
+
 - Serialize responses map deterministically and compute a stable hash for cache keys
 - Use optimistic concurrency: read-through cache with lazy invalidation on write
 - Prefer atomic operations for counters and hashes
 
 **Section sources**
+
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L40-L87)
 - [redis.module.ts](file://libs/redis/src/redis.module.ts#L1-L10)
 - [configuration.ts](file://apps/api/src/config/configuration.ts#L12-L17)
 - [adaptive-logic.md](file://docs/questionnaire/adaptive-logic.md#L514-L549)
 
 ### Database Optimization with Prisma
+
 - PrismaService logs slow queries in development and manages lifecycle hooks.
 - Current code performs multiple database calls per request (responses, session, questions).
 - Optimization techniques:
@@ -253,11 +276,13 @@ Implementation guidance:
   - Enable connection pooling at the application level and tune pool size based on CPU cores and DB capacity
 
 **Section sources**
+
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L20-L33)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L172-L193)
 - [questionnaire.service.ts](file://apps/api/src/modules/questionnaire/questionnaire.service.ts#L76-L97)
 
 ### Session Management Scaling
+
 - Distributed session storage:
   - Store session metadata in Redis with TTL and use database only for immutable historical data
   - Use sticky sessions or external stateless auth (JWT) combined with Redis-backed session reads
@@ -269,11 +294,13 @@ Implementation guidance:
   - Implement idempotent writes for responses to tolerate retries
 
 **Section sources**
+
 - [docker-compose.yml](file://docker-compose.yml#L42-L68)
 - [main.tf](file://infrastructure/terraform/modules/cache/main.tf#L3-L20)
 - [configuration.ts](file://apps/api/src/config/configuration.ts#L12-L17)
 
 ### Monitoring and Profiling
+
 - Observability stack:
   - Metrics (Prometheus), logs (Fluent Bit), traces (OpenTelemetry/Jaeger)
   - Grafana dashboards for latency, throughput, error rates, and cache hit ratios
@@ -284,9 +311,11 @@ Implementation guidance:
   - Cache hit rate and eviction metrics
 
 **Section sources**
+
 - [03-product-architecture.md](file://docs/cto/03-product-architecture.md#L468-L500)
 
 ## Dependency Analysis
+
 ```mermaid
 classDiagram
 class SessionService {
@@ -322,6 +351,7 @@ SessionService --> RedisService : "uses"
 ```
 
 **Diagram sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L88-L94)
 - [questionnaire.service.ts](file://apps/api/src/modules/questionnaire/questionnaire.service.ts#L64-L65)
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L23-L26)
@@ -330,6 +360,7 @@ SessionService --> RedisService : "uses"
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L6-L38)
 
 **Section sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L88-L94)
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L23-L26)
 - [questionnaire.service.ts](file://apps/api/src/modules/questionnaire/questionnaire.service.ts#L64-L65)
@@ -337,6 +368,7 @@ SessionService --> RedisService : "uses"
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L6-L38)
 
 ## Performance Considerations
+
 - Adaptive logic evaluation
   - Cache visible question sets keyed by questionnaireId and a deterministic hash of responses
   - Invalidate only affected entries when a response changes
@@ -358,6 +390,7 @@ SessionService --> RedisService : "uses"
 [No sources needed since this section provides general guidance]
 
 ## Troubleshooting Guide
+
 - Slow query detection
   - Development slow query logging is enabled in PrismaService; review warnings for long-running queries
 - Redis connectivity
@@ -368,12 +401,14 @@ SessionService --> RedisService : "uses"
   - Response validation errors are captured and returned with submission results
 
 **Section sources**
+
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L25-L33)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L21-L27)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L147-L153)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L622-L659)
 
 ## Conclusion
+
 By implementing targeted Redis caching for session state and rule evaluation, optimizing database queries with batching and indexes, and adopting observability practices, the system can achieve significant performance gains. Focus on incremental improvements: cache warm-up, dependency-aware invalidation, and connection pooling, validated through benchmarking and monitoring.
 
 [No sources needed since this section summarizes without analyzing specific files]
@@ -381,6 +416,7 @@ By implementing targeted Redis caching for session state and rule evaluation, op
 ## Appendices
 
 ### Benchmarking Methodologies
+
 - Load tests simulating concurrent users answering questionnaires
 - Metrics: p50/p95/p99 latency, throughput, cache hit ratio, DB query time, Redis latency
 - Baseline vs. post-optimization comparisons across adaptive logic-heavy and simple questionnaires
@@ -388,10 +424,12 @@ By implementing targeted Redis caching for session state and rule evaluation, op
 [No sources needed since this section provides general guidance]
 
 ### Validation Approaches
+
 - Unit tests for condition operators and rule evaluation logic
 - Integration tests covering session lifecycle and adaptive changes
 - End-to-end tests verifying progress computation and next-question selection
 
 **Section sources**
+
 - [adaptive-logic.service.spec.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.spec.ts#L1-L306)
 - [condition.evaluator.spec.ts](file://apps/api/src/modules/adaptive-logic/evaluators/condition.evaluator.spec.ts#L1-L358)

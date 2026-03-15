@@ -6,8 +6,6 @@ import { RedisService } from '@libs/redis';
 
 describe('HealthController', () => {
   let controller: HealthController;
-  let prismaService: jest.Mocked<PrismaService>;
-  let redisService: jest.Mocked<RedisService>;
 
   const mockPrismaService = {
     $queryRaw: jest.fn(),
@@ -33,8 +31,8 @@ describe('HealthController', () => {
     }).compile();
 
     controller = module.get<HealthController>(HealthController);
-    prismaService = module.get(PrismaService);
-    redisService = module.get(RedisService);
+    module.get(PrismaService);
+    module.get(RedisService);
   });
 
   describe('check (GET /health)', () => {
@@ -230,7 +228,6 @@ describe('HealthController', () => {
   describe('Branch coverage - checkDatabase slow response', () => {
     it('should return degraded status when database responds slowly', async () => {
       // Mock slow database response (>1000ms)
-      const originalDateNow = Date.now;
       let callCount = 0;
       jest.spyOn(Date, 'now').mockImplementation(() => {
         callCount++;
@@ -258,7 +255,6 @@ describe('HealthController', () => {
     it('should return degraded status when redis responds slowly', async () => {
       mockPrismaService.$queryRaw.mockResolvedValue([{ '?column?': 1 }]);
 
-      const originalDateNow = Date.now;
       let callCount = 0;
       jest.spyOn(Date, 'now').mockImplementation(() => {
         callCount++;
@@ -327,7 +323,6 @@ describe('HealthController', () => {
       mockRedisClient.ping.mockResolvedValue('PONG');
 
       // Mock process.memoryUsage to return critical memory
-      const originalMemoryUsage = process.memoryUsage;
       jest.spyOn(process, 'memoryUsage').mockReturnValue({
         heapUsed: 950 * 1024 * 1024,
         heapTotal: 1000 * 1024 * 1024,

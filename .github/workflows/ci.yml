@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 env:
-  NODE_VERSION: '22.x'
+  NODE_VERSION: '25.x'
 
 jobs:
   lint-and-format:
@@ -110,7 +110,7 @@ jobs:
       - name: Sync database schema
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
-        run: npx prisma db push --skip-generate
+        run: ./node_modules/.bin/prisma db push --skip-generate
 
       - name: Run API tests
         env:
@@ -229,7 +229,7 @@ jobs:
       - name: Sync database schema
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
-        run: npx prisma db push --skip-generate
+        run: ./node_modules/.bin/prisma db push --skip-generate
 
       - name: Run Regression tests
         env:
@@ -304,12 +304,12 @@ jobs:
       - name: Sync database schema
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
-        run: npx prisma db push --skip-generate
+        run: ./node_modules/.bin/prisma db push --skip-generate
 
       - name: Build core packages
         run: npx turbo run build --filter=api --filter=database --filter=redis --filter=shared --filter=web
 
-      - name: Run E2E tests
+      - name: Start API server
         env:
           NODE_ENV: test
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
@@ -317,12 +317,37 @@ jobs:
           REDIS_PORT: 6379
           JWT_SECRET: test-jwt-secret
           JWT_REFRESH_SECRET: test-refresh-secret
-          PLAYWRIGHT_NO_WEBSERVER: '1'
+          CSRF_DISABLED: 'true'
         run: |
-          echo "E2E tests require manual server startup - skipping webserver auto-start"
+          node dist/apps/api/main.js &
+          sleep 5
+          curl -f http://localhost:3000/api/v1/health/live || exit 1
+
+      - name: Start Web server
+        run: |
+          cd apps/web && npx vite preview --port 5173 &
+          sleep 3
+
+      - name: Run E2E tests
+        env:
+          PLAYWRIGHT_NO_WEBSERVER: '1'
+          E2E_BASE_URL: http://localhost:5173
+          API_URL: http://localhost:3000
+        run: npx playwright test --reporter=html,json,junit
+
+      - name: E2E Summary
+        if: always()
+        run: |
           echo "## E2E Tests" >> $GITHUB_STEP_SUMMARY
-          echo "E2E infrastructure (API + web servers) requires dedicated setup." >> $GITHUB_STEP_SUMMARY
-          echo "Run locally with: npm run test:e2e" >> $GITHUB_STEP_SUMMARY
+          if [ -f e2e/reports/junit-report.xml ]; then
+            TESTS=$(grep -c 'testcase' e2e/reports/junit-report.xml || echo "0")
+            FAILURES=$(grep -c 'failure' e2e/reports/junit-report.xml || echo "0")
+            echo "| Total | Failures |" >> $GITHUB_STEP_SUMMARY
+            echo "|-------|----------|" >> $GITHUB_STEP_SUMMARY
+            echo "| ${TESTS} | ${FAILURES} |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No E2E report generated." >> $GITHUB_STEP_SUMMARY
+          fi
 
       - name: Upload E2E test results
         uses: actions/upload-artifact@v4
@@ -441,8 +466,16 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Run npm audit
-        run: npm audit --omit=dev --audit-level=high
-        continue-on-error: true
+        run: npm audit --omit=dev --audit-level=critical
+
+      - name: Run Trivy filesystem scan
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          severity: 'CRITICAL'
+          exit-code: '1'
+          ignore-unfixed: true
 
       - name: Run security scan script
         run: |

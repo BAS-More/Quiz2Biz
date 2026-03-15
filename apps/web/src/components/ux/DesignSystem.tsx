@@ -246,17 +246,11 @@ export interface ColorSwatchProps {
 }
 
 export const ColorSwatch: React.FC<ColorSwatchProps> = ({ name, color, textColor = '#000' }) => (
-  <div style={styles.colorSwatch}>
-    <div
-      style={{
-        ...styles.colorSwatchBox,
-        backgroundColor: color,
-        color: textColor,
-      }}
-    >
+  <div className={styles.colorSwatch}>
+    <div className={styles.colorSwatchBox} style={{ backgroundColor: color, color: textColor }}>
       {color}
     </div>
-    <span style={styles.colorSwatchName}>{name}</span>
+    <span className={styles.colorSwatchName}>{name}</span>
   </div>
 );
 
@@ -266,9 +260,9 @@ export interface ColorPaletteDisplayProps {
 }
 
 export const ColorPaletteDisplay: React.FC<ColorPaletteDisplayProps> = ({ name, colors }) => (
-  <div style={styles.colorPalette}>
-    <h4 style={styles.paletteName}>{name}</h4>
-    <div style={styles.paletteGrid}>
+  <div className={styles.colorPalette}>
+    <h4 className={styles.paletteName}>{name}</h4>
+    <div className={styles.paletteGrid}>
       {Object.entries(colors).map(([shade, color]) => (
         <ColorSwatch
           key={shade}
@@ -282,24 +276,18 @@ export const ColorPaletteDisplay: React.FC<ColorPaletteDisplayProps> = ({ name, 
 );
 
 export const SpacingScale: React.FC = () => (
-  <div style={styles.section}>
-    <h3 style={styles.sectionTitle}>Spacing Scale</h3>
-    <p style={styles.sectionDesc}>
+  <div className={styles.section}>
+    <h3 className={styles.sectionTitle}>Spacing Scale</h3>
+    <p className={styles.sectionDesc}>
       Consistent spacing using a 4px base unit. Use these values for margins, padding, and gaps.
     </p>
-    <div style={styles.spacingGrid}>
+    <div className={styles.spacingGrid}>
       {Object.entries(SPACING_SCALE).map(([key, value]) => (
-        <div key={key} style={styles.spacingItem}>
-          <div
-            style={{
-              ...styles.spacingBox,
-              width: value,
-              height: value,
-            }}
-          />
-          <div style={styles.spacingLabel}>
-            <span style={styles.spacingKey}>{key}</span>
-            <span style={styles.spacingValue}>{value}</span>
+        <div key={key} className={styles.spacingItem}>
+          <div className={styles.spacingBox} style={{ width: value, height: value }} />
+          <div className={styles.spacingLabel}>
+            <span className={styles.spacingKey}>{key}</span>
+            <span className={styles.spacingValue}>{value}</span>
           </div>
         </div>
       ))}
@@ -308,30 +296,34 @@ export const SpacingScale: React.FC = () => (
 );
 
 export const TypographyScale: React.FC = () => (
-  <div style={styles.section}>
-    <h3 style={styles.sectionTitle}>Typography</h3>
-    <p style={styles.sectionDesc}>
+  <div className={styles.section}>
+    <h3 className={styles.sectionTitle}>Typography</h3>
+    <p className={styles.sectionDesc}>
       Consistent font sizes and weights for readable, accessible text.
     </p>
 
-    <h4 style={styles.subsectionTitle}>Font Sizes</h4>
-    <div style={styles.typographyList}>
+    <h4 className={styles.subsectionTitle}>Font Sizes</h4>
+    <div className={styles.typographyList}>
       {Object.entries(TYPOGRAPHY.fontSize).map(([key, value]) => (
-        <div key={key} style={styles.typographyItem}>
-          <span style={{ ...styles.typographySample, fontSize: value }}>The quick brown fox</span>
-          <span style={styles.typographyMeta}>
+        <div key={key} className={styles.typographyItem}>
+          <span className={styles.typographySample} style={{ fontSize: value }}>
+            The quick brown fox
+          </span>
+          <span className={styles.typographyMeta}>
             {key}: {value}
           </span>
         </div>
       ))}
     </div>
 
-    <h4 style={styles.subsectionTitle}>Font Weights</h4>
-    <div style={styles.typographyList}>
+    <h4 className={styles.subsectionTitle}>Font Weights</h4>
+    <div className={styles.typographyList}>
       {Object.entries(TYPOGRAPHY.fontWeight).map(([key, value]) => (
-        <div key={key} style={styles.typographyItem}>
-          <span style={{ ...styles.typographySample, fontWeight: value }}>The quick brown fox</span>
-          <span style={styles.typographyMeta}>
+        <div key={key} className={styles.typographyItem}>
+          <span className={styles.typographySample} style={{ fontWeight: value }}>
+            The quick brown fox
+          </span>
+          <span className={styles.typographyMeta}>
             {key}: {value}
           </span>
         </div>
@@ -341,18 +333,13 @@ export const TypographyScale: React.FC = () => (
 );
 
 export const BorderRadiusScale: React.FC = () => (
-  <div style={styles.section}>
-    <h3 style={styles.sectionTitle}>Border Radius</h3>
-    <div style={styles.radiusGrid}>
+  <div className={styles.section}>
+    <h3 className={styles.sectionTitle}>Border Radius</h3>
+    <div className={styles.radiusGrid}>
       {Object.entries(BORDER_RADIUS).map(([key, value]) => (
-        <div key={key} style={styles.radiusItem}>
-          <div
-            style={{
-              ...styles.radiusBox,
-              borderRadius: value,
-            }}
-          />
-          <span style={styles.radiusLabel}>
+        <div key={key} className={styles.radiusItem}>
+          <div className={styles.radiusBox} style={{ borderRadius: value }} />
+          <span className={styles.radiusLabel}>
             {key}: {value}
           </span>
         </div>
@@ -362,18 +349,13 @@ export const BorderRadiusScale: React.FC = () => (
 );
 
 export const ShadowScale: React.FC = () => (
-  <div style={styles.section}>
-    <h3 style={styles.sectionTitle}>Shadows</h3>
-    <div style={styles.shadowGrid}>
+  <div className={styles.section}>
+    <h3 className={styles.sectionTitle}>Shadows</h3>
+    <div className={styles.shadowGrid}>
       {Object.entries(SHADOWS).map(([key, value]) => (
-        <div key={key} style={styles.shadowItem}>
-          <div
-            style={{
-              ...styles.shadowBox,
-              boxShadow: value,
-            }}
-          />
-          <span style={styles.shadowLabel}>{key}</span>
+        <div key={key} className={styles.shadowItem}>
+          <div className={styles.shadowBox} style={{ boxShadow: value }} />
+          <span className={styles.shadowLabel}>{key}</span>
         </div>
       ))}
     </div>
@@ -403,58 +385,24 @@ export const Button: React.FC<ButtonProps> = ({
   style,
   ...props
 }) => {
-  const variantStyles: Record<string, React.CSSProperties> = {
-    primary: {
-      backgroundColor: COLOR_PALETTE.primary[600],
-      color: '#FFFFFF',
-      border: 'none',
-    },
-    secondary: {
-      backgroundColor: '#FFFFFF',
-      color: COLOR_PALETTE.neutral[700],
-      border: `1px solid ${COLOR_PALETTE.neutral[300]}`,
-    },
-    ghost: {
-      backgroundColor: 'transparent',
-      color: COLOR_PALETTE.neutral[700],
-      border: 'none',
-    },
-    danger: {
-      backgroundColor: COLOR_PALETTE.error[600],
-      color: '#FFFFFF',
-      border: 'none',
-    },
-    success: {
-      backgroundColor: COLOR_PALETTE.success[600],
-      color: '#FFFFFF',
-      border: 'none',
-    },
+  const variantClasses: Record<string, string> = {
+    primary: 'bg-brand-600 text-white border-none',
+    secondary: 'bg-surface-50 text-surface-700 border border-surface-300',
+    ghost: 'bg-transparent text-surface-700 border-none',
+    danger: 'bg-danger-600 text-white border-none',
+    success: 'bg-success-600 text-white border-none',
   };
 
-  const sizeStyles: Record<string, React.CSSProperties> = {
-    sm: {
-      padding: '6px 12px',
-      fontSize: TYPOGRAPHY.fontSize.sm,
-      borderRadius: BORDER_RADIUS.md,
-    },
-    md: {
-      padding: '8px 16px',
-      fontSize: TYPOGRAPHY.fontSize.base,
-      borderRadius: BORDER_RADIUS.md,
-    },
-    lg: {
-      padding: '12px 24px',
-      fontSize: TYPOGRAPHY.fontSize.lg,
-      borderRadius: BORDER_RADIUS.lg,
-    },
+  const sizeClasses: Record<string, string> = {
+    sm: 'px-3 py-1.5 text-sm rounded-md',
+    md: 'px-4 py-2 text-base rounded-md',
+    lg: 'px-6 py-3 text-lg rounded-lg',
   };
 
   return (
     <button
+      className={`${styles.button} ${variantClasses[variant]} ${sizeClasses[size]}`}
       style={{
-        ...styles.button,
-        ...variantStyles[variant],
-        ...sizeStyles[size],
         opacity: disabled || isLoading ? 0.6 : 1,
         cursor: disabled || isLoading ? 'not-allowed' : 'pointer',
         ...style,
@@ -462,20 +410,20 @@ export const Button: React.FC<ButtonProps> = ({
       disabled={disabled || isLoading}
       {...props}
     >
-      {isLoading && <span style={styles.spinner}>⏳</span>}
-      {leftIcon && !isLoading && <span style={styles.buttonIcon}>{leftIcon}</span>}
+      {isLoading && <span className={styles.spinner}>⏳</span>}
+      {leftIcon && !isLoading && <span className={styles.buttonIcon}>{leftIcon}</span>}
       {children}
-      {rightIcon && <span style={styles.buttonIcon}>{rightIcon}</span>}
+      {rightIcon && <span className={styles.buttonIcon}>{rightIcon}</span>}
     </button>
   );
 };
 
 export const ButtonShowcase: React.FC = () => (
-  <div style={styles.section}>
-    <h3 style={styles.sectionTitle}>Buttons</h3>
+  <div className={styles.section}>
+    <h3 className={styles.sectionTitle}>Buttons</h3>
 
-    <h4 style={styles.subsectionTitle}>Variants</h4>
-    <div style={styles.buttonRow}>
+    <h4 className={styles.subsectionTitle}>Variants</h4>
+    <div className={styles.buttonRow}>
       <Button variant="primary">Primary</Button>
       <Button variant="secondary">Secondary</Button>
       <Button variant="ghost">Ghost</Button>
@@ -483,22 +431,22 @@ export const ButtonShowcase: React.FC = () => (
       <Button variant="success">Success</Button>
     </div>
 
-    <h4 style={styles.subsectionTitle}>Sizes</h4>
-    <div style={styles.buttonRow}>
+    <h4 className={styles.subsectionTitle}>Sizes</h4>
+    <div className={styles.buttonRow}>
       <Button size="sm">Small</Button>
       <Button size="md">Medium</Button>
       <Button size="lg">Large</Button>
     </div>
 
-    <h4 style={styles.subsectionTitle}>States</h4>
-    <div style={styles.buttonRow}>
+    <h4 className={styles.subsectionTitle}>States</h4>
+    <div className={styles.buttonRow}>
       <Button>Normal</Button>
       <Button disabled>Disabled</Button>
       <Button isLoading>Loading</Button>
     </div>
 
-    <h4 style={styles.subsectionTitle}>With Icons</h4>
-    <div style={styles.buttonRow}>
+    <h4 className={styles.subsectionTitle}>With Icons</h4>
+    <div className={styles.buttonRow}>
       <Button leftIcon="➕">Add Item</Button>
       <Button rightIcon="→">Next</Button>
       <Button leftIcon="💾" rightIcon="✓">
@@ -533,38 +481,33 @@ export const Input: React.FC<InputProps> = ({
   const inputId = id || `input-${Math.random().toString(36).slice(2)}`;
 
   return (
-    <div style={styles.inputWrapper}>
+    <div className={styles.inputWrapper}>
       {label && (
-        <label htmlFor={inputId} style={styles.inputLabel}>
+        <label htmlFor={inputId} className={styles.inputLabel}>
           {label}
         </label>
       )}
-      <div style={styles.inputContainer}>
-        {leftAddon && <span style={styles.inputAddon}>{leftAddon}</span>}
+      <div className={styles.inputContainer}>
+        {leftAddon && <span className={styles.inputAddon}>{leftAddon}</span>}
         <input
           id={inputId}
-          style={{
-            ...styles.input,
-            ...(error ? styles.inputError : {}),
-            ...(leftAddon ? { paddingLeft: '40px' } : {}),
-            ...(rightAddon ? { paddingRight: '40px' } : {}),
-            ...style,
-          }}
+          className={`${styles.input} ${error ? styles.inputError : ''} ${leftAddon ? 'pl-10' : ''} ${rightAddon ? 'pr-10' : ''}`}
+          style={style}
           aria-invalid={!!error}
           aria-describedby={error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined}
           {...props}
         />
         {rightAddon && (
-          <span style={{ ...styles.inputAddon, right: '12px', left: 'auto' }}>{rightAddon}</span>
+          <span className={`${styles.inputAddon} right-3 !left-auto`}>{rightAddon}</span>
         )}
       </div>
       {error && (
-        <span id={`${inputId}-error`} style={styles.inputErrorText} role="alert">
+        <span id={`${inputId}-error`} className={styles.inputErrorText} role="alert">
           {error}
         </span>
       )}
       {hint && !error && (
-        <span id={`${inputId}-hint`} style={styles.inputHint}>
+        <span id={`${inputId}-hint`} className={styles.inputHint}>
           {hint}
         </span>
       )}
@@ -573,10 +516,10 @@ export const Input: React.FC<InputProps> = ({
 };
 
 export const InputShowcase: React.FC = () => (
-  <div style={styles.section}>
-    <h3 style={styles.sectionTitle}>Inputs</h3>
+  <div className={styles.section}>
+    <h3 className={styles.sectionTitle}>Inputs</h3>
 
-    <div style={styles.inputGrid}>
+    <div className={styles.inputGrid}>
       <Input label="Default" placeholder="Enter text..." />
       <Input label="With Hint" placeholder="Enter email..." hint="We'll never share your email" />
       <Input label="With Error" placeholder="Enter password..." error="Password is required" />
@@ -598,64 +541,37 @@ export interface BadgeProps {
 }
 
 export const Badge: React.FC<BadgeProps> = ({ children, variant = 'default', size = 'md' }) => {
-  const variantStyles: Record<string, React.CSSProperties> = {
-    default: {
-      backgroundColor: COLOR_PALETTE.neutral[100],
-      color: COLOR_PALETTE.neutral[700],
-    },
-    primary: {
-      backgroundColor: COLOR_PALETTE.primary[100],
-      color: COLOR_PALETTE.primary[700],
-    },
-    success: {
-      backgroundColor: COLOR_PALETTE.success[100],
-      color: COLOR_PALETTE.success[700],
-    },
-    warning: {
-      backgroundColor: COLOR_PALETTE.warning[100],
-      color: COLOR_PALETTE.warning[700],
-    },
-    error: {
-      backgroundColor: COLOR_PALETTE.error[100],
-      color: COLOR_PALETTE.error[700],
-    },
+  const variantClasses: Record<string, string> = {
+    default: 'bg-surface-100 text-surface-700',
+    primary: 'bg-brand-100 text-brand-700',
+    success: 'bg-success-100 text-success-700',
+    warning: 'bg-warning-100 text-warning-700',
+    error: 'bg-danger-100 text-danger-700',
   };
 
-  const sizeStyles: Record<string, React.CSSProperties> = {
-    sm: {
-      padding: '2px 6px',
-      fontSize: '11px',
-    },
-    md: {
-      padding: '4px 8px',
-      fontSize: '12px',
-    },
+  const sizeClasses: Record<string, string> = {
+    sm: 'px-1.5 py-0.5 text-[11px]',
+    md: 'px-2 py-1 text-xs',
   };
 
   return (
-    <span
-      style={{
-        ...styles.badge,
-        ...variantStyles[variant],
-        ...sizeStyles[size],
-      }}
-    >
+    <span className={`${styles.badge} ${variantClasses[variant]} ${sizeClasses[size]}`}>
       {children}
     </span>
   );
 };
 
 export const BadgeShowcase: React.FC = () => (
-  <div style={styles.section}>
-    <h3 style={styles.sectionTitle}>Badges</h3>
-    <div style={styles.badgeRow}>
+  <div className={styles.section}>
+    <h3 className={styles.sectionTitle}>Badges</h3>
+    <div className={styles.badgeRow}>
       <Badge>Default</Badge>
       <Badge variant="primary">Primary</Badge>
       <Badge variant="success">Success</Badge>
       <Badge variant="warning">Warning</Badge>
       <Badge variant="error">Error</Badge>
     </div>
-    <div style={{ ...styles.badgeRow, marginTop: '12px' }}>
+    <div className={`${styles.badgeRow} mt-3`}>
       <Badge size="sm">Small</Badge>
       <Badge size="md">Medium</Badge>
     </div>
@@ -686,35 +602,31 @@ export const Card: React.FC<CardProps> = ({
   className = '',
 }) => (
   <div
-    className={`design-card ${className}`}
-    style={{
-      ...styles.card,
-      padding: SPACING_SCALE[padding],
-      boxShadow: SHADOWS[shadow],
-    }}
+    className={`design-card ${className} ${styles.card}`}
+    style={{ padding: SPACING_SCALE[padding], boxShadow: SHADOWS[shadow] }}
   >
     {(title || subtitle) && (
-      <div style={styles.cardHeader}>
-        {title && <h4 style={styles.cardTitle}>{title}</h4>}
-        {subtitle && <p style={styles.cardSubtitle}>{subtitle}</p>}
+      <div className={styles.cardHeader}>
+        {title && <h4 className={styles.cardTitle}>{title}</h4>}
+        {subtitle && <p className={styles.cardSubtitle}>{subtitle}</p>}
       </div>
     )}
-    <div style={styles.cardContent}>{children}</div>
-    {footer && <div style={styles.cardFooter}>{footer}</div>}
+    <div className={styles.cardContent}>{children}</div>
+    {footer && <div className={styles.cardFooter}>{footer}</div>}
   </div>
 );
 
 export const CardShowcase: React.FC = () => (
-  <div style={styles.section}>
-    <h3 style={styles.sectionTitle}>Cards</h3>
-    <div style={styles.cardGrid}>
+  <div className={styles.section}>
+    <h3 className={styles.sectionTitle}>Cards</h3>
+    <div className={styles.cardGrid}>
       <Card title="Basic Card" subtitle="With title and subtitle">
         <p>Card content goes here. Cards are versatile containers for related content.</p>
       </Card>
       <Card
         title="Card with Footer"
         footer={
-          <div style={styles.cardFooterActions}>
+          <div className={styles.cardFooterActions}>
             <Button variant="ghost" size="sm">
               Cancel
             </Button>
@@ -743,47 +655,24 @@ export interface AlertProps {
 }
 
 export const Alert: React.FC<AlertProps> = ({ children, variant = 'info', title, onClose }) => {
-  const variantStyles: Record<string, { bg: string; border: string; icon: string }> = {
-    info: {
-      bg: COLOR_PALETTE.primary[50],
-      border: COLOR_PALETTE.primary[200],
-      icon: 'ℹ️',
-    },
-    success: {
-      bg: COLOR_PALETTE.success[50],
-      border: COLOR_PALETTE.success[200],
-      icon: '✅',
-    },
-    warning: {
-      bg: COLOR_PALETTE.warning[50],
-      border: COLOR_PALETTE.warning[200],
-      icon: '⚠️',
-    },
-    error: {
-      bg: COLOR_PALETTE.error[50],
-      border: COLOR_PALETTE.error[200],
-      icon: '❌',
-    },
+  const variantConfig: Record<string, { classes: string; icon: string }> = {
+    info: { classes: 'bg-brand-50 border-brand-200', icon: 'ℹ️' },
+    success: { classes: 'bg-success-50 border-success-200', icon: '✅' },
+    warning: { classes: 'bg-warning-50 border-warning-200', icon: '⚠️' },
+    error: { classes: 'bg-danger-50 border-danger-200', icon: '❌' },
   };
 
-  const { bg, border, icon } = variantStyles[variant];
+  const { classes: variantClasses, icon } = variantConfig[variant];
 
   return (
-    <div
-      style={{
-        ...styles.alert,
-        backgroundColor: bg,
-        borderColor: border,
-      }}
-      role="alert"
-    >
-      <span style={styles.alertIcon}>{icon}</span>
-      <div style={styles.alertContent}>
-        {title && <strong style={styles.alertTitle}>{title}</strong>}
+    <div className={`${styles.alert} ${variantClasses}`} role="alert">
+      <span className={styles.alertIcon}>{icon}</span>
+      <div className={styles.alertContent}>
+        {title && <strong className={styles.alertTitle}>{title}</strong>}
         <div>{children}</div>
       </div>
       {onClose && (
-        <button onClick={onClose} style={styles.alertClose} aria-label="Dismiss alert">
+        <button onClick={onClose} className={styles.alertClose} aria-label="Dismiss alert">
           ✕
         </button>
       )}
@@ -792,9 +681,9 @@ export const Alert: React.FC<AlertProps> = ({ children, variant = 'info', title,
 };
 
 export const AlertShowcase: React.FC = () => (
-  <div style={styles.section}>
-    <h3 style={styles.sectionTitle}>Alerts</h3>
-    <div style={styles.alertStack}>
+  <div className={styles.section}>
+    <h3 className={styles.sectionTitle}>Alerts</h3>
+    <div className={styles.alertStack}>
       <Alert variant="info" title="Information">
         This is an informational message.
       </Alert>
@@ -834,21 +723,18 @@ export const DesignSystemViewer: React.FC<DesignSystemViewerProps> = ({
   ];
 
   return (
-    <div style={styles.viewer}>
-      <header style={styles.viewerHeader}>
-        <h1 style={styles.viewerTitle}>Design System</h1>
-        <p style={styles.viewerDesc}>Quiz2Biz unified design tokens and component library</p>
+    <div className={styles.viewer}>
+      <header className={styles.viewerHeader}>
+        <h1 className={styles.viewerTitle}>Design System</h1>
+        <p className={styles.viewerDesc}>Quiz2Biz unified design tokens and component library</p>
       </header>
 
-      <nav style={styles.viewerNav}>
+      <nav className={styles.viewerNav}>
         {sections.map(({ id, label }) => (
           <button
             key={id}
             onClick={() => setActiveSection(id)}
-            style={{
-              ...styles.navButton,
-              ...(activeSection === id ? styles.navButtonActive : {}),
-            }}
+            className={`${styles.navButton} ${activeSection === id ? styles.navButtonActive : ''}`}
             aria-current={activeSection === id ? 'page' : undefined}
           >
             {label}
@@ -856,7 +742,7 @@ export const DesignSystemViewer: React.FC<DesignSystemViewerProps> = ({
         ))}
       </nav>
 
-      <main style={styles.viewerContent}>
+      <main className={styles.viewerContent}>
         {activeSection === 'colors' && (
           <>
             <ColorPaletteDisplay name="Primary" colors={COLOR_PALETTE.primary} />
@@ -895,391 +781,75 @@ export const DesignSystemViewer: React.FC<DesignSystemViewerProps> = ({
 // Styles
 // ============================================================================
 
-const styles: Record<string, React.CSSProperties> = {
-  // Color Swatch
-  colorSwatch: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '4px',
-  },
-  colorSwatchBox: {
-    width: '80px',
-    height: '48px',
-    borderRadius: BORDER_RADIUS.md,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '10px',
-    fontFamily: TYPOGRAPHY.fontFamily.mono,
-  },
-  colorSwatchName: {
-    fontSize: '11px',
-    color: COLOR_PALETTE.neutral[600],
-  },
-
-  // Color Palette
-  colorPalette: {
-    marginBottom: '32px',
-  },
-  paletteName: {
-    margin: '0 0 12px 0',
-    fontSize: '16px',
-    fontWeight: 600,
-    color: COLOR_PALETTE.neutral[800],
-    textTransform: 'capitalize',
-  },
-  paletteGrid: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '8px',
-  },
-
-  // Section
-  section: {
-    marginBottom: '48px',
-  },
-  sectionTitle: {
-    margin: '0 0 8px 0',
-    fontSize: '20px',
-    fontWeight: 600,
-    color: COLOR_PALETTE.neutral[900],
-  },
-  sectionDesc: {
-    margin: '0 0 24px 0',
-    fontSize: '14px',
-    color: COLOR_PALETTE.neutral[600],
-    lineHeight: 1.6,
-  },
-  subsectionTitle: {
-    margin: '24px 0 12px 0',
-    fontSize: '14px',
-    fontWeight: 600,
-    color: COLOR_PALETTE.neutral[700],
-  },
-
-  // Spacing
-  spacingGrid: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '16px',
-    alignItems: 'flex-end',
-  },
-  spacingItem: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '8px',
-  },
-  spacingBox: {
-    backgroundColor: COLOR_PALETTE.primary[500],
-    borderRadius: '2px',
-    minWidth: '8px',
-    minHeight: '8px',
-  },
-  spacingLabel: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '2px',
-  },
-  spacingKey: {
-    fontSize: '12px',
-    fontWeight: 600,
-    color: COLOR_PALETTE.neutral[800],
-  },
-  spacingValue: {
-    fontSize: '10px',
-    color: COLOR_PALETTE.neutral[500],
-    fontFamily: TYPOGRAPHY.fontFamily.mono,
-  },
-
-  // Typography
-  typographyList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px',
-  },
-  typographyItem: {
-    display: 'flex',
-    alignItems: 'baseline',
-    justifyContent: 'space-between',
-    paddingBottom: '12px',
-    borderBottom: `1px solid ${COLOR_PALETTE.neutral[200]}`,
-  },
-  typographySample: {
-    color: COLOR_PALETTE.neutral[900],
-  },
-  typographyMeta: {
-    fontSize: '12px',
-    color: COLOR_PALETTE.neutral[500],
-    fontFamily: TYPOGRAPHY.fontFamily.mono,
-  },
-
-  // Border Radius
-  radiusGrid: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '16px',
-  },
-  radiusItem: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '8px',
-  },
-  radiusBox: {
-    width: '64px',
-    height: '64px',
-    backgroundColor: COLOR_PALETTE.primary[500],
-  },
-  radiusLabel: {
-    fontSize: '11px',
-    color: COLOR_PALETTE.neutral[600],
-    fontFamily: TYPOGRAPHY.fontFamily.mono,
-  },
-
-  // Shadows
-  shadowGrid: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '24px',
-  },
-  shadowItem: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '12px',
-  },
-  shadowBox: {
-    width: '80px',
-    height: '80px',
-    backgroundColor: '#FFFFFF',
-    borderRadius: BORDER_RADIUS.md,
-  },
-  shadowLabel: {
-    fontSize: '12px',
-    color: COLOR_PALETTE.neutral[600],
-  },
-
-  // Button
-  button: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '8px',
-    fontWeight: 500,
-    transition: TRANSITIONS.fast,
-    fontFamily: 'inherit',
-  },
-  buttonIcon: {
-    display: 'inline-flex',
-    fontSize: '14px',
-  },
-  spinner: {
-    animation: 'spin 1s linear infinite',
-  },
-  buttonRow: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '12px',
-    marginBottom: '16px',
-  },
-
-  // Input
-  inputWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '6px',
-    width: '100%',
-  },
-  inputLabel: {
-    fontSize: '14px',
-    fontWeight: 500,
-    color: COLOR_PALETTE.neutral[700],
-  },
-  inputContainer: {
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-  },
-  input: {
-    width: '100%',
-    padding: '10px 12px',
-    fontSize: '14px',
-    color: COLOR_PALETTE.neutral[900],
-    backgroundColor: '#FFFFFF',
-    border: `1px solid ${COLOR_PALETTE.neutral[300]}`,
-    borderRadius: BORDER_RADIUS.md,
-    outline: 'none',
-    transition: TRANSITIONS.fast,
-    fontFamily: 'inherit',
-  },
-  inputError: {
-    borderColor: COLOR_PALETTE.error[500],
-  },
-  inputAddon: {
-    position: 'absolute',
-    left: '12px',
-    color: COLOR_PALETTE.neutral[500],
-  },
-  inputErrorText: {
-    fontSize: '12px',
-    color: COLOR_PALETTE.error[600],
-  },
-  inputHint: {
-    fontSize: '12px',
-    color: COLOR_PALETTE.neutral[500],
-  },
-  inputGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-    gap: '24px',
-  },
-
-  // Badge
-  badge: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    fontWeight: 500,
-    borderRadius: BORDER_RADIUS.full,
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-  },
-  badgeRow: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '8px',
-  },
-
-  // Card
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: BORDER_RADIUS.lg,
-    border: `1px solid ${COLOR_PALETTE.neutral[200]}`,
-  },
-  cardHeader: {
-    marginBottom: '16px',
-  },
-  cardTitle: {
-    margin: '0 0 4px 0',
-    fontSize: '16px',
-    fontWeight: 600,
-    color: COLOR_PALETTE.neutral[900],
-  },
-  cardSubtitle: {
-    margin: 0,
-    fontSize: '14px',
-    color: COLOR_PALETTE.neutral[600],
-  },
-  cardContent: {
-    fontSize: '14px',
-    color: COLOR_PALETTE.neutral[700],
-    lineHeight: 1.6,
-  },
-  cardFooter: {
-    marginTop: '16px',
-    paddingTop: '16px',
-    borderTop: `1px solid ${COLOR_PALETTE.neutral[200]}`,
-  },
-  cardFooterActions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    gap: '8px',
-  },
-  cardGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-    gap: '24px',
-  },
-
-  // Alert
-  alert: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '12px',
-    padding: '16px',
-    borderRadius: BORDER_RADIUS.lg,
-    border: '1px solid',
-  },
-  alertIcon: {
-    fontSize: '18px',
-    flexShrink: 0,
-  },
-  alertContent: {
-    flex: 1,
-    fontSize: '14px',
-    lineHeight: 1.5,
-  },
-  alertTitle: {
-    display: 'block',
-    marginBottom: '4px',
-  },
-  alertClose: {
-    padding: '4px',
-    fontSize: '14px',
-    color: COLOR_PALETTE.neutral[500],
-    backgroundColor: 'transparent',
-    border: 'none',
-    borderRadius: BORDER_RADIUS.sm,
-    cursor: 'pointer',
-  },
-  alertStack: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px',
-  },
-
-  // Viewer
-  viewer: {
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '32px',
-    fontFamily: TYPOGRAPHY.fontFamily.sans,
-  },
-  viewerHeader: {
-    marginBottom: '32px',
-    textAlign: 'center',
-  },
-  viewerTitle: {
-    margin: '0 0 8px 0',
-    fontSize: '32px',
-    fontWeight: 700,
-    color: COLOR_PALETTE.neutral[900],
-  },
-  viewerDesc: {
-    margin: 0,
-    fontSize: '16px',
-    color: COLOR_PALETTE.neutral[600],
-  },
-  viewerNav: {
-    display: 'flex',
-    gap: '8px',
-    marginBottom: '32px',
-    padding: '4px',
-    backgroundColor: COLOR_PALETTE.neutral[100],
-    borderRadius: BORDER_RADIUS.lg,
-  },
-  navButton: {
-    flex: 1,
-    padding: '10px 16px',
-    fontSize: '14px',
-    fontWeight: 500,
-    color: COLOR_PALETTE.neutral[600],
-    backgroundColor: 'transparent',
-    border: 'none',
-    borderRadius: BORDER_RADIUS.md,
-    cursor: 'pointer',
-    transition: TRANSITIONS.fast,
-  },
-  navButtonActive: {
-    color: COLOR_PALETTE.neutral[900],
-    backgroundColor: '#FFFFFF',
-    boxShadow: SHADOWS.sm,
-  },
-  viewerContent: {
-    minHeight: '400px',
-  },
+const styles = {
+  colorSwatch: 'flex flex-col items-center gap-1',
+  colorSwatchBox: 'w-20 h-12 rounded-md flex items-center justify-center text-[10px] font-mono',
+  colorSwatchName: 'text-[11px] text-surface-600',
+  colorPalette: 'mb-8',
+  paletteName: 'm-0 mb-3 text-base font-semibold text-surface-800 capitalize',
+  paletteGrid: 'flex flex-wrap gap-2',
+  section: 'mb-12',
+  sectionTitle: 'm-0 mb-2 text-xl font-semibold text-surface-900',
+  sectionDesc: 'm-0 mb-6 text-sm text-surface-600 leading-relaxed',
+  subsectionTitle: 'mt-6 mb-3 text-sm font-semibold text-surface-700',
+  spacingGrid: 'flex flex-wrap gap-4 items-end',
+  spacingItem: 'flex flex-col items-center gap-2',
+  spacingBox: 'bg-brand-500 rounded-sm min-w-2 min-h-2',
+  spacingLabel: 'flex flex-col items-center gap-0.5',
+  spacingKey: 'text-xs font-semibold text-surface-800',
+  spacingValue: 'text-[10px] text-surface-500 font-mono',
+  typographyList: 'flex flex-col gap-3',
+  typographyItem: 'flex items-baseline justify-between pb-3 border-b border-surface-200',
+  typographySample: 'text-surface-900',
+  typographyMeta: 'text-xs text-surface-500 font-mono',
+  radiusGrid: 'flex flex-wrap gap-4',
+  radiusItem: 'flex flex-col items-center gap-2',
+  radiusBox: 'w-16 h-16 bg-brand-500',
+  radiusLabel: 'text-[11px] text-surface-600 font-mono',
+  shadowGrid: 'flex flex-wrap gap-6',
+  shadowItem: 'flex flex-col items-center gap-3',
+  shadowBox: 'w-20 h-20 bg-surface-50 rounded-md',
+  shadowLabel: 'text-xs text-surface-600',
+  button:
+    'inline-flex items-center justify-center gap-2 font-medium transition-all duration-150 font-[inherit]',
+  buttonIcon: 'inline-flex text-sm',
+  spinner: 'animate-spin',
+  buttonRow: 'flex flex-wrap gap-3 mb-4',
+  inputWrapper: 'flex flex-col gap-1.5 w-full',
+  inputLabel: 'text-sm font-medium text-surface-700',
+  inputContainer: 'relative flex items-center',
+  input:
+    'w-full px-3 py-2.5 text-sm text-surface-900 bg-surface-50 border border-surface-300 rounded-md outline-none transition-all duration-150 font-[inherit]',
+  inputError: 'border-danger-500',
+  inputAddon: 'absolute left-3 text-surface-500',
+  inputErrorText: 'text-xs text-danger-600',
+  inputHint: 'text-xs text-surface-500',
+  inputGrid: 'grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6',
+  badge: 'inline-flex items-center font-medium rounded-full uppercase tracking-wider',
+  badgeRow: 'flex flex-wrap gap-2',
+  card: 'bg-surface-50 rounded-lg border border-surface-200',
+  cardHeader: 'mb-4',
+  cardTitle: 'm-0 mb-1 text-base font-semibold text-surface-900',
+  cardSubtitle: 'm-0 text-sm text-surface-600',
+  cardContent: 'text-sm text-surface-700 leading-relaxed',
+  cardFooter: 'mt-4 pt-4 border-t border-surface-200',
+  cardFooterActions: 'flex justify-end gap-2',
+  cardGrid: 'grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-6',
+  alert: 'flex items-start gap-3 p-4 rounded-lg border',
+  alertIcon: 'text-lg shrink-0',
+  alertContent: 'flex-1 text-sm leading-normal',
+  alertTitle: 'block mb-1',
+  alertClose: 'p-1 text-sm text-surface-500 bg-transparent border-none rounded cursor-pointer',
+  alertStack: 'flex flex-col gap-3',
+  viewer: 'max-w-[1200px] mx-auto p-8 font-sans',
+  viewerHeader: 'mb-8 text-center',
+  viewerTitle: 'm-0 mb-2 text-[32px] font-bold text-surface-900',
+  viewerDesc: 'm-0 text-base text-surface-600',
+  viewerNav: 'flex gap-2 mb-8 p-1 bg-surface-100 rounded-lg',
+  navButton:
+    'flex-1 px-4 py-2.5 text-sm font-medium text-surface-600 bg-transparent border-none rounded-md cursor-pointer transition-all duration-150',
+  navButtonActive: 'text-surface-900 bg-surface-50 shadow-sm',
+  viewerContent: 'min-h-[400px]',
 };
 
 // ============================================================================

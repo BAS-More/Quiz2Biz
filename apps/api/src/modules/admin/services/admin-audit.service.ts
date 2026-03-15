@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '@libs/database';
 import { Request } from 'express';
 
@@ -21,16 +22,17 @@ export class AdminAuditService {
     const { userId, action, resourceType, resourceId, changes, request } = params;
 
     try {
+      const requestMeta = this.extractRequestMetadata(request);
       await this.prisma.auditLog.create({
         data: {
           userId,
           action,
           resourceType,
           resourceId,
-          changes: changes ? JSON.parse(JSON.stringify(changes)) : null,
-          ipAddress: request?.ip ?? request?.socket?.remoteAddress ?? null,
-          userAgent: request?.headers?.['user-agent'] ?? null,
-          requestId: (request?.headers?.['x-request-id'] as string) ?? null,
+          changes: changes
+            ? (JSON.parse(JSON.stringify(changes)) as Prisma.InputJsonValue)
+            : Prisma.JsonNull,
+          ...requestMeta,
         },
       });
 
@@ -41,5 +43,17 @@ export class AdminAuditService {
         error instanceof Error ? error.stack : undefined,
       );
     }
+  }
+
+  private extractRequestMetadata(request?: Request): {
+    ipAddress: string | null;
+    userAgent: string | null;
+    requestId: string | null;
+  } {
+    return {
+      ipAddress: request?.ip ?? request?.socket?.remoteAddress ?? null,
+      userAgent: request?.headers?.['user-agent'] ?? null,
+      requestId: (request?.headers?.['x-request-id'] as string) ?? null,
+    };
   }
 }

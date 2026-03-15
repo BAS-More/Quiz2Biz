@@ -41,3 +41,16 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "stripe_webhook_secret" {
+  description = "Stripe webhook signing secret"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "cors_origin" {
+  description = "Allowed CORS origin (comma-separated for multiple)"
+  type        = string
+  default     = "https://quiz2biz.com"
+}

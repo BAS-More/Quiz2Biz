@@ -5,7 +5,7 @@ export class CreateSectionDto {
   @ApiProperty({ example: 'Business Foundation', maxLength: 200 })
   @IsString()
   @MaxLength(200)
-  name: string;
+  name!: string;
 
   @ApiPropertyOptional({ example: 'Core business information and goals' })
   @IsOptional()

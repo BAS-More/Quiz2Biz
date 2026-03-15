@@ -18,12 +18,15 @@
 </cite>
 
 ## Update Summary
+
 **Changes Made**
+
 - Enhanced type safety in controller methods with explicit DocumentTypeResponseDto casting
 - Improved response handling through explicit type assertions for better compile-time type checking
 - Added comprehensive type safety measures in document generation and administrative operations
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
@@ -86,11 +89,13 @@ SS --> AZURE[Azure Storage]
 ```
 
 **Diagram sources**
+
 - [document-generator.module.ts](file://apps/api/src/modules/document-generator/document-generator.module.ts#L1-L23)
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L1-L163)
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L1-L230)
 
 **Section sources**
+
 - [document-generator.module.ts](file://apps/api/src/modules/document-generator/document-generator.module.ts#L1-L23)
 
 ## Core Components
@@ -98,21 +103,25 @@ SS --> AZURE[Azure Storage]
 The Document Generator module consists of several interconnected components that work together to provide comprehensive document generation capabilities:
 
 ### Controller Layer
+
 - **DocumentController**: Handles user-facing document operations including generation requests, document retrieval, and download URL generation
 - **DocumentAdminController**: Manages administrative document operations including document type management and document review workflows
 
 ### Service Layer
+
 - **DocumentGeneratorService**: Orchestrates the complete document generation pipeline, coordinating between template engine, builder, and storage services
 - **TemplateEngineService**: Assembles template data from questionnaire responses and applies document-specific mappings
 - **DocumentBuilderService**: Constructs DOCX documents using the docx library with category-specific formatting
 - **StorageService**: Manages document storage and retrieval using Azure Blob Storage with secure SAS token generation
 
 ### Data Transfer Objects (DTOs)
+
 - Comprehensive validation and serialization for all API requests and responses
 - Support for document type management and review workflows
 - **Enhanced Type Safety**: Explicit DocumentTypeResponseDto casting ensures compile-time type checking and runtime response validation
 
 **Section sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L33-L36)
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L40-L43)
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L28-L37)
@@ -147,6 +156,7 @@ Controller-->>Client : DocumentResponseDto
 ```
 
 **Diagram sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L38-L54)
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L42-L139)
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L35-L99)
@@ -185,10 +195,12 @@ DocumentController --> DocumentGeneratorService : uses
 ```
 
 **Diagram sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L33-L162)
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L28-L37)
 
 **Section sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L33-L162)
 
 ### DocumentAdminController Analysis
@@ -215,10 +227,12 @@ DocumentAdminController --> DocumentGeneratorService : delegates
 ```
 
 **Diagram sources**
+
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L39-L229)
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L284-L358)
 
 **Section sources**
+
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L39-L229)
 
 ### DocumentGeneratorService Analysis
@@ -247,9 +261,11 @@ BadReq2 --> Error
 ```
 
 **Diagram sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L42-L194)
 
 **Section sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L28-L359)
 
 ### TemplateEngineService Analysis
@@ -283,9 +299,11 @@ TemplateData --> StandardSection : contains
 ```
 
 **Diagram sources**
+
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L27-L289)
 
 **Section sources**
+
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L27-L289)
 
 ### DocumentBuilderService Analysis
@@ -325,9 +343,11 @@ DocumentBuilderService --> DocumentCategory : uses
 ```
 
 **Diagram sources**
+
 - [document-builder.service.ts](file://apps/api/src/modules/document-generator/services/document-builder.service.ts#L28-L486)
 
 **Section sources**
+
 - [document-builder.service.ts](file://apps/api/src/modules/document-generator/services/document-builder.service.ts#L28-L486)
 
 ### StorageService Analysis
@@ -356,9 +376,11 @@ StorageService --> UploadResult : returns
 ```
 
 **Diagram sources**
+
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L18-L159)
 
 **Section sources**
+
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L18-L159)
 
 ## API Endpoints
@@ -367,27 +389,28 @@ The Document Generator exposes a comprehensive set of RESTful endpoints organize
 
 ### User Document Operations
 
-| Endpoint | Method | Description | Authentication |
-|----------|--------|-------------|----------------|
-| `/documents/generate` | POST | Request document generation for a session | JWT Required |
-| `/documents/types` | GET | List available document types | JWT Required |
-| `/documents/session/:sessionId` | GET | List all documents for a session | JWT Required |
-| `/documents/:id` | GET | Get document details | JWT Required |
-| `/documents/:id/download` | GET | Get secure download URL | JWT Required |
+| Endpoint                        | Method | Description                               | Authentication |
+| ------------------------------- | ------ | ----------------------------------------- | -------------- |
+| `/documents/generate`           | POST   | Request document generation for a session | JWT Required   |
+| `/documents/types`              | GET    | List available document types             | JWT Required   |
+| `/documents/session/:sessionId` | GET    | List all documents for a session          | JWT Required   |
+| `/documents/:id`                | GET    | Get document details                      | JWT Required   |
+| `/documents/:id/download`       | GET    | Get secure download URL                   | JWT Required   |
 
 ### Administrative Document Operations
 
-| Endpoint | Method | Description | Authentication | Roles |
-|----------|--------|-------------|----------------|-------|
-| `/admin/document-types` | GET | List all document types | JWT + Roles | ADMIN, SUPER_ADMIN |
-| `/admin/document-types/:id` | GET | Get document type details | JWT + Roles | ADMIN, SUPER_ADMIN |
-| `/admin/document-types` | POST | Create document type | JWT + Roles | ADMIN, SUPER_ADMIN |
-| `/admin/document-types/:id` | PATCH | Update document type | JWT + Roles | ADMIN, SUPER_ADMIN |
-| `/admin/documents/pending-review` | GET | List documents pending review | JWT + Roles | ADMIN, SUPER_ADMIN |
-| `/admin/documents/:id/approve` | PATCH | Approve a document | JWT + Roles | ADMIN, SUPER_ADMIN |
-| `/admin/documents/:id/reject` | PATCH | Reject a document | JWT + Roles | ADMIN, SUPER_ADMIN |
+| Endpoint                          | Method | Description                   | Authentication | Roles              |
+| --------------------------------- | ------ | ----------------------------- | -------------- | ------------------ |
+| `/admin/document-types`           | GET    | List all document types       | JWT + Roles    | ADMIN, SUPER_ADMIN |
+| `/admin/document-types/:id`       | GET    | Get document type details     | JWT + Roles    | ADMIN, SUPER_ADMIN |
+| `/admin/document-types`           | POST   | Create document type          | JWT + Roles    | ADMIN, SUPER_ADMIN |
+| `/admin/document-types/:id`       | PATCH  | Update document type          | JWT + Roles    | ADMIN, SUPER_ADMIN |
+| `/admin/documents/pending-review` | GET    | List documents pending review | JWT + Roles    | ADMIN, SUPER_ADMIN |
+| `/admin/documents/:id/approve`    | PATCH  | Approve a document            | JWT + Roles    | ADMIN, SUPER_ADMIN |
+| `/admin/documents/:id/reject`     | PATCH  | Reject a document             | JWT + Roles    | ADMIN, SUPER_ADMIN |
 
 **Section sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L38-L113)
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L49-L228)
 
@@ -396,30 +419,35 @@ The Document Generator exposes a comprehensive set of RESTful endpoints organize
 The document generation process follows a sophisticated multi-stage workflow:
 
 ### Stage 1: Validation and Preparation
+
 1. **Session Validation**: Verify session exists and is completed
 2. **User Authorization**: Confirm user ownership of the session
 3. **Document Type Validation**: Ensure document type exists and is active
 4. **Requirement Checking**: Validate completion of required questions
 
 ### Stage 2: Template Assembly
+
 1. **Response Collection**: Gather all valid responses for the session
 2. **Content Mapping**: Apply document-specific mappings to organize data
 3. **Standard Integration**: Include relevant engineering standards for CTO documents
 4. **Template Data Creation**: Structure data for document building
 
 ### Stage 3: Document Construction
+
 1. **Category-Specific Building**: Apply appropriate content structure based on document category
 2. **Content Rendering**: Convert structured data to formatted paragraphs and sections
 3. **Style Application**: Apply consistent formatting and typography
 4. **Section Organization**: Arrange content according to document specifications
 
 ### Stage 4: Storage and Metadata
+
 1. **File Upload**: Store document in Azure Blob Storage with categorized folder structure
 2. **Metadata Recording**: Update document records with storage URLs and file sizes
 3. **Status Update**: Mark document as generated and ready for download
 4. **Access Token Generation**: Create secure download URLs with expiration
 
 **Section sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L42-L194)
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L35-L99)
 - [document-builder.service.ts](file://apps/api/src/modules/document-generator/services/document-builder.service.ts#L35-L108)
@@ -429,21 +457,25 @@ The document generation process follows a sophisticated multi-stage workflow:
 The Document Generator implements multiple layers of security and access control:
 
 ### Authentication
+
 - **JWT Authentication**: All endpoints require valid JSON Web Tokens
 - **Role-Based Access Control**: Administrative operations restricted to ADMIN and SUPER_ADMIN roles
 - **Session Ownership Verification**: Users can only access their own documents
 
 ### Authorization Patterns
+
 - **Document Access Control**: Documents are accessible only to their creators or administrators
 - **Administrative Privileges**: Admin users can approve or reject documents pending review
 - **Rate Limiting**: Built-in protection against abuse through request validation
 
 ### Data Protection
+
 - **Secure Storage**: Azure Blob Storage with HTTPS encryption
 - **Temporary URLs**: Secure Access Signature (SAS) tokens with configurable expiration
 - **Audit Trail**: Complete document lifecycle tracking with timestamps
 
 **Section sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L31-L32)
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L37-L38)
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L100-L136)
@@ -451,6 +483,7 @@ The Document Generator implements multiple layers of security and access control
 ## Storage and Templates
 
 ### Storage Architecture
+
 The system uses Azure Blob Storage with a hierarchical organization:
 
 ```
@@ -468,6 +501,7 @@ documents/
 ```
 
 ### Template System
+
 The template engine supports dynamic content assembly:
 
 - **Category-Specific Templates**: Different content structures for CTO, CFO, and BA documents
@@ -476,6 +510,7 @@ The template engine supports dynamic content assembly:
 - **Placeholder Management**: Intelligent handling of missing or incomplete data
 
 **Section sources**
+
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L75-L95)
 - [base.template.ts](file://apps/api/src/modules/document-generator/templates/base.template.ts#L59-L95)
 
@@ -488,15 +523,17 @@ The template engine supports dynamic content assembly:
 The controllers now employ explicit type casting to ensure type safety across all response operations:
 
 #### Controller-Level Type Safety
+
 - **DocumentController**: Uses explicit casting for document type responses in list operations
 - **DocumentAdminController**: Implements comprehensive type casting for all document type management operations
 - **Response Mapping**: Ensures consistent type conversion in custom response mappers
 
 #### Implementation Details
+
 ```typescript
 // Example of explicit casting in controller methods
 async listDocumentTypes(): Promise<DocumentTypeResponseDto[]> {
-  return this.documentGeneratorService.listDocumentTypes() 
+  return this.documentGeneratorService.listDocumentTypes()
     as unknown as Promise<DocumentTypeResponseDto[]>;
 }
 
@@ -505,6 +542,7 @@ category: document.documentType.category as DocumentTypeResponseDto['category']
 ```
 
 #### Benefits of Enhanced Type Safety
+
 - **Compile-Time Validation**: TypeScript catches type mismatches during development
 - **Runtime Type Assurance**: Explicit casting ensures consistent response structures
 - **Enum Type Protection**: Prevents invalid category values in document type responses
@@ -527,7 +565,7 @@ private mapToResponse(document: {
     documentType: document.documentType
       ? {
           // ... mapped document type properties
-          category: document.documentType.category 
+          category: document.documentType.category
             as DocumentTypeResponseDto['category'],
         }
       : undefined,
@@ -544,6 +582,7 @@ The administrative controller implements robust type safety for document type op
 - **Document Review Responses**: Structured responses with proper type casting for approval/rejection workflows
 
 **Section sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L59-L61)
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L154-L156)
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L95-L96)
@@ -555,68 +594,84 @@ The administrative controller implements robust type safety for document type op
 ### Common Issues and Solutions
 
 #### Document Generation Failures
+
 **Symptoms**: Generation requests return 400 errors with validation messages
-**Causes**: 
+**Causes**:
+
 - Session not completed before generation
 - Missing required questions for the document type
 - User lacks permission to access the session
 - Document type is inactive
 
 **Solutions**:
+
 1. Verify session status is COMPLETED before requesting generation
 2. Check that all required questions are answered for the target document type
 3. Confirm user ownership of the session
 4. Ensure the document type is marked as active
 
 #### Storage Configuration Issues
+
 **Symptoms**: Upload operations fail or return generic errors
 **Causes**:
+
 - Missing Azure Storage connection string
 - Invalid storage account credentials
 - Network connectivity issues
 
 **Solutions**:
+
 1. Verify `AZURE_STORAGE_CONNECTION_STRING` environment variable is set
 2. Check storage account name and key configuration
 3. Test network connectivity to Azure endpoints
 
 #### Download URL Generation Problems
+
 **Symptoms**: Download requests return 400 errors or expired URLs
 **Causes**:
+
 - Document not in GENERATED or APPROVED status
 - Missing storage URL in document record
 - Expiration time configuration issues
 
 **Solutions**:
+
 1. Verify document status is either GENERATED or APPROVED
 2. Check that storage URL exists in the document record
 3. Validate expiration time parameter (default 60 minutes)
 
 #### Administrative Operation Failures
+
 **Symptoms**: Admin operations return 400 errors for document review
 **Causes**:
+
 - Document not in PENDING_REVIEW status
 - Incorrect role-based access
 - Invalid document ID format
 
 **Solutions**:
+
 1. Verify document status is PENDING_REVIEW before approval/rejection
 2. Confirm user has ADMIN or SUPER_ADMIN role
 3. Validate UUID format for document IDs
 
 #### Type Safety Issues
+
 **Symptoms**: Compilation errors or runtime type mismatches in controller responses
 **Causes**:
+
 - Missing explicit type casting in controller methods
 - Inconsistent type handling across different response scenarios
 - Enum type validation failures
 
 **Solutions**:
+
 1. Ensure all controller methods use explicit DocumentTypeResponseDto casting
 2. Verify response mapping functions include proper type casting
 3. Check that enum values are properly validated during type conversion
 
 **Section sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L54-L132)
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L104-L136)
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L59-L61)

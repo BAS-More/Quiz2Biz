@@ -83,31 +83,48 @@ export function HeatmapPage() {
 
   if (isLoading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '48px' }}>
-        <div style={{ fontSize: '16px', color: '#6b7280' }}>Loading heatmap...</div>
+      <div className="flex items-center justify-center py-12">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-8 w-8 rounded-full border-4 border-brand-200 border-t-brand-600 animate-spin" />
+          <p className="text-sm text-surface-500">Loading heatmap...</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div style={{ padding: '24px' }}>
-        <div
-          style={{
-            background: '#fef2f2',
-            border: '1px solid #fecaca',
-            borderRadius: '8px',
-            padding: '16px',
-            color: '#dc2626',
-          }}
-        >
+      <div className="p-6">
+        <div className="p-4 bg-danger-50 border border-danger-200 rounded-xl text-sm text-danger-700">
           Error: {error}
         </div>
       </div>
     );
   }
 
-  if (!heatmap) return null;
+  if (!heatmap) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 gap-4">
+        <div className="w-16 h-16 rounded-2xl bg-surface-100 flex items-center justify-center">
+          <svg
+            className="h-8 w-8 text-surface-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            />
+          </svg>
+        </div>
+        <p className="text-sm font-medium text-surface-700">No heatmap data available</p>
+        <p className="text-sm text-surface-500">Complete a session to generate the gap heatmap.</p>
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}>

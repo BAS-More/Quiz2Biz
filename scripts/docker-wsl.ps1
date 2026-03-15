@@ -1,42 +1,35 @@
-# Docker WSL Workaround Script
-# Use this when Docker Desktop's Windows integration is not working
-# Source: Docker Desktop named pipe communication issue
+# ============================================
+# DEPRECATED - DO NOT USE
+# ============================================
+# This project uses Azure Container Registry (Docker Cloud)
+# DO NOT use Docker Desktop or WSL workarounds
+#
+# Use these commands instead:
+#   npm run cloud:login   # az acr login --name acrquestionnaireprod
+#   npm run cloud:build   # Build image for ACR
+#   npm run cloud:push    # Push to Azure Container Registry
+#   npm run cloud:deploy  # Deploy to Azure Container Apps
+#   npm run cloud:all     # Full deployment pipeline
+#
+# Production URLs:
+#   API: https://ca-questionnaire-api-prod.wittyriver-206156ea.australiasoutheast.azurecontainerapps.io
+#   Web: https://ca-questionnaire-web-prod.wittyriver-206156ea.australiasoutheast.azurecontainerapps.io
+# ============================================
 
-Write-Host "Setting up Docker via WSL workaround..." -ForegroundColor Cyan
+Write-Host "ERROR: This script is DEPRECATED." -ForegroundColor Red
+Write-Host ""
+Write-Host "This project uses Azure Container Registry (Docker Cloud)." -ForegroundColor Yellow
+Write-Host "DO NOT use Docker Desktop or WSL workarounds." -ForegroundColor Yellow
+Write-Host ""
+Write-Host "Use these commands instead:" -ForegroundColor Cyan
+Write-Host "  npm run cloud:login   - Login to Azure Container Registry"
+Write-Host "  npm run cloud:build   - Build Docker image for ACR"
+Write-Host "  npm run cloud:push    - Push image to ACR"
+Write-Host "  npm run cloud:deploy  - Deploy to Azure Container Apps"
+Write-Host "  npm run cloud:all     - Full deployment pipeline"
+Write-Host ""
+Write-Host "Production URLs:" -ForegroundColor Green
+Write-Host "  API: https://ca-questionnaire-api-prod.wittyriver-206156ea.australiasoutheast.azurecontainerapps.io"
+Write-Host "  Web: https://ca-questionnaire-web-prod.wittyriver-206156ea.australiasoutheast.azurecontainerapps.io"
 
-# Create functions that route Docker commands through WSL Ubuntu
-function global:docker {
-    wsl -d Ubuntu -e docker $args
-}
-
-function global:docker-compose {
-    # Convert Windows paths to WSL paths if needed
-    $wslArgs = $args | ForEach-Object {
-        if ($_ -match '^[A-Za-z]:') {
-            # Convert Windows path to WSL path
-            $_ -replace '^([A-Za-z]):', '/mnt/$1'.ToLower() -replace '\\', '/'
-        } else {
-            $_
-        }
-    }
-    wsl -d Ubuntu -e docker compose $wslArgs
-}
-
-# Test the connection
-Write-Host "`nTesting Docker connection..." -ForegroundColor Yellow
-try {
-    $version = wsl -d Ubuntu -e docker version --format '{{.Server.Version}}' 2>&1
-    if ($LASTEXITCODE -eq 0) {
-        Write-Host "Docker Server: $version" -ForegroundColor Green
-        Write-Host "Docker is now accessible via WSL!" -ForegroundColor Green
-    } else {
-        Write-Host "Docker not responding in WSL" -ForegroundColor Red
-    }
-} catch {
-    Write-Host "Error: $_" -ForegroundColor Red
-}
-
-Write-Host "`nUsage:" -ForegroundColor Cyan
-Write-Host "  docker ps              - List containers"
-Write-Host "  docker-compose up -d   - Start services"
-Write-Host "  docker-compose down    - Stop services"
+exit 1

@@ -6,6 +6,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { HelpCenter } from '../../components/help/HelpCenter';
+import { TutorialLibrary, VideoTutorialsProvider } from '../../components/tutorials/VideoTutorials';
 
 export function HelpPage() {
   return (
@@ -49,6 +50,14 @@ export function HelpPage() {
       {/* Main Content */}
       <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <HelpCenter />
+
+        {/* Video Tutorials Section */}
+        <section className="mt-12" aria-label="Video tutorials">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Video Tutorials</h2>
+          <VideoTutorialsProvider>
+            <TutorialLibrary />
+          </VideoTutorialsProvider>
+        </section>
       </main>
 
       {/* Footer */}

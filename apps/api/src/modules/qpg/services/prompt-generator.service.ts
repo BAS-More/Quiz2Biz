@@ -89,7 +89,7 @@ export class PromptGeneratorService {
    * Interpolate template string with context variables
    */
   private interpolate(template: string, context: Record<string, string>): string {
-    return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+    return template.replace(/\{\{(\w+)\}\}/g, (match, key: string) => {
       return context[key] || match;
     });
   }
@@ -123,7 +123,7 @@ export class PromptGeneratorService {
    * Evaluate task condition
    */
   private evaluateCondition(condition: TaskCondition, gap: GapContext): boolean {
-    const value = (gap as any)[condition.field];
+    const value = gap[condition.field as keyof GapContext];
     if (value === undefined) {
       return false;
     }

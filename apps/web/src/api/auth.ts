@@ -19,16 +19,22 @@ export const authApi = {
    * Register a new user
    */
   register: async (payload: RegisterPayload): Promise<TokenResponse> => {
-    const { data } = await apiClient.post<TokenResponse>(`${AUTH_PREFIX}/register`, payload);
-    return data;
+    const { data } = await apiClient.post<{ success: boolean; data: TokenResponse }>(
+      `${AUTH_PREFIX}/register`,
+      payload,
+    );
+    return data.data;
   },
 
   /**
    * Login with email and password
    */
   login: async (payload: LoginPayload): Promise<TokenResponse> => {
-    const { data } = await apiClient.post<TokenResponse>(`${AUTH_PREFIX}/login`, payload);
-    return data;
+    const { data } = await apiClient.post<{ success: boolean; data: TokenResponse }>(
+      `${AUTH_PREFIX}/login`,
+      payload,
+    );
+    return data.data;
   },
 
   /**

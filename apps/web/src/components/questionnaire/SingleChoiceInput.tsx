@@ -14,11 +14,12 @@ export const SingleChoiceInput: React.FC<QuestionInputProps<string>> = ({
   const options: QuestionOption[] = question.options || [];
 
   return (
-    <div className="question-input single-choice-input">
+    <div className="question-input single-choice-input" data-testid="single-choice-input">
       <div className="space-y-3">
-        {options.map((option) => (
+        {options.map((option, index) => (
           <label
             key={option.value}
+            data-testid={`option-${index}`}
             className={`flex items-start p-4 border rounded-lg cursor-pointer transition-all
                             ${
                               value === option.value

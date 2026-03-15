@@ -12,8 +12,6 @@ import {
 
 describe('CsrfGuard', () => {
   let guard: CsrfGuard;
-  let configService: jest.Mocked<ConfigService>;
-  let reflector: jest.Mocked<Reflector>;
 
   const mockConfigService = {
     get: jest.fn((key: string, defaultValue?: any) => {
@@ -43,8 +41,8 @@ describe('CsrfGuard', () => {
     }).compile();
 
     guard = module.get<CsrfGuard>(CsrfGuard);
-    configService = module.get(ConfigService);
-    reflector = module.get(Reflector);
+    module.get(ConfigService);
+    module.get(Reflector);
   });
 
   const createMockContext = (
@@ -435,7 +433,6 @@ describe('SkipCsrf decorator', () => {
 
 describe('CsrfService', () => {
   let service: CsrfService;
-  let configService: jest.Mocked<ConfigService>;
 
   const mockConfigService = {
     get: jest.fn((key: string, defaultValue?: any) => {
@@ -460,7 +457,7 @@ describe('CsrfService', () => {
     }).compile();
 
     service = module.get<CsrfService>(CsrfService);
-    configService = module.get(ConfigService);
+    module.get(ConfigService);
   });
 
   describe('generateToken', () => {

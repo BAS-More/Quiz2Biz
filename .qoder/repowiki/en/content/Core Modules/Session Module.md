@@ -17,6 +17,7 @@
 </cite>
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
@@ -29,9 +30,11 @@
 10. [Appendices](#appendices)
 
 ## Introduction
+
 The Session Module manages the lifecycle of a user’s interaction with a Questionnaire. It supports session creation, continuation, response submission, and completion tracking. It integrates with the Questionnaire and Adaptive Logic services to compute dynamic question flows, enforce validation rules, and maintain accurate progress metrics. Sessions persist in the database with structured progress and adaptive state, enabling resumable experiences and robust analytics.
 
 ## Project Structure
+
 The Session Module is organized around a controller, a service, and DTOs. It depends on the Questionnaire and Adaptive Logic modules and persists data via Prisma. Optional Redis integration can support caching and timeouts at the application layer.
 
 ```mermaid
@@ -60,6 +63,7 @@ SC --> D3
 ```
 
 **Diagram sources**
+
 - [session.controller.ts](file://apps/api/src/modules/session/session.controller.ts#L30-L153)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L87-L94)
 - [questionnaire.service.ts](file://apps/api/src/modules/questionnaire/questionnaire.service.ts#L63-L65)
@@ -68,11 +72,13 @@ SC --> D3
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 
 **Section sources**
+
 - [session.module.ts](file://apps/api/src/modules/session/session.module.ts#L1-L17)
 - [session.controller.ts](file://apps/api/src/modules/session/session.controller.ts#L30-L153)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L87-L94)
 
 ## Core Components
+
 - SessionController: Exposes REST endpoints for session lifecycle operations and delegates to SessionService.
 - SessionService: Implements session state management, progress calculation, response validation, and integration with adaptive logic.
 - DTOs: Strongly typed request/response contracts for create, continue, and submit operations.
@@ -82,6 +88,7 @@ SC --> D3
 - Optional Redis: Provides caching and TTL primitives for advanced session features.
 
 **Section sources**
+
 - [session.controller.ts](file://apps/api/src/modules/session/session.controller.ts#L36-L151)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L96-L136)
 - [create-session.dto.ts](file://apps/api/src/modules/session/dto/create-session.dto.ts#L4-L14)
@@ -93,7 +100,9 @@ SC --> D3
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L40-L67)
 
 ## Architecture Overview
+
 The Session Module orchestrates session operations with clear separation of concerns:
+
 - Controller validates inputs and enforces authentication.
 - Service encapsulates business logic, including progress computation and adaptive evaluation.
 - Services for Questionnaire and Adaptive Logic provide domain data and dynamic visibility.
@@ -120,6 +129,7 @@ Controller-->>Client : 201 SessionResponse
 ```
 
 **Diagram sources**
+
 - [session.controller.ts](file://apps/api/src/modules/session/session.controller.ts#L36-L44)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L96-L136)
 - [questionnaire.service.ts](file://apps/api/src/modules/questionnaire/questionnaire.service.ts#L100-L182)
@@ -128,6 +138,7 @@ Controller-->>Client : 201 SessionResponse
 ## Detailed Component Analysis
 
 ### Session Lifecycle Management
+
 - Creation: Initializes a new session with status IN_PROGRESS, sets current section/question, and seeds progress and adaptive state.
 - Continuation: Resumes a session, computes visible questions, determines next questions, and updates last activity.
 - Response Submission: Validates responses against question rules, persists/upserts answers, evaluates adaptive changes, and updates progress.
@@ -146,19 +157,23 @@ Complete --> End([End])
 ```
 
 **Diagram sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L96-L136)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L388-L546)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L270-L359)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L361-L386)
 
 **Section sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L96-L136)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L388-L546)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L270-L359)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L361-L386)
 
 ### Session Service Implementation
+
 Key responsibilities:
+
 - State management: Tracks status, current section/question, progress, and adaptive state.
 - Progress calculation: Computes percentage, answered count, total visible, and estimated time remaining.
 - Adaptive integration: Uses visibility rules to compute visible questions and required states.
@@ -197,17 +212,20 @@ SessionService --> AdaptiveLogicService : "uses"
 ```
 
 **Diagram sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L87-L94)
 - [questionnaire.service.ts](file://apps/api/src/modules/questionnaire/questionnaire.service.ts#L63-L65)
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L19-L26)
 
 **Section sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L17-L85)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L567-L620)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L622-L659)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L661-L682)
 
 ### Session DTOs and Validation Rules
+
 - CreateSessionDto
   - Fields: questionnaireId (UUID), industry (optional string, max length 100).
   - Purpose: Start a new session with optional industry context for adaptive logic.
@@ -219,6 +237,7 @@ SessionService --> AdaptiveLogicService : "uses"
   - Purpose: Submit or update a response to a question.
 
 Validation rules enforced by the service:
+
 - Required fields: empty/null/undefined values trigger a validation error when a question is marked required.
 - Text constraints: minimum and maximum length checks based on question validation rules.
 - Numeric constraints: minimum and maximum numeric bounds based on question validation rules.
@@ -256,15 +275,18 @@ SESSION ||--o{ RESPONSE : "has"
 ```
 
 **Diagram sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L270-L322)
 
 **Section sources**
+
 - [create-session.dto.ts](file://apps/api/src/modules/session/dto/create-session.dto.ts#L4-L14)
 - [continue-session.dto.ts](file://apps/api/src/modules/session/dto/continue-session.dto.ts#L5-L13)
 - [submit-response.dto.ts](file://apps/api/src/modules/session/dto/submit-response.dto.ts#L4-L21)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L622-L659)
 
 ### Examples of Session Workflows
+
 - New Session Creation
   - Client calls POST /sessions with CreateSessionDto.
   - Service creates a session with initial progress and adaptive state, sets current section/question, and returns SessionResponse.
@@ -299,14 +321,17 @@ Controller-->>Client : 200 ContinueSessionResponse
 ```
 
 **Diagram sources**
+
 - [session.controller.ts](file://apps/api/src/modules/session/session.controller.ts#L81-L105)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L388-L546)
 
 **Section sources**
+
 - [session.controller.ts](file://apps/api/src/modules/session/session.controller.ts#L81-L105)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L388-L546)
 
 ### Integration with Adaptive Logic
+
 - Visible questions: The service queries adaptive logic to compute the current visible question set based on existing responses.
 - Requirement state: Adaptive rules can mark questions as required or unrequired dynamically.
 - Branch history: Adaptive state tracks applied rules and branching decisions for observability.
@@ -326,24 +351,29 @@ DB-->>Svc : Updated Session
 ```
 
 **Diagram sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L225-L241)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L321-L332)
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L31-L66)
 
 **Section sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L225-L241)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L321-L332)
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L71-L153)
 
 ### Session Persistence Strategies
+
 - Sessions: Stored with progress and adaptive state as JSONB for flexibility and fast aggregation.
 - Responses: Upsert pattern ensures idempotent updates and revision tracking.
 - Indexes: Optimized for user-scoped queries, status filtering, and timestamps.
 
 **Section sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L270-L322)
 
 ### Concurrent Session Handling
+
 - Access control: Each operation validates ownership and throws forbidden for unauthorized access.
 - Concurrency model: The service uses database transactions via Prisma for atomic updates. No explicit distributed locks are present in the codebase.
 - Recommendations:
@@ -352,10 +382,12 @@ DB-->>Svc : Updated Session
   - For high concurrency, add application-level rate limiting and consider Redis for lightweight coordination.
 
 **Section sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L548-L565)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L306-L313)
 
 ### Timeout Management, Progress Saving, and Recovery
+
 - Timeout management: The database schema defines an expiresAt field on sessions but does not include automatic expiration logic in the service. Redis can be leveraged to manage TTLs and invalidate stale sessions.
 - Progress saving: Progress is updated on each response submission and continuation call.
 - Recovery: Clients can resume sessions via continuation endpoints; the service returns next questions and progress.
@@ -370,16 +402,19 @@ Expire --> T3["Recovery: Client resumes via Continue"]
 ```
 
 **Diagram sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L285-L285)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L525-L531)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L44-L67)
 
 **Section sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L285-L285)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L525-L531)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L44-L67)
 
 ### Extending Session Functionality and Edge Cases
+
 - Extensibility:
   - Add new validation rules by extending question validation structures and updating the validator.
   - Introduce new adaptive actions by expanding the adaptive logic evaluator.
@@ -393,6 +428,7 @@ Expire --> T3["Recovery: Client resumes via Continue"]
   - canComplete determined by required questions and answered count.
 
 **Section sources**
+
 - [session.service.spec.ts](file://apps/api/src/modules/session/session.service.spec.ts#L121-L162)
 - [session.service.spec.ts](file://apps/api/src/modules/session/session.service.spec.ts#L164-L189)
 - [session.service.spec.ts](file://apps/api/src/modules/session/session.service.spec.ts#L225-L287)
@@ -402,6 +438,7 @@ Expire --> T3["Recovery: Client resumes via Continue"]
 - [session.service.spec.ts](file://apps/api/src/modules/session/session.service.spec.ts#L578-L715)
 
 ## Dependency Analysis
+
 - Internal dependencies:
   - SessionController depends on SessionService and DTOs.
   - SessionService depends on QuestionnaireService, AdaptiveLogicService, and PrismaService.
@@ -422,18 +459,21 @@ RM --> RS["RedisService"]
 ```
 
 **Diagram sources**
+
 - [session.module.ts](file://apps/api/src/modules/session/session.module.ts#L7-L15)
 - [session.controller.ts](file://apps/api/src/modules/session/session.controller.ts#L33-L34)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L89-L94)
 - [redis.module.ts](file://libs/redis/src/redis.module.ts#L1-L10)
 
 **Section sources**
+
 - [session.module.ts](file://apps/api/src/modules/session/session.module.ts#L7-L15)
 - [session.controller.ts](file://apps/api/src/modules/session/session.controller.ts#L33-L34)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L89-L94)
 - [redis.module.ts](file://libs/redis/src/redis.module.ts#L1-L10)
 
 ## Performance Considerations
+
 - Database efficiency:
   - Use indexes on user_id, status, and timestamps for fast filtering and sorting.
   - Batch operations: Fetch responses and visible questions in single queries per request.
@@ -444,7 +484,9 @@ RM --> RS["RedisService"]
   - Consider Redis caching for hot session data and short-lived TTLs to reduce DB load.
 
 ## Troubleshooting Guide
+
 Common issues and resolutions:
+
 - Session not found or access denied:
   - Ensure the session belongs to the authenticated user; otherwise, a forbidden error is thrown.
 - Attempting to operate on a completed session:
@@ -455,6 +497,7 @@ Common issues and resolutions:
   - Verify adaptive rules and that responses are persisted before requesting next questions.
 
 **Section sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L548-L565)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L270-L279)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L622-L659)
@@ -462,9 +505,11 @@ Common issues and resolutions:
 - [session.service.spec.ts](file://apps/api/src/modules/session/session.service.spec.ts#L331-L340)
 
 ## Conclusion
+
 The Session Module provides a robust, extensible foundation for managing questionnaire sessions with adaptive logic, validation, and progress tracking. Its clean separation of concerns, strong typing via DTOs, and modular design enable safe extension and maintenance. Integrating Redis can enhance scalability and support advanced features like automatic expiration and caching.
 
 ## Appendices
+
 - API Endpoints Overview
   - POST /sessions: Create a new session.
   - GET /sessions: List user sessions with pagination and optional status filter.
@@ -476,4 +521,5 @@ The Session Module provides a robust, extensible foundation for managing questio
   - POST /sessions/:id/complete: Mark session as completed.
 
 **Section sources**
+
 - [session.controller.ts](file://apps/api/src/modules/session/session.controller.ts#L36-L151)

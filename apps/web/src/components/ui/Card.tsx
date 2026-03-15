@@ -22,7 +22,7 @@ export function Card({ padding = 'md', hover = false, className, children, ...pr
   return (
     <div
       className={clsx(
-        'bg-white rounded-xl border border-surface-200/60 shadow-card',
+        'bg-white dark:bg-surface-800 rounded-xl border border-surface-200/60 dark:border-surface-700/60 shadow-card',
         hover && 'hover:shadow-elevated hover:border-surface-300/60 transition-all duration-200',
         paddingStyles[padding],
         className,

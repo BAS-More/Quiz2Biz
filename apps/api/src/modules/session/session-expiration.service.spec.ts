@@ -5,8 +5,6 @@ import { NotificationService } from '../notifications/notification.service';
 
 describe('SessionExpirationService', () => {
   let service: SessionExpirationService;
-  let prismaService: jest.Mocked<PrismaService>;
-  let notificationService: jest.Mocked<NotificationService>;
 
   const mockPrismaService = {
     session: {
@@ -31,8 +29,8 @@ describe('SessionExpirationService', () => {
     }).compile();
 
     service = module.get<SessionExpirationService>(SessionExpirationService);
-    prismaService = module.get(PrismaService);
-    notificationService = module.get(NotificationService);
+    module.get(PrismaService);
+    module.get(NotificationService);
   });
 
   describe('handleExpiredSessions', () => {
@@ -97,6 +95,7 @@ describe('SessionExpirationService', () => {
           user: { select: { email: true, name: true } },
           questionnaire: { select: { name: true } },
         },
+        take: 1000,
       });
 
       expect(mockNotificationService.sendSessionReminderEmail).toHaveBeenCalledTimes(2);

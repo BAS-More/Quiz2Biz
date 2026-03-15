@@ -23,6 +23,7 @@ export const TextareaInput: React.FC<QuestionInputProps<string>> = ({
         minLength={question.validationRules?.minLength}
         maxLength={question.validationRules?.maxLength}
         rows={5}
+        data-testid="text-answer"
         className={`w-full px-4 py-3 border rounded-lg transition-colors resize-y min-h-[120px]
                     ${error ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}
                     focus:outline-none focus:ring-2 focus:border-transparent

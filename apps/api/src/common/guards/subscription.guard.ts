@@ -17,6 +17,20 @@ export const FEATURE_CHECK_KEY = 'featureCheck';
 // Types for feature checking
 export type FeatureName = keyof typeof SUBSCRIPTION_TIERS.FREE.features;
 
+/** Typed subset of Express Request used by subscription guard */
+interface SubscriptionRequest {
+  user?: { organizationId?: string };
+  query?: Record<string, string | undefined>;
+  headers: Record<string, string | string[] | undefined>;
+  body?: { organizationId?: string };
+  subscription?: unknown;
+}
+
+/** Typed subset of Express Response used by subscription middleware */
+interface SubscriptionResponse {
+  setHeader(name: string, value: string | number): void;
+}
+
 export interface FeatureCheckConfig {
   feature: FeatureName;
   getUsage?: (request: Request) => Promise<number> | number;
@@ -49,7 +63,7 @@ export class SubscriptionGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<SubscriptionRequest>();
     const organizationId = this.extractOrganizationId(request);
 
     if (!organizationId) {
@@ -83,7 +97,7 @@ export class SubscriptionGuard implements CanActivate {
    * Extract organization ID from request
    * Supports: JWT token, query param, header, body
    */
-  private extractOrganizationId(request: any): string | null {
+  private extractOrganizationId(request: SubscriptionRequest): string | null {
     // From JWT user context (set by auth guard)
     if (request.user?.organizationId) {
       return request.user.organizationId;
@@ -95,8 +109,9 @@ export class SubscriptionGuard implements CanActivate {
     }
 
     // From header
-    if (request.headers['x-organization-id']) {
-      return request.headers['x-organization-id'];
+    const headerOrgId = request.headers['x-organization-id'];
+    if (typeof headerOrgId === 'string') {
+      return headerOrgId;
     }
 
     // From request body
@@ -134,9 +149,9 @@ export class SubscriptionGuard implements CanActivate {
   private async checkFeatureAccess(
     organizationId: string,
     config: FeatureCheckConfig,
-    request: any,
+    request: SubscriptionRequest,
   ): Promise<void> {
-    const currentUsage = config.getUsage ? await config.getUsage(request) : 0;
+    const currentUsage = config.getUsage ? await config.getUsage(request as unknown as Request) : 0;
 
     const access = await this.subscriptionService.hasFeatureAccess(
       organizationId,
@@ -169,11 +184,15 @@ export class FeatureUsageMiddleware {
     private subscriptionService: SubscriptionService,
   ) {}
 
-  async use(request: any, response: any, next: () => void): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Express middleware signature requires any for NestJS compatibility
+  async use(request: any, response: SubscriptionResponse, next: () => void): Promise<void> {
+    const req = request as SubscriptionRequest;
     const organizationId =
-      request.user?.organizationId ||
-      request.query?.organizationId ||
-      request.headers['x-organization-id'];
+      req.user?.organizationId ||
+      req.query?.organizationId ||
+      (typeof req.headers['x-organization-id'] === 'string'
+        ? req.headers['x-organization-id']
+        : undefined);
 
     if (organizationId) {
       try {
@@ -181,7 +200,7 @@ export class FeatureUsageMiddleware {
           await this.subscriptionService.getOrganizationSubscription(organizationId);
 
         // Attach subscription info to request for downstream use
-        request.subscription = subscription;
+        req.subscription = subscription;
 
         // Add usage headers for client awareness
         response.setHeader('X-Subscription-Tier', subscription.tier);

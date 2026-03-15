@@ -165,12 +165,34 @@ export class IdeaCaptureService {
         projectTypeId: ideaCapture.projectTypeId,
         isActive: true,
       },
+      include: {
+        sections: {
+          orderBy: { orderIndex: 'asc' },
+          take: 1,
+          include: {
+            questions: {
+              orderBy: { orderIndex: 'asc' },
+              take: 1,
+            },
+          },
+        },
+      },
       orderBy: [{ isDefault: 'desc' }, { createdAt: 'desc' }],
     });
 
     if (!questionnaire) {
       throw new BadRequestException(
         `No questionnaire available for project type: ${ideaCapture.projectType?.name || 'unknown'}`,
+      );
+    }
+
+    // Get the first section and question to initialize the session
+    const firstSection = questionnaire.sections[0];
+    const firstQuestion = firstSection?.questions[0];
+
+    if (!firstSection || !firstQuestion) {
+      throw new BadRequestException(
+        `Questionnaire "${questionnaire.name}" has no sections or questions configured.`,
       );
     }
 
@@ -182,6 +204,8 @@ export class IdeaCaptureService {
         projectTypeId: ideaCapture.projectTypeId,
         ideaCaptureId: ideaCapture.id,
         status: 'IN_PROGRESS',
+        currentSectionId: firstSection.id,
+        currentQuestionId: firstQuestion.id,
         metadata: {
           ideaTitle: ideaCapture.title,
           ideaThemes: (ideaCapture.analysis as Record<string, unknown>)?.themes || [],

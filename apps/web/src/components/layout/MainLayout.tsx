@@ -15,18 +15,55 @@ import {
   ChevronLeft,
   CreditCard,
   HelpCircle,
+  FolderKanban,
+  BarChart3,
+  Settings,
+  Bell,
+  ShieldCheck,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { clsx } from 'clsx';
+import { ThemeToggle } from '../settings/ThemeToggle';
+import { StandaloneBreadcrumbs, DEFAULT_ROUTE_MAPPINGS } from '../ux/Breadcrumbs';
+import type { BreadcrumbItem } from '../ux/Breadcrumbs';
+import { featureFlags } from '../../config/feature-flags.config';
+import { AIChatProvider, AIChatWidget } from '../ai/AIChatWidget';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Workspace', href: '/workspace', icon: FolderKanban },
   { name: 'Assessments', href: '/questionnaire/new', icon: ClipboardList },
   { name: 'Documents', href: '/documents', icon: FileText },
+  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Billing', href: '/billing', icon: CreditCard },
+  { name: 'Admin', href: '/admin/review', icon: ShieldCheck },
 ];
 
-const bottomNav = [{ name: 'Help Center', href: '/help', icon: HelpCircle }];
+const bottomNav = [
+  { name: 'Settings', href: '/settings/profile', icon: Settings },
+  { name: 'Help Center', href: '/help', icon: HelpCircle },
+];
+
+/** Computes breadcrumbs from current route and renders them in the header */
+function HeaderBreadcrumbs({ pathname }: { pathname: string }) {
+  const items = useMemo<BreadcrumbItem[]>(() => {
+    for (const mapping of DEFAULT_ROUTE_MAPPINGS) {
+      const match = pathname.match(mapping.pattern);
+      if (match) {
+        return typeof mapping.breadcrumbs === 'function'
+          ? mapping.breadcrumbs({})
+          : mapping.breadcrumbs;
+      }
+    }
+    return [{ label: 'Home', href: '/', icon: '\u{1F3E0}' }];
+  }, [pathname]);
+
+  if (items.length <= 1) return null;
+
+  return (
+    <StandaloneBreadcrumbs items={items} showIcons={false} className="text-sm text-surface-500" />
+  );
+}
 
 export function MainLayout() {
   const { user, logout } = useAuthStore();
@@ -82,7 +119,7 @@ export function MainLayout() {
       {/* Sidebar */}
       <aside
         className={clsx(
-          'fixed inset-y-0 left-0 z-50 bg-white border-r border-surface-200/80 flex flex-col transform transition-all duration-200 ease-in-out lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-50 bg-white dark:bg-surface-900 border-r border-surface-200/80 flex flex-col transform transition-all duration-200 ease-in-out lg:translate-x-0',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full',
           collapsed ? 'w-[68px]' : 'w-64',
         )}
@@ -170,6 +207,7 @@ export function MainLayout() {
                   <Link
                     to={item.href}
                     onClick={() => setSidebarOpen(false)}
+                    aria-current={active ? 'page' : undefined}
                     className={clsx(
                       'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150',
                       active
@@ -220,6 +258,7 @@ export function MainLayout() {
         {/* User section */}
         <div
           className={clsx('border-t border-surface-100 p-3', collapsed && 'flex justify-center')}
+          data-testid="user-menu"
         >
           {!collapsed ? (
             <div className="space-y-2">
@@ -236,6 +275,7 @@ export function MainLayout() {
               </div>
               <button
                 onClick={handleLogout}
+                data-testid="logout-button"
                 className="flex items-center w-full gap-2 px-3 py-2 text-sm text-surface-500 rounded-lg hover:bg-danger-50 hover:text-danger-600 transition-colors"
               >
                 <LogOut className="h-4 w-4" />
@@ -245,6 +285,7 @@ export function MainLayout() {
           ) : (
             <button
               onClick={handleLogout}
+              data-testid="logout-button"
               className="p-2 rounded-lg text-surface-400 hover:bg-danger-50 hover:text-danger-600 transition-colors"
               title="Sign out"
             >
@@ -257,7 +298,7 @@ export function MainLayout() {
       {/* Main content */}
       <div className={clsx('transition-all duration-200', collapsed ? 'lg:pl-[68px]' : 'lg:pl-64')}>
         {/* Top header */}
-        <header className="sticky top-0 z-30 h-14 bg-white/80 backdrop-blur-md border-b border-surface-200/60 flex items-center px-4 lg:px-6">
+        <header className="sticky top-0 z-30 h-14 bg-white/80 dark:bg-surface-900/80 backdrop-blur-md border-b border-surface-200/60 flex items-center px-4 lg:px-6">
           <button
             className="lg:hidden p-2 rounded-lg hover:bg-surface-100 text-surface-500 mr-3 transition-colors"
             onClick={() => setSidebarOpen(true)}
@@ -266,11 +307,25 @@ export function MainLayout() {
             <Menu className="h-5 w-5" />
           </button>
 
-          {/* Breadcrumb area - can be enhanced later */}
-          <div className="flex-1" />
+          {/* Route-based breadcrumbs */}
+          <div className="flex-1 min-w-0">
+            <HeaderBreadcrumbs pathname={location.pathname} />
+          </div>
 
           {/* User avatar in header (mobile/quick access) */}
           <div className="flex items-center gap-3">
+            {/* Notifications bell */}
+            <button
+              className="relative p-2 rounded-lg hover:bg-surface-100 text-surface-500 transition-colors"
+              aria-label="Notifications"
+              title="Notifications"
+            >
+              <Bell className="h-5 w-5" />
+            </button>
+
+            {/* Theme toggle */}
+            <ThemeToggle compact />
+
             <div className="h-8 w-8 rounded-full bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center text-white text-xs font-semibold lg:hidden">
               {userInitials}
             </div>
@@ -286,7 +341,7 @@ export function MainLayout() {
 
         {/* Footer */}
         <footer
-          className="border-t border-surface-100 bg-white/50 px-4 lg:px-6 py-4 mt-auto"
+          className="border-t border-surface-100 bg-white/50 dark:bg-surface-900/50 px-4 lg:px-6 py-4 mt-auto"
           role="contentinfo"
         >
           <p className="text-center text-xs text-surface-400">
@@ -294,6 +349,13 @@ export function MainLayout() {
           </p>
         </footer>
       </div>
+
+      {/* Floating AI Chat Widget (feature-flagged) */}
+      {featureFlags.aiChatWidget && (
+        <AIChatProvider>
+          <AIChatWidget position="bottom-right" />
+        </AIChatProvider>
+      )}
     </div>
   );
 }

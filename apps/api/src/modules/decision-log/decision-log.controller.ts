@@ -3,6 +3,7 @@ import {
   Post,
   Get,
   Delete,
+  Patch,
   Body,
   Param,
   Query,
@@ -93,6 +94,31 @@ Lock a DRAFT decision, making it permanent.
     @Body() dto: UpdateDecisionStatusDto,
     @Request() req: { user: { userId: string } },
   ): Promise<DecisionResponse> {
+    return this.decisionService.updateDecisionStatus(dto, req.user.userId);
+  }
+
+  /**
+   * Update decision status (PATCH adapter for frontend)
+   */
+  @Patch(':decisionId/status')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Update decision status',
+    description:
+      'Update the status of a decision. Frontend-friendly PATCH route that delegates to the append-only status transition logic.',
+  })
+  @ApiParam({ name: 'decisionId', description: 'Decision UUID' })
+  @ApiResponse({ status: 200, description: 'Decision status updated', type: DecisionResponse })
+  @ApiResponse({ status: 403, description: 'Invalid status transition' })
+  async updateDecisionStatus(
+    @Param('decisionId') decisionId: string,
+    @Body() body: { status: string },
+    @Request() req: { user: { userId: string } },
+  ): Promise<DecisionResponse> {
+    const dto: UpdateDecisionStatusDto = Object.assign(new UpdateDecisionStatusDto(), {
+      decisionId,
+      status: body.status,
+    });
     return this.decisionService.updateDecisionStatus(dto, req.user.userId);
   }
 

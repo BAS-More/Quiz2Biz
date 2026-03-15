@@ -58,7 +58,7 @@ export function AuthLayout() {
         className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10"
         tabIndex={-1}
       >
-        <div className="bg-white py-8 px-6 shadow-float rounded-2xl sm:px-10 border border-surface-200/50 animate-fade-in">
+        <div className="bg-white dark:bg-surface-800 py-8 px-6 shadow-float rounded-2xl sm:px-10 border border-surface-200/50 animate-fade-in">
           <Outlet />
         </div>
 

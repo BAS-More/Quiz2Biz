@@ -16,6 +16,7 @@ export * from './FileUploadInput';
 export * from './MatrixInput';
 export * from './QuestionRenderer';
 export * from './QuestionnaireFlow';
+export * from './QuestionnaireNavigation';
 export * from './ProgressDisplay';
 export * from './HeatmapVisualization';
 export * from './ScoreDashboard';

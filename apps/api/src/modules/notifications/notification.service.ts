@@ -427,10 +427,10 @@ export class NotificationService {
 
     // Handle {{#each array}} ... {{/each}} blocks
     const eachRegex = /{{#each\s+(\w+)}}([\s\S]*?){{\/each}}/g;
-    result = result.replace(eachRegex, (_, arrayName, content) => {
+    result = result.replace(eachRegex, (_, arrayName: string, content: string) => {
       const array = data[arrayName];
       if (Array.isArray(array)) {
-        return array.map((item) => content.replace(/{{this}}/g, String(item))).join('');
+        return array.map((item: unknown) => content.replace(/{{this}}/g, String(item))).join('');
       }
       return '';
     });

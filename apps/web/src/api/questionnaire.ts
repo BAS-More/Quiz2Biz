@@ -179,7 +179,9 @@ export const questionnaireApi = {
   async listQuestionnaires(industry?: string): Promise<QuestionnaireListItem[]> {
     const params = industry ? { industry } : {};
     const { data } = await apiClient.get(`${API_PREFIX}/questionnaires`, { params });
-    return data.items ?? data;
+    // API returns { items, pagination } structure - extract items array
+    const items = data?.items ?? data;
+    return Array.isArray(items) ? items : [];
   },
 
   /** Create a new session */
@@ -426,6 +428,23 @@ export const questionnaireApi = {
     return data;
   },
 
+  /** Update a decision's status (e.g. DRAFT → LOCKED) */
+  async updateDecisionStatus(
+    decisionId: string,
+    status: string,
+  ): Promise<{
+    id: string;
+    sessionId: string;
+    statement: string;
+    status: string;
+    createdAt: string;
+  }> {
+    const { data } = await apiClient.patch(`${API_PREFIX}/decisions/${decisionId}/status`, {
+      status,
+    });
+    return data;
+  },
+
   /** Generate QPG prompts for a session */
   async generatePrompts(sessionId: string): Promise<{
     id: string;
@@ -448,7 +467,11 @@ export const questionnaireApi = {
     terraformRules: string;
     generatedAt: string;
   }> {
-    const { data } = await apiClient.post(`${API_PREFIX}/policy-pack/generate/${sessionId}`);
+    const { data } = await apiClient.post(
+      `${API_PREFIX}/policy-pack/generate/${sessionId}`,
+      {},
+      { timeout: 120000 },
+    );
     return data;
   },
 };

@@ -4,6 +4,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { billingApi, type Subscription, type UsageStats } from '../../api/billing';
+import { FileText } from 'lucide-react';
 
 // Tier display config
 const TIER_CONFIG = {
@@ -57,13 +58,16 @@ function SubscriptionCard({ subscription }: { subscription: Subscription }) {
   });
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-white rounded-lg shadow-md p-6" data-testid="current-plan">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-xl font-semibold text-gray-900">Current Plan</h2>
           <p className="text-gray-500 text-sm">Manage your subscription</p>
         </div>
-        <span className={`px-3 py-1 rounded-full text-sm font-medium ${tierConfig.badge}`}>
+        <span
+          className={`px-3 py-1 rounded-full text-sm font-medium ${tierConfig.badge}`}
+          data-testid="plan-name"
+        >
           {tierConfig.label}
         </span>
       </div>
@@ -85,11 +89,14 @@ function SubscriptionCard({ subscription }: { subscription: Subscription }) {
         </div>
 
         {subscription.currentPeriodEnd && (
-          <div className="flex justify-between py-2 border-b border-gray-100">
+          <div
+            className="flex justify-between py-2 border-b border-gray-100"
+            data-testid="billing-cycle"
+          >
             <span className="text-gray-600">
               {subscription.cancelAtPeriodEnd ? 'Access Until' : 'Renews On'}
             </span>
-            <span className="font-medium text-gray-900">
+            <span className="font-medium text-gray-900" data-testid="next-billing-date">
               {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
             </span>
           </div>
@@ -111,7 +118,7 @@ function SubscriptionCard({ subscription }: { subscription: Subscription }) {
         )}
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex gap-3" data-testid="upgrade-section">
         {subscription.tier !== 'ENTERPRISE' && (
           <a
             href="/billing/upgrade"
@@ -127,6 +134,7 @@ function SubscriptionCard({ subscription }: { subscription: Subscription }) {
               onClick={() => portalMutation.mutate()}
               disabled={portalMutation.isPending}
               className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              data-testid="payment-method"
             >
               Manage Billing
             </button>
@@ -190,8 +198,23 @@ export function BillingPage() {
 
   if (subLoading || usageLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-gray-900">Billing & Subscription</h1>
+          <p className="text-gray-500">Loading billing data...</p>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          {[1, 2].map((i) => (
+            <div
+              key={i}
+              className="bg-white rounded-xl border border-gray-200 p-6 space-y-3 animate-pulse"
+            >
+              <div className="h-4 bg-gray-200 rounded w-1/3" />
+              <div className="h-8 bg-gray-200 rounded w-1/2" />
+              <div className="h-4 bg-gray-200 rounded w-2/3" />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -208,16 +231,28 @@ export function BillingPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 py-8" data-testid="billing-page">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Billing & Subscription</h1>
         <p className="text-gray-500">Manage your plan and view usage</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {subscription && <SubscriptionCard subscription={subscription} />}
-        {usage && <UsageCard usage={usage} />}
-      </div>
+      {!subscription && !usage ? (
+        <div className="flex flex-col items-center justify-center py-16 gap-4">
+          <FileText className="h-12 w-12 text-gray-300" />
+          <div className="text-center">
+            <h3 className="text-lg font-medium text-gray-900">No billing data available</h3>
+            <p className="text-gray-500 mt-1">
+              Your subscription and usage information will appear here.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="grid gap-6 md:grid-cols-2">
+          {subscription && <SubscriptionCard subscription={subscription} />}
+          {usage && <UsageCard usage={usage} />}
+        </div>
+      )}
 
       <div className="mt-8">
         <a href="/billing/invoices" className="text-blue-600 hover:text-blue-700 font-medium">

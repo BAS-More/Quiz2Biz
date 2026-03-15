@@ -11,11 +11,11 @@ const EvidenceTypeValues = Object.values(EvidenceType);
 export class UploadEvidenceDto {
   @ApiProperty({ description: 'Session ID the evidence belongs to' })
   @IsUUID()
-  sessionId: string;
+  sessionId!: string;
 
   @ApiProperty({ description: 'Question ID the evidence supports' })
   @IsUUID()
-  questionId: string;
+  questionId!: string;
 
   @ApiProperty({
     enum: EvidenceTypeValues,
@@ -23,7 +23,7 @@ export class UploadEvidenceDto {
     description: 'Type of evidence artifact',
   })
   @IsEnum(EvidenceType)
-  artifactType: EvidenceType;
+  artifactType!: EvidenceType;
 
   @ApiPropertyOptional({ description: 'Custom file name for the evidence' })
   @IsOptional()
@@ -38,11 +38,11 @@ export class UploadEvidenceDto {
 export class VerifyEvidenceDto {
   @ApiProperty({ description: 'Evidence ID to verify' })
   @IsUUID()
-  evidenceId: string;
+  evidenceId!: string;
 
   @ApiProperty({ description: 'Whether the evidence is verified' })
   @IsBoolean()
-  verified: boolean;
+  verified!: boolean;
 
   @ApiPropertyOptional({
     description: 'Coverage value to set on the associated response (0.0-1.0)',
@@ -58,43 +58,43 @@ export class VerifyEvidenceDto {
  */
 export class EvidenceItemResponse {
   @ApiProperty({ description: 'Evidence ID' })
-  id: string;
+  id!: string;
 
   @ApiProperty({ description: 'Session ID' })
-  sessionId: string;
+  sessionId!: string;
 
   @ApiProperty({ description: 'Question ID' })
-  questionId: string;
+  questionId!: string;
 
   @ApiProperty({ description: 'Storage URL' })
-  artifactUrl: string;
+  artifactUrl!: string;
 
   @ApiProperty({ enum: EvidenceTypeValues, enumName: 'EvidenceType' })
-  artifactType: EvidenceType;
+  artifactType!: EvidenceType;
 
   @ApiProperty({ description: 'Original file name' })
-  fileName: string | null;
+  fileName!: string | null;
 
   @ApiProperty({ description: 'File size in bytes' })
-  fileSize: bigint | null;
+  fileSize!: bigint | null;
 
   @ApiProperty({ description: 'MIME type' })
-  mimeType: string | null;
+  mimeType!: string | null;
 
   @ApiProperty({ description: 'SHA-256 hash of file content' })
-  hashSignature: string | null;
+  hashSignature!: string | null;
 
   @ApiProperty({ description: 'Whether evidence has been verified' })
-  verified: boolean;
+  verified!: boolean;
 
   @ApiPropertyOptional({ description: 'ID of user who verified' })
-  verifierId: string | null;
+  verifierId!: string | null;
 
   @ApiPropertyOptional({ description: 'When evidence was verified' })
-  verifiedAt: Date | null;
+  verifiedAt!: Date | null;
 
   @ApiProperty({ description: 'When evidence was created' })
-  createdAt: Date;
+  createdAt!: Date;
 }
 
 /**

@@ -4,7 +4,6 @@ import { ScoringEngineService } from './scoring-engine.service';
 
 describe('ScoringEngineController', () => {
   let controller: ScoringEngineController;
-  let scoringService: ScoringEngineService;
   let module: TestingModule;
 
   const mockScoringService = {
@@ -23,7 +22,7 @@ describe('ScoringEngineController', () => {
     }).compile();
 
     controller = module.get<ScoringEngineController>(ScoringEngineController);
-    scoringService = module.get<ScoringEngineService>(ScoringEngineService);
+    module.get<ScoringEngineService>(ScoringEngineService);
 
     jest.clearAllMocks();
   });

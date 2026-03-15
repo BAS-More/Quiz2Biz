@@ -646,17 +646,12 @@ const OnboardingOverlay: React.FC<OnboardingOverlayProps> = ({
       {/* Border highlight */}
       {targetRect && step.highlightStyle === 'border' && (
         <div
-          className="onboarding-border-highlight"
+          className="onboarding-border-highlight fixed pointer-events-none border-3 border-brand-500 rounded-lg animate-[pulse-border_2s_infinite]"
           style={{
-            position: 'fixed',
             top: targetRect.top - 4,
             left: targetRect.left - 4,
             width: targetRect.width + 8,
             height: targetRect.height + 8,
-            border: '3px solid #3182ce',
-            borderRadius: 8,
-            pointerEvents: 'none',
-            animation: 'pulse-border 2s infinite',
           }}
         />
       )}
@@ -664,18 +659,10 @@ const OnboardingOverlay: React.FC<OnboardingOverlayProps> = ({
       {/* Pulse highlight */}
       {targetRect && step.highlightStyle === 'pulse' && (
         <div
-          className="onboarding-pulse-highlight"
+          className="onboarding-pulse-highlight fixed w-5 h-5 rounded-full bg-brand-500 -translate-x-1/2 -translate-y-1/2 animate-[pulse-ring_1.5s_infinite] pointer-events-none"
           style={{
-            position: 'fixed',
             top: targetRect.top + targetRect.height / 2,
             left: targetRect.left + targetRect.width / 2,
-            width: 20,
-            height: 20,
-            borderRadius: '50%',
-            backgroundColor: '#3182ce',
-            transform: 'translate(-50%, -50%)',
-            animation: 'pulse-ring 1.5s infinite',
-            pointerEvents: 'none',
           }}
         />
       )}
@@ -695,8 +682,7 @@ const OnboardingOverlay: React.FC<OnboardingOverlayProps> = ({
           <img
             src={step.image}
             alt=""
-            className="onboarding-tooltip__image"
-            style={{ width: '100%', borderRadius: 8, marginBottom: 12 }}
+            className="onboarding-tooltip__image w-full rounded-lg mb-3"
           />
         )}
 
@@ -778,7 +764,7 @@ const OnboardingOverlay: React.FC<OnboardingOverlayProps> = ({
         .onboarding-tooltip__title {
           font-size: 18px;
           font-weight: 600;
-          color: #1a1a2e;
+          color: var(--color-surface-900);
           margin: 0;
         }
 
@@ -787,18 +773,18 @@ const OnboardingOverlay: React.FC<OnboardingOverlayProps> = ({
           border: none;
           font-size: 18px;
           cursor: pointer;
-          color: #666;
+          color: var(--color-surface-500);
           padding: 4px;
         }
 
         .onboarding-tooltip__close:hover {
-          color: #333;
+          color: var(--color-surface-800);
         }
 
         .onboarding-tooltip__content {
           font-size: 14px;
           line-height: 1.6;
-          color: #4a5568;
+          color: var(--color-surface-600);
           margin: 0 0 16px;
         }
 
@@ -808,7 +794,7 @@ const OnboardingOverlay: React.FC<OnboardingOverlayProps> = ({
           align-items: center;
           margin-bottom: 16px;
           font-size: 12px;
-          color: #718096;
+          color: var(--color-surface-500);
         }
 
         .onboarding-tooltip__dots {
@@ -820,15 +806,15 @@ const OnboardingOverlay: React.FC<OnboardingOverlayProps> = ({
           width: 8px;
           height: 8px;
           border-radius: 50%;
-          background: #e2e8f0;
+          background: var(--color-surface-200);
         }
 
         .onboarding-tooltip__dot--active {
-          background: #3182ce;
+          background: var(--color-brand-500);
         }
 
         .onboarding-tooltip__dot--completed {
-          background: #38a169;
+          background: var(--color-success-500);
         }
 
         .onboarding-tooltip__actions {
@@ -847,33 +833,33 @@ const OnboardingOverlay: React.FC<OnboardingOverlayProps> = ({
         }
 
         .onboarding-tooltip__btn--primary {
-          background: #3182ce;
+          background: var(--color-brand-500);
           color: white;
           border: none;
         }
 
         .onboarding-tooltip__btn--primary:hover {
-          background: #2c5282;
+          background: var(--color-brand-700);
         }
 
         .onboarding-tooltip__btn--secondary {
-          background: #edf2f7;
-          color: #4a5568;
+          background: var(--color-surface-100);
+          color: var(--color-surface-600);
           border: none;
         }
 
         .onboarding-tooltip__btn--secondary:hover {
-          background: #e2e8f0;
+          background: var(--color-surface-200);
         }
 
         .onboarding-tooltip__btn--skip {
           background: transparent;
-          color: #718096;
+          color: var(--color-surface-500);
           border: none;
         }
 
         .onboarding-tooltip__btn--skip:hover {
-          color: #4a5568;
+          color: var(--color-surface-600);
         }
 
         @keyframes pulse-border {
@@ -945,20 +931,8 @@ export const TourButton: React.FC<TourButtonProps> = ({
 
   return (
     <button
-      className={`tour-button ${className}`}
+      className={`tour-button ${className} inline-flex items-center gap-2 px-4 py-2 border-none rounded-md text-sm cursor-pointer ${isCompleted ? 'bg-surface-100 text-surface-600' : 'bg-brand-500 text-white'}`}
       onClick={() => startTour(tourId)}
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 8,
-        padding: '8px 16px',
-        background: isCompleted ? '#edf2f7' : '#3182ce',
-        color: isCompleted ? '#4a5568' : 'white',
-        border: 'none',
-        borderRadius: 6,
-        fontSize: 14,
-        cursor: 'pointer',
-      }}
     >
       {isCompleted ? '✓ ' : '▶ '}
       {children}
@@ -975,8 +949,8 @@ export const TourList: React.FC<{ className?: string }> = ({ className = '' }) =
 
   return (
     <div className={`tour-list ${className}`}>
-      <h3 style={{ marginBottom: 16 }}>Interactive Tours</h3>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <h3 className="mb-4">Interactive Tours</h3>
+      <div className="flex flex-col gap-3">
         {ONBOARDING_TOURS.map((tour) => {
           const isCompleted = state.completedTours.includes(tour.id);
           const isDismissed = state.dismissedTours.includes(tour.id);
@@ -984,52 +958,29 @@ export const TourList: React.FC<{ className?: string }> = ({ className = '' }) =
           return (
             <div
               key={tour.id}
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: 16,
-                background: '#f7fafc',
-                borderRadius: 8,
-                border: '1px solid #e2e8f0',
-              }}
+              className="flex justify-between items-center p-4 bg-surface-50 rounded-lg border border-surface-200"
             >
               <div>
-                <h4 style={{ margin: 0, fontSize: 16 }}>
+                <h4 className="m-0 text-base">
                   {isCompleted && '✓ '}
                   {tour.name}
                 </h4>
-                <p style={{ margin: '4px 0 0', fontSize: 13, color: '#718096' }}>
+                <p className="mt-1 mb-0 text-[13px] text-surface-500">
                   {tour.description} • {tour.steps.length} steps
                 </p>
               </div>
-              <div style={{ display: 'flex', gap: 8 }}>
+              <div className="flex gap-2">
                 {(isCompleted || isDismissed) && (
                   <button
                     onClick={() => resetTour(tour.id)}
-                    style={{
-                      padding: '6px 12px',
-                      background: 'transparent',
-                      border: '1px solid #cbd5e0',
-                      borderRadius: 4,
-                      fontSize: 13,
-                      cursor: 'pointer',
-                    }}
+                    className="px-3 py-1.5 bg-transparent border border-surface-300 rounded text-[13px] cursor-pointer"
                   >
                     Reset
                   </button>
                 )}
                 <button
                   onClick={() => startTour(tour.id)}
-                  style={{
-                    padding: '6px 12px',
-                    background: '#3182ce',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: 4,
-                    fontSize: 13,
-                    cursor: 'pointer',
-                  }}
+                  className="px-3 py-1.5 bg-brand-500 text-white border-none rounded text-[13px] cursor-pointer"
                 >
                   {isCompleted ? 'Replay' : 'Start'}
                 </button>

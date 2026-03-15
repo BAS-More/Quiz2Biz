@@ -103,7 +103,7 @@ describe('MainLayout', () => {
   it('has accessible navigation landmark', () => {
     renderMainLayout();
 
-    expect(screen.getByRole('navigation')).toBeInTheDocument();
+    expect(screen.getAllByRole('navigation').length).toBeGreaterThanOrEqual(1);
   });
 
   it('has accessible main content landmark', () => {

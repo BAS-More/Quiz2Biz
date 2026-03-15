@@ -4,6 +4,8 @@ import { seedBusinessIncubator } from './seeds/business-incubator.seed';
 import { seedDimensions } from './seeds/dimensions.seed';
 import { seedReadinessQuestions } from './seeds/questions.seed';
 import { seedProjectTypes } from './seeds/project-types.seed';
+import { seedAiProviders } from './seeds/ai-providers.seed';
+import { seedQualityDimensions } from './seeds/quality-dimensions.seed';
 
 const prisma = new PrismaClient();
 
@@ -37,6 +39,9 @@ async function main(): Promise<void> {
     },
   });
   console.log('Created admin user:', adminUser.id);
+
+  // Seed AI providers (Quiz2Biz AI Gateway)
+  await seedAiProviders();
 
   // Create the main questionnaire
   const questionnaire = await prisma.questionnaire.upsert({
@@ -504,6 +509,10 @@ async function main(): Promise<void> {
   // Seed project types with dimensions and document types
   // Must run AFTER seedDimensions so existing tech dimensions can be migrated
   await seedProjectTypes();
+
+  // Seed Quiz2Biz quality dimensions with benchmark criteria
+  // Must run AFTER seedProjectTypes so project type IDs are available
+  await seedQualityDimensions();
 
   console.log('Database seed completed successfully!');
 }

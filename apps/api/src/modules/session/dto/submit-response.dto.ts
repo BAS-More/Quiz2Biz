@@ -4,7 +4,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class SubmitResponseDto {
   @ApiProperty({ example: 'q_015', description: 'ID of the question being answered' })
   @IsUUID()
-  questionId: string;
+  questionId!: string;
 
   @ApiProperty({
     example: { selectedOptionId: 'opt_001' },

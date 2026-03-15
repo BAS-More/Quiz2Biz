@@ -5,6 +5,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
+import { RedisService } from '@libs/redis';
 import { StandardCategory, EngineeringStandard } from '@prisma/client';
 import {
   StandardResponse,
@@ -17,17 +18,32 @@ import {
 @Injectable()
 export class StandardsService {
   private readonly logger = new Logger(StandardsService.name);
+  private static readonly CACHE_TTL = 3600; // 1 hour
+  private static readonly CACHE_KEY_ALL = 'standards:all';
+  private static readonly CACHE_KEY_PREFIX = 'standards:category:';
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly redis: RedisService,
+  ) {}
 
   async findAll(): Promise<StandardResponse[]> {
     try {
+      // Check Redis cache first (GAP-P3)
+      const cached = await this.getCached<StandardResponse[]>(StandardsService.CACHE_KEY_ALL);
+      if (cached) {
+        return cached;
+      }
+
       const standards = await this.prisma.engineeringStandard.findMany({
         where: { isActive: true },
         orderBy: { category: 'asc' },
+        take: 200,
       });
 
-      return standards.map((standard: EngineeringStandard) => this.mapToResponse(standard));
+      const result = standards.map((standard: EngineeringStandard) => this.mapToResponse(standard));
+      await this.setCache(StandardsService.CACHE_KEY_ALL, result);
+      return result;
     } catch (error) {
       this.logger.error('Failed to fetch standards:', error);
       throw new InternalServerErrorException(
@@ -38,6 +54,13 @@ export class StandardsService {
 
   async findByCategory(category: StandardCategory): Promise<StandardResponse> {
     try {
+      // Check Redis cache first (GAP-P3)
+      const cacheKey = `${StandardsService.CACHE_KEY_PREFIX}${category}`;
+      const cached = await this.getCached<StandardResponse>(cacheKey);
+      if (cached) {
+        return cached;
+      }
+
       const standard = await this.prisma.engineeringStandard.findUnique({
         where: { category },
       });
@@ -46,7 +69,9 @@ export class StandardsService {
         throw new NotFoundException(`Standard category ${category} not found`);
       }
 
-      return this.mapToResponse(standard);
+      const result = this.mapToResponse(standard);
+      await this.setCache(cacheKey, result);
+      return result;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
@@ -183,9 +208,7 @@ export class StandardsService {
       const standards = documentType.standardMappings.map(
         (mapping: { standard: EngineeringStandard; sectionTitle: string | null }) => ({
           category: mapping.standard.category,
-          title:
-            mapping.sectionTitle ||
-            STANDARD_CATEGORY_TITLES[mapping.standard.category as StandardCategory],
+          title: mapping.sectionTitle || STANDARD_CATEGORY_TITLES[mapping.standard.category],
           principles: mapping.standard.principles as unknown as Principle[],
         }),
       );
@@ -253,5 +276,36 @@ export class StandardsService {
       version: standard.version,
       isActive: standard.isActive,
     };
+  }
+
+  // Redis cache helpers (GAP-P3)
+  private async getCached<T>(key: string): Promise<T | null> {
+    try {
+      const raw = await this.redis.get(key);
+      return raw ? (JSON.parse(raw) as T) : null;
+    } catch {
+      this.logger.warn(`Cache read failed for ${key}`);
+      return null;
+    }
+  }
+
+  private async setCache(key: string, data: unknown): Promise<void> {
+    try {
+      await this.redis.set(key, JSON.stringify(data), StandardsService.CACHE_TTL);
+    } catch {
+      this.logger.warn(`Cache write failed for ${key}`);
+    }
+  }
+
+  /** Invalidate all standards caches — call on admin mutations */
+  async invalidateCache(): Promise<void> {
+    try {
+      const keys = await this.redis.keys('standards:*');
+      for (const key of keys) {
+        await this.redis.del(key);
+      }
+    } catch {
+      this.logger.warn('Standards cache invalidation failed');
+    }
   }
 }

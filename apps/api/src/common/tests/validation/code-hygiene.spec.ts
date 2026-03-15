@@ -218,7 +218,7 @@ describe('Code Hygiene Validation', () => {
       }
 
       const duplicates: string[] = [];
-      for (const [block, locations] of codeBlocks) {
+      for (const [, locations] of codeBlocks) {
         if (locations.length > 2) {
           duplicates.push(
             `Block duplicated ${locations.length} times: ${locations.slice(0, 3).join(', ')}`,

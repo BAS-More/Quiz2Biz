@@ -111,7 +111,7 @@ describe('Dependency Health Validation', () => {
 
       const violations: string[] = [];
       for (const { name, pkg } of packages) {
-        const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
+        const allDeps: Record<string, string> = { ...pkg.dependencies, ...pkg.devDependencies };
         for (const [dep, version] of Object.entries(allDeps)) {
           if (version === '*' || version === 'latest') {
             violations.push(`${name}: ${dep} has unpinned version: ${version}`);
@@ -130,7 +130,7 @@ describe('Dependency Health Validation', () => {
 
       let hasVersionRanges = false;
       for (const { pkg } of packages) {
-        const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
+        const allDeps: Record<string, string> = { ...pkg.dependencies, ...pkg.devDependencies };
         for (const version of Object.values(allDeps)) {
           if (version.startsWith('^') || version.startsWith('~')) {
             hasVersionRanges = true;
@@ -289,9 +289,9 @@ describe('Dependency Health Validation', () => {
       ];
 
       const violations: string[] = [];
-      for (const { name, pkg } of packages) {
+      for (const { pkg } of packages) {
         if (pkg.peerDependencies) {
-          for (const [peer, peerVersion] of Object.entries(pkg.peerDependencies)) {
+          for (const [peer] of Object.entries(pkg.peerDependencies)) {
             const installed = pkg.dependencies?.[peer] || pkg.devDependencies?.[peer];
             if (!installed) {
               // Peer dependency not directly installed - might be from parent

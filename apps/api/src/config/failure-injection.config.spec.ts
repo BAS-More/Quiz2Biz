@@ -6,10 +6,6 @@ import {
   FailureCategory,
   ImpactLevel,
   InjectionType,
-  FailureParameters,
-  ExpectedBehavior,
-  ValidationChecks,
-  RollbackTrigger,
   getDatabaseFailureScenarios,
   getExternalApiFailureScenarios,
   getNetworkFailureScenarios,
@@ -707,7 +703,7 @@ describe('Failure Injection Config', () => {
 
   describe('Branch coverage - mapToChaosMeshKind all types', () => {
     it('should map data-corruption to IOChaos', () => {
-      const experiments = generateChaosMeshExperiments();
+      generateChaosMeshExperiments();
       // data-corruption is not in default scenarios, but we verify the mapping exists
       // by checking that all known injection types produce valid kinds
       const allScenarios = getAllFailureScenarios();

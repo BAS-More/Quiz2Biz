@@ -1,3 +1,13 @@
 export { default as apiClient } from './client';
 export { default as authApi } from './auth';
 export { default as questionnaireApi } from './questionnaire';
+export { default as chatApi } from './chat';
+export { default as projectApi } from './projects';
+export { default as documentCommerceApi } from './documentCommerce';
+export { default as factsApi } from './facts';
+export { default as billingApi } from './billing';
+export * as documentsApi from './documents';
+export * as conversationApi from './conversation';
+export * as mfaApi from './mfa';
+export * as adminApi from './admin';
+export * as ideaCaptureApi from './idea-capture';

@@ -5,7 +5,6 @@ import { Decimal } from '@prisma/client/runtime/library';
 
 describe('ContextBuilderService', () => {
   let service: ContextBuilderService;
-  let prismaService: jest.Mocked<PrismaService>;
 
   const mockPrismaService = {
     session: {
@@ -85,7 +84,7 @@ describe('ContextBuilderService', () => {
     }).compile();
 
     service = module.get<ContextBuilderService>(ContextBuilderService);
-    prismaService = module.get(PrismaService);
+    module.get(PrismaService);
   });
 
   describe('buildGapContexts', () => {

@@ -5,7 +5,6 @@
  * identifies memory leaks, and profiles database queries.
  */
 
-import { performance } from 'perf_hooks';
 import * as crypto from 'crypto';
 
 // Stress test configuration
@@ -197,7 +196,6 @@ describe('Stress Tests', () => {
         users <= STRESS_CONFIG.maxUsers;
         users += STRESS_CONFIG.rampUpStep
       ) {
-        const startTime = performance.now();
         let errors = 0;
         const responseTimes: number[] = [];
 
@@ -208,7 +206,7 @@ describe('Stress Tests', () => {
             try {
               const endpoint =
                 Object.keys(ENDPOINT_BASELINES)[
-                  Math.floor(Math.random() * Object.keys(ENDPOINT_BASELINES).length)
+                Math.floor(Math.random() * Object.keys(ENDPOINT_BASELINES).length)
                 ];
               const duration = await simulateRequest(endpoint, users);
               responseTimes.push(duration);
@@ -256,10 +254,10 @@ describe('Stress Tests', () => {
       for (const r of results) {
         console.log(
           `${r.users.toString().padStart(5)} | ` +
-            `${r.avgResponseTime.toFixed(0).padStart(6)}ms | ` +
-            `${r.p95ResponseTime.toFixed(0).padStart(6)}ms | ` +
-            `${r.memoryMB.toFixed(1).padStart(6)}MB | ` +
-            `${r.errors}`,
+          `${r.avgResponseTime.toFixed(0).padStart(6)}ms | ` +
+          `${r.p95ResponseTime.toFixed(0).padStart(6)}ms | ` +
+          `${r.memoryMB.toFixed(1).padStart(6)}MB | ` +
+          `${r.errors}`,
         );
       }
 
@@ -373,10 +371,10 @@ describe('Stress Tests', () => {
         const shortQuery = query.length > 40 ? query.substring(0, 37) + '...' : query;
         console.log(
           `${shortQuery.padEnd(40)} | ` +
-            `${profile.executionTime.toFixed(1).padStart(7)}ms | ` +
-            `${profile.rows.toString().padStart(4)} | ` +
-            `${(profile.indexUsed || 'N/A').padEnd(10)} | ` +
-            `${profile.seqScan ? 'YES' : 'NO'}`,
+          `${profile.executionTime.toFixed(1).padStart(7)}ms | ` +
+          `${profile.rows.toString().padStart(4)} | ` +
+          `${(profile.indexUsed || 'N/A').padEnd(10)} | ` +
+          `${profile.seqScan ? 'YES' : 'NO'}`,
         );
 
         if (profile.executionTime > 10) {
@@ -448,38 +446,38 @@ describe('Stress Tests', () => {
     it(
       'should maintain acceptable response time percentiles',
       async () => {
-      const tracker = new ResponseTimeTracker();
-      const requestCount = 100;
+        const tracker = new ResponseTimeTracker();
+        const requestCount = 100;
 
-      for (let i = 0; i < requestCount; i++) {
-        for (const endpoint of Object.keys(ENDPOINT_BASELINES)) {
-          const duration = await simulateRequest(endpoint, 50);
-          tracker.record(endpoint, duration);
+        for (let i = 0; i < requestCount; i++) {
+          for (const endpoint of Object.keys(ENDPOINT_BASELINES)) {
+            const duration = await simulateRequest(endpoint, 50);
+            tracker.record(endpoint, duration);
+          }
         }
-      }
 
-      console.log('\nResponse Time Distribution:');
-      console.log('Endpoint | Count | Avg | P50 | P95 | P99 | Max');
-      console.log('---------|-------|-----|-----|-----|-----|----');
+        console.log('\nResponse Time Distribution:');
+        console.log('Endpoint | Count | Avg | P50 | P95 | P99 | Max');
+        console.log('---------|-------|-----|-----|-----|-----|----');
 
-      for (const endpoint of tracker.getAllEndpoints()) {
-        const stats = tracker.getStats(endpoint);
-        const shortEndpoint = endpoint.length > 25 ? endpoint.substring(0, 22) + '...' : endpoint;
-        console.log(
-          `${shortEndpoint.padEnd(25)} | ` +
+        for (const endpoint of tracker.getAllEndpoints()) {
+          const stats = tracker.getStats(endpoint);
+          const shortEndpoint = endpoint.length > 25 ? endpoint.substring(0, 22) + '...' : endpoint;
+          console.log(
+            `${shortEndpoint.padEnd(25)} | ` +
             `${stats.count.toString().padStart(5)} | ` +
             `${stats.avg.toFixed(0).padStart(3)} | ` +
             `${stats.p50.toFixed(0).padStart(3)} | ` +
             `${stats.p95.toFixed(0).padStart(3)} | ` +
             `${stats.p99.toFixed(0).padStart(3)} | ` +
             `${stats.max.toFixed(0).padStart(3)}`,
-        );
+          );
 
-        // P95 should be under threshold (relaxed for simulated test environment)
-        expect(stats.p95).toBeLessThan(1000);
-      }
-    },
-    120000, // 120 second timeout for stress test
+          // P95 should be under threshold (relaxed for simulated test environment)
+          expect(stats.p95).toBeLessThan(1000);
+        }
+      },
+      120000, // 120 second timeout for stress test
     );
   });
 });

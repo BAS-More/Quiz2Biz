@@ -10,6 +10,8 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { OAuthService } from './oauth/oauth.service';
 import { OAuthController } from './oauth/oauth.controller';
+import { MfaService } from './mfa/mfa.service';
+import { MfaController } from './mfa/mfa.controller';
 import { CsrfService, CsrfGuard } from '../../common/guards/csrf.guard';
 
 @Module({
@@ -26,16 +28,25 @@ import { CsrfService, CsrfGuard } from '../../common/guards/csrf.guard';
       inject: [ConfigService],
     }),
   ],
-  controllers: [AuthController, OAuthController],
+  controllers: [AuthController, OAuthController, MfaController],
   providers: [
     AuthService,
     JwtStrategy,
     JwtAuthGuard,
     RolesGuard,
     OAuthService,
+    MfaService,
     CsrfService,
     CsrfGuard,
   ],
-  exports: [AuthService, JwtAuthGuard, RolesGuard, OAuthService, CsrfService, CsrfGuard],
+  exports: [
+    AuthService,
+    JwtAuthGuard,
+    RolesGuard,
+    OAuthService,
+    MfaService,
+    CsrfService,
+    CsrfGuard,
+  ],
 })
 export class AuthModule {}

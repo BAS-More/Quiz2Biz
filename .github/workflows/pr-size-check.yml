@@ -16,7 +16,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,7 +29,7 @@ jobs:
           script: |
             const { owner, repo } = context.repo;
             const pull_number = context.payload.pull_request.number;
-            
+
             // Get PR files
             const { data: files } = await github.rest.pulls.listFiles({
               owner,
@@ -37,11 +37,11 @@ jobs:
               pull_number,
               per_page: 100
             });
-            
+
             // Calculate total changes
             let additions = 0;
             let deletions = 0;
-            
+
             for (const file of files) {
               // Skip generated files, lockfiles, and test snapshots
               if (file.filename.includes('package-lock.json') ||
@@ -54,17 +54,17 @@ jobs:
               additions += file.additions;
               deletions += file.deletions;
             }
-            
+
             const totalChanges = additions + deletions;
-            
+
             // Size thresholds (based on DORA research)
             const SMALL = 100;
             const MEDIUM = 200;
             const LARGE = 300;
             const MAX = 500;
-            
+
             let label, message, emoji;
-            
+
             if (totalChanges <= SMALL) {
               label = 'size/S';
               emoji = '🟢';
@@ -86,15 +86,15 @@ jobs:
               emoji = '⛔';
               message = `PR too large (${totalChanges} lines > ${MAX}). Split required for proper review.`;
             }
-            
+
             // Create comment
             const body = `## ${emoji} PR Size Check
-            
+
             **Total changes:** ${totalChanges} lines (+${additions} / -${deletions})
             **Files changed:** ${files.length}
-            
+
             ${message}
-            
+
             ### Size Guidelines
             | Size | Lines | Review Quality |
             |------|-------|---------------|
@@ -103,9 +103,9 @@ jobs:
             | 🟠 Large | 200-300 | Acceptable |
             | 🔴 XL | 300-500 | Reduced |
             | ⛔ XXL | > 500 | Split Required |
-            
+
             *70% of PRs should be under 200 lines for optimal review quality.*`;
-            
+
             // Post comment
             await github.rest.issues.createComment({
               owner,
@@ -113,7 +113,7 @@ jobs:
               issue_number: pull_number,
               body
             });
-            
+
             // Add label
             try {
               await github.rest.issues.addLabels({
@@ -125,7 +125,7 @@ jobs:
             } catch (e) {
               console.log('Could not add label:', e.message);
             }
-            
+
             if (totalChanges > MAX) {
               core.warning(`PR is too large (${totalChanges} > ${MAX} lines). Consider splitting into smaller PRs.`);
             }

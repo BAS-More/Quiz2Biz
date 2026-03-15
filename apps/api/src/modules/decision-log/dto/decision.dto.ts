@@ -11,12 +11,12 @@ const DecisionStatusValues = Object.values(DecisionStatus);
 export class CreateDecisionDto {
   @ApiProperty({ description: 'Session ID the decision belongs to' })
   @IsUUID()
-  sessionId: string;
+  sessionId!: string;
 
   @ApiProperty({ description: 'The decision statement' })
   @IsString()
   @MaxLength(5000)
-  statement: string;
+  statement!: string;
 
   @ApiPropertyOptional({ description: 'Underlying assumptions for the decision' })
   @IsOptional()
@@ -38,14 +38,14 @@ export class CreateDecisionDto {
 export class UpdateDecisionStatusDto {
   @ApiProperty({ description: 'Decision ID to update' })
   @IsUUID()
-  decisionId: string;
+  decisionId!: string;
 
   @ApiProperty({
     enum: ['LOCKED'],
     description: 'New status (only LOCKED allowed from DRAFT)',
   })
   @IsEnum(DecisionStatus)
-  status: DecisionStatus;
+  status!: DecisionStatus;
 }
 
 /**
@@ -54,12 +54,12 @@ export class UpdateDecisionStatusDto {
 export class SupersedeDecisionDto {
   @ApiProperty({ description: 'ID of the decision to supersede' })
   @IsUUID()
-  supersedesDecisionId: string;
+  supersedesDecisionId!: string;
 
   @ApiProperty({ description: 'The new decision statement' })
   @IsString()
   @MaxLength(5000)
-  statement: string;
+  statement!: string;
 
   @ApiPropertyOptional({ description: 'Underlying assumptions for the decision' })
   @IsOptional()
@@ -102,31 +102,31 @@ export class ListDecisionsDto {
  */
 export class DecisionResponse {
   @ApiProperty({ description: 'Decision ID' })
-  id: string;
+  id!: string;
 
   @ApiProperty({ description: 'Session ID' })
-  sessionId: string;
+  sessionId!: string;
 
   @ApiProperty({ description: 'Decision statement' })
-  statement: string;
+  statement!: string;
 
   @ApiPropertyOptional({ description: 'Assumptions' })
-  assumptions: string | null;
+  assumptions!: string | null;
 
   @ApiPropertyOptional({ description: 'References' })
-  references: string | null;
+  references!: string | null;
 
   @ApiProperty({ description: 'Owner user ID' })
-  ownerId: string;
+  ownerId!: string;
 
   @ApiProperty({ enum: DecisionStatusValues, enumName: 'DecisionStatus' })
-  status: DecisionStatus;
+  status!: DecisionStatus;
 
   @ApiPropertyOptional({ description: 'ID of decision this supersedes' })
-  supersedesDecisionId: string | null;
+  supersedesDecisionId!: string | null;
 
   @ApiProperty({ description: 'When decision was created' })
-  createdAt: Date;
+  createdAt!: Date;
 }
 
 /**
@@ -134,17 +134,17 @@ export class DecisionResponse {
  */
 export class DecisionAuditExport {
   @ApiProperty({ description: 'Export timestamp' })
-  exportedAt: Date;
+  exportedAt!: Date;
 
   @ApiProperty({ description: 'Session ID' })
-  sessionId: string;
+  sessionId!: string;
 
   @ApiProperty({ description: 'Total decision count' })
-  totalDecisions: number;
+  totalDecisions!: number;
 
   @ApiProperty({ type: [DecisionResponse] })
-  decisions: DecisionResponse[];
+  decisions!: DecisionResponse[];
 
   @ApiProperty({ description: 'Supersession chain mapping' })
-  supersessionChain: Record<string, string[]>;
+  supersessionChain!: Record<string, string[]>;
 }

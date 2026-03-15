@@ -5,7 +5,7 @@ import { Persona } from '@prisma/client';
 export class CreateSessionDto {
   @ApiProperty({ example: 'quest_001', description: 'ID of the questionnaire to start' })
   @IsUUID()
-  questionnaireId: string;
+  questionnaireId!: string;
 
   @ApiPropertyOptional({
     description: 'Project type ID — determines which dimensions and thresholds apply',

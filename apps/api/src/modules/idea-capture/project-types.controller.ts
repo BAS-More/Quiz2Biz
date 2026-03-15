@@ -17,6 +17,7 @@ export class ProjectTypesController {
     return this.prisma.projectType.findMany({
       where: { isActive: true },
       orderBy: [{ isDefault: 'desc' }, { name: 'asc' }],
+      take: 100,
       select: {
         id: true,
         slug: true,

@@ -14,7 +14,6 @@ import {
   Header,
   Footer,
   PageNumber,
-  NumberFormat,
 } from 'docx';
 import { DocumentCategory } from '@prisma/client';
 import { TemplateData, StandardSection } from './template-engine.service';
@@ -416,7 +415,8 @@ export class DocumentBuilderService {
    * Build a simple two-column table
    */
   private buildTable(rows: string[][]): Paragraph {
-    const table = new Table({
+    // Table constructed for future use when DOCX table embedding is implemented
+    void new Table({
       width: { size: 100, type: WidthType.PERCENTAGE },
       rows: rows.map(
         (row) =>

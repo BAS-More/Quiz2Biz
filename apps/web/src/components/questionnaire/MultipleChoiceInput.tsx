@@ -19,7 +19,7 @@ export const MultipleChoiceInput: React.FC<QuestionInputProps<string[]>> = ({
   };
 
   return (
-    <div className="question-input multiple-choice-input">
+    <div className="question-input multiple-choice-input" data-testid="multiple-choice-input">
       <div className="space-y-3">
         {options.map((option) => (
           <label

@@ -271,7 +271,7 @@ Start-Sleep -Seconds 30
 az containerapp exec `
     --name $CONTAINER_APP_NAME `
     --resource-group $ResourceGroup `
-    --command "npx prisma migrate deploy" 2>$null
+    --command "./node_modules/.bin/prisma migrate deploy" 2>$null
 
 if ($LASTEXITCODE -eq 0) {
     Write-Success "Database migrations completed"

@@ -23,11 +23,11 @@ export class CreateVisibilityRuleDto {
     description: 'JSON condition structure',
   })
   @IsObject()
-  condition: Record<string, unknown>;
+  condition!: Record<string, unknown>;
 
   @ApiProperty({ enum: VisibilityActionValues, enumName: 'VisibilityAction', example: 'SHOW' })
   @IsEnum(VisibilityAction)
-  action: VisibilityAction;
+  action!: VisibilityAction;
 
   @ApiProperty({
     example: ['123e4567-e89b-12d3-a456-426614174000'],
@@ -35,7 +35,7 @@ export class CreateVisibilityRuleDto {
   })
   @IsArray()
   @IsUUID('4', { each: true })
-  targetQuestionIds: string[];
+  targetQuestionIds!: string[];
 
   @ApiPropertyOptional({ example: 0, description: 'Rule evaluation priority' })
   @IsOptional()

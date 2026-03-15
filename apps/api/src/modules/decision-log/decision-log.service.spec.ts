@@ -234,6 +234,7 @@ describe('DecisionLogService', () => {
       expect(mockPrismaService.decisionLog.findMany).toHaveBeenCalledWith({
         where: { sessionId: 'session-1' },
         orderBy: { createdAt: 'desc' },
+        take: 1000,
       });
     });
 
@@ -245,6 +246,7 @@ describe('DecisionLogService', () => {
       expect(mockPrismaService.decisionLog.findMany).toHaveBeenCalledWith({
         where: { ownerId: 'user-1' },
         orderBy: { createdAt: 'desc' },
+        take: 1000,
       });
     });
 
@@ -256,6 +258,7 @@ describe('DecisionLogService', () => {
       expect(mockPrismaService.decisionLog.findMany).toHaveBeenCalledWith({
         where: { status: DecisionStatus.DRAFT },
         orderBy: { createdAt: 'desc' },
+        take: 1000,
       });
     });
 
@@ -275,6 +278,7 @@ describe('DecisionLogService', () => {
           status: DecisionStatus.DRAFT,
         },
         orderBy: { createdAt: 'desc' },
+        take: 1000,
       });
     });
   });

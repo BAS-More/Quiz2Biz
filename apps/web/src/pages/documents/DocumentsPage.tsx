@@ -19,14 +19,19 @@ import {
   Presentation,
   Bot,
   RefreshCw,
+  Archive,
 } from 'lucide-react';
 import { Card } from '../../components/ui';
+import { EmptyState } from '../../components/ui/EmptyState';
 import { useQuestionnaireStore } from '../../stores/questionnaire';
 import {
   listDocumentTypes,
   getSessionDocumentTypes,
   requestDocumentGeneration,
+  bulkDownloadSession,
+  getSessionDocuments,
   type DocumentType,
+  type DocumentResponse,
 } from '../../api/documents';
 
 const DOC_TYPE_ICONS: Record<string, typeof FileText> = {
@@ -46,10 +51,12 @@ export function DocumentsPage() {
   const { sessions, loadSessions } = useQuestionnaireStore();
 
   const [documentTypes, setDocumentTypes] = useState<DocumentType[]>([]);
+  const [sessionDocuments, setSessionDocuments] = useState<DocumentResponse[]>([]);
   const [isLoadingTypes, setIsLoadingTypes] = useState(true);
   const [generatingSlug, setGeneratingSlug] = useState<string | null>(null);
   const [generationError, setGenerationError] = useState<string | null>(null);
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(sessionId);
+  const [isDownloadingZip, setIsDownloadingZip] = useState(false);
 
   const completedSessions = sessions.filter((s) => s.status === 'COMPLETED');
 
@@ -67,6 +74,14 @@ export function DocumentsPage() {
           ? await getSessionDocumentTypes(selectedSessionId)
           : await listDocumentTypes();
         setDocumentTypes(types);
+
+        // Also load existing documents for the session
+        if (selectedSessionId) {
+          const docs = await getSessionDocuments(selectedSessionId);
+          setSessionDocuments(docs);
+        } else {
+          setSessionDocuments([]);
+        }
       } catch {
         // Fallback: load all types
         try {
@@ -75,6 +90,7 @@ export function DocumentsPage() {
         } catch {
           setDocumentTypes([]);
         }
+        setSessionDocuments([]);
       } finally {
         setIsLoadingTypes(false);
       }
@@ -117,8 +133,37 @@ export function DocumentsPage() {
 
   const selectedSession = completedSessions.find((s) => s.id === selectedSessionId);
 
+  const handleBulkDownload = useCallback(async () => {
+    if (!selectedSessionId) return;
+    setIsDownloadingZip(true);
+    setGenerationError(null);
+    try {
+      const blob = await bulkDownloadSession(selectedSessionId);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `documents_${new Date().toISOString().split('T')[0]}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err: unknown) {
+      const message =
+        (err as { response?: { data?: { message?: string } }; message?: string })?.response?.data
+          ?.message ??
+        (err as { message?: string })?.message ??
+        'Download failed';
+      setGenerationError(message);
+    } finally {
+      setIsDownloadingZip(false);
+    }
+  }, [selectedSessionId]);
+
+  const completedDocuments = sessionDocuments.filter((d) => d.status === 'COMPLETED');
+  const hasDocumentsToDownload = completedDocuments.length > 0;
+
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in" data-testid="documents-page">
       {/* Back button */}
       <button
         onClick={() => navigate('/dashboard')}
@@ -161,11 +206,33 @@ export function DocumentsPage() {
         </div>
       ) : (
         <Card padding="none">
-          <div className="px-6 py-4 border-b border-surface-100">
-            <h2 className="text-base font-semibold text-surface-900">Select a Project</h2>
-            <p className="text-xs text-surface-400 mt-0.5">
-              Choose which project to generate documents from.
-            </p>
+          <div className="px-6 py-4 border-b border-surface-100 flex items-center justify-between">
+            <div>
+              <h2 className="text-base font-semibold text-surface-900">Select a Project</h2>
+              <p className="text-xs text-surface-400 mt-0.5">
+                Choose which project to generate documents from.
+              </p>
+            </div>
+            {hasDocumentsToDownload && (
+              <button
+                onClick={handleBulkDownload}
+                disabled={isDownloadingZip}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-success-600 text-white text-sm font-medium rounded-lg hover:bg-success-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                aria-label="Download all documents as ZIP"
+              >
+                {isDownloadingZip ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Preparing ZIP...
+                  </>
+                ) : (
+                  <>
+                    <Archive className="w-4 h-4" />
+                    Download All ({completedDocuments.length})
+                  </>
+                )}
+              </button>
+            )}
           </div>
           <div className="p-4 space-y-2">
             {completedSessions.slice(0, 5).map((session) => {
@@ -237,14 +304,16 @@ export function DocumentsPage() {
             <span className="ml-2 text-sm text-surface-400">Loading document types...</span>
           </div>
         ) : documentTypes.length === 0 ? (
-          <div className="text-center py-8">
-            <FileText className="w-10 h-10 text-surface-300 mx-auto mb-3" />
-            <p className="text-sm text-surface-500">
-              {selectedSessionId
+          <EmptyState
+            type="documents"
+            title={selectedSessionId ? 'No document types available' : 'Select a project'}
+            description={
+              selectedSessionId
                 ? 'No document types available for this project type.'
-                : 'No document types configured. Select a project to see available documents.'}
-            </p>
-          </div>
+                : 'Select a completed project above to see available documents.'
+            }
+            size="sm"
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {documentTypes.map((docType) => {
@@ -273,6 +342,7 @@ export function DocumentsPage() {
                     <button
                       onClick={() => handleGenerate(docType)}
                       disabled={isGenerating || !canGenerate}
+                      data-testid="generate-document-button"
                       className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-brand-600 text-white text-xs font-medium rounded-lg hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                     >
                       {isGenerating ? (

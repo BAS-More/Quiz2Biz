@@ -7,9 +7,6 @@ import { EvidenceType } from '@prisma/client';
 
 describe('EvidenceRegistryController', () => {
   let controller: EvidenceRegistryController;
-  let evidenceService: EvidenceRegistryService;
-  let integrityService: EvidenceIntegrityService;
-  let ciIngestionService: CIArtifactIngestionService;
   let module: TestingModule;
 
   const mockEvidenceService = {
@@ -60,9 +57,9 @@ describe('EvidenceRegistryController', () => {
     }).compile();
 
     controller = module.get<EvidenceRegistryController>(EvidenceRegistryController);
-    evidenceService = module.get<EvidenceRegistryService>(EvidenceRegistryService);
-    integrityService = module.get<EvidenceIntegrityService>(EvidenceIntegrityService);
-    ciIngestionService = module.get<CIArtifactIngestionService>(CIArtifactIngestionService);
+    module.get<EvidenceRegistryService>(EvidenceRegistryService);
+    module.get<EvidenceIntegrityService>(EvidenceIntegrityService);
+    module.get<CIArtifactIngestionService>(CIArtifactIngestionService);
 
     jest.clearAllMocks();
   });

@@ -820,239 +820,49 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({
 // Styles
 // ============================================================================
 
-const styles: Record<string, React.CSSProperties> = {
-  dashboard: {
-    padding: '24px',
-    backgroundColor: '#f8f9fa',
-    minHeight: '100vh',
-  },
-  dashboardHeader: {
-    marginBottom: '24px',
-  },
-  dashboardTitle: {
-    fontSize: '24px',
-    fontWeight: 700,
-    color: '#333',
-    margin: 0,
-  },
-  metricsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: '16px',
-    marginBottom: '24px',
-  },
-  metricCard: {
-    backgroundColor: '#fff',
-    padding: '20px',
-    borderRadius: '12px',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-  },
-  metricValue: {
-    fontSize: '32px',
-    fontWeight: 700,
-    color: '#333',
-    marginBottom: '4px',
-  },
-  metricLabel: {
-    fontSize: '14px',
-    color: '#666',
-  },
-  metricChange: {
-    fontSize: '12px',
-    marginTop: '8px',
-  },
-  metricChangePositive: {
-    color: '#22c55e',
-  },
-  metricChangeNegative: {
-    color: '#ef4444',
-  },
-  section: {
-    backgroundColor: '#fff',
-    borderRadius: '12px',
-    padding: '20px',
-    marginBottom: '24px',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-  },
-  sectionTitle: {
-    fontSize: '18px',
-    fontWeight: 600,
-    color: '#333',
-    marginBottom: '16px',
-  },
-  tableContainer: {
-    overflowX: 'auto',
-  },
-  table: {
-    width: '100%',
-    borderCollapse: 'collapse',
-  },
-  tableHeader: {
-    textAlign: 'left',
-    padding: '12px',
-    borderBottom: '2px solid #e5e7eb',
-    fontSize: '12px',
-    fontWeight: 600,
-    color: '#666',
-    textTransform: 'uppercase',
-  },
-  tableCell: {
-    padding: '12px',
-    borderBottom: '1px solid #f0f0f0',
-    fontSize: '14px',
-    color: '#333',
-  },
-  funnelContainer: {
-    display: 'flex',
-    alignItems: 'flex-end',
-    justifyContent: 'space-around',
-    height: '200px',
-    padding: '20px 0',
-  },
-  funnelStep: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    flex: 1,
-  },
-  funnelBar: {
-    width: '80%',
-    backgroundColor: '#6366f1',
-    borderRadius: '4px 4px 0 0',
-    transition: 'height 0.3s ease',
-  },
-  funnelLabel: {
-    marginTop: '8px',
-    fontSize: '12px',
-    color: '#666',
-    textAlign: 'center',
-  },
-  funnelValue: {
-    fontSize: '16px',
-    fontWeight: 600,
-    color: '#333',
-  },
-  funnelDropoff: {
-    fontSize: '11px',
-    color: '#ef4444',
-    marginTop: '4px',
-  },
-  heatmapContainer: {
-    position: 'relative',
-    width: '100%',
-    height: '400px',
-    backgroundColor: '#f0f0f0',
-    borderRadius: '8px',
-    overflow: 'hidden',
-  },
-  heatmapCanvas: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-  },
-  heatmapControls: {
-    display: 'flex',
-    gap: '8px',
-    marginBottom: '12px',
-  },
-  heatmapButton: {
-    padding: '8px 16px',
-    fontSize: '13px',
-    border: '1px solid #e5e7eb',
-    borderRadius: '6px',
-    backgroundColor: '#fff',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-  },
-  heatmapButtonActive: {
-    backgroundColor: '#6366f1',
-    color: '#fff',
-    borderColor: '#6366f1',
-  },
-  journeyList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px',
-    maxHeight: '400px',
-    overflowY: 'auto',
-  },
-  journeyItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '12px',
-    backgroundColor: '#f8f9fa',
-    borderRadius: '8px',
-  },
-  journeyStep: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '4px',
-    fontSize: '12px',
-    color: '#666',
-  },
-  journeyArrow: {
-    color: '#9ca3af',
-  },
-  journeyPage: {
-    padding: '2px 8px',
-    backgroundColor: '#e0e7ff',
-    color: '#4338ca',
-    borderRadius: '4px',
-    fontSize: '11px',
-    fontWeight: 500,
-  },
-  replayContainer: {
-    position: 'relative',
-    backgroundColor: '#000',
-    borderRadius: '8px',
-    overflow: 'hidden',
-  },
-  replayControls: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-    padding: '12px',
-    backgroundColor: '#1f2937',
-  },
-  replayButton: {
-    padding: '8px 16px',
-    fontSize: '14px',
-    backgroundColor: '#6366f1',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '6px',
-    cursor: 'pointer',
-  },
-  replayProgress: {
-    flex: 1,
-    height: '4px',
-    backgroundColor: '#374151',
-    borderRadius: '2px',
-    overflow: 'hidden',
-  },
-  replayProgressBar: {
-    height: '100%',
-    backgroundColor: '#6366f1',
-    transition: 'width 0.1s linear',
-  },
-  replayTime: {
-    fontSize: '12px',
-    color: '#9ca3af',
-    fontFamily: 'monospace',
-  },
-  exportButton: {
-    padding: '10px 20px',
-    fontSize: '14px',
-    backgroundColor: '#fff',
-    color: '#333',
-    border: '1px solid #e5e7eb',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    fontWeight: 500,
-  },
+const styles = {
+  dashboard: 'p-6 bg-surface-100 min-h-screen',
+  dashboardHeader: 'mb-6',
+  dashboardTitle: 'text-2xl font-bold text-surface-800 m-0',
+  metricsGrid: 'grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 mb-6',
+  metricCard: 'bg-surface-50 p-5 rounded-xl shadow-card',
+  metricValue: 'text-[32px] font-bold text-surface-800 mb-1',
+  metricLabel: 'text-sm text-surface-500',
+  metricChange: 'text-xs mt-2',
+  metricChangePositive: 'text-success-500',
+  metricChangeNegative: 'text-danger-500',
+  section: 'bg-surface-50 rounded-xl p-5 mb-6 shadow-card',
+  sectionTitle: 'text-lg font-semibold text-surface-800 mb-4',
+  tableContainer: 'overflow-x-auto',
+  table: 'w-full border-collapse',
+  tableHeader:
+    'text-left p-3 border-b-2 border-surface-200 text-xs font-semibold text-surface-500 uppercase',
+  tableCell: 'p-3 border-b border-surface-200 text-sm text-surface-800',
+  funnelContainer: 'flex items-end justify-around h-[200px] py-5',
+  funnelStep: 'flex flex-col items-center flex-1',
+  funnelBar: 'w-4/5 bg-brand-500 rounded-t transition-[height] duration-300 ease-in-out',
+  funnelLabel: 'mt-2 text-xs text-surface-500 text-center',
+  funnelValue: 'text-base font-semibold text-surface-800',
+  funnelDropoff: 'text-[11px] text-danger-500 mt-1',
+  heatmapContainer: 'relative w-full h-[400px] bg-surface-200 rounded-lg overflow-hidden',
+  heatmapCanvas: 'absolute top-0 left-0 w-full h-full',
+  heatmapControls: 'flex gap-2 mb-3',
+  heatmapButton:
+    'px-4 py-2 text-[13px] border border-surface-200 rounded-md bg-surface-50 cursor-pointer transition-all duration-200',
+  heatmapButtonActive: 'bg-brand-500 text-white border-brand-500',
+  journeyList: 'flex flex-col gap-3 max-h-[400px] overflow-y-auto',
+  journeyItem: 'flex items-center gap-2 p-3 bg-surface-100 rounded-lg',
+  journeyStep: 'flex items-center gap-1 text-xs text-surface-500',
+  journeyArrow: 'text-surface-400',
+  journeyPage: 'px-2 py-0.5 bg-brand-100 text-brand-700 rounded text-[11px] font-medium',
+  replayContainer: 'relative bg-surface-900 rounded-lg overflow-hidden',
+  replayControls: 'flex items-center gap-3 p-3 bg-surface-800',
+  replayButton: 'px-4 py-2 text-sm bg-brand-500 text-white border-none rounded-md cursor-pointer',
+  replayProgress: 'flex-1 h-1 bg-surface-700 rounded-sm overflow-hidden',
+  replayProgressBar: 'h-full bg-brand-500 transition-[width] duration-100 ease-linear',
+  replayTime: 'text-xs text-surface-400 font-mono',
+  exportButton:
+    'px-5 py-2.5 text-sm bg-surface-50 text-surface-800 border border-surface-200 rounded-lg cursor-pointer font-medium',
 };
 
 // ============================================================================
@@ -1089,15 +899,12 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   };
 
   return (
-    <div style={styles.metricCard}>
-      <div style={styles.metricValue}>{formatValue()}</div>
-      <div style={styles.metricLabel}>{label}</div>
+    <div className={styles.metricCard}>
+      <div className={styles.metricValue}>{formatValue()}</div>
+      <div className={styles.metricLabel}>{label}</div>
       {change !== undefined && (
         <div
-          style={{
-            ...styles.metricChange,
-            ...(change >= 0 ? styles.metricChangePositive : styles.metricChangeNegative),
-          }}
+          className={`${styles.metricChange} ${change >= 0 ? styles.metricChangePositive : styles.metricChangeNegative}`}
         >
           {change >= 0 ? '↑' : '↓'} {Math.abs(change * 100).toFixed(1)}%
         </div>
@@ -1117,16 +924,18 @@ export const FunnelChart: React.FC<FunnelChartProps> = ({ steps }) => {
   const maxCount = Math.max(...steps.map((s) => s.count));
 
   return (
-    <div style={styles.funnelContainer}>
+    <div className={styles.funnelContainer}>
       {steps.map((step, index) => {
         const height = maxCount > 0 ? (step.count / maxCount) * 160 : 0;
         return (
-          <div key={step.name} style={styles.funnelStep}>
-            <div style={styles.funnelValue}>{step.count.toLocaleString()}</div>
-            <div style={{ ...styles.funnelBar, height: `${height}px` }} />
-            <div style={styles.funnelLabel}>{step.name}</div>
+          <div key={step.name} className={styles.funnelStep}>
+            <div className={styles.funnelValue}>{step.count.toLocaleString()}</div>
+            <div className={styles.funnelBar} style={{ height: `${height}px` }} />
+            <div className={styles.funnelLabel}>{step.name}</div>
             {index > 0 && step.dropOffRate > 0 && (
-              <div style={styles.funnelDropoff}>-{(step.dropOffRate * 100).toFixed(1)}% drop</div>
+              <div className={styles.funnelDropoff}>
+                -{(step.dropOffRate * 100).toFixed(1)}% drop
+              </div>
             )}
           </div>
         );
@@ -1144,21 +953,19 @@ interface TopPagesTableProps {
 
 export const TopPagesTable: React.FC<TopPagesTableProps> = ({ pages }) => {
   return (
-    <div style={styles.tableContainer}>
-      <table style={styles.table}>
+    <div className={styles.tableContainer}>
+      <table className={styles.table}>
         <thead>
           <tr>
-            <th style={styles.tableHeader}>Page</th>
-            <th style={{ ...styles.tableHeader, textAlign: 'right' }}>Views</th>
+            <th className={styles.tableHeader}>Page</th>
+            <th className={`${styles.tableHeader} text-right`}>Views</th>
           </tr>
         </thead>
         <tbody>
           {pages.map((page, index) => (
             <tr key={index}>
-              <td style={styles.tableCell}>{page.page}</td>
-              <td style={{ ...styles.tableCell, textAlign: 'right' }}>
-                {page.views.toLocaleString()}
-              </td>
+              <td className={styles.tableCell}>{page.page}</td>
+              <td className={`${styles.tableCell} text-right`}>{page.views.toLocaleString()}</td>
             </tr>
           ))}
         </tbody>
@@ -1179,16 +986,16 @@ export const UserJourneys: React.FC<UserJourneysProps> = ({ journeys, limit = 10
   const displayJourneys = journeys.slice(0, limit);
 
   return (
-    <div style={styles.journeyList}>
+    <div className={styles.journeyList}>
       {displayJourneys.map((journey) => (
-        <div key={journey.sessionId} style={styles.journeyItem}>
+        <div key={journey.sessionId} className={styles.journeyItem}>
           {journey.steps.map((step, index) => (
-            <div key={index} style={styles.journeyStep}>
-              <span style={styles.journeyPage}>{step.page}</span>
-              {index < journey.steps.length - 1 && <span style={styles.journeyArrow}>→</span>}
+            <div key={index} className={styles.journeyStep}>
+              <span className={styles.journeyPage}>{step.page}</span>
+              {index < journey.steps.length - 1 && <span className={styles.journeyArrow}>→</span>}
             </div>
           ))}
-          <span style={{ marginLeft: 'auto', fontSize: '11px', color: '#888' }}>
+          <span className="ml-auto text-[11px] text-surface-400">
             {Math.round(journey.duration / 1000)}s
           </span>
         </div>
@@ -1223,17 +1030,17 @@ export const AnalyticsDashboard: React.FC = () => {
   }
 
   return (
-    <div style={styles.dashboard}>
-      <div style={styles.dashboardHeader}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h1 style={styles.dashboardTitle}>Analytics Dashboard</h1>
-          <button style={styles.exportButton} onClick={handleExport}>
+    <div className={styles.dashboard}>
+      <div className={styles.dashboardHeader}>
+        <div className="flex justify-between items-center">
+          <h1 className={styles.dashboardTitle}>Analytics Dashboard</h1>
+          <button className={styles.exportButton} onClick={handleExport}>
             Export Data
           </button>
         </div>
       </div>
 
-      <div style={styles.metricsGrid}>
+      <div className={styles.metricsGrid}>
         <MetricCard label="Total Sessions" value={metrics.totalSessions} />
         <MetricCard label="Page Views" value={metrics.totalPageViews} />
         <MetricCard label="Unique Users" value={metrics.uniqueUsers} />
@@ -1242,19 +1049,19 @@ export const AnalyticsDashboard: React.FC = () => {
         <MetricCard label="Conversion Rate" value={metrics.conversionRate} format="percent" />
       </div>
 
-      <div style={styles.section}>
-        <h2 style={styles.sectionTitle}>Conversion Funnel</h2>
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Conversion Funnel</h2>
         <FunnelChart steps={funnelData} />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-        <div style={styles.section}>
-          <h2 style={styles.sectionTitle}>Top Pages</h2>
+      <div className="grid grid-cols-2 gap-6">
+        <div className={styles.section}>
+          <h2 className={styles.sectionTitle}>Top Pages</h2>
           <TopPagesTable pages={metrics.topPages} />
         </div>
 
-        <div style={styles.section}>
-          <h2 style={styles.sectionTitle}>User Journeys</h2>
+        <div className={styles.section}>
+          <h2 className={styles.sectionTitle}>User Journeys</h2>
           <UserJourneys journeys={journeys} />
         </div>
       </div>
@@ -1316,22 +1123,19 @@ export const HeatmapVisualization: React.FC<HeatmapVisualizationProps> = ({
 
   return (
     <div>
-      <div style={styles.heatmapControls}>
+      <div className={styles.heatmapControls}>
         {(['click', 'scroll', 'hover'] as const).map((t) => (
           <button
             key={t}
-            style={{
-              ...styles.heatmapButton,
-              ...(type === t ? styles.heatmapButtonActive : {}),
-            }}
+            className={`${styles.heatmapButton} ${type === t ? styles.heatmapButtonActive : ''}`}
             onClick={() => setType(t)}
           >
             {t.charAt(0).toUpperCase() + t.slice(1)}s
           </button>
         ))}
       </div>
-      <div style={{ ...styles.heatmapContainer, width, height }}>
-        <canvas ref={canvasRef} width={width} height={height} style={styles.heatmapCanvas} />
+      <div className={styles.heatmapContainer} style={{ width, height }}>
+        <canvas ref={canvasRef} width={width} height={height} className={styles.heatmapCanvas} />
       </div>
     </div>
   );
@@ -1382,20 +1186,20 @@ export const SessionReplayPlayer: React.FC<SessionReplayPlayerProps> = ({ sessio
   };
 
   return (
-    <div style={styles.replayContainer}>
-      <div style={{ padding: '200px', textAlign: 'center', color: '#fff' }}>
+    <div className={styles.replayContainer}>
+      <div className="p-[200px] text-center text-white">
         Session Replay View
         <br />
         <small>Frames: {frames.length}</small>
       </div>
-      <div style={styles.replayControls}>
-        <button style={styles.replayButton} onClick={() => setIsPlaying(!isPlaying)}>
+      <div className={styles.replayControls}>
+        <button className={styles.replayButton} onClick={() => setIsPlaying(!isPlaying)}>
           {isPlaying ? '⏸ Pause' : '▶ Play'}
         </button>
-        <div style={styles.replayProgress}>
-          <div style={{ ...styles.replayProgressBar, width: `${progress}%` }} />
+        <div className={styles.replayProgress}>
+          <div className={styles.replayProgressBar} style={{ width: `${progress}%` }} />
         </div>
-        <span style={styles.replayTime}>
+        <span className={styles.replayTime}>
           {formatTime(currentTime)} / {formatTime(duration)}
         </span>
       </div>

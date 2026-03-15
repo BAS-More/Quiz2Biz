@@ -7,9 +7,9 @@ import {
   RequireDecisionApproval,
   RequireSecurityExceptionApproval,
   ApprovalGuard,
-  APPROVAL_REQUIRED_KEY,
   ApprovalRequirementOptions,
 } from './require-approval.decorator';
+
 import { ApprovalCategory, ApprovalWorkflowService } from '../approval-workflow.service';
 
 describe('RequireApproval Decorator', () => {

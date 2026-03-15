@@ -7,33 +7,33 @@ const StandardCategoryValues = Object.values(StandardCategory);
 
 export class StandardResponseDto {
   @ApiProperty({ description: 'Standard ID' })
-  id: string;
+  id!: string;
 
   @ApiProperty({
     enum: StandardCategoryValues,
     enumName: 'StandardCategory',
     description: 'Standard category',
   })
-  category: StandardCategory;
+  category!: StandardCategory;
 
   @ApiProperty({ description: 'Standard title' })
-  title: string;
+  title!: string;
 
   @ApiProperty({ description: 'Standard description' })
-  description: string;
+  description!: string;
 
   @ApiProperty({ description: 'List of principles', type: 'array' })
-  principles: {
+  principles!: {
     title: string;
     description: string;
     examples?: string[];
   }[];
 
   @ApiProperty({ description: 'Standard version' })
-  version: string;
+  version!: string;
 
   @ApiProperty({ description: 'Whether the standard is active' })
-  isActive: boolean;
+  isActive!: boolean;
 }
 
 export class StandardCategoryParamDto {
@@ -43,21 +43,21 @@ export class StandardCategoryParamDto {
     description: 'Standard category',
   })
   @IsEnum(StandardCategory)
-  category: StandardCategory;
+  category!: StandardCategory;
 }
 
 export class DocumentStandardsParamDto {
   @ApiProperty({ description: 'Document type ID or slug' })
   @IsString()
-  documentTypeId: string;
+  documentTypeId!: string;
 }
 
 export class StandardsSectionResponseDto {
   @ApiProperty({ description: 'Generated Markdown content' })
-  markdown: string;
+  markdown!: string;
 
   @ApiProperty({ description: 'Standards included in the section', type: 'array' })
-  standards: {
+  standards!: {
     category: StandardCategory;
     title: string;
     principles: {
@@ -69,19 +69,19 @@ export class StandardsSectionResponseDto {
 
 export class DocumentTypeMappingDto {
   @ApiProperty({ description: 'Document type ID' })
-  id: string;
+  id!: string;
 
   @ApiProperty({ description: 'Document type name' })
-  name: string;
+  name!: string;
 
   @ApiProperty({ description: 'Document type slug' })
-  slug: string;
+  slug!: string;
 
   @ApiPropertyOptional({ description: 'Custom section title for this document' })
   sectionTitle?: string;
 
   @ApiProperty({ description: 'Priority order in the document' })
-  priority: number;
+  priority!: number;
 }
 
 export class StandardWithMappingsDto extends StandardResponseDto {
@@ -89,5 +89,5 @@ export class StandardWithMappingsDto extends StandardResponseDto {
     description: 'Document types this standard is mapped to',
     type: [DocumentTypeMappingDto],
   })
-  documentTypes: DocumentTypeMappingDto[];
+  documentTypes!: DocumentTypeMappingDto[];
 }

@@ -173,6 +173,7 @@ export class QuestionnaireService {
       include: {
         visibilityRules: true,
       },
+      take: 1000,
     });
   }
 
@@ -236,6 +237,7 @@ export class QuestionnaireService {
         visibilityRules: true,
         section: true,
       },
+      take: 1000,
     });
   }
 

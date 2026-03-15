@@ -5,7 +5,7 @@ export class CreateQuestionnaireDto {
   @ApiProperty({ example: 'Business Plan Questionnaire', maxLength: 200 })
   @IsString()
   @MaxLength(200)
-  name: string;
+  name!: string;
 
   @ApiPropertyOptional({ example: 'Comprehensive questionnaire for business planning' })
   @IsOptional()

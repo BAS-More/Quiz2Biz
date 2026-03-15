@@ -221,6 +221,7 @@ export class DecisionLogService {
     const decisions = await this.prisma.decisionLog.findMany({
       where,
       orderBy: { createdAt: 'desc' },
+      take: 1000,
     });
 
     return decisions.map((d: DecisionLog) => this.mapToResponse(d));
@@ -243,6 +244,7 @@ export class DecisionLogService {
     const decisions = await this.prisma.decisionLog.findMany({
       where: { sessionId },
       orderBy: { createdAt: 'asc' },
+      take: 1000,
     });
 
     // Build supersession chain
@@ -303,6 +305,7 @@ export class DecisionLogService {
     const supersessions = await this.prisma.decisionLog.findMany({
       where: { supersedesDecisionId: decisionId },
       orderBy: { createdAt: 'asc' },
+      take: 1000,
     });
 
     supersessions.forEach((d: DecisionLog) => {
@@ -358,7 +361,7 @@ export class DecisionLogService {
         action: `DECISION_${action}`,
         resourceType: 'DecisionLog',
         resourceId: decisionId,
-        changes: metadata ? JSON.parse(JSON.stringify(metadata)) : {},
+        changes: metadata ? (JSON.parse(JSON.stringify(metadata)) as Prisma.InputJsonValue) : {},
       },
     });
   }

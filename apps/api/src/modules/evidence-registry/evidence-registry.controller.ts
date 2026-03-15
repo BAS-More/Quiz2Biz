@@ -12,6 +12,7 @@ import {
   HttpCode,
   HttpStatus,
   Request,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
@@ -190,7 +191,9 @@ Only users with Verifier role should be allowed to verify evidence.
     status: 404,
     description: 'Evidence not found',
   })
-  async getEvidence(@Param('evidenceId') evidenceId: string): Promise<EvidenceItemResponse> {
+  async getEvidence(
+    @Param('evidenceId', ParseUUIDPipe) evidenceId: string,
+  ): Promise<EvidenceItemResponse> {
     return this.evidenceService.getEvidence(evidenceId);
   }
 
@@ -240,7 +243,7 @@ Only users with Verifier role should be allowed to verify evidence.
       },
     },
   })
-  async getEvidenceStats(@Param('sessionId') sessionId: string) {
+  async getEvidenceStats(@Param('sessionId', ParseUUIDPipe) sessionId: string) {
     return this.evidenceService.getEvidenceStats(sessionId);
   }
 
@@ -270,7 +273,7 @@ Only users with Verifier role should be allowed to verify evidence.
     description: 'Evidence not found',
   })
   async deleteEvidence(
-    @Param('evidenceId') evidenceId: string,
+    @Param('evidenceId', ParseUUIDPipe) evidenceId: string,
     @Request() req: { user: { userId: string } },
   ): Promise<void> {
     await this.evidenceService.deleteEvidence(evidenceId, req.user.userId);
@@ -297,7 +300,7 @@ Optionally requests a timestamp token from RFC 3161 TSA.
   @ApiResponse({ status: 200, description: 'Evidence added to chain' })
   @ApiResponse({ status: 404, description: 'Evidence not found' })
   async chainEvidence(
-    @Param('evidenceId') evidenceId: string,
+    @Param('evidenceId', ParseUUIDPipe) evidenceId: string,
     @Body() body: { sessionId: string },
   ) {
     return this.integrityService.chainEvidence(evidenceId, body.sessionId);
@@ -313,7 +316,7 @@ Optionally requests a timestamp token from RFC 3161 TSA.
   })
   @ApiParam({ name: 'sessionId', description: 'Session UUID' })
   @ApiResponse({ status: 200, description: 'Evidence chain entries' })
-  async getEvidenceChain(@Param('sessionId') sessionId: string) {
+  async getEvidenceChain(@Param('sessionId', ParseUUIDPipe) sessionId: string) {
     return this.integrityService.getEvidenceChain(sessionId);
   }
 
@@ -330,7 +333,7 @@ Checks: hash chain links, computed hashes match stored hashes, evidence not modi
   })
   @ApiParam({ name: 'sessionId', description: 'Session UUID' })
   @ApiResponse({ status: 200, description: 'Chain verification result' })
-  async verifyChain(@Param('sessionId') sessionId: string) {
+  async verifyChain(@Param('sessionId', ParseUUIDPipe) sessionId: string) {
     return this.integrityService.verifyChain(sessionId);
   }
 
@@ -345,7 +348,7 @@ Checks: hash chain links, computed hashes match stored hashes, evidence not modi
   @ApiParam({ name: 'evidenceId', description: 'Evidence UUID' })
   @ApiResponse({ status: 200, description: 'Integrity verification result' })
   @ApiResponse({ status: 404, description: 'Evidence not found' })
-  async verifyEvidenceIntegrity(@Param('evidenceId') evidenceId: string) {
+  async verifyEvidenceIntegrity(@Param('evidenceId', ParseUUIDPipe) evidenceId: string) {
     return this.integrityService.verifyEvidenceIntegrity(evidenceId);
   }
 
@@ -359,7 +362,7 @@ Checks: hash chain links, computed hashes match stored hashes, evidence not modi
   })
   @ApiParam({ name: 'sessionId', description: 'Session UUID' })
   @ApiResponse({ status: 200, description: 'Session integrity report' })
-  async generateIntegrityReport(@Param('sessionId') sessionId: string) {
+  async generateIntegrityReport(@Param('sessionId', ParseUUIDPipe) sessionId: string) {
     return this.integrityService.generateIntegrityReport(sessionId);
   }
 
@@ -436,7 +439,7 @@ Parses artifacts and extracts relevant metrics.
   })
   @ApiParam({ name: 'sessionId', description: 'Session UUID' })
   @ApiResponse({ status: 200, description: 'List of CI artifacts' })
-  async getSessionCIArtifacts(@Param('sessionId') sessionId: string) {
+  async getSessionCIArtifacts(@Param('sessionId', ParseUUIDPipe) sessionId: string) {
     return this.ciIngestionService.getSessionArtifacts(sessionId);
   }
 
@@ -453,7 +456,7 @@ Parses artifacts and extracts relevant metrics.
   @ApiResponse({ status: 200, description: 'Build summary with metrics' })
   @ApiResponse({ status: 404, description: 'Build not found' })
   async getCIBuildSummary(
-    @Param('sessionId') sessionId: string,
+    @Param('sessionId', ParseUUIDPipe) sessionId: string,
     @Param('buildId') buildId: string,
   ) {
     return this.ciIngestionService.getBuildSummary(sessionId, buildId);

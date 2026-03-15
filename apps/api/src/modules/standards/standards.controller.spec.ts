@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { StandardsController } from './standards.controller';
 import { StandardsService } from './standards.service';
+import { StandardCategory } from '@prisma/client';
 
 describe('StandardsController', () => {
   let controller: StandardsController;
-  let standardsService: jest.Mocked<StandardsService>;
 
   const mockStandardsService = {
     findAll: jest.fn(),
@@ -22,7 +22,7 @@ describe('StandardsController', () => {
     }).compile();
 
     controller = module.get<StandardsController>(StandardsController);
-    standardsService = module.get(StandardsService);
+    module.get(StandardsService);
   });
 
   describe('findAll', () => {
@@ -58,16 +58,20 @@ describe('StandardsController', () => {
       };
       mockStandardsService.findWithMappings.mockResolvedValue(mockStandard);
 
-      const result = await controller.findByCategory('SECURITY');
+      const result = await controller.findByCategory(StandardCategory.SECURITY_DEVSECOPS);
 
       expect(result).toEqual(mockStandard);
-      expect(mockStandardsService.findWithMappings).toHaveBeenCalledWith('SECURITY');
+      expect(mockStandardsService.findWithMappings).toHaveBeenCalledWith(
+        StandardCategory.SECURITY_DEVSECOPS,
+      );
     });
 
     it('should handle category not found', async () => {
       mockStandardsService.findWithMappings.mockRejectedValue(new Error('Not found'));
 
-      await expect(controller.findByCategory('INVALID')).rejects.toThrow('Not found');
+      await expect(controller.findByCategory(StandardCategory.MODERN_ARCHITECTURE)).rejects.toThrow(
+        'Not found',
+      );
     });
   });
 

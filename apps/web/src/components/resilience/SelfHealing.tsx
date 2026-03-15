@@ -750,7 +750,7 @@ export const SelfHealingProvider: React.FC<SelfHealingProviderProps> = ({
 const styles: Record<string, React.CSSProperties> = {
   statusPanel: {
     padding: '16px',
-    backgroundColor: '#fff',
+    backgroundColor: 'var(--color-surface-50)',
     borderRadius: '8px',
     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
   },
@@ -763,7 +763,7 @@ const styles: Record<string, React.CSSProperties> = {
   title: {
     fontSize: '16px',
     fontWeight: 600,
-    color: '#333',
+    color: 'var(--color-surface-700)',
     margin: 0,
   },
   toggleButton: {
@@ -774,12 +774,12 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: 'pointer',
   },
   enabledButton: {
-    backgroundColor: '#dcfce7',
-    color: '#16a34a',
+    backgroundColor: 'var(--color-success-50)',
+    color: 'var(--color-success-500)',
   },
   disabledButton: {
-    backgroundColor: '#fee2e2',
-    color: '#dc2626',
+    backgroundColor: 'var(--color-danger-50)',
+    color: 'var(--color-danger-500)',
   },
   circuitList: {
     display: 'flex',
@@ -791,22 +791,22 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '12px',
-    backgroundColor: '#f8f9fa',
+    backgroundColor: 'var(--color-surface-50)',
     borderRadius: '6px',
     borderLeft: '4px solid',
   },
   circuitClosed: {
-    borderLeftColor: '#22c55e',
+    borderLeftColor: 'var(--color-success-500)',
   },
   circuitOpen: {
-    borderLeftColor: '#ef4444',
+    borderLeftColor: 'var(--color-danger-500)',
   },
   circuitHalfOpen: {
-    borderLeftColor: '#f59e0b',
+    borderLeftColor: 'var(--color-warning-500)',
   },
   circuitName: {
     fontWeight: 500,
-    color: '#333',
+    color: 'var(--color-surface-700)',
     fontSize: '14px',
   },
   circuitState: {
@@ -816,22 +816,22 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 500,
   },
   stateOpen: {
-    backgroundColor: '#fee2e2',
-    color: '#dc2626',
+    backgroundColor: 'var(--color-danger-50)',
+    color: 'var(--color-danger-500)',
   },
   stateClosed: {
-    backgroundColor: '#dcfce7',
-    color: '#16a34a',
+    backgroundColor: 'var(--color-success-50)',
+    color: 'var(--color-success-500)',
   },
   stateHalfOpen: {
-    backgroundColor: '#fef3c7',
-    color: '#d97706',
+    backgroundColor: 'var(--color-warning-50)',
+    color: 'var(--color-warning-600)',
   },
   resetButton: {
     fontSize: '11px',
     padding: '4px 8px',
-    backgroundColor: '#e5e7eb',
-    color: '#374151',
+    backgroundColor: 'var(--color-surface-200)',
+    color: 'var(--color-surface-700)',
     border: 'none',
     borderRadius: '4px',
     cursor: 'pointer',
@@ -839,13 +839,13 @@ const styles: Record<string, React.CSSProperties> = {
   },
   recoveryLog: {
     marginTop: '16px',
-    borderTop: '1px solid #e5e7eb',
+    borderTop: '1px solid var(--color-surface-200)',
     paddingTop: '16px',
   },
   logTitle: {
     fontSize: '14px',
     fontWeight: 500,
-    color: '#666',
+    color: 'var(--color-surface-500)',
     marginBottom: '8px',
   },
   logList: {
@@ -858,17 +858,17 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '8px',
     padding: '8px',
     fontSize: '12px',
-    borderBottom: '1px solid #f0f0f0',
+    borderBottom: '1px solid var(--color-surface-100)',
   },
   logIcon: {
     fontSize: '14px',
   },
   logMessage: {
     flex: 1,
-    color: '#333',
+    color: 'var(--color-surface-700)',
   },
   logTime: {
-    color: '#888',
+    color: 'var(--color-surface-400)',
     fontSize: '11px',
   },
   retryIndicator: {
@@ -876,15 +876,15 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     gap: '8px',
     padding: '12px 16px',
-    backgroundColor: '#fef3c7',
+    backgroundColor: 'var(--color-warning-50)',
     borderRadius: '8px',
     fontSize: '14px',
-    color: '#92400e',
+    color: 'var(--color-warning-900)',
   },
   retrySpinner: {
     width: '16px',
     height: '16px',
-    border: '2px solid #fbbf24',
+    border: '2px solid var(--color-warning-400)',
     borderTopColor: 'transparent',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite',
@@ -899,20 +899,20 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '8px 12px',
-    backgroundColor: '#f8f9fa',
+    backgroundColor: 'var(--color-surface-50)',
     borderRadius: '6px',
   },
   healthyBadge: {
-    backgroundColor: '#dcfce7',
-    color: '#16a34a',
+    backgroundColor: 'var(--color-success-50)',
+    color: 'var(--color-success-500)',
     padding: '2px 8px',
     borderRadius: '12px',
     fontSize: '11px',
     fontWeight: 500,
   },
   unhealthyBadge: {
-    backgroundColor: '#fee2e2',
-    color: '#dc2626',
+    backgroundColor: 'var(--color-danger-50)',
+    color: 'var(--color-danger-500)',
     padding: '2px 8px',
     borderRadius: '12px',
     fontSize: '11px',
@@ -920,7 +920,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   latency: {
     fontSize: '11px',
-    color: '#888',
+    color: 'var(--color-surface-400)',
   },
 };
 

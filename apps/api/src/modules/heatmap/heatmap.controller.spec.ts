@@ -6,7 +6,6 @@ import { HeatmapColor } from './dto';
 
 describe('HeatmapController', () => {
   let controller: HeatmapController;
-  let heatmapService: HeatmapService;
   let module: TestingModule;
 
   const mockHeatmapService = {
@@ -30,7 +29,7 @@ describe('HeatmapController', () => {
     }).compile();
 
     controller = module.get<HeatmapController>(HeatmapController);
-    heatmapService = module.get<HeatmapService>(HeatmapService);
+    module.get<HeatmapService>(HeatmapService);
 
     jest.clearAllMocks();
   });

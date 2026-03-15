@@ -7,8 +7,6 @@ import { SeverityBucket, HeatmapColor } from './dto';
 
 describe('HeatmapService', () => {
   let service: HeatmapService;
-  let prisma: PrismaService;
-  let redis: RedisService;
   let module: TestingModule;
 
   const mockPrisma = {
@@ -92,8 +90,8 @@ describe('HeatmapService', () => {
     }).compile();
 
     service = module.get<HeatmapService>(HeatmapService);
-    prisma = module.get<PrismaService>(PrismaService);
-    redis = module.get<RedisService>(RedisService);
+    module.get<PrismaService>(PrismaService);
+    module.get<RedisService>(RedisService);
 
     jest.clearAllMocks();
   });
@@ -1921,7 +1919,7 @@ describe('HeatmapService', () => {
       const gaps = await service.getPriorityGaps('session-123', 20);
 
       // Low severity bucket gets 0.5 multiplier - cell should have a priority score
-      const lowGaps = gaps.filter((g) => g.severityBucket === SeverityBucket.LOW);
+      gaps.filter((g) => g.severityBucket === SeverityBucket.LOW);
       // These may be green and skipped, but the test exercises the code path
       expect(gaps).toBeDefined();
     });

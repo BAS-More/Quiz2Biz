@@ -1083,7 +1083,7 @@ describe('ApprovalWorkflowService', () => {
       mockPrismaService.auditLog.create.mockResolvedValue({});
 
       // Create an approval with very short expiration (already expired)
-      const approval = await service.createApprovalRequest(
+      await service.createApprovalRequest(
         {
           category: ApprovalCategory.ADR_APPROVAL,
           resourceType: 'ADR',

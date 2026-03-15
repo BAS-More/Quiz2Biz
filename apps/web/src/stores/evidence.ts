@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { questionnaireApi } from '../api/questionnaire';
+import { logger } from '../lib/logger';
 
 interface EvidenceItem {
   id: string;
@@ -58,7 +59,7 @@ export const useEvidenceStore = create<EvidenceState>()((set) => ({
       const stats = await questionnaireApi.getEvidenceStats(sessionId);
       set({ stats });
     } catch (err: unknown) {
-      console.warn('Failed to load evidence stats:', err);
+      logger.warn('Failed to load evidence stats:', err);
     }
   },
 

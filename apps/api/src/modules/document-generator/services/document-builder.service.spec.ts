@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DocumentBuilderService, DocumentTypeInfo } from './document-builder.service';
 import { DocumentCategory } from '@prisma/client';
-import { TemplateData, StandardSection } from './template-engine.service';
+import { TemplateData } from './template-engine.service';
 import { GeneratedDocumentContent } from './ai-document-content.service';
 
 describe('DocumentBuilderService', () => {
@@ -587,13 +587,6 @@ describe('DocumentBuilderService', () => {
   // Document categories via buildDocument (template path)
   // ---------------------------------------------------------------------------
   describe('document categories via buildDocument', () => {
-    const baseMetadata = {
-      documentType: 'Test',
-      category: DocumentCategory.BA,
-      generatedAt: new Date(),
-      version: '1.0',
-    };
-
     it('should build document for BA category', async () => {
       const docType: DocumentTypeInfo = {
         name: 'User Stories',

@@ -10,6 +10,11 @@ import { TemplateEngineService } from './services/template-engine.service';
 import { StorageService } from './services/storage.service';
 import { DeliverablesCompilerService } from './services/deliverables-compiler.service';
 import { AiDocumentContentService } from './services/ai-document-content.service';
+import { QualityCalibratorService } from './services/quality-calibrator.service';
+import { MarkdownRendererService } from './services/markdown-renderer.service';
+import { ProviderComparisonService } from './services/provider-comparison.service';
+import { PdfRendererService } from './services/pdf-renderer.service';
+import { BulkDownloadService } from './services/bulk-download.service';
 
 @Module({
   imports: [PrismaModule, ConfigModule],
@@ -21,7 +26,21 @@ import { AiDocumentContentService } from './services/ai-document-content.service
     StorageService,
     DeliverablesCompilerService,
     AiDocumentContentService,
+    QualityCalibratorService,
+    MarkdownRendererService,
+    ProviderComparisonService,
+    PdfRendererService,
+    BulkDownloadService,
   ],
-  exports: [DocumentGeneratorService, DeliverablesCompilerService, AiDocumentContentService],
+  exports: [
+    DocumentGeneratorService,
+    DeliverablesCompilerService,
+    AiDocumentContentService,
+    QualityCalibratorService,
+    MarkdownRendererService,
+    ProviderComparisonService,
+    PdfRendererService,
+    BulkDownloadService,
+  ],
 })
 export class DocumentGeneratorModule {}

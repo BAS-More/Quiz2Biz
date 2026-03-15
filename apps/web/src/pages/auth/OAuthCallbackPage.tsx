@@ -102,7 +102,7 @@ export function OAuthCallbackPage() {
         const data = await response.json();
 
         // Successfully authenticated - store in Zustand (persists to localStorage)
-        login(data.accessToken, data.refreshToken, data.user);
+        await login(data.accessToken, data.refreshToken, data.user);
 
         setStatus('success');
 

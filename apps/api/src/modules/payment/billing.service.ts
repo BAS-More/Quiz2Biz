@@ -99,6 +99,7 @@ export class BillingService {
           equals: params.stripeCustomerId,
         },
       },
+      take: 100,
     });
 
     for (const org of orgs) {
@@ -151,6 +152,7 @@ export class BillingService {
           equals: params.stripeCustomerId,
         },
       },
+      take: 100,
     });
 
     for (const org of orgs) {

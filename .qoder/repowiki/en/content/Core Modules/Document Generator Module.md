@@ -22,7 +22,9 @@
 </cite>
 
 ## Update Summary
+
 **Changes Made**
+
 - Enhanced template engine with comprehensive question type support and standards mapping
 - Expanded document builder with multi-category content generation (CTO, CFO, BA)
 - Improved storage service with Azure Blob Storage integration and SAS token generation
@@ -31,6 +33,7 @@
 - Enhanced error handling and validation throughout the document generation pipeline
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
@@ -102,11 +105,13 @@ DGS --> PRISMA
 ```
 
 **Diagram sources**
+
 - [document-generator.module.ts](file://apps/api/src/modules/document-generator/document-generator.module.ts#L1-L23)
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L1-L163)
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L1-L230)
 
 **Section sources**
+
 - [document-generator.module.ts](file://apps/api/src/modules/document-generator/document-generator.module.ts#L1-L23)
 - [app.module.ts](file://apps/api/src/app.module.ts#L14-L60)
 
@@ -115,20 +120,25 @@ DGS --> PRISMA
 The Document Generator Module consists of four primary service components that work together to provide comprehensive document generation capabilities:
 
 ### DocumentGeneratorService
+
 The central orchestrator that manages the entire document generation workflow, handling validation, coordination between services, and database operations.
 
 ### TemplateEngineService
+
 Responsible for extracting and transforming questionnaire responses into structured template data, handling different question types and mapping responses to document sections.
 
 ### DocumentBuilderService
+
 Converts template data into professionally formatted DOCX documents using the docx library, supporting multiple document categories with specialized layouts.
 
 ### StorageService
+
 Manages document storage and retrieval using Azure Blob Storage, providing secure file uploads, downloads via SAS tokens, and proper file organization.
 
 **Updated** Enhanced with comprehensive administrative workflows for document review and approval processes.
 
 **Section sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L28-L360)
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L26-L290)
 - [document-builder.service.ts](file://apps/api/src/modules/document-generator/services/document-builder.service.ts#L28-L487)
@@ -164,6 +174,7 @@ Note over Client,Storage : Secure download via SAS token
 ```
 
 **Diagram sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L38-L54)
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L42-L139)
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L35-L99)
@@ -171,6 +182,7 @@ Note over Client,Storage : Secure download via SAS token
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L65-L95)
 
 The architecture follows these key principles:
+
 - **Separation of Concerns**: Each service has a specific responsibility
 - **Dependency Injection**: Services are injected through the NestJS DI container
 - **Asynchronous Processing**: Long-running operations are handled asynchronously
@@ -218,6 +230,7 @@ RequirementsError --> End
 ```
 
 **Diagram sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L42-L194)
 
 **Updated** Enhanced with comprehensive validation and error handling throughout the generation pipeline.
@@ -258,28 +271,31 @@ StandardSection --> Principle : contains
 ```
 
 **Diagram sources**
+
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L26-L290)
 
 **Updated** Enhanced with comprehensive question type support including MATRIX, FILE_UPLOAD, and improved standards mapping for CTO documents.
 
 **Section sources**
+
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L35-L288)
 
 ### Document Builder Categories
 
 The DocumentBuilderService supports three distinct document categories with specialized layouts:
 
-| Category | Purpose | Key Sections |
-|----------|---------|--------------|
-| **CTO** | Technical Architecture Documents | Executive Summary, Technical Overview, Infrastructure, Security, Engineering Standards |
-| **CFO** | Business Planning Documents | Executive Summary, Company Description, Market Analysis, Financial Projections, Risk Management |
-| **BA** | Business Analysis Documents | Introduction, Business Requirements, Functional Requirements, User Stories, Process Flows |
+| Category | Purpose                          | Key Sections                                                                                    |
+| -------- | -------------------------------- | ----------------------------------------------------------------------------------------------- |
+| **CTO**  | Technical Architecture Documents | Executive Summary, Technical Overview, Infrastructure, Security, Engineering Standards          |
+| **CFO**  | Business Planning Documents      | Executive Summary, Company Description, Market Analysis, Financial Projections, Risk Management |
+| **BA**   | Business Analysis Documents      | Introduction, Business Requirements, Functional Requirements, User Stories, Process Flows       |
 
 Each category follows a standardized structure while accommodating the specific content requirements of different stakeholders.
 
 **Updated** Enhanced with comprehensive content section building and standards section generation for technical documents.
 
 **Section sources**
+
 - [document-builder.service.ts](file://apps/api/src/modules/document-generator/services/document-builder.service.ts#L77-L277)
 
 ### Storage Management
@@ -308,11 +324,13 @@ FileName --> Blob
 ```
 
 **Diagram sources**
+
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L75-L77)
 
 **Updated** Enhanced with comprehensive Azure Blob Storage integration, SAS token generation, and secure file access controls.
 
 **Section sources**
+
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L65-L136)
 
 ### Administrative Review Workflow
@@ -334,6 +352,7 @@ Hold --> Complete
 ```
 
 **Diagram sources**
+
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L150-L228)
 
 **Updated** Added comprehensive administrative document review workflow with approval/rejection capabilities and audit trails.
@@ -400,11 +419,13 @@ DOCUMENT_TYPE ||--o{ RESPONSE : maps_to
 ```
 
 **Diagram sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L328-L381)
 
 **Updated** Enhanced with comprehensive document status tracking, review metadata, and approval workflows.
 
 **Section sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L328-L381)
 
 ## API Endpoints
@@ -413,29 +434,30 @@ The Document Generator Module exposes a comprehensive REST API with both user-fa
 
 ### User API Endpoints
 
-| Endpoint | Method | Description | Authentication |
-|----------|--------|-------------|----------------|
-| `/documents/generate` | POST | Request document generation for a session | JWT Required |
-| `/documents/types` | GET | List available document types | JWT Required |
-| `/documents/session/{sessionId}` | GET | List all documents for a session | JWT Required |
-| `/documents/{id}` | GET | Get document details | JWT Required |
-| `/documents/{id}/download` | GET | Get secure download URL | JWT Required |
+| Endpoint                         | Method | Description                               | Authentication |
+| -------------------------------- | ------ | ----------------------------------------- | -------------- |
+| `/documents/generate`            | POST   | Request document generation for a session | JWT Required   |
+| `/documents/types`               | GET    | List available document types             | JWT Required   |
+| `/documents/session/{sessionId}` | GET    | List all documents for a session          | JWT Required   |
+| `/documents/{id}`                | GET    | Get document details                      | JWT Required   |
+| `/documents/{id}/download`       | GET    | Get secure download URL                   | JWT Required   |
 
 ### Administrative API Endpoints
 
-| Endpoint | Method | Description | Authentication |
-|----------|--------|-------------|----------------|
-| `/admin/document-types` | GET | List all document types | Admin/Super Admin |
-| `/admin/document-types/{id}` | GET | Get document type details | Admin/Super Admin |
-| `/admin/document-types` | POST | Create document type | Admin/Super Admin |
-| `/admin/document-types/{id}` | PATCH | Update document type | Admin/Super Admin |
-| `/admin/documents/pending-review` | GET | List documents pending review | Admin/Super Admin |
-| `/admin/documents/{id}/approve` | PATCH | Approve a document | Admin/Super Admin |
-| `/admin/documents/{id}/reject` | PATCH | Reject a document | Admin/Super Admin |
+| Endpoint                          | Method | Description                   | Authentication    |
+| --------------------------------- | ------ | ----------------------------- | ----------------- |
+| `/admin/document-types`           | GET    | List all document types       | Admin/Super Admin |
+| `/admin/document-types/{id}`      | GET    | Get document type details     | Admin/Super Admin |
+| `/admin/document-types`           | POST   | Create document type          | Admin/Super Admin |
+| `/admin/document-types/{id}`      | PATCH  | Update document type          | Admin/Super Admin |
+| `/admin/documents/pending-review` | GET    | List documents pending review | Admin/Super Admin |
+| `/admin/documents/{id}/approve`   | PATCH  | Approve a document            | Admin/Super Admin |
+| `/admin/documents/{id}/reject`    | PATCH  | Reject a document             | Admin/Super Admin |
 
 **Updated** Enhanced with comprehensive administrative endpoints for document type management and review workflows.
 
 **Section sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L38-L113)
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L49-L228)
 
@@ -444,16 +466,19 @@ The Document Generator Module exposes a comprehensive REST API with both user-fa
 The Document Generator Module implements comprehensive security measures:
 
 ### Authentication
+
 - **JWT Authentication**: All endpoints require valid JWT tokens
 - **Role-Based Access Control**: Administrative endpoints restricted to ADMIN and SUPER_ADMIN roles
 - **Session Validation**: Automatic verification that users own the session they're requesting documents for
 
 ### Authorization
+
 - **Document Access**: Users can only access documents from their own sessions
 - **Admin Privileges**: Special handling for document approval/rejection workflows
 - **Input Validation**: Comprehensive DTO validation with class-validator
 
 ### Data Protection
+
 - **Secure Downloads**: SAS tokens for temporary file access
 - **Audit Logging**: Complete audit trail for document generation activities
 - **Error Handling**: Generic error messages to prevent information leakage
@@ -461,6 +486,7 @@ The Document Generator Module implements comprehensive security measures:
 **Updated** Enhanced with comprehensive administrative access controls and document review security measures.
 
 **Section sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L31-L36)
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L36-L43)
 
@@ -469,16 +495,19 @@ The Document Generator Module implements comprehensive security measures:
 The module provides robust file management capabilities through Azure Blob Storage integration:
 
 ### Storage Configuration
+
 - **Connection Management**: Automatic connection string parsing with fallback support
 - **Container Organization**: Hierarchical folder structure (category/YYYY-MM-DD/)
 - **File Naming**: Consistent naming convention using document type slug and document ID
 
 ### Security Features
+
 - **SAS Token Generation**: Temporary access tokens with configurable expiration
 - **Access Control**: Role-based file access restrictions
 - **Cleanup Operations**: Support for file deletion and maintenance
 
 ### Performance Considerations
+
 - **Async Operations**: Non-blocking file uploads and downloads
 - **Content Type Management**: Proper MIME type handling for DOCX files
 - **Error Recovery**: Comprehensive error handling for storage operations
@@ -486,6 +515,7 @@ The module provides robust file management capabilities through Azure Blob Stora
 **Updated** Enhanced with comprehensive Azure Blob Storage integration, SAS token generation, and secure file access controls.
 
 **Section sources**
+
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L26-L160)
 
 ## Template System
@@ -493,6 +523,7 @@ The module provides robust file management capabilities through Azure Blob Stora
 The template system provides flexible content mapping from questionnaire responses to document structure:
 
 ### Template Data Structure
+
 The TemplateEngineService transforms raw responses into structured TemplateData objects:
 
 ```mermaid
@@ -519,42 +550,46 @@ TemplateData --> StandardSection
 ```
 
 **Diagram sources**
+
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L5-L24)
 
 ### Content Mapping
+
 Different question types are mapped to appropriate content structures:
 
-| Question Type | Content Mapping | Example Output |
-|---------------|----------------|----------------|
-| TEXT/TEXTAREA | String value | "Project description text" |
-| NUMBER | Numeric value | 42 |
-| DATE | ISO date string | "2024-01-15" |
-| SINGLE_CHOICE | Selected option label | "High Priority" |
-| MULTIPLE_CHOICE | Array of selected labels | ["Option A", "Option B"] |
-| SCALE | Rating value | 5 |
-| MATRIX | Object with matrix data | {"question1": "response"} |
-| FILE_UPLOAD | File URL | "https://storage.blob.core.windows.net/documents/..." |
-| EMAIL/URL | String value | "user@example.com" |
+| Question Type   | Content Mapping          | Example Output                                        |
+| --------------- | ------------------------ | ----------------------------------------------------- |
+| TEXT/TEXTAREA   | String value             | "Project description text"                            |
+| NUMBER          | Numeric value            | 42                                                    |
+| DATE            | ISO date string          | "2024-01-15"                                          |
+| SINGLE_CHOICE   | Selected option label    | "High Priority"                                       |
+| MULTIPLE_CHOICE | Array of selected labels | ["Option A", "Option B"]                              |
+| SCALE           | Rating value             | 5                                                     |
+| MATRIX          | Object with matrix data  | {"question1": "response"}                             |
+| FILE_UPLOAD     | File URL                 | "https://storage.blob.core.windows.net/documents/..." |
+| EMAIL/URL       | String value             | "user@example.com"                                    |
 
 **Updated** Enhanced with comprehensive question type support including MATRIX, FILE_UPLOAD, and improved content mapping logic.
 
 **Section sources**
+
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L141-L200)
 
 ### Document Type Management
 
 Administrative endpoints provide comprehensive document type management:
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/admin/document-types` | GET | List all document types with pagination |
-| `/admin/document-types/{id}` | GET | Get document type details with mappings |
-| `/admin/document-types` | POST | Create new document type |
-| `/admin/document-types/{id}` | PATCH | Update existing document type |
+| Endpoint                     | Method | Description                             |
+| ---------------------------- | ------ | --------------------------------------- |
+| `/admin/document-types`      | GET    | List all document types with pagination |
+| `/admin/document-types/{id}` | GET    | Get document type details with mappings |
+| `/admin/document-types`      | POST   | Create new document type                |
+| `/admin/document-types/{id}` | PATCH  | Update existing document type           |
 
 **Updated** Added comprehensive administrative document type management with validation and mapping support.
 
 **Section sources**
+
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L49-L144)
 
 ## Performance Considerations
@@ -562,16 +597,19 @@ Administrative endpoints provide comprehensive document type management:
 The Document Generator Module is designed with several performance optimization strategies:
 
 ### Asynchronous Processing
+
 - **Non-blocking Operations**: Document generation runs asynchronously to prevent request timeouts
 - **Background Processing**: Long-running tasks are handled outside the main request thread
 - **Progress Tracking**: Real-time status updates during generation process
 
 ### Resource Management
+
 - **Memory Optimization**: Efficient buffer management for document creation
 - **Database Connections**: Optimized Prisma queries with selective field loading
 - **Storage Efficiency**: Compressed file storage and efficient upload operations
 
 ### Scalability Features
+
 - **Horizontal Scaling**: Stateless service design supports multiple instances
 - **Load Distribution**: Database and storage operations optimized for concurrent access
 - **Caching Strategy**: Redis integration for frequently accessed data
@@ -583,51 +621,63 @@ The Document Generator Module is designed with several performance optimization 
 ### Common Issues and Solutions
 
 #### Document Generation Failures
+
 **Symptoms**: Generation requests fail with validation errors
-**Causes**: 
+**Causes**:
+
 - Session not completed
 - Missing required questions
 - Invalid document type
 - User ownership verification failed
 
 **Solutions**:
+
 - Verify session status is COMPLETED
 - Check required questions are answered
 - Confirm document type is active and valid
 - Ensure user owns the session
 
 #### Storage Access Issues
+
 **Symptoms**: Download URLs fail or files not found
 **Causes**:
+
 - Azure Storage connection not configured
 - Invalid SAS token parameters
 - File deletion or corruption
 
 **Solutions**:
+
 - Verify AZURE_STORAGE_CONNECTION_STRING environment variable
 - Check SAS token expiration settings
 - Validate file exists in storage container
 
 #### Template Processing Errors
+
 **Symptoms**: Template data extraction failures
 **Causes**:
+
 - Missing document mappings in questions
 - Invalid question types
 - Data format inconsistencies
 
 **Solutions**:
+
 - Verify document mappings exist for all questions
 - Check question type compatibility
 - Validate response data structure
 
 #### Administrative Workflow Issues
+
 **Symptoms**: Document review and approval failures
 **Causes**:
+
 - Insufficient admin privileges
 - Document not in correct status
 - Invalid approval/rejection data
 
 **Solutions**:
+
 - Verify user has ADMIN or SUPER_ADMIN role
 - Check document status is PENDING_REVIEW
 - Validate rejection reason length and format
@@ -635,6 +685,7 @@ The Document Generator Module is designed with several performance optimization 
 **Updated** Enhanced with comprehensive troubleshooting guidance for administrative workflows and document review processes.
 
 **Section sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L54-L132)
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L104-L136)
 

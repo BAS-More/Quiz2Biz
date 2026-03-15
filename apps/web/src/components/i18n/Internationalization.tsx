@@ -785,59 +785,17 @@ export const useI18n = (): I18nContextType => {
 // =============================================================================
 
 const styles = {
-  switcher: {
-    position: 'relative' as const,
-  } as React.CSSProperties,
-  switcherButton: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '8px 12px',
-    backgroundColor: '#f3f4f6',
-    border: '1px solid #d1d5db',
-    borderRadius: '8px',
-    fontSize: '14px',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-  } as React.CSSProperties,
-  flag: {
-    fontSize: '18px',
-  } as React.CSSProperties,
-  dropdown: {
-    position: 'absolute' as const,
-    top: 'calc(100% + 4px)',
-    right: 0,
-    minWidth: '200px',
-    backgroundColor: '#ffffff',
-    borderRadius: '8px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-    zIndex: 1000,
-    overflow: 'hidden',
-  } as React.CSSProperties,
-  dropdownItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-    padding: '12px 16px',
-    fontSize: '14px',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s ease',
-    border: 'none',
-    backgroundColor: 'transparent',
-    width: '100%',
-    textAlign: 'left' as const,
-  } as React.CSSProperties,
-  dropdownItemActive: {
-    backgroundColor: '#eff6ff',
-    color: '#3b82f6',
-  } as React.CSSProperties,
-  localeName: {
-    flex: 1,
-  } as React.CSSProperties,
-  nativeName: {
-    color: '#6b7280',
-    fontSize: '12px',
-  } as React.CSSProperties,
+  switcher: 'relative',
+  switcherButton:
+    'flex items-center gap-2 px-3 py-2 bg-surface-100 border border-surface-300 rounded-lg text-sm cursor-pointer transition-all duration-200',
+  flag: 'text-lg',
+  dropdown:
+    'absolute top-[calc(100%+4px)] right-0 min-w-[200px] bg-surface-50 rounded-lg shadow-lg z-[1000] overflow-hidden',
+  dropdownItem:
+    'flex items-center gap-3 px-4 py-3 text-sm cursor-pointer transition-colors duration-200 border-none bg-transparent w-full text-left',
+  dropdownItemActive: 'bg-brand-50 text-brand-500',
+  localeName: 'flex-1',
+  nativeName: 'text-surface-500 text-xs',
 };
 
 // Language Switcher Component
@@ -881,37 +839,34 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   };
 
   return (
-    <div ref={dropdownRef} className={className} style={{ ...styles.switcher, ...style }}>
+    <div ref={dropdownRef} className={`${className || ''} ${styles.switcher}`} style={style}>
       <button
-        style={styles.switcherButton}
+        className={styles.switcherButton}
         onClick={() => setIsOpen(!isOpen)}
         disabled={isLoading}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
-        {showFlag && <span style={styles.flag}>{currentConfig.flag}</span>}
+        {showFlag && <span className={styles.flag}>{currentConfig.flag}</span>}
         {!compact && <span>{currentConfig.nativeName}</span>}
-        <span style={{ fontSize: '10px' }}>{isOpen ? '▲' : '▼'}</span>
+        <span className="text-[10px]">{isOpen ? '▲' : '▼'}</span>
       </button>
 
       {isOpen && (
-        <div style={styles.dropdown} role="listbox">
+        <div className={styles.dropdown} role="listbox">
           {locales.map((config) => (
             <button
               key={config.code}
-              style={{
-                ...styles.dropdownItem,
-                ...(locale === config.code ? styles.dropdownItemActive : {}),
-              }}
+              className={`${styles.dropdownItem} ${locale === config.code ? styles.dropdownItemActive : ''}`}
               onClick={() => handleSelect(config.code)}
               role="option"
               aria-selected={locale === config.code}
             >
-              {showFlag && <span style={styles.flag}>{config.flag}</span>}
-              <div style={styles.localeName}>
+              {showFlag && <span className={styles.flag}>{config.flag}</span>}
+              <div className={styles.localeName}>
                 <div>{config.name}</div>
                 {showNativeName && config.name !== config.nativeName && (
-                  <div style={styles.nativeName}>{config.nativeName}</div>
+                  <div className={styles.nativeName}>{config.nativeName}</div>
                 )}
               </div>
               {locale === config.code && <span aria-hidden="true">✓</span>}
@@ -936,9 +891,7 @@ export const RTLWrapper: React.FC<RTLWrapperProps> = ({ children, forceDirection
   return (
     <div
       dir={effectiveDirection}
-      style={{
-        textAlign: effectiveDirection === 'rtl' ? 'right' : 'left',
-      }}
+      className={effectiveDirection === 'rtl' ? 'text-right' : 'text-left'}
     >
       {children}
     </div>

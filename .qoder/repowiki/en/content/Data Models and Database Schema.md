@@ -19,6 +19,7 @@
 </cite>
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
@@ -31,10 +32,13 @@
 10. [Appendices](#appendices)
 
 ## Introduction
+
 This document provides comprehensive data model documentation for the Quiz-to-build database schema. It details all entities, their relationships, fields, data types, constraints, indexes, and referential integrity enforced by the Prisma schema. It also covers validation rules, business constraints, performance characteristics, caching strategies, and practical usage patterns derived from the application services. Finally, it outlines migration procedures, seeding strategies, and operational considerations for data lifecycle and retention.
 
 ## Project Structure
+
 The data model is defined centrally in the Prisma schema and supported by:
+
 - Prisma client generation and runtime service
 - Redis caching layer
 - Seed scripts for initial data and standards
@@ -58,16 +62,19 @@ SCHEMA -.-> PRISMA
 ```
 
 **Diagram sources**
+
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 - [schema.prisma](file://prisma/schema.prisma#L1-L447)
 
 **Section sources**
+
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 - [schema.prisma](file://prisma/schema.prisma#L1-L447)
 
 ## Core Components
+
 This section enumerates the core entities and their primary attributes, constraints, and relationships as defined in the Prisma schema.
 
 - Organization
@@ -159,10 +166,13 @@ This section enumerates the core entities and their primary attributes, constrai
   - Constraints: unique (document_type_id, standard_id)
 
 **Section sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L82-L446)
 
 ## Architecture Overview
+
 The system follows a layered architecture:
+
 - API services consume Prisma for database operations and optionally Redis for caching.
 - Prisma generates strongly typed client code and manages schema migrations.
 - Redis caches hot data and supports rate limiting and session metadata.
@@ -187,11 +197,13 @@ ENGINEERING_STANDARD ||--o{ DOCUMENT_TYPE_STANDARD : "mapped_by"
 ```
 
 **Diagram sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L82-L446)
 
 ## Detailed Component Analysis
 
 ### Entities and Relationships
+
 - Primary Keys: All entities use UUID primary keys with default generation.
 - Foreign Keys: Defined with explicit fields/references and cascading behavior where appropriate.
 - Soft Deletes: Implemented via optional deletion timestamps on Organization, User, and Questionnaire.
@@ -400,23 +412,28 @@ EngineeringStandard "1" o-- "0..*" DocumentTypeStandard
 ```
 
 **Diagram sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L82-L446)
 
 **Section sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L82-L446)
 
 ### Data Validation Rules and Business Constraints
+
 - Required fields: isRequired on Question; email uniqueness on User; token uniqueness on RefreshToken and ApiKey; unique slug on Organization and DocumentType; unique category on EngineeringStandard; unique (session_id, question_id) on Response.
 - Enumerations: UserRole, QuestionType, SessionStatus, VisibilityAction, DocumentCategory, DocumentStatus, StandardCategory enforce domain constraints.
 - JSON schemas: Options, VisibilityRule conditions, Response values, and progress structures are defined in the documentation to guide clients and validation logic.
 - Adaptive logic: VisibilityRule conditionals drive dynamic visibility and requirement changes during sessions.
 
 **Section sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L17-L76)
 - [05-data-models-db-architecture.md](file://docs/cto/05-data-models-db-architecture.md#L487-L551)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L622-L659)
 
 ### Indexes and Performance Considerations
+
 - Core indexes:
   - Organizations: slug, createdAt
   - Users: email, org_id, role, createdAt
@@ -437,6 +454,7 @@ EngineeringStandard "1" o-- "0..*" DocumentTypeStandard
   - Connection pooling and read replicas for reporting
 
 **Section sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L94-L96)
 - [schema.prisma](file://prisma/schema.prisma#L126-L130)
 - [schema.prisma](file://prisma/schema.prisma#L192-L195)
@@ -451,11 +469,13 @@ EngineeringStandard "1" o-- "0..*" DocumentTypeStandard
 - [05-data-models-db-architecture.md](file://docs/cto/05-data-models-db-architecture.md#L555-L585)
 
 ### Sample Data Examples
+
 - Default Organization and Admin User are created during seeding.
 - A default Questionnaire with multiple Sections and Questions is seeded, including visibility rules.
 - Engineering Standards and DocumentType mappings are seeded for CTO documents.
 
 **Section sources**
+
 - [seed.ts](file://prisma/seed.ts#L9-L35)
 - [seed.ts](file://prisma/seed.ts#L37-L145)
 - [seed.ts](file://prisma/seed.ts#L420-L439)
@@ -463,6 +483,7 @@ EngineeringStandard "1" o-- "0..*" DocumentTypeStandard
 - [standards.seed.ts](file://prisma/seeds/standards.seed.ts#L274-L349)
 
 ### Common Query Patterns
+
 - Retrieve user profile with organization and counts of completed sessions and generated documents.
 - List questionnaires with section counts and pagination.
 - Create a new session, initialize progress, and track current section/question.
@@ -470,6 +491,7 @@ EngineeringStandard "1" o-- "0..*" DocumentTypeStandard
 - Generate standards section for a given document type by joining standards and mappings.
 
 **Section sources**
+
 - [users.service.ts](file://apps/api/src/modules/users/users.service.ts#L41-L73)
 - [users.service.ts](file://apps/api/src/modules/users/users.service.ts#L129-L164)
 - [questionnaire.service.ts](file://apps/api/src/modules/questionnaire/questionnaire.service.ts#L67-L98)
@@ -480,6 +502,7 @@ EngineeringStandard "1" o-- "0..*" DocumentTypeStandard
 - [standards.service.ts](file://apps/api/src/modules/standards/standards.service.ts#L105-L151)
 
 ### Data Lifecycle, Retention, and Archival
+
 - Retention policies:
   - Sessions and Responses: keep for 2–7 years depending on status and archival cadence
   - Documents: keep for 2 years with indefinite archive potential
@@ -492,10 +515,12 @@ EngineeringStandard "1" o-- "0..*" DocumentTypeStandard
   - Cross-region replication for disaster recovery
 
 **Section sources**
+
 - [05-data-models-db-architecture.md](file://docs/cto/05-data-models-db-architecture.md#L672-L696)
 - [05-data-models-db-architecture.md](file://docs/cto/05-data-models-db-architecture.md#L624-L640)
 
 ### Caching Strategies and Performance Optimization
+
 - Redis caching:
   - Questionnaire structure and metadata cached with TTL
   - User sessions and rate limits stored with expiration
@@ -507,10 +532,12 @@ EngineeringStandard "1" o-- "0..*" DocumentTypeStandard
   - PgBouncer connection pooling
 
 **Section sources**
+
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 - [05-data-models-db-architecture.md](file://docs/cto/05-data-models-db-architecture.md#L652-L669)
 
 ### Prisma Migration Procedures and Version Management
+
 - Commands:
   - Generate Prisma client: db:generate
   - Local migrations: db:migrate
@@ -524,11 +551,13 @@ EngineeringStandard "1" o-- "0..*" DocumentTypeStandard
   - PostgreSQL extensions enabled at container startup
 
 **Section sources**
+
 - [package.json](file://package.json#L10-L34)
 - [05-data-models-db-architecture.md](file://docs/cto/05-data-models-db-architecture.md#L589-L621)
 - [init.sql](file://docker/postgres/init.sql#L4-L8)
 
 ## Dependency Analysis
+
 - Prisma Service
   - Provides database connectivity and lifecycle hooks
   - Emits slow query logs in development
@@ -553,6 +582,7 @@ SESSION_SERVICE --> REDIS_SERVICE
 ```
 
 **Diagram sources**
+
 - [prisma.module.ts](file://libs/database/src/prisma.module.ts#L1-L10)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
 - [redis.module.ts](file://libs/redis/src/redis.module.ts#L1-L10)
@@ -563,6 +593,7 @@ SESSION_SERVICE --> REDIS_SERVICE
 - [standards.service.ts](file://apps/api/src/modules/standards/standards.service.ts#L1-L197)
 
 **Section sources**
+
 - [prisma.module.ts](file://libs/database/src/prisma.module.ts#L1-L10)
 - [redis.module.ts](file://libs/redis/src/redis.module.ts#L1-L10)
 - [users.service.ts](file://apps/api/src/modules/users/users.service.ts#L1-L200)
@@ -571,6 +602,7 @@ SESSION_SERVICE --> REDIS_SERVICE
 - [standards.service.ts](file://apps/api/src/modules/standards/standards.service.ts#L1-L197)
 
 ## Performance Considerations
+
 - Query optimization guidelines:
   - Use EXPLAIN ANALYZE for new queries
   - Limit result sets with pagination
@@ -589,10 +621,12 @@ SESSION_SERVICE --> REDIS_SERVICE
   - Document metadata: Redis TTL 30 minutes
 
 **Section sources**
+
 - [05-data-models-db-architecture.md](file://docs/cto/05-data-models-db-architecture.md#L643-L669)
 - [05-data-models-db-architecture.md](file://docs/cto/05-data-models-db-architecture.md#L555-L585)
 
 ## Troubleshooting Guide
+
 - Slow queries:
   - Prisma logs slow queries in development when duration exceeds threshold
 - Database connectivity:
@@ -604,15 +638,18 @@ SESSION_SERVICE --> REDIS_SERVICE
   - Confirm indexes exist for high-traffic queries
 
 **Section sources**
+
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L20-L40)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L10-L28)
 
 ## Conclusion
+
 The Quiz-to-build data model is designed around flexibility and scalability, leveraging PostgreSQL’s JSONB capabilities and Prisma’s strong typing. Robust indexing, caching, and operational policies ensure performance and reliability. The documented relationships, constraints, and patterns enable consistent development and maintenance across modules.
 
 ## Appendices
 
 ### Appendix A: Entity Relationship Diagram (ERD)
+
 ```mermaid
 erDiagram
 ORGANIZATION ||--o{ USER : "has"
@@ -632,9 +669,11 @@ ENGINEERING_STANDARD ||--o{ DOCUMENT_TYPE_STANDARD : "mapped_by"
 ```
 
 **Diagram sources**
+
 - [schema.prisma](file://prisma/schema.prisma#L82-L446)
 
 ### Appendix B: Sample Data Flow (Seeding)
+
 ```mermaid
 sequenceDiagram
 participant Seeder as "Seed Script"
@@ -666,4 +705,5 @@ end
 ```
 
 **Diagram sources**
+
 - [seed.ts](file://prisma/seed.ts#L6-L484)

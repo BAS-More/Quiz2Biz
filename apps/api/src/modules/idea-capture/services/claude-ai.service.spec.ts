@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-import { ClaudeAiService, IdeaAnalysisResult, ConversationFollowUp } from './claude-ai.service';
+import { ClaudeAiService, IdeaAnalysisResult } from './claude-ai.service';
 
 // Mock the Anthropic SDK
 jest.mock('@anthropic-ai/sdk', () => {

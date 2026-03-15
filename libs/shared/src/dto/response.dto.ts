@@ -2,24 +2,24 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class PaginationMeta {
   @ApiProperty({ example: 1 })
-  page: number;
+  page!: number;
 
   @ApiProperty({ example: 20 })
-  limit: number;
+  limit!: number;
 
   @ApiProperty({ example: 100 })
-  totalItems: number;
+  totalItems!: number;
 
   @ApiProperty({ example: 5 })
-  totalPages: number;
+  totalPages!: number;
 }
 
 export class ApiResponseDto<T> {
   @ApiProperty({ example: true })
-  success: boolean;
+  success!: boolean;
 
   @ApiProperty()
-  data: T;
+  data!: T;
 
   @ApiPropertyOptional()
   meta?: {
@@ -30,10 +30,10 @@ export class ApiResponseDto<T> {
 
 export class PaginatedResponseDto<T> {
   @ApiProperty({ example: true })
-  success: boolean;
+  success!: boolean;
 
   @ApiProperty()
-  data: {
+  data!: {
     items: T[];
     pagination: PaginationMeta;
   };
@@ -41,7 +41,7 @@ export class PaginatedResponseDto<T> {
 
 export class ErrorResponseDto {
   @ApiProperty({ example: false })
-  success: false;
+  success!: false;
 
   @ApiProperty({
     example: {
@@ -50,7 +50,7 @@ export class ErrorResponseDto {
       timestamp: '2025-01-15T10:00:00.000Z',
     },
   })
-  error: {
+  error!: {
     code: string;
     message: string;
     details?: unknown[];

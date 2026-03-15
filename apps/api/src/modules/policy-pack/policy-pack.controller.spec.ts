@@ -5,8 +5,6 @@ import { ContextBuilderService } from '../qpg/services/context-builder.service';
 
 describe('PolicyPackController', () => {
   let controller: PolicyPackController;
-  let policyPackService: PolicyPackService;
-  let contextBuilder: ContextBuilderService;
   let module: TestingModule;
 
   const mockPolicyPackService = {
@@ -31,8 +29,8 @@ describe('PolicyPackController', () => {
     }).compile();
 
     controller = module.get<PolicyPackController>(PolicyPackController);
-    policyPackService = module.get<PolicyPackService>(PolicyPackService);
-    contextBuilder = module.get<ContextBuilderService>(ContextBuilderService);
+    module.get<PolicyPackService>(PolicyPackService);
+    module.get<ContextBuilderService>(ContextBuilderService);
 
     jest.clearAllMocks();
   });

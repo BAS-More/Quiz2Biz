@@ -5,6 +5,10 @@
  * to verify system behavior under resource constraints.
  */
 
+import { Logger } from '@nestjs/common';
+
+const logger = new Logger('ResourcePressure');
+
 // =============================================================================
 // RESOURCE PRESSURE TYPES
 // =============================================================================
@@ -829,8 +833,8 @@ export class ResourcePressureTestRunner {
 
     this.executions.set(test.id, execution);
 
-    console.log(`Starting resource pressure test: ${test.name}`);
-    console.log(`Expected behavior: ${test.expectedBehavior.description}`);
+    logger.log(`Starting resource pressure test: ${test.name}`);
+    logger.log(`Expected behavior: ${test.expectedBehavior.description}`);
 
     // Simulate test execution
     // In real implementation, this would apply actual resource pressure

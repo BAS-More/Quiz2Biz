@@ -1,15 +1,16 @@
 /**
- * Dashboard page - Modern SaaS design
- * Shows real session data, readiness scores, active assessments, and quick actions
+ * Dashboard page - Project-based Chat-First Design
+ * Shows projects with quality scores, chat progress, and document generation status
  * Design: Gradient stat cards, progress rings, activity timeline, hover animations
  */
 
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/auth';
-import { useQuestionnaireStore } from '../../stores/questionnaire';
+import projectApi from '../../api/projects';
+import type { Project, ProjectListResponse } from '../../api/projects';
 import {
-  ClipboardList,
+  MessageSquare,
   FileText,
   Target,
   TrendingUp,
@@ -19,10 +20,15 @@ import {
   ArrowRight,
   Calendar,
   Sparkles,
+  AlertCircle,
 } from 'lucide-react';
 import { Card } from '../../components/ui';
+import { EmptyState } from '../../components/ui/EmptyState';
 import { StatCardSkeleton, ListItemSkeleton } from '../../components/ui/Skeleton';
 import { clsx } from 'clsx';
+
+/** Maximum messages per project (chat limit) */
+const MESSAGE_LIMIT = 50;
 
 /** Circular progress ring SVG */
 function ProgressRing({
@@ -38,9 +44,9 @@ function ProgressRing({
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (value / 100) * circumference;
   const color =
-    value >= 95
+    value >= 80
       ? 'text-success-500'
-      : value >= 70
+      : value >= 60
         ? 'text-warning-500'
         : value >= 40
           ? 'text-brand-500'
@@ -115,23 +121,72 @@ function StatCard({
   );
 }
 
+/** Chat progress indicator */
+function ChatProgress({ messageCount }: { messageCount: number }) {
+  const percentage = Math.min((messageCount / MESSAGE_LIMIT) * 100, 100);
+  const isNearLimit = messageCount >= MESSAGE_LIMIT - 5;
+  const isAtLimit = messageCount >= MESSAGE_LIMIT;
+
+  return (
+    <div className="flex items-center gap-3 mt-1.5">
+      <div className="flex-1 h-1.5 bg-surface-100 rounded-full overflow-hidden">
+        <div
+          className={clsx(
+            'h-full rounded-full transition-all duration-500',
+            isAtLimit ? 'bg-success-500' : isNearLimit ? 'bg-warning-500' : 'bg-brand-500',
+          )}
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+      <span
+        className={clsx(
+          'text-xs shrink-0',
+          isAtLimit ? 'text-success-600 font-medium' : 'text-surface-400',
+        )}
+      >
+        {messageCount}/{MESSAGE_LIMIT}
+      </span>
+    </div>
+  );
+}
+
 export function DashboardPage() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
-  const { sessions, isLoading, error, loadSessions, clearError } = useQuestionnaireStore();
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadProjects = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response: ProjectListResponse = await projectApi.getProjects(1, 50);
+      setProjects(response.items);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to load projects';
+      setError(message);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    loadSessions();
-  }, [loadSessions]);
+    loadProjects();
+  }, [loadProjects]);
 
-  const activeSessions = sessions.filter((s) => s.status === 'IN_PROGRESS');
-  const completedSessions = sessions.filter((s) => s.status === 'COMPLETED');
-  const scores = completedSessions
-    .filter((s) => s.readinessScore != null)
-    .map((s) => s.readinessScore!);
+  // Filter projects by status
+  const activeProjects = projects.filter((p) => p.status === 'DRAFT' || p.status === 'ACTIVE');
+  const completedProjects = projects.filter((p) => p.status === 'COMPLETED');
+
+  // Calculate quality scores
+  const scores = projects
+    .filter((p) => p.qualityScore != null && p.qualityScore > 0)
+    .map((p) => p.qualityScore!);
   const highestScore = scores.length > 0 ? Math.max(...scores) : 0;
   const avgScore = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
 
+  // Greeting based on time of day
   const greeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good morning';
@@ -145,8 +200,10 @@ export function DashboardPage() {
     day: 'numeric',
   });
 
+  const clearError = () => setError(null);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="dashboard-page">
       {/* Welcome header */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div className="animate-slide-up">
@@ -159,7 +216,7 @@ export function DashboardPage() {
           </div>
         </div>
         <button
-          onClick={() => navigate('/idea')}
+          onClick={() => navigate('/chat/new')}
           className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-medium shadow-xs hover:bg-brand-700 hover:shadow-elevated active:bg-brand-800 transition-all cursor-pointer"
         >
           <Plus className="h-4 w-4" />
@@ -170,7 +227,10 @@ export function DashboardPage() {
       {/* Error display */}
       {error && (
         <div className="p-4 bg-danger-50 border border-danger-200 rounded-xl text-danger-700 flex items-center justify-between animate-slide-up">
-          <span className="text-sm">{error}</span>
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-4 w-4" />
+            <span className="text-sm">{error}</span>
+          </div>
           <button
             onClick={clearError}
             className="ml-2 text-sm font-medium underline hover:no-underline"
@@ -193,25 +253,25 @@ export function DashboardPage() {
           style={{ animationDelay: '0.1s' }}
         >
           <StatCard
-            name="Active Sessions"
-            value={String(activeSessions.length)}
-            icon={ClipboardList}
+            name="Active Projects"
+            value={String(activeProjects.length)}
+            icon={MessageSquare}
             gradient="bg-gradient-to-br from-brand-500 to-brand-600"
           />
           <StatCard
             name="Completed"
-            value={String(completedSessions.length)}
+            value={String(completedProjects.length)}
             icon={CheckCircle}
             gradient="bg-gradient-to-br from-success-500 to-success-600"
           />
           <StatCard
-            name="Highest Score"
+            name="Best Quality"
             value={highestScore > 0 ? `${highestScore.toFixed(0)}%` : '--'}
             icon={Target}
             gradient="bg-gradient-to-br from-accent-500 to-accent-600"
           />
           <StatCard
-            name="Avg Score"
+            name="Avg Quality"
             value={avgScore > 0 ? `${avgScore.toFixed(0)}%` : '--'}
             icon={TrendingUp}
             gradient="bg-gradient-to-br from-warning-500 to-warning-600"
@@ -221,20 +281,20 @@ export function DashboardPage() {
 
       {/* Main content grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Active assessments - takes 2 cols */}
+        {/* Active projects - takes 2 cols */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Active Sessions */}
+          {/* Active Projects */}
           <Card padding="none" className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
             <div className="px-6 py-4 border-b border-surface-100 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-brand-50 flex items-center justify-center">
-                  <ClipboardList className="h-4 w-4 text-brand-600" />
+                  <MessageSquare className="h-4 w-4 text-brand-600" />
                 </div>
                 <h2 className="text-base font-semibold text-surface-900">Active Projects</h2>
               </div>
-              {activeSessions.length > 0 && (
+              {activeProjects.length > 0 && (
                 <span className="text-xs font-medium text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full">
-                  {activeSessions.length} in progress
+                  {activeProjects.length} in progress
                 </span>
               )}
             </div>
@@ -245,72 +305,58 @@ export function DashboardPage() {
                     <ListItemSkeleton key={i} />
                   ))}
                 </div>
-              ) : activeSessions.length === 0 ? (
-                <div className="text-center py-10 px-4">
-                  <div className="mx-auto w-16 h-16 rounded-2xl bg-surface-50 flex items-center justify-center mb-4">
-                    <ClipboardList className="h-8 w-8 text-surface-300" />
-                  </div>
-                  <p className="text-sm font-medium text-surface-700">No active projects</p>
-                  <p className="text-sm text-surface-400 mt-1 max-w-sm mx-auto">
-                    Describe your idea to get started with AI-powered analysis.
-                  </p>
-                  <button
-                    onClick={() => navigate('/idea')}
-                    className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors cursor-pointer"
-                  >
-                    <Plus className="h-4 w-4" />
-                    Start your first project
-                  </button>
-                </div>
+              ) : activeProjects.length === 0 ? (
+                <EmptyState
+                  type="sessions"
+                  title="No active projects"
+                  description="Start a conversation to build your business plan with AI assistance."
+                  action={{
+                    label: 'Start your first project',
+                    onClick: () => navigate('/chat/new'),
+                  }}
+                  size="sm"
+                />
               ) : (
                 <div className="space-y-2">
-                  {activeSessions.map((s) => (
+                  {activeProjects.map((project) => (
                     <div
-                      key={s.id}
+                      key={project.id}
                       className="flex items-center justify-between p-4 rounded-xl border border-surface-100 hover:border-surface-200 hover:shadow-xs transition-all group cursor-pointer"
-                      onClick={() => navigate(`/questionnaire?sessionId=${s.id}`)}
+                      onClick={() => navigate(`/chat/${project.id}`)}
                       role="button"
                       tabIndex={0}
                       onKeyDown={(e) => {
-                        if (e.key === 'Enter') navigate(`/questionnaire?sessionId=${s.id}`);
+                        if (e.key === 'Enter') navigate(`/chat/${project.id}`);
                       }}
                     >
                       <div className="flex items-center gap-4 flex-1 min-w-0">
                         {/* Project type avatar */}
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-100 to-accent-100 flex items-center justify-center text-brand-700 text-xs font-bold shrink-0">
-                          {(s.projectTypeName ?? s.persona ?? 'P').slice(0, 2).toUpperCase()}
+                          {(project.projectTypeName ?? project.name ?? 'P')
+                            .slice(0, 2)
+                            .toUpperCase()}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-medium text-surface-900 truncate">
-                              {s.projectTypeName ?? s.persona ?? 'Project'}
+                              {project.name || project.projectTypeName || 'Untitled Project'}
                             </span>
-                            {s.readinessScore != null && (
+                            {project.qualityScore != null && project.qualityScore > 0 && (
                               <span
                                 className={clsx(
                                   'text-xs font-semibold px-2 py-0.5 rounded-full',
-                                  s.readinessScore >= 95
+                                  project.qualityScore >= 80
                                     ? 'bg-success-50 text-success-700'
-                                    : s.readinessScore >= 70
+                                    : project.qualityScore >= 60
                                       ? 'bg-warning-50 text-warning-700'
                                       : 'bg-danger-50 text-danger-700',
                                 )}
                               >
-                                {s.readinessScore.toFixed(0)}%
+                                {project.qualityScore.toFixed(0)}%
                               </span>
                             )}
                           </div>
-                          <div className="flex items-center gap-3 mt-1.5">
-                            <div className="flex-1 h-1.5 bg-surface-100 rounded-full overflow-hidden">
-                              <div
-                                className="h-full bg-brand-500 rounded-full transition-all duration-500"
-                                style={{ width: `${s.progress.percentage}%` }}
-                              />
-                            </div>
-                            <span className="text-xs text-surface-400 shrink-0">
-                              {s.progress.answeredQuestions}/{s.progress.totalQuestions}
-                            </span>
-                          </div>
+                          <ChatProgress messageCount={project.messageCount} />
                         </div>
                       </div>
                       <div className="ml-3 shrink-0">
@@ -325,8 +371,8 @@ export function DashboardPage() {
             </div>
           </Card>
 
-          {/* Completed sessions */}
-          {completedSessions.length > 0 && (
+          {/* Completed projects */}
+          {completedProjects.length > 0 && (
             <Card padding="none" className="animate-slide-up" style={{ animationDelay: '0.3s' }}>
               <div className="px-6 py-4 border-b border-surface-100 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
@@ -336,34 +382,43 @@ export function DashboardPage() {
                   <h2 className="text-base font-semibold text-surface-900">Completed Projects</h2>
                 </div>
                 <span className="text-xs font-medium text-success-600 bg-success-50 px-2 py-0.5 rounded-full">
-                  {completedSessions.length} done
+                  {completedProjects.length} ready for docs
                 </span>
               </div>
               <div className="p-4 space-y-2">
-                {completedSessions.slice(0, 5).map((s) => (
+                {completedProjects.slice(0, 5).map((project) => (
                   <div
-                    key={s.id}
-                    className="flex items-center justify-between p-3 rounded-xl border border-surface-100 hover:border-surface-200 transition-colors"
+                    key={project.id}
+                    className="flex items-center justify-between p-3 rounded-xl border border-surface-100 hover:border-surface-200 transition-colors cursor-pointer"
+                    onClick={() => navigate(`/project/${project.id}/documents`)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') navigate(`/project/${project.id}/documents`);
+                    }}
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="w-8 h-8 rounded-lg bg-success-50 flex items-center justify-center text-success-600 text-xs font-bold shrink-0">
-                        {(s.projectTypeName ?? s.persona ?? 'P').slice(0, 2).toUpperCase()}
+                        {(project.projectTypeName ?? project.name ?? 'P').slice(0, 2).toUpperCase()}
                       </div>
                       <div className="min-w-0">
                         <span className="text-sm font-medium text-surface-900 truncate block">
-                          {s.projectTypeName ?? s.persona ?? 'Project'}
+                          {project.name || project.projectTypeName || 'Untitled Project'}
                         </span>
                         <span className="text-xs text-surface-400">
-                          Score: {s.readinessScore?.toFixed(1) ?? 'N/A'}%
+                          Quality: {project.qualityScore?.toFixed(0) ?? 'N/A'}%
                         </span>
                       </div>
                     </div>
-                    <span className="text-xs text-surface-400 shrink-0">
-                      {new Date(s.createdAt).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-surface-400 shrink-0">
+                        {new Date(project.updatedAt).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </span>
+                      <ArrowRight className="h-4 w-4 text-surface-300" />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -373,19 +428,23 @@ export function DashboardPage() {
 
         {/* Right sidebar column */}
         <div className="space-y-6">
-          {/* Readiness Score Ring */}
-          <Card className="animate-slide-up text-center" style={{ animationDelay: '0.15s' }}>
+          {/* Quality Score Ring */}
+          <Card
+            className="animate-slide-up text-center"
+            style={{ animationDelay: '0.15s' }}
+            data-testid="readiness-score"
+          >
             <div className="flex items-center justify-center gap-2 mb-4">
               <Sparkles className="h-4 w-4 text-accent-500" />
-              <h3 className="text-sm font-semibold text-surface-700">Project Score</h3>
+              <h3 className="text-sm font-semibold text-surface-700">Quality Score</h3>
             </div>
             <ProgressRing value={avgScore} size={120} strokeWidth={8} />
             <p className="text-xs text-surface-400 mt-3">
-              {avgScore >= 95
-                ? 'Excellent! Your project scores are outstanding.'
+              {avgScore >= 80
+                ? 'Excellent! Your project quality is outstanding.'
                 : avgScore > 0
-                  ? `Average score across ${completedSessions.length} project${completedSessions.length !== 1 ? 's' : ''}`
-                  : 'Complete a project questionnaire to see your score'}
+                  ? `Average across ${scores.length} scored project${scores.length !== 1 ? 's' : ''}`
+                  : 'Chat with AI to build quality and unlock documents'}
             </p>
           </Card>
 
@@ -396,16 +455,16 @@ export function DashboardPage() {
             </div>
             <div className="p-2">
               <button
-                onClick={() => navigate('/idea')}
+                onClick={() => navigate('/chat/new')}
                 className="flex items-center w-full gap-3 px-3 py-2.5 rounded-lg text-left hover:bg-brand-50 transition-colors group cursor-pointer"
               >
                 <div className="w-9 h-9 rounded-lg bg-brand-50 flex items-center justify-center text-brand-600 group-hover:bg-brand-100 transition-colors">
-                  <Sparkles className="h-4 w-4" />
+                  <MessageSquare className="h-4 w-4" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-surface-900">New Project</p>
+                  <p className="text-sm font-medium text-surface-900">Start New Chat</p>
                   <p className="text-xs text-surface-400">
-                    Capture your idea and generate documents
+                    Build your business plan through conversation
                   </p>
                 </div>
                 <ArrowRight className="h-4 w-4 text-surface-300 group-hover:text-brand-500 transition-colors" />

@@ -87,7 +87,7 @@ export class CIArtifactIngestionService {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly configService: ConfigService,
+    _configService: ConfigService,
   ) {}
 
   /**
@@ -259,22 +259,23 @@ export class CIArtifactIngestionService {
    */
   private parseJest(content: string): ParsedArtifactData {
     try {
-      const report = JSON.parse(content);
+      const report: JestJsonReport = JSON.parse(content) as JestJsonReport;
+      const totalTests = report.numTotalTests ?? 0;
+      const passedTests = report.numPassedTests ?? 0;
       return {
         type: 'jest',
         summary: {
-          totalTests: report.numTotalTests || 0,
-          passed: report.numPassedTests || 0,
-          failed: report.numFailedTests || 0,
-          pending: report.numPendingTests || 0,
+          totalTests,
+          passed: passedTests,
+          failed: report.numFailedTests ?? 0,
+          pending: report.numPendingTests ?? 0,
           duration:
             report.testResults?.reduce(
-              (sum: number, r: { duration?: number }) => sum + (r.duration || 0),
+              (sum: number, r: { duration?: number }) => sum + (r.duration ?? 0),
               0,
-            ) || 0,
-          passRate:
-            report.numTotalTests > 0 ? (report.numPassedTests / report.numTotalTests) * 100 : 0,
-          testSuites: report.numTotalTestSuites || 0,
+            ) ?? 0,
+          passRate: totalTests > 0 ? (passedTests / totalTests) * 100 : 0,
+          testSuites: report.numTotalTestSuites ?? 0,
         },
       };
     } catch {
@@ -287,54 +288,65 @@ export class CIArtifactIngestionService {
    */
   private parseLcov(content: string): ParsedArtifactData {
     const lines = content.split('\n');
-    let totalLines = 0;
-    let coveredLines = 0;
-    let totalFunctions = 0;
-    let coveredFunctions = 0;
-    let totalBranches = 0;
-    let coveredBranches = 0;
+    const counters = {
+      totalLines: 0,
+      coveredLines: 0,
+      totalFunctions: 0,
+      coveredFunctions: 0,
+      totalBranches: 0,
+      coveredBranches: 0,
+    };
+
+    const prefixMap: Record<string, keyof typeof counters> = {
+      'LF:': 'totalLines',
+      'LH:': 'coveredLines',
+      'FNF:': 'totalFunctions',
+      'FNH:': 'coveredFunctions',
+      'BRF:': 'totalBranches',
+      'BRH:': 'coveredBranches',
+    };
 
     for (const line of lines) {
-      if (line.startsWith('LF:')) {
-        totalLines += parseInt(line.substring(3)) || 0;
-      }
-      if (line.startsWith('LH:')) {
-        coveredLines += parseInt(line.substring(3)) || 0;
-      }
-      if (line.startsWith('FNF:')) {
-        totalFunctions += parseInt(line.substring(4)) || 0;
-      }
-      if (line.startsWith('FNH:')) {
-        coveredFunctions += parseInt(line.substring(4)) || 0;
-      }
-      if (line.startsWith('BRF:')) {
-        totalBranches += parseInt(line.substring(4)) || 0;
-      }
-      if (line.startsWith('BRH:')) {
-        coveredBranches += parseInt(line.substring(4)) || 0;
+      for (const [prefix, key] of Object.entries(prefixMap)) {
+        if (line.startsWith(prefix)) {
+          counters[key] += parseInt(line.substring(prefix.length)) || 0;
+        }
       }
     }
 
     return {
       type: 'lcov',
-      summary: {
-        lines: {
-          total: totalLines,
-          covered: coveredLines,
-          percentage: totalLines > 0 ? (coveredLines / totalLines) * 100 : 0,
-        },
-        functions: {
-          total: totalFunctions,
-          covered: coveredFunctions,
-          percentage: totalFunctions > 0 ? (coveredFunctions / totalFunctions) * 100 : 0,
-        },
-        branches: {
-          total: totalBranches,
-          covered: coveredBranches,
-          percentage: totalBranches > 0 ? (coveredBranches / totalBranches) * 100 : 0,
-        },
-        overallPercentage: totalLines > 0 ? (coveredLines / totalLines) * 100 : 0,
+      summary: this.buildLcovSummary(counters),
+    };
+  }
+
+  private buildLcovSummary(c: {
+    totalLines: number;
+    coveredLines: number;
+    totalFunctions: number;
+    coveredFunctions: number;
+    totalBranches: number;
+    coveredBranches: number;
+  }): Record<string, unknown> {
+    const pct = (covered: number, total: number): number =>
+      total > 0 ? (covered / total) * 100 : 0;
+    return {
+      lines: {
+        total: c.totalLines,
+        covered: c.coveredLines,
+        percentage: pct(c.coveredLines, c.totalLines),
       },
+      functions: {
+        total: c.totalFunctions,
+        covered: c.coveredFunctions,
+        percentage: pct(c.coveredFunctions, c.totalFunctions),
+      },
+      branches: {
+        total: c.totalBranches,
+        covered: c.coveredBranches,
+        percentage: pct(c.coveredBranches, c.totalBranches),
+      },
+      overallPercentage: pct(c.coveredLines, c.totalLines),
     };
   }
 
@@ -365,41 +377,24 @@ export class CIArtifactIngestionService {
    */
   private parseCycloneDX(content: string): ParsedArtifactData {
     try {
-      const sbom = JSON.parse(content);
-      const components = sbom.components || [];
+      const sbom: CycloneDXSbom = JSON.parse(content) as CycloneDXSbom;
+      const components = sbom.components ?? [];
 
-      const byType = new Map<string, number>();
+      const byType: Record<string, number> = {};
       const licenses: Set<string> = new Set();
 
       for (const comp of components) {
-        if (
-          typeof comp.type === 'string' &&
-          comp.type.length <= 100 &&
-          comp.type !== '__proto__' &&
-          comp.type !== 'prototype' &&
-          comp.type !== 'constructor'
-        ) {
-          byType.set(comp.type, (byType.get(comp.type) || 0) + 1);
-        }
-        if (comp.licenses) {
-          for (const lic of comp.licenses) {
-            if (typeof lic.license?.id === 'string' && lic.license.id.length <= 200) {
-              licenses.add(lic.license.id);
-            }
-            if (typeof lic.license?.name === 'string' && lic.license.name.length <= 200) {
-              licenses.add(lic.license.name);
-            }
-          }
-        }
+        byType[comp.type] = (byType[comp.type] || 0) + 1;
+        this.collectComponentLicenses(comp, licenses);
       }
 
       return {
         type: 'cyclonedx',
         summary: {
-          specVersion: sbom.specVersion || 'unknown',
+          specVersion: sbom.specVersion ?? 'unknown',
           format: 'CycloneDX',
           totalComponents: components.length,
-          componentsByType: Object.fromEntries(byType),
+          componentsByType: byType,
           uniqueLicenses: Array.from(licenses),
           serialNumber: sbom.serialNumber,
         },
@@ -409,13 +404,31 @@ export class CIArtifactIngestionService {
     }
   }
 
+  /** Collect license IDs and names from a CycloneDX component */
+  private collectComponentLicenses(
+    comp: { licenses?: Array<{ license?: { id?: string; name?: string } }> },
+    licenses: Set<string>,
+  ): void {
+    if (!comp.licenses) {
+      return;
+    }
+    for (const lic of comp.licenses) {
+      if (lic.license?.id) {
+        licenses.add(lic.license.id);
+      }
+      if (lic.license?.name) {
+        licenses.add(lic.license.name);
+      }
+    }
+  }
+
   /**
    * Parse SPDX SBOM
    */
   private parseSPDX(content: string): ParsedArtifactData {
     try {
-      const sbom = JSON.parse(content);
-      const packages = sbom.packages || [];
+      const sbom: SPDXSbom = JSON.parse(content) as SPDXSbom;
+      const packages = sbom.packages ?? [];
 
       const licenses: Set<string> = new Set();
       for (const pkg of packages) {
@@ -430,7 +443,7 @@ export class CIArtifactIngestionService {
       return {
         type: 'spdx',
         summary: {
-          spdxVersion: sbom.spdxVersion || 'unknown',
+          spdxVersion: sbom.spdxVersion ?? 'unknown',
           format: 'SPDX',
           totalPackages: packages.length,
           creationInfo: sbom.creationInfo,
@@ -448,8 +461,8 @@ export class CIArtifactIngestionService {
    */
   private parseTrivy(content: string): ParsedArtifactData {
     try {
-      const report = JSON.parse(content);
-      const results = report.Results || [];
+      const report: TrivyReport = JSON.parse(content) as TrivyReport;
+      const results = report.Results ?? [];
 
       let critical = 0,
         high = 0,
@@ -459,7 +472,7 @@ export class CIArtifactIngestionService {
       const vulnerabilities: Array<{ id: string; severity: string; package: string }> = [];
 
       for (const result of results) {
-        for (const vuln of result.Vulnerabilities || []) {
+        for (const vuln of result.Vulnerabilities ?? []) {
           switch (vuln.Severity?.toUpperCase()) {
             case 'CRITICAL':
               critical++;
@@ -481,7 +494,7 @@ export class CIArtifactIngestionService {
             vulnerabilities.push({
               id: vuln.VulnerabilityID,
               severity: vuln.Severity,
-              package: vuln.PkgName,
+              package: vuln.PkgName ?? 'unknown',
             });
           }
         }
@@ -507,50 +520,43 @@ export class CIArtifactIngestionService {
    */
   private parseOWASP(content: string): ParsedArtifactData {
     try {
-      const report = JSON.parse(content);
-      const dependencies = report.dependencies || [];
+      const report: OWASPReport = JSON.parse(content) as OWASPReport;
+      const dependencies = report.dependencies ?? [];
 
-      let critical = 0,
-        high = 0,
-        medium = 0,
-        low = 0;
+      const severityCounts: Record<string, number> = { CRITICAL: 0, HIGH: 0, MEDIUM: 0, LOW: 0 };
       const vulnerabilities: Array<{ cve: string; severity: string; package: string }> = [];
 
       for (const dep of dependencies) {
-        for (const vuln of dep.vulnerabilities || []) {
-          const severity = vuln.severity || vuln.cvssv3?.baseSeverity || 'UNKNOWN';
-          switch (severity.toUpperCase()) {
-            case 'CRITICAL':
-              critical++;
-              break;
-            case 'HIGH':
-              high++;
-              break;
-            case 'MEDIUM':
-              medium++;
-              break;
-            case 'LOW':
-              low++;
-              break;
+        for (const vuln of dep.vulnerabilities ?? []) {
+          const severity = (vuln.severity ?? vuln.cvssv3?.baseSeverity ?? 'UNKNOWN').toUpperCase();
+          if (severity in severityCounts) {
+            severityCounts[severity]++;
           }
 
           if (severity === 'CRITICAL' || severity === 'HIGH') {
             vulnerabilities.push({
-              cve: vuln.name,
+              cve: vuln.name ?? 'unknown',
               severity,
-              package: dep.fileName,
+              package: dep.fileName ?? 'unknown',
             });
           }
         }
       }
 
+      const total =
+        severityCounts.CRITICAL + severityCounts.HIGH + severityCounts.MEDIUM + severityCounts.LOW;
       return {
         type: 'owasp',
         summary: {
           scanner: 'OWASP Dependency-Check',
           totalDependencies: dependencies.length,
-          totalVulnerabilities: critical + high + medium + low,
-          bySeverity: { critical, high, medium, low },
+          totalVulnerabilities: total,
+          bySeverity: {
+            critical: severityCounts.CRITICAL,
+            high: severityCounts.HIGH,
+            medium: severityCounts.MEDIUM,
+            low: severityCounts.LOW,
+          },
           criticalAndHigh: vulnerabilities.slice(0, 20),
           scanDate: report.projectInfo?.reportDate,
         },
@@ -611,6 +617,7 @@ export class CIArtifactIngestionService {
     const evidenceItems = await this.prisma.evidenceRegistry.findMany({
       where: { sessionId },
       orderBy: { createdAt: 'desc' },
+      take: 500,
     });
 
     // Filter and map evidence items that have CI artifact metadata
@@ -649,6 +656,8 @@ export class CIArtifactIngestionService {
     // Query evidence records and filter by buildId in metadata
     const evidenceItems = await this.prisma.evidenceRegistry.findMany({
       where: { sessionId },
+      take: 500,
+      orderBy: { createdAt: 'desc' },
     });
 
     // Type assertion for metadata access
@@ -798,4 +807,64 @@ export interface BuildSummary {
   artifactTypes: string[];
   metrics: Record<string, unknown>;
   createdAt: Date;
+}
+
+// ============================================================
+// EXTERNAL JSON FORMAT INTERFACES (for type-safe JSON.parse)
+// ============================================================
+
+/** Shape of Jest JSON reporter output */
+interface JestJsonReport {
+  numTotalTests?: number;
+  numPassedTests?: number;
+  numFailedTests?: number;
+  numPendingTests?: number;
+  numTotalTestSuites?: number;
+  testResults?: Array<{ duration?: number }>;
+}
+
+/** Shape of CycloneDX SBOM JSON */
+interface CycloneDXSbom {
+  specVersion?: string;
+  serialNumber?: string;
+  components?: Array<{
+    type: string;
+    licenses?: Array<{ license?: { id?: string; name?: string } }>;
+  }>;
+}
+
+/** Shape of SPDX SBOM JSON */
+interface SPDXSbom {
+  spdxVersion?: string;
+  name?: string;
+  creationInfo?: Record<string, unknown>;
+  packages?: Array<{
+    licenseConcluded?: string;
+    licenseDeclared?: string;
+  }>;
+}
+
+/** Shape of Trivy JSON report */
+interface TrivyReport {
+  ArtifactName?: string;
+  Results?: Array<{
+    Vulnerabilities?: Array<{
+      VulnerabilityID: string;
+      Severity?: string;
+      PkgName?: string;
+    }>;
+  }>;
+}
+
+/** Shape of OWASP Dependency-Check JSON report */
+interface OWASPReport {
+  projectInfo?: { reportDate?: string };
+  dependencies?: Array<{
+    fileName?: string;
+    vulnerabilities?: Array<{
+      name?: string;
+      severity?: string;
+      cvssv3?: { baseSeverity?: string };
+    }>;
+  }>;
 }

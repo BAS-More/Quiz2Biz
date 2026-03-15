@@ -1,0 +1,265 @@
+/**
+ * Quiz2Biz Dark Theme CSS
+ * Defines dark mode color variables and applies them via the .dark class
+ */
+
+/* Dark mode variables - applied when .dark class is on html or body */
+.dark {
+    /* Surface colors (inverted for dark mode) */
+    --color-surface-50: #1c1917;
+    --color-surface-100: #292524;
+    --color-surface-200: #44403c;
+    --color-surface-300: #57534e;
+    --color-surface-400: #78716c;
+    --color-surface-500: #a8a29e;
+    --color-surface-600: #d6d3d1;
+    --color-surface-700: #e7e5e4;
+    --color-surface-800: #f5f5f4;
+    --color-surface-900: #fafafa;
+
+    /* Adjusted brand colors for better contrast on dark backgrounds */
+    --color-brand-50: #312e81;
+    --color-brand-100: #3730a3;
+    --color-brand-200: #4338ca;
+    --color-brand-300: #4f46e5;
+    --color-brand-400: #6366f1;
+    --color-brand-500: #818cf8;
+    --color-brand-600: #a5b4fc;
+    --color-brand-700: #c7d2fe;
+    --color-brand-800: #e0e7ff;
+    --color-brand-900: #eef2ff;
+
+    /* Adjusted accent colors */
+    --color-accent-50: #581c87;
+    --color-accent-100: #6b21a8;
+    --color-accent-200: #7e22ce;
+    --color-accent-300: #9333ea;
+    --color-accent-400: #a855f7;
+    --color-accent-500: #c084fc;
+    --color-accent-600: #d8b4fe;
+    --color-accent-700: #e9d5ff;
+
+    /* Adjusted status colors for dark backgrounds */
+    --color-success-50: #052e16;
+    --color-success-100: #065f46;
+    --color-success-500: #22c55e;
+    --color-success-600: #4ade80;
+    --color-success-700: #86efac;
+
+    --color-warning-50: #451a03;
+    --color-warning-100: #78350f;
+    --color-warning-500: #f59e0b;
+    --color-warning-600: #fbbf24;
+
+    --color-danger-50: #450a0a;
+    --color-danger-100: #7f1d1d;
+    --color-danger-500: #f87171;
+    --color-danger-600: #fca5a5;
+
+    /* Adjusted shadows for dark mode (lighter shadows) */
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.15);
+    --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.25), 0 1px 2px -1px rgb(0 0 0 / 0.2);
+    --shadow-elevated: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.25);
+    --shadow-float: 0 10px 15px -3px rgb(0 0 0 / 0.35), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+    --shadow-overlay: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.35);
+}
+
+/* Dark mode base styles */
+.dark body,
+body.dark {
+    background-color: var(--color-surface-50);
+    color: var(--color-surface-900);
+}
+
+/* Focus ring for dark mode */
+.dark *:focus-visible {
+    outline-color: var(--color-brand-500);
+}
+
+/* Dark mode specific component overrides */
+.dark .bg-white {
+    background-color: #27272a;
+}
+
+.dark .bg-gray-50 {
+    background-color: #18181b;
+}
+
+.dark .bg-gray-100 {
+    background-color: #1f1f23;
+}
+
+.dark .text-gray-900 {
+    color: #fafafa;
+}
+
+.dark .text-gray-800 {
+    color: #f4f4f5;
+}
+
+.dark .text-gray-700 {
+    color: #e4e4e7;
+}
+
+.dark .text-gray-600 {
+    color: #d4d4d8;
+}
+
+.dark .text-gray-500 {
+    color: #a1a1aa;
+}
+
+.dark .text-gray-400 {
+    color: #71717a;
+}
+
+.dark .border-gray-200 {
+    border-color: #3f3f46;
+}
+
+.dark .border-gray-300 {
+    border-color: #52525b;
+}
+
+.dark .divide-gray-200> :not([hidden])~ :not([hidden]) {
+    border-color: #3f3f46;
+}
+
+/* Card-like components in dark mode */
+.dark .shadow {
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.25);
+}
+
+.dark .shadow-lg {
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.35), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+}
+
+/* Input fields in dark mode */
+.dark input,
+.dark textarea,
+.dark select {
+    background-color: #27272a;
+    border-color: #3f3f46;
+    color: #fafafa;
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+    border-color: var(--color-brand-500);
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+    color: #71717a;
+}
+
+/* Buttons in dark mode */
+.dark .bg-blue-600 {
+    background-color: #4f46e5;
+}
+
+.dark .bg-blue-600:hover {
+    background-color: #4338ca;
+}
+
+.dark .bg-green-600 {
+    background-color: #059669;
+}
+
+.dark .bg-red-600 {
+    background-color: #dc2626;
+}
+
+/* Hover states in dark mode */
+.dark .hover\:bg-gray-50:hover {
+    background-color: #27272a;
+}
+
+.dark .hover\:bg-gray-100:hover {
+    background-color: #3f3f46;
+}
+
+/* Status backgrounds in dark mode */
+.dark .bg-blue-50 {
+    background-color: rgba(79, 70, 229, 0.15);
+}
+
+.dark .bg-green-50 {
+    background-color: rgba(5, 150, 105, 0.15);
+}
+
+.dark .bg-yellow-50 {
+    background-color: rgba(245, 158, 11, 0.15);
+}
+
+.dark .bg-red-50 {
+    background-color: rgba(220, 38, 38, 0.15);
+}
+
+.dark .bg-amber-50 {
+    background-color: rgba(217, 119, 6, 0.15);
+}
+
+/* Border colors in status states */
+.dark .border-blue-200 {
+    border-color: rgba(79, 70, 229, 0.3);
+}
+
+.dark .border-green-200 {
+    border-color: rgba(5, 150, 105, 0.3);
+}
+
+.dark .border-yellow-200 {
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.dark .border-red-200 {
+    border-color: rgba(220, 38, 38, 0.3);
+}
+
+/* Ring colors in dark mode */
+.dark .ring-gray-200 {
+    --tw-ring-color: #3f3f46;
+}
+
+/* Table styles in dark mode */
+.dark thead {
+    background-color: #1f1f23;
+}
+
+.dark tbody tr:nth-child(even) {
+    background-color: #1c1917;
+}
+
+.dark tbody tr:hover {
+    background-color: #27272a;
+}
+
+/* Scrollbar styles for dark mode */
+.dark ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+    background: #18181b;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #3f3f46;
+    border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #52525b;
+}
+
+/* Transition for smooth theme switching */
+html {
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+html.dark {
+    color-scheme: dark;
+}

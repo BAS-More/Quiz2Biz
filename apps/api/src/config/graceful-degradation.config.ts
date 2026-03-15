@@ -9,6 +9,10 @@
  * - Rate Limiting
  */
 
+import { Logger } from '@nestjs/common';
+
+const logger = new Logger('GracefulDegradation');
+
 // =============================================================================
 // CIRCUIT BREAKER IMPLEMENTATION
 // =============================================================================
@@ -279,7 +283,7 @@ export class FallbackHandler {
 
   private async queueForRetry(config: FallbackConfig): Promise<FallbackResult> {
     // In real implementation, this would add to a message queue
-    console.log(`Queuing request to ${config.queueName} for retry`);
+    logger.log(`Queuing request to ${config.queueName} for retry`);
     return {
       success: true,
       source: 'queue',
@@ -307,7 +311,7 @@ export class FallbackHandler {
 
   private async localCache(config: FallbackConfig): Promise<FallbackResult> {
     // In real implementation, this would read from local filesystem
-    console.log(`Reading from local cache at ${config.localPath}`);
+    logger.log(`Reading from local cache at ${config.localPath}`);
     return {
       success: false,
       source: 'local',
@@ -459,20 +463,20 @@ export class RetryExecutor {
 
         // Check if error is non-retryable
         if (config.nonRetryableErrors.includes(errorCode)) {
-          console.log(`[Retry] ${context}: Non-retryable error ${errorCode}, aborting`);
+          logger.warn(`[Retry] ${context}: Non-retryable error ${errorCode}, aborting`);
           break;
         }
 
         // Check if error is retryable
         if (!config.retryableErrors.includes(errorCode)) {
-          console.log(`[Retry] ${context}: Unknown error ${errorCode}, aborting`);
+          logger.warn(`[Retry] ${context}: Unknown error ${errorCode}, aborting`);
           break;
         }
 
         if (attempt <= config.maxRetries) {
           const delay = this.calculateDelay(attempt, config);
           totalDelayMs += delay;
-          console.log(
+          logger.log(
             `[Retry] ${context}: Attempt ${attempt} failed with ${errorCode}, ` +
               `retrying in ${delay}ms (${config.maxRetries - attempt} retries left)`,
           );
@@ -827,8 +831,8 @@ export class GracefulDegradationService {
     if (level >= 0 && level < this.degradationLevels.length) {
       const previousLevel = this.currentLevel;
       this.currentLevel = level;
-      console.log(
-        `[GracefulDegradation] Level changed from ${previousLevel} (${this.degradationLevels[previousLevel].name}) ` +
+      logger.warn(
+        `Level changed from ${previousLevel} (${this.degradationLevels[previousLevel].name}) ` +
           `to ${level} (${this.degradationLevels[level].name})`,
       );
     }

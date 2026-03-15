@@ -437,6 +437,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
     return () => {
       recognitionRef.current?.stop();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enableVoice, processVoiceCommand]);
 
   // Register default commands
@@ -533,6 +534,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
     } else {
       document.body.classList.remove('highlight-links');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.cognitive]);
 
   // Voice Navigation functions
@@ -546,7 +548,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
         console.error('[Accessibility] Failed to start recognition:', error);
       }
     }
-  }, [state.voice.isSupported]);
+  }, [state.voice.isSupported, speak]);
 
   const stopListening = useCallback(() => {
     if (recognitionRef.current) {
@@ -554,7 +556,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
       dispatch({ type: 'STOP_LISTENING' });
       speak('Voice navigation deactivated');
     }
-  }, []);
+  }, [speak]);
 
   const cancelSpeech = useCallback(() => {
     synthRef.current?.cancel();
@@ -689,17 +691,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({
         role="status"
         aria-live="polite"
         aria-atomic="true"
-        style={{
-          position: 'absolute',
-          width: '1px',
-          height: '1px',
-          padding: 0,
-          margin: '-1px',
-          overflow: 'hidden',
-          clip: 'rect(0, 0, 0, 0)',
-          whiteSpace: 'nowrap',
-          border: 0,
-        }}
+        className="sr-only"
       />
     </AccessibilityContext.Provider>
   );
@@ -722,104 +714,22 @@ export const useAccessibility = (): AccessibilityContextType => {
 // =============================================================================
 
 const styles = {
-  panel: {
-    backgroundColor: '#ffffff',
-    borderRadius: '12px',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-    padding: '24px',
-  } as React.CSSProperties,
-  title: {
-    fontSize: '18px',
-    fontWeight: 600,
-    color: '#1a1a2e',
-    marginBottom: '20px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-  } as React.CSSProperties,
-  section: {
-    marginBottom: '24px',
-  } as React.CSSProperties,
-  sectionTitle: {
-    fontSize: '14px',
-    fontWeight: 600,
-    color: '#6b7280',
-    marginBottom: '12px',
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.05em',
-  } as React.CSSProperties,
-  option: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '12px 0',
-    borderBottom: '1px solid #e5e7eb',
-  } as React.CSSProperties,
-  optionLabel: {
-    fontSize: '14px',
-    color: '#374151',
-  } as React.CSSProperties,
-  slider: {
-    width: '120px',
-    height: '6px',
-    borderRadius: '3px',
-    appearance: 'none' as const,
-    backgroundColor: '#e5e7eb',
-    cursor: 'pointer',
-  } as React.CSSProperties,
-  select: {
-    padding: '8px 12px',
-    borderRadius: '8px',
-    border: '1px solid #d1d5db',
-    fontSize: '14px',
-    backgroundColor: '#ffffff',
-    cursor: 'pointer',
-  } as React.CSSProperties,
-  toggle: {
-    width: '44px',
-    height: '24px',
-    borderRadius: '12px',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s ease',
-    position: 'relative' as const,
-    border: 'none',
-  } as React.CSSProperties,
-  toggleKnob: {
-    width: '20px',
-    height: '20px',
-    borderRadius: '50%',
-    backgroundColor: '#ffffff',
-    position: 'absolute' as const,
-    top: '2px',
-    transition: 'left 0.2s ease',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
-  } as React.CSSProperties,
-  voiceButton: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '12px 24px',
-    borderRadius: '8px',
-    border: 'none',
-    fontSize: '14px',
-    fontWeight: 500,
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-  } as React.CSSProperties,
-  commandList: {
-    maxHeight: '200px',
-    overflow: 'auto',
-    padding: '8px 0',
-  } as React.CSSProperties,
-  commandItem: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '8px 12px',
-    backgroundColor: '#f3f4f6',
-    borderRadius: '6px',
-    marginBottom: '4px',
-    fontSize: '13px',
-  } as React.CSSProperties,
+  panel: 'bg-surface-50 rounded-xl shadow-card p-6',
+  title: 'text-lg font-semibold text-surface-900 mb-5 flex items-center gap-2',
+  section: 'mb-6',
+  sectionTitle: 'text-sm font-semibold text-surface-500 mb-3 uppercase tracking-wide',
+  option: 'flex justify-between items-center py-3 border-b border-surface-200',
+  optionLabel: 'text-sm text-surface-700',
+  slider: 'w-[120px] h-1.5 rounded-full appearance-none bg-surface-200 cursor-pointer',
+  select: 'px-3 py-2 rounded-lg border border-surface-300 text-sm bg-surface-50 cursor-pointer',
+  toggle:
+    'w-11 h-6 rounded-full cursor-pointer transition-colors duration-200 relative border-none',
+  toggleKnob:
+    'w-5 h-5 rounded-full bg-white absolute top-0.5 transition-[left] duration-200 shadow-sm',
+  voiceButton:
+    'flex items-center gap-2 px-6 py-3 rounded-lg border-none text-sm font-medium cursor-pointer transition-all duration-200',
+  commandList: 'max-h-[200px] overflow-auto py-2',
+  commandItem: 'flex justify-between px-3 py-2 bg-surface-100 rounded-md mb-1 text-[13px]',
 };
 
 // Toggle Component
@@ -830,23 +740,15 @@ interface ToggleProps {
 }
 
 const Toggle: React.FC<ToggleProps> = ({ checked, onChange, label }) => (
-  <div style={styles.option}>
-    <span style={styles.optionLabel}>{label}</span>
+  <div className={styles.option}>
+    <span className={styles.optionLabel}>{label}</span>
     <button
-      style={{
-        ...styles.toggle,
-        backgroundColor: checked ? '#3b82f6' : '#d1d5db',
-      }}
+      className={`${styles.toggle} ${checked ? 'bg-brand-500' : 'bg-surface-300'}`}
       onClick={() => onChange(!checked)}
       role="switch"
       aria-checked={checked}
     >
-      <div
-        style={{
-          ...styles.toggleKnob,
-          left: checked ? '22px' : '2px',
-        }}
-      />
+      <div className={styles.toggleKnob} style={{ left: checked ? '22px' : '2px' }} />
     </button>
   </div>
 );
@@ -864,24 +766,20 @@ export const AccessibilitySettingsPanel: React.FC = () => {
   } = useAccessibility();
 
   return (
-    <div style={styles.panel}>
-      <h2 style={styles.title}>
+    <div className={styles.panel}>
+      <h2 className={styles.title}>
         <span>♿</span>
         Accessibility Settings
       </h2>
 
       {/* Voice Navigation */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Voice Navigation</h3>
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>Voice Navigation</h3>
 
         {voice.isSupported ? (
           <>
             <button
-              style={{
-                ...styles.voiceButton,
-                backgroundColor: voice.isListening ? '#ef4444' : '#3b82f6',
-                color: '#ffffff',
-              }}
+              className={`${styles.voiceButton} ${voice.isListening ? 'bg-danger-500' : 'bg-brand-500'} text-white`}
               onClick={voice.isListening ? stopListening : startListening}
             >
               <span>{voice.isListening ? '🔴' : '🎤'}</span>
@@ -889,40 +787,36 @@ export const AccessibilitySettingsPanel: React.FC = () => {
             </button>
 
             {voice.isListening && voice.transcript && (
-              <p style={{ marginTop: '12px', fontSize: '14px', color: '#6b7280' }}>
-                Heard: "{voice.transcript}"
-              </p>
+              <p className="mt-3 text-sm text-surface-500">Heard: "{voice.transcript}"</p>
             )}
 
-            <div style={{ marginTop: '16px' }}>
-              <p style={{ fontSize: '13px', color: '#6b7280', marginBottom: '8px' }}>
-                Available Commands:
-              </p>
-              <div style={styles.commandList}>
+            <div className="mt-4">
+              <p className="text-[13px] text-surface-500 mb-2">Available Commands:</p>
+              <div className={styles.commandList}>
                 {voiceCommands.map((cmd) => (
-                  <div key={cmd.command} style={styles.commandItem}>
+                  <div key={cmd.command} className={styles.commandItem}>
                     <span>"{cmd.command}"</span>
-                    <span style={{ color: '#6b7280' }}>{cmd.description}</span>
+                    <span className="text-surface-500">{cmd.description}</span>
                   </div>
                 ))}
               </div>
             </div>
           </>
         ) : (
-          <p style={{ color: '#ef4444', fontSize: '14px' }}>
+          <p className="text-danger-500 text-sm">
             Voice navigation is not supported in your browser.
           </p>
         )}
       </div>
 
       {/* Typography */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Typography</h3>
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>Typography</h3>
 
-        <div style={styles.option}>
-          <span style={styles.optionLabel}>Font Family</span>
+        <div className={styles.option}>
+          <span className={styles.optionLabel}>Font Family</span>
           <select
-            style={styles.select}
+            className={styles.select}
             value={cognitive.fontFamily}
             onChange={(e) => updateCognitiveSettings({ fontFamily: e.target.value as FontFamily })}
           >
@@ -933,20 +827,22 @@ export const AccessibilitySettingsPanel: React.FC = () => {
           </select>
         </div>
 
-        <div style={styles.option}>
-          <span style={styles.optionLabel}>Font Size ({cognitive.fontSize}%)</span>
+        <div className={styles.option}>
+          <span className={styles.optionLabel}>Font Size ({cognitive.fontSize}%)</span>
           <input
             type="range"
             min="75"
             max="200"
             value={cognitive.fontSize}
             onChange={(e) => updateCognitiveSettings({ fontSize: Number(e.target.value) })}
-            style={styles.slider}
+            className={styles.slider}
           />
         </div>
 
-        <div style={styles.option}>
-          <span style={styles.optionLabel}>Line Height ({cognitive.lineHeight.toFixed(1)})</span>
+        <div className={styles.option}>
+          <span className={styles.optionLabel}>
+            Line Height ({cognitive.lineHeight.toFixed(1)})
+          </span>
           <input
             type="range"
             min="1"
@@ -954,12 +850,12 @@ export const AccessibilitySettingsPanel: React.FC = () => {
             step="0.1"
             value={cognitive.lineHeight}
             onChange={(e) => updateCognitiveSettings({ lineHeight: Number(e.target.value) })}
-            style={styles.slider}
+            className={styles.slider}
           />
         </div>
 
-        <div style={styles.option}>
-          <span style={styles.optionLabel}>
+        <div className={styles.option}>
+          <span className={styles.optionLabel}>
             Letter Spacing ({cognitive.letterSpacing.toFixed(2)}em)
           </span>
           <input
@@ -969,19 +865,19 @@ export const AccessibilitySettingsPanel: React.FC = () => {
             step="0.01"
             value={cognitive.letterSpacing}
             onChange={(e) => updateCognitiveSettings({ letterSpacing: Number(e.target.value) })}
-            style={styles.slider}
+            className={styles.slider}
           />
         </div>
       </div>
 
       {/* Display */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Display</h3>
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>Display</h3>
 
-        <div style={styles.option}>
-          <span style={styles.optionLabel}>Contrast Mode</span>
+        <div className={styles.option}>
+          <span className={styles.optionLabel}>Contrast Mode</span>
           <select
-            style={styles.select}
+            className={styles.select}
             value={cognitive.contrastMode}
             onChange={(e) =>
               updateCognitiveSettings({ contrastMode: e.target.value as ContrastMode })
@@ -1013,8 +909,8 @@ export const AccessibilitySettingsPanel: React.FC = () => {
       </div>
 
       {/* Reading Aids */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Reading Aids</h3>
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>Reading Aids</h3>
 
         <Toggle
           label="Reading Ruler"
@@ -1044,16 +940,7 @@ export const AccessibilitySettingsPanel: React.FC = () => {
       {/* Reset Button */}
       <button
         onClick={resetCognitiveSettings}
-        style={{
-          padding: '12px 24px',
-          backgroundColor: '#f3f4f6',
-          color: '#374151',
-          border: 'none',
-          borderRadius: '8px',
-          fontSize: '14px',
-          cursor: 'pointer',
-          width: '100%',
-        }}
+        className="w-full px-6 py-3 bg-surface-100 text-surface-700 border-none rounded-lg text-sm cursor-pointer"
       >
         Reset to Defaults
       </button>
@@ -1071,25 +958,7 @@ export const VoiceNavigationButton: React.FC = () => {
 
   return (
     <button
-      style={{
-        position: 'fixed',
-        bottom: '80px',
-        right: '24px',
-        width: '56px',
-        height: '56px',
-        borderRadius: '50%',
-        backgroundColor: voice.isListening ? '#ef4444' : '#3b82f6',
-        color: '#ffffff',
-        border: 'none',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '24px',
-        zIndex: 999,
-        transition: 'all 0.2s ease',
-      }}
+      className={`fixed bottom-20 right-6 w-14 h-14 rounded-full text-white border-none shadow-lg cursor-pointer flex items-center justify-center text-2xl z-[999] transition-all duration-200 ${voice.isListening ? 'bg-danger-500' : 'bg-brand-500'}`}
       onClick={voice.isListening ? stopListening : startListening}
       aria-label={voice.isListening ? 'Stop voice navigation' : 'Start voice navigation'}
     >
@@ -1110,35 +979,7 @@ export const SkipLink: React.FC<SkipLinkProps> = ({
 }) => (
   <a
     href={`#${targetId}`}
-    style={{
-      position: 'absolute',
-      left: '-9999px',
-      top: 'auto',
-      width: '1px',
-      height: '1px',
-      overflow: 'hidden',
-    }}
-    onFocus={(e) => {
-      e.currentTarget.style.position = 'fixed';
-      e.currentTarget.style.top = '4px';
-      e.currentTarget.style.left = '4px';
-      e.currentTarget.style.width = 'auto';
-      e.currentTarget.style.height = 'auto';
-      e.currentTarget.style.padding = '12px 24px';
-      e.currentTarget.style.backgroundColor = '#3b82f6';
-      e.currentTarget.style.color = '#ffffff';
-      e.currentTarget.style.borderRadius = '8px';
-      e.currentTarget.style.zIndex = '10000';
-      e.currentTarget.style.fontSize = '16px';
-      e.currentTarget.style.fontWeight = '600';
-      e.currentTarget.style.textDecoration = 'none';
-    }}
-    onBlur={(e) => {
-      e.currentTarget.style.position = 'absolute';
-      e.currentTarget.style.left = '-9999px';
-      e.currentTarget.style.width = '1px';
-      e.currentTarget.style.height = '1px';
-    }}
+    className="sr-only focus:not-sr-only focus:fixed focus:top-1 focus:left-1 focus:w-auto focus:h-auto focus:px-6 focus:py-3 focus:bg-brand-500 focus:text-white focus:rounded-lg focus:z-[10000] focus:text-base focus:font-semibold focus:no-underline"
   >
     {children}
   </a>

@@ -151,7 +151,7 @@ export const HeatmapVisualization: React.FC<HeatmapVisualizationProps> = ({
 
       {/* Selected dimension drill-down */}
       {selectedDimensionData && (
-        <div className="bg-white rounded-lg border p-6 mb-6">
+        <div className="bg-white dark:bg-surface-800 rounded-lg border p-6 mb-6">
           <div className="flex justify-between items-start mb-4">
             <div>
               <h4 className="text-lg font-semibold text-gray-900">{selectedDimensionData.name}</h4>

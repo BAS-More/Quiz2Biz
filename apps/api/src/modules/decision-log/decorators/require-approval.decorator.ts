@@ -8,6 +8,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { Request } from 'express';
 import { ApprovalCategory, ApprovalWorkflowService } from '../approval-workflow.service';
 
 /**
@@ -82,7 +83,7 @@ export class ApprovalGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<Request & { user?: { role?: string } }>();
     const user = request.user;
 
     if (!user) {
@@ -127,22 +128,24 @@ export class ApprovalGuard implements CanActivate {
   /**
    * Extract resource ID from request
    */
-  private getResourceId(request: any, options: ApprovalRequirementOptions): string | null {
+  private getResourceId(request: Request, options: ApprovalRequirementOptions): string | null {
     const paramName = options.resourceIdParam || 'id';
 
     // Check route params
     if (request.params?.[paramName]) {
-      return request.params[paramName];
+      const value = request.params[paramName];
+      return Array.isArray(value) ? value[0] : value;
     }
 
     // Check body
-    if (request.body?.[paramName]) {
-      return request.body[paramName];
+    const body = request.body as Record<string, string | number | undefined> | undefined;
+    if (body?.[paramName] !== undefined) {
+      return String(body[paramName]);
     }
 
     // Check query
     if (request.query?.[paramName]) {
-      return request.query[paramName];
+      return String(request.query[paramName] as string | number);
     }
 
     return null;

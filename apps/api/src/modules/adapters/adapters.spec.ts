@@ -14,9 +14,6 @@ import { NotFoundException, BadRequestException } from '@nestjs/common';
 describe('AdapterController', () => {
   let controller: AdapterController;
   let adapterConfigService: jest.Mocked<AdapterConfigService>;
-  let githubAdapter: jest.Mocked<GitHubAdapter>;
-  let gitlabAdapter: jest.Mocked<GitLabAdapter>;
-  let jiraAdapter: jest.Mocked<JiraConfluenceAdapter>;
 
   const mockAdapterConfig = {
     id: 'adapter-1',
@@ -83,9 +80,9 @@ describe('AdapterController', () => {
 
     controller = module.get<AdapterController>(AdapterController);
     adapterConfigService = module.get(AdapterConfigService);
-    githubAdapter = module.get(GitHubAdapter);
-    gitlabAdapter = module.get(GitLabAdapter);
-    jiraAdapter = module.get(JiraConfluenceAdapter);
+    module.get(GitHubAdapter);
+    module.get(GitLabAdapter);
+    module.get(JiraConfluenceAdapter);
   });
 
   describe('getSupportedTypes', () => {
@@ -620,6 +617,7 @@ describe('AdapterController - Branch Coverage', () => {
 
       const result = await controller.handleGitHubWebhook(
         { action: 'opened' },
+        '',
         'adapter-1',
         'tenant-1',
       );
@@ -635,6 +633,7 @@ describe('AdapterController - Branch Coverage', () => {
 
       const result = await controller.handleGitHubWebhook(
         { action: 'opened' },
+        '',
         'adapter-1',
         'tenant-1',
       );
@@ -647,6 +646,7 @@ describe('AdapterController - Branch Coverage', () => {
 
       const result = await controller.handleGitHubWebhook(
         { action: 'opened' },
+        '',
         'adapter-1',
         'tenant-1',
       );
@@ -658,7 +658,7 @@ describe('AdapterController - Branch Coverage', () => {
     it('should use "unknown" when payload.action is falsy', async () => {
       adapterConfigService.getAdapterConfig.mockResolvedValue(mockAdapterConfig);
 
-      const result = await controller.handleGitHubWebhook({}, 'adapter-1', 'tenant-1');
+      const result = await controller.handleGitHubWebhook({}, '', 'adapter-1', 'tenant-1');
 
       expect(result.event).toBe('unknown');
     });
@@ -670,6 +670,7 @@ describe('AdapterController - Branch Coverage', () => {
 
       const result = await controller.handleGitLabWebhook(
         { object_kind: 'push' },
+        '',
         'adapter-1',
         'tenant-1',
       );
@@ -682,6 +683,7 @@ describe('AdapterController - Branch Coverage', () => {
 
       const result = await controller.handleGitLabWebhook(
         { object_kind: 'push' },
+        '',
         'adapter-1',
         'tenant-1',
       );
@@ -693,7 +695,7 @@ describe('AdapterController - Branch Coverage', () => {
     it('should use "unknown" when payload.object_kind is falsy', async () => {
       adapterConfigService.getAdapterConfig.mockResolvedValue(mockAdapterConfig);
 
-      const result = await controller.handleGitLabWebhook({}, 'adapter-1', 'tenant-1');
+      const result = await controller.handleGitLabWebhook({}, '', 'adapter-1', 'tenant-1');
 
       expect(result.event).toBe('unknown');
     });

@@ -530,7 +530,7 @@ export class AdaptiveCardService {
   /**
    * Send heatmap notification to configured Teams channel
    */
-  async notifyHeatmapUpdate(sessionId: string, data: HeatmapCardData): Promise<void> {
+  async notifyHeatmapUpdate(_sessionId: string, data: HeatmapCardData): Promise<void> {
     const webhookUrl = this.configService.get<string>('TEAMS_WEBHOOK_URL');
     if (!webhookUrl) {
       this.logger.warn('Teams webhook URL not configured');
@@ -544,7 +544,7 @@ export class AdaptiveCardService {
   /**
    * Send gap summary notification to configured Teams channel
    */
-  async notifyGapSummary(sessionId: string, data: GapSummaryCardData): Promise<void> {
+  async notifyGapSummary(_sessionId: string, data: GapSummaryCardData): Promise<void> {
     const webhookUrl = this.configService.get<string>('TEAMS_WEBHOOK_URL');
     if (!webhookUrl) {
       this.logger.warn('Teams webhook URL not configured');

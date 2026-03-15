@@ -75,7 +75,7 @@ export const FileUploadInput: React.FC<QuestionInputProps<FileWithPreview[]>> = 
   };
 
   return (
-    <div className="question-input file-upload-input">
+    <div className="question-input file-upload-input" data-testid="file-upload-input">
       {/* Drop zone */}
       <div
         role="button"
@@ -154,7 +154,11 @@ export const FileUploadInput: React.FC<QuestionInputProps<FileWithPreview[]>> = 
                   </div>
                 )}
               </div>
-              <p className="mt-1 text-xs text-gray-600 truncate" title={fileItem.file.name}>
+              <p
+                className="mt-1 text-xs text-gray-600 truncate"
+                title={fileItem.file.name}
+                data-testid="uploaded-file-name"
+              >
                 {fileItem.file.name}
               </p>
               <p className="text-xs text-gray-400">{formatFileSize(fileItem.file.size)}</p>

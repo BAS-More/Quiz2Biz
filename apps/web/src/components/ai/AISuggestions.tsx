@@ -8,7 +8,7 @@
  * - One-click answer population
  */
 
-import React, { useState, useEffect, useCallback, createContext, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, createContext, useContext } from 'react';
 
 // ============================================================================
 // Types & Interfaces
@@ -167,7 +167,7 @@ export const AISuggestionsProvider: React.FC<AISuggestionsProviderProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [currentContext, setCurrentContext] = useState<QuestionContext | null>(null);
 
-  const config = { ...DEFAULT_CONFIG, ...initialConfig };
+  const config = useMemo(() => ({ ...DEFAULT_CONFIG, ...initialConfig }), [initialConfig]);
 
   const getTemplateSuggestions = useCallback(
     (context: QuestionContext): AnswerSuggestion[] => {
@@ -300,10 +300,10 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
 }) => {
   const confidenceColor =
     suggestion.confidence >= 0.85
-      ? '#22C55E'
+      ? 'var(--color-success-500)'
       : suggestion.confidence >= 0.75
-        ? '#F59E0B'
-        : '#6B7280';
+        ? 'var(--color-warning-500)'
+        : 'var(--color-surface-500)';
 
   const sourceLabel = {
     ai: '🤖 AI Suggestion',
@@ -319,37 +319,37 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
   };
 
   return (
-    <div style={styles.card}>
-      <div style={styles.cardHeader}>
-        <span style={styles.sourceLabel}>
+    <div className={styles.card}>
+      <div className={styles.cardHeader}>
+        <span className={styles.sourceLabel}>
           <span aria-hidden="true">{sourceIcon[suggestion.source]}</span>{' '}
           {sourceLabel[suggestion.source].split(' ').slice(1).join(' ')}
         </span>
-        <div style={styles.confidenceContainer}>
-          <span style={styles.confidenceLabel}>Confidence:</span>
-          <span style={{ ...styles.confidenceValue, color: confidenceColor }}>
+        <div className={styles.confidenceContainer}>
+          <span className={styles.confidenceLabel}>Confidence:</span>
+          <span className={styles.confidenceValue} style={{ color: confidenceColor }}>
             {Math.round(suggestion.confidence * 100)}%
           </span>
         </div>
       </div>
 
-      <div style={styles.cardContent}>
-        <p style={styles.suggestionText}>{suggestion.text}</p>
+      <div className={styles.cardContent}>
+        <p className={styles.suggestionText}>{suggestion.text}</p>
 
         {showReasoning && suggestion.reasoning && (
-          <div style={styles.reasoning}>
-            <span style={styles.reasoningIcon} aria-hidden="true">
+          <div className={styles.reasoning}>
+            <span className={styles.reasoningIcon} aria-hidden="true">
               💡
             </span>
-            <span style={styles.reasoningText}>{suggestion.reasoning}</span>
+            <span className={styles.reasoningText}>{suggestion.reasoning}</span>
           </div>
         )}
 
         {showStandardRefs && suggestion.standardRefs && suggestion.standardRefs.length > 0 && (
-          <div style={styles.standardRefs}>
-            <span style={styles.standardRefsLabel}>Standards:</span>
+          <div className={styles.standardRefs}>
+            <span className={styles.standardRefsLabel}>Standards:</span>
             {suggestion.standardRefs.map((ref, idx) => (
-              <span key={idx} style={styles.standardRefBadge}>
+              <span key={idx} className={styles.standardRefBadge}>
                 {ref}
               </span>
             ))}
@@ -357,11 +357,11 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
         )}
       </div>
 
-      <div style={styles.cardActions}>
-        <button onClick={onDismiss} style={styles.dismissButton}>
+      <div className={styles.cardActions}>
+        <button onClick={onDismiss} className={styles.dismissButton}>
           Dismiss
         </button>
-        <button onClick={onAccept} style={styles.acceptButton}>
+        <button onClick={onAccept} className={styles.acceptButton}>
           Use This Answer
         </button>
       </div>
@@ -392,15 +392,15 @@ export const SuggestionsPanel: React.FC<SuggestionsPanelProps> = ({
 
   if (isLoading) {
     return (
-      <div className={className} style={styles.panel}>
-        <div style={styles.panelHeader}>
-          <span style={styles.panelIcon} aria-hidden="true">
+      <div className={`${className} ${styles.panel}`}>
+        <div className={styles.panelHeader}>
+          <span className={styles.panelIcon} aria-hidden="true">
             ✨
           </span>
-          <span style={styles.panelTitle}>{title}</span>
+          <span className={styles.panelTitle}>{title}</span>
         </div>
-        <div style={styles.loading}>
-          <span style={styles.loadingSpinner} aria-hidden="true">
+        <div className={styles.loading}>
+          <span className={styles.loadingSpinner} aria-hidden="true">
             ⏳
           </span>
           <span>Generating suggestions...</span>
@@ -410,30 +410,32 @@ export const SuggestionsPanel: React.FC<SuggestionsPanelProps> = ({
   }
 
   return (
-    <div className={className} style={styles.panel}>
-      <div style={styles.panelHeader}>
-        <span style={styles.panelIcon} aria-hidden="true">
+    <div className={`${className} ${styles.panel}`}>
+      <div className={styles.panelHeader}>
+        <span className={styles.panelIcon} aria-hidden="true">
           ✨
         </span>
-        <span style={styles.panelTitle}>{title}</span>
-        {suggestions.length > 0 && <span style={styles.suggestionCount}>{suggestions.length}</span>}
+        <span className={styles.panelTitle}>{title}</span>
+        {suggestions.length > 0 && (
+          <span className={styles.suggestionCount}>{suggestions.length}</span>
+        )}
       </div>
 
       {error && (
-        <div style={styles.errorBanner}>
+        <div className={styles.errorBanner}>
           <span aria-hidden="true">⚠️</span> {error}
         </div>
       )}
 
       {suggestions.length === 0 ? (
-        <div style={styles.emptyState}>
-          <span style={styles.emptyIcon} aria-hidden="true">
+        <div className={styles.emptyState}>
+          <span className={styles.emptyIcon} aria-hidden="true">
             💭
           </span>
-          <span style={styles.emptyText}>{emptyMessage}</span>
+          <span className={styles.emptyText}>{emptyMessage}</span>
         </div>
       ) : (
-        <div style={styles.suggestionsList}>
+        <div className={styles.suggestionsList}>
           {suggestions.map((suggestion) => (
             <SuggestionCard
               key={suggestion.id}
@@ -465,16 +467,16 @@ export const InlineSuggestion: React.FC<InlineSuggestionProps> = ({
   onAccept,
   compact = false,
 }) => (
-  <div style={compact ? styles.inlineCompact : styles.inline}>
-    <div style={styles.inlineContent}>
-      <span style={styles.inlineIcon} aria-hidden="true">
+  <div className={compact ? styles.inlineCompact : styles.inline}>
+    <div className={styles.inlineContent}>
+      <span className={styles.inlineIcon} aria-hidden="true">
         💡
       </span>
-      <span style={styles.inlineText}>
+      <span className={styles.inlineText}>
         {compact ? suggestion.text.slice(0, 100) + '...' : suggestion.text}
       </span>
     </div>
-    <button onClick={onAccept} style={styles.inlineButton}>
+    <button onClick={onAccept} className={styles.inlineButton}>
       Use
     </button>
   </div>
@@ -497,6 +499,7 @@ export function useAutoSuggestions(context: QuestionContext | null, enabled = tr
     return () => {
       clearSuggestions();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context?.questionId, enabled]);
 }
 
@@ -504,243 +507,59 @@ export function useAutoSuggestions(context: QuestionContext | null, enabled = tr
 // Styles
 // ============================================================================
 
-const styles: Record<string, React.CSSProperties> = {
+const styles = {
   // Panel
-  panel: {
-    backgroundColor: '#FFFFFF',
-    border: '1px solid #E5E7EB',
-    borderRadius: '12px',
-    overflow: 'hidden',
-  },
-  panelHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '12px 16px',
-    backgroundColor: '#F9FAFB',
-    borderBottom: '1px solid #E5E7EB',
-  },
-  panelIcon: {
-    fontSize: '18px',
-  },
-  panelTitle: {
-    fontSize: '14px',
-    fontWeight: 600,
-    color: '#111827',
-    flex: 1,
-  },
-  suggestionCount: {
-    fontSize: '12px',
-    fontWeight: 600,
-    color: '#FFFFFF',
-    backgroundColor: '#2563EB',
-    padding: '2px 8px',
-    borderRadius: '10px',
-  },
+  panel: 'bg-surface-50 border border-surface-200 rounded-xl overflow-hidden',
+  panelHeader: 'flex items-center gap-2 px-4 py-3 bg-surface-100 border-b border-surface-200',
+  panelIcon: 'text-lg',
+  panelTitle: 'text-sm font-semibold text-surface-900 flex-1',
+  suggestionCount: 'text-xs font-semibold text-white bg-brand-600 px-2 py-0.5 rounded-full',
 
   // Loading
-  loading: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '8px',
-    padding: '24px',
-    color: '#6B7280',
-    fontSize: '14px',
-  },
-  loadingSpinner: {
-    animation: 'spin 1s linear infinite',
-  },
+  loading: 'flex items-center justify-center gap-2 p-6 text-surface-500 text-sm',
+  loadingSpinner: 'animate-spin',
 
   // Error
-  errorBanner: {
-    padding: '8px 16px',
-    backgroundColor: '#FEF2F2',
-    color: '#DC2626',
-    fontSize: '13px',
-  },
+  errorBanner: 'px-4 py-2 bg-danger-50 text-danger-600 text-[13px]',
 
   // Empty
-  emptyState: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '24px',
-    color: '#9CA3AF',
-  },
-  emptyIcon: {
-    fontSize: '32px',
-    marginBottom: '8px',
-    opacity: 0.5,
-  },
-  emptyText: {
-    fontSize: '13px',
-    textAlign: 'center',
-  },
+  emptyState: 'flex flex-col items-center p-6 text-surface-400',
+  emptyIcon: 'text-[32px] mb-2 opacity-50',
+  emptyText: 'text-[13px] text-center',
 
   // List
-  suggestionsList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px',
-    padding: '16px',
-  },
+  suggestionsList: 'flex flex-col gap-3 p-4',
 
   // Card
-  card: {
-    backgroundColor: '#FFFFFF',
-    border: '1px solid #E5E7EB',
-    borderRadius: '8px',
-    overflow: 'hidden',
-    transition: 'box-shadow 0.15s ease',
-  },
-  cardHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '8px 12px',
-    backgroundColor: '#F9FAFB',
-    borderBottom: '1px solid #F3F4F6',
-  },
-  sourceLabel: {
-    fontSize: '11px',
-    fontWeight: 500,
-    color: '#6B7280',
-  },
-  confidenceContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '4px',
-  },
-  confidenceLabel: {
-    fontSize: '10px',
-    color: '#9CA3AF',
-  },
-  confidenceValue: {
-    fontSize: '12px',
-    fontWeight: 600,
-  },
-  cardContent: {
-    padding: '12px',
-  },
-  suggestionText: {
-    margin: '0 0 8px 0',
-    fontSize: '14px',
-    lineHeight: 1.5,
-    color: '#111827',
-  },
-  reasoning: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '6px',
-    marginTop: '8px',
-    padding: '8px',
-    backgroundColor: '#FEF3C7',
-    borderRadius: '6px',
-  },
-  reasoningIcon: {
-    fontSize: '12px',
-    flexShrink: 0,
-  },
-  reasoningText: {
-    fontSize: '12px',
-    color: '#92400E',
-    lineHeight: 1.4,
-  },
-  standardRefs: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: '6px',
-    marginTop: '8px',
-  },
-  standardRefsLabel: {
-    fontSize: '11px',
-    color: '#6B7280',
-  },
-  standardRefBadge: {
-    fontSize: '10px',
-    fontWeight: 500,
-    color: '#1E40AF',
-    backgroundColor: '#DBEAFE',
-    padding: '2px 6px',
-    borderRadius: '4px',
-  },
-  cardActions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    gap: '8px',
-    padding: '8px 12px',
-    borderTop: '1px solid #F3F4F6',
-  },
-  dismissButton: {
-    padding: '6px 12px',
-    fontSize: '12px',
-    color: '#6B7280',
-    backgroundColor: 'transparent',
-    border: '1px solid #D1D5DB',
-    borderRadius: '6px',
-    cursor: 'pointer',
-    fontFamily: 'inherit',
-  },
-  acceptButton: {
-    padding: '6px 12px',
-    fontSize: '12px',
-    fontWeight: 500,
-    color: '#FFFFFF',
-    backgroundColor: '#2563EB',
-    border: 'none',
-    borderRadius: '6px',
-    cursor: 'pointer',
-    fontFamily: 'inherit',
-  },
+  card: 'bg-surface-50 border border-surface-200 rounded-lg overflow-hidden transition-shadow duration-150',
+  cardHeader:
+    'flex justify-between items-center px-3 py-2 bg-surface-100 border-b border-surface-100',
+  sourceLabel: 'text-[11px] font-medium text-surface-500',
+  confidenceContainer: 'flex items-center gap-1',
+  confidenceLabel: 'text-[10px] text-surface-400',
+  confidenceValue: 'text-xs font-semibold',
+  cardContent: 'p-3',
+  suggestionText: 'm-0 mb-2 text-sm leading-relaxed text-surface-900',
+  reasoning: 'flex items-start gap-1.5 mt-2 p-2 bg-warning-100 rounded-md',
+  reasoningIcon: 'text-xs shrink-0',
+  reasoningText: 'text-xs text-warning-800 leading-snug',
+  standardRefs: 'flex flex-wrap items-center gap-1.5 mt-2',
+  standardRefsLabel: 'text-[11px] text-surface-500',
+  standardRefBadge: 'text-[10px] font-medium text-brand-800 bg-brand-100 px-1.5 py-0.5 rounded',
+  cardActions: 'flex justify-end gap-2 px-3 py-2 border-t border-surface-100',
+  dismissButton:
+    'px-3 py-1.5 text-xs text-surface-500 bg-transparent border border-surface-300 rounded-md cursor-pointer font-[inherit]',
+  acceptButton:
+    'px-3 py-1.5 text-xs font-medium text-white bg-brand-600 border-none rounded-md cursor-pointer font-[inherit]',
 
   // Inline
-  inline: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '12px',
-    padding: '12px',
-    backgroundColor: '#EFF6FF',
-    border: '1px solid #BFDBFE',
-    borderRadius: '8px',
-  },
-  inlineCompact: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '8px 12px',
-    backgroundColor: '#EFF6FF',
-    border: '1px solid #BFDBFE',
-    borderRadius: '6px',
-  },
-  inlineContent: {
-    flex: 1,
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '8px',
-  },
-  inlineIcon: {
-    fontSize: '16px',
-    flexShrink: 0,
-  },
-  inlineText: {
-    fontSize: '13px',
-    lineHeight: 1.4,
-    color: '#1E40AF',
-  },
-  inlineButton: {
-    padding: '4px 10px',
-    fontSize: '12px',
-    fontWeight: 500,
-    color: '#FFFFFF',
-    backgroundColor: '#2563EB',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    whiteSpace: 'nowrap',
-    fontFamily: 'inherit',
-  },
+  inline: 'flex items-start gap-3 p-3 bg-brand-50 border border-brand-200 rounded-lg',
+  inlineCompact: 'flex items-center gap-2 px-3 py-2 bg-brand-50 border border-brand-200 rounded-md',
+  inlineContent: 'flex-1 flex items-start gap-2',
+  inlineIcon: 'text-base shrink-0',
+  inlineText: 'text-[13px] leading-snug text-brand-800',
+  inlineButton:
+    'px-2.5 py-1 text-xs font-medium text-white bg-brand-600 border-none rounded cursor-pointer whitespace-nowrap font-[inherit]',
 };
 
 // ============================================================================

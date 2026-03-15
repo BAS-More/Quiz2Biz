@@ -13,6 +13,7 @@ jest.mock('@sentry/nestjs', () => ({
   startInactiveSpan: jest.fn().mockReturnValue({ finish: jest.fn() }),
 }));
 
+import { Logger } from '@nestjs/common';
 import {
   getSentryConfig,
   initializeSentry,
@@ -75,7 +76,7 @@ describe('getSentryConfig', () => {
 
 describe('initializeSentry', () => {
   const originalEnv = process.env;
-  const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+  const warnSpy = jest.spyOn(Logger.prototype, 'warn').mockImplementation();
 
   beforeEach(() => {
     process.env = { ...originalEnv };
@@ -84,7 +85,7 @@ describe('initializeSentry', () => {
 
   afterAll(() => {
     process.env = originalEnv;
-    consoleSpy.mockRestore();
+    warnSpy.mockRestore();
   });
 
   it('should skip initialization when DSN not provided', () => {
@@ -92,7 +93,7 @@ describe('initializeSentry', () => {
 
     initializeSentry();
 
-    expect(consoleSpy).toHaveBeenCalledWith('Sentry DSN not configured, skipping initialization');
+    expect(warnSpy).toHaveBeenCalledWith('Sentry DSN not configured, skipping initialization');
     expect(Sentry.init).not.toHaveBeenCalled();
   });
 
@@ -264,7 +265,7 @@ describe('initializeSentry - Sentry.init options', () => {
   beforeEach(() => {
     process.env = { ...originalEnv };
     jest.clearAllMocks();
-    consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+    consoleSpy = jest.spyOn(Logger.prototype, 'log').mockImplementation();
   });
 
   afterEach(() => {

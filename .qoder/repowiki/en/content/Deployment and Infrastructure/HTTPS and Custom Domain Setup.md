@@ -19,13 +19,16 @@
 </cite>
 
 ## Update Summary
+
 **Changes Made**
+
 - Enhanced PowerShell script with improved DNS verification and interactive prompts
 - Added comprehensive error handling and user feedback mechanisms
 - Updated troubleshooting section with enhanced script capabilities
 - Improved user experience through better step-by-step guidance and validation
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
@@ -37,9 +40,11 @@
 9. [Conclusion](#conclusion)
 
 ## Introduction
+
 This document explains how the project enables HTTPS and custom domain configuration for the quiz2biz.com domain using Azure Container Apps and managed SSL certificates. It covers the automated setup scripts, DNS configuration automation with GoDaddy, application security enhancements, and operational procedures for monitoring and maintenance.
 
 ## Project Structure
+
 The HTTPS and custom domain setup spans documentation, automation scripts, application configuration, and infrastructure provisioning:
 
 - Documentation: Guides and flow diagrams for quick setup, manual steps, and troubleshooting
@@ -100,6 +105,7 @@ I1 --> I2
 ```
 
 **Diagram sources**
+
 - [HTTPS-QUICK-START.md](file://docs/HTTPS-QUICK-START.md#L1-L206)
 - [CUSTOM-DOMAIN-SETUP.md](file://docs/CUSTOM-DOMAIN-SETUP.md#L1-L375)
 - [HTTPS-SETUP-SUMMARY.md](file://docs/HTTPS-SETUP-SUMMARY.md#L1-L318)
@@ -116,12 +122,14 @@ I1 --> I2
 - [container-apps main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L1-L192)
 
 **Section sources**
+
 - [HTTPS-QUICK-START.md](file://docs/HTTPS-QUICK-START.md#L1-L206)
 - [CUSTOM-DOMAIN-SETUP.md](file://docs/CUSTOM-DOMAIN-SETUP.md#L1-L375)
 - [HTTPS-SETUP-SUMMARY.md](file://docs/HTTPS-SETUP-SUMMARY.md#L1-L318)
 - [HTTPS-FLOW-DIAGRAM.md](file://docs/HTTPS-FLOW-DIAGRAM.md#L1-L292)
 
 ## Core Components
+
 - **Enhanced** Automated setup scripts:
   - PowerShell script with improved DNS verification, interactive prompts, and comprehensive error handling
   - Bash script mirrors the PowerShell logic for Linux/macOS environments
@@ -136,6 +144,7 @@ I1 --> I2
   - Container environment variables include CORS_ORIGIN and ENABLE_SWAGGER
 
 **Section sources**
+
 - [setup-godaddy-dns.py](file://scripts/setup-godaddy-dns.py#L1-L99)
 - [setup-custom-domain.ps1](file://scripts/setup-custom-domain.ps1#L1-L196)
 - [setup-custom-domain.sh](file://scripts/setup-custom-domain.sh#L1-L218)
@@ -145,6 +154,7 @@ I1 --> I2
 - [container-apps main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L142-L151)
 
 ## Architecture Overview
+
 The HTTPS pipeline integrates DNS, Azure Container Apps, and the NestJS application:
 
 ```mermaid
@@ -167,6 +177,7 @@ Script-->>Dev : Setup complete
 ```
 
 **Diagram sources**
+
 - [setup-godaddy-dns.py](file://scripts/setup-godaddy-dns.py#L39-L63)
 - [setup-custom-domain.ps1](file://scripts/setup-custom-domain.ps1#L74-L184)
 - [setup-custom-domain.sh](file://scripts/setup-custom-domain.sh#L68-L165)
@@ -175,6 +186,7 @@ Script-->>Dev : Setup complete
 ## Detailed Component Analysis
 
 ### Enhanced Automated Setup Scripts
+
 The PowerShell script has been significantly enhanced with improved DNS verification, interactive prompts, and comprehensive error handling:
 
 - **Improved DNS Verification**: Uses Resolve-DnsName for real-time DNS validation with detailed error reporting
@@ -206,18 +218,22 @@ VerifyHTTPS --> Done(["Setup Complete"])
 **Updated** Enhanced PowerShell script with improved DNS verification, interactive prompts, and comprehensive error handling
 
 **Diagram sources**
+
 - [setup-custom-domain.ps1](file://scripts/setup-custom-domain.ps1#L52-L95)
 - [setup-custom-domain.ps1](file://scripts/setup-custom-domain.ps1#L111-L126)
 - [setup-custom-domain.ps1](file://scripts/setup-custom-domain.ps1#L145-L161)
 - [setup-custom-domain.ps1](file://scripts/setup-custom-domain.ps1#L172-L181)
 
 **Section sources**
+
 - [setup-godaddy-dns.py](file://scripts/setup-godaddy-dns.py#L1-L99)
 - [setup-custom-domain.ps1](file://scripts/setup-custom-domain.ps1#L1-L196)
 - [setup-custom-domain.sh](file://scripts/setup-custom-domain.sh#L1-L218)
 
 ### DNS Configuration and Propagation
+
 DNS configuration ensures domain ownership verification and traffic routing:
+
 - **Manual Option**: TXT record for domain verification (asuid)
 - **Enhanced**: PowerShell script provides interactive DNS verification with Resolve-DnsName
 - **Automated Option**: Python script configures TXT and CNAME records via GoDaddy API
@@ -254,19 +270,23 @@ Propagate --> Verified["DNS verified"]
 ```
 
 **Diagram sources**
+
 - [setup-custom-domain.ps1](file://scripts/setup-custom-domain.ps1#L52-L95)
 - [setup-godaddy-dns.py](file://scripts/setup-godaddy-dns.py#L39-L63)
 - [CUSTOM-DOMAIN-SETUP.md](file://docs/CUSTOM-DOMAIN-SETUP.md#L78-L130)
 - [HTTPS-QUICK-START.md](file://docs/HTTPS-QUICK-START.md#L27-L58)
 
 **Section sources**
+
 - [setup-godaddy-dns.py](file://scripts/setup-godaddy-dns.py#L1-L99)
 - [setup-custom-domain.ps1](file://scripts/setup-custom-domain.ps1#L52-L95)
 - [CUSTOM-DOMAIN-SETUP.md](file://docs/CUSTOM-DOMAIN-SETUP.md#L70-L130)
 - [HTTPS-QUICK-START.md](file://docs/HTTPS-QUICK-START.md#L22-L58)
 
 ### Application Security Enhancements
+
 The NestJS application enforces HTTPS and hardens security:
+
 - Helmet.js enabled with production-specific policies
 - HSTS header applied in production to enforce HTTPS
 - CORS configured via environment variables for allowed origins
@@ -288,17 +308,21 @@ Bootstrap --> ConfigService : "reads configuration"
 ```
 
 **Diagram sources**
+
 - [main.ts](file://apps/api/src/main.ts#L20-L93)
 - [configuration.ts](file://apps/api/src/config/configuration.ts#L39-L48)
 - [.env.production.example](file://.env.production.example#L54-L66)
 
 **Section sources**
+
 - [main.ts](file://apps/api/src/main.ts#L20-L93)
 - [configuration.ts](file://apps/api/src/config/configuration.ts#L39-L48)
 - [.env.production.example](file://.env.production.example#L54-L66)
 
 ### Infrastructure and Container Apps
+
 Azure Container Apps ingress exposes the application externally and supports HTTPS:
+
 - External ingress enabled with auto transport
 - Health probes configured for liveness/readiness/startup
 - Environment variables set for production runtime
@@ -314,16 +338,19 @@ Env --> Swagger["ENABLE_SWAGGER"]
 ```
 
 **Diagram sources**
+
 - [container-apps main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L142-L151)
 - [container-apps main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L35-L104)
 - [main.tf](file://infrastructure/terraform/main.tf#L106-L150)
 
 **Section sources**
+
 - [container-apps main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L142-L151)
 - [container-apps main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L35-L104)
 - [main.tf](file://infrastructure/terraform/main.tf#L106-L150)
 
 ## Dependency Analysis
+
 The HTTPS setup depends on coordinated actions across documentation, scripts, application, and infrastructure:
 
 ```mermaid
@@ -339,6 +366,7 @@ Infra --> App
 ```
 
 **Diagram sources**
+
 - [HTTPS-QUICK-START.md](file://docs/HTTPS-QUICK-START.md#L1-L206)
 - [setup-godaddy-dns.py](file://scripts/setup-godaddy-dns.py#L1-L99)
 - [setup-custom-domain.ps1](file://scripts/setup-custom-domain.ps1#L1-L196)
@@ -350,6 +378,7 @@ Infra --> App
 - [container-apps main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L1-L192)
 
 **Section sources**
+
 - [HTTPS-QUICK-START.md](file://docs/HTTPS-QUICK-START.md#L1-L206)
 - [setup-godaddy-dns.py](file://scripts/setup-godaddy-dns.py#L1-L99)
 - [setup-custom-domain.ps1](file://scripts/setup-custom-domain.ps1#L1-L196)
@@ -361,6 +390,7 @@ Infra --> App
 - [container-apps main.tf](file://infrastructure/terraform/modules/container-apps/main.tf#L1-L192)
 
 ## Performance Considerations
+
 - DNS propagation typically completes within 5–15 minutes; allow up to 48 hours in rare cases
 - **Enhanced PowerShell script**: Improved DNS verification reduces setup time by providing immediate feedback
 - **Automated DNS via GoDaddy API**: May take 1-2 minutes for API calls to complete
@@ -369,7 +399,9 @@ Infra --> App
 - Container health probes reduce downtime during deployments by ensuring readiness before traffic routing
 
 ## Troubleshooting Guide
+
 Common issues and resolutions:
+
 - **Enhanced PowerShell script**: Interactive prompts help resolve DNS mismatches before they cause failures
 - DNS not propagating:
   - Flush local DNS cache and verify from alternate DNS servers
@@ -399,10 +431,12 @@ Common issues and resolutions:
   - Color-coded feedback improves user experience
 
 **Section sources**
+
 - [CUSTOM-DOMAIN-SETUP.md](file://docs/CUSTOM-DOMAIN-SETUP.md#L208-L261)
 - [HTTPS-QUICK-START.md](file://docs/HTTPS-QUICK-START.md#L139-L178)
 - [setup-godaddy-dns.py](file://scripts/setup-godaddy-dns.py#L52-L62)
 - [setup-custom-domain.ps1](file://scripts/setup-custom-domain.ps1#L52-L95)
 
 ## Conclusion
+
 The project provides a complete, automated solution for enabling HTTPS and custom domains with Azure Container Apps and managed SSL certificates. The setup scripts streamline DNS configuration, domain binding, and certificate provisioning, while the NestJS application enforces HTTPS and security best practices. **Enhanced**: The PowerShell script now offers improved user experience through interactive prompts, comprehensive error handling, and real-time DNS verification, making the setup process more reliable and user-friendly. **New**: The addition of the GoDaddy DNS automation script provides developers with an alternative to manual DNS configuration, reducing setup time and minimizing human error. Terraform infrastructure ensures consistent deployment with proper ingress and environment configuration.

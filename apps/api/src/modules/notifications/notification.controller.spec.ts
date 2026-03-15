@@ -5,7 +5,6 @@ import { EmailType, SendEmailDto, BulkSendEmailDto } from './dto/send-email.dto'
 
 describe('NotificationController', () => {
   let controller: NotificationController;
-  let notificationService: jest.Mocked<NotificationService>;
 
   const mockNotificationService = {
     sendEmail: jest.fn(),
@@ -21,7 +20,7 @@ describe('NotificationController', () => {
     }).compile();
 
     controller = module.get<NotificationController>(NotificationController);
-    notificationService = module.get(NotificationService);
+    module.get(NotificationService);
   });
 
   describe('sendEmail', () => {

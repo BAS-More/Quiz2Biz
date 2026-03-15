@@ -134,7 +134,7 @@ export class JiraConfluenceAdapter {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly prisma: PrismaService,
+    _prisma: PrismaService,
   ) {}
 
   private getTrustedJiraDomain(): string {
@@ -166,45 +166,43 @@ export class JiraConfluenceAdapter {
   private validateDomain(config: JiraConfig): void {
     const rawDomain = (config.domain || '').trim().toLowerCase();
 
-    // Must be non-empty and reasonably short
     if (!rawDomain || rawDomain.length > 255) {
       throw new HttpException('Invalid Jira domain', HttpStatus.BAD_REQUEST);
     }
 
-    // Disallow schemes, paths, ports, credentials, and backslashes
-    if (
-      rawDomain.includes('://') ||
-      rawDomain.includes('/') ||
-      rawDomain.includes('\\') ||
-      rawDomain.includes('@') ||
-      rawDomain.includes(':')
-    ) {
-      throw new HttpException('Invalid Jira domain format', HttpStatus.BAD_REQUEST);
-    }
+    this.rejectUnsafeDomainChars(rawDomain);
+    this.rejectPrivateAddresses(rawDomain);
 
-    // Disallow localhost and common loopback variants
-    if (
-      rawDomain === 'localhost' ||
-      rawDomain.endsWith('.localhost') ||
-      rawDomain === '127.0.0.1' ||
-      rawDomain.startsWith('127.') ||
-      rawDomain === '::1'
-    ) {
-      throw new HttpException('Jira domain not allowed', HttpStatus.BAD_REQUEST);
-    }
-
-    // Disallow common private IPv4 ranges by simple prefix match
-    if (
-      rawDomain.startsWith('10.') ||
-      rawDomain.startsWith('192.168.') ||
-      rawDomain.match(/^172\.(1[6-9]|2[0-9]|3[0-1])\./)
-    ) {
-      throw new HttpException('Jira domain not allowed', HttpStatus.BAD_REQUEST);
-    }
-
-    // Enforce Atlassian cloud domains (adjust if self-hosted Jira must be supported)
     if (!rawDomain.endsWith('.atlassian.net')) {
       throw new HttpException('Unsupported Jira domain', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /** Reject domains containing scheme, path, port, credential, or backslash chars */
+  private rejectUnsafeDomainChars(domain: string): void {
+    const unsafePatterns = ['://', '/', '\\', '@', ':'];
+    if (unsafePatterns.some((p) => domain.includes(p))) {
+      throw new HttpException('Invalid Jira domain format', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /** Reject localhost, loopback, and private-range addresses */
+  private rejectPrivateAddresses(domain: string): void {
+    const loopbackPatterns = ['localhost', '127.0.0.1', '::1'];
+    if (
+      loopbackPatterns.includes(domain) ||
+      domain.endsWith('.localhost') ||
+      domain.startsWith('127.')
+    ) {
+      throw new HttpException('Jira domain not allowed', HttpStatus.BAD_REQUEST);
+    }
+
+    const privateRangePrefixes = ['10.', '192.168.'];
+    if (
+      privateRangePrefixes.some((p) => domain.startsWith(p)) ||
+      /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(domain)
+    ) {
+      throw new HttpException('Jira domain not allowed', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -228,6 +226,16 @@ export class JiraConfluenceAdapter {
     return candidate.startsWith('/') ? candidate.slice(1) : candidate;
   }
 
+  private buildAtlassianBaseUrl(domain: string, isConfluence: boolean, isAgile: boolean): string {
+    if (isConfluence) {
+      return `https://${domain}/wiki/rest/api`;
+    }
+    if (isAgile) {
+      return `https://${domain}/rest/agile/1.0`;
+    }
+    return `https://${domain}/rest/api/3`;
+  }
+
   private async makeRequest<T>(
     config: JiraConfig,
     endpoint: string,
@@ -246,14 +254,7 @@ export class JiraConfluenceAdapter {
     this.validateDomain({ ...config, domain: normalizedDomain });
     const safeEndpoint = this.sanitizeEndpoint(endpoint);
 
-    let baseUrl: string;
-    if (isConfluence) {
-      baseUrl = `https://${normalizedDomain}/wiki/rest/api`;
-    } else if (isAgile) {
-      baseUrl = `https://${normalizedDomain}/rest/agile/1.0`;
-    } else {
-      baseUrl = `https://${normalizedDomain}/rest/api/3`;
-    }
+    const baseUrl: string = this.buildAtlassianBaseUrl(normalizedDomain, isConfluence, isAgile);
 
     const requestUrl = new URL(safeEndpoint, `${baseUrl}/`);
     const trustedBaseUrl = new URL(`${baseUrl}/`);
@@ -561,7 +562,10 @@ export class JiraConfluenceAdapter {
     if (cql) {
       endpoint = `/content/search?cql=${encodeURIComponent(cql)}&limit=${limit}&start=${start}&expand=${expand.join(',')}`;
     } else if (query) {
-      endpoint = `/content/search?cql=${encodeURIComponent(`space = ${config.spaceKey} AND text ~ "${query}"`)}&limit=${limit}&start=${start}&expand=${expand.join(',')}`;
+      // Sanitize inputs to prevent CQL injection
+      const safeSpaceKey = config.spaceKey.replace(/['"\\]/g, '');
+      const safeQuery = query.replace(/['"\\]/g, '');
+      endpoint = `/content/search?cql=${encodeURIComponent(`space = "${safeSpaceKey}" AND text ~ "${safeQuery}"`)}&limit=${limit}&start=${start}&expand=${expand.join(',')}`;
     } else {
       endpoint = `/content?spaceKey=${config.spaceKey}&limit=${limit}&start=${start}&expand=${expand.join(',')}`;
     }
@@ -713,21 +717,7 @@ export class JiraConfluenceAdapter {
       type: 'confluence_page' as const,
       sourceId: `confluence-page-${page.id}`,
       sourceUrl: `https://${config.domain}/wiki${page._links.webui}`,
-      data: {
-        id: page.id,
-        title: page.title,
-        type: page.type,
-        status: page.status,
-        spaceKey: page.space?.key,
-        spaceName: page.space?.name,
-        version: page.version?.number,
-        versionDate: page.version?.when,
-        versionAuthor: page.version?.by?.displayName,
-        ancestors: page.ancestors?.map((a) => ({ id: a.id, title: a.title })),
-        childPageCount: page.children?.page?.results?.length || 0,
-        attachmentCount: page.children?.attachment?.results?.length || 0,
-        content: page.body?.storage?.value || page.body?.view?.value,
-      },
+      data: this.extractConfluencePageData(page),
       hash: this.calculateHash(page),
       timestamp: new Date(page.version?.when || new Date()),
       metadata: {
@@ -736,6 +726,36 @@ export class JiraConfluenceAdapter {
         spaceKey: config.spaceKey,
         resourceType: 'page',
       },
+    };
+  }
+
+  private extractConfluencePageData(page: ConfluencePage): Record<string, unknown> {
+    return {
+      id: page.id,
+      title: page.title,
+      type: page.type,
+      status: page.status,
+      ...this.extractConfluenceVersionInfo(page),
+      ...this.extractConfluenceHierarchyInfo(page),
+      content: page.body?.storage?.value || page.body?.view?.value,
+    };
+  }
+
+  private extractConfluenceVersionInfo(page: ConfluencePage): Record<string, unknown> {
+    return {
+      spaceKey: page.space?.key,
+      spaceName: page.space?.name,
+      version: page.version?.number,
+      versionDate: page.version?.when,
+      versionAuthor: page.version?.by?.displayName,
+    };
+  }
+
+  private extractConfluenceHierarchyInfo(page: ConfluencePage): Record<string, unknown> {
+    return {
+      ancestors: page.ancestors?.map((a) => ({ id: a.id, title: a.title })),
+      childPageCount: page.children?.page?.results?.length || 0,
+      attachmentCount: page.children?.attachment?.results?.length || 0,
     };
   }
 
