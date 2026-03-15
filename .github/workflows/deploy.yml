@@ -20,6 +20,7 @@ on:
         default: 'development'
 
 env:
+  GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
   NODE_VERSION: '25.x'
   REGISTRY_NAME: acrquestionnaireprod
   IMAGE_NAME: quiz-api
@@ -33,6 +34,7 @@ concurrency:
 
 permissions:
   contents: read
+  packages: read
 
 jobs:
   build:
@@ -106,6 +108,8 @@ jobs:
         with:
           context: .
           file: ./docker/api/Dockerfile
+          build-args: |
+            GH_PACKAGES_TOKEN=${{ secrets.GH_PACKAGES_TOKEN }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

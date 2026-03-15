@@ -171,6 +171,19 @@ See [QUICK-START.md](QUICK-START.md) for detailed plan comparison.
 
 ---
 
+
+## GitHub Packages Authentication
+
+This project uses `@bas-more/orchestrator` from GitHub Packages. CI handles auth automatically via `GITHUB_TOKEN`.
+
+For **local development**, you need a GitHub Personal Access Token (PAT) with `read:packages` scope:
+
+1. Create a PAT at https://github.com/settings/tokens/new?scopes=read:packages
+2. Set it in your shell: `export GH_PACKAGES_TOKEN=ghp_your_token_here` (or use `.env`)
+3. Run `npm install --legacy-peer-deps`
+
+Without this, `npm install` will return 401/403 for `@bas-more`-scoped packages.
+
 ## 🚀 Getting Started in 5 Steps
 
 1. **Sign Up** (2 min) - Create account at `/auth/register`

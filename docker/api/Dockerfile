@@ -1,6 +1,10 @@
 # Build stage
 FROM node:25-alpine AS builder
 
+# GitHub Packages auth for @bas-more scope
+ARG GH_PACKAGES_TOKEN
+ENV GH_PACKAGES_TOKEN=${GH_PACKAGES_TOKEN}
+
 WORKDIR /app
 
 # Install security patches and OpenSSL for Prisma
@@ -8,6 +12,7 @@ RUN apk upgrade --no-cache && \
     apk add --no-cache openssl
 
 # Install dependencies
+COPY .npmrc ./
 COPY package*.json ./
 COPY apps/api/package*.json ./apps/api/
 COPY libs/database/package*.json ./libs/database/
@@ -15,6 +20,9 @@ COPY libs/redis/package*.json ./libs/redis/
 COPY libs/shared/package*.json ./libs/shared/
 
 RUN npm ci --legacy-peer-deps || npm install --legacy-peer-deps
+
+# Remove .npmrc after install (don't leak token into image layers)
+RUN rm -f .npmrc
 
 # Copy source files
 COPY . .
@@ -29,14 +37,14 @@ RUN npx turbo run build --filter=api --filter=database --filter=redis --filter=s
 # NOTE: npm prune runs AFTER build to remove dev dependencies.
 # This is intentional: dev dependencies are needed during build but not in production.
 # The pruned node_modules are then copied to the production stage.
-# OPTIMIZATION CONSIDERATION: For smaller images, consider:
-# - Using npm ci --production in a separate stage to avoid copying dev deps
-# - Multi-stage builds with only production dependencies in final stage
-# - Using .dockerignore to exclude unnecessary files from context
 RUN npm prune --omit=dev --legacy-peer-deps || true
 
 # Development stage
 FROM node:25-alpine AS development
+
+# GitHub Packages auth for @bas-more scope
+ARG GH_PACKAGES_TOKEN
+ENV GH_PACKAGES_TOKEN=${GH_PACKAGES_TOKEN}
 
 WORKDIR /app
 
@@ -45,6 +53,7 @@ RUN apk upgrade --no-cache && \
     apk add --no-cache openssl
 
 # Install dependencies
+COPY .npmrc ./
 COPY package*.json ./
 COPY apps/api/package*.json ./apps/api/
 COPY libs/database/package*.json ./libs/database/
@@ -52,6 +61,9 @@ COPY libs/redis/package*.json ./libs/redis/
 COPY libs/shared/package*.json ./libs/shared/
 
 RUN npm ci --legacy-peer-deps || npm install --legacy-peer-deps
+
+# Remove .npmrc after install
+RUN rm -f .npmrc
 
 # Copy source files
 COPY . .

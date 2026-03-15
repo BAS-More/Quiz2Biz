@@ -15,9 +15,11 @@ on:
 
 permissions:
   contents: read
+  packages: read
   security-events: write
 
 env:
+  GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
   NODE_VERSION: '25.x'
 
 jobs:
@@ -112,6 +114,8 @@ jobs:
         with:
           context: .
           file: ./docker/api/Dockerfile
+          build-args: |
+            GH_PACKAGES_TOKEN=${{ secrets.GH_PACKAGES_TOKEN }}
           push: false
           load: true
           tags: quiz-api:scan
