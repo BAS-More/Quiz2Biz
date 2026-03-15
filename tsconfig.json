@@ -45,12 +45,8 @@
       "@libs/shared/*": [
         "libs/shared/src/*"
       ],
-      "@libs/orchestrator": [
-        "libs/orchestrator/src/index.ts"
-      ],
-      "@libs/orchestrator/*": [
-        "libs/orchestrator/src/*"
-      ]
+      "@libs/orchestrator": ["node_modules/@bas-more/orchestrator"],
+      "@libs/orchestrator/*": ["node_modules/@bas-more/orchestrator/dist/*"]
     },
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

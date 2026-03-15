@@ -15,9 +15,11 @@ on:
 
 permissions:
   contents: read
+  packages: read
   pull-requests: write
 
 env:
+  GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
   NODE_VERSION: '25.x'
   COVERAGE_THRESHOLD_BRANCHES: 80
   COVERAGE_THRESHOLD_LINES: 80

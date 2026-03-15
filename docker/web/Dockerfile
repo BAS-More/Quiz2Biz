@@ -3,15 +3,23 @@ FROM node:25-alpine AS builder
 
 WORKDIR /app
 
+# GitHub Packages auth for @bas-more scope
+ARG GH_PACKAGES_TOKEN
+ENV GH_PACKAGES_TOKEN=${GH_PACKAGES_TOKEN}
+
 # Install security patches
 RUN apk upgrade --no-cache
 
 # Install dependencies
+COPY .npmrc ./
 COPY package*.json ./
 COPY apps/web/package*.json ./apps/web/
 COPY libs/shared/package*.json ./libs/shared/
 
 RUN npm ci --ignore-scripts --legacy-peer-deps || npm install --ignore-scripts --legacy-peer-deps
+
+# Remove .npmrc after install
+RUN rm -f .npmrc
 
 # Copy source files
 COPY . .

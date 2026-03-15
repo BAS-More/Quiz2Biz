@@ -15,9 +15,16 @@ on:
       - '.github/workflows/lighthouse.yml'
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: read
+
 concurrency:
   group: lighthouse-${{ github.ref }}
   cancel-in-progress: true
+
+env:
+  GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
 
 jobs:
   lighthouse:
