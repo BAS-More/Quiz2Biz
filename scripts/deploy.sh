@@ -161,10 +161,11 @@ echo -e "\n${YELLOW}Step 9: Waiting for deployment rollout...${NC}"
 sleep 30
 
 echo -e "\n${YELLOW}Step 10: Running database migrations...${NC}"
+# Use local prisma binary to avoid npx downloading latest version
 az containerapp exec \
   --name "$CONTAINER_APP_NAME" \
   --resource-group "$RESOURCE_GROUP" \
-  --command "npx prisma migrate deploy" || {
+  --command "./node_modules/.bin/prisma migrate deploy" || {
   echo -e "${YELLOW}Warning: Could not run migrations via exec. Run manually if needed.${NC}"
 }
 

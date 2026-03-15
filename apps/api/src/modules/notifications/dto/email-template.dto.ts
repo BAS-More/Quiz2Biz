@@ -26,16 +26,16 @@ export interface EmailTemplateData {
 
 export class EmailTemplateDto {
   @ApiProperty({ description: 'Template identifier' })
-  id: string;
+  id!: string;
 
   @ApiProperty({ description: 'Template name' })
-  name: string;
+  name!: string;
 
   @ApiProperty({ description: 'Subject line template (supports variables)' })
-  subject: string;
+  subject!: string;
 
   @ApiProperty({ description: 'HTML content template' })
-  htmlTemplate: string;
+  htmlTemplate!: string;
 
   @ApiPropertyOptional({ description: 'Plain text template' })
   textTemplate?: string;

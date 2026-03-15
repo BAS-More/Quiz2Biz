@@ -9,7 +9,6 @@ import {
   getDocumentTemplate,
   getAllDocumentTemplates,
   DocumentTemplate,
-  DocumentTemplateSection,
 } from './document-templates';
 
 describe('documentTemplates registry', () => {

@@ -11,9 +11,11 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { Logger as PinoLogger } from 'nestjs-pino';
 import helmet from 'helmet';
+import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, json, urlencoded } from 'express';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
@@ -25,13 +27,44 @@ initializeSentry();
 
 async function bootstrap(): Promise<void> {
   const logger = new Logger('Bootstrap');
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    rawBody: true, // Required for Stripe webhook signature verification
+    bufferLogs: true, // Buffer logs until Pino logger is ready
+  });
+
+  // Use Pino as the NestJS logger (structured JSON in production)
+  app.useLogger(app.get(PinoLogger));
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT', 3000);
   const apiPrefix = configService.get<string>('API_PREFIX', 'api/v1');
   const nodeEnv = configService.get<string>('NODE_ENV', 'development');
 
+  // HTTP compression middleware (GAP-P2) — gzip/brotli for response bodies
+  // NOTE: Do not compress Server-Sent Events (SSE) or streaming AI gateway responses
+  app.use(
+    compression({
+      filter: (req, res) => {
+        const acceptHeader = req.headers.accept ?? '';
+
+        // Skip compression for SSE and streaming endpoints (prefix-aware)
+        const url =
+          typeof (req as unknown as { originalUrl?: string }).originalUrl === 'string'
+            ? (req as unknown as { originalUrl: string }).originalUrl
+            : req.url;
+        if (typeof url === 'string' && url.includes('/ai-gateway/stream')) {
+          return false;
+        }
+
+        if (acceptHeader.includes('text/event-stream')) {
+          return false;
+        }
+
+        // Fallback to default compression filter behavior
+        return compression.filter(req, res);
+      },
+    }),
+  );
   // Security middleware with CSP configuration for React SPA
   app.use(
     helmet({
@@ -73,6 +106,7 @@ async function bootstrap(): Promise<void> {
           baseUri: ["'self'"],
           formAction: ["'self'"],
           frameAncestors: ["'self'"],
+          reportUri: [`/${apiPrefix.replace(/^\/+/, '')}/csp-report`],
           upgradeInsecureRequests: nodeEnv === 'production' ? [] : null,
         },
       },
@@ -90,7 +124,7 @@ async function bootstrap(): Promise<void> {
 
   // Permissions-Policy header (formerly Feature-Policy)
   // Restricts which browser features the site can use
-  app.use((req: Request, res: Response, next: NextFunction) => {
+  app.use((_req: Request, res: Response, next: NextFunction) => {
     res.setHeader(
       'Permissions-Policy',
       [
@@ -139,13 +173,21 @@ async function bootstrap(): Promise<void> {
   // Cookie parser for CSRF tokens
   app.use(cookieParser());
 
+  // Request body size limits (GAP-S2) — prevent oversized payload attacks
+  app.use(json({ limit: '1mb' }));
+  app.use(urlencoded({ limit: '1mb', extended: true }));
+
   // CORS configuration - parse comma-separated origins and handle credentials properly
   const corsOrigin = configService.get<string>('CORS_ORIGIN', '*');
   const parsedOrigins = corsOrigin === '*' ? '*' : corsOrigin.split(',').map((o) => o.trim());
+  const useCredentials = parsedOrigins !== '*';
+  if (!useCredentials && nodeEnv !== 'development') {
+    logger.warn('CORS wildcard origin detected in non-dev environment — credentials disabled');
+  }
   app.enableCors({
     origin: parsedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    credentials: true,
+    credentials: useCredentials,
   });
 
   // Global prefix
@@ -169,12 +211,16 @@ async function bootstrap(): Promise<void> {
   // Global interceptors
   app.useGlobalInterceptors(new TransformInterceptor(), new LoggingInterceptor());
 
-  // Swagger/OpenAPI documentation - available in all environments
-  // Production APIs benefit from self-documenting endpoints
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('Quiz2Biz API')
-    .setDescription(
-      `## Adaptive Questionnaire System API
+  // Swagger/OpenAPI documentation — gated by ENABLE_SWAGGER (disabled in production by default)
+  const enableSwagger = configService.get<string>(
+    'ENABLE_SWAGGER',
+    nodeEnv !== 'production' ? 'true' : 'false',
+  );
+  if (enableSwagger === 'true') {
+    const swaggerConfig = new DocumentBuilder()
+      .setTitle('Quiz2Biz API')
+      .setDescription(
+        `## Adaptive Questionnaire System API
       
 This API powers the Quiz2Biz platform - an intelligent assessment tool for organizational readiness.
 
@@ -191,62 +237,65 @@ This API powers the Quiz2Biz platform - an intelligent assessment tool for organ
 
 ### Support
 For API issues, contact: support@quiz2biz.com`,
-    )
-    .setVersion('1.0.0')
-    .setContact('Quiz2Biz Team', 'https://quiz2biz.com', 'support@quiz2biz.com')
-    .setLicense('Proprietary', 'https://quiz2biz.com/terms')
-    .addServer(
-      nodeEnv === 'production' ? 'https://api.quiz2biz.com' : `http://localhost:${port}`,
-      nodeEnv === 'production' ? 'Production' : 'Development',
-    )
-    .addBearerAuth(
-      {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-        name: 'Authorization',
-        description: 'Enter your JWT access token',
-        in: 'header',
-      },
-      'JWT-auth',
-    )
-    .addTag('auth', 'Authentication & authorization endpoints')
-    .addTag('users', 'User profile management')
-    .addTag('questionnaires', 'Questionnaire templates and management')
-    .addTag('sessions', 'Assessment sessions and progress')
-    .addTag('responses', 'Question responses and validation')
-    .addTag('scoring', 'Readiness scoring and heatmaps')
-    .addTag('evidence', 'Evidence collection and verification')
-    .addTag('documents', 'Document generation and export')
-    .addTag('admin', 'Administrative operations')
-    .addTag('payment', 'Subscription and billing')
-    .addTag('health', 'Health check endpoints')
-    .build();
+      )
+      .setVersion('1.0.0')
+      .setContact('Quiz2Biz Team', 'https://quiz2biz.com', 'support@quiz2biz.com')
+      .setLicense('Proprietary', 'https://quiz2biz.com/terms')
+      .addServer(
+        nodeEnv === 'production' ? 'https://api.quiz2biz.com' : `http://localhost:${port}`,
+        nodeEnv === 'production' ? 'Production' : 'Development',
+      )
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          name: 'Authorization',
+          description: 'Enter your JWT access token',
+          in: 'header',
+        },
+        'JWT-auth',
+      )
+      .addTag('auth', 'Authentication & authorization endpoints')
+      .addTag('users', 'User profile management')
+      .addTag('questionnaires', 'Questionnaire templates and management')
+      .addTag('sessions', 'Assessment sessions and progress')
+      .addTag('responses', 'Question responses and validation')
+      .addTag('scoring', 'Readiness scoring and heatmaps')
+      .addTag('evidence', 'Evidence collection and verification')
+      .addTag('documents', 'Document generation and export')
+      .addTag('admin', 'Administrative operations')
+      .addTag('payment', 'Subscription and billing')
+      .addTag('health', 'Health check endpoints')
+      .build();
 
-  const openApiDocument = SwaggerModule.createDocument(app, swaggerConfig, {
-    operationIdFactory: (controllerKey: string, methodKey: string) => methodKey,
-  });
+    const openApiDocument = SwaggerModule.createDocument(app, swaggerConfig, {
+      operationIdFactory: (_controllerKey: string, methodKey: string) => methodKey,
+    });
 
-  // Set up Swagger UI at /api/v1/docs
-  SwaggerModule.setup(`${apiPrefix}/docs`, app, openApiDocument, {
-    swaggerOptions: {
-      persistAuthorization: true,
-      docExpansion: 'none',
-      filter: true,
-      showRequestDuration: true,
-      syntaxHighlight: {
-        activate: true,
-        theme: 'monokai',
+    // Set up Swagger UI at /api/v1/docs
+    SwaggerModule.setup(`${apiPrefix}/docs`, app, openApiDocument, {
+      swaggerOptions: {
+        persistAuthorization: true,
+        docExpansion: 'none',
+        filter: true,
+        showRequestDuration: true,
+        syntaxHighlight: {
+          activate: true,
+          theme: 'monokai',
+        },
       },
-    },
-    customSiteTitle: 'Quiz2Biz API Documentation',
-    customCss: `
+      customSiteTitle: 'Quiz2Biz API Documentation',
+      customCss: `
       .swagger-ui .topbar { display: none; }
       .swagger-ui .info .title { font-size: 2rem; }
     `,
-  });
+    });
 
-  logger.log(`Swagger documentation available at /${apiPrefix}/docs`);
+    logger.log(`Swagger documentation available at /${apiPrefix}/docs`);
+  } else {
+    logger.log('Swagger documentation is disabled (set ENABLE_SWAGGER=true to enable)');
+  }
 
   // Graceful shutdown
   app.enableShutdownHooks();
@@ -267,13 +316,15 @@ For API issues, contact: support@quiz2biz.com`,
   logger.log(`Environment: ${nodeEnv}`);
 }
 
-bootstrap().catch((error) => {
+bootstrap().catch((error: unknown) => {
   const logger = new Logger('Bootstrap');
   logger.error('Failed to start application', error);
-  console.error('Full stack trace:', error.stack);
+  logger.error('Full stack trace:', error instanceof Error ? error.stack : String(error));
 
   // Capture bootstrap errors in Sentry
-  captureException(error, { context: 'bootstrap' });
+  captureException(error instanceof Error ? error : new Error(String(error)), {
+    context: 'bootstrap',
+  });
 
   process.exit(1);
 });

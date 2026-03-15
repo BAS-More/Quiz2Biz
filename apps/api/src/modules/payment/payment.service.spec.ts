@@ -8,7 +8,6 @@ jest.mock('stripe');
 
 describe('PaymentService', () => {
   let service: PaymentService;
-  let configService: ConfigService;
   let mockStripe: jest.Mocked<Stripe>;
   let module: TestingModule;
 
@@ -51,7 +50,7 @@ describe('PaymentService', () => {
           useValue: {
             get: jest.fn((key: string, defaultValue?: string) => {
               if (key === 'STRIPE_SECRET_KEY') {
-                return 'sk_test_123';
+                return 'test_stripe_key_123';
               }
               if (key === 'STRIPE_PRICE_PROFESSIONAL') {
                 return defaultValue || 'price_professional';
@@ -67,7 +66,7 @@ describe('PaymentService', () => {
     }).compile();
 
     service = module.get<PaymentService>(PaymentService);
-    configService = module.get<ConfigService>(ConfigService);
+    module.get<ConfigService>(ConfigService);
   });
 
   afterAll(async () => {
@@ -553,7 +552,7 @@ describe('PaymentService', () => {
             useValue: {
               get: jest.fn((key: string, defaultValue?: string) => {
                 if (key === 'STRIPE_SECRET_KEY') {
-                  return 'sk_test_123';
+                  return 'test_stripe_key_123';
                 }
                 if (key === 'STRIPE_PRICE_PROFESSIONAL') {
                   return defaultValue;

@@ -22,14 +22,20 @@ export default defineConfig([
     rules: {
       // Disable React Compiler experimental rules for react-hook-form compatibility
       'react-hooks/incompatible-library': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
-      // Temporary disable rules blocking deployment
+      // Restored: detect unused vars (prefix with _ to suppress)
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+      // TODO: Progressively fix and re-enable no-explicit-any
       '@typescript-eslint/no-explicit-any': 'off',
       'react-hooks/set-state-in-effect': 'off',
       'react-refresh/only-export-components': 'off',
+      // TODO: Progressively fix and re-enable purity/immutability
       'react-hooks/purity': 'off',
       'no-case-declarations': 'off',
-      'react-hooks/exhaustive-deps': 'off',
+      // Restored: detect stale closure bugs in hooks
+      'react-hooks/exhaustive-deps': 'warn',
       'react-hooks/preserve-manual-memoization': 'off',
       'react-hooks/immutability': 'off',
     },

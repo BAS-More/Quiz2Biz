@@ -166,7 +166,7 @@ function buildConfig(): IOrchestratorConfig {
 // ── Validation ──────────────────────────────────────────────────────────────
 
 /** Required environment variables — config key, description. */
-const REQUIRED_VARS: ReadonlyArray<{
+export const REQUIRED_VARS: ReadonlyArray<{
   key: keyof IOrchestratorConfig;
   path: string;
   description: string;

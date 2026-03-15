@@ -7,11 +7,13 @@ import {
   Body,
   Param,
   Query,
+  Headers,
   HttpCode,
   HttpStatus,
   BadRequestException,
   NotFoundException,
   UseGuards,
+  Logger,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -21,34 +23,67 @@ import {
   ApiParam,
   ApiQuery,
 } from '@nestjs/swagger';
+import * as crypto from 'crypto';
+import { IsString, IsBoolean, IsEnum, IsObject, IsOptional, IsUUID } from 'class-validator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Public } from '../auth/decorators/public.decorator';
 import { GitHubAdapter } from './github.adapter';
 import { GitLabAdapter } from './gitlab.adapter';
 import { JiraConfluenceAdapter } from './jira-confluence.adapter';
-import { AdapterConfigService, AdapterType, AdapterConfig } from './adapter-config.service';
+import {
+  AdapterConfigService,
+  AdapterType,
+  AdapterConfig,
+  GitHubAdapterConfig,
+  GitLabAdapterConfig,
+  JiraAdapterConfig,
+  ConfluenceAdapterConfig,
+} from './adapter-config.service';
 
-// DTOs
+// DTOs with class-validator decorators for input validation (GAP-001 fix)
 class CreateAdapterConfigDto {
-  type: AdapterType;
-  name: string;
-  enabled: boolean;
-  config: Record<string, unknown>;
+  @IsEnum(['github', 'gitlab', 'jira', 'confluence', 'azure_devops'])
+  type!: AdapterType;
+
+  @IsString()
+  name!: string;
+
+  @IsBoolean()
+  enabled!: boolean;
+
+  @IsObject()
+  config!: Record<string, unknown>;
 }
 
 class UpdateAdapterConfigDto {
+  @IsOptional()
+  @IsString()
   name?: string;
+
+  @IsOptional()
+  @IsBoolean()
   enabled?: boolean;
+
+  @IsOptional()
+  @IsObject()
   config?: Record<string, unknown>;
 }
 
 class SyncAdapterDto {
-  sessionId: string;
+  @IsUUID()
+  sessionId!: string;
+
+  @IsOptional()
+  @IsObject()
   options?: Record<string, unknown>;
 }
 
 class TestAdapterConnectionDto {
-  type: AdapterType;
-  config: Record<string, unknown>;
+  @IsEnum(['github', 'gitlab', 'jira', 'confluence', 'azure_devops'])
+  type!: AdapterType;
+
+  @IsObject()
+  config!: Record<string, unknown>;
 }
 
 @ApiTags('Adapters')
@@ -200,7 +235,7 @@ export class AdapterController {
     try {
       switch (dto.type) {
         case 'github': {
-          const config = dto.config as any;
+          const config = dto.config as unknown as GitHubAdapterConfig;
           // Try to fetch a single PR to test connection
           await this.githubAdapter.fetchPullRequests(
             { token: config.token, owner: config.owner, repo: config.repo },
@@ -210,7 +245,7 @@ export class AdapterController {
         }
 
         case 'gitlab': {
-          const config = dto.config as any;
+          const config = dto.config as unknown as GitLabAdapterConfig;
           await this.gitlabAdapter.fetchPipelines(
             { token: config.token, projectId: config.projectId, apiUrl: config.apiUrl },
             { perPage: 1 },
@@ -219,7 +254,7 @@ export class AdapterController {
         }
 
         case 'jira': {
-          const config = dto.config as any;
+          const config = dto.config as unknown as JiraAdapterConfig;
           await this.jiraConfluenceAdapter.fetchProject(
             { domain: config.domain, email: config.email, apiToken: config.apiToken },
             config.projectKey,
@@ -228,7 +263,7 @@ export class AdapterController {
         }
 
         case 'confluence': {
-          const config = dto.config as any;
+          const config = dto.config as unknown as ConfluenceAdapterConfig;
           await this.jiraConfluenceAdapter.searchPages(
             {
               domain: config.domain,
@@ -283,7 +318,7 @@ export class AdapterController {
 
       switch (config.type) {
         case 'github': {
-          const githubConfig = config.config as any;
+          const githubConfig = config.config as unknown as GitHubAdapterConfig;
           result = await this.githubAdapter.ingestAllEvidence(
             {
               token: githubConfig.token,
@@ -297,7 +332,7 @@ export class AdapterController {
         }
 
         case 'gitlab': {
-          const gitlabConfig = config.config as any;
+          const gitlabConfig = config.config as unknown as GitLabAdapterConfig;
           result = await this.gitlabAdapter.ingestAllEvidence(
             {
               token: gitlabConfig.token,
@@ -311,14 +346,16 @@ export class AdapterController {
 
         case 'jira':
         case 'confluence': {
-          const atlassianConfig = config.config as any;
+          const atlassianConfig = config.config as unknown as JiraAdapterConfig & {
+            spaceKey?: string;
+          };
           const confluenceConfig =
             config.type === 'confluence' || atlassianConfig.spaceKey
               ? {
                   domain: atlassianConfig.domain,
                   email: atlassianConfig.email,
                   apiToken: atlassianConfig.apiToken,
-                  spaceKey: atlassianConfig.spaceKey,
+                  spaceKey: atlassianConfig.spaceKey ?? '',
                 }
               : null;
 
@@ -404,73 +441,100 @@ export class AdapterController {
 
   // ==================== WEBHOOKS ====================
 
+  private readonly webhookLogger = new Logger('AdapterWebhook');
+
+  /**
+   * Verify GitHub webhook signature using HMAC-SHA256
+   * @see https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries
+   */
+  private verifyGitHubSignature(payload: string, signature: string, secret: string): boolean {
+    const expected = 'sha256=' + crypto.createHmac('sha256', secret).update(payload).digest('hex');
+    return (
+      signature.length === expected.length &&
+      crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))
+    );
+  }
+
+  @Public()
   @Post('webhooks/github')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'GitHub webhook endpoint' })
+  @ApiOperation({ summary: 'GitHub webhook endpoint — authenticated via HMAC signature, not JWT' })
   async handleGitHubWebhook(
     @Body() payload: Record<string, unknown>,
+    @Headers('x-hub-signature-256') signature: string,
     @Query('adapterId') adapterId: string,
     @Query('tenantId') tenantId: string,
   ) {
-    // Validate and sanitize event name from payload
-    const eventName = this.sanitizeWebhookEvent(payload.action);
-
     const config = await this.adapterConfigService.getAdapterConfig(tenantId, adapterId);
-    if (!config) {
-      return { status: 'ignored', reason: 'Adapter not found or disabled' };
-    }
-    if (!config.enabled) {
+    if (!config || !config.enabled) {
       return { status: 'ignored', reason: 'Adapter not found or disabled' };
     }
 
-    // Process webhook event based on event type
-    // This would typically trigger an async job
+    // Verify webhook signature
+    const webhookSecret = (config as AdapterConfig & { webhookSecret?: string }).webhookSecret;
+    if (webhookSecret && signature) {
+      const isValid = this.verifyGitHubSignature(JSON.stringify(payload), signature, webhookSecret);
+      if (!isValid) {
+        this.webhookLogger.warn(`GitHub webhook signature mismatch for adapter ${adapterId}`);
+        throw new BadRequestException('Invalid webhook signature');
+      }
+    } else {
+      this.webhookLogger.warn(`GitHub webhook received without signature for adapter ${adapterId}`);
+    }
+
     return {
       status: 'received',
-      adapterId: config.id,
-      event: eventName,
+      adapterId,
+      event: payload.action || 'unknown',
     };
   }
 
+  @Public()
   @Post('webhooks/gitlab')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'GitLab webhook endpoint' })
+  @ApiOperation({ summary: 'GitLab webhook endpoint — authenticated via secret token, not JWT' })
   async handleGitLabWebhook(
     @Body() payload: Record<string, unknown>,
+    @Headers('x-gitlab-token') gitlabToken: string,
     @Query('adapterId') adapterId: string,
     @Query('tenantId') tenantId: string,
   ) {
-    // Validate and sanitize event name from payload
-    const eventName = this.sanitizeWebhookEvent(payload.object_kind);
-
     const config = await this.adapterConfigService.getAdapterConfig(tenantId, adapterId);
-    if (!config) {
+    if (!config || !config.enabled) {
       return { status: 'ignored', reason: 'Adapter not found or disabled' };
     }
-    if (!config.enabled) {
-      return { status: 'ignored', reason: 'Adapter not found or disabled' };
+
+    // Verify GitLab secret token
+    const webhookSecret = (config as AdapterConfig & { webhookSecret?: string }).webhookSecret;
+    if (webhookSecret) {
+      // Use constant-time comparison to avoid timing side-channels on webhook secrets
+      if (!gitlabToken) {
+        this.webhookLogger.warn(`GitLab webhook token mismatch for adapter ${adapterId}`);
+        throw new BadRequestException('Invalid webhook token');
+      }
+
+      const webhookSecretBuffer = Buffer.from(webhookSecret, 'utf8');
+      const gitlabTokenBuffer = Buffer.from(gitlabToken, 'utf8');
+
+      if (
+        gitlabTokenBuffer.length !== webhookSecretBuffer.length ||
+        !crypto.timingSafeEqual(gitlabTokenBuffer, webhookSecretBuffer)
+      ) {
+        this.webhookLogger.warn(`GitLab webhook token mismatch for adapter ${adapterId}`);
+        throw new BadRequestException('Invalid webhook token');
+      }
+    } else {
+      this.webhookLogger.warn(`GitLab webhook received without token for adapter ${adapterId}`);
     }
 
     return {
       status: 'received',
-      adapterId: config.id,
-      event: eventName,
+      adapterId,
+      event: payload.object_kind || 'unknown',
     };
   }
 
   // ==================== HELPERS ====================
-
-  /**
-   * Sanitize webhook event name to prevent injection of user-controlled values.
-   * Only allows alphanumeric characters, underscores, hyphens, and dots.
-   */
-  private sanitizeWebhookEvent(value: unknown): string {
-    if (typeof value !== 'string') {
-      return 'unknown';
-    }
-    const sanitized = value.replace(/[^a-zA-Z0-9_.-]/g, '');
-    return sanitized.length > 0 ? sanitized.substring(0, 100) : 'unknown';
-  }
 
   private redactSensitiveFields(config: AdapterConfig): AdapterConfig {
     const redacted = { ...config, config: { ...config.config } };

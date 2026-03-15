@@ -7,7 +7,7 @@ import { testUsers, createTestHelpers } from '../fixtures';
 
 test.describe('User Login Flow', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/login');
+    await page.goto('/auth/login');
   });
 
   test('should display login form with all required fields', async ({ page }) => {
@@ -82,13 +82,13 @@ test.describe('User Login Flow', () => {
 
   test('should navigate to registration page', async ({ page }) => {
     await page.click('text=Create an account');
-    await page.waitForURL('/register');
+    await page.waitForURL('/auth/register');
     await expect(page.locator('[data-testid="register-button"]')).toBeVisible();
   });
 
   test('should navigate to forgot password page', async ({ page }) => {
     await page.click('text=Forgot password');
-    await page.waitForURL('/forgot-password');
+    await page.waitForURL('/auth/forgot-password');
     await expect(page.locator('[data-testid="reset-password-button"]')).toBeVisible();
   });
 
@@ -100,7 +100,7 @@ test.describe('User Login Flow', () => {
 test.describe('Session Management', () => {
   test('should persist session after page reload', async ({ page }) => {
     // Login first
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.fill('[data-testid="email-input"]', testUsers.user.email);
     await page.fill('[data-testid="password-input"]', testUsers.user.password);
     await page.click('[data-testid="login-button"]');
@@ -116,7 +116,7 @@ test.describe('Session Management', () => {
 
   test('should logout successfully', async ({ page }) => {
     // Login first
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.fill('[data-testid="email-input"]', testUsers.user.email);
     await page.fill('[data-testid="password-input"]', testUsers.user.password);
     await page.click('[data-testid="login-button"]');
@@ -127,7 +127,7 @@ test.describe('Session Management', () => {
     await page.click('[data-testid="logout-button"]');
 
     // Should redirect to login
-    await page.waitForURL('/login');
+    await page.waitForURL('/auth/login');
     await expect(page.locator('[data-testid="login-button"]')).toBeVisible();
   });
 
@@ -136,16 +136,16 @@ test.describe('Session Management', () => {
     await page.goto('/dashboard');
 
     // Should redirect to login
-    await page.waitForURL(/\/login/);
+    await page.waitForURL(/\/auth\/login/);
     await expect(page.locator('[data-testid="login-button"]')).toBeVisible();
   });
 
   test('should redirect to intended page after login', async ({ page }) => {
     // Try to access questionnaires without login
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
 
     // Should redirect to login with redirect parameter
-    await page.waitForURL(/\/login/);
+    await page.waitForURL(/\/auth\/login/);
 
     // Login
     await page.fill('[data-testid="email-input"]', testUsers.user.email);
@@ -153,12 +153,12 @@ test.describe('Session Management', () => {
     await page.click('[data-testid="login-button"]');
 
     // Should redirect to original intended page
-    await page.waitForURL('/questionnaires', { timeout: 10000 });
+    await page.waitForURL('/questionnaire', { timeout: 10000 });
   });
 
   test('should display user information in header', async ({ page }) => {
     // Login first
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.fill('[data-testid="email-input"]', testUsers.user.email);
     await page.fill('[data-testid="password-input"]', testUsers.user.password);
     await page.click('[data-testid="login-button"]');
@@ -173,7 +173,7 @@ test.describe('Session Management', () => {
 
   test('should handle session expiration gracefully', async ({ page, context }) => {
     // Login first
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.fill('[data-testid="email-input"]', testUsers.user.email);
     await page.fill('[data-testid="password-input"]', testUsers.user.password);
     await page.click('[data-testid="login-button"]');
@@ -183,10 +183,10 @@ test.describe('Session Management', () => {
     await context.clearCookies();
 
     // Try to perform an action
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
 
     // Should redirect to login with appropriate message
-    await page.waitForURL(/\/login/);
+    await page.waitForURL(/\/auth\/login/);
     await expect(
       page.locator('text=session expired').or(page.locator('text=Please login')),
     ).toBeVisible();
@@ -195,7 +195,7 @@ test.describe('Session Management', () => {
 
 test.describe('Password Reset Flow', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/forgot-password');
+    await page.goto('/auth/forgot-password');
   });
 
   test('should display password reset form', async ({ page }) => {
@@ -224,13 +224,13 @@ test.describe('Password Reset Flow', () => {
 
   test('should navigate back to login', async ({ page }) => {
     await page.click('text=Back to login');
-    await page.waitForURL('/login');
+    await page.waitForURL('/auth/login');
     await expect(page.locator('[data-testid="login-button"]')).toBeVisible();
   });
 
   test('should handle reset token flow', async ({ page }) => {
     // Navigate to reset page with token
-    await page.goto('/reset-password?token=valid-reset-token');
+    await page.goto('/auth/reset-password?token=valid-reset-token');
 
     // Should show new password form
     await expect(page.locator('[data-testid="new-password-input"]')).toBeVisible();
@@ -239,7 +239,7 @@ test.describe('Password Reset Flow', () => {
   });
 
   test('should validate new password requirements', async ({ page }) => {
-    await page.goto('/reset-password?token=valid-reset-token');
+    await page.goto('/auth/reset-password?token=valid-reset-token');
 
     await page.fill('[data-testid="new-password-input"]', 'weak');
     await page.fill('[data-testid="confirm-password-input"]', 'weak');
@@ -252,7 +252,7 @@ test.describe('Password Reset Flow', () => {
   });
 
   test('should handle invalid reset token', async ({ page }) => {
-    await page.goto('/reset-password?token=invalid-token');
+    await page.goto('/auth/reset-password?token=invalid-token');
 
     // Should show error message
     await expect(page.locator('text=invalid').or(page.locator('text=expired'))).toBeVisible({
@@ -263,28 +263,28 @@ test.describe('Password Reset Flow', () => {
 
 test.describe('Admin Login', () => {
   test('should allow admin to access admin panel', async ({ page }) => {
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.fill('[data-testid="email-input"]', testUsers.admin.email);
     await page.fill('[data-testid="password-input"]', testUsers.admin.password);
     await page.click('[data-testid="login-button"]');
     await page.waitForURL('/dashboard');
 
     // Navigate to admin panel
-    await page.goto('/admin');
+    await page.goto('/admin/review');
 
     // Admin should have access
     await expect(page.locator('[data-testid="admin-dashboard"]')).toBeVisible();
   });
 
   test('should deny regular user from admin panel', async ({ page }) => {
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.fill('[data-testid="email-input"]', testUsers.user.email);
     await page.fill('[data-testid="password-input"]', testUsers.user.password);
     await page.click('[data-testid="login-button"]');
     await page.waitForURL('/dashboard');
 
     // Try to access admin panel
-    await page.goto('/admin');
+    await page.goto('/admin/review');
 
     // Should show access denied or redirect
     await expect(page.locator('text=Access denied').or(page.locator('text=Unauthorized')))

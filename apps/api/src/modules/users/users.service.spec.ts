@@ -7,7 +7,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 describe('UsersService', () => {
   let service: UsersService;
-  let prisma: jest.Mocked<PrismaService>;
   let module: TestingModule;
 
   const mockUser = {
@@ -52,7 +51,7 @@ describe('UsersService', () => {
     }).compile();
 
     service = module.get<UsersService>(UsersService);
-    prisma = module.get(PrismaService);
+    module.get(PrismaService);
   });
 
   afterAll(async () => {
@@ -186,7 +185,7 @@ describe('UsersService', () => {
       });
       mockPrismaService.document.count.mockResolvedValue(0);
 
-      const result = await service.update('user-123', prefsDto, 'user-123');
+      await service.update('user-123', prefsDto, 'user-123');
 
       expect(mockPrismaService.user.update).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -223,7 +222,7 @@ describe('UsersService', () => {
       mockPrismaService.user.count.mockResolvedValue(1);
       mockPrismaService.document.count.mockResolvedValue(0);
 
-      const result = await service.findAll({ page: 1, limit: 10, skip: 0 }, UserRole.CLIENT);
+      await service.findAll({ page: 1, limit: 10, skip: 0 }, UserRole.CLIENT);
 
       expect(mockPrismaService.user.findMany).toHaveBeenCalledWith(
         expect.objectContaining({

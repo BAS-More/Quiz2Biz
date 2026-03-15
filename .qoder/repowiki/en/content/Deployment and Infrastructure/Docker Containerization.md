@@ -19,6 +19,7 @@
 </cite>
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
@@ -31,7 +32,9 @@
 10. [Appendices](#appendices)
 
 ## Introduction
+
 This document explains the Docker containerization of the Quiz-to-build system with a focus on:
+
 - Multi-stage Dockerfile for the API service, including base image selection, dependency installation, and optimization techniques
 - docker-compose orchestration for local development, including service definitions, network configuration, volume mounts, and environment variable management
 - PostgreSQL initialization script for database setup and seeding
@@ -41,12 +44,14 @@ This document explains the Docker containerization of the Quiz-to-build system w
 - Security best practices, image optimization, and registry management guidance
 
 ## Project Structure
+
 The containerization artifacts are organized under dedicated folders:
+
 - docker/api/Dockerfile defines the multi-stage build for the API service
 - docker-compose.yml orchestrates PostgreSQL, Redis, and the API service
 - docker/postgres/init.sql initializes database extensions and grants privileges
-- prisma/* seeds the database with initial data and standards
-- apps/api/* and libs/* define runtime configuration and environment variables
+- prisma/\* seeds the database with initial data and standards
+- apps/api/_ and libs/_ define runtime configuration and environment variables
 
 ```mermaid
 graph TB
@@ -72,13 +77,16 @@ API --> RD
 ```
 
 **Diagram sources**
+
 - [docker-compose.yml](file://docker-compose.yml#L1-L77)
 
 **Section sources**
+
 - [docker-compose.yml](file://docker-compose.yml#L1-L77)
 - [Dockerfile](file://docker/api/Dockerfile#L1-L72)
 
 ## Core Components
+
 - API Service (multi-stage Dockerfile)
   - Builder stage installs dependencies, generates Prisma client, and builds the application
   - Production stage runs as a non-root user, exposes port 3000, includes a health check, and starts the server
@@ -89,18 +97,22 @@ API --> RD
   - Uses redis:7-alpine with AOF persistence and health check
 
 Key environment variables and ports:
+
 - API: PORT=3000, DATABASE_URL, REDIS_HOST, REDIS_PORT, JWT secrets
 - PostgreSQL: POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
 - Redis: default host/port with AOF enabled
 
 **Section sources**
+
 - [Dockerfile](file://docker/api/Dockerfile#L1-L72)
 - [docker-compose.yml](file://docker-compose.yml#L1-L77)
 - [configuration.ts](file://apps/api/src/config/configuration.ts#L1-L49)
 - [main.ts](file://apps/api/src/main.ts#L1-L93)
 
 ## Architecture Overview
+
 The system runs three containers orchestrated by Docker Compose:
+
 - API container depends on healthy PostgreSQL and Redis
 - API connects to PostgreSQL via Prisma and to Redis via ioredis
 - Initialization script ensures required PostgreSQL extensions and privileges
@@ -125,6 +137,7 @@ RD --> |"AOF"| RDBDATA["/data"]
 ```
 
 **Diagram sources**
+
 - [docker-compose.yml](file://docker-compose.yml#L1-L77)
 - [Dockerfile](file://docker/api/Dockerfile#L1-L72)
 - [init.sql](file://docker/postgres/init.sql#L1-L21)
@@ -132,7 +145,9 @@ RD --> |"AOF"| RDBDATA["/data"]
 ## Detailed Component Analysis
 
 ### API Service Dockerfile (Multi-stage)
+
 Implementation highlights:
+
 - Base images: node:20-alpine for all stages
 - Builder stage:
   - Copies package manifests for workspace packages
@@ -150,6 +165,7 @@ Implementation highlights:
   - Similar to production but uses npm run start:dev
 
 Optimization techniques:
+
 - Multi-stage build reduces final image size
 - npm ci for deterministic installs
 - Minimal base image (alpine)
@@ -174,13 +190,17 @@ DevStage --> DevRun["Start with npm run start:dev"]
 ```
 
 **Diagram sources**
+
 - [Dockerfile](file://docker/api/Dockerfile#L1-L72)
 
 **Section sources**
+
 - [Dockerfile](file://docker/api/Dockerfile#L1-L72)
 
 ### docker-compose Orchestration
+
 Services:
+
 - postgres:
   - Image: postgres:15-alpine
   - Ports: 5432:5432
@@ -218,13 +238,17 @@ API-->>Compose : Ready after dependencies healthy
 ```
 
 **Diagram sources**
+
 - [docker-compose.yml](file://docker-compose.yml#L1-L77)
 
 **Section sources**
+
 - [docker-compose.yml](file://docker-compose.yml#L1-L77)
 
 ### PostgreSQL Initialization Script
+
 Purpose:
+
 - Enables UUID and pgcrypto extensions
 - Grants privileges on the questionnaire database to postgres
 - Logs successful initialization
@@ -239,13 +263,17 @@ LogNotice --> InitEnd["Initialization complete"]
 ```
 
 **Diagram sources**
+
 - [init.sql](file://docker/postgres/init.sql#L1-L21)
 
 **Section sources**
+
 - [init.sql](file://docker/postgres/init.sql#L1-L21)
 
 ### Database Seeding and Standards
+
 Prisma schema defines the data model and datasource URL from environment variables. The seed script:
+
 - Creates default organization and admin user
 - Seeds a main questionnaire with sections, questions, visibility rules
 - Seeds engineering standards and document-type-to-standard mappings
@@ -263,16 +291,19 @@ Standards --> Complete["Seed complete"]
 ```
 
 **Diagram sources**
+
 - [seed.ts](file://prisma/seed.ts#L1-L495)
 - [standards.seed.ts](file://prisma/seeds/standards.seed.ts#L1-L361)
 - [schema.prisma](file://prisma/schema.prisma#L1-L447)
 
 **Section sources**
+
 - [seed.ts](file://prisma/seed.ts#L1-L495)
 - [standards.seed.ts](file://prisma/seeds/standards.seed.ts#L1-L361)
 - [schema.prisma](file://prisma/schema.prisma#L1-L447)
 
 ### Runtime Configuration and Environment Variables
+
 - API reads configuration from environment variables via ConfigModule
 - Key variables include NODE_ENV, PORT, DATABASE_URL, REDIS_HOST, REDIS_PORT, JWT secrets, CORS_ORIGIN, logging level
 - Example environment files:
@@ -308,16 +339,19 @@ Configuration --> EnvProdExample : "production"
 ```
 
 **Diagram sources**
+
 - [configuration.ts](file://apps/api/src/config/configuration.ts#L1-L49)
 - [.env.example](file://.env.example#L1-L33)
 - [.env.production.example](file://.env.production.example#L1-L66)
 
 **Section sources**
+
 - [configuration.ts](file://apps/api/src/config/configuration.ts#L1-L49)
 - [.env.example](file://.env.example#L1-L33)
 - [.env.production.example](file://.env.production.example#L1-L66)
 
 ### Inter-Service Communication
+
 - API connects to PostgreSQL using DATABASE_URL
 - API connects to Redis using REDIS_HOST and REDIS_PORT
 - Both connections are configured at runtime via environment variables
@@ -335,16 +369,19 @@ CACHE-->>API : Cache operations
 ```
 
 **Diagram sources**
+
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 - [docker-compose.yml](file://docker-compose.yml#L1-L77)
 
 **Section sources**
+
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 - [docker-compose.yml](file://docker-compose.yml#L1-L77)
 
 ## Dependency Analysis
+
 - API depends on:
   - PostgreSQL for relational data (Prisma)
   - Redis for caching and session-like operations
@@ -365,16 +402,19 @@ CACHE --> NET
 ```
 
 **Diagram sources**
+
 - [docker-compose.yml](file://docker-compose.yml#L1-L77)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 
 **Section sources**
+
 - [docker-compose.yml](file://docker-compose.yml#L1-L77)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
 - [redis.service.ts](file://libs/redis/src/redis.service.ts#L1-L96)
 
 ## Performance Considerations
+
 - Multi-stage build minimizes final image size and attack surface
 - Alpine base reduces footprint
 - Non-root user improves security posture
@@ -385,7 +425,9 @@ CACHE --> NET
 [No sources needed since this section provides general guidance]
 
 ## Troubleshooting Guide
+
 Common issues and resolutions:
+
 - API fails to start due to database unavailability
   - Verify PostgreSQL health check passes and init.sql executed
   - Confirm DATABASE_URL matches compose network and credentials
@@ -400,14 +442,17 @@ Common issues and resolutions:
   - Review health check intervals/timeouts and service readiness
 
 Operational commands:
+
 - Start/stop services: npm run docker:up, npm run docker:down
 - View logs: npm run docker:logs
 
 **Section sources**
+
 - [docker-compose.yml](file://docker-compose.yml#L1-L77)
 - [package.json](file://package.json#L10-L34)
 
 ## Conclusion
+
 The Quiz-to-build system leverages a multi-stage Dockerfile for the API, robust docker-compose orchestration for local development, and a PostgreSQL initialization script with Prisma-based seeding. The setup emphasizes security (non-root user), reliability (health checks and restart policies), and maintainability (multi-stage builds and persistent volumes). Production preparation involves updating environment variables and ensuring proper secrets management.
 
 [No sources needed since this section summarizes without analyzing specific files]
@@ -415,6 +460,7 @@ The Quiz-to-build system leverages a multi-stage Dockerfile for the API, robust 
 ## Appendices
 
 ### Local Development Setup
+
 - Prerequisites: Docker and Docker Compose installed
 - Steps:
   - Copy .env.example to .env and adjust values as needed
@@ -424,11 +470,13 @@ The Quiz-to-build system leverages a multi-stage Dockerfile for the API, robust 
   - Stop services with docker-compose down
 
 **Section sources**
+
 - [docker-compose.yml](file://docker-compose.yml#L1-L77)
 - [package.json](file://package.json#L10-L34)
 - [main.ts](file://apps/api/src/main.ts#L51-L78)
 
 ### Production Deployment Preparation
+
 - Prepare .env.production with:
   - Updated DATABASE_URL pointing to production PostgreSQL
   - Updated REDIS_HOST/PORT/PASSWORD for production cache
@@ -440,10 +488,12 @@ The Quiz-to-build system leverages a multi-stage Dockerfile for the API, robust 
   - Monitoring and logging integration
 
 **Section sources**
+
 - [.env.production.example](file://.env.production.example#L1-L66)
 - [docker-compose.yml](file://docker-compose.yml#L1-L77)
 
 ### Security Best Practices
+
 - Run containers as non-root (already implemented)
 - Use health checks and restart policies
 - Restrict exposed ports and use internal networks
@@ -451,10 +501,12 @@ The Quiz-to-build system leverages a multi-stage Dockerfile for the API, robust 
 - Regularly update base images and dependencies
 
 **Section sources**
+
 - [Dockerfile](file://docker/api/Dockerfile#L29-L47)
 - [docker-compose.yml](file://docker-compose.yml#L7-L21)
 
 ### Image Optimization and Registry Management
+
 - Multi-stage builds reduce final image size
 - Use .dockerignore to exclude unnecessary files
 - Tag images consistently and push to a registry

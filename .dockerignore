@@ -52,3 +52,46 @@ Dockerfile*
 # Large/unnecessary files
 *.tsbuildinfo
 .turbo
+
+# Infrastructure & Terraform
+infrastructure
+
+# Build artifacts & caches
+.jest-cache
+**/.jest-cache
+acr-build*.log
+build.log
+container-logs*
+*.tfstate*
+tfplan
+errored.tfstate
+
+# Project tooling & snapshots
+.qoder
+.snapshots
+.claude
+testsprite_tests
+.husky
+
+# Scripts & security configs
+scripts
+security
+
+# E2E & test output
+e2e
+test
+
+# Documentation extras
+docs
+
+# Misc large root files
+*.png
+*.docx
+*.log
+snyk-report.json
+.secrets.baseline
+.lighthouserc.json
+azure-pipelines.yml
+playwright.config.ts
+.pre-commit-config.yaml
+.github

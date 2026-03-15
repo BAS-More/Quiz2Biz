@@ -217,33 +217,33 @@ const tooltipStyles = `
 
 /* Themes */
 .tooltip-content--dark {
-  background: #1a1a2e;
+  background: var(--color-surface-900);
   color: #ffffff;
 }
 
 .tooltip-content--light {
-  background: #ffffff;
-  color: #1a1a2e;
-  border: 1px solid #e2e8f0;
+  background: var(--color-surface-50);
+  color: var(--color-surface-900);
+  border: 1px solid var(--color-surface-200);
 }
 
 .tooltip-content--info {
-  background: #3182ce;
+  background: var(--color-brand-500);
   color: #ffffff;
 }
 
 .tooltip-content--warning {
-  background: #dd6b20;
+  background: var(--color-warning-600);
   color: #ffffff;
 }
 
 .tooltip-content--error {
-  background: #e53e3e;
+  background: var(--color-danger-500);
   color: #ffffff;
 }
 
 .tooltip-content--success {
-  background: #38a169;
+  background: var(--color-success-500);
   color: #ffffff;
 }
 
@@ -582,7 +582,7 @@ export const InfoTooltip: React.FC<InfoTooltipProps> = ({
           width: size === 'sm' ? 16 : size === 'lg' ? 24 : 20,
           height: size === 'sm' ? 16 : size === 'lg' ? 24 : 20,
           borderRadius: '50%',
-          backgroundColor: '#3182ce',
+          backgroundColor: 'var(--color-brand-500)',
           color: 'white',
           fontSize: size === 'sm' ? 10 : size === 'lg' ? 14 : 12,
           fontWeight: 'bold',

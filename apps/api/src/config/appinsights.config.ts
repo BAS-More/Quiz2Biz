@@ -5,6 +5,9 @@
  * Tracks requests, dependencies, exceptions, and custom metrics.
  */
 import * as appInsights from 'applicationinsights';
+import { Logger } from '@nestjs/common';
+
+const logger = new Logger('AppInsights');
 
 // =============================================================================
 // Configuration Interface
@@ -37,7 +40,7 @@ export function getAppInsightsConfig(): AppInsightsConfig {
     instrumentationKey: process.env.APPINSIGHTS_INSTRUMENTATIONKEY || '',
     cloudRole: process.env.AZURE_CLOUD_ROLE || 'quiz-to-build-api',
     cloudRoleInstance: process.env.HOSTNAME || 'local-dev',
-    samplingPercentage: isProd ? 100 : 50, // Sample all requests in prod
+    samplingPercentage: isProd ? 75 : 50, // 75% in prod for cost optimization (GAP-P5)
     enableAutoCollect: {
       requests: true,
       performance: true,
@@ -64,12 +67,12 @@ export function initializeAppInsights(): void {
 
   // Skip if already initialized or no connection string
   if (isInitialized) {
-    console.log('Application Insights already initialized');
+    logger.log('Application Insights already initialized');
     return;
   }
 
   if (!config.connectionString && !config.instrumentationKey) {
-    console.log(
+    logger.warn(
       'Application Insights not configured (no connection string or instrumentation key)',
     );
     return;
@@ -102,11 +105,14 @@ export function initializeAppInsights(): void {
     client = appInsights.defaultClient;
     isInitialized = true;
 
-    console.log(
+    logger.log(
       `Application Insights initialized: role=${config.cloudRole}, instance=${config.cloudRoleInstance}`,
     );
   } catch (error) {
-    console.error('Failed to initialize Application Insights:', error);
+    logger.error(
+      'Failed to initialize Application Insights:',
+      error instanceof Error ? error.stack : String(error),
+    );
   }
 }
 
@@ -296,26 +302,29 @@ export function trackDocumentGeneration(
   });
 }
 
+/** Options for tracking API endpoint usage */
+export interface EndpointUsageOptions {
+  endpoint: string;
+  method: string;
+  statusCode: number;
+  durationMs: number;
+  userId?: string;
+}
+
 /**
  * Track API endpoint usage
  */
-export function trackEndpointUsage(
-  endpoint: string,
-  method: string,
-  statusCode: number,
-  durationMs: number,
-  userId?: string,
-): void {
+export function trackEndpointUsage(options: EndpointUsageOptions): void {
   trackEvent({
     name: 'api_request',
     properties: {
-      endpoint,
-      method,
-      statusCode: statusCode.toString(),
-      userId: userId || 'anonymous',
+      endpoint: options.endpoint,
+      method: options.method,
+      statusCode: options.statusCode.toString(),
+      userId: options.userId || 'anonymous',
     },
     measurements: {
-      durationMs,
+      durationMs: options.durationMs,
     },
   });
 }
@@ -492,27 +501,30 @@ export function trackPerformance(
 // Availability Tracking
 // =============================================================================
 
+/** Options for tracking availability test results */
+export interface AvailabilityOptions {
+  testName: string;
+  success: boolean;
+  durationMs: number;
+  runLocation?: string;
+  message?: string;
+}
+
 /**
  * Track an availability test result (health check)
  */
-export function trackAvailability(
-  testName: string,
-  success: boolean,
-  durationMs: number,
-  runLocation?: string,
-  message?: string,
-): void {
+export function trackAvailability(options: AvailabilityOptions): void {
   if (!client) {
     return;
   }
 
   client.trackAvailability({
-    id: `${testName}-${Date.now()}`,
-    name: testName,
-    success,
-    duration: durationMs,
-    runLocation: runLocation || 'Azure',
-    message: message || (success ? 'Available' : 'Unavailable'),
+    id: `${options.testName}-${Date.now()}`,
+    name: options.testName,
+    success: options.success,
+    duration: options.durationMs,
+    runLocation: options.runLocation || 'Azure',
+    message: options.message || (options.success ? 'Available' : 'Unavailable'),
   });
 }
 
@@ -525,7 +537,7 @@ export function trackAvailability(
  */
 export function flush(): void {
   if (client) {
-    client.flush();
+    void client.flush();
   }
 }
 
@@ -534,10 +546,10 @@ export function flush(): void {
  */
 export async function shutdown(): Promise<void> {
   if (client) {
-    client.flush();
+    void client.flush();
     // Give time for telemetry to be sent
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log('Application Insights telemetry flushed');
+    logger.log('Application Insights telemetry flushed');
   }
 }
 
@@ -545,18 +557,37 @@ export async function shutdown(): Promise<void> {
 // NestJS Middleware Helper
 // =============================================================================
 
+/** Minimal Express Request shape for tracking middleware */
+interface TrackingRequest {
+  path: string;
+  method: string;
+  user?: { id?: string };
+}
+
+/** Minimal Express Response shape for tracking middleware */
+interface TrackingResponse {
+  statusCode: number;
+  on(event: string, listener: () => void): void;
+}
+
 /**
  * Create a request tracking middleware for NestJS
  */
 export function createRequestTrackingMiddleware() {
-  return (req: any, res: any, next: () => void) => {
+  return (req: TrackingRequest, res: TrackingResponse, next: () => void) => {
     const startTime = Date.now();
 
     res.on('finish', () => {
       const durationMs = Date.now() - startTime;
       const userId = req.user?.id;
 
-      trackEndpointUsage(req.path, req.method, res.statusCode, durationMs, userId);
+      trackEndpointUsage({
+        endpoint: req.path,
+        method: req.method,
+        statusCode: res.statusCode,
+        durationMs,
+        userId,
+      });
 
       // Track slow requests (>500ms)
       if (durationMs > 500) {

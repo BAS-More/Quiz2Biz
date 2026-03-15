@@ -5,7 +5,6 @@ import { SessionStatus } from '@prisma/client';
 
 describe('SessionController', () => {
   let controller: SessionController;
-  let sessionService: SessionService;
   let module: TestingModule;
 
   const mockSessionService = {
@@ -32,7 +31,7 @@ describe('SessionController', () => {
     }).compile();
 
     controller = module.get<SessionController>(SessionController);
-    sessionService = module.get<SessionService>(SessionService);
+    module.get<SessionService>(SessionService);
 
     jest.clearAllMocks();
   });

@@ -6,15 +6,19 @@
  */
 
 import * as Sentry from '@sentry/nestjs';
+import { Logger } from '@nestjs/common';
+
+const logger = new Logger('Sentry');
 
 // Profiling is optional - only load if available
-
-let nodeProfilingIntegration: (() => any) | null = null;
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access -- Dynamic require for optional @sentry/profiling-node integration */
+let nodeProfilingIntegration: (() => ReturnType<typeof Sentry.httpIntegration>) | null = null;
 try {
   nodeProfilingIntegration = require('@sentry/profiling-node').nodeProfilingIntegration;
 } catch {
   // Profiling not available
 }
+/* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 
 export interface SentryConfig {
   dsn: string;
@@ -49,7 +53,7 @@ export function initializeSentry(): void {
 
   // Only initialize if DSN is provided
   if (!config.dsn) {
-    console.log('Sentry DSN not configured, skipping initialization');
+    logger.warn('Sentry DSN not configured, skipping initialization');
     return;
   }
 
@@ -119,7 +123,7 @@ export function initializeSentry(): void {
     ],
   });
 
-  console.log(`Sentry initialized for environment: ${config.environment}`);
+  logger.log(`Sentry initialized for environment: ${config.environment}`);
 }
 
 /**

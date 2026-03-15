@@ -7,7 +7,6 @@ import {
   REQUIRED_TIER_KEY,
   FEATURE_CHECK_KEY,
   TIER_RATE_LIMITS,
-  FEATURE_TIER_MATRIX,
   isFeatureAvailable,
   getFeatureLimit,
 } from './subscription.guard';
@@ -15,8 +14,6 @@ import { SubscriptionService } from '../../modules/payment/subscription.service'
 
 describe('SubscriptionGuard', () => {
   let guard: SubscriptionGuard;
-  let reflector: jest.Mocked<Reflector>;
-  let subscriptionService: jest.Mocked<SubscriptionService>;
 
   const mockSubscriptionService = {
     getOrganizationSubscription: jest.fn(),
@@ -39,8 +36,8 @@ describe('SubscriptionGuard', () => {
     }).compile();
 
     guard = module.get<SubscriptionGuard>(SubscriptionGuard);
-    reflector = module.get(Reflector);
-    subscriptionService = module.get(SubscriptionService);
+    module.get(Reflector);
+    module.get(SubscriptionService);
   });
 
   const createMockContext = (request: any = {}): ExecutionContext => {
@@ -207,7 +204,6 @@ describe('SubscriptionGuard', () => {
 
 describe('FeatureUsageMiddleware', () => {
   let middleware: FeatureUsageMiddleware;
-  let subscriptionService: jest.Mocked<SubscriptionService>;
 
   const mockSubscriptionService = {
     getOrganizationSubscription: jest.fn(),
@@ -224,7 +220,7 @@ describe('FeatureUsageMiddleware', () => {
     }).compile();
 
     middleware = module.get<FeatureUsageMiddleware>(FeatureUsageMiddleware);
-    subscriptionService = module.get(SubscriptionService);
+    module.get(SubscriptionService);
   });
 
   describe('use', () => {

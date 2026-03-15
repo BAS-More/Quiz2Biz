@@ -6,7 +6,6 @@ import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 
 describe('JwtAuthGuard', () => {
   let guard: JwtAuthGuard;
-  let reflector: jest.Mocked<Reflector>;
 
   const mockReflector = {
     getAllAndOverride: jest.fn(),
@@ -40,7 +39,7 @@ describe('JwtAuthGuard', () => {
     }).compile();
 
     guard = module.get<JwtAuthGuard>(JwtAuthGuard);
-    reflector = module.get(Reflector);
+    module.get(Reflector);
   });
 
   it('should be defined', () => {
@@ -66,7 +65,7 @@ describe('JwtAuthGuard', () => {
       mockReflector.getAllAndOverride.mockReturnValue(false);
 
       // Mock the parent's canActivate
-      const superCanActivate = jest
+      jest
         .spyOn(Object.getPrototypeOf(Object.getPrototypeOf(guard)), 'canActivate')
         .mockReturnValue(true);
 
@@ -80,62 +79,91 @@ describe('JwtAuthGuard', () => {
       mockReflector.getAllAndOverride.mockReturnValue(undefined);
 
       // The guard will call super.canActivate which returns promise/boolean
-      const result = guard.canActivate(context);
+      guard.canActivate(context);
 
       expect(mockReflector.getAllAndOverride).toHaveBeenCalled();
     });
   });
 
   describe('handleRequest', () => {
+    const createMockContextForHandleRequest = () => {
+      return {
+        switchToHttp: jest.fn().mockReturnValue({
+          getRequest: jest.fn().mockReturnValue({
+            headers: { authorization: 'Bearer test-token-12345' },
+            method: 'GET',
+            path: '/api/v1/test',
+          }),
+        }),
+      } as unknown as ExecutionContext;
+    };
+
     it('should return user when authentication is successful', () => {
       const mockUser = { id: 'user-1', email: 'test@example.com' };
+      const context = createMockContextForHandleRequest();
 
-      const result = guard.handleRequest(null, mockUser, null);
+      const result = guard.handleRequest(null, mockUser, null, context);
 
       expect(result).toBe(mockUser);
     });
 
     it('should throw UnauthorizedException when user is null', () => {
-      expect(() => guard.handleRequest(null, null, null)).toThrow(UnauthorizedException);
-      expect(() => guard.handleRequest(null, null, null)).toThrow('Authentication required');
+      const context = createMockContextForHandleRequest();
+      expect(() => guard.handleRequest(null, null, null, context)).toThrow(UnauthorizedException);
+      expect(() => guard.handleRequest(null, null, null, context)).toThrow(
+        'Authentication required',
+      );
     });
 
     it('should throw UnauthorizedException with token expired message', () => {
       const tokenExpiredError = new Error('Token expired');
       tokenExpiredError.name = 'TokenExpiredError';
+      const context = createMockContextForHandleRequest();
 
-      expect(() => guard.handleRequest(null, null, tokenExpiredError)).toThrow(
+      expect(() => guard.handleRequest(null, null, tokenExpiredError, context)).toThrow(
         UnauthorizedException,
       );
-      expect(() => guard.handleRequest(null, null, tokenExpiredError)).toThrow('Token has expired');
+      expect(() => guard.handleRequest(null, null, tokenExpiredError, context)).toThrow(
+        'Token has expired',
+      );
     });
 
     it('should throw UnauthorizedException with invalid token message', () => {
       const jwtError = new Error('Invalid token');
       jwtError.name = 'JsonWebTokenError';
+      const context = createMockContextForHandleRequest();
 
-      expect(() => guard.handleRequest(null, null, jwtError)).toThrow(UnauthorizedException);
-      expect(() => guard.handleRequest(null, null, jwtError)).toThrow('Invalid token');
+      expect(() => guard.handleRequest(null, null, jwtError, context)).toThrow(
+        UnauthorizedException,
+      );
+      expect(() => guard.handleRequest(null, null, jwtError, context)).toThrow('Invalid token');
     });
 
     it('should rethrow original error when err is provided', () => {
       const originalError = new Error('Original error');
+      const context = createMockContextForHandleRequest();
 
-      expect(() => guard.handleRequest(originalError, null, null)).toThrow(originalError);
+      expect(() => guard.handleRequest(originalError, null, null, context)).toThrow(originalError);
     });
 
     it('should throw default UnauthorizedException for unknown info errors', () => {
       const unknownError = new Error('Unknown error');
       unknownError.name = 'UnknownError';
+      const context = createMockContextForHandleRequest();
 
-      expect(() => guard.handleRequest(null, null, unknownError)).toThrow(UnauthorizedException);
-      expect(() => guard.handleRequest(null, null, unknownError)).toThrow(
+      expect(() => guard.handleRequest(null, null, unknownError, context)).toThrow(
+        UnauthorizedException,
+      );
+      expect(() => guard.handleRequest(null, null, unknownError, context)).toThrow(
         'Authentication required',
       );
     });
 
     it('should handle user being undefined', () => {
-      expect(() => guard.handleRequest(null, undefined, null)).toThrow(UnauthorizedException);
+      const context = createMockContextForHandleRequest();
+      expect(() => guard.handleRequest(null, undefined, null, context)).toThrow(
+        UnauthorizedException,
+      );
     });
   });
 });

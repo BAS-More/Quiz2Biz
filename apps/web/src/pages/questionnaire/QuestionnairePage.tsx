@@ -3,7 +3,7 @@
  * Wires to real session API, scoring engine, and NQS algorithm
  */
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -27,6 +27,11 @@ import {
   type ConversationMessage,
   type FollowUpResult,
 } from '../../api/conversation';
+import { QuestionnaireNavigation } from '../../components/questionnaire/QuestionnaireNavigation';
+import { EmptyState } from '../../components/ui/EmptyState';
+import { useDraftAutosave, formatTimeSinceSave } from '../../hooks/useDraftAutosave';
+import { featureFlags } from '../../config/feature-flags.config';
+import { AISuggestionsProvider } from '../../components/ai/AISuggestions';
 
 const PERSONA_OPTIONS: { value: Persona; label: string; description: string }[] = [
   { value: 'CTO', label: 'CTO', description: 'Architecture, security, DevOps, quality' },
@@ -49,7 +54,7 @@ export function QuestionnairePage() {
 
   const {
     session,
-    currentQuestions,
+    currentQuestions: rawCurrentQuestions,
     currentSection,
     readinessScore,
     canComplete,
@@ -57,17 +62,39 @@ export function QuestionnairePage() {
     isLoading,
     error,
     nqsHint,
+    questionHistory,
+    isReviewingPrevious,
+    reviewIndex,
     createSession,
     continueSession,
     submitResponse,
     completeSession,
     clearError,
+    goToPrevious,
+    skipQuestion,
+    canGoBack,
+    canSkip,
   } = useQuestionnaireStore();
+
+  // Ensure currentQuestions is always an array
+  const currentQuestions = useMemo(() => rawCurrentQuestions ?? [], [rawCurrentQuestions]);
 
   const [questionnaires, setQuestionnaires] = useState<QuestionnaireListItem[]>([]);
   const [questionnaireLoadError, setQuestionnaireLoadError] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState<Persona>('CTO');
   const startTimeRef = useRef<number>(0);
+
+  // Draft autosave — persists answers to IndexedDB for recovery
+  const {
+    status: autosaveStatus,
+    saveDraft,
+    hasDraft,
+    draftData,
+    clearDraft: clearAutosaveDraft,
+  } = useDraftAutosave({
+    sessionId: session?.id ?? '',
+    questionnaireId: sessionIdParam ?? session?.id ?? '',
+  });
 
   // Conversational AI follow-up state
   const [followUp, setFollowUp] = useState<FollowUpResult | null>(null);
@@ -80,12 +107,17 @@ export function QuestionnairePage() {
   const [currentValue, setCurrentValue] = useState<unknown>(null);
   const [valueQuestionId, setValueQuestionId] = useState(currentQuestionId);
 
-  // Reset value and follow-up when question changes
+  // Reset value and follow-up when question changes, preload value if reviewing
   if (currentQuestionId !== valueQuestionId) {
     setValueQuestionId(currentQuestionId);
-    if (currentValue !== null) {
+
+    // If reviewing a previous question, preload the saved value
+    if (isReviewingPrevious && reviewIndex >= 0 && questionHistory[reviewIndex]) {
+      setCurrentValue(questionHistory[reviewIndex].answeredValue);
+    } else if (currentValue !== null) {
       setCurrentValue(null);
     }
+
     if (followUp !== null) {
       setFollowUp(null);
       setFollowUpAnswer('');
@@ -135,6 +167,17 @@ export function QuestionnairePage() {
     // Submit the answer to the scoring engine
     await submitResponse(session.id, currentQuestions[0].id, currentValue, timeSpent);
 
+    // Persist draft after each answer
+    void saveDraft({
+      responses: { [currentQuestions[0].id]: currentValue },
+      currentQuestionIndex: (session.progress?.answeredQuestions ?? 0) + 1,
+      metadata: {
+        questionnaireName: currentSection?.name ?? 'Assessment',
+        totalQuestions: session.progress?.totalQuestions ?? 0,
+        completedQuestions: (session.progress?.answeredQuestions ?? 0) + 1,
+      },
+    });
+
     // For text/textarea answers, also evaluate with AI for follow-up
     const q = currentQuestions[0];
     const isTextAnswer = q.type === 'TEXT' || q.type === 'TEXTAREA';
@@ -155,7 +198,15 @@ export function QuestionnairePage() {
         // Non-critical — if AI follow-up fails, continue normally
       }
     }
-  }, [session, currentQuestions, currentValue, isValueEmpty, submitResponse, currentSection]);
+  }, [
+    session,
+    currentQuestions,
+    currentValue,
+    isValueEmpty,
+    submitResponse,
+    currentSection,
+    saveDraft,
+  ]);
 
   const handleComplete = useCallback(async () => {
     if (!session) return;
@@ -232,9 +283,14 @@ export function QuestionnairePage() {
           {questionnaireLoadError ? (
             <p className="text-red-500">Failed to load questionnaires. Please refresh the page.</p>
           ) : questionnaires.length === 0 ? (
-            <p className="text-gray-500">Loading questionnaires...</p>
+            <EmptyState
+              type="sessions"
+              title="No assessments available"
+              description="No questionnaire templates are configured yet. Contact your administrator."
+              size="sm"
+            />
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-3" data-testid="questionnaire-list">
               {questionnaires.map((q) => (
                 <div
                   key={q.id}
@@ -250,6 +306,7 @@ export function QuestionnairePage() {
                   <button
                     onClick={() => handleStartSession(q.id)}
                     disabled={isLoading}
+                    data-testid="start-questionnaire-button"
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
                   >
                     {isLoading ? 'Starting...' : 'Start'}
@@ -282,13 +339,23 @@ export function QuestionnairePage() {
     );
   }
 
+  // Show loading while session is loading after URL navigation
+  if (!session && sessionIdParam && !error) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <span className="ml-3 text-gray-600">Loading session...</span>
+      </div>
+    );
+  }
+
   if (isComplete && session) {
     return (
       <div className="space-y-6">
-        <div className="bg-white rounded-lg shadow p-8 text-center">
+        <div className="bg-white rounded-lg shadow p-8 text-center" data-testid="completed-session">
           <CheckCircle className="h-16 w-16 mx-auto text-green-500 mb-4" aria-hidden="true" />
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Project Complete!</h1>
-          <p className="text-gray-600 mb-4">
+          <p className="text-gray-600 mb-4" data-testid="completion-summary">
             Your score:{' '}
             <span className="text-2xl font-bold text-green-600">
               {readinessScore?.toFixed(1) ?? 'N/A'}%
@@ -316,7 +383,8 @@ export function QuestionnairePage() {
   const currentQuestion = currentQuestions[0];
   const progress = session?.progress;
 
-  return (
+  // Wrap in AISuggestions if flag enabled
+  const content = (
     <div className="space-y-6">
       {/* Header with back + score */}
       <div className="flex items-center justify-between">
@@ -349,9 +417,33 @@ export function QuestionnairePage() {
         )}
       </div>
 
+      {/* Draft recovery banner */}
+      {hasDraft && draftData && !isComplete && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 flex items-center justify-between">
+          <span className="text-sm text-yellow-800">
+            Draft saved {formatTimeSinceSave(new Date(draftData.lastSavedAt))}
+          </span>
+          <button
+            onClick={() => void clearAutosaveDraft()}
+            className="text-xs text-yellow-600 hover:text-yellow-800 underline"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
+
+      {/* Autosave status indicator */}
+      {session && autosaveStatus.lastSaved && (
+        <div className="text-xs text-gray-400 text-right">
+          {autosaveStatus.isSaving
+            ? 'Saving...'
+            : `Auto-saved ${formatTimeSinceSave(autosaveStatus.lastSaved)}`}
+        </div>
+      )}
+
       {/* Progress bar */}
       {progress && (
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="bg-white rounded-lg shadow p-4" data-testid="question-progress">
           <div className="flex justify-between text-sm text-gray-600 mb-2">
             <span>
               {currentQuestion ? (
@@ -372,10 +464,38 @@ export function QuestionnairePage() {
             />
           </div>
           {currentSection && (
-            <p className="text-xs text-gray-500 mt-1">
-              Section: {currentSection.name} ({currentSection.answeredInSection}/
-              {currentSection.questionsInSection})
-            </p>
+            <div className="flex items-center justify-between mt-1">
+              <p className="text-xs text-gray-500">
+                Section: {currentSection.name} ({currentSection.answeredInSection}/
+                {currentSection.questionsInSection})
+              </p>
+              {progress.estimatedTimeRemaining !== undefined &&
+              progress.estimatedTimeRemaining > 0 ? (
+                <p className="text-xs text-gray-500 flex items-center gap-1">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  ~{progress.estimatedTimeRemaining} min left
+                </p>
+              ) : progress.questionsLeft > 0 ? (
+                <p className="text-xs text-gray-500 flex items-center gap-1">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  ~{Math.ceil(progress.questionsLeft * 1.5)} min left
+                </p>
+              ) : null}
+            </div>
           )}
         </div>
       )}
@@ -395,7 +515,9 @@ export function QuestionnairePage() {
       {/* Current question */}
       {currentQuestion ? (
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">{currentQuestion.text}</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-2" data-testid="question-text">
+            {currentQuestion.text}
+          </h2>
           {currentQuestion.helpText && (
             <p className="text-sm text-gray-500 mb-4">{currentQuestion.helpText}</p>
           )}
@@ -403,10 +525,11 @@ export function QuestionnairePage() {
           {/* Question input based on type */}
           <div className="mt-4">
             {currentQuestion.type === 'SINGLE_CHOICE' && currentQuestion.options ? (
-              <div className="space-y-2">
+              <div className="space-y-2" data-testid="single-choice-input">
                 {currentQuestion.options.map((opt) => (
                   <label
                     key={opt.id}
+                    data-testid={`option-${opt.id}`}
                     className={`flex items-center p-3 rounded-lg border cursor-pointer transition-colors ${
                       currentValue === opt.id
                         ? 'border-blue-600 bg-blue-50'
@@ -431,11 +554,12 @@ export function QuestionnairePage() {
                 ))}
               </div>
             ) : currentQuestion.type === 'SCALE' ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2" data-testid="scale-input">
                 {[1, 2, 3, 4, 5].map((n) => (
                   <button
                     key={n}
                     onClick={() => setCurrentValue(n)}
+                    data-testid={`scale-value-${n}`}
                     className={`w-12 h-12 rounded-lg border-2 font-bold transition-colors ${
                       currentValue === n
                         ? 'border-blue-600 bg-blue-600 text-white'
@@ -447,7 +571,7 @@ export function QuestionnairePage() {
                 ))}
               </div>
             ) : currentQuestion.type === 'MULTIPLE_CHOICE' && currentQuestion.options ? (
-              <div className="space-y-2">
+              <div className="space-y-2" data-testid="multiple-choice-input">
                 {currentQuestion.options.map((opt) => {
                   const selected =
                     Array.isArray(currentValue) && (currentValue as string[]).includes(opt.id);
@@ -485,31 +609,33 @@ export function QuestionnairePage() {
                 value={typeof currentValue === 'string' ? currentValue : ''}
                 onChange={(e) => setCurrentValue(e.target.value)}
                 placeholder={currentQuestion.placeholder ?? 'Type your answer...'}
+                data-testid="text-answer"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[100px]"
                 rows={4}
               />
             )}
           </div>
 
-          {/* Submit button */}
-          <div className="mt-6 flex items-center justify-between">
-            <div className="text-sm text-gray-500">
-              {currentQuestion.required && <span className="text-red-500">* Required</span>}
+          {/* Navigation: Previous / Skip / Submit */}
+          <div className="mt-6">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm text-gray-500">
+                {currentQuestion.required && <span className="text-red-500">* Required</span>}
+                {!currentQuestion.required && <span className="text-gray-400">Optional</span>}
+              </div>
             </div>
-            <button
-              onClick={handleSubmit}
-              disabled={isLoading || isValueEmpty}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
-            >
-              {isLoading ? (
-                <span className="flex items-center">
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  Submitting...
-                </span>
-              ) : (
-                'Submit Answer'
-              )}
-            </button>
+            <QuestionnaireNavigation
+              onPrevious={goToPrevious}
+              onSkip={() => session && skipQuestion(session.id)}
+              onSubmit={handleSubmit}
+              canGoBack={canGoBack()}
+              canSkip={canSkip()}
+              isSubmitDisabled={isValueEmpty}
+              isLoading={isLoading}
+              isReviewing={isReviewingPrevious}
+              reviewPosition={isReviewingPrevious ? reviewIndex + 1 : undefined}
+              totalHistory={isReviewingPrevious ? questionHistory.length : undefined}
+            />
           </div>
 
           {/* AI Follow-up section */}
@@ -627,6 +753,12 @@ export function QuestionnairePage() {
         </div>
       )}
     </div>
+  );
+
+  return featureFlags.aiSuggestions ? (
+    <AISuggestionsProvider>{content}</AISuggestionsProvider>
+  ) : (
+    content
   );
 }
 

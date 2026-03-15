@@ -25,10 +25,16 @@ const mockRedisService = {
   expire: jest.fn(),
 };
 
+// Mock Prisma service — this test only exercises bcrypt and JWT, not DB
+const mockPrismaService = {
+  user: { findUnique: jest.fn(), findFirst: jest.fn(), update: jest.fn() },
+  refreshToken: { create: jest.fn(), findFirst: jest.fn(), deleteMany: jest.fn() },
+  $connect: jest.fn(),
+  $disconnect: jest.fn(),
+};
+
 describe('Authentication Security Tests', () => {
-  let authService: AuthService;
   let jwtService: JwtService;
-  let prisma: PrismaService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -41,7 +47,10 @@ describe('Authentication Security Tests', () => {
       providers: [
         AuthService,
         JwtService,
-        PrismaService,
+        {
+          provide: PrismaService,
+          useValue: mockPrismaService,
+        },
         {
           provide: 'JWT_SECRET',
           useValue: 'test-secret-key-minimum-32-characters-long',
@@ -57,9 +66,9 @@ describe('Authentication Security Tests', () => {
       ],
     }).compile();
 
-    authService = module.get<AuthService>(AuthService);
+    module.get<AuthService>(AuthService);
     jwtService = module.get<JwtService>(JwtService);
-    prisma = module.get<PrismaService>(PrismaService);
+    module.get<PrismaService>(PrismaService);
   });
 
   describe('Password Hashing Security', () => {
@@ -264,6 +273,7 @@ describe('Authentication Security Tests', () => {
   describe('Brute Force Protection', () => {
     it('should implement rate limiting for failed login attempts', async () => {
       const email = 'bruteforce@example.com';
+      void email; // Used for documentation of test intent
       const maxAttempts = 5;
       const failedAttempts: number[] = [];
 

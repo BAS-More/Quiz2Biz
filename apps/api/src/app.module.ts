@@ -1,7 +1,9 @@
 import { Module, DynamicModule, Type } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { LoggerModule } from 'nestjs-pino';
+import { buildLoggerConfig } from './config/logger.config';
 import { CsrfGuard } from './common/guards/csrf.guard';
 import { PrismaModule } from '@libs/database';
 import { RedisModule } from '@libs/redis';
@@ -19,6 +21,11 @@ import { NotificationModule } from './modules/notifications/notification.module'
 import { PaymentModule } from './modules/payment/payment.module';
 import { AdaptersModule } from './modules/adapters/adapters.module';
 import { IdeaCaptureModule } from './modules/idea-capture/idea-capture.module';
+import { AiGatewayModule } from './modules/ai-gateway/ai-gateway.module';
+import { ChatEngineModule } from './modules/chat-engine/chat-engine.module';
+import { FactExtractionModule } from './modules/fact-extraction/fact-extraction.module';
+import { QualityScoringModule } from './modules/quality-scoring/quality-scoring.module';
+import { ProjectsModule } from './modules/projects/projects.module';
 import { HealthController } from './health.controller';
 import configuration from './config/configuration';
 
@@ -28,14 +35,19 @@ import configuration from './config/configuration';
  */
 function getLegacyModules(): Array<Type | DynamicModule> {
   if (process.env.ENABLE_LEGACY_MODULES === 'true') {
+    // Dynamic imports for feature-flagged legacy modules to avoid loading unused code
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment -- Dynamic require for conditional module loading */
     const {
       EvidenceRegistryModule,
     } = require('./modules/evidence-registry/evidence-registry.module');
     const { DecisionLogModule } = require('./modules/decision-log/decision-log.module');
     const { QpgModule } = require('./modules/qpg/qpg.module');
     const { PolicyPackModule } = require('./modules/policy-pack/policy-pack.module');
+    /* eslint-enable @typescript-eslint/no-unsafe-assignment */
 
-    return [EvidenceRegistryModule, DecisionLogModule, QpgModule, PolicyPackModule];
+    return [EvidenceRegistryModule, DecisionLogModule, QpgModule, PolicyPackModule] as Array<
+      Type | DynamicModule
+    >;
   }
   return [];
 }
@@ -47,6 +59,12 @@ function getLegacyModules(): Array<Type | DynamicModule> {
       isGlobal: true,
       load: [configuration],
       envFilePath: ['.env', '.env.local'],
+    }),
+
+    // Structured logging (Pino)
+    LoggerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => buildLoggerConfig(config),
     }),
 
     // Rate limiting
@@ -89,6 +107,11 @@ function getLegacyModules(): Array<Type | DynamicModule> {
     PaymentModule,
     AdaptersModule,
     IdeaCaptureModule,
+    AiGatewayModule,
+    ChatEngineModule,
+    FactExtractionModule,
+    QualityScoringModule,
+    ProjectsModule,
 
     // Legacy modules (feature-flagged via ENABLE_LEGACY_MODULES env var)
     ...getLegacyModules(),

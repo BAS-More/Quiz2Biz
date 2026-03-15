@@ -236,7 +236,7 @@ export const QuestionnaireFlow: React.FC<QuestionnaireFlowProps> = ({
       </div>
 
       {/* Question card */}
-      <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
+      <div className="bg-white dark:bg-surface-800 rounded-xl shadow-lg p-8 mb-6">
         <QuestionRenderer
           question={currentItem.question}
           value={currentResponse?.value}

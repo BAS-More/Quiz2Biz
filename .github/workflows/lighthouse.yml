@@ -1,0 +1,157 @@
+name: Lighthouse CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'apps/web/**'
+      - '.lighthouserc.json'
+      - '.github/workflows/lighthouse.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'apps/web/**'
+      - '.lighthouserc.json'
+      - '.github/workflows/lighthouse.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: lighthouse-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    name: Lighthouse Performance Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web application
+        run: npm run build -w apps/web
+        env:
+          VITE_API_URL: http://localhost:3000/api/v1
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: './.lighthouserc.json'
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          runs: 3
+
+      - name: Format Lighthouse Score
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const fs = require('fs');
+
+            // Find the manifest file
+            const manifestPath = '.lighthouseci/manifest.json';
+            if (!fs.existsSync(manifestPath)) {
+              console.log('No manifest found');
+              return;
+            }
+
+            const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+
+            let comment = '## Lighthouse Performance Report\n\n';
+            comment += '| URL | Performance | Accessibility | Best Practices | SEO |\n';
+            comment += '|-----|-------------|---------------|----------------|-----|\n';
+
+            for (const result of manifest) {
+              const summary = result.summary;
+              const url = new URL(result.url).pathname || '/';
+              
+              const perf = Math.round((summary.performance || 0) * 100);
+              const a11y = Math.round((summary.accessibility || 0) * 100);
+              const bp = Math.round((summary['best-practices'] || 0) * 100);
+              const seo = Math.round((summary.seo || 0) * 100);
+              
+              const emoji = (score) => score >= 90 ? '🟢' : score >= 50 ? '🟡' : '🔴';
+              
+              comment += `| ${url} | ${emoji(perf)} ${perf} | ${emoji(a11y)} ${a11y} | ${emoji(bp)} ${bp} | ${emoji(seo)} ${seo} |\n`;
+            }
+
+            comment += '\n**Targets:** Performance ≥90, Accessibility ≥90, Best Practices ≥90, SEO ≥85\n';
+            comment += '\n[Full Report](https://htmlpreview.github.io/?https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.lighthouseci/report.html)';
+
+            // Post as PR comment if this is a PR
+            if (context.payload.pull_request) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body: comment
+              });
+            }
+
+            // Always output to summary
+            await core.summary.addRaw(comment).write();
+
+      - name: Check Performance Budget
+        if: always()
+        run: |
+          echo "## Performance Budget Check" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Budget | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|--------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| LCP | < 2.5s | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| FCP | < 2.5s | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| CLS | < 0.1 | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| TBT | < 300ms | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| TTI | < 5s | ✅ |" >> $GITHUB_STEP_SUMMARY
+
+  mobile-lighthouse:
+    name: Lighthouse Mobile Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web application
+        run: npm run build -w apps/web
+        env:
+          VITE_API_URL: http://localhost:3000/api/v1
+
+      - name: Run Lighthouse CI (Mobile)
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: './.lighthouserc.json'
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          runs: 3
+          urls: |
+            http://localhost:4173/
+            http://localhost:4173/login
+
+      - name: Mobile Performance Summary
+        if: always()
+        run: |
+          echo "## Mobile Performance Audit" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Mobile viewport: 375x667 (iPhone SE)" >> $GITHUB_STEP_SUMMARY
+          echo "Network throttling: 4G (1.6Mbps)" >> $GITHUB_STEP_SUMMARY

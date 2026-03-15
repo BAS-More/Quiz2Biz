@@ -6,7 +6,6 @@ import { PolicyType, DocumentStatus, RequirementLevel } from '../types';
 
 describe('PolicyGeneratorService', () => {
   let service: PolicyGeneratorService;
-  let controlMappingService: jest.Mocked<ControlMappingService>;
 
   const mockControlMappingService = {
     getMappingsForDimension: jest.fn(),
@@ -42,7 +41,7 @@ describe('PolicyGeneratorService', () => {
     }).compile();
 
     service = module.get<PolicyGeneratorService>(PolicyGeneratorService);
-    controlMappingService = module.get(ControlMappingService);
+    module.get(ControlMappingService);
   });
 
   describe('generatePolicyForGap', () => {

@@ -6,7 +6,7 @@
 import { clsx } from 'clsx';
 import type { ReactNode } from 'react';
 
-type BadgeVariant = 'default' | 'brand' | 'success' | 'warning' | 'danger' | 'accent';
+type BadgeVariant = 'default' | 'secondary' | 'brand' | 'success' | 'warning' | 'danger' | 'accent';
 type BadgeSize = 'sm' | 'md';
 
 interface BadgeProps {
@@ -19,6 +19,7 @@ interface BadgeProps {
 
 const variantStyles: Record<BadgeVariant, string> = {
   default: 'bg-surface-100 text-surface-700',
+  secondary: 'bg-surface-200 text-surface-600',
   brand: 'bg-brand-50 text-brand-700',
   success: 'bg-success-50 text-success-700',
   warning: 'bg-warning-50 text-warning-600',
@@ -28,6 +29,7 @@ const variantStyles: Record<BadgeVariant, string> = {
 
 const dotColors: Record<BadgeVariant, string> = {
   default: 'bg-surface-400',
+  secondary: 'bg-surface-500',
   brand: 'bg-brand-500',
   success: 'bg-success-500',
   warning: 'bg-warning-500',

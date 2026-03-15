@@ -11,6 +11,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/user.decorator';
 import { AuthenticatedUser } from '../auth/auth.service';
@@ -20,11 +21,14 @@ import { ConfirmProjectTypeDto } from './dto/confirm-project-type.dto';
 import { IdeaCaptureResponseDto } from './dto/idea-response.dto';
 
 @ApiTags('idea-capture')
+@ApiBearerAuth('JWT-auth')
+@UseGuards(JwtAuthGuard)
 @Controller('sessions/idea')
 export class IdeaCaptureController {
   constructor(private readonly ideaCaptureService: IdeaCaptureService) {}
 
   @Post()
+  @Throttle({ short: { limit: 3, ttl: 60000 } })
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Submit a business idea for AI analysis',
@@ -38,12 +42,13 @@ export class IdeaCaptureController {
   })
   async captureIdea(
     @Body() dto: CreateIdeaDto,
-    @CurrentUser() user?: AuthenticatedUser,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<IdeaCaptureResponseDto> {
-    return this.ideaCaptureService.captureAndAnalyze(dto, user?.id);
+    return this.ideaCaptureService.captureAndAnalyze(dto, user.id);
   }
 
   @Get(':id')
+  @Throttle({ medium: { limit: 10, ttl: 60000 } })
   @ApiOperation({ summary: 'Get idea capture details by ID' })
   @ApiResponse({ status: 200, type: IdeaCaptureResponseDto })
   async getIdea(@Param('id', ParseUUIDPipe) id: string): Promise<IdeaCaptureResponseDto> {
@@ -51,8 +56,6 @@ export class IdeaCaptureController {
   }
 
   @Patch(':id/confirm')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('JWT-auth')
   @ApiOperation({
     summary: 'Confirm project type selection for an idea',
     description:
@@ -67,8 +70,6 @@ export class IdeaCaptureController {
   }
 
   @Post(':id/session')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('JWT-auth')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Create a questionnaire session from a confirmed idea',

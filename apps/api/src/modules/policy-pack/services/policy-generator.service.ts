@@ -2,7 +2,7 @@
  * Policy Generator Service
  * Creates Policy → Standard → Procedure documents from gaps
  */
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import {
   PolicyDocument,
@@ -30,8 +30,6 @@ interface PolicyTemplate {
 
 @Injectable()
 export class PolicyGeneratorService {
-  private readonly logger = new Logger(PolicyGeneratorService.name);
-
   constructor(private readonly controlMappingService: ControlMappingService) {}
 
   /**

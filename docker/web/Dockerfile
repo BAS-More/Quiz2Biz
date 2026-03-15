@@ -1,5 +1,5 @@
 # Build stage
-FROM node:22-alpine AS builder
+FROM node:25-alpine AS builder
 
 WORKDIR /app
 
@@ -38,7 +38,6 @@ RUN npx turbo run build --filter=web && \
     grep -r "a9552f92" apps/web/dist/assets/*.js || echo "Client ID NOT found in build"
 
 # Production stage - serve with nginx
-# Force rebuild: CSP fix 2026-02-25
 FROM nginx:1.27-alpine AS production
 
 ARG IMAGE_VERSION=unknown
@@ -62,8 +61,16 @@ RUN addgroup -g 1001 -S webapp && \
 # Copy built assets from builder
 COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
 
-# Copy nginx configuration
-COPY docker/web/nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx configuration template (envsubst replaces ${API_UPSTREAM} at runtime)
+COPY docker/web/nginx.conf /etc/nginx/templates/default.conf.template
+
+# Default API upstream — override via docker-compose or -e at runtime
+ENV API_UPSTREAM=http://api:3000
+
+# Fix permissions for non-root nginx
+RUN mkdir -p /var/cache/nginx /var/log/nginx /var/run && \
+    chown -R webapp:webapp /var/cache/nginx /var/log/nginx /var/run /etc/nginx/conf.d && \
+    chmod -R 755 /var/cache/nginx /var/log/nginx
 
 # Expose port
 EXPOSE 80
@@ -72,4 +79,6 @@ EXPOSE 80
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1
 
+# Run as non-root user (nginx master stays root for port 80, workers run as webapp)
+# Note: nginx:1.27-alpine supports NGINX_ENVSUBST_TEMPLATE_DIR natively
 CMD ["nginx", "-g", "daemon off;"]

@@ -1,21 +1,30 @@
 /**
- * Quiz2Biz E2E Global Teardown
- * Runs once after all tests
+ * Global Teardown for Quiz2Biz E2E Tests
+ * Runs once after all tests to clean up test data
  */
 import { FullConfig } from '@playwright/test';
+import { execSync } from 'child_process';
+import * as path from 'path';
 
-async function globalTeardown(config: FullConfig) {
-  console.log('🧹 Starting E2E Global Teardown...');
+async function globalTeardown(_config: FullConfig) {
+  console.log('🧹 E2E Global Teardown - Starting...');
 
-  // Clean up test data if needed
-  if (process.env.E2E_CLEANUP === 'true') {
-    console.log('🗑️ Cleaning up test data...');
-    // Cleanup logic would go here
+  try {
+    const seedScript = path.resolve(__dirname, '..', 'prisma', 'seeds', 'e2e-seed.ts');
+    execSync(
+      `npx ts-node --compiler-options "{\\\"module\\\":\\\"CommonJS\\\"}" "${seedScript}" cleanup`,
+      {
+        cwd: path.resolve(__dirname, '..'),
+        env: { ...process.env, NODE_ENV: 'test' },
+        stdio: 'inherit',
+        timeout: 30_000,
+      },
+    );
+  } catch (error) {
+    console.warn('⚠️  E2E cleanup failed (non-critical):', error);
   }
 
-  // Generate summary report
-  console.log('📊 Test execution complete');
-  console.log('✅ E2E Global Teardown complete');
+  console.log('✅ E2E Global Teardown - Complete');
 }
 
 export default globalTeardown;

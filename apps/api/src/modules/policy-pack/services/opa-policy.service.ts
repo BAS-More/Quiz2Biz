@@ -2,13 +2,11 @@
  * OPA Policy Service
  * Generates OPA/Rego policies for infrastructure validation
  */
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { OpaPolicy, PolicySeverity } from '../types';
 
 @Injectable()
 export class OpaPolicyService {
-  private readonly logger = new Logger(OpaPolicyService.name);
-
   /**
    * OPA policy templates by dimension
    */

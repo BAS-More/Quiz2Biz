@@ -17,6 +17,7 @@
 </cite>
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [DTO Architecture Overview](#dto-architecture-overview)
 3. [Core DTO Definitions](#core-dto-definitions)
@@ -69,10 +70,12 @@ L --> M
 ```
 
 **Diagram sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L22-L27)
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L27-L33)
 
 **Section sources**
+
 - [document-generator.module.ts](file://apps/api/src/modules/document-generator/document-generator.module.ts#L1-L23)
 
 ## Core DTO Definitions
@@ -86,6 +89,7 @@ The document type management DTOs handle the creation and updating of document t
 The `CreateDocumentTypeDto` serves as the primary input model for creating new document types. It encapsulates all necessary information for defining document templates, including categorization, formatting requirements, and validation rules.
 
 Key characteristics include:
+
 - **Name Validation**: String validation with maximum length constraint
 - **Slug Generation**: Unique identifier for document types
 - **Category Association**: Enum-based categorization system
@@ -100,6 +104,7 @@ Key characteristics include:
 The `UpdateDocumentTypeDto` extends the creation DTO using NestJS's `PartialType` utility, enabling partial updates without requiring all fields to be specified.
 
 **Section sources**
+
 - [create-document-type.dto.ts](file://apps/api/src/modules/document-generator/dto/create-document-type.dto.ts#L14-L70)
 - [update-document-type.dto.ts](file://apps/api/src/modules/document-generator/dto/update-document-type.dto.ts#L1-L5)
 
@@ -130,6 +135,7 @@ J --> K
 ```
 
 **Diagram sources**
+
 - [create-document-type.dto.ts](file://apps/api/src/modules/document-generator/dto/create-document-type.dto.ts#L1-L10)
 - [request-generation.dto.ts](file://apps/api/src/modules/document-generator/dto/request-generation.dto.ts#L1-L2)
 
@@ -145,6 +151,7 @@ Each field type follows specific validation patterns:
 - **Boolean Fields**: Type-safe boolean validation
 
 **Section sources**
+
 - [create-document-type.dto.ts](file://apps/api/src/modules/document-generator/dto/create-document-type.dto.ts#L1-L70)
 - [request-generation.dto.ts](file://apps/api/src/modules/document-generator/dto/request-generation.dto.ts#L1-L28)
 
@@ -189,6 +196,7 @@ DocumentResponseDto --> DocumentTypeResponseDto : "includes"
 ```
 
 **Diagram sources**
+
 - [document-response.dto.ts](file://apps/api/src/modules/document-generator/dto/document-response.dto.ts#L27-L63)
 
 ### DocumentTypeResponseDto
@@ -200,6 +208,7 @@ The `DocumentTypeResponseDto` provides essential document type information for r
 The `DownloadUrlResponseDto` encapsulates secure download URLs with expiration timing for document access control.
 
 **Section sources**
+
 - [document-response.dto.ts](file://apps/api/src/modules/document-generator/dto/document-response.dto.ts#L1-L77)
 
 ## Request DTOs
@@ -234,10 +243,12 @@ Controller-->>Client : DocumentResponseDto
 ```
 
 **Diagram sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L38-L54)
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L42-L139)
 
 **Section sources**
+
 - [request-generation.dto.ts](file://apps/api/src/modules/document-generator/dto/request-generation.dto.ts#L1-L28)
 
 ## Admin DTOs
@@ -257,6 +268,7 @@ The `RejectDocumentDto` validates rejection reasons with strict length constrain
 The `ApproveDocumentDto` provides optional approval notes with character limits for administrative documentation.
 
 **Section sources**
+
 - [review-document.dto.ts](file://apps/api/src/modules/document-generator/dto/review-document.dto.ts#L1-L24)
 
 ## Integration Patterns
@@ -296,6 +308,7 @@ C --> F
 ```
 
 **Diagram sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L34-L36)
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L40-L43)
 
@@ -308,6 +321,7 @@ The DTO system leverages shared DTOs for pagination and response standardization
 - **ErrorResponseDto**: Standardized error response format
 
 **Section sources**
+
 - [pagination.dto.ts](file://libs/shared/src/dto/pagination.dto.ts#L1-L25)
 - [response.dto.ts](file://libs/shared/src/dto/response.dto.ts#L1-L61)
 
@@ -318,14 +332,14 @@ The DTO system leverages shared DTOs for pagination and response standardization
 ```typescript
 // Example payload for creating a document type
 const createPayload = {
-  name: "Business Plan",
-  slug: "business-plan",
-  category: "CFO",
-  templatePath: "templates/cfo/business-plan.hbs",
-  requiredQuestions: ["question-id-1", "question-id-2"],
-  outputFormats: ["DOCX"],
+  name: 'Business Plan',
+  slug: 'business-plan',
+  category: 'CFO',
+  templatePath: 'templates/cfo/business-plan.hbs',
+  requiredQuestions: ['question-id-1', 'question-id-2'],
+  outputFormats: ['DOCX'],
   estimatedPages: 15,
-  isActive: true
+  isActive: true,
 };
 ```
 
@@ -334,9 +348,9 @@ const createPayload = {
 ```typescript
 // Example payload for document generation
 const generatePayload = {
-  sessionId: "123e4567-e89b-12d3-a456-426614174000",
-  documentTypeId: "123e4567-e89b-12d3-a456-426614174000",
-  format: "DOCX"
+  sessionId: '123e4567-e89b-12d3-a456-426614174000',
+  documentTypeId: '123e4567-e89b-12d3-a456-426614174000',
+  format: 'DOCX',
 };
 ```
 
@@ -345,12 +359,12 @@ const generatePayload = {
 ```typescript
 // Example payload for document rejection
 const rejectPayload = {
-  reason: "Document contains inaccurate financial projections"
+  reason: 'Document contains inaccurate financial projections',
 };
 
 // Example payload for document approval
 const approvePayload = {
-  notes: "Reviewed and approved"
+  notes: 'Reviewed and approved',
 };
 ```
 
@@ -384,30 +398,36 @@ The DTO system integrates with the application's error handling framework:
 ### Common Validation Issues
 
 **UUID Validation Failures**
+
 - Ensure UUID format matches RFC 4122 standard
 - Verify UUID strings are properly formatted without extra characters
 
 **String Length Exceeds Limits**
+
 - Check maximum length constraints for each string field
 - Validate input against field-specific length limits
 
 **Enum Value Validation**
+
 - Ensure enum values match defined enumeration options
 - Verify case sensitivity for enum values
 
 ### Integration Issues
 
 **Controller-Service Communication**
+
 - Verify DTO imports in controller files
 - Check service method signatures match expected parameters
 - Ensure proper error propagation from services to controllers
 
 **Database Integration**
+
 - Confirm DTO field mappings align with database schema
 - Verify optional field handling for nullable database columns
 - Check data type compatibility between DTOs and database models
 
 **Section sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L115-L161)
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L154-L178)
 

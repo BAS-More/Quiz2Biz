@@ -6,6 +6,10 @@ interface ProgressDisplayProps {
   sectionName?: string;
   showDetails?: boolean;
   className?: string;
+  /** Average time spent per question in seconds (for more accurate estimation) */
+  avgTimePerQuestion?: number;
+  /** Estimated time remaining from API */
+  estimatedTimeRemaining?: number;
 }
 
 /**
@@ -17,6 +21,8 @@ export const ProgressDisplay: React.FC<ProgressDisplayProps> = ({
   sectionName,
   showDetails = true,
   className = '',
+  avgTimePerQuestion,
+  estimatedTimeRemaining,
 }) => {
   const {
     percentage,
@@ -32,7 +38,7 @@ export const ProgressDisplay: React.FC<ProgressDisplayProps> = ({
   const questionsLeft = total - answered;
 
   return (
-    <div className={`progress-display ${className}`}>
+    <div className={`progress-display ${className}`} data-testid="question-progress">
       {/* Main progress bar */}
       <div className="mb-4">
         <div className="flex justify-between items-center mb-1">
@@ -50,7 +56,10 @@ export const ProgressDisplay: React.FC<ProgressDisplayProps> = ({
       {/* Stats row */}
       <div className="flex flex-wrap gap-4 text-sm">
         {/* Sections left */}
-        <div className="flex items-center gap-2 px-3 py-2 bg-purple-50 rounded-lg">
+        <div
+          className="flex items-center gap-2 px-3 py-2 bg-purple-50 rounded-lg"
+          data-testid="sections-left"
+        >
           <svg
             className="w-4 h-4 text-purple-500"
             fill="none"
@@ -70,7 +79,10 @@ export const ProgressDisplay: React.FC<ProgressDisplayProps> = ({
         </div>
 
         {/* Questions left */}
-        <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 rounded-lg">
+        <div
+          className="flex items-center gap-2 px-3 py-2 bg-orange-50 rounded-lg"
+          data-testid="questions-left"
+        >
           <svg
             className="w-4 h-4 text-orange-500"
             fill="none"
@@ -115,7 +127,7 @@ export const ProgressDisplay: React.FC<ProgressDisplayProps> = ({
 
       {/* Section progress */}
       {showDetails && sectionName && (
-        <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+        <div className="mt-4 p-3 bg-gray-50 rounded-lg" data-testid="section-progress">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-gray-600">{sectionName}</span>
             <span className="text-sm font-medium text-gray-800">
@@ -135,20 +147,56 @@ export const ProgressDisplay: React.FC<ProgressDisplayProps> = ({
 
       {/* Completion estimate */}
       {showDetails && questionsLeft > 0 && (
-        <div className="mt-4 text-center text-sm text-gray-500">
-          <span className="inline-flex items-center gap-1">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            Est. {Math.ceil(questionsLeft * 1.5)} minutes remaining
-          </span>
-        </div>
+        <TimeEstimateDisplay
+          questionsLeft={questionsLeft}
+          estimatedTimeRemaining={estimatedTimeRemaining}
+          avgTimePerQuestion={avgTimePerQuestion}
+        />
       )}
+    </div>
+  );
+};
+
+/**
+ * Time estimate display component
+ */
+const TimeEstimateDisplay: React.FC<{
+  questionsLeft: number;
+  estimatedTimeRemaining?: number;
+  avgTimePerQuestion?: number;
+}> = ({ questionsLeft, estimatedTimeRemaining, avgTimePerQuestion }) => {
+  // Priority: API estimate > calculated from avg time > default estimate
+  const getEstimatedMinutes = () => {
+    if (estimatedTimeRemaining !== undefined && estimatedTimeRemaining > 0) {
+      return estimatedTimeRemaining;
+    }
+    if (avgTimePerQuestion !== undefined && avgTimePerQuestion > 0) {
+      // Convert seconds to minutes and round up
+      return Math.ceil((questionsLeft * avgTimePerQuestion) / 60);
+    }
+    // Default: ~90 seconds per question
+    return Math.ceil(questionsLeft * 1.5);
+  };
+
+  const estimatedMinutes = getEstimatedMinutes();
+  const displayTime =
+    estimatedMinutes >= 60
+      ? `${Math.floor(estimatedMinutes / 60)}h ${estimatedMinutes % 60}m`
+      : `${estimatedMinutes} min`;
+
+  return (
+    <div className="mt-4 text-center text-sm text-gray-500">
+      <span className="inline-flex items-center gap-1">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        Est. {displayTime} remaining
+      </span>
     </div>
   );
 };

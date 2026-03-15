@@ -441,7 +441,7 @@ describe('AdapterController', () => {
           config: { token: 'token', projectId: 123 },
         },
       ]);
-      mockAdapterConfigService.getAdapterConfig.mockImplementation((tenantId, adapterId) => {
+      mockAdapterConfigService.getAdapterConfig.mockImplementation((_tenantId, adapterId) => {
         if (adapterId === 'adapter-1') {
           return Promise.resolve(mockConfig);
         }
@@ -491,6 +491,7 @@ describe('AdapterController', () => {
 
       const result = await controller.handleGitHubWebhook(
         { action: 'opened', pull_request: {} },
+        '',
         'adapter-1',
         'tenant-1',
       );
@@ -502,7 +503,7 @@ describe('AdapterController', () => {
     it('should ignore webhook if adapter not found', async () => {
       mockAdapterConfigService.getAdapterConfig.mockResolvedValue(null);
 
-      const result = await controller.handleGitHubWebhook({}, 'adapter-1', 'tenant-1');
+      const result = await controller.handleGitHubWebhook({}, '', 'adapter-1', 'tenant-1');
 
       expect(result.status).toBe('ignored');
       expect(result.reason).toContain('not found');
@@ -514,7 +515,7 @@ describe('AdapterController', () => {
         enabled: false,
       });
 
-      const result = await controller.handleGitHubWebhook({}, 'adapter-1', 'tenant-1');
+      const result = await controller.handleGitHubWebhook({}, '', 'adapter-1', 'tenant-1');
 
       expect(result.status).toBe('ignored');
     });
@@ -529,6 +530,7 @@ describe('AdapterController', () => {
 
       const result = await controller.handleGitLabWebhook(
         { object_kind: 'pipeline' },
+        '',
         'adapter-1',
         'tenant-1',
       );
@@ -540,7 +542,7 @@ describe('AdapterController', () => {
     it('should ignore webhook if adapter not found or disabled', async () => {
       mockAdapterConfigService.getAdapterConfig.mockResolvedValue(null);
 
-      const result = await controller.handleGitLabWebhook({}, 'adapter-1', 'tenant-1');
+      const result = await controller.handleGitLabWebhook({}, '', 'adapter-1', 'tenant-1');
 
       expect(result.status).toBe('ignored');
     });

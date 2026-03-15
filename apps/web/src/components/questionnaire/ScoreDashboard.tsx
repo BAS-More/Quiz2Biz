@@ -268,12 +268,12 @@ export const ScoreDashboard: React.FC<ScoreDashboardProps> = ({
                 style={{
                   stroke:
                     scoreData.score >= 80
-                      ? '#22C55E'
+                      ? 'var(--color-success-500)'
                       : scoreData.score >= 60
-                        ? '#EAB308'
+                        ? 'var(--color-warning-500)'
                         : scoreData.score >= 40
-                          ? '#F97316'
-                          : '#EF4444',
+                          ? 'var(--color-warning-600)'
+                          : 'var(--color-danger-500)',
                 }}
               />
             </svg>
@@ -305,13 +305,13 @@ export const ScoreDashboard: React.FC<ScoreDashboardProps> = ({
       </div>
 
       {/* Progress display */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border">
+      <div className="bg-white dark:bg-surface-800 rounded-xl p-6 shadow-sm border">
         <h3 className="text-lg font-semibold mb-4">Progress Overview</h3>
         <ProgressDisplay progress={progress} showDetails={false} />
       </div>
 
       {/* Dimension breakdown */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border">
+      <div className="bg-white dark:bg-surface-800 rounded-xl p-6 shadow-sm border">
         <h3 className="text-lg font-semibold mb-4">Dimension Breakdown</h3>
         <div className="space-y-4">
           {scoreData.dimensions

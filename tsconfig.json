@@ -8,12 +8,12 @@
     "moduleResolution": "node",
     "strict": true,
     "strictNullChecks": true,
-    "strictPropertyInitialization": false,
+    "strictPropertyInitialization": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -63,6 +63,9 @@
     "apps/web",
     "e2e",
     "test/regression",
-    "prisma/prisma.config.ts"
+    "prisma/prisma.config.ts",
+    "scripts",
+    "apps/api/src/modules/document-commerce/**",
+    "apps/api/test/integration/**"
   ]
 }

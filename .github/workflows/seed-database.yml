@@ -16,14 +16,14 @@ on:
         type: string
 
 env:
-  NODE_VERSION: '22.x'
+  NODE_VERSION: '25.x'
 
 jobs:
   seed:
     name: Seed Database
     runs-on: ubuntu-latest
     if: github.event.inputs.confirm == 'CONFIRM'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -38,14 +38,14 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Generate Prisma client
-        run: npx prisma generate
+        run: ./node_modules/.bin/prisma generate
 
       - name: Run database seed
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           echo "Running database seed for ${{ github.event.inputs.environment }}..."
-          npx prisma db seed
+          ./node_modules/.bin/prisma db seed
           echo "✅ Database seed completed successfully"
 
       - name: Verify seed results
@@ -53,7 +53,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           echo "Verifying seed data..."
-          npx prisma db execute --stdin <<EOF
+          ./node_modules/.bin/prisma db execute --stdin <<EOF
           SELECT 'Users' as table_name, COUNT(*) as count FROM "User"
           UNION ALL
           SELECT 'Organizations', COUNT(*) FROM "Organization"

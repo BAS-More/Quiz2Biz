@@ -21,18 +21,18 @@ export enum SubscriptionStatusDto {
 export class CreateCheckoutDto {
   @IsString()
   @IsNotEmpty()
-  organizationId: string;
+  organizationId!: string;
 
   @IsEnum(SubscriptionTierDto)
-  tier: SubscriptionTierDto;
+  tier!: SubscriptionTierDto;
 
   @IsString()
   @IsNotEmpty()
-  successUrl: string;
+  successUrl!: string;
 
   @IsString()
   @IsNotEmpty()
-  cancelUrl: string;
+  cancelUrl!: string;
 
   @IsOptional()
   @IsString()
@@ -45,25 +45,25 @@ export class CreateCheckoutDto {
 export class CreatePortalSessionDto {
   @IsString()
   @IsNotEmpty()
-  customerId: string;
+  customerId!: string;
 
   @IsString()
   @IsNotEmpty()
-  returnUrl: string;
+  returnUrl!: string;
 }
 
 /**
  * Response DTO for subscription status
  */
 export class SubscriptionResponseDto {
-  organizationId: string;
-  tier: SubscriptionTierDto;
-  status: SubscriptionStatusDto;
+  organizationId!: string;
+  tier!: SubscriptionTierDto;
+  status!: SubscriptionStatusDto;
   stripeCustomerId?: string;
   stripeSubscriptionId?: string;
   currentPeriodEnd?: Date;
-  cancelAtPeriodEnd: boolean;
-  features: {
+  cancelAtPeriodEnd!: boolean;
+  features!: {
     questionnaires: number;
     responses: number;
     documents: number;
@@ -76,13 +76,13 @@ export class SubscriptionResponseDto {
  * Response DTO for invoice
  */
 export class InvoiceResponseDto {
-  id: string;
-  stripeInvoiceId: string;
-  amount: number;
-  currency: string;
-  status: string;
+  id!: string;
+  stripeInvoiceId!: string;
+  amount!: number;
+  currency!: string;
+  status!: string;
   paidAt?: Date;
-  createdAt: Date;
+  createdAt!: Date;
   invoiceUrl?: string;
   invoicePdfUrl?: string;
 }
@@ -93,10 +93,10 @@ export class InvoiceResponseDto {
 export class UpdateSubscriptionDto {
   @IsString()
   @IsNotEmpty()
-  subscriptionId: string;
+  subscriptionId!: string;
 
   @IsEnum(SubscriptionTierDto)
-  newTier: SubscriptionTierDto;
+  newTier!: SubscriptionTierDto;
 }
 
 /**
@@ -105,7 +105,7 @@ export class UpdateSubscriptionDto {
 export class CancelSubscriptionDto {
   @IsString()
   @IsNotEmpty()
-  subscriptionId: string;
+  subscriptionId!: string;
 
   @IsOptional()
   cancelImmediately?: boolean;

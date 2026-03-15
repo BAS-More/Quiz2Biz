@@ -127,6 +127,10 @@ describe('Configuration', () => {
 
     it('should use NODE_ENV from environment', () => {
       process.env.NODE_ENV = 'production';
+      process.env.JWT_SECRET = 'test-jwt-secret-that-is-at-least-32-chars-long';
+      process.env.JWT_REFRESH_SECRET = 'test-refresh-secret-that-is-at-least-32-chars';
+      process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test';
+      process.env.CORS_ORIGIN = 'https://example.com';
       const config = configuration();
       expect(config.nodeEnv).toBe('production');
     });

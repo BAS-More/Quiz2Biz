@@ -26,7 +26,7 @@ export const MatrixInput: React.FC<QuestionInputProps<MatrixValue>> = ({
   };
 
   return (
-    <div className="question-input matrix-input overflow-x-auto">
+    <div className="question-input matrix-input overflow-x-auto" data-testid="matrix-input">
       <table className="w-full border-collapse">
         <thead>
           <tr>

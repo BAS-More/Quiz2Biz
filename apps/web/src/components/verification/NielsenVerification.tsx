@@ -940,24 +940,24 @@ export const NielsenDashboard: React.FC = () => {
         <div className="space-y-6">
           {/* Score Cards */}
           <div className="grid grid-cols-4 gap-4">
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white dark:bg-surface-800 p-6 rounded-lg shadow">
               <div className="text-sm text-gray-500 mb-1">Nielsen Score</div>
               <div className={`text-4xl font-bold ${getScoreColor(score)}`}>
                 {score.toFixed(0)}%
               </div>
               <div className="text-xs text-gray-400 mt-1">Target: 95%+</div>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white dark:bg-surface-800 p-6 rounded-lg shadow">
               <div className="text-sm text-gray-500 mb-1">WCAG Level</div>
               <div className="text-4xl font-bold text-green-600">AA</div>
               <div className="text-xs text-gray-400 mt-1">100% Compliant</div>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white dark:bg-surface-800 p-6 rounded-lg shadow">
               <div className="text-sm text-gray-500 mb-1">SUS Score</div>
               <div className="text-4xl font-bold text-green-600">86</div>
               <div className="text-xs text-gray-400 mt-1">Target: 85+</div>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white dark:bg-surface-800 p-6 rounded-lg shadow">
               <div className="text-sm text-gray-500 mb-1">Production Ready</div>
               <div
                 className={`text-4xl font-bold ${
@@ -981,7 +981,7 @@ export const NielsenDashboard: React.FC = () => {
           </div>
 
           {/* Readiness Checks */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white dark:bg-surface-800 rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">Production Readiness Checks</h2>
             <div className="space-y-2">
               {readiness.checks.map((check) => (
@@ -1077,7 +1077,7 @@ export const NielsenDashboard: React.FC = () => {
       {/* UAT Tab */}
       {activeTab === 'uat' && (
         <div className="space-y-4">
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white dark:bg-surface-800 rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">User Acceptance Testing</h2>
             <div className="grid grid-cols-3 gap-4 mb-6">
               <div className="p-4 bg-gray-50 rounded">
@@ -1107,7 +1107,7 @@ export const NielsenDashboard: React.FC = () => {
       {/* Report Tab */}
       {activeTab === 'report' && report && (
         <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white dark:bg-surface-800 rounded-lg shadow p-6">
             <div className="flex justify-between items-start mb-6">
               <div>
                 <h2 className="text-lg font-semibold">UX Compliance Report</h2>

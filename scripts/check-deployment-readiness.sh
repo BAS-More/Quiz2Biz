@@ -187,7 +187,7 @@ else
 fi
 
 if command -v docker &> /dev/null; then
-    info "Docker detected (optional). Cloud deployment path does not require Docker Desktop."
+    info "Docker detected (optional). This project uses Azure Container Registry for cloud deployment."
 else
     pass "Docker not installed (cloud-only mode)"
 fi

@@ -722,14 +722,14 @@ export const ScoreBadge: React.FC<ScoreBadgeProps> = ({ score, maxScore = 10 }) 
   let textColor = '#FFFFFF';
 
   if (percentage >= 90) {
-    bgColor = '#22C55E';
+    bgColor = 'var(--color-success-500)';
   } else if (percentage >= 80) {
-    bgColor = '#EAB308';
+    bgColor = 'var(--color-warning-500)';
     textColor = '#000000';
   } else if (percentage >= 70) {
-    bgColor = '#F97316';
+    bgColor = 'var(--color-warning-600)';
   } else {
-    bgColor = '#EF4444';
+    bgColor = 'var(--color-danger-500)';
   }
 
   return (
@@ -758,10 +758,14 @@ export interface StatusBadgeProps {
 
 export const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const config = {
-    pass: { bg: '#DCFCE7', color: '#166534', label: 'Pass' },
-    fail: { bg: '#FEE2E2', color: '#991B1B', label: 'Fail' },
-    warning: { bg: '#FEF3C7', color: '#92400E', label: 'Warning' },
-    pending: { bg: '#E5E7EB', color: '#374151', label: 'Pending' },
+    pass: { bg: 'var(--color-success-50)', color: 'var(--color-success-900)', label: 'Pass' },
+    fail: { bg: 'var(--color-danger-50)', color: 'var(--color-danger-900)', label: 'Fail' },
+    warning: { bg: 'var(--color-warning-50)', color: 'var(--color-warning-900)', label: 'Warning' },
+    pending: {
+      bg: 'var(--color-surface-200)',
+      color: 'var(--color-surface-700)',
+      label: 'Pending',
+    },
   };
 
   const { bg, color, label } = config[status];
@@ -985,18 +989,18 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'flex-start',
     marginBottom: '24px',
     paddingBottom: '24px',
-    borderBottom: '1px solid #E5E7EB',
+    borderBottom: '1px solid var(--color-surface-200)',
   },
   title: {
     margin: '0 0 4px 0',
     fontSize: '28px',
     fontWeight: 700,
-    color: '#111827',
+    color: 'var(--color-surface-900)',
   },
   subtitle: {
     margin: 0,
     fontSize: '16px',
-    color: '#6B7280',
+    color: 'var(--color-surface-500)',
   },
   scoreOverview: {
     display: 'flex',
@@ -1012,11 +1016,11 @@ const styles: Record<string, React.CSSProperties> = {
   scoreValue: {
     fontSize: '48px',
     fontWeight: 700,
-    color: '#111827',
+    color: 'var(--color-surface-900)',
   },
   scoreLabel: {
     fontSize: '18px',
-    color: '#6B7280',
+    color: 'var(--color-surface-500)',
   },
   stats: {
     display: 'grid',
@@ -1029,17 +1033,17 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     alignItems: 'center',
     padding: '16px',
-    backgroundColor: '#F9FAFB',
+    backgroundColor: 'var(--color-surface-50)',
     borderRadius: '8px',
   },
   statValue: {
     fontSize: '24px',
     fontWeight: 700,
-    color: '#111827',
+    color: 'var(--color-surface-900)',
   },
   statLabel: {
     fontSize: '12px',
-    color: '#6B7280',
+    color: 'var(--color-surface-500)',
     marginTop: '4px',
   },
   controls: {
@@ -1051,9 +1055,9 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '8px 16px',
     fontSize: '14px',
     fontWeight: 500,
-    color: '#374151',
-    backgroundColor: '#FFFFFF',
-    border: '1px solid #D1D5DB',
+    color: 'var(--color-surface-700)',
+    backgroundColor: 'var(--color-surface-50)',
+    border: '1px solid var(--color-surface-300)',
     borderRadius: '6px',
     cursor: 'pointer',
   },
@@ -1063,8 +1067,8 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '12px',
   },
   heuristicCard: {
-    backgroundColor: '#FFFFFF',
-    border: '1px solid #E5E7EB',
+    backgroundColor: 'var(--color-surface-50)',
+    border: '1px solid var(--color-surface-200)',
     borderRadius: '8px',
     overflow: 'hidden',
   },
@@ -1087,15 +1091,15 @@ const styles: Record<string, React.CSSProperties> = {
   heuristicNumber: {
     fontSize: '12px',
     fontWeight: 600,
-    color: '#6B7280',
-    backgroundColor: '#F3F4F6',
+    color: 'var(--color-surface-500)',
+    backgroundColor: 'var(--color-surface-100)',
     padding: '4px 8px',
     borderRadius: '4px',
   },
   heuristicName: {
     fontSize: '16px',
     fontWeight: 600,
-    color: '#111827',
+    color: 'var(--color-surface-900)',
   },
   heuristicMeta: {
     display: 'flex',
@@ -1104,16 +1108,16 @@ const styles: Record<string, React.CSSProperties> = {
   },
   expandIcon: {
     fontSize: '10px',
-    color: '#9CA3AF',
+    color: 'var(--color-surface-400)',
   },
   heuristicContent: {
     padding: '0 16px 16px 16px',
-    borderTop: '1px solid #E5E7EB',
+    borderTop: '1px solid var(--color-surface-200)',
   },
   heuristicDesc: {
     margin: '12px 0 16px 0',
     fontSize: '14px',
-    color: '#6B7280',
+    color: 'var(--color-surface-500)',
     lineHeight: 1.5,
   },
   checkList: {
@@ -1123,7 +1127,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   checkItem: {
     padding: '12px',
-    backgroundColor: '#F9FAFB',
+    backgroundColor: 'var(--color-surface-50)',
     borderRadius: '6px',
   },
   checkHeader: {
@@ -1140,7 +1144,7 @@ const styles: Record<string, React.CSSProperties> = {
   checkName: {
     fontSize: '14px',
     fontWeight: 500,
-    color: '#111827',
+    color: 'var(--color-surface-900)',
   },
   checkCategory: {
     fontSize: '12px',
@@ -1148,12 +1152,12 @@ const styles: Record<string, React.CSSProperties> = {
   checkDesc: {
     margin: '0 0 8px 0',
     fontSize: '13px',
-    color: '#6B7280',
+    color: 'var(--color-surface-500)',
   },
   checkEvidence: {
     marginTop: '8px',
     fontSize: '12px',
-    color: '#374151',
+    color: 'var(--color-surface-700)',
   },
   evidenceList: {
     margin: '4px 0 0 0',
@@ -1162,7 +1166,7 @@ const styles: Record<string, React.CSSProperties> = {
   checkRecommendations: {
     marginTop: '8px',
     fontSize: '12px',
-    color: '#B45309',
+    color: 'var(--color-warning-700)',
   },
   recommendationsList: {
     margin: '4px 0 0 0',
@@ -1171,10 +1175,10 @@ const styles: Record<string, React.CSSProperties> = {
   footer: {
     marginTop: '32px',
     paddingTop: '16px',
-    borderTop: '1px solid #E5E7EB',
+    borderTop: '1px solid var(--color-surface-200)',
     textAlign: 'center',
     fontSize: '14px',
-    color: '#6B7280',
+    color: 'var(--color-surface-500)',
   },
   footerNote: {
     marginTop: '8px',

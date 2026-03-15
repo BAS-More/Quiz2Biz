@@ -4,7 +4,6 @@ import { QuestionnaireService } from './questionnaire.service';
 
 describe('QuestionnaireController', () => {
   let controller: QuestionnaireController;
-  let questionnaireService: QuestionnaireService;
   let module: TestingModule;
 
   const mockQuestionnaireService = {
@@ -19,7 +18,7 @@ describe('QuestionnaireController', () => {
     }).compile();
 
     controller = module.get<QuestionnaireController>(QuestionnaireController);
-    questionnaireService = module.get<QuestionnaireService>(QuestionnaireService);
+    module.get<QuestionnaireService>(QuestionnaireService);
 
     jest.clearAllMocks();
   });

@@ -281,6 +281,7 @@ export class EvidenceRegistryService {
     const evidenceList = await this.prisma.evidenceRegistry.findMany({
       where,
       orderBy: { createdAt: 'desc' },
+      take: 500,
     });
 
     return evidenceList.map((e: EvidenceRegistry) => this.mapToResponse(e));
@@ -298,6 +299,7 @@ export class EvidenceRegistryService {
     const evidence = await this.prisma.evidenceRegistry.findMany({
       where: { sessionId },
       select: { verified: true, artifactType: true },
+      take: 500,
     });
 
     const byType: Record<string, number> = {};
@@ -544,7 +546,7 @@ export class EvidenceRegistryService {
 
   /**
    * Bulk verify multiple evidence items
-   * Useful for batch processing verification workflows
+   * Uses batch queries to avoid N+1 pattern
    */
   async bulkVerifyEvidence(
     evidenceIds: string[],
@@ -557,17 +559,55 @@ export class EvidenceRegistryService {
       totalProcessed: evidenceIds.length,
     };
 
-    for (const evidenceId of evidenceIds) {
-      try {
-        const result = await this.verifyEvidence(
-          { evidenceId, verified: true, coverageValue },
-          verifierId,
-        );
-        results.successful.push(result.id);
-      } catch (error) {
+    // Pre-fetch all evidence items in a single query
+    const evidenceItems = await this.prisma.evidenceRegistry.findMany({
+      where: { id: { in: evidenceIds } },
+    });
+
+    const foundIds = new Set(evidenceItems.map((e) => e.id));
+    const missingIds = evidenceIds.filter((id) => !foundIds.has(id));
+    for (const id of missingIds) {
+      results.failed.push({ evidenceId: id, error: 'Evidence not found' });
+    }
+
+    // Batch update all found evidence items in a single transaction
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        // Update all verification statuses at once
+        await tx.evidenceRegistry.updateMany({
+          where: { id: { in: [...foundIds] } },
+          data: {
+            verified: true,
+            verifierId,
+            verifiedAt: new Date(),
+          },
+        });
+
+        // Batch coverage updates by unique (sessionId, questionId) pairs
+        if (coverageValue !== undefined) {
+          const coveragePairs = new Map<string, { sessionId: string; questionId: string }>();
+          for (const evidence of evidenceItems) {
+            const key = `${evidence.sessionId}:${evidence.questionId}`;
+            if (!coveragePairs.has(key)) {
+              coveragePairs.set(key, {
+                sessionId: evidence.sessionId,
+                questionId: evidence.questionId,
+              });
+            }
+          }
+          for (const { sessionId, questionId } of coveragePairs.values()) {
+            await this.updateResponseCoverage(sessionId, questionId, coverageValue);
+          }
+        }
+      });
+
+      results.successful = [...foundIds];
+    } catch (error) {
+      // If transaction fails, mark all as failed
+      for (const id of foundIds) {
         results.failed.push({
-          evidenceId,
-          error: error instanceof Error ? error.message : 'Unknown error',
+          evidenceId: id,
+          error: error instanceof Error ? error.message : 'Transaction failed',
         });
       }
     }
@@ -609,6 +649,7 @@ export class EvidenceRegistryService {
         createdAt: true,
         status: true,
       },
+      take: 500,
     });
 
     const auditTrail: EvidenceAuditEntry[] = [
@@ -716,6 +757,8 @@ export class EvidenceRegistryService {
           },
         },
       },
+      take: 500,
+      orderBy: { createdAt: 'asc' },
     });
 
     const byDimension = new Map<string, DimensionEvidenceSummary>();

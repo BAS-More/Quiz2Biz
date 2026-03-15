@@ -1,5 +1,5 @@
 # Build stage
-FROM node:22-alpine AS builder
+FROM node:25-alpine AS builder
 
 WORKDIR /app
 
@@ -19,8 +19,8 @@ RUN npm ci --legacy-peer-deps || npm install --legacy-peer-deps
 # Copy source files
 COPY . .
 
-# Generate Prisma client
-RUN npx prisma generate
+# Generate Prisma client (use local binary to ensure version consistency)
+RUN ./node_modules/.bin/prisma generate
 
 # Build the application (API and dependencies only, exclude CLI and web)
 RUN npx turbo run build --filter=api --filter=database --filter=redis --filter=shared
@@ -36,7 +36,7 @@ RUN npx turbo run build --filter=api --filter=database --filter=redis --filter=s
 RUN npm prune --omit=dev --legacy-peer-deps || true
 
 # Development stage
-FROM node:22-alpine AS development
+FROM node:25-alpine AS development
 
 WORKDIR /app
 
@@ -56,8 +56,8 @@ RUN npm ci --legacy-peer-deps || npm install --legacy-peer-deps
 # Copy source files
 COPY . .
 
-# Generate Prisma client
-RUN npx prisma generate
+# Generate Prisma client (use local binary to ensure version consistency)
+RUN ./node_modules/.bin/prisma generate
 
 # Expose port
 EXPOSE 3000
@@ -66,7 +66,7 @@ EXPOSE 3000
 CMD ["npm", "run", "start:dev"]
 
 # Production stage (must be last for default ACR build)
-FROM node:22-alpine AS production
+FROM node:25-alpine AS production
 
 # Accept build argument for image version
 ARG IMAGE_VERSION=unknown

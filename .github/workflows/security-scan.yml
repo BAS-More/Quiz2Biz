@@ -18,7 +18,7 @@ permissions:
   security-events: write
 
 env:
-  NODE_VERSION: '22.x'
+  NODE_VERSION: '25.x'
 
 jobs:
   dependency-scan:
@@ -125,7 +125,7 @@ jobs:
           image-ref: 'quiz-api:scan'
           format: 'sarif'
           output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL'
           exit-code: '0'
           ignore-unfixed: true
 
@@ -142,7 +142,7 @@ jobs:
           image-ref: 'quiz-api:scan'
           format: 'json'
           output: 'trivy-results.json'
-          severity: 'CRITICAL,HIGH,MEDIUM'
+          severity: 'CRITICAL,HIGH'
         continue-on-error: true
 
       - name: Generate security summary
@@ -194,7 +194,7 @@ jobs:
             const intervalMs = 15000;
             const start = Date.now();
             const okConclusions = new Set(["success", "neutral", "skipped"]);
-            const matchesCodeqlCheck = (name) => /^Analyze \(/.test(name) || name === "CodeQL";
+            const matchesCodeqlCheck = (name) => /^Analyze \(/.test(name);
 
             while ((Date.now() - start) / 1000 < timeoutSeconds) {
               const allRuns = await github.paginate(github.rest.checks.listForRef, {

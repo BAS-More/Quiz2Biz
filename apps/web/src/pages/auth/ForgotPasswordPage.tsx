@@ -26,6 +26,7 @@ export function ForgotPasswordPage() {
     formState: { errors, isSubmitting },
   } = useForm<ForgotPasswordForm>({
     resolver: zodResolver(forgotPasswordSchema),
+    mode: 'onTouched',
   });
 
   const onSubmit = async (data: ForgotPasswordForm) => {
@@ -84,6 +85,7 @@ export function ForgotPasswordPage() {
             type="email"
             id="email"
             autoComplete="email"
+            data-testid="email-input"
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             placeholder="you@example.com"
           />
@@ -93,6 +95,7 @@ export function ForgotPasswordPage() {
         <button
           type="submit"
           disabled={isSubmitting}
+          data-testid="reset-password-button"
           className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? (

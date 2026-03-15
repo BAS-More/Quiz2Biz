@@ -1,9 +1,36 @@
 {
   "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@libs/database": [
+        "../../libs/database/dist"
+      ],
+      "@libs/database/*": [
+        "../../libs/database/dist/*"
+      ],
+      "@libs/redis": [
+        "../../libs/redis/dist"
+      ],
+      "@libs/redis/*": [
+        "../../libs/redis/dist/*"
+      ],
+      "@libs/shared": [
+        "../../libs/shared/dist"
+      ],
+      "@libs/shared/*": [
+        "../../libs/shared/dist/*"
+      ]
+    }
+  },
   "exclude": [
     "node_modules",
     "dist",
     "test",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "src/modules/document-commerce/**",
+    "src/modules/document-generator/services/bulk-download.service.ts",
+    "src/modules/document-generator/services/project-document-generation.service.ts",
+    "src/modules/document-generator/_wip/**"
   ]
 }

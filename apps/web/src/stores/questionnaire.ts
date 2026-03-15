@@ -13,6 +13,15 @@ import {
   type SubmitResponseResult,
   type DimensionResidual,
 } from '../api/questionnaire';
+import { logger } from '../lib/logger';
+
+/** History entry for tracking answered questions */
+interface QuestionHistoryEntry {
+  question: QuestionItem;
+  section: ContinueSessionResponse['currentSection'] | null;
+  answeredValue: unknown;
+  timestamp: number;
+}
 
 interface QuestionnaireState {
   // Session state
@@ -24,6 +33,11 @@ interface QuestionnaireState {
   // Question flow
   currentQuestions: QuestionItem[];
   currentSection: ContinueSessionResponse['currentSection'] | null;
+
+  // Navigation history for back/skip
+  questionHistory: QuestionHistoryEntry[];
+  isReviewingPrevious: boolean;
+  reviewIndex: number;
 
   // Scoring
   readinessScore: number | null;
@@ -50,6 +64,13 @@ interface QuestionnaireState {
   loadScore: (sessionId: string) => Promise<void>;
   clearError: () => void;
   reset: () => void;
+
+  // Navigation actions
+  goToPrevious: () => void;
+  goToNext: () => void;
+  skipQuestion: (sessionId: string) => Promise<void>;
+  canGoBack: () => boolean;
+  canSkip: () => boolean;
 }
 
 const initialState = {
@@ -59,6 +80,9 @@ const initialState = {
   error: null,
   currentQuestions: [],
   currentSection: null,
+  questionHistory: [] as QuestionHistoryEntry[],
+  isReviewingPrevious: false,
+  reviewIndex: -1,
   readinessScore: null,
   dimensions: [],
   scoreTrend: null,
@@ -129,11 +153,11 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
       const result = await questionnaireApi.continueSession(sessionId);
       set({
         session: result.session,
-        currentQuestions: result.nextQuestions,
-        currentSection: result.currentSection,
+        currentQuestions: result.nextQuestions ?? [],
+        currentSection: result.currentSection ?? null,
         readinessScore: result.readinessScore ?? null,
-        canComplete: result.canComplete,
-        isComplete: result.isComplete,
+        canComplete: result.canComplete ?? false,
+        isComplete: result.isComplete ?? false,
         isLoading: false,
       });
     } catch (err: unknown) {
@@ -149,6 +173,10 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
   },
 
   submitResponse: async (sessionId, questionId, value, timeSpent) => {
+    const { currentQuestions, currentSection, questionHistory, isReviewingPrevious, reviewIndex } =
+      get();
+    const currentQuestion = currentQuestions[0];
+
     set({ isLoading: true, error: null });
     try {
       const result = await questionnaireApi.submitResponse(sessionId, {
@@ -156,11 +184,38 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
         value,
         timeSpentSeconds: timeSpent,
       });
+
+      // Track question in history (only if answering new questions, not reviewing)
+      if (currentQuestion && !isReviewingPrevious) {
+        const historyEntry: QuestionHistoryEntry = {
+          question: currentQuestion,
+          section: currentSection,
+          answeredValue: value,
+          timestamp: Date.now(),
+        };
+        // Append to history
+        set({ questionHistory: [...questionHistory, historyEntry] });
+      } else if (isReviewingPrevious && reviewIndex >= 0) {
+        // Update existing history entry when re-answering
+        const updatedHistory = [...questionHistory];
+        if (updatedHistory[reviewIndex]) {
+          updatedHistory[reviewIndex] = {
+            ...updatedHistory[reviewIndex],
+            answeredValue: value,
+            timestamp: Date.now(),
+          };
+        }
+        set({ questionHistory: updatedHistory });
+      }
+
       // Update local state with new score and NQS hint
       set({
         readinessScore: result.readinessScore ?? get().readinessScore,
         nqsHint: result.nextQuestionByNQS ?? null,
+        isReviewingPrevious: false,
+        reviewIndex: -1,
       });
+
       // Refresh session state to get next question
       await get().continueSession(sessionId);
       return result;
@@ -204,11 +259,98 @@ export const useQuestionnaireStore = create<QuestionnaireState>()((set, get) => 
       });
     } catch (err: unknown) {
       // Non-critical, don't block the UI
-      console.warn('Failed to load score:', err);
+      logger.warn('Failed to load score:', err);
     }
   },
 
   clearError: () => set({ error: null }),
 
   reset: () => set(initialState),
+
+  // Navigation: go to previous question in history
+  goToPrevious: () => {
+    const { questionHistory, isReviewingPrevious, reviewIndex } = get();
+    if (questionHistory.length === 0) return;
+
+    if (!isReviewingPrevious) {
+      // Start reviewing from the last answered question
+      const lastIndex = questionHistory.length - 1;
+      const entry = questionHistory[lastIndex];
+      set({
+        isReviewingPrevious: true,
+        reviewIndex: lastIndex,
+        currentQuestions: [entry.question],
+        currentSection: entry.section,
+      });
+    } else if (reviewIndex > 0) {
+      // Go further back in history
+      const newIndex = reviewIndex - 1;
+      const entry = questionHistory[newIndex];
+      set({
+        reviewIndex: newIndex,
+        currentQuestions: [entry.question],
+        currentSection: entry.section,
+      });
+    }
+  },
+
+  // Navigation: go to next question (or exit review mode)
+  goToNext: () => {
+    const { questionHistory, isReviewingPrevious, reviewIndex, session } = get();
+    if (!isReviewingPrevious) return;
+
+    if (reviewIndex < questionHistory.length - 1) {
+      // Move forward in history
+      const newIndex = reviewIndex + 1;
+      const entry = questionHistory[newIndex];
+      set({
+        reviewIndex: newIndex,
+        currentQuestions: [entry.question],
+        currentSection: entry.section,
+      });
+    } else {
+      // Exit review mode and continue session to get next question
+      set({ isReviewingPrevious: false, reviewIndex: -1 });
+      if (session) {
+        get().continueSession(session.id);
+      }
+    }
+  },
+
+  // Navigation: skip current optional question
+  skipQuestion: async (sessionId: string) => {
+    const { currentQuestions, isReviewingPrevious, goToNext } = get();
+    const currentQuestion = currentQuestions[0];
+
+    if (!currentQuestion || currentQuestion.required) return;
+
+    if (isReviewingPrevious) {
+      // If reviewing, just move forward
+      goToNext();
+    } else {
+      // Submit empty response and continue
+      set({ isLoading: true });
+      try {
+        await get().continueSession(sessionId);
+      } finally {
+        set({ isLoading: false });
+      }
+    }
+  },
+
+  // Check if can go back
+  canGoBack: () => {
+    const { questionHistory, isReviewingPrevious, reviewIndex } = get();
+    if (!isReviewingPrevious) {
+      return questionHistory.length > 0;
+    }
+    return reviewIndex > 0;
+  },
+
+  // Check if current question can be skipped
+  canSkip: () => {
+    const { currentQuestions } = get();
+    const currentQuestion = currentQuestions[0];
+    return currentQuestion ? !currentQuestion.required : false;
+  },
 }));

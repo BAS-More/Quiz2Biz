@@ -19,6 +19,7 @@
 </cite>
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
@@ -30,7 +31,9 @@
 9. [Conclusion](#conclusion)
 
 ## Introduction
+
 This document explains the design patterns implemented in the Quiz-to-build system. It focuses on:
+
 - Repository pattern via Prisma service for database abstraction
 - Service Layer pattern across feature modules
 - Strategy pattern in adaptive logic for pluggable condition evaluation
@@ -41,7 +44,9 @@ This document explains the design patterns implemented in the Quiz-to-build syst
 The goal is to show how these patterns improve maintainability, extensibility, and separation of concerns.
 
 ## Project Structure
+
 The system follows NestJS modular architecture with clear separation of concerns:
+
 - Feature modules encapsulate business logic (e.g., session, questionnaire, adaptive logic, auth, users)
 - Shared libraries provide cross-cutting services (database, Redis)
 - Modules declare providers and exports to enable dependency injection
@@ -82,6 +87,7 @@ Mod_Users --> Svc_Users
 ```
 
 **Diagram sources**
+
 - [session.module.ts](file://apps/api/src/modules/session/session.module.ts#L1-L17)
 - [questionnaire.module.ts](file://apps/api/src/modules/questionnaire/questionnaire.module.ts#L1-L11)
 - [adaptive-logic.module.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.module.ts#L1-L12)
@@ -89,6 +95,7 @@ Mod_Users --> Svc_Users
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
 
 **Section sources**
+
 - [session.module.ts](file://apps/api/src/modules/session/session.module.ts#L1-L17)
 - [questionnaire.module.ts](file://apps/api/src/modules/questionnaire/questionnaire.module.ts#L1-L11)
 - [adaptive-logic.module.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.module.ts#L1-L12)
@@ -96,6 +103,7 @@ Mod_Users --> Svc_Users
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
 
 ## Core Components
+
 - PrismaService: Provides database client lifecycle hooks and a clean abstraction for repositories
 - AdaptiveLogicService: Orchestrates visibility and branching rules, delegates condition evaluation
 - ConditionEvaluator: Pluggable evaluator for rule conditions
@@ -106,12 +114,14 @@ Mod_Users --> Svc_Users
 - Guards: JwtAuthGuard and RolesGuard enforce authentication and authorization
 
 Benefits:
+
 - Clean separation between business logic and data access
 - Extensible rule evaluation and pluggable strategies
 - Clear authorization boundaries
 - Testable services with DI
 
 **Section sources**
+
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L1-L307)
 - [condition.evaluator.ts](file://apps/api/src/modules/adaptive-logic/evaluators/condition.evaluator.ts#L1-L402)
@@ -123,7 +133,9 @@ Benefits:
 - [roles.guard.ts](file://apps/api/src/modules/auth/guards/roles.guard.ts#L1-L39)
 
 ## Architecture Overview
+
 The system uses a layered architecture with explicit service boundaries:
+
 - Controllers orchestrate requests and delegate to services
 - Services encapsulate business logic and coordinate multiple domain services
 - Shared services (Prisma, Redis) provide infrastructure concerns
@@ -150,6 +162,7 @@ SS-->>C : "result"
 ```
 
 **Diagram sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L1-L684)
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L1-L307)
 - [questionnaire.service.ts](file://apps/api/src/modules/questionnaire/questionnaire.service.ts#L1-L253)
@@ -158,6 +171,7 @@ SS-->>C : "result"
 ## Detailed Component Analysis
 
 ### Repository Pattern with PrismaService
+
 - Purpose: Abstract database operations behind a service interface to keep controllers and business logic agnostic of persistence details.
 - Implementation highlights:
   - PrismaService extends PrismaClient and implements lifecycle hooks for connection and logging
@@ -194,6 +208,7 @@ AuthService --> PrismaService : "uses"
 ```
 
 **Diagram sources**
+
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
 - [questionnaire.service.ts](file://apps/api/src/modules/questionnaire/questionnaire.service.ts#L1-L253)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L1-L684)
@@ -201,6 +216,7 @@ AuthService --> PrismaService : "uses"
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L1-L278)
 
 **Section sources**
+
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
 - [questionnaire.service.ts](file://apps/api/src/modules/questionnaire/questionnaire.service.ts#L64-L253)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L88-L684)
@@ -208,6 +224,7 @@ AuthService --> PrismaService : "uses"
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L35-L278)
 
 ### Service Layer Pattern
+
 - Purpose: Encapsulate business operations in cohesive services per feature, keeping controllers thin.
 - Implementation highlights:
   - SessionService orchestrates session lifecycle, integrates adaptive logic and questionnaire services
@@ -253,18 +270,21 @@ QuestionnaireService --> PrismaService : "uses"
 ```
 
 **Diagram sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L88-L684)
 - [questionnaire.service.ts](file://apps/api/src/modules/questionnaire/questionnaire.service.ts#L64-L253)
 - [users.service.ts](file://apps/api/src/modules/users/users.service.ts#L38-L200)
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L35-L278)
 
 **Section sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L88-L684)
 - [questionnaire.service.ts](file://apps/api/src/modules/questionnaire/questionnaire.service.ts#L64-L253)
 - [users.service.ts](file://apps/api/src/modules/users/users.service.ts#L38-L200)
 - [auth.service.ts](file://apps/api/src/modules/auth/auth.service.ts#L35-L278)
 
 ### Strategy Pattern in Adaptive Logic
+
 - Purpose: Enable pluggable condition evaluation for extensible rule processing.
 - Implementation highlights:
   - AdaptiveLogicService delegates condition evaluation to ConditionEvaluator
@@ -296,16 +316,19 @@ AdaptiveLogicService --> RuleTypes : "uses"
 ```
 
 **Diagram sources**
+
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L20-L307)
 - [condition.evaluator.ts](file://apps/api/src/modules/adaptive-logic/evaluators/condition.evaluator.ts#L5-L402)
 - [rule.types.ts](file://apps/api/src/modules/adaptive-logic/types/rule.types.ts#L1-L120)
 
 **Section sources**
+
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L20-L307)
 - [condition.evaluator.ts](file://apps/api/src/modules/adaptive-logic/evaluators/condition.evaluator.ts#L5-L402)
 - [rule.types.ts](file://apps/api/src/modules/adaptive-logic/types/rule.types.ts#L1-L120)
 
 ### Observer Pattern for Validation and State Notifications
+
 - Purpose: Notify downstream systems or services about validation outcomes and state changes.
 - Implementation highlights:
   - SessionService validates responses and updates session state; this can be extended to emit events
@@ -332,15 +355,18 @@ Notifier-->>SS : "ack"
 ```
 
 **Diagram sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L270-L359)
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L228-L243)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
 
 **Section sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L270-L359)
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L228-L243)
 
 ### Guard Pattern for Authentication and Authorization
+
 - Purpose: Enforce authentication and role-based access control at runtime.
 - Implementation highlights:
   - JwtAuthGuard integrates with Passport and NestJS Reflector to allow public routes and handle token errors
@@ -366,16 +392,19 @@ Forbidden --> End
 ```
 
 **Diagram sources**
+
 - [jwt-auth.guard.ts](file://apps/api/src/modules/auth/guards/jwt-auth.guard.ts#L1-L38)
 - [roles.guard.ts](file://apps/api/src/modules/auth/guards/roles.guard.ts#L1-L39)
 - [auth.module.ts](file://apps/api/src/modules/auth/auth.module.ts#L1-L30)
 
 **Section sources**
+
 - [jwt-auth.guard.ts](file://apps/api/src/modules/auth/guards/jwt-auth.guard.ts#L1-L38)
 - [roles.guard.ts](file://apps/api/src/modules/auth/guards/roles.guard.ts#L1-L39)
 - [auth.module.ts](file://apps/api/src/modules/auth/auth.module.ts#L1-L30)
 
 ### Factory Pattern in Service Creation and Dependency Injection
+
 - Purpose: Provide flexible instantiation and composition of services with controlled lifecycles.
 - Implementation highlights:
   - NestJS modules act as factories by declaring providers and exports
@@ -399,6 +428,7 @@ SS --> QS
 ```
 
 **Diagram sources**
+
 - [session.module.ts](file://apps/api/src/modules/session/session.module.ts#L1-L17)
 - [adaptive-logic.module.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.module.ts#L1-L12)
 - [questionnaire.module.ts](file://apps/api/src/modules/questionnaire/questionnaire.module.ts#L1-L11)
@@ -406,6 +436,7 @@ SS --> QS
 - [auth.module.ts](file://apps/api/src/modules/auth/auth.module.ts#L1-L30)
 
 **Section sources**
+
 - [session.module.ts](file://apps/api/src/modules/session/session.module.ts#L1-L17)
 - [adaptive-logic.module.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.module.ts#L1-L12)
 - [questionnaire.module.ts](file://apps/api/src/modules/questionnaire/questionnaire.module.ts#L1-L11)
@@ -413,6 +444,7 @@ SS --> QS
 - [auth.module.ts](file://apps/api/src/modules/auth/auth.module.ts#L1-L30)
 
 ## Dependency Analysis
+
 - Cohesion: Each service has a single responsibility (session orchestration, questionnaire retrieval, adaptive logic, auth, users)
 - Coupling: Services depend on abstractions (PrismaService) rather than concrete clients; modules export providers for controlled access
 - Circular Dependencies: Resolved via forwardRef in SessionModule and AdaptiveLogicModule
@@ -430,6 +462,7 @@ US["UsersService"] --> DB
 ```
 
 **Diagram sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L88-L94)
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L23-L26)
 - [questionnaire.service.ts](file://apps/api/src/modules/questionnaire/questionnaire.service.ts#L65)
@@ -437,6 +470,7 @@ US["UsersService"] --> DB
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
 
 **Section sources**
+
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L88-L94)
 - [adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L23-L26)
 - [questionnaire.service.ts](file://apps/api/src/modules/questionnaire/questionnaire.service.ts#L65)
@@ -444,12 +478,14 @@ US["UsersService"] --> DB
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L1-L62)
 
 ## Performance Considerations
+
 - Database queries: Use selective includes and ordering to minimize payload size; batch operations where possible
 - Adaptive logic: Cache visible questions per session when feasible; avoid repeated recalculations
 - Authentication: Keep JWT payloads minimal; leverage Redis TTLs for refresh tokens
 - Logging: Use conditional logging in development to reduce overhead
 
 ## Troubleshooting Guide
+
 - Authentication failures:
   - Check token expiration and refresh token storage
   - Validate guard configuration and route metadata
@@ -461,13 +497,16 @@ US["UsersService"] --> DB
   - Verify response upserts and visibility recalculations
 
 **Section sources**
+
 - [jwt-auth.guard.ts](file://apps/api/src/modules/auth/guards/jwt-auth.guard.ts#L25-L36)
 - [roles.guard.ts](file://apps/api/src/modules/auth/guards/roles.guard.ts#L11-L37)
 - [prisma.service.ts](file://libs/database/src/prisma.service.ts#L20-L40)
 - [session.service.ts](file://apps/api/src/modules/session/session.service.ts#L270-L359)
 
 ## Conclusion
+
 The Quiz-to-build system applies well-established design patterns to achieve clean separation of concerns, maintainability, and extensibility:
+
 - Repository pattern with PrismaService abstracts persistence
 - Service Layer pattern keeps controllers thin and business logic cohesive
 - Strategy pattern in adaptive logic enables extensible rule evaluation

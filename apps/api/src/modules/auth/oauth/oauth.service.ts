@@ -2,6 +2,7 @@ import { Injectable, Logger, UnauthorizedException, ConflictException } from '@n
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@libs/database';
+import { User } from '@prisma/client';
 import { OAuth2Client } from 'google-auth-library';
 
 /**
@@ -165,7 +166,7 @@ export class OAuthService {
       include: { user: true },
     });
 
-    let user: any;
+    let user: User | null = null;
     let isNewUser = false;
 
     if (oauthAccount) {
@@ -233,8 +234,8 @@ export class OAuthService {
       user: {
         id: user.id,
         email: user.email,
-        name: user.name,
-        picture: user.avatar,
+        name: user.name ?? '',
+        picture: user.avatar ?? undefined,
       },
       isNewUser,
     };
@@ -343,10 +344,10 @@ export class OAuthService {
 
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
-        expiresIn: this.configService.get<string>('jwt.expiresIn', '15m') as any,
+        expiresIn: this.configService.get<string>('jwt.expiresIn', '15m') as string | number,
       }),
       this.jwtService.signAsync(payload, {
-        expiresIn: this.configService.get<string>('jwt.refreshExpiresIn', '7d') as any,
+        expiresIn: this.configService.get<string>('jwt.refreshExpiresIn', '7d') as string | number,
       }),
     ]);
 

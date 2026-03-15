@@ -31,6 +31,9 @@ vi.mock('lucide-react', () => ({
   AlertCircle: () => <div data-testid="alert-circle-icon" />,
   Target: () => <div data-testid="target-icon" />,
   TrendingUp: () => <div data-testid="trending-up-icon" />,
+  CheckSquare: () => <div data-testid="check-square-icon" />,
+  Square: () => <div data-testid="square-icon" />,
+  Plus: () => <div data-testid="plus-icon" />,
   ChevronRight: () => <div data-testid="chevron-right-icon" />,
   Loader2: () => <div data-testid="loader-icon" />,
 }));
@@ -182,11 +185,11 @@ describe('IdeaCapturePage', () => {
     });
 
     it('shows analyzing state while submission is in progress', async () => {
-      let resolveSubmit: (value: unknown) => void;
+      let _resolveSubmit: (value: unknown) => void;
       vi.mocked(submitIdea).mockImplementation(
         () =>
           new Promise((resolve) => {
-            resolveSubmit = resolve;
+            _resolveSubmit = resolve;
           }),
       );
 
@@ -364,11 +367,10 @@ describe('IdeaCapturePage', () => {
       expect(screen.getByText('Revenue model details')).toBeInTheDocument();
       expect(screen.getByText('Competitive analysis')).toBeInTheDocument();
 
-      // Should show project type selection
-      expect(screen.getByText('Recommended Project Type')).toBeInTheDocument();
+      // Should show document type selection (multi-select)
+      expect(screen.getByText('Select Document Types')).toBeInTheDocument();
       expect(screen.getByText('Web Application')).toBeInTheDocument();
       expect(screen.getByText('Best fit for your e-commerce marketplace idea')).toBeInTheDocument();
-      expect(screen.getByText('95% match')).toBeInTheDocument();
       expect(screen.getByText('Recommended')).toBeInTheDocument();
 
       // Should show alternative project type
@@ -376,7 +378,6 @@ describe('IdeaCapturePage', () => {
       expect(
         screen.getByText('Alternative approach for mobile-first strategy'),
       ).toBeInTheDocument();
-      expect(screen.getByText('75% match')).toBeInTheDocument();
 
       // Should show start button
       const startButton = screen.getByText('Start Questionnaire');
@@ -443,6 +444,12 @@ describe('IdeaCapturePage', () => {
       await waitFor(() => {
         expect(screen.getByText('Mobile Application')).toBeInTheDocument();
       });
+
+      // Deselect the recommended type first (multi-select toggle off)
+      const webAppCard = screen.getByText('Web Application').closest('button');
+      if (webAppCard) {
+        fireEvent.click(webAppCard);
+      }
 
       // Select alternative project type
       const mobileAppCard = screen.getByText('Mobile Application').closest('button');

@@ -20,7 +20,7 @@ on:
         default: 'development'
 
 env:
-  NODE_VERSION: '22.x'
+  NODE_VERSION: '25.x'
   REGISTRY_NAME: acrquestionnaireprod
   IMAGE_NAME: quiz-api
   RESOURCE_GROUP: rg-questionnaire-prod
@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -76,7 +76,7 @@ jobs:
     if: github.event_name == 'push' || github.event.inputs.environment != ''
     permissions:
       contents: read
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -121,7 +121,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -221,9 +221,9 @@ jobs:
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --query properties.configuration.ingress.fqdn \
             -o tsv)
-          
+
           echo "Application URL: https://${APP_URL}"
-          
+
           ATTEMPT=1
           MAX_ATTEMPTS=20
           until [ "$ATTEMPT" -gt "$MAX_ATTEMPTS" ]; do
@@ -277,7 +277,7 @@ jobs:
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --query properties.configuration.ingress.fqdn \
             -o tsv 2>/dev/null || echo "unavailable")
-          
+
           echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
           echo "- **Environment**: ${{ github.event.inputs.environment || 'production' }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Image**: ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ steps.image-tag.outputs.tag }}" >> $GITHUB_STEP_SUMMARY

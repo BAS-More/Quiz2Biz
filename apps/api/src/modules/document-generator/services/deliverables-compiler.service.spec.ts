@@ -6,7 +6,6 @@ import { SessionStatus, DecisionStatus } from '@prisma/client';
 
 describe('DeliverablesCompilerService', () => {
   let service: DeliverablesCompilerService;
-  let prisma: PrismaService;
   let module: TestingModule;
 
   const mockPrisma = {
@@ -112,7 +111,7 @@ describe('DeliverablesCompilerService', () => {
     }).compile();
 
     service = module.get<DeliverablesCompilerService>(DeliverablesCompilerService);
-    prisma = module.get<PrismaService>(PrismaService);
+    module.get<PrismaService>(PrismaService);
 
     jest.clearAllMocks();
   });

@@ -4,6 +4,10 @@
  * 5% → 25% → 50% → 100% with automated health-based rollback
  */
 
+import { Logger } from '@nestjs/common';
+
+const logger = new Logger('CanaryDeployment');
+
 // ============================================================================
 // Types & Interfaces
 // ============================================================================
@@ -536,9 +540,9 @@ export class CanaryDeploymentManager {
     this.state.status = 'in_progress';
     this.state.stageStartTime = new Date();
 
-    console.log(`[Canary] Starting deployment for revision: ${revisionName}`);
-    console.log(`[Canary] Stage 1/${this.config.stages.length}: ${this.config.stages[0].name}`);
-    console.log(`[Canary] Traffic weight: ${this.config.stages[0].trafficPercentage}%`);
+    logger.log(`Starting deployment for revision: ${revisionName}`);
+    logger.log(`Stage 1/${this.config.stages.length}: ${this.config.stages[0].name}`);
+    logger.log(`Traffic weight: ${this.config.stages[0].trafficPercentage}%`);
 
     await this.notifyEvent('deployment_started', {
       revision: revisionName,
@@ -746,7 +750,7 @@ export class CanaryDeploymentManager {
     if (nextStageIndex >= this.config.stages.length) {
       // Deployment complete
       this.state.status = 'completed';
-      console.log('[Canary] Deployment completed successfully!');
+      logger.log('Deployment completed successfully!');
       await this.notifyEvent('deployment_completed', {
         totalDuration: Date.now() - this.state.stageStartTime.getTime(),
       });
@@ -758,8 +762,8 @@ export class CanaryDeploymentManager {
     this.state.stageStartTime = new Date();
     this.state.status = 'in_progress';
 
-    console.log(`[Canary] Promoting to stage ${nextStageIndex + 1}/${this.config.stages.length}`);
-    console.log(`[Canary] Stage: ${nextStage.name}, Traffic: ${nextStage.trafficPercentage}%`);
+    logger.log(`Promoting to stage ${nextStageIndex + 1}/${this.config.stages.length}`);
+    logger.log(`Stage: ${nextStage.name}, Traffic: ${nextStage.trafficPercentage}%`);
 
     await this.notifyEvent('stage_promoted', {
       fromStage: currentStage.name,
@@ -778,7 +782,7 @@ export class CanaryDeploymentManager {
     this.state.status = 'rolling_back';
     this.state.lastError = reason;
 
-    console.log(`[Canary] Initiating rollback: ${reason}`);
+    logger.warn(`Initiating rollback: ${reason}`);
 
     await this.notifyEvent('rollback_initiated', { reason });
 
@@ -786,7 +790,7 @@ export class CanaryDeploymentManager {
     await this.updateTrafficWeight(0);
 
     this.state.status = 'failed';
-    console.log('[Canary] Rollback completed');
+    logger.log('Rollback completed');
 
     await this.notifyEvent('rollback_completed', { reason });
   }
@@ -823,8 +827,8 @@ export class CanaryDeploymentManager {
     // In production, this would call Azure Container Apps API
     // az containerapp ingress traffic set --name <app> --resource-group <rg> \
     //   --revision-weight <stable>=<100-canaryPercentage> <canary>=<canaryPercentage>
-    console.log(
-      `[Canary] Traffic weight updated: canary=${canaryPercentage}%, stable=${100 - canaryPercentage}%`,
+    logger.log(
+      `Traffic weight updated: canary=${canaryPercentage}%, stable=${100 - canaryPercentage}%`,
     );
   }
 
@@ -837,13 +841,13 @@ export class CanaryDeploymentManager {
     for (const channelName of eventConfig.channels) {
       const channel = this.config.notificationConfig.channels.find((c) => c.type === channelName);
       if (channel) {
-        console.log(`[Canary] Notifying ${channel.type}: ${event}`, data);
+        logger.log(`Notifying ${channel.type}: ${event} - payload=${JSON.stringify(data)}`);
         // In production, send actual notifications
       }
     }
   }
 
-  private async httpRequest(endpoint: HealthEndpoint): Promise<{ status: number; body: string }> {
+  private async httpRequest(_endpoint: HealthEndpoint): Promise<{ status: number; body: string }> {
     // In production, use actual HTTP client (fetch/axios)
     return { status: 200, body: '{"status":"healthy"}' };
   }

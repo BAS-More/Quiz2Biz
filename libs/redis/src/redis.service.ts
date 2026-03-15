@@ -2,10 +2,19 @@ import { Injectable, OnModuleDestroy, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 
+/**
+ * Redis Service with graceful reconnection handling
+ *
+ * Features:
+ * - Automatic retry with exponential backoff (max 2s)
+ * - Connection event logging for debugging
+ * - Ready state tracking
+ */
 @Injectable()
 export class RedisService implements OnModuleDestroy {
   private readonly logger = new Logger(RedisService.name);
   private readonly client: Redis;
+  private isReady = false;
 
   constructor(private readonly configService: ConfigService) {
     const host = this.configService.get<string>('redis.host', 'localhost');
@@ -19,18 +28,53 @@ export class RedisService implements OnModuleDestroy {
       password,
       tls: useTls ? { servername: host } : undefined,
       retryStrategy: (times: number) => {
+        // Exponential backoff: 50ms, 100ms, 150ms... max 2000ms
         const delay = Math.min(times * 50, 2000);
+        this.logger.warn(`Redis retry attempt ${times}, reconnecting in ${delay}ms`);
         return delay;
       },
+      // Max retries per command before giving up
+      maxRetriesPerRequest: 3,
+      // Enable reconnection on errors
+      enableReadyCheck: true,
+      // Lazy connect - don't throw on initial connection failure
+      lazyConnect: false,
     });
 
+    // Connection lifecycle events
     this.client.on('connect', () => {
       this.logger.log('Redis connection established');
+    });
+
+    this.client.on('ready', () => {
+      this.isReady = true;
+      this.logger.log('Redis is ready to accept commands');
     });
 
     this.client.on('error', (error: Error) => {
       this.logger.error(`Redis error: ${error.message}`);
     });
+
+    this.client.on('close', () => {
+      this.isReady = false;
+      this.logger.warn('Redis connection closed');
+    });
+
+    this.client.on('reconnecting', () => {
+      this.logger.warn('Redis reconnecting...');
+    });
+
+    this.client.on('end', () => {
+      this.isReady = false;
+      this.logger.warn('Redis connection ended');
+    });
+  }
+
+  /**
+   * Check if Redis is ready to accept commands
+   */
+  isConnectionReady(): boolean {
+    return this.isReady && this.client.status === 'ready';
   }
 
   async onModuleDestroy(): Promise<void> {

@@ -7,7 +7,6 @@ import { DecisionLogService } from './decision-log.service';
 
 describe('DecisionLogController', () => {
   let controller: DecisionLogController;
-  let decisionService: jest.Mocked<DecisionLogService>;
   let module: TestingModule;
 
   const mockDecisionService = {
@@ -43,7 +42,7 @@ describe('DecisionLogController', () => {
     }).compile();
 
     controller = module.get<DecisionLogController>(DecisionLogController);
-    decisionService = module.get(DecisionLogService);
+    module.get(DecisionLogService);
 
     jest.clearAllMocks();
   });

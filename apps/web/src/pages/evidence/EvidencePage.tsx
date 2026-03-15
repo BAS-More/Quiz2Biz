@@ -1,21 +1,27 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useEvidenceStore } from '../../stores/evidence';
+import { EmptyState } from '../../components/ui/EmptyState';
+import { Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 
 export function EvidencePage() {
   const { sessionId } = useParams<{ sessionId: string }>();
   const { items, stats, isLoading, error, loadEvidence, loadStats } = useEvidenceStore();
 
-  useEffect(() => {
+  const reload = useCallback(() => {
     if (!sessionId) return;
     loadEvidence(sessionId);
     loadStats(sessionId);
   }, [sessionId, loadEvidence, loadStats]);
 
+  useEffect(() => {
+    reload();
+  }, [reload]);
+
   if (isLoading && items.length === 0) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '48px' }}>
-        <div style={{ fontSize: '16px', color: '#6b7280' }}>Loading evidence...</div>
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="h-8 w-8 text-brand-600 animate-spin" />
       </div>
     );
   }
@@ -30,17 +36,17 @@ export function EvidencePage() {
       </h1>
 
       {error && (
-        <div
-          style={{
-            background: '#fef2f2',
-            border: '1px solid #fecaca',
-            borderRadius: '8px',
-            padding: '12px',
-            color: '#dc2626',
-            marginBottom: '16px',
-          }}
-        >
-          {error}
+        <div className="p-4 bg-danger-50 border border-danger-200 rounded-xl text-sm text-danger-700 mb-4 flex items-center gap-2">
+          <AlertCircle className="h-5 w-5 shrink-0" />
+          <span className="flex-1">{error}</span>
+          <button
+            onClick={reload}
+            disabled={isLoading}
+            className="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium rounded-md bg-danger-100 hover:bg-danger-200 transition-colors disabled:opacity-50"
+          >
+            <RefreshCw className={`h-3 w-3 ${isLoading ? 'animate-spin' : ''}`} />
+            Retry
+          </button>
         </div>
       )}
 
@@ -103,9 +109,12 @@ export function EvidencePage() {
       )}
 
       {items.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '48px', color: '#6b7280' }}>
-          No evidence uploaded yet for this session.
-        </div>
+        <EmptyState
+          type="documents"
+          title="No evidence uploaded yet"
+          description="Upload evidence files for this session to track verification status."
+          size="sm"
+        />
       ) : (
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
           <thead>

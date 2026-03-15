@@ -36,6 +36,7 @@
 </cite>
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
@@ -48,10 +49,13 @@
 10. [Appendices](#appendices)
 
 ## Introduction
+
 This document presents the architecture of the Quiz-to-build system, a NestJS-based monorepo designed to deliver an adaptive client questionnaire platform. The system emphasizes modular design, layered architecture, and robust cross-cutting concerns such as authentication, validation, caching, and observability. It supports dynamic visibility and branching of questions based on user responses, integrates standards mapping for engineering compliance, and provides scalable infrastructure via containerization and Terraform.
 
 ## Project Structure
+
 The repository follows a classic NestJS monorepo layout:
+
 - apps/api: The primary NestJS application containing feature modules, controllers, services, guards, strategies, DTOs, and configuration.
 - libs: Shared libraries for database (Prisma), caching (Redis), and common DTOs.
 - prisma: Database schema and seeding logic.
@@ -86,16 +90,19 @@ SCRIPTS --> INFRA
 ```
 
 **Diagram sources**
+
 - [apps/api/src/app.module.ts](file://apps/api/src/app.module.ts#L1-L67)
 - [libs/database/src/prisma.module.ts](file://libs/database/src/prisma.module.ts#L1-L10)
 - [libs/redis/src/redis.module.ts](file://libs/redis/src/redis.module.ts#L1-L10)
 - [libs/shared/src/index.ts](file://libs/shared/src/index.ts#L1-L3)
 
 **Section sources**
+
 - [apps/api/src/app.module.ts](file://apps/api/src/app.module.ts#L1-L67)
 - [turbo.json](file://turbo.json)
 
 ## Core Components
+
 - Application bootstrap and middleware pipeline:
   - Helmet-based security headers, CORS configuration, global prefix, validation pipe, global exception filter, and interceptors are configured at startup.
   - Swagger documentation is enabled in non-production environments.
@@ -110,15 +117,19 @@ SCRIPTS --> INFRA
   - Logging and Transform interceptors standardize request logging and response shaping.
 
 Key implementation references:
+
 - Bootstrap and middleware: [apps/api/src/main.ts](file://apps/api/src/main.ts#L11-L86)
 - Root module composition: [apps/api/src/app.module.ts](file://apps/api/src/app.module.ts#L16-L64)
 
 **Section sources**
+
 - [apps/api/src/main.ts](file://apps/api/src/main.ts#L11-L86)
 - [apps/api/src/app.module.ts](file://apps/api/src/app.module.ts#L16-L64)
 
 ## Architecture Overview
+
 The system employs a layered architecture:
+
 - Presentation layer: Controllers expose REST endpoints.
 - Application layer: Services orchestrate business logic and coordinate between modules.
 - Domain and persistence layer: Prisma service abstracts database operations; Redis service provides caching.
@@ -160,6 +171,7 @@ SvcSession --> Cache
 ```
 
 **Diagram sources**
+
 - [apps/api/src/app.module.ts](file://apps/api/src/app.module.ts#L1-L67)
 - [apps/api/src/modules/session/session.service.ts](file://apps/api/src/modules/session/session.service.ts#L87-L94)
 - [apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L19-L26)
@@ -169,6 +181,7 @@ SvcSession --> Cache
 ## Detailed Component Analysis
 
 ### Authentication and Authorization Module
+
 - Composition:
   - Passport strategy registration and JWT module configuration.
   - Guards: JWT auth guard and role-based guard.
@@ -203,12 +216,15 @@ AuthModule --> RolesGuard : "provides"
 ```
 
 **Diagram sources**
+
 - [apps/api/src/modules/auth/auth.module.ts](file://apps/api/src/modules/auth/auth.module.ts#L11-L28)
 
 **Section sources**
+
 - [apps/api/src/modules/auth/auth.module.ts](file://apps/api/src/modules/auth/auth.module.ts#L1-L30)
 
 ### Adaptive Logic Module
+
 - Purpose: Compute visibility, branching, and required state of questions based on user responses.
 - Core components:
   - AdaptiveLogicService orchestrates evaluation and interacts with Prisma for rule retrieval.
@@ -251,14 +267,17 @@ AdaptiveLogicService --> ConditionEvaluator : "uses"
 ```
 
 **Diagram sources**
+
 - [apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L19-L306)
 - [apps/api/src/modules/adaptive-logic/evaluators/condition.evaluator.ts](file://apps/api/src/modules/adaptive-logic/evaluators/condition.evaluator.ts#L4-L401)
 
 **Section sources**
+
 - [apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L19-L306)
 - [apps/api/src/modules/adaptive-logic/evaluators/condition.evaluator.ts](file://apps/api/src/modules/adaptive-logic/evaluators/condition.evaluator.ts#L4-L401)
 
 ### Session Management Module
+
 - Responsibilities:
   - Create, continue, and complete user sessions.
   - Retrieve next questions respecting visibility rules.
@@ -289,13 +308,16 @@ Controller-->>Client : "200 OK"
 ```
 
 **Diagram sources**
+
 - [apps/api/src/modules/session/session.service.ts](file://apps/api/src/modules/session/session.service.ts#L198-L268)
 - [apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L31-L66)
 
 **Section sources**
+
 - [apps/api/src/modules/session/session.service.ts](file://apps/api/src/modules/session/session.service.ts#L87-L684)
 
 ### Questionnaire Management Module
+
 - Responsibilities:
   - List, fetch, and map questionnaire structures with sections and questions.
   - Provide question metadata and validation rules.
@@ -311,12 +333,15 @@ Map --> Return["Return DTO"]
 ```
 
 **Diagram sources**
+
 - [apps/api/src/modules/questionnaire/questionnaire.service.ts](file://apps/api/src/modules/questionnaire/questionnaire.service.ts#L100-L123)
 
 **Section sources**
+
 - [apps/api/src/modules/questionnaire/questionnaire.service.ts](file://apps/api/src/modules/questionnaire/questionnaire.service.ts#L63-L253)
 
 ### Standards Management Module
+
 - Responsibilities:
   - Retrieve engineering standards and category-specific mappings.
   - Generate standardized sections for documents based on mappings.
@@ -339,12 +364,15 @@ Controller-->>Client : "200 OK"
 ```
 
 **Diagram sources**
+
 - [apps/api/src/modules/standards/standards.service.ts](file://apps/api/src/modules/standards/standards.service.ts#L25-L35)
 
 **Section sources**
+
 - [apps/api/src/modules/standards/standards.service.ts](file://apps/api/src/modules/standards/standards.service.ts#L12-L197)
 
 ### Data Persistence and Caching
+
 - Database: PrismaModule provides a globally scoped PrismaService for database operations.
 - Cache: RedisModule provides a globally scoped RedisService for caching and session-related operations.
 
@@ -362,15 +390,18 @@ RedisModule --> RedisService
 ```
 
 **Diagram sources**
+
 - [apps/api/src/app.module.ts](file://apps/api/src/app.module.ts#L44-L48)
 - [libs/database/src/prisma.module.ts](file://libs/database/src/prisma.module.ts#L1-L10)
 - [libs/redis/src/redis.module.ts](file://libs/redis/src/redis.module.ts#L1-L10)
 
 **Section sources**
+
 - [libs/database/src/prisma.module.ts](file://libs/database/src/prisma.module.ts#L1-L10)
 - [libs/redis/src/redis.module.ts](file://libs/redis/src/redis.module.ts#L1-L10)
 
 ## Dependency Analysis
+
 - Module dependencies:
   - AppModule composes feature modules and shared modules.
   - SessionModule imports QuestionnaireModule and forward-ref imports AdaptiveLogicModule to avoid circular dependencies.
@@ -409,18 +440,21 @@ StandardsModule --> PrismaModule
 ```
 
 **Diagram sources**
+
 - [apps/api/src/app.module.ts](file://apps/api/src/app.module.ts#L50-L56)
 - [apps/api/src/modules/session/session.module.ts](file://apps/api/src/modules/session/session.module.ts#L7-L11)
 - [apps/api/src/modules/adaptive-logic/adaptive-logic.module.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.module.ts#L6-L10)
 - [apps/api/src/modules/standards/standards.module.ts](file://apps/api/src/modules/standards/standards.module.ts#L6-L10)
 
 **Section sources**
+
 - [apps/api/src/app.module.ts](file://apps/api/src/app.module.ts#L1-L67)
 - [apps/api/src/modules/session/session.module.ts](file://apps/api/src/modules/session/session.module.ts#L1-L17)
 - [apps/api/src/modules/adaptive-logic/adaptive-logic.module.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.module.ts#L1-L12)
 - [apps/api/src/modules/standards/standards.module.ts](file://apps/api/src/modules/standards/standards.module.ts#L1-L13)
 
 ## Performance Considerations
+
 - Caching:
   - Use RedisService for frequently accessed data (e.g., user sessions, questionnaire metadata) to reduce database load.
 - Database optimization:
@@ -438,6 +472,7 @@ StandardsModule --> PrismaModule
 [No sources needed since this section provides general guidance]
 
 ## Troubleshooting Guide
+
 - Common issues and mitigations:
   - Authentication failures: Verify JWT secret configuration and token expiration settings.
   - Validation errors: Review DTO validation rules and ensure client payloads conform to schemas.
@@ -450,10 +485,12 @@ StandardsModule --> PrismaModule
   - Track rate-limiting triggers and adjust thresholds as needed.
 
 **Section sources**
+
 - [apps/api/src/main.ts](file://apps/api/src/main.ts#L34-L49)
 - [apps/api/src/modules/session/session.service.ts](file://apps/api/src/modules/session/session.service.ts#L548-L565)
 
 ## Conclusion
+
 The Quiz-to-build system demonstrates a well-structured, modular NestJS architecture with clear separation of concerns. By leveraging the Service Layer, Repository, Strategy, and forward-ref patterns, the system achieves maintainability, testability, and extensibility. The integration of Prisma and Redis, combined with robust security and validation layers, provides a solid foundation for adaptive questionnaire delivery and standards-driven content generation.
 
 [No sources needed since this section summarizes without analyzing specific files]
@@ -461,6 +498,7 @@ The Quiz-to-build system demonstrates a well-structured, modular NestJS architec
 ## Appendices
 
 ### System Context Diagram
+
 This diagram shows how authentication, questionnaire management, session handling, and adaptive logic modules interact within the API boundary and with external systems.
 
 ```mermaid
@@ -500,6 +538,7 @@ AdminPortal --> Standards
 ```
 
 **Diagram sources**
+
 - [apps/api/src/app.module.ts](file://apps/api/src/app.module.ts#L1-L67)
 - [apps/api/src/modules/session/session.service.ts](file://apps/api/src/modules/session/session.service.ts#L87-L94)
 - [apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts](file://apps/api/src/modules/adaptive-logic/adaptive-logic.service.ts#L19-L26)
@@ -507,6 +546,7 @@ AdminPortal --> Standards
 - [libs/redis/src/redis.module.ts](file://libs/redis/src/redis.module.ts#L1-L10)
 
 ### Technology Stack and Dependencies
+
 - Backend framework: NestJS
 - Database ORM: Prisma
 - Caching: Redis
@@ -519,11 +559,13 @@ AdminPortal --> Standards
 - Packaging: Docker
 
 **Section sources**
+
 - [apps/api/src/main.ts](file://apps/api/src/main.ts#L4-L9)
 - [apps/api/src/app.module.ts](file://apps/api/src/app.module.ts#L1-L67)
 - [package.json](file://package.json)
 
 ### Infrastructure and Deployment Topology
+
 - Containerization:
   - API service built from docker/api/Dockerfile.
   - PostgreSQL initialized via docker/postgres/init.sql.
@@ -563,6 +605,7 @@ TFVars --> TFMain
 ```
 
 **Diagram sources**
+
 - [docker/api/Dockerfile](file://docker/api/Dockerfile)
 - [docker/postgres/init.sql](file://docker/postgres/init.sql)
 - [infrastructure/terraform/main.tf](file://infrastructure/terraform/main.tf)
@@ -576,6 +619,7 @@ TFVars --> TFMain
 - [infrastructure/terraform/modules/monitoring/main.tf](file://infrastructure/terraform/modules/monitoring/main.tf)
 
 **Section sources**
+
 - [docker/api/Dockerfile](file://docker/api/Dockerfile)
 - [docker/postgres/init.sql](file://docker/postgres/init.sql)
 - [infrastructure/terraform/main.tf](file://infrastructure/terraform/main.tf)
@@ -586,6 +630,7 @@ TFVars --> TFMain
 - [scripts/setup-azure.sh](file://scripts/setup-azure.sh)
 
 ### Data Model Overview
+
 The Prisma schema defines entities for questionnaires, sections, questions, visibility rules, sessions, responses, and standards. The schema supports adaptive branching, progress tracking, and standards mapping.
 
 ```mermaid
@@ -671,8 +716,10 @@ QUESTION ||--o{ RESPONSE : "answered"
 ```
 
 **Diagram sources**
+
 - [prisma/schema.prisma](file://prisma/schema.prisma)
 
 **Section sources**
+
 - [prisma/schema.prisma](file://prisma/schema.prisma)
 - [prisma/seed.ts](file://prisma/seed.ts)

@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { StandardsService } from './standards.service';
 import { PrismaService } from '@libs/database';
+import { RedisService } from '@libs/redis';
 import { StandardCategory } from '@prisma/client';
 
 describe('StandardsService', () => {
@@ -58,7 +59,19 @@ describe('StandardsService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [StandardsService, { provide: PrismaService, useValue: mockPrismaService }],
+      providers: [
+        StandardsService,
+        { provide: PrismaService, useValue: mockPrismaService },
+        {
+          provide: RedisService,
+          useValue: {
+            get: jest.fn().mockResolvedValue(null),
+            set: jest.fn().mockResolvedValue(undefined),
+            keys: jest.fn().mockResolvedValue([]),
+            del: jest.fn().mockResolvedValue(undefined),
+          },
+        },
+      ],
     }).compile();
 
     service = module.get<StandardsService>(StandardsService);
@@ -80,6 +93,7 @@ describe('StandardsService', () => {
       expect(prismaService.engineeringStandard.findMany).toHaveBeenCalledWith({
         where: { isActive: true },
         orderBy: { category: 'asc' },
+        take: 200,
       });
     });
 

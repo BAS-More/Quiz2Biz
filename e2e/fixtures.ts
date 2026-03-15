@@ -396,7 +396,7 @@ interface AuthenticatedFixtures {
 export const test = base.extend<AuthenticatedFixtures>({
   authenticatedPage: async ({ page }, use) => {
     // Login as regular user before test
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.fill('[data-testid="email-input"]', testUsers.user.email);
     await page.fill('[data-testid="password-input"]', testUsers.user.password);
     await page.click('[data-testid="login-button"]');
@@ -406,7 +406,7 @@ export const test = base.extend<AuthenticatedFixtures>({
 
   adminPage: async ({ page }, use) => {
     // Login as admin before test
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.fill('[data-testid="email-input"]', testUsers.admin.email);
     await page.fill('[data-testid="password-input"]', testUsers.admin.password);
     await page.click('[data-testid="login-button"]');
@@ -420,13 +420,13 @@ export { expect };
 
 // Helper functions
 export class TestHelpers {
-  constructor(private page: Page) {}
+  constructor(private page: Page) { }
 
   /**
    * Login with specified credentials
    */
   async login(email: string, password: string) {
-    await this.page.goto('/login');
+    await this.page.goto('/auth/login');
     await this.page.fill('[data-testid="email-input"]', email);
     await this.page.fill('[data-testid="password-input"]', password);
     await this.page.click('[data-testid="login-button"]');
@@ -439,14 +439,14 @@ export class TestHelpers {
   async logout() {
     await this.page.click('[data-testid="user-menu"]');
     await this.page.click('[data-testid="logout-button"]');
-    await this.page.waitForURL('/login');
+    await this.page.waitForURL('/auth/login');
   }
 
   /**
    * Navigate to a specific questionnaire
    */
   async navigateToQuestionnaire(name: string) {
-    await this.page.goto('/questionnaires');
+    await this.page.goto('/questionnaire');
     await this.page.click(`[data-testid="questionnaire-${name}"]`);
   }
 
@@ -534,7 +534,7 @@ export const createTestHelpers = (page: Page) => new TestHelpers(page);
 // API UTILITIES
 // ============================================
 export class ApiUtils {
-  constructor(private request: APIRequestContext) {}
+  constructor(private request: APIRequestContext) { }
 
   /**
    * Get authentication token for a user
@@ -643,7 +643,7 @@ export class DataLoader {
 // WAIT UTILITIES
 // ============================================
 export class WaitUtils {
-  constructor(private page: Page) {}
+  constructor(private page: Page) { }
 
   /**
    * Wait for network idle
@@ -697,7 +697,7 @@ export const createWaitUtils = (page: Page) => new WaitUtils(page);
 // MOCK UTILITIES
 // ============================================
 export class MockUtils {
-  constructor(private page: Page) {}
+  constructor(private page: Page) { }
 
   /**
    * Mock API response
@@ -749,7 +749,7 @@ export const createMockUtils = (page: Page) => new MockUtils(page);
 // ASSERTION UTILITIES
 // ============================================
 export class AssertionUtils {
-  constructor(private page: Page) {}
+  constructor(private page: Page) { }
 
   /**
    * Assert element count

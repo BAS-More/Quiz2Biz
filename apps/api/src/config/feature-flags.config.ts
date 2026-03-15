@@ -3,6 +3,10 @@
  * LaunchDarkly integration for gradual feature rollouts
  */
 
+import { Logger } from '@nestjs/common';
+
+const logger = new Logger('FeatureFlags');
+
 // ============================================================================
 // Types & Interfaces
 // ============================================================================
@@ -704,10 +708,10 @@ export interface FlagEvaluationContext {
  */
 export class FeatureFlagService {
   private flags: Map<string, FeatureFlagConfig> = new Map();
-  private client: unknown; // LaunchDarkly client instance
 
   constructor(config?: LaunchDarklyConfig) {
     const ldConfig = config || getLaunchDarklyConfig();
+    void ldConfig; // Reserved for LaunchDarkly SDK initialization
 
     // Initialize flags from defaults
     for (const flag of getDefaultFeatureFlags()) {
@@ -716,7 +720,7 @@ export class FeatureFlagService {
 
     // In production, initialize LaunchDarkly client
     // this.client = LaunchDarkly.init(ldConfig.sdkKey, ldConfig.options);
-    console.log(`[FeatureFlags] Initialized with ${this.flags.size} flags`);
+    logger.log(`Initialized with ${this.flags.size} flags`);
   }
 
   /**
@@ -776,7 +780,7 @@ export class FeatureFlagService {
    * Track a custom event
    */
   track(eventName: string, context: FlagEvaluationContext, data?: Record<string, unknown>): void {
-    console.log(`[FeatureFlags] Track event: ${eventName}`, { context, data });
+    logger.log(`Track event: ${eventName} ${JSON.stringify({ context, data })}`);
     // In production: this.client.track(eventName, this.contextToLDUser(context), data);
   }
 
@@ -785,7 +789,7 @@ export class FeatureFlagService {
    */
   async close(): Promise<void> {
     // In production: await this.client.close();
-    console.log('[FeatureFlags] Client closed');
+    logger.log('Client closed');
   }
 
   // Private helper methods

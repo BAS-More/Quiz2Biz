@@ -11,7 +11,7 @@ export class GeneratePromptsDto {
   })
   @IsString()
   @IsNotEmpty()
-  sessionId: string;
+  sessionId!: string;
 
   @ApiPropertyOptional({
     description: 'Specific dimensions to generate prompts for',
@@ -48,7 +48,7 @@ export class GenerateSinglePromptDto {
   })
   @IsString()
   @IsNotEmpty()
-  sessionId: string;
+  sessionId!: string;
 
   @ApiProperty({
     description: 'Question ID to generate prompt for',
@@ -56,5 +56,5 @@ export class GenerateSinglePromptDto {
   })
   @IsString()
   @IsNotEmpty()
-  questionId: string;
+  questionId!: string;
 }

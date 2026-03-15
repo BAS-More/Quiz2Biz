@@ -254,17 +254,7 @@ export const UnsavedChangesDialog: React.FC<UnsavedChangesDialogProps> = ({
 
   return (
     <div
-      className="nav-guard-overlay"
-      style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 10000,
-        animation: 'fadeIn 0.2s ease',
-      }}
+      className="nav-guard-overlay fixed inset-0 bg-black/50 flex items-center justify-center z-[10000] animate-[fadeIn_0.2s_ease]"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onCancel();
@@ -277,83 +267,32 @@ export const UnsavedChangesDialog: React.FC<UnsavedChangesDialogProps> = ({
         aria-modal="true"
         aria-labelledby="nav-guard-title"
         aria-describedby="nav-guard-message"
-        className="nav-guard-dialog"
-        style={{
-          background: 'white',
-          borderRadius: 12,
-          padding: 24,
-          maxWidth: 420,
-          width: '90%',
-          boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
-          animation: 'slideUp 0.3s ease',
-        }}
+        className="nav-guard-dialog bg-surface-50 rounded-xl p-6 max-w-[420px] w-[90%] shadow-xl animate-[slideUp_0.3s_ease]"
       >
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
-          <span
-            style={{
-              width: 48,
-              height: 48,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: '#fef3c7',
-              borderRadius: 12,
-              fontSize: 24,
-            }}
-          >
+        <div className="flex items-start gap-4">
+          <span className="w-12 h-12 flex items-center justify-center bg-warning-100 rounded-xl text-2xl">
             ⚠️
           </span>
-          <div style={{ flex: 1 }}>
-            <h2
-              id="nav-guard-title"
-              style={{ margin: '0 0 8px', fontSize: 18, fontWeight: 600, color: '#1a202c' }}
-            >
+          <div className="flex-1">
+            <h2 id="nav-guard-title" className="m-0 mb-2 text-lg font-semibold text-surface-900">
               {title}
             </h2>
-            <p
-              id="nav-guard-message"
-              style={{ margin: 0, fontSize: 14, color: '#4a5568', lineHeight: 1.5 }}
-            >
+            <p id="nav-guard-message" className="m-0 text-sm text-surface-600 leading-relaxed">
               {message}
             </p>
           </div>
         </div>
 
-        <div
-          style={{
-            display: 'flex',
-            gap: 12,
-            justifyContent: 'flex-end',
-            marginTop: 24,
-          }}
-        >
+        <div className="flex gap-3 justify-end mt-6">
           <button
             onClick={onCancel}
-            style={{
-              padding: '10px 20px',
-              background: '#3182ce',
-              color: 'white',
-              border: 'none',
-              borderRadius: 6,
-              fontSize: 14,
-              fontWeight: 500,
-              cursor: 'pointer',
-            }}
+            className="px-5 py-2.5 bg-brand-500 text-white border-none rounded-md text-sm font-medium cursor-pointer"
           >
             {cancelText}
           </button>
           <button
             onClick={onConfirm}
-            style={{
-              padding: '10px 20px',
-              background: '#e53e3e',
-              color: 'white',
-              border: 'none',
-              borderRadius: 6,
-              fontSize: 14,
-              fontWeight: 500,
-              cursor: 'pointer',
-            }}
+            className="px-5 py-2.5 bg-danger-500 text-white border-none rounded-md text-sm font-medium cursor-pointer"
           >
             {confirmText}
           </button>
@@ -596,31 +535,11 @@ export const DirtyIndicator: React.FC<DirtyIndicatorProps> = ({
 
   return (
     <span
-      className={`dirty-indicator ${className}`}
-      style={{
-        ...positionStyles[position],
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 4,
-        padding: '4px 8px',
-        background: '#fef3c7',
-        color: '#92400e',
-        borderRadius: 12,
-        fontSize: 11,
-        fontWeight: 500,
-        whiteSpace: 'nowrap',
-      }}
+      className={`dirty-indicator ${className} inline-flex items-center gap-1 px-2 py-1 bg-warning-100 text-warning-800 rounded-full text-[11px] font-medium whitespace-nowrap`}
+      style={positionStyles[position]}
       title={message}
     >
-      <span
-        style={{
-          width: 6,
-          height: 6,
-          borderRadius: '50%',
-          background: '#f59e0b',
-          animation: 'pulse 1.5s infinite',
-        }}
-      />
+      <span className="w-1.5 h-1.5 rounded-full bg-warning-500 animate-pulse" />
       {message}
       <style>{`
         @keyframes pulse {

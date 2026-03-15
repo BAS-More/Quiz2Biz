@@ -1,12 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@libs/database';
-import { AdapterConfigService, AdapterConfig, AdapterType } from './adapter-config.service';
+import { AdapterConfigService, AdapterConfig } from './adapter-config.service';
 
 describe('AdapterConfigService', () => {
   let service: AdapterConfigService;
-  let configService: ConfigService;
-  let prismaService: PrismaService;
 
   const mockConfigService = {
     get: jest.fn(),
@@ -45,8 +43,8 @@ describe('AdapterConfigService', () => {
     }).compile();
 
     service = module.get<AdapterConfigService>(AdapterConfigService);
-    configService = module.get<ConfigService>(ConfigService);
-    prismaService = module.get<PrismaService>(PrismaService);
+    module.get<ConfigService>(ConfigService);
+    module.get<PrismaService>(PrismaService);
     jest.clearAllMocks();
   });
 
@@ -465,7 +463,6 @@ describe('AdapterConfigService', () => {
       mockPrismaService.$queryRaw.mockResolvedValue(buildDbRow([cfg]));
       mockPrismaService.$executeRaw.mockResolvedValue(1);
 
-      const beforeUpdate = new Date();
       await service.updateSyncStatus(TENANT_ID, 'success-cfg', 'success');
 
       // We verify through the saved data; the executeRaw should have been called

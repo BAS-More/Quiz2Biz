@@ -18,7 +18,6 @@ describe('Input Validation Security Tests', () => {
 
     it('should use parameterized queries (Prisma prevents SQL injection)', () => {
       // Prisma automatically uses parameterized queries
-      const userEmail = "test@example.com' OR '1'='1";
       // Prisma query: prisma.user.findUnique({ where: { email: userEmail } })
       // This is safe - Prisma escapes parameters
       expect(true).toBe(true); // Prisma handles this

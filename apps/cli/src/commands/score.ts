@@ -17,6 +17,7 @@ export const scoreCommand = new Command('score')
   .option('-d, --detailed', 'Show detailed dimension breakdown')
   .option('-j, --json', 'Output as JSON')
   .option('--offline', 'Use offline data file')
+  // eslint-disable-next-line max-lines-per-function, complexity -- CLI command handler, refactor tracked in GAP-A5
   .action(async (sessionId: string | undefined, options) => {
     const config = new Config();
     const targetSessionId = sessionId || config.get('defaultSession');

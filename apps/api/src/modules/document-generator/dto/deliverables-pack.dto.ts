@@ -10,7 +10,7 @@ import { Type } from 'class-transformer';
 export class CompileDeliverablesDto {
   @ApiProperty({ description: 'Session ID to compile deliverables for' })
   @IsUUID()
-  sessionId: string;
+  sessionId!: string;
 
   @ApiPropertyOptional({ description: 'Include decision log in pack', default: true })
   @IsOptional()
@@ -46,30 +46,30 @@ export class CompileDeliverablesDto {
 
 export class DocumentSectionDto {
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty()
-  title: string;
+  title!: string;
 
   @ApiProperty()
-  content: string;
+  content!: string;
 
   @ApiProperty()
-  wordCount: number;
+  wordCount!: number;
 
   @ApiPropertyOptional({ type: () => [DocumentSectionDto] })
   subSections?: DocumentSectionDto[];
 
   @ApiProperty()
-  order: number;
+  order!: number;
 }
 
 export class CompiledDocumentDto {
   @ApiProperty()
-  id: string;
+  id!: string;
 
   @ApiProperty()
-  title: string;
+  title!: string;
 
   @ApiProperty({
     enum: [
@@ -84,96 +84,96 @@ export class CompiledDocumentDto {
       'READINESS',
     ],
   })
-  category: string;
+  category!: string;
 
   @ApiProperty({ type: [DocumentSectionDto] })
-  sections: DocumentSectionDto[];
+  sections!: DocumentSectionDto[];
 
   @ApiProperty()
-  wordCount: number;
+  wordCount!: number;
 
   @ApiProperty()
-  subSectionCount: number;
+  subSectionCount!: number;
 
   @ApiProperty()
-  generatedAt: Date;
+  generatedAt!: Date;
 }
 
 export class PackSummaryDto {
   @ApiProperty()
-  totalDocuments: number;
+  totalDocuments!: number;
 
   @ApiProperty()
-  totalSections: number;
+  totalSections!: number;
 
   @ApiProperty()
-  totalWordCount: number;
+  totalWordCount!: number;
 
   @ApiProperty({ description: 'Document count per category' })
-  categories: Record<string, number>;
+  categories!: Record<string, number>;
 
   @ApiProperty({ description: 'Overall completeness score (0-100)' })
-  completenessScore: number;
+  completenessScore!: number;
 }
 
 export class PackMetadataDto {
   @ApiProperty()
-  sessionId: string;
+  sessionId!: string;
 
   @ApiProperty()
-  userId: string;
+  userId!: string;
 
   @ApiProperty()
-  questionnaireVersion: number;
+  questionnaireVersion!: number;
 
   @ApiPropertyOptional()
   industry?: string;
 
   @ApiProperty()
-  readinessScore: number;
+  readinessScore!: number;
 
   @ApiProperty({ description: 'Scores per dimension' })
-  dimensionScores: Record<string, number>;
+  dimensionScores!: Record<string, number>;
 
   @ApiProperty()
-  generationTimestamp: string;
+  generationTimestamp!: string;
 }
 
 export class DeliverablePackResponseDto {
   @ApiProperty()
-  sessionId: string;
+  sessionId!: string;
 
   @ApiProperty()
-  generatedAt: Date;
+  generatedAt!: Date;
 
   @ApiProperty({ type: [CompiledDocumentDto] })
-  documents: CompiledDocumentDto[];
+  documents!: CompiledDocumentDto[];
 
   @ApiProperty({ type: PackSummaryDto })
-  summary: PackSummaryDto;
+  summary!: PackSummaryDto;
 
   @ApiProperty()
-  readinessScore: number;
+  readinessScore!: number;
 
   @ApiProperty({ type: PackMetadataDto })
-  metadata: PackMetadataDto;
+  metadata!: PackMetadataDto;
 }
 
 export class ExportFormatDto {
   @ApiProperty({ enum: ['json', 'pdf', 'docx', 'zip'] })
-  format: 'json' | 'pdf' | 'docx' | 'zip';
+  format!: 'json' | 'pdf' | 'docx' | 'zip';
 }
 
 export class ExportUrlResponseDto {
   @ApiProperty({ description: 'Secure download URL for exported pack' })
-  url: string;
+  url!: string;
 
   @ApiProperty({ description: 'URL expiration timestamp' })
-  expiresAt: Date;
+  expiresAt!: Date;
 
   @ApiProperty({ description: 'Export format' })
-  format: string;
+  format!: string;
 
   @ApiProperty({ description: 'Estimated file size in bytes' })
-  estimatedSize: number;
+  estimatedSize!: number;
 }

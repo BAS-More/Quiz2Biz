@@ -47,16 +47,7 @@ export function PolicyPackPage() {
       </p>
 
       {error && (
-        <div
-          style={{
-            background: '#fef2f2',
-            border: '1px solid #fecaca',
-            borderRadius: '8px',
-            padding: '12px',
-            color: '#dc2626',
-            marginBottom: '16px',
-          }}
-        >
+        <div className="p-4 bg-danger-50 border border-danger-200 rounded-xl text-sm text-danger-700 mb-4">
           {error}
         </div>
       )}

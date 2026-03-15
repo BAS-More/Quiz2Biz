@@ -182,6 +182,36 @@ export class AdapterConfigService {
     this.configCache.delete(tenantId);
   }
 
+  /** Required fields per adapter type */
+  private readonly adapterRequiredFields: Record<string, { field: string; label: string }[]> = {
+    ['github']: [
+      { field: 'token', label: 'GitHub token' },
+      { field: 'owner', label: 'GitHub owner' },
+      { field: 'repo', label: 'GitHub repo' },
+    ],
+    ['gitlab']: [
+      { field: 'token', label: 'GitLab token' },
+      { field: 'projectId', label: 'GitLab project ID' },
+    ],
+    ['jira']: [
+      { field: 'domain', label: 'Jira domain' },
+      { field: 'email', label: 'Jira email' },
+      { field: 'apiToken', label: 'Jira API token' },
+      { field: 'projectKey', label: 'Jira project key' },
+    ],
+    ['confluence']: [
+      { field: 'domain', label: 'Confluence domain' },
+      { field: 'email', label: 'Confluence email' },
+      { field: 'apiToken', label: 'Confluence API token' },
+      { field: 'spaceKey', label: 'Confluence space key' },
+    ],
+    ['azure_devops']: [
+      { field: 'organizationUrl', label: 'Azure DevOps organization URL' },
+      { field: 'personalAccessToken', label: 'Azure DevOps PAT' },
+      { field: 'project', label: 'Azure DevOps project' },
+    ],
+  };
+
   /**
    * Validate adapter configuration
    */
@@ -189,72 +219,22 @@ export class AdapterConfigService {
     type: AdapterType,
     config: Record<string, unknown>,
   ): { valid: boolean; errors: string[] } {
-    const errors: string[] = [];
+    const requiredFields = this.adapterRequiredFields[type] ?? [];
+    const errors = requiredFields
+      .filter(({ field }) => {
+        const value = config[field];
 
-    switch (type) {
-      case 'github':
-        if (!config.token) {
-          errors.push('GitHub token is required');
+        if (value === undefined || value === null) {
+          return true;
         }
-        if (!config.owner) {
-          errors.push('GitHub owner is required');
-        }
-        if (!config.repo) {
-          errors.push('GitHub repo is required');
-        }
-        break;
 
-      case 'gitlab':
-        if (!config.token) {
-          errors.push('GitLab token is required');
+        if (typeof value === 'string') {
+          return value.trim().length === 0;
         }
-        if (!config.projectId) {
-          errors.push('GitLab project ID is required');
-        }
-        break;
 
-      case 'jira':
-        if (!config.domain) {
-          errors.push('Jira domain is required');
-        }
-        if (!config.email) {
-          errors.push('Jira email is required');
-        }
-        if (!config.apiToken) {
-          errors.push('Jira API token is required');
-        }
-        if (!config.projectKey) {
-          errors.push('Jira project key is required');
-        }
-        break;
-
-      case 'confluence':
-        if (!config.domain) {
-          errors.push('Confluence domain is required');
-        }
-        if (!config.email) {
-          errors.push('Confluence email is required');
-        }
-        if (!config.apiToken) {
-          errors.push('Confluence API token is required');
-        }
-        if (!config.spaceKey) {
-          errors.push('Confluence space key is required');
-        }
-        break;
-
-      case 'azure_devops':
-        if (!config.organizationUrl) {
-          errors.push('Azure DevOps organization URL is required');
-        }
-        if (!config.personalAccessToken) {
-          errors.push('Azure DevOps PAT is required');
-        }
-        if (!config.project) {
-          errors.push('Azure DevOps project is required');
-        }
-        break;
-    }
+        return false;
+      })
+      .map(({ label }) => `${label} is required`);
 
     return { valid: errors.length === 0, errors };
   }

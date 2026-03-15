@@ -18,11 +18,11 @@ permissions:
   pull-requests: write
 
 env:
-  NODE_VERSION: '22.x'
-  COVERAGE_THRESHOLD_BRANCHES: 50
-  COVERAGE_THRESHOLD_LINES: 50
-  COVERAGE_THRESHOLD_FUNCTIONS: 50
-  COVERAGE_THRESHOLD_STATEMENTS: 50
+  NODE_VERSION: '25.x'
+  COVERAGE_THRESHOLD_BRANCHES: 80
+  COVERAGE_THRESHOLD_LINES: 80
+  COVERAGE_THRESHOLD_FUNCTIONS: 80
+  COVERAGE_THRESHOLD_STATEMENTS: 80
 
 jobs:
   coverage-check:
@@ -77,7 +77,7 @@ jobs:
       - name: Sync database schema
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/questionnaire_test?schema=public
-        run: npx prisma db push --skip-generate
+        run: ./node_modules/.bin/prisma db push --skip-generate
 
       - name: Run tests with coverage
         env:

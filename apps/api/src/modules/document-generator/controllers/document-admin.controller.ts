@@ -211,4 +211,54 @@ export class DocumentAdminController {
       },
     };
   }
+
+  // ==========================================================================
+  // BATCH REVIEW OPERATIONS
+  // ==========================================================================
+
+  @Post('documents/batch-approve')
+  @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
+  @ApiOperation({ summary: 'Approve multiple documents at once' })
+  @ApiResponse({ status: 200, description: 'Documents approved' })
+  @ApiResponse({ status: 400, description: 'Some documents could not be approved' })
+  async batchApproveDocuments(
+    @Body() dto: { documentIds: string[]; notes?: string },
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    const results = await this.documentGeneratorService.batchApproveDocuments(
+      dto.documentIds,
+      user.id,
+      dto.notes,
+    );
+
+    return {
+      message: `Successfully approved ${results.approved.length} documents`,
+      approved: results.approved,
+      failed: results.failed,
+      totalRequested: dto.documentIds.length,
+    };
+  }
+
+  @Post('documents/batch-reject')
+  @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
+  @ApiOperation({ summary: 'Reject multiple documents at once' })
+  @ApiResponse({ status: 200, description: 'Documents rejected' })
+  @ApiResponse({ status: 400, description: 'Some documents could not be rejected' })
+  async batchRejectDocuments(
+    @Body() dto: { documentIds: string[]; reason: string },
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    const results = await this.documentGeneratorService.batchRejectDocuments(
+      dto.documentIds,
+      user.id,
+      dto.reason,
+    );
+
+    return {
+      message: `Successfully rejected ${results.rejected.length} documents`,
+      rejected: results.rejected,
+      failed: results.failed,
+      totalRequested: dto.documentIds.length,
+    };
+  }
 }

@@ -5,8 +5,6 @@ import { PromptGeneratorService } from './services/prompt-generator.service';
 
 describe('QpgController', () => {
   let controller: QpgController;
-  let qpgService: QpgService;
-  let promptGenerator: PromptGeneratorService;
   let module: TestingModule;
 
   const mockQpgService = {
@@ -29,8 +27,8 @@ describe('QpgController', () => {
     }).compile();
 
     controller = module.get<QpgController>(QpgController);
-    qpgService = module.get<QpgService>(QpgService);
-    promptGenerator = module.get<PromptGeneratorService>(PromptGeneratorService);
+    module.get<QpgService>(QpgService);
+    module.get<PromptGeneratorService>(PromptGeneratorService);
 
     jest.clearAllMocks();
   });

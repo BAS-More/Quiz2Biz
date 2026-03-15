@@ -7,8 +7,6 @@ import { PrismaService } from '@libs/database';
 
 describe('EvidenceIntegrityService', () => {
   let service: EvidenceIntegrityService;
-  let prisma: PrismaService;
-  let configService: ConfigService;
   let module: TestingModule;
 
   const mockPrisma = {
@@ -30,6 +28,9 @@ describe('EvidenceIntegrityService', () => {
   };
 
   beforeEach(async () => {
+    // Restore all mocks to clear any spies from previous tests
+    jest.restoreAllMocks();
+
     module = await Test.createTestingModule({
       providers: [
         EvidenceIntegrityService,
@@ -45,8 +46,8 @@ describe('EvidenceIntegrityService', () => {
     }).compile();
 
     service = module.get<EvidenceIntegrityService>(EvidenceIntegrityService);
-    prisma = module.get<PrismaService>(PrismaService);
-    configService = module.get<ConfigService>(ConfigService);
+    module.get<PrismaService>(PrismaService);
+    module.get<ConfigService>(ConfigService);
 
     jest.clearAllMocks();
   });
@@ -951,7 +952,7 @@ describe('EvidenceIntegrityService', () => {
 
   describe('Branch coverage - requestTimestamp with non-200 status', () => {
     it('should reject when TSA returns non-200 status', async () => {
-      const server = http.createServer((req, res) => {
+      const server = http.createServer((_req, res) => {
         res.statusCode = 500;
         res.end('Internal Server Error');
       });

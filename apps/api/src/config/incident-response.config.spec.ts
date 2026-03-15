@@ -2,23 +2,7 @@
  * Incident Response Configuration Tests
  */
 import {
-  IncidentSeverity,
   SeverityLevel,
-  ImpactMetrics,
-  EscalationPath,
-  IncidentRunbook,
-  TriggerCondition,
-  TriggerType,
-  RunbookStep,
-  CommunicationTemplate,
-  IncidentResponseConfig,
-  OncallSchedule,
-  OncallRotation,
-  CommunicationConfig,
-  Incident,
-  IncidentStatus,
-  IncidentTimelineEntry,
-  IncidentMetrics,
   getSeverityDefinitions,
   getEscalationPaths,
   getIncidentRunbooks,

@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DocumentController } from './document.controller';
 import { DocumentGeneratorService } from '../services/document-generator.service';
+import { BulkDownloadService } from '../services/bulk-download.service';
 
 // Skip full compile test since controller has type issues
 // Test the core functionality with mocks
 describe('DocumentController', () => {
   let controller: DocumentController;
-  let documentService: any;
   let module: TestingModule;
 
   const mockDocumentService = {
@@ -27,11 +27,21 @@ describe('DocumentController', () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       controllers: [DocumentController],
-      providers: [{ provide: DocumentGeneratorService, useValue: mockDocumentService }],
+      providers: [
+        { provide: DocumentGeneratorService, useValue: mockDocumentService },
+        {
+          provide: BulkDownloadService,
+          useValue: {
+            createSessionDocumentsZip: jest.fn(),
+            createSelectedDocumentsZip: jest.fn(),
+            getDownloadStats: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<DocumentController>(DocumentController);
-    documentService = module.get(DocumentGeneratorService);
+    module.get(DocumentGeneratorService);
 
     jest.clearAllMocks();
   });

@@ -438,217 +438,46 @@ export const RealTimeProvider: React.FC<RealTimeProviderProps> = ({
 // ============================================================================
 
 const styles = {
-  presenceBar: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '8px 16px',
-    backgroundColor: '#f8fafc',
-    borderRadius: '8px',
-    border: '1px solid #e2e8f0',
-  },
-  presenceLabel: {
-    fontSize: '13px',
-    color: '#64748b',
-    marginRight: '8px',
-  },
-  avatarStack: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  avatar: {
-    width: '32px',
-    height: '32px',
-    borderRadius: '50%',
-    border: '2px solid #fff',
-    marginLeft: '-8px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '12px',
-    fontWeight: 600,
-    color: '#fff',
-    cursor: 'pointer',
-    position: 'relative' as const,
-  },
-  avatarFirst: {
-    marginLeft: '0',
-  },
-  onlineIndicator: {
-    position: 'absolute' as const,
-    bottom: '-2px',
-    right: '-2px',
-    width: '10px',
-    height: '10px',
-    borderRadius: '50%',
-    border: '2px solid #fff',
-  },
-  onlineIndicatorOnline: {
-    backgroundColor: '#22c55e',
-  },
-  onlineIndicatorOffline: {
-    backgroundColor: '#94a3b8',
-  },
-  moreAvatars: {
-    backgroundColor: '#94a3b8',
-    fontSize: '11px',
-  },
-  cursor: {
-    position: 'fixed' as const,
-    pointerEvents: 'none' as const,
-    zIndex: 9999,
-    transition: 'transform 0.1s ease-out',
-  },
-  cursorPointer: {
-    width: '0',
-    height: '0',
-    borderLeft: '6px solid transparent',
-    borderRight: '6px solid transparent',
-    borderBottom: '10px solid',
-  },
-  cursorLabel: {
-    marginTop: '2px',
-    padding: '2px 6px',
-    borderRadius: '4px',
-    fontSize: '11px',
-    fontWeight: 500,
-    color: '#fff',
-    whiteSpace: 'nowrap' as const,
-  },
-  lockBadge: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '4px',
-    padding: '4px 8px',
-    fontSize: '12px',
-    borderRadius: '4px',
-    backgroundColor: '#fef3c7',
-    color: '#92400e',
-  },
-  conflictModal: {
-    position: 'fixed' as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1000,
-  },
-  conflictContent: {
-    backgroundColor: '#fff',
-    borderRadius: '16px',
-    width: '100%',
-    maxWidth: '600px',
-    overflow: 'hidden',
-  },
-  conflictHeader: {
-    padding: '20px 24px',
-    backgroundColor: '#fef2f2',
-    borderBottom: '1px solid #fee2e2',
-  },
-  conflictTitle: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    fontSize: '18px',
-    fontWeight: 600,
-    color: '#991b1b',
-    margin: 0,
-  },
-  conflictBody: {
-    padding: '24px',
-  },
-  conflictVersions: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '16px',
-    marginBottom: '24px',
-  },
-  conflictVersion: {
-    padding: '16px',
-    borderRadius: '8px',
-    border: '1px solid #e2e8f0',
-  },
-  conflictVersionHeader: {
-    fontSize: '12px',
-    fontWeight: 600,
-    color: '#64748b',
-    marginBottom: '8px',
-    textTransform: 'uppercase' as const,
-  },
-  conflictVersionContent: {
-    fontSize: '14px',
-    color: '#1e293b',
-    lineHeight: 1.5,
-    backgroundColor: '#f8fafc',
-    padding: '12px',
-    borderRadius: '6px',
-    fontFamily: 'ui-monospace, monospace',
-    minHeight: '80px',
-    whiteSpace: 'pre-wrap' as const,
-  },
-  conflictActions: {
-    display: 'flex',
-    gap: '12px',
-    justifyContent: 'flex-end',
-  },
-  conflictButton: {
-    padding: '10px 20px',
-    fontSize: '14px',
-    fontWeight: 500,
-    borderRadius: '8px',
-    border: 'none',
-    cursor: 'pointer',
-    transition: 'background-color 0.15s',
-  },
-  conflictButtonLocal: {
-    backgroundColor: '#dbeafe',
-    color: '#1e40af',
-  },
-  conflictButtonRemote: {
-    backgroundColor: '#dcfce7',
-    color: '#166534',
-  },
-  conflictButtonMerge: {
-    backgroundColor: '#1e293b',
-    color: '#fff',
-  },
-  mergeTextarea: {
-    width: '100%',
-    minHeight: '100px',
-    padding: '12px',
-    fontSize: '14px',
-    border: '1px solid #e2e8f0',
-    borderRadius: '8px',
-    resize: 'vertical' as const,
-    marginBottom: '16px',
-    fontFamily: 'ui-monospace, monospace',
-  },
-  typingIndicator: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '8px 12px',
-    fontSize: '13px',
-    color: '#64748b',
-    backgroundColor: '#f8fafc',
-    borderRadius: '8px',
-    marginTop: '8px',
-  },
-  typingDots: {
-    display: 'flex',
-    gap: '3px',
-  },
-  typingDot: {
-    width: '6px',
-    height: '6px',
-    borderRadius: '50%',
-    backgroundColor: '#94a3b8',
-    animation: 'typing-bounce 1.4s infinite ease-in-out both',
-  },
+  presenceBar:
+    'flex items-center gap-2 px-4 py-2 bg-surface-50 rounded-lg border border-surface-200',
+  presenceLabel: 'text-[13px] text-surface-500 mr-2',
+  avatarStack: 'flex items-center',
+  avatar:
+    'w-8 h-8 rounded-full border-2 border-surface-50 -ml-2 flex items-center justify-center text-xs font-semibold text-white cursor-pointer relative',
+  avatarFirst: 'ml-0',
+  onlineIndicator:
+    'absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-surface-50',
+  onlineIndicatorOnline: 'bg-success-500',
+  onlineIndicatorOffline: 'bg-surface-400',
+  moreAvatars: 'bg-surface-400 text-[11px]',
+  cursor: 'fixed pointer-events-none z-[9999] transition-transform duration-100 ease-out',
+  cursorPointer:
+    'w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[10px]',
+  cursorLabel: 'mt-0.5 px-1.5 py-0.5 rounded text-[11px] font-medium text-white whitespace-nowrap',
+  lockBadge:
+    'inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-warning-50 text-warning-600',
+  conflictModal: 'fixed inset-0 bg-black/50 flex items-center justify-center z-[1000]',
+  conflictContent: 'bg-surface-50 rounded-2xl w-full max-w-[600px] overflow-hidden',
+  conflictHeader: 'px-6 py-5 bg-danger-50 border-b border-danger-100',
+  conflictTitle: 'flex items-center gap-2 text-lg font-semibold text-danger-600 m-0',
+  conflictBody: 'p-6',
+  conflictVersions: 'grid grid-cols-2 gap-4 mb-6',
+  conflictVersion: 'p-4 rounded-lg border border-surface-200',
+  conflictVersionHeader: 'text-xs font-semibold text-surface-500 mb-2 uppercase',
+  conflictVersionContent:
+    'text-sm text-surface-800 leading-normal bg-surface-50 p-3 rounded-md font-mono min-h-[80px] whitespace-pre-wrap',
+  conflictActions: 'flex gap-3 justify-end',
+  conflictButton:
+    'px-5 py-2.5 text-sm font-medium rounded-lg border-none cursor-pointer transition-colors',
+  conflictButtonLocal: 'bg-brand-100 text-brand-700',
+  conflictButtonRemote: 'bg-success-50 text-success-700',
+  conflictButtonMerge: 'bg-surface-800 text-white',
+  mergeTextarea:
+    'w-full min-h-[100px] p-3 text-sm border border-surface-200 rounded-lg resize-y mb-4 font-mono',
+  typingIndicator:
+    'flex items-center gap-2 px-3 py-2 text-[13px] text-surface-500 bg-surface-50 rounded-lg mt-2',
+  typingDots: 'flex gap-[3px]',
+  typingDot: 'w-1.5 h-1.5 rounded-full bg-surface-400 animate-bounce',
 };
 
 // ============================================================================
@@ -681,52 +510,31 @@ export const PresenceBar: React.FC<PresenceBarProps> = ({ maxVisible = 5 }) => {
   };
 
   return (
-    <div style={styles.presenceBar}>
-      <span style={styles.presenceLabel}>{onlineUsers.length} online</span>
-      <div style={styles.avatarStack}>
+    <div className={styles.presenceBar}>
+      <span className={styles.presenceLabel}>{onlineUsers.length} online</span>
+      <div className={styles.avatarStack}>
         {visibleUsers.map((user, index) => (
           <div
             key={user.userId}
-            style={{
-              ...styles.avatar,
-              ...(index === 0 ? styles.avatarFirst : {}),
-              backgroundColor: user.color,
-              zIndex: visibleUsers.length - index,
-            }}
+            className={`${styles.avatar} ${index === 0 ? styles.avatarFirst : ''}`}
+            style={{ backgroundColor: user.color, zIndex: visibleUsers.length - index }}
             onMouseEnter={() => setHoveredUser(user.userId)}
             onMouseLeave={() => setHoveredUser(null)}
             title={user.userName}
           >
             {getInitials(user.userName)}
             <div
-              style={{
-                ...styles.onlineIndicator,
-                ...(user.isOnline ? styles.onlineIndicatorOnline : styles.onlineIndicatorOffline),
-              }}
+              className={`${styles.onlineIndicator} ${user.isOnline ? styles.onlineIndicatorOnline : styles.onlineIndicatorOffline}`}
             />
             {hoveredUser === user.userId && (
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: '100%',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  marginBottom: '8px',
-                  padding: '4px 8px',
-                  backgroundColor: '#1e293b',
-                  color: '#fff',
-                  fontSize: '12px',
-                  borderRadius: '4px',
-                  whiteSpace: 'nowrap',
-                }}
-              >
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-surface-800 text-white text-xs rounded whitespace-nowrap">
                 {user.userName}
               </div>
             )}
           </div>
         ))}
         {remainingCount > 0 && (
-          <div style={{ ...styles.avatar, ...styles.moreAvatars }}>+{remainingCount}</div>
+          <div className={`${styles.avatar} ${styles.moreAvatars}`}>+{remainingCount}</div>
         )}
       </div>
     </div>
@@ -751,23 +559,11 @@ export const RemoteCursors: React.FC = () => {
         return (
           <div
             key={userId}
-            style={{
-              ...styles.cursor,
-              transform: `translate(${position.x}px, ${position.y}px)`,
-            }}
+            className={styles.cursor}
+            style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
           >
-            <div
-              style={{
-                ...styles.cursorPointer,
-                borderBottomColor: user.color,
-              }}
-            />
-            <div
-              style={{
-                ...styles.cursorLabel,
-                backgroundColor: user.color,
-              }}
-            >
+            <div className={styles.cursorPointer} style={{ borderBottomColor: user.color }} />
+            <div className={styles.cursorLabel} style={{ backgroundColor: user.color }}>
               {user.userName}
             </div>
           </div>
@@ -790,7 +586,7 @@ export const FieldLockIndicator: React.FC<FieldLockIndicatorProps> = ({ fieldId 
   }
 
   return (
-    <div style={styles.lockBadge}>
+    <div className={styles.lockBadge}>
       <svg
         width="12"
         height="12"
@@ -822,10 +618,10 @@ export const ConflictResolver: React.FC<ConflictResolverProps> = ({
   const [mergedValue, setMergedValue] = useState(conflict.localValue);
 
   return (
-    <div style={styles.conflictModal} onClick={onDismiss}>
-      <div style={styles.conflictContent} onClick={(e) => e.stopPropagation()}>
-        <div style={styles.conflictHeader}>
-          <h3 style={styles.conflictTitle}>
+    <div className={styles.conflictModal} onClick={onDismiss}>
+      <div className={styles.conflictContent} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.conflictHeader}>
+          <h3 className={styles.conflictTitle}>
             <svg
               width="24"
               height="24"
@@ -840,32 +636,32 @@ export const ConflictResolver: React.FC<ConflictResolverProps> = ({
             </svg>
             Edit Conflict Detected
           </h3>
-          <p style={{ margin: '8px 0 0', fontSize: '14px', color: '#7f1d1d' }}>
+          <p className="mt-2 text-sm text-danger-600">
             {conflict.remoteUser} made changes while you were editing.
           </p>
         </div>
 
-        <div style={styles.conflictBody}>
-          <div style={styles.conflictVersions}>
-            <div style={styles.conflictVersion}>
-              <div style={styles.conflictVersionHeader}>Your Version ({conflict.localUser})</div>
-              <div style={styles.conflictVersionContent}>{conflict.localValue}</div>
+        <div className={styles.conflictBody}>
+          <div className={styles.conflictVersions}>
+            <div className={styles.conflictVersion}>
+              <div className={styles.conflictVersionHeader}>
+                Your Version ({conflict.localUser})
+              </div>
+              <div className={styles.conflictVersionContent}>{conflict.localValue}</div>
             </div>
-            <div style={styles.conflictVersion}>
-              <div style={styles.conflictVersionHeader}>Their Version ({conflict.remoteUser})</div>
-              <div style={styles.conflictVersionContent}>{conflict.remoteValue}</div>
+            <div className={styles.conflictVersion}>
+              <div className={styles.conflictVersionHeader}>
+                Their Version ({conflict.remoteUser})
+              </div>
+              <div className={styles.conflictVersionContent}>{conflict.remoteValue}</div>
             </div>
           </div>
 
           {showMerge && (
-            <div style={{ marginBottom: '16px' }}>
-              <label
-                style={{ display: 'block', fontSize: '14px', fontWeight: 500, marginBottom: '8px' }}
-              >
-                Merged Version
-              </label>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Merged Version</label>
               <textarea
-                style={styles.mergeTextarea}
+                className={styles.mergeTextarea}
                 value={mergedValue}
                 onChange={(e) => setMergedValue(e.target.value)}
                 placeholder="Combine both versions..."
@@ -873,38 +669,30 @@ export const ConflictResolver: React.FC<ConflictResolverProps> = ({
             </div>
           )}
 
-          <div style={styles.conflictActions}>
+          <div className={styles.conflictActions}>
             <button
-              style={{ ...styles.conflictButton, ...styles.conflictButtonLocal }}
+              className={`${styles.conflictButton} ${styles.conflictButtonLocal}`}
               onClick={() => onResolve('local')}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#bfdbfe')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#dbeafe')}
             >
               Keep Mine
             </button>
             <button
-              style={{ ...styles.conflictButton, ...styles.conflictButtonRemote }}
+              className={`${styles.conflictButton} ${styles.conflictButtonRemote}`}
               onClick={() => onResolve('remote')}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#bbf7d0')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#dcfce7')}
             >
               Use Theirs
             </button>
             {!showMerge ? (
               <button
-                style={{ ...styles.conflictButton, ...styles.conflictButtonMerge }}
+                className={`${styles.conflictButton} ${styles.conflictButtonMerge}`}
                 onClick={() => setShowMerge(true)}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#334155')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1e293b')}
               >
                 Merge...
               </button>
             ) : (
               <button
-                style={{ ...styles.conflictButton, ...styles.conflictButtonMerge }}
+                className={`${styles.conflictButton} ${styles.conflictButtonMerge}`}
                 onClick={() => onResolve('merged', mergedValue)}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#334155')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1e293b')}
               >
                 Save Merged
               </button>
@@ -934,11 +722,11 @@ export const TypingIndicator: React.FC<TypingIndicatorProps> = ({ fieldId }) => 
   }
 
   return (
-    <div style={styles.typingIndicator}>
-      <div style={styles.typingDots}>
-        <div style={{ ...styles.typingDot, animationDelay: '0s' }} />
-        <div style={{ ...styles.typingDot, animationDelay: '0.2s' }} />
-        <div style={{ ...styles.typingDot, animationDelay: '0.4s' }} />
+    <div className={styles.typingIndicator}>
+      <div className={styles.typingDots}>
+        <div className={`${styles.typingDot}`} style={{ animationDelay: '0s' }} />
+        <div className={`${styles.typingDot}`} style={{ animationDelay: '0.2s' }} />
+        <div className={`${styles.typingDot}`} style={{ animationDelay: '0.4s' }} />
       </div>
       <span>{user.userName} is typing...</span>
     </div>

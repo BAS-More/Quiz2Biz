@@ -8,7 +8,7 @@ import { testUsers } from '../fixtures';
 test.describe('Adaptive Logic Flow', () => {
   test.beforeEach(async ({ page }) => {
     // Login before each test
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.fill('[data-testid="email-input"]', testUsers.user.email);
     await page.fill('[data-testid="password-input"]', testUsers.user.password);
     await page.click('[data-testid="login-button"]');
@@ -16,7 +16,7 @@ test.describe('Adaptive Logic Flow', () => {
   });
 
   test('should show conditional question when trigger condition is met', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Answer yes to trigger follow-up question
@@ -31,7 +31,7 @@ test.describe('Adaptive Logic Flow', () => {
   });
 
   test('should skip conditional question when trigger condition is not met', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Get initial question number
@@ -57,7 +57,7 @@ test.describe('Adaptive Logic Flow', () => {
   });
 
   test('should hide entire section based on branching logic', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Get sections count before answering
@@ -77,7 +77,7 @@ test.describe('Adaptive Logic Flow', () => {
   });
 
   test('should show section when qualifying score is reached', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Answer with high score to unlock detailed section
@@ -101,7 +101,7 @@ test.describe('Adaptive Logic Flow', () => {
   });
 
   test('should update progress correctly when questions are skipped', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Get initial total questions
@@ -123,7 +123,7 @@ test.describe('Adaptive Logic Flow', () => {
   });
 
   test('should handle nested conditional logic', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // First level condition
@@ -145,7 +145,7 @@ test.describe('Adaptive Logic Flow', () => {
   });
 
   test('should respect dimension-based visibility rules', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
 
     // Start a questionnaire that has dimension-based rules
     await page.click('[data-testid="start-questionnaire-button"]');
@@ -171,7 +171,7 @@ test.describe('Adaptive Logic Flow', () => {
   });
 
   test('should maintain skip state on navigation back', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Answer to trigger skip
@@ -204,7 +204,7 @@ test.describe('Adaptive Logic Flow', () => {
   });
 
   test('should display skip reason indicator', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Look for question navigator that shows skipped questions
@@ -219,7 +219,7 @@ test.describe('Adaptive Logic Flow', () => {
   });
 
   test('should handle multiple skip conditions (AND logic)', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Answer first condition
@@ -241,7 +241,7 @@ test.describe('Adaptive Logic Flow', () => {
   });
 
   test('should handle multiple skip conditions (OR logic)', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Answer to trigger OR condition
@@ -258,7 +258,7 @@ test.describe('Adaptive Logic Flow', () => {
 
 test.describe('Section Visibility', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.fill('[data-testid="email-input"]', testUsers.user.email);
     await page.fill('[data-testid="password-input"]', testUsers.user.password);
     await page.click('[data-testid="login-button"]');
@@ -266,7 +266,7 @@ test.describe('Section Visibility', () => {
   });
 
   test('should show section list with visibility indicators', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Look for section overview
@@ -278,7 +278,7 @@ test.describe('Section Visibility', () => {
   });
 
   test('should update section visibility in real-time', async ({ page }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
     await page.click('[data-testid="start-questionnaire-button"]');
 
     // Get initial section count
@@ -300,7 +300,7 @@ test.describe('Section Visibility', () => {
   test('should complete questionnaire when all visible questions are answered', async ({
     page,
   }) => {
-    await page.goto('/questionnaires');
+    await page.goto('/questionnaire');
 
     // Look for a short/completed questionnaire
     const completedSession = page.locator('[data-testid="completed-session"]').first();
@@ -317,7 +317,7 @@ test.describe('Section Visibility', () => {
 
 test.describe('Adaptive Score Impact', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/login');
+    await page.goto('/auth/login');
     await page.fill('[data-testid="email-input"]', testUsers.user.email);
     await page.fill('[data-testid="password-input"]', testUsers.user.password);
     await page.click('[data-testid="login-button"]');

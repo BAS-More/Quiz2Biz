@@ -18,12 +18,12 @@ export class CreateDocumentTypeDto {
   @ApiProperty({ example: 'Business Plan', maxLength: 200 })
   @IsString()
   @MaxLength(200)
-  name: string;
+  name!: string;
 
   @ApiProperty({ example: 'business-plan', maxLength: 100 })
   @IsString()
   @MaxLength(100)
-  slug: string;
+  slug!: string;
 
   @ApiPropertyOptional({ example: 'Comprehensive business planning document' })
   @IsOptional()
@@ -32,7 +32,7 @@ export class CreateDocumentTypeDto {
 
   @ApiProperty({ enum: DocumentCategoryValues, enumName: 'DocumentCategory', example: 'CFO' })
   @IsEnum(DocumentCategory)
-  category: DocumentCategory;
+  category!: DocumentCategory;
 
   @ApiPropertyOptional({ example: 'templates/cfo/business-plan.hbs' })
   @IsOptional()

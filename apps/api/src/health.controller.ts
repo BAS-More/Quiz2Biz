@@ -3,6 +3,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SkipThrottle } from '@nestjs/throttler';
 import { PrismaService } from '@libs/database';
 import { RedisService } from '@libs/redis';
+import { AiGatewayService } from './modules/ai-gateway/ai-gateway.service';
 
 // =============================================================================
 // Health Response Interfaces
@@ -52,13 +53,12 @@ interface ReadinessResponse {
 @Controller()
 @SkipThrottle()
 export class HealthController {
-  private readonly startTime: Date;
-
   constructor(
     @Optional() @Inject(PrismaService) private readonly prisma?: PrismaService,
     @Optional() @Inject(RedisService) private readonly redis?: RedisService,
+    @Optional() @Inject(AiGatewayService) private readonly aiGateway?: AiGatewayService,
   ) {
-    this.startTime = new Date();
+    // DI-injected services used for health checks
   }
 
   // ===========================================================================
@@ -93,6 +93,15 @@ export class HealthController {
       checks.push(redisCheck);
       if (redisCheck.status !== 'healthy' && overallStatus === 'ok') {
         overallStatus = 'degraded'; // Redis is non-critical, so only degrade
+      }
+    }
+
+    // Check AI Gateway
+    const aiCheck = await this.checkAiGateway();
+    if (aiCheck) {
+      checks.push(aiCheck);
+      if (aiCheck.status === 'unhealthy' && overallStatus === 'ok') {
+        overallStatus = 'degraded'; // AI Gateway degradation is non-critical
       }
     }
 
@@ -332,12 +341,69 @@ export class HealthController {
   }
 
   private checkDisk(): DependencyCheck {
-    // Simple disk check - in production, you'd use a proper disk space check
-    // This is a placeholder that always returns healthy
-    return {
-      name: 'disk',
-      status: 'healthy',
-      message: 'Disk space check not implemented',
-    };
+    try {
+      const memUsage = process.memoryUsage();
+      const heapTotal = memUsage.heapTotal;
+      const heapUsed = memUsage.heapUsed;
+      const heapUtilization = heapUsed / heapTotal;
+
+      // Use heap utilization as a proxy for resource pressure
+      // In containerized environments, disk space is managed by the orchestrator
+      let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
+      let message = `Heap utilization: ${(heapUtilization * 100).toFixed(1)}%`;
+
+      if (heapUtilization > 0.95) {
+        status = 'unhealthy';
+        message = `Critical heap utilization: ${(heapUtilization * 100).toFixed(1)}%`;
+      } else if (heapUtilization > 0.85) {
+        status = 'degraded';
+        message = `High heap utilization: ${(heapUtilization * 100).toFixed(1)}%`;
+      }
+
+      return { name: 'disk', status, message };
+    } catch {
+      return {
+        name: 'disk',
+        status: 'degraded',
+        message: 'Disk check unavailable in this environment',
+      };
+    }
+  }
+
+  /**
+   * Check AI Gateway provider availability
+   * Returns null if AI Gateway service is not injected
+   */
+  private async checkAiGateway(): Promise<DependencyCheck | null> {
+    if (!this.aiGateway) {
+      return null;
+    }
+
+    const startTime = Date.now();
+    try {
+      const health = await this.aiGateway.getHealth();
+      const responseTime = Date.now() - startTime;
+      const availableProviders = health.providers.filter((p) => p.available).map((p) => p.provider);
+
+      let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
+      let message = `${availableProviders.length}/${health.providers.length} providers available`;
+
+      if (health.status === 'unhealthy') {
+        status = 'unhealthy';
+        message = 'No AI providers available';
+      } else if (health.status === 'degraded') {
+        status = 'degraded';
+        message = `Degraded: only ${availableProviders.join(', ')} available`;
+      }
+
+      return { name: 'ai-gateway', status, responseTime, message };
+    } catch (error) {
+      return {
+        name: 'ai-gateway',
+        status: 'unhealthy',
+        responseTime: Date.now() - startTime,
+        message: error instanceof Error ? error.message : 'AI Gateway check failed',
+      };
+    }
   }
 }

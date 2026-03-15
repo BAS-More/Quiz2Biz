@@ -275,6 +275,7 @@ describe('SubscriptionService', () => {
           },
         },
         select: { id: true },
+        take: 1000,
       });
     });
   });

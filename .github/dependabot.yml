@@ -1,26 +1,26 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/apps/api"
+  - package-ecosystem: 'npm'
+    directory: '/apps/api'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-    versioning-strategy: "lockfile-only"
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+    versioning-strategy: 'lockfile-only'
     open-pull-requests-limit: 5
-  - package-ecosystem: "npm"
-    directory: "/apps/web"
+  - package-ecosystem: 'npm'
+    directory: '/apps/web'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-    versioning-strategy: "lockfile-only"
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+    versioning-strategy: 'lockfile-only'
     open-pull-requests-limit: 5
-  - package-ecosystem: "npm"
-    directory: "/apps/cli"
+  - package-ecosystem: 'npm'
+    directory: '/apps/cli'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-    versioning-strategy: "lockfile-only"
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+    versioning-strategy: 'lockfile-only'
     open-pull-requests-limit: 5

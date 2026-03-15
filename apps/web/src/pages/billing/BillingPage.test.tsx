@@ -90,6 +90,6 @@ describe('BillingPage', () => {
     renderBillingPage();
 
     // Initially shows loading spinner
-    expect(document.querySelector('.animate-spin')).toBeInTheDocument();
+    expect(screen.getByText(/loading billing data/i)).toBeInTheDocument();
   });
 });

@@ -272,6 +272,7 @@ describe('QuestionnaireService', () => {
         where: { sectionId: 'section-1' },
         orderBy: { orderIndex: 'asc' },
         include: { visibilityRules: true },
+        take: 1000,
       });
     });
 

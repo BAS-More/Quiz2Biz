@@ -67,6 +67,7 @@ describe('ProjectTypesController', () => {
           isDefault: true,
           metadata: true,
         },
+        take: 100,
       });
     });
 

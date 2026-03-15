@@ -4,7 +4,6 @@ import { ConversationService } from '../services/conversation.service';
 
 describe('ConversationController', () => {
   let controller: ConversationController;
-  let conversationService: jest.Mocked<ConversationService>;
 
   const mockConversationService = {
     processAnswerWithAi: jest.fn(),
@@ -22,7 +21,7 @@ describe('ConversationController', () => {
     }).compile();
 
     controller = module.get<ConversationController>(ConversationController);
-    conversationService = module.get(ConversationService);
+    module.get(ConversationService);
   });
 
   describe('submitAnswerWithAi', () => {

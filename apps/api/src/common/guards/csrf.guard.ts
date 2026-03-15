@@ -19,9 +19,9 @@ export const CSRF_SKIP_KEY = 'skipCsrf';
  * Use sparingly - only for webhooks or public endpoints
  */
 export const SkipCsrf = () => {
-  return (target: object, propertyKey?: string, descriptor?: PropertyDescriptor) => {
+  return (target: object, _propertyKey?: string, descriptor?: PropertyDescriptor) => {
     if (descriptor) {
-      Reflect.defineMetadata(CSRF_SKIP_KEY, true, descriptor.value);
+      Reflect.defineMetadata(CSRF_SKIP_KEY, true, descriptor.value as object);
     } else {
       Reflect.defineMetadata(CSRF_SKIP_KEY, true, target);
     }
@@ -53,19 +53,28 @@ export class CsrfGuard implements CanActivate {
     private readonly configService: ConfigService,
     private readonly reflector: Reflector,
   ) {
-    this.csrfSecret = this.configService.get<string>(
-      'CSRF_SECRET',
-      'quiz2biz-csrf-secret-change-in-production',
-    );
+    const nodeEnv = this.configService.get<string>('NODE_ENV', 'development');
+    const configuredSecret = this.configService.get<string>('CSRF_SECRET');
+
+    if (nodeEnv === 'production' && !configuredSecret) {
+      throw new Error('FATAL: CSRF_SECRET must be set in production');
+    }
+
+    this.csrfSecret = configuredSecret || 'quiz2biz-csrf-secret-change-in-production';
   }
 
   canActivate(context: ExecutionContext): boolean {
-    // Check if CSRF is globally disabled via environment variable
+    // CSRF_DISABLED only allowed in non-production environments
+    const nodeEnv = this.configService.get<string>('NODE_ENV', 'development');
     const csrfDisabled =
       this.configService.get<string>('CSRF_DISABLED', 'false').toLowerCase() === 'true';
     if (csrfDisabled) {
-      this.logger.warn('CSRF protection is DISABLED via CSRF_DISABLED environment variable');
-      return true;
+      if (nodeEnv === 'production') {
+        this.logger.error('CSRF_DISABLED is set but ignored in production');
+      } else {
+        this.logger.warn('CSRF protection is DISABLED via CSRF_DISABLED environment variable');
+        return true;
+      }
     }
 
     const request = context.switchToHttp().getRequest<Request>();
@@ -174,7 +183,7 @@ export class CsrfGuard implements CanActivate {
       }
 
       return crypto.timingSafeEqual(Buffer.from(providedHmac), Buffer.from(expectedHmac));
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -190,10 +199,14 @@ export class CsrfService {
   private readonly tokenMaxAge: number;
 
   constructor(private readonly configService: ConfigService) {
-    this.csrfSecret = this.configService.get<string>(
-      'CSRF_SECRET',
-      'quiz2biz-csrf-secret-change-in-production',
-    );
+    const configuredSecret = this.configService.get<string>('CSRF_SECRET');
+    const nodeEnv = this.configService.get<string>('NODE_ENV', 'development');
+
+    if (nodeEnv === 'production' && !configuredSecret) {
+      throw new Error('FATAL: CSRF_SECRET must be set in production');
+    }
+
+    this.csrfSecret = configuredSecret || 'quiz2biz-csrf-secret-change-in-production';
     // Token valid for 24 hours by default
     this.tokenMaxAge = this.configService.get<number>('CSRF_TOKEN_MAX_AGE', 86400000);
   }

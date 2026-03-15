@@ -4,7 +4,6 @@ import {
   AiDocumentContentService,
   GenerateDocumentContentParams,
   SessionAnswer,
-  DocumentTemplateSection,
 } from './ai-document-content.service';
 
 // ---------------------------------------------------------------------------

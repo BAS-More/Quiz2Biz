@@ -59,7 +59,7 @@ export function Skeleton({ className, variant = 'text', width, height, lines = 1
 /** Pre-built skeleton for a stat card */
 export function StatCardSkeleton() {
   return (
-    <div className="bg-white rounded-xl border border-surface-200/60 p-6 space-y-3">
+    <div className="bg-white dark:bg-surface-800 rounded-xl border border-surface-200/60 p-6 space-y-3">
       <div className="flex items-center gap-3">
         <Skeleton variant="rectangular" width={40} height={40} className="rounded-lg" />
         <div className="flex-1 space-y-2">

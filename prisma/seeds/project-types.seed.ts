@@ -95,6 +95,36 @@ export const projectTypes: ProjectTypeSeedData[] = [
       documentTypes: ['financial-projections', 'budget-plan', 'investor-pitch'],
     },
   },
+  // V1 project types from migration - these exist with fixed UUIDs
+  {
+    slug: 'idea-to-docs',
+    name: 'Idea to Documents',
+    description:
+      'Capture a project idea and generate selected business and delivery documents.',
+    icon: 'lightbulb',
+    isDefault: false,
+    metadata: {
+      category: 'business',
+      targetAudience: ['entrepreneurs', 'founders', 'product-managers'],
+      estimatedCompletionMinutes: 30,
+      routing: 'idea-first',
+      documentTypes: ['business-plan', 'marketing-strategy', 'financial-projections'],
+    },
+  },
+  {
+    slug: 'technical-readiness',
+    name: 'Technical Readiness',
+    description:
+      'Legacy Quiz2Biz technical assessment flow with readiness scoring and heatmaps.',
+    icon: 'shield-check',
+    isDefault: false,
+    metadata: {
+      category: 'technology',
+      targetAudience: ['cto', 'engineering-leads', 'devops'],
+      estimatedCompletionMinutes: 90,
+      routing: 'legacy-readiness',
+    },
+  },
 ];
 
 /**
@@ -281,6 +311,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'business-plan',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 25,
+    basePrice: 149.0, // AUD - Premium document
+    qualitySliderEnabled: true,
     // Core questions: strategy/vision, stakeholder alignment, budget, system architecture, requirements
     requiredQuestions: ['q-strategy-001', 'q-strategy-002', 'q-finance-001', 'q-arch-001', 'q-req-001'],
   },
@@ -292,6 +324,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'business-plan',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 15,
+    basePrice: 99.0, // AUD
+    qualitySliderEnabled: true,
     // Core questions: strategy/vision, requirements definition, market requirements, people/team
     requiredQuestions: ['q-strategy-001', 'q-req-001', 'q-req-002', 'q-people-001', 'q-people-002'],
   },
@@ -303,6 +337,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'business-plan',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 12,
+    basePrice: 129.0, // AUD - High-value financial document
+    qualitySliderEnabled: true,
     // Core questions: budget tracking, TCO analysis, cloud cost optimization
     requiredQuestions: ['q-finance-001', 'q-finance-002', 'q-finance-003'],
   },
@@ -314,6 +350,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'business-plan',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 10,
+    basePrice: 79.0, // AUD - Shorter document
+    qualitySliderEnabled: true,
     // Core questions: strategy/vision, stakeholder alignment, budget, architecture, requirements
     requiredQuestions: ['q-strategy-001', 'q-strategy-002', 'q-finance-001', 'q-arch-001', 'q-req-001'],
   },
@@ -325,6 +363,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'business-plan',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 8,
+    basePrice: 49.0, // AUD - Lower complexity
+    qualitySliderEnabled: false, // Fixed quality for prompt library
     // Core questions: strategy/vision, operations
     requiredQuestions: ['q-strategy-001', 'q-ops-001'],
   },
@@ -336,6 +376,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'marketing-strategy',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 18,
+    basePrice: 119.0, // AUD
+    qualitySliderEnabled: true,
     // Core questions: strategy/vision, requirements definition, market requirements, people/team
     requiredQuestions: ['q-strategy-001', 'q-req-001', 'q-req-002', 'q-people-001'],
   },
@@ -347,6 +389,8 @@ export const documentTypeSeeds = [
     projectTypeSlug: 'financial-projections',
     outputFormats: ['DOCX', 'PDF'],
     estimatedPages: 20,
+    basePrice: 149.0, // AUD - Premium financial document
+    qualitySliderEnabled: true,
     // Core questions: budget tracking, TCO analysis, cloud cost optimization
     requiredQuestions: ['q-finance-001', 'q-finance-002', 'q-finance-003'],
   },
@@ -506,6 +550,8 @@ export async function seedProjectTypes(): Promise<void> {
         outputFormats: dt.outputFormats,
         estimatedPages: dt.estimatedPages,
         requiredQuestions: dt.requiredQuestions,
+        basePrice: dt.basePrice,
+        qualitySliderEnabled: dt.qualitySliderEnabled,
         isActive: true,
       },
       create: {
@@ -517,11 +563,14 @@ export async function seedProjectTypes(): Promise<void> {
         outputFormats: dt.outputFormats,
         estimatedPages: dt.estimatedPages,
         requiredQuestions: dt.requiredQuestions,
+        basePrice: dt.basePrice,
+        qualitySliderEnabled: dt.qualitySliderEnabled,
         isActive: true,
         metadata: {},
       },
     });
-    console.log(`    ✓ DocumentType: ${dt.name} (${dt.slug}) → ${dt.projectTypeSlug}`);
+    const priceStr = dt.basePrice ? `$${dt.basePrice}` : 'N/A';
+    console.log(`    ✓ DocumentType: ${dt.name} (${dt.slug}) → ${dt.projectTypeSlug} [${priceStr}]`);
   }
 
   // Link existing questionnaires to project types
@@ -536,6 +585,128 @@ export async function seedProjectTypes(): Promise<void> {
       data: { projectTypeId: bpTypeId },
     });
     console.log(`    ✓ Linked ${linked.count} orphaned questionnaire(s) to business-plan`);
+  }
+
+  // Ensure every project type has at least one questionnaire with sections
+  console.log('\n  📝 Ensuring all project types have questionnaires with sections...');
+  for (const [slug, typeId] of createdTypes) {
+    let questionnaire = await prisma.questionnaire.findFirst({
+      where: { projectTypeId: typeId, isActive: true },
+      include: { sections: true },
+    });
+
+    if (!questionnaire) {
+      const pt = projectTypes.find((p) => p.slug === slug);
+      questionnaire = await prisma.questionnaire.create({
+        data: {
+          name: `${pt?.name || slug} Questionnaire`,
+          description: pt?.description || `Questionnaire for ${slug}`,
+          industry: 'general',
+          version: 1,
+          isActive: true,
+          isDefault: true,
+          estimatedTime: (pt?.metadata?.estimatedCompletionMinutes as number) || 45,
+          projectTypeId: typeId,
+          metadata: {
+            tags: [slug],
+            autoGenerated: true,
+          },
+        },
+        include: { sections: true },
+      });
+      console.log(`    ✓ Created questionnaire for ${slug}: ${questionnaire.id}`);
+    } else {
+      console.log(`    ✓ ${slug} already has questionnaire: ${questionnaire.id}`);
+    }
+
+    // Ensure questionnaire has at least one section with questions
+    if (questionnaire.sections.length === 0) {
+      console.log(`    ⚠️ Questionnaire ${questionnaire.id} has no sections, creating default...`);
+      
+      // Create a default section
+      const section = await prisma.section.create({
+        data: {
+          questionnaireId: questionnaire.id,
+          name: 'Project Overview',
+          description: 'Tell us about your project',
+          orderIndex: 1,
+          icon: 'clipboard',
+          estimatedTime: 10,
+          metadata: {},
+        },
+      });
+
+      // Create default questions for the section
+      await prisma.question.createMany({
+        data: [
+          {
+            sectionId: section.id,
+            text: 'What is the name of your project or business?',
+            type: 'TEXT',
+            helpText: 'Enter the name you want to use for this project',
+            isRequired: true,
+            orderIndex: 1,
+            validationRules: { minLength: 2, maxLength: 100 },
+            metadata: {},
+            industryTags: [],
+            documentMappings: {},
+          },
+          {
+            sectionId: section.id,
+            text: 'Describe your project in a few sentences.',
+            type: 'TEXTAREA',
+            helpText: 'What problem are you solving and who is your target audience?',
+            isRequired: true,
+            orderIndex: 2,
+            validationRules: { minLength: 20, maxLength: 2000 },
+            metadata: {},
+            industryTags: [],
+            documentMappings: {},
+          },
+          {
+            sectionId: section.id,
+            text: 'What type of product or service are you building?',
+            type: 'SINGLE_CHOICE',
+            helpText: 'Select the category that best describes your offering',
+            isRequired: true,
+            orderIndex: 3,
+            options: [
+              { id: 'opt-1', label: 'Software/SaaS Application', value: 'software' },
+              { id: 'opt-2', label: 'Mobile Application', value: 'mobile' },
+              { id: 'opt-3', label: 'E-commerce/Marketplace', value: 'ecommerce' },
+              { id: 'opt-4', label: 'Professional Services', value: 'services' },
+              { id: 'opt-5', label: 'Physical Product', value: 'physical' },
+              { id: 'opt-6', label: 'Other', value: 'other' },
+            ],
+            validationRules: {},
+            metadata: {},
+            industryTags: [],
+            documentMappings: {},
+          },
+          {
+            sectionId: section.id,
+            text: 'What stage is your project at?',
+            type: 'SINGLE_CHOICE',
+            helpText: 'This helps us tailor recommendations to your current needs',
+            isRequired: true,
+            orderIndex: 4,
+            options: [
+              { id: 'opt-s1', label: 'Just an idea', value: 'idea' },
+              { id: 'opt-s2', label: 'Planning/Research', value: 'planning' },
+              { id: 'opt-s3', label: 'Building MVP', value: 'mvp' },
+              { id: 'opt-s4', label: 'Launched/Operating', value: 'launched' },
+              { id: 'opt-s5', label: 'Scaling/Growing', value: 'scaling' },
+            ],
+            validationRules: {},
+            metadata: {},
+            industryTags: [],
+            documentMappings: {},
+          },
+        ],
+      });
+
+      console.log(`    ✓ Created default section with 4 questions for ${slug}`);
+    }
   }
 
   console.log('\n✅ Project Types seeded successfully');

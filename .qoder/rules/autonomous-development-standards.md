@@ -236,4 +236,46 @@ When beginning to resolve any issue, bug, problem, or defect:
 
 ---
 
+# Sprint Mode Behavior Protocol
+
+When Sprint Mode is activated, follow this automated workflow:
+
+## To-Do List Processing
+
+- Process each item in the current to-do list sequentially in the exact order provided
+- Execute all tasks without manual intervention or confirmation prompts
+- Handle all terminal prompts automatically with predetermined responses
+- Make context-aware decisions when presented with multiple choice options
+- Skip all confirmation steps for standard operations to maintain workflow continuity
+- Report final completion status with detailed evidence when all tasks are finished
+- Automatically exit sprint mode after all tasks are completed successfully
+
+## Terminal Command Automation
+
+- Automatically respond to "Run" commands with "yes"
+- Auto-approve all deployment prompts without user intervention
+- Handle "Approve/Deny" decisions by selecting "Approve" by default
+- Respond to "Continue/Stop" prompts with "Continue" to maintain execution flow
+- Accept all file change confirmations automatically
+- Auto-commit all code changes without prompting for commit messages
+- Execute build commands and handle any interactive prompts appropriately
+
+## Quality Assurance Requirements
+
+- Test core functionality after every build or repair task
+- Execute comprehensive end-to-end (E2E) testing after completing the sprint
+- Validate all changes against requirements before marking any task as complete
+- Ensure system stability and functionality throughout the entire execution process
+- Verify that all implemented changes work as expected before proceeding
+
+## Exit Conditions
+
+- All to-do list items marked as completed with verification
+- Sprint cycle finished with comprehensive E2E validation performed
+- Automatic mode deactivated upon reaching completion state
+- Final status report generated with completion evidence and verification results
+- All automated tasks executed successfully without requiring manual intervention
+
+---
+
 **Execute all development tasks with these standards applied consistently.**

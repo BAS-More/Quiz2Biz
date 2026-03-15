@@ -450,6 +450,7 @@ export class EvidenceIntegrityService {
     const evidence = await this.prisma.evidenceRegistry.findMany({
       where: { sessionId },
       orderBy: { createdAt: 'asc' },
+      take: 500,
     });
 
     const chainVerification = await this.verifyChain(sessionId);

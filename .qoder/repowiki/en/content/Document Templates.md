@@ -18,6 +18,7 @@
 </cite>
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
@@ -64,11 +65,13 @@ Services --> Templates
 ```
 
 **Diagram sources**
+
 - [document-generator.module.ts](file://apps/api/src/modules/document-generator/document-generator.module.ts#L1-L23)
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L1-L163)
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L1-L230)
 
 **Section sources**
+
 - [document-generator.module.ts](file://apps/api/src/modules/document-generator/document-generator.module.ts#L1-L23)
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L1-L163)
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L1-L230)
@@ -78,21 +81,27 @@ Services --> Templates
 The Document Templates system consists of several interconnected components that work together to generate professional documents:
 
 ### Document Generator Service
+
 The central orchestrator that manages the entire document generation lifecycle, from validation to final storage.
 
 ### Template Engine Service
+
 Responsible for assembling template data from questionnaire responses and mapping them to document structure.
 
 ### Document Builder Service
+
 Handles the actual DOCX document creation using the docx library, applying styles and formatting.
 
 ### Storage Service
+
 Manages document storage and retrieval using Azure Blob Storage with secure SAS tokens.
 
 ### Controllers
+
 Provide REST API endpoints for both user and administrative document operations.
 
 **Section sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L28-L360)
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L26-L290)
 - [document-builder.service.ts](file://apps/api/src/modules/document-generator/services/document-builder.service.ts#L28-L487)
@@ -130,6 +139,7 @@ Note over Client,Storage : Document generation workflow
 ```
 
 **Diagram sources**
+
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L38-L54)
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L42-L139)
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L35-L99)
@@ -171,12 +181,14 @@ TemplateData --> StandardSection : contains
 ```
 
 **Diagram sources**
+
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L26-L290)
 - [base.template.ts](file://apps/api/src/modules/document-generator/templates/base.template.ts#L5-L106)
 
 The service handles different question types and maps them to appropriate content structures. It supports complex nested content through dot notation paths and includes validation for required fields.
 
 **Section sources**
+
 - [template-engine.service.ts](file://apps/api/src/modules/document-generator/services/template-engine.service.ts#L26-L290)
 - [base.template.ts](file://apps/api/src/modules/document-generator/templates/base.template.ts#L1-L106)
 
@@ -205,12 +217,14 @@ CreateDOCX --> End([Document Complete])
 ```
 
 **Diagram sources**
+
 - [document-builder.service.ts](file://apps/api/src/modules/document-generator/services/document-builder.service.ts#L35-L108)
 - [base.template.ts](file://apps/api/src/modules/document-generator/templates/base.template.ts#L5-L48)
 
 The service applies consistent styling, manages section ordering, and handles different content types including text, lists, and tables.
 
 **Section sources**
+
 - [document-builder.service.ts](file://apps/api/src/modules/document-generator/services/document-builder.service.ts#L28-L487)
 - [base.template.ts](file://apps/api/src/modules/document-generator/templates/base.template.ts#L1-L106)
 
@@ -241,11 +255,13 @@ StorageService --> UploadResult : returns
 ```
 
 **Diagram sources**
+
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L18-L160)
 
 The service implements Azure Blob Storage integration with SAS token generation for secure document access and automatic categorization by document type.
 
 **Section sources**
+
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L18-L160)
 
 ## Template System
@@ -256,26 +272,27 @@ The template system provides a flexible foundation for document generation with 
 
 The system defines comprehensive styling guidelines that ensure consistent document appearance:
 
-| Style Category | Properties | Values |
-|---|---|---|
-| Document | Font family | Calibri |
-| Document | Base font size | 24 (12pt) |
-| Document | Line spacing | 276 (1.15) |
-| Titles | Font size | 48 (24pt) |
-| Titles | Bold | true |
-| Headings | H1 | 32 (16pt, bold, spacing) |
-| Headings | H2 | 28 (14pt, bold, spacing) |
-| Headings | H3 | 24 (12pt, bold, spacing) |
-| Paragraphs | Spacing | 120 after |
-| Tables | Header background | E0E0E0 |
-| Tables | Border color | 000000 |
-| Tables | Border size | 1 |
+| Style Category | Properties        | Values                   |
+| -------------- | ----------------- | ------------------------ |
+| Document       | Font family       | Calibri                  |
+| Document       | Base font size    | 24 (12pt)                |
+| Document       | Line spacing      | 276 (1.15)               |
+| Titles         | Font size         | 48 (24pt)                |
+| Titles         | Bold              | true                     |
+| Headings       | H1                | 32 (16pt, bold, spacing) |
+| Headings       | H2                | 28 (14pt, bold, spacing) |
+| Headings       | H3                | 24 (12pt, bold, spacing) |
+| Paragraphs     | Spacing           | 120 after                |
+| Tables         | Header background | E0E0E0                   |
+| Tables         | Border color      | 000000                   |
+| Tables         | Border size       | 1                        |
 
 ### Section Order Management
 
 Different document categories follow specific section ordering:
 
 **CTO Documents:**
+
 1. Document Control
 2. Executive Summary
 3. Technical Overview
@@ -286,6 +303,7 @@ Different document categories follow specific section ordering:
 8. Appendices
 
 **CFO Documents:**
+
 1. Document Control
 2. Executive Summary
 3. Company Description
@@ -299,6 +317,7 @@ Different document categories follow specific section ordering:
 11. Appendices
 
 **BA Documents:**
+
 1. Document Control
 2. Introduction
 3. Business Requirements
@@ -314,14 +333,15 @@ Different document categories follow specific section ordering:
 
 The system includes intelligent placeholder handling for missing data:
 
-| Placeholder Type | Default Value | Purpose |
-|---|---|---|
-| Text | "[Not provided]" | Empty text responses |
-| Number | 0 | Empty numeric responses |
-| Date | "TBD" | Unspecified dates |
-| List | [] | Empty choice selections |
+| Placeholder Type | Default Value    | Purpose                 |
+| ---------------- | ---------------- | ----------------------- |
+| Text             | "[Not provided]" | Empty text responses    |
+| Number           | 0                | Empty numeric responses |
+| Date             | "TBD"            | Unspecified dates       |
+| List             | []               | Empty choice selections |
 
 **Section sources**
+
 - [base.template.ts](file://apps/api/src/modules/document-generator/templates/base.template.ts#L1-L106)
 
 ## Document Generation Workflow
@@ -352,11 +372,13 @@ Error3 --> End
 ```
 
 **Diagram sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L42-L139)
 
 The workflow ensures data integrity, proper validation, and maintains detailed audit trails for all document generation activities.
 
 **Section sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L28-L360)
 
 ## Admin Management
@@ -367,12 +389,12 @@ Administrative capabilities provide comprehensive control over document types an
 
 Administrators can manage document types through dedicated endpoints:
 
-| Endpoint | Method | Description |
-|---|---|---|
-| `/admin/document-types` | GET | List all document types with pagination |
-| `/admin/document-types/:id` | GET | Get document type details |
-| `/admin/document-types` | POST | Create new document type |
-| `/admin/document-types/:id` | PATCH | Update existing document type |
+| Endpoint                    | Method | Description                             |
+| --------------------------- | ------ | --------------------------------------- |
+| `/admin/document-types`     | GET    | List all document types with pagination |
+| `/admin/document-types/:id` | GET    | Get document type details               |
+| `/admin/document-types`     | POST   | Create new document type                |
+| `/admin/document-types/:id` | PATCH  | Update existing document type           |
 
 ### Review Workflow
 
@@ -397,9 +419,11 @@ FAILED --> [*]
 ```
 
 **Diagram sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L284-L358)
 
 **Section sources**
+
 - [document-admin.controller.ts](file://apps/api/src/modules/document-generator/controllers/document-admin.controller.ts#L1-L230)
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L282-L358)
 
@@ -418,17 +442,18 @@ The system uses Azure Blob Storage for scalable document storage with the follow
 
 ### Security Features
 
-| Security Aspect | Implementation | Purpose |
-|---|---|---|
-| Access Control | JWT authentication | User identity verification |
-| Role-based Access | ADMIN/SUPER_ADMIN roles | Administrative privileges |
+| Security Aspect    | Implementation          | Purpose                     |
+| ------------------ | ----------------------- | --------------------------- |
+| Access Control     | JWT authentication      | User identity verification  |
+| Role-based Access  | ADMIN/SUPER_ADMIN roles | Administrative privileges   |
 | Session Validation | Session ownership check | Prevent unauthorized access |
-| Download Security | SAS token generation | Controlled document access |
-| Data Validation | DTO validation | Input sanitization |
+| Download Security  | SAS token generation    | Controlled document access  |
+| Data Validation    | DTO validation          | Input sanitization          |
 
 ### Storage Structure
 
 Documents are stored in a hierarchical structure:
+
 ```
 {category}/{date}/{filename}.docx
 ```
@@ -436,6 +461,7 @@ Documents are stored in a hierarchical structure:
 Example: `cto/2024-01-15/business-plan-123e4567-e89b-12d3-a456-426614174000.docx`
 
 **Section sources**
+
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L18-L160)
 - [document.controller.ts](file://apps/api/src/modules/document-generator/controllers/document.controller.ts#L91-L113)
 
@@ -458,6 +484,7 @@ The document generation system is designed for optimal performance and scalabili
 ### Monitoring and Logging
 
 The system implements comprehensive logging for:
+
 - Document generation metrics
 - Storage operation tracking
 - Error reporting and debugging
@@ -495,6 +522,7 @@ Common issues and their solutions:
 **Solution**: Review base template styles and section configurations
 
 **Section sources**
+
 - [document-generator.service.ts](file://apps/api/src/modules/document-generator/services/document-generator.service.ts#L54-L132)
 - [storage.service.ts](file://apps/api/src/modules/document-generator/services/storage.service.ts#L46-L55)
 
@@ -503,6 +531,7 @@ Common issues and their solutions:
 The Document Templates system provides a robust, scalable solution for automated document generation from questionnaire responses. Its modular architecture, comprehensive validation, and enterprise-grade security make it suitable for production environments requiring professional document output.
 
 Key strengths include:
+
 - Flexible template system supporting multiple document categories
 - Comprehensive validation and error handling
 - Secure document storage with controlled access

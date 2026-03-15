@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { DashboardPage } from './DashboardPage';
@@ -11,44 +11,43 @@ const mockUser = {
   email: 'john@example.com',
 };
 
-const mockSessions = [
-  {
-    id: 'session_1',
-    status: 'IN_PROGRESS',
-    projectTypeName: 'Web Application',
-    persona: 'CTO',
-    readinessScore: 75,
-    progress: { answeredQuestions: 5, totalQuestions: 10, percentage: 50 },
-    createdAt: '2026-02-01T00:00:00Z',
-  },
-  {
-    id: 'session_2',
-    status: 'COMPLETED',
-    projectTypeName: 'Mobile App',
-    persona: 'CFO',
-    readinessScore: 92,
-    progress: { answeredQuestions: 10, totalQuestions: 10, percentage: 100 },
-    createdAt: '2026-01-15T00:00:00Z',
-  },
-];
-
-const mockLoadSessions = vi.fn();
-const mockClearError = vi.fn();
-
 vi.mock('../../stores/auth', () => ({
   useAuthStore: () => ({
     user: mockUser,
   }),
 }));
 
-vi.mock('../../stores/questionnaire', () => ({
-  useQuestionnaireStore: () => ({
-    sessions: mockSessions,
-    isLoading: false,
-    error: null,
-    loadSessions: mockLoadSessions,
-    clearError: mockClearError,
-  }),
+// Mock the projects API
+const mockProjects = [
+  {
+    id: 'proj_1',
+    name: 'My Web App',
+    status: 'ACTIVE',
+    messageCount: 12,
+    qualityScore: 75,
+    projectTypeName: 'Web Application',
+    createdAt: '2026-02-01T00:00:00Z',
+    updatedAt: '2026-02-10T00:00:00Z',
+    lastActivityAt: '2026-02-10T00:00:00Z',
+  },
+  {
+    id: 'proj_2',
+    name: 'Mobile Strategy',
+    status: 'COMPLETED',
+    messageCount: 50,
+    qualityScore: 92,
+    projectTypeName: 'Mobile App',
+    createdAt: '2026-01-15T00:00:00Z',
+    updatedAt: '2026-01-20T00:00:00Z',
+    lastActivityAt: '2026-01-20T00:00:00Z',
+  },
+];
+
+vi.mock('../../api/projects', () => ({
+  default: {
+    getProjects: vi.fn(),
+  },
+  getProjects: vi.fn(),
 }));
 
 const mockNavigate = vi.fn();
@@ -59,6 +58,9 @@ vi.mock('react-router-dom', async () => {
     useNavigate: () => mockNavigate,
   };
 });
+
+// Import after mocks
+import projectApi from '../../api/projects';
 
 const renderDashboardPage = () => {
   return render(
@@ -71,146 +73,108 @@ const renderDashboardPage = () => {
 describe('DashboardPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(projectApi.getProjects).mockResolvedValue({
+      items: mockProjects,
+      total: 2,
+    });
   });
 
-  it('renders dashboard with greeting', () => {
+  it('renders dashboard with greeting', async () => {
     renderDashboardPage();
 
+    await waitFor(() => {
+      expect(screen.getByText(/john/i)).toBeInTheDocument();
+    });
+  });
+
+  it('loads projects on mount', async () => {
+    renderDashboardPage();
+
+    await waitFor(() => {
+      expect(projectApi.getProjects).toHaveBeenCalledWith(1, 50);
+    });
+  });
+
+  it('displays active projects stat', async () => {
+    renderDashboardPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('Active Projects')).toBeInTheDocument();
+    });
+  });
+
+  it('displays completed stat', async () => {
+    renderDashboardPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('Completed')).toBeInTheDocument();
+    });
+  });
+
+  it('displays best quality stat', async () => {
+    renderDashboardPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('Best Quality')).toBeInTheDocument();
+    });
+  });
+
+  it('navigates to new chat on New Project click', async () => {
+    const user = userEvent.setup();
+    renderDashboardPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('Active Projects')).toBeInTheDocument();
+    });
+
+    const newProjectButton = screen.getByRole('button', { name: /new project/i });
+    await user.click(newProjectButton);
+
+    expect(mockNavigate).toHaveBeenCalledWith('/chat/new');
+  });
+
+  it('displays active project cards', async () => {
+    renderDashboardPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('My Web App')).toBeInTheDocument();
+    });
+  });
+
+  it('displays completed project cards', async () => {
+    renderDashboardPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('Mobile Strategy')).toBeInTheDocument();
+    });
+  });
+
+  it('shows loading state initially', () => {
+    vi.mocked(projectApi.getProjects).mockImplementation(() => new Promise(() => {}));
+    renderDashboardPage();
+
+    // Should not crash while loading
     expect(screen.getByText(/john/i)).toBeInTheDocument();
   });
 
-  it('loads sessions on mount', () => {
+  it('shows error when project loading fails', async () => {
+    vi.mocked(projectApi.getProjects).mockRejectedValue(new Error('Network error'));
     renderDashboardPage();
 
-    expect(mockLoadSessions).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(screen.getByText('Network error')).toBeInTheDocument();
+    });
   });
 
-  it('displays active sessions count', () => {
+  it('shows empty state when no projects exist', async () => {
+    vi.mocked(projectApi.getProjects).mockResolvedValue({
+      items: [],
+      total: 0,
+    });
     renderDashboardPage();
 
-    const activeLabel = screen.getByText('Active Sessions');
-    expect(activeLabel).toBeInTheDocument();
-    const statContainer = activeLabel.closest('.min-w-0')!;
-    expect(within(statContainer).getByText('1')).toBeInTheDocument();
-  });
-
-  it('displays completed sessions count', () => {
-    renderDashboardPage();
-
-    expect(screen.getByText('Completed')).toBeInTheDocument();
-  });
-
-  it('displays highest score', () => {
-    renderDashboardPage();
-
-    const highestLabel = screen.getByText('Highest Score');
-    expect(highestLabel).toBeInTheDocument();
-    const statContainer = highestLabel.closest('.min-w-0')!;
-    expect(within(statContainer).getByText('92%')).toBeInTheDocument();
-  });
-
-  it('navigates to idea capture on New Project click', async () => {
-    const user = userEvent.setup();
-    renderDashboardPage();
-
-    const newProjectButtons = screen.getAllByRole('button', { name: /new project/i });
-    await user.click(newProjectButtons[0]);
-
-    expect(mockNavigate).toHaveBeenCalledWith('/idea');
-  });
-
-  it('displays active project cards', () => {
-    renderDashboardPage();
-
-    expect(screen.getByText('Active Projects')).toBeInTheDocument();
-    expect(screen.getByText('Web Application')).toBeInTheDocument();
-  });
-
-  it('displays completed project cards', () => {
-    renderDashboardPage();
-
-    expect(screen.getByText('Completed Projects')).toBeInTheDocument();
-    expect(screen.getByText('Mobile App')).toBeInTheDocument();
-  });
-
-  it('navigates to questionnaire on session click', async () => {
-    const user = userEvent.setup();
-    renderDashboardPage();
-
-    const sessionCard = screen.getByText('Web Application').closest('[role="button"]');
-    if (sessionCard) {
-      await user.click(sessionCard);
-      expect(mockNavigate).toHaveBeenCalledWith('/questionnaire?sessionId=session_1');
-    }
-  });
-
-  it('renders quick actions section', () => {
-    renderDashboardPage();
-
-    expect(screen.getByText('Quick Actions')).toBeInTheDocument();
-    expect(screen.getByText('View Documents')).toBeInTheDocument();
-    expect(screen.getByText('Manage Billing')).toBeInTheDocument();
-  });
-
-  it('displays progress ring with average score', () => {
-    renderDashboardPage();
-
-    expect(screen.getByText('Project Score')).toBeInTheDocument();
-  });
-});
-
-describe('DashboardPage - Loading State', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('shows skeleton loaders when loading', async () => {
-    vi.doMock('../../stores/questionnaire', () => ({
-      useQuestionnaireStore: () => ({
-        sessions: [],
-        isLoading: true,
-        error: null,
-        loadSessions: mockLoadSessions,
-        clearError: mockClearError,
-      }),
-    }));
-
-    // Re-render with loading state would require resetting modules
-    // This test confirms the pattern exists
-    expect(true).toBe(true);
-  });
-});
-
-describe('DashboardPage - Error State', () => {
-  it('displays error message when error exists', async () => {
-    vi.doMock('../../stores/questionnaire', () => ({
-      useQuestionnaireStore: () => ({
-        sessions: [],
-        isLoading: false,
-        error: 'Failed to load sessions',
-        loadSessions: mockLoadSessions,
-        clearError: mockClearError,
-      }),
-    }));
-
-    // Error state test pattern confirmation
-    expect(true).toBe(true);
-  });
-});
-
-describe('DashboardPage - Empty State', () => {
-  it('displays empty state when no sessions', async () => {
-    vi.doMock('../../stores/questionnaire', () => ({
-      useQuestionnaireStore: () => ({
-        sessions: [],
-        isLoading: false,
-        error: null,
-        loadSessions: mockLoadSessions,
-        clearError: mockClearError,
-      }),
-    }));
-
-    // Empty state test pattern confirmation
-    expect(true).toBe(true);
+    await waitFor(() => {
+      expect(screen.getByText('No active projects')).toBeInTheDocument();
+    });
   });
 });

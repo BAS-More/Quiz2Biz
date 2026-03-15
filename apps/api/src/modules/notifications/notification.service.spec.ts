@@ -9,7 +9,6 @@ global.fetch = jest.fn();
 
 describe('NotificationService', () => {
   let service: NotificationService;
-  let prismaService: jest.Mocked<PrismaService>;
   let configService: jest.Mocked<ConfigService>;
 
   const mockPrismaService = {
@@ -47,7 +46,7 @@ describe('NotificationService', () => {
     }).compile();
 
     service = module.get<NotificationService>(NotificationService);
-    prismaService = module.get(PrismaService);
+    module.get(PrismaService);
     configService = module.get(ConfigService);
   });
 

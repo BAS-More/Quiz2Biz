@@ -1,49 +1,69 @@
 /**
- * Quiz2Biz E2E Global Setup
- * Runs once before all tests
+ * Global Setup for Quiz2Biz E2E Tests
+ * Runs once before all tests to set up the test environment
  */
-import { chromium, FullConfig } from '@playwright/test';
+import { FullConfig } from '@playwright/test';
+import { execSync } from 'child_process';
+import * as path from 'path';
 
 async function globalSetup(config: FullConfig) {
-  console.log('🚀 Starting E2E Global Setup...');
+  const { baseURL } = config.projects[0].use;
 
-  // Get the base URL from config
-  const baseURL = config.projects[0].use?.baseURL || 'http://localhost:5173';
-  const apiURL = process.env.API_URL || 'http://localhost:3000';
+  console.log('🚀 E2E Global Setup - Starting...');
+  console.log(`   Base URL: ${baseURL}`);
 
-  // Wait for services to be ready
-  console.log('⏳ Waiting for services...');
+  // -----------------------------------------------------------------------
+  // 1. Wait for API to be ready (hard-fail on timeout)
+  // -----------------------------------------------------------------------
+  const maxRetries = 30;
+  let retries = 0;
+  const apiUrl = process.env.API_URL || 'http://localhost:3000';
 
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
-
-  // Check web app is running
-  try {
-    await page.goto(baseURL, { timeout: 30000 });
-    console.log('✅ Web app is running');
-  } catch (error) {
-    console.warn('⚠️ Web app not ready, tests may fail');
-  }
-
-  // Check API is running
-  try {
-    const response = await page.request.get(`${apiURL}/health`);
-    if (response.ok()) {
-      console.log('✅ API is running');
+  while (retries < maxRetries) {
+    try {
+      const response = await fetch(`${apiUrl}/api/v1/health/live`);
+      if (response.ok) {
+        console.log('✅ API is ready');
+        break;
+      }
+    } catch {
+      // API not ready yet
     }
+    retries++;
+    await new Promise((r) => setTimeout(r, 2000));
+    if (retries % 5 === 0) {
+      console.log(`⏳ Waiting for API... (${retries}/${maxRetries})`);
+    }
+  }
+
+  if (retries >= maxRetries) {
+    throw new Error(
+      `❌ API health check timed out after ${maxRetries * 2}s. ` +
+      `Cannot run E2E tests without a running API at ${apiUrl}`,
+    );
+  }
+
+  // -----------------------------------------------------------------------
+  // 2. Seed E2E test data via Prisma (idempotent)
+  // -----------------------------------------------------------------------
+  try {
+    const seedScript = path.resolve(__dirname, '..', 'prisma', 'seeds', 'e2e-seed.ts');
+    console.log('🌱 Seeding E2E test data...');
+    execSync(
+      `npx ts-node --compiler-options "{\\\"module\\\":\\\"CommonJS\\\"}" "${seedScript}"`,
+      {
+        cwd: path.resolve(__dirname, '..'),
+        env: { ...process.env, NODE_ENV: 'test' },
+        stdio: 'inherit',
+        timeout: 30_000,
+      },
+    );
+    console.log('✅ Test data seeded');
   } catch (error) {
-    console.warn('⚠️ API not ready, tests may fail');
+    console.warn('⚠️  E2E seed script failed (tests may still run if data exists):', error);
   }
 
-  await browser.close();
-
-  // Set up test database (if needed)
-  if (process.env.E2E_RESET_DB === 'true') {
-    console.log('🗄️ Resetting test database...');
-    // Database reset logic would go here
-  }
-
-  console.log('✅ E2E Global Setup complete');
+  console.log('✅ E2E Global Setup - Complete');
 }
 
 export default globalSetup;

@@ -2,6 +2,7 @@
  * Application Insights Configuration Tests
  */
 import * as appInsights from 'applicationinsights';
+import { Logger } from '@nestjs/common';
 
 // Mock applicationinsights before importing the module
 jest.mock('applicationinsights', () => ({
@@ -28,12 +29,8 @@ jest.mock('applicationinsights', () => ({
 }));
 
 import {
-  AppInsightsConfig,
-  CustomMetricOptions,
-  CustomEventOptions,
   getAppInsightsConfig,
   initializeAppInsights,
-  getClient,
   trackMetric,
   trackResponseTime,
   trackQuestionnaireMetrics,
@@ -104,10 +101,10 @@ describe('Application Insights Config', () => {
       expect(config.cloudRoleInstance).toBe('local-dev');
     });
 
-    it('should set 100% sampling in production', () => {
+    it('should set 75% sampling in production', () => {
       process.env.NODE_ENV = 'production';
       const config = getAppInsightsConfig();
-      expect(config.samplingPercentage).toBe(100);
+      expect(config.samplingPercentage).toBe(75);
     });
 
     it('should set 50% sampling in development', () => {
@@ -399,7 +396,13 @@ describe('Application Insights Config', () => {
     });
 
     it('should track API endpoint usage', () => {
-      trackEndpointUsage('/api/v1/questionnaires', 'GET', 200, 50, 'user-123');
+      trackEndpointUsage({
+        endpoint: '/api/v1/questionnaires',
+        method: 'GET',
+        statusCode: 200,
+        durationMs: 50,
+        userId: 'user-123',
+      });
 
       expect(appInsights.defaultClient.trackEvent).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -605,7 +608,12 @@ describe('Application Insights Config', () => {
     });
 
     it('should track availability test', () => {
-      trackAvailability('health-check', true, 50, 'Azure-EastUS');
+      trackAvailability({
+        testName: 'health-check',
+        success: true,
+        durationMs: 50,
+        runLocation: 'Azure-EastUS',
+      });
 
       expect(appInsights.defaultClient.trackAvailability).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -740,13 +748,13 @@ describe('Application Insights Config', () => {
       process.env.APPLICATIONINSIGHTS_CONNECTION_STRING = 'test';
       initializeAppInsights();
 
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      const logSpy = jest.spyOn(Logger.prototype, 'log').mockImplementation();
 
       // Try to initialize again
       initializeAppInsights();
 
-      expect(consoleSpy).toHaveBeenCalledWith('Application Insights already initialized');
-      consoleSpy.mockRestore();
+      expect(logSpy).toHaveBeenCalledWith('Application Insights already initialized');
+      logSpy.mockRestore();
     });
   });
 
@@ -811,7 +819,7 @@ describe('Application Insights Config', () => {
       const freshModule = require('./appinsights.config');
 
       expect(() => {
-        freshModule.trackAvailability('test', true, 100);
+        freshModule.trackAvailability({ testName: 'test', success: true, durationMs: 100 });
       }).not.toThrow();
     });
   });
@@ -900,7 +908,7 @@ describe('Application Insights Config', () => {
     });
 
     it('should use default runLocation when not provided', () => {
-      trackAvailability('health-check', true, 50);
+      trackAvailability({ testName: 'health-check', success: true, durationMs: 50 });
 
       expect(appInsights.defaultClient.trackAvailability).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -910,7 +918,7 @@ describe('Application Insights Config', () => {
     });
 
     it('should use default message for success', () => {
-      trackAvailability('health-check', true, 50);
+      trackAvailability({ testName: 'health-check', success: true, durationMs: 50 });
 
       expect(appInsights.defaultClient.trackAvailability).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -920,7 +928,7 @@ describe('Application Insights Config', () => {
     });
 
     it('should use default message for failure', () => {
-      trackAvailability('health-check', false, 50);
+      trackAvailability({ testName: 'health-check', success: false, durationMs: 50 });
 
       expect(appInsights.defaultClient.trackAvailability).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -930,7 +938,13 @@ describe('Application Insights Config', () => {
     });
 
     it('should use custom message when provided', () => {
-      trackAvailability('health-check', true, 50, 'Region-A', 'Custom message');
+      trackAvailability({
+        testName: 'health-check',
+        success: true,
+        durationMs: 50,
+        runLocation: 'Region-A',
+        message: 'Custom message',
+      });
 
       expect(appInsights.defaultClient.trackAvailability).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -1006,7 +1020,12 @@ describe('Application Insights Config', () => {
     });
 
     it('should use anonymous for missing userId', () => {
-      trackEndpointUsage('/api/public', 'GET', 200, 50);
+      trackEndpointUsage({
+        endpoint: '/api/public',
+        method: 'GET',
+        statusCode: 200,
+        durationMs: 50,
+      });
 
       expect(appInsights.defaultClient.trackEvent).toHaveBeenCalledWith(
         expect.objectContaining({

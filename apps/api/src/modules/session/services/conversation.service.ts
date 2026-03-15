@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@libs/database';
 import {
   ClaudeAiService,
@@ -29,8 +29,6 @@ export interface AnswerWithFollowUpResult {
 
 @Injectable()
 export class ConversationService {
-  private readonly logger = new Logger(ConversationService.name);
-
   constructor(
     private readonly prisma: PrismaService,
     private readonly claudeAi: ClaudeAiService,
