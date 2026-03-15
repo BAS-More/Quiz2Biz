@@ -2,24 +2,24 @@
 
 <cite>
 **Referenced Files in This Document**
+- [README.md](file://README.md)
+- [QUICK-START.md](file://QUICK-START.md)
+- [DEPLOYMENT.md](file://DEPLOYMENT.md)
+- [DEPLOY-NOW.md](file://DEPLOY-NOW.md)
 - [package.json](file://package.json)
-- [turbo.json](file://turbo.json)
 - [docker-compose.yml](file://docker-compose.yml)
-- [.env.example](file://.env.example)
-- [Dockerfile (api)](file://docker/api/Dockerfile)
-- [apps/api/src/main.ts](file://apps/api/src/main.ts)
-- [apps/api/src/app.module.ts](file://apps/api/src/app.module.ts)
-- [apps/api/src/config/configuration.ts](file://apps/api/src/config/configuration.ts)
-- [apps/api/src/modules/auth/auth.controller.ts](file://apps/api/src/modules/auth/auth.controller.ts)
-- [apps/api/src/modules/questionnaire/questionnaire.controller.ts](file://apps/api/src/modules/questionnaire/questionnaire.controller.ts)
-- [apps/api/src/modules/session/session.controller.ts](file://apps/api/src/modules/session/session.controller.ts)
-- [prisma/schema.prisma](file://prisma/schema.prisma)
-- [libs/database/src/prisma.service.ts](file://libs/database/src/prisma.service.ts)
-- [libs/redis/src/redis.service.ts](file://libs/redis/src/redis.service.ts)
+- [docker/api/Dockerfile](file://docker/api/Dockerfile)
+- [docker/api/entrypoint.sh](file://docker/api/entrypoint.sh)
+- [docker/postgres/init.sql](file://docker/postgres/init.sql)
+- [apps/api/package.json](file://apps/api/package.json)
+- [apps/web/package.json](file://apps/web/package.json)
+- [scripts/setup-local.sh](file://scripts/setup-local.sh)
+- [scripts/dev-start.sh](file://scripts/dev-start.sh)
+- [scripts/deploy-to-azure.ps1](file://scripts/deploy-to-azure.ps1)
+- [scripts/setup-azure.sh](file://scripts/setup-azure.sh)
 </cite>
 
 ## Table of Contents
-
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
@@ -32,350 +32,297 @@
 10. [Appendices](#appendices)
 
 ## Introduction
-
-This guide helps you set up and run the Quiz-to-build project locally. It covers prerequisites, environment configuration, database initialization, dependency installation, monorepo navigation, and how to start the development server. You will also learn how to access API endpoints, run tests, and troubleshoot common issues. Practical examples show how to create a questionnaire, start a session, and authenticate users.
+This guide helps you get Quiz-to-build (Quiz2Biz) running locally and understand how to deploy it to Azure quickly. You will:
+- Install prerequisites and set up a local Docker-based development environment
+- Understand the 5-step user journey for completing questionnaires and generating professional documentation
+- Configure environment variables and initialize the database
+- Explore quick deployment options to Azure and first-time onboarding tips
+- Troubleshoot common setup and runtime issues
 
 ## Project Structure
+Quiz2Biz is a monorepo with three main applications:
+- apps/api: NestJS backend API
+- apps/web: React 19 frontend
+- apps/cli: Command-line tools
 
-The project is a monorepo organized with workspaces for applications and libraries:
-
-- apps/api: NestJS-based backend API
-- libs/database, libs/redis, libs/shared: Shared libraries for database, caching, and DTOs
-- prisma: Database schema and seed configuration
-- docker and docker-compose.yml: Local database and cache containers
-- Root scripts and Turbo pipeline orchestrate builds, dev, test, and Docker commands
+It also includes:
+- docker/: Container configurations for API, web, and PostgreSQL init
+- prisma/: Database schema and seed data
+- scripts/: Local and Azure deployment automation
+- infrastructure/terraform/: Optional Terraform-based infrastructure setup
 
 ```mermaid
 graph TB
-subgraph "Monorepo"
-A["apps/api<br/>NestJS API"]
-B["libs/database<br/>Prisma client"]
-C["libs/redis<br/>Redis client"]
-D["libs/shared<br/>DTOs"]
-E["prisma<br/>Schema + Seed"]
-F["docker-compose.yml<br/>Postgres + Redis + API"]
+subgraph "Local Development"
+DC["docker-compose.yml"]
+API["apps/api (NestJS)"]
+WEB["apps/web (React)"]
+PG["PostgreSQL 16"]
+RD["Redis 7"]
 end
-A --> B
-A --> C
-A --> D
-A --> E
-F --> A
-F --> |"Postgres"| E
-F --> |"Redis"| C
+DC --> API
+DC --> WEB
+DC --> PG
+DC --> RD
+API --> PG
+API --> RD
 ```
 
 **Diagram sources**
-
-- [apps/api/src/app.module.ts](file://apps/api/src/app.module.ts#L1-L67)
-- [prisma/schema.prisma](file://prisma/schema.prisma#L1-L447)
-- [docker-compose.yml](file://docker-compose.yml#L1-L77)
+- [docker-compose.yml:18-150](file://docker-compose.yml#L18-L150)
+- [apps/api/package.json:1-144](file://apps/api/package.json#L1-L144)
+- [apps/web/package.json:1-75](file://apps/web/package.json#L1-L75)
 
 **Section sources**
-
-- [package.json](file://package.json#L6-L9)
-- [turbo.json](file://turbo.json#L1-L46)
+- [README.md:295-318](file://README.md#L295-L318)
+- [package.json:11-14](file://package.json#L11-L14)
 
 ## Core Components
-
-- API server: Bootstrapped via NestJS, configured with global pipes, filters, interceptors, CORS, and Swagger documentation in non-production environments.
-- Configuration: Centralized via a configuration loader that reads environment variables.
-- Database: Prisma client connects to PostgreSQL using DATABASE_URL.
-- Cache: Redis client configured via environment variables.
-- Modules: Auth, Users, Questionnaire, Session, Adaptive Logic, Standards, and Health controller.
-
-Key runtime behaviors:
-
-- Global prefix and CORS are applied at startup.
-- Swagger is enabled in non-production environments.
-- Health checks are exposed by the HealthController.
+- Backend API (NestJS): Provides authentication, questionnaire orchestration, scoring, document generation, and integrations. It connects to PostgreSQL via Prisma and uses Redis for caching/session data.
+- Frontend (React 19): Single-page application for user onboarding, questionnaire taking, dashboard, document management, and billing.
+- Database (PostgreSQL 16): Schema managed by Prisma with migrations and seed data.
+- Caching (Redis 7): Used for session and transient data.
+- CLI: Supporting tools for heatmaps, scoring, and offline operations.
 
 **Section sources**
-
-- [apps/api/src/main.ts](file://apps/api/src/main.ts#L11-L86)
-- [apps/api/src/app.module.ts](file://apps/api/src/app.module.ts#L16-L66)
-- [apps/api/src/config/configuration.ts](file://apps/api/src/config/configuration.ts#L1-L49)
+- [apps/api/package.json:21-64](file://apps/api/package.json#L21-L64)
+- [apps/web/package.json:18-36](file://apps/web/package.json#L18-L36)
+- [docker-compose.yml:27-51](file://docker-compose.yml#L27-L51)
+- [docker-compose.yml:55-70](file://docker-compose.yml#L55-L70)
 
 ## Architecture Overview
-
-The API depends on a PostgreSQL database and a Redis cache. Docker Compose provisions both services and the API container. Environment variables define connectivity and secrets.
+The system uses a containerized architecture with a clear separation of concerns:
+- API container runs the NestJS server, applies Prisma migrations on startup, and exposes REST endpoints.
+- PostgreSQL 16 stores user data, questionnaire responses, scoring results, and metadata.
+- Redis 7 caches session and transient data.
+- The React web app communicates with the API over HTTP(S).
 
 ```mermaid
 graph TB
-Client["Client Apps / Browser"] --> API["API Container<br/>NestJS"]
-API --> PG["Postgres DB"]
-API --> RD["Redis Cache"]
-subgraph "Docker Compose"
-API
-PG
-RD
+subgraph "Containerized Services"
+API["API (NestJS)"]
+PG["PostgreSQL 16"]
+RD["Redis 7"]
 end
+subgraph "Web App"
+WEB["React Web"]
+end
+WEB --> API
+API --> PG
+API --> RD
 ```
 
 **Diagram sources**
-
-- [docker-compose.yml](file://docker-compose.yml#L1-L77)
-- [apps/api/src/main.ts](file://apps/api/src/main.ts#L11-L86)
+- [docker/api/Dockerfile:68-120](file://docker/api/Dockerfile#L68-L120)
+- [docker/api/entrypoint.sh:4-30](file://docker/api/entrypoint.sh#L4-L30)
+- [docker-compose.yml:109-135](file://docker-compose.yml#L109-L135)
 
 ## Detailed Component Analysis
 
-### Environment Variables and Configuration
-
-- Required variables include application settings, database URL, Redis host/port/password, JWT secrets, rate limits, logging, and CORS origin.
-- The configuration loader reads environment variables and exposes them to the application.
-
-Recommended steps:
-
-- Copy the example environment file to a local environment file and adjust values for your environment.
-- Ensure DATABASE_URL points to your local Postgres or Docker Postgres.
-- Set JWT secrets to strong random values in non-development environments.
-
-**Section sources**
-
-- [.env.example](file://.env.example#L1-L33)
-- [apps/api/src/config/configuration.ts](file://apps/api/src/config/configuration.ts#L1-L49)
-
-### Database Initialization with Prisma
-
-- The schema defines core entities: organizations, users, questionnaires, sections, questions, sessions, responses, documents, audit logs, and engineering standards.
-- Initialize the database using Prisma migrations and seed data.
-
-Typical workflow:
-
-- Run migration to create/update tables.
-- Seed initial data if needed.
-- Verify connectivity via Prisma Studio or the API health endpoint.
-
-**Section sources**
-
-- [prisma/schema.prisma](file://prisma/schema.prisma#L1-L447)
-- [package.json](file://package.json#L24-L29)
-
-### Running Services Locally
-
-#### Option A: Docker Compose (recommended for local)
-
-- Starts Postgres, Redis, and the API container.
-- Exposes ports 3000 (API), 5432 (Postgres), 6379 (Redis).
-- Uses environment variables defined in docker-compose.yml.
-
-Commands:
-
-- Bring up services: docker compose up -d
-- View logs: docker compose logs -f
-- Tear down: docker compose down
-
-Notes:
-
-- The API container runs in development mode by default.
-- The API waits for Postgres and Redis to be healthy before starting.
-
-**Section sources**
-
-- [docker-compose.yml](file://docker-compose.yml#L1-L77)
-- [docker/api/Dockerfile](file://docker/api/Dockerfile#L53-L72)
-
-#### Option B: Native local setup
-
-- Install dependencies at the monorepo root.
-- Configure environment variables.
-- Start Postgres and Redis manually or via Docker Compose.
-- Run the API in development mode.
-
-Prerequisites:
-
-- Node.js v20+ and npm v10+ (enforced by engines).
-- Docker (optional but recommended for Postgres/Redis).
-- Basic understanding of PostgreSQL and Redis.
-
-**Section sources**
-
-- [package.json](file://package.json#L60-L63)
-- [package.json](file://package.json#L10-L33)
-
-### Starting the Development Server
-
-- From the monorepo root, use the dev script to start the API in watch mode.
-- Alternatively, use the dedicated API script for NestJS dev mode.
-
-Expected behavior:
-
-- The server starts on the configured port with a global prefix.
-- Swagger UI is available at /docs in non-production environments.
-
-**Section sources**
-
-- [package.json](file://package.json#L10-L12)
-- [apps/api/src/main.ts](file://apps/api/src/main.ts#L11-L86)
-
-### Accessing API Endpoints
-
-- Base URL: http://localhost:3000/api/v1 (prefix configurable via environment).
-- Authentication endpoints: POST /api/v1/auth/register, POST /api/v1/auth/login, POST /api/v1/auth/refresh, POST /api/v1/auth/logout, GET /api/v1/auth/me.
-- Questionnaire endpoints: GET /api/v1/questionnaires, GET /api/v1/questionnaires/{id}.
-- Session endpoints: POST /api/v1/sessions, GET /api/v1/sessions, GET /api/v1/sessions/{id}, GET /api/v1/sessions/{id}/continue, GET /api/v1/sessions/{id}/questions/next, POST /api/v1/sessions/{id}/responses, PUT /api/v1/sessions/{id}/responses/{questionId}, POST /api/v1/sessions/{id}/complete.
-
-Swagger:
-
-- Available at /docs in non-production environments.
-
-**Section sources**
-
-- [apps/api/src/main.ts](file://apps/api/src/main.ts#L30-L78)
-- [apps/api/src/modules/auth/auth.controller.ts](file://apps/api/src/modules/auth/auth.controller.ts#L22-L74)
-- [apps/api/src/modules/questionnaire/questionnaire.controller.ts](file://apps/api/src/modules/questionnaire/questionnaire.controller.ts#L18-L56)
-- [apps/api/src/modules/session/session.controller.ts](file://apps/api/src/modules/session/session.controller.ts#L29-L153)
-
-### Running Tests
-
-- Unit and integration tests: npm run test
-- Watch mode: npm run test:watch
-- Coverage: npm run test:cov
-- End-to-end tests: npm run test:e2e
-
-Jest configuration in the API package includes module name mapping for shared libraries.
-
-**Section sources**
-
-- [apps/api/package.json](file://apps/api/package.json#L13-L17)
-- [apps/api/package.json](file://apps/api/package.json#L62-L85)
-
-### Quick Start Examples
-
-#### Create a questionnaire
-
-- Use the questionnaire endpoints to list and retrieve questionnaires.
-- Example request paths:
-  - List: GET /api/v1/questionnaires
-  - Retrieve by ID: GET /api/v1/questionnaires/{id}
-
-**Section sources**
-
-- [apps/api/src/modules/questionnaire/questionnaire.controller.ts](file://apps/api/src/modules/questionnaire/questionnaire.controller.ts#L25-L54)
-
-#### Start a session
-
-- Authenticate first, then create a session.
-- Example request paths:
-  - Create session: POST /api/v1/sessions
-  - List sessions: GET /api/v1/sessions
-  - Get session details: GET /api/v1/sessions/{id}
-
-**Section sources**
-
-- [apps/api/src/modules/session/session.controller.ts](file://apps/api/src/modules/session/session.controller.ts#L36-L79)
-
-#### Authenticate users
-
-- Register a new user: POST /api/v1/auth/register
-- Login: POST /api/v1/auth/login
-- Refresh token: POST /api/v1/auth/refresh
-- Logout: POST /api/v1/auth/logout
-- Get profile: GET /api/v1/auth/me
-
-Use the returned JWT token in the Authorization header for protected endpoints.
-
-**Section sources**
-
-- [apps/api/src/modules/auth/auth.controller.ts](file://apps/api/src/modules/auth/auth.controller.ts#L27-L72)
-
-## Dependency Analysis
-
-The API module composes feature modules and integrates shared libraries. The database and cache are provided by dedicated modules.
+### Local Development Environment (Docker Compose)
+Follow these steps to run the platform locally using Docker Compose:
+1. Prerequisites
+   - Docker with Compose plugin
+   - Node.js 22.x (as defined by the root engines and API package)
+2. Start infrastructure and API
+   - Use the provided setup script to start PostgreSQL, Redis, and the API, then run migrations and seed the database.
+   - Alternatively, use the quick start script to bring up services and apply migrations.
+3. Access the API
+   - Health endpoint: http://localhost:3000/api/v1/health
+   - Swagger docs: http://localhost:3000/docs
 
 ```mermaid
-graph LR
-AM["AppModule"] --> CM["ConfigModule"]
-AM --> TM["ThrottlerModule"]
-AM --> PM["PrismaModule"]
-AM --> RM["RedisModule"]
-AM --> AU["AuthModule"]
-AM --> UM["UsersModule"]
-AM --> QM["QuestionnaireModule"]
-AM --> SM["SessionModule"]
-AM --> ALM["AdaptiveLogicModule"]
-AM --> STM["StandardsModule"]
-AM --> HC["HealthController"]
+flowchart TD
+Start(["Start Local Dev"]) --> CheckDocker["Check Docker and Compose"]
+CheckDocker --> UpInfra["Start PostgreSQL and Redis"]
+UpInfra --> UpAPI["Start API container"]
+UpAPI --> Migrate["Apply Prisma Migrations"]
+Migrate --> Seed["Seed Database (optional)"]
+Seed --> Health["Verify Health Endpoint"]
+Health --> Ready(["Ready"])
 ```
 
 **Diagram sources**
-
-- [apps/api/src/app.module.ts](file://apps/api/src/app.module.ts#L16-L66)
+- [scripts/setup-local.sh:74-125](file://scripts/setup-local.sh#L74-L125)
+- [scripts/dev-start.sh:6-12](file://scripts/dev-start.sh#L6-L12)
+- [docker/api/entrypoint.sh:20-29](file://docker/api/entrypoint.sh#L20-L29)
 
 **Section sources**
+- [package.json:7-10](file://package.json#L7-L10)
+- [apps/api/package.json:8-12](file://apps/api/package.json#L8-L12)
+- [scripts/setup-local.sh:46-68](file://scripts/setup-local.sh#L46-L68)
+- [scripts/dev-start.sh:1-15](file://scripts/dev-start.sh#L1-L15)
+- [docker-compose.yml:18-150](file://docker-compose.yml#L18-L150)
 
-- [apps/api/src/app.module.ts](file://apps/api/src/app.module.ts#L1-L67)
+### Environment Variables and Database Initialization
+- Environment variables are defined in the Compose file for local development. These include database URL, Redis host/port, and JWT secrets.
+- The API entrypoint runs Prisma migrations on startup and starts the server.
+- PostgreSQL extensions are initialized via init.sql to enable UUID and pgcrypto.
+
+```mermaid
+sequenceDiagram
+participant API as "API Container"
+participant Entryp as "Entrypoint Script"
+participant DB as "PostgreSQL"
+participant Redis as "Redis"
+API->>Entryp : Start container
+Entryp->>DB : Apply Prisma migrations
+DB-->>Entryp : Success/Failure
+Entryp->>API : Start Node server
+API->>Redis : Connect for caching
+```
+
+**Diagram sources**
+- [docker/api/entrypoint.sh:4-30](file://docker/api/entrypoint.sh#L4-L30)
+- [docker/api/Dockerfile:114-116](file://docker/api/Dockerfile#L114-L116)
+- [docker-compose.yml:118-125](file://docker-compose.yml#L118-L125)
+- [docker/postgres/init.sql:4-20](file://docker/postgres/init.sql#L4-L20)
+
+**Section sources**
+- [docker-compose.yml:118-125](file://docker-compose.yml#L118-L125)
+- [docker/api/entrypoint.sh:20-29](file://docker/api/entrypoint.sh#L20-L29)
+- [docker/postgres/init.sql:4-20](file://docker/postgres/init.sql#L4-L20)
+
+### 5-Step User Journey
+The platform’s user journey is designed for speed and clarity:
+1. Sign Up: Create an account at the registration page.
+2. Start Questionnaire: Answer adaptive questions across 5 sections (30–50 minutes).
+3. View Scores: See your dashboard heatmap and dimension scores.
+4. Generate Documents: Create professional documentation packages.
+5. Download & Share: Export DOCX/PDF and share results.
+
+```mermaid
+flowchart TD
+U["User"] --> R["Register"]
+R --> Q["Answer Questionnaire"]
+Q --> S["View Scores"]
+S --> G["Generate Documents"]
+G --> D["Download & Share"]
+```
+
+**Diagram sources**
+- [QUICK-START.md:171-196](file://QUICK-START.md#L171-L196)
+
+**Section sources**
+- [QUICK-START.md:171-196](file://QUICK-START.md#L171-L196)
+
+### Quick Deployment to Azure
+There are several ways to deploy quickly to Azure:
+- Automatic deployment via GitHub Actions (recommended): Configure secrets and push to main to auto-deploy.
+- First-time setup with scripts: Use the PowerShell script to provision infrastructure and deploy the app.
+- Manual deployment: Build the image locally, push to ACR, and update the Container App.
+
+```mermaid
+sequenceDiagram
+participant Dev as "Developer"
+participant GH as "GitHub Actions"
+participant ACR as "ACR"
+participant CA as "Container Apps"
+Dev->>GH : Push to main
+GH->>ACR : Build and push image
+GH->>CA : Deploy image and run migrations
+CA-->>Dev : App URL and health status
+```
+
+**Diagram sources**
+- [DEPLOY-NOW.md:78-92](file://DEPLOY-NOW.md#L78-L92)
+- [scripts/deploy-to-azure.ps1:115-132](file://scripts/deploy-to-azure.ps1#L115-L132)
+
+**Section sources**
+- [DEPLOY-NOW.md:20-54](file://DEPLOY-NOW.md#L20-L54)
+- [DEPLOYMENT.md:24-53](file://DEPLOYMENT.md#L24-L53)
+- [scripts/deploy-to-azure.ps1:115-132](file://scripts/deploy-to-azure.ps1#L115-L132)
+
+### First-Time Onboarding Tips
+- Use the setup script to provision infrastructure and start services locally.
+- Seed the database to populate initial data for testing.
+- Verify the health endpoint and explore the Swagger docs.
+- For Azure, generate secrets and configure GitHub Actions secrets before triggering a deployment.
+
+**Section sources**
+- [scripts/setup-local.sh:128-135](file://scripts/setup-local.sh#L128-L135)
+- [DEPLOYMENT.md:54-118](file://DEPLOYMENT.md#L54-L118)
+
+## Dependency Analysis
+- Root package defines Node.js 22.x requirement and workspace configuration for apps and libs.
+- API package depends on NestJS, Prisma client, Redis, and other backend libraries.
+- Web package depends on React 19, TanStack Query, and related UI libraries.
+- Dockerfile targets a production stage with non-root user and health checks.
+
+```mermaid
+graph LR
+Root["Root package.json"] --> API["apps/api/package.json"]
+Root --> WEB["apps/web/package.json"]
+API --> Nest["@nestjs/*"]
+API --> Prisma["@prisma/client"]
+API --> Redis["ioredis"]
+WEB --> React["react, react-dom"]
+WEB --> Query["@tanstack/react-query"]
+```
+
+**Diagram sources**
+- [package.json:7-10](file://package.json#L7-L10)
+- [apps/api/package.json:21-64](file://apps/api/package.json#L21-L64)
+- [apps/web/package.json:18-36](file://apps/web/package.json#L18-L36)
+
+**Section sources**
+- [package.json:7-10](file://package.json#L7-L10)
+- [apps/api/package.json:21-64](file://apps/api/package.json#L21-L64)
+- [apps/web/package.json:18-36](file://apps/web/package.json#L18-L36)
 
 ## Performance Considerations
+- Local development uses lightweight containers (PostgreSQL 16-alpine, Redis 7-alpine).
+- The API Dockerfile sets a memory limit for the Node process and includes health checks.
+- For production, consider scaling Container Apps replicas and enabling Application Insights for monitoring.
 
-- Use Docker Compose for consistent local environments and reduced setup overhead.
-- Enable rate limiting via throttler configuration.
-- Monitor slow database queries in development using Prisma logs.
-- Keep JWT secrets strong and rotate them regularly outside development.
+[No sources needed since this section provides general guidance]
 
 ## Troubleshooting Guide
-
 Common issues and resolutions:
-
-- Port conflicts
-  - Adjust PORT in environment variables or stop conflicting services.
-- Database not reachable
-  - Confirm DATABASE_URL matches your Postgres instance.
-  - Ensure Prisma migrations are applied.
-- Redis connectivity errors
-  - Verify REDIS_HOST, REDIS_PORT, and optional REDIS_PASSWORD.
-- CORS blocked requests
-  - Set CORS_ORIGIN appropriately for your frontend origin.
-- Swagger not visible
-  - Ensure NODE_ENV is not set to production.
-- Health checks failing
-  - Confirm Postgres and Redis are healthy per docker-compose healthchecks.
-
-Operational commands:
-
-- docker compose logs -f
-- docker compose ps
-- npm run db:studio (Prisma Studio)
-- npm run db:reset (reset migrations if needed)
+- Docker daemon not running or missing Compose: Install Docker Desktop and ensure Compose is available.
+- Health check fails after deployment: Inspect application logs and verify environment variables and secrets.
+- Database migrations fail: Run migrations manually via the Container App exec command and check migration status.
+- Azure deployment fails due to credentials: Recreate the service principal and update GitHub secrets.
 
 **Section sources**
-
-- [docker-compose.yml](file://docker-compose.yml#L17-L21)
-- [docker-compose.yml](file://docker-compose.yml#L33-L37)
-- [apps/api/src/main.ts](file://apps/api/src/main.ts#L52-L78)
-- [libs/database/src/prisma.service.ts](file://libs/database/src/prisma.service.ts#L20-L34)
-- [libs/redis/src/redis.service.ts](file://libs/redis/src/redis.service.ts#L21-L27)
-- [package.json](file://package.json#L24-L29)
+- [scripts/setup-local.sh:62-68](file://scripts/setup-local.sh#L62-L68)
+- [DEPLOYMENT.md:329-420](file://DEPLOYMENT.md#L329-L420)
 
 ## Conclusion
+You now have the essentials to run Quiz2Biz locally with Docker Compose and to deploy it to Azure quickly. Use the 5-step user journey to onboard users and generate professional documentation. For deeper customization, explore the API and web app packages, and leverage the provided scripts and documentation.
 
-You now have the essentials to set up Quiz-to-build locally, configure environment variables, initialize the database, and run the API with Docker or natively. Use the provided examples to authenticate, create questionnaires, and manage sessions. Refer to the troubleshooting section for common issues and keep environment variables secure for non-development usage.
+[No sources needed since this section summarizes without analyzing specific files]
 
 ## Appendices
 
-### Environment Variables Reference
-
-- Application: NODE_ENV, PORT, API_PREFIX
-- Database: DATABASE_URL
-- Redis: REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
-- JWT: JWT_SECRET, JWT_EXPIRES_IN, JWT_REFRESH_SECRET, JWT_REFRESH_EXPIRES_IN
-- Security: BCRYPT_ROUNDS
-- Rate limiting: THROTTLE_TTL, THROTTLE_LIMIT, THROTTLE_LOGIN_LIMIT
-- Logging: LOG_LEVEL
-- CORS: CORS_ORIGIN
+### System Requirements
+- Node.js 22.x
+- Docker with Compose
+- PostgreSQL 16
+- Redis 7
 
 **Section sources**
+- [package.json:7-10](file://package.json#L7-L10)
+- [docker-compose.yml:35](file://docker-compose.yml#L35)
+- [docker-compose.yml:56](file://docker-compose.yml#L56)
 
-- [.env.example](file://.env.example#L1-L33)
-
-### Database Schema Highlights
-
-- Entities include organizations, users, questionnaires, sections, questions, visibility rules, sessions, responses, documents, audit logs, and engineering standards.
-- UUID primary keys and JSON fields for flexible metadata.
+### Environment Variable Reference (Local)
+- DATABASE_URL: Postgres connection string
+- REDIS_HOST: Redis hostname
+- REDIS_PORT: Redis port
+- JWT_SECRET: Secret for signing tokens
+- JWT_REFRESH_SECRET: Secret for refresh tokens
 
 **Section sources**
+- [docker-compose.yml:118-125](file://docker-compose.yml#L118-L125)
 
-- [prisma/schema.prisma](file://prisma/schema.prisma#L82-L131)
-- [prisma/schema.prisma](file://prisma/schema.prisma#L173-L195)
-- [prisma/schema.prisma](file://prisma/schema.prisma#L270-L300)
-- [prisma/schema.prisma](file://prisma/schema.prisma#L351-L381)
-- [prisma/schema.prisma](file://prisma/schema.prisma#L412-L428)
+### First-Time Setup Checklist
+- Install prerequisites
+- Start infrastructure and API
+- Run migrations and seed database
+- Verify health endpoint
+- Explore API docs
+
+**Section sources**
+- [scripts/setup-local.sh:108-135](file://scripts/setup-local.sh#L108-L135)
+- [docker/api/entrypoint.sh:20-29](file://docker/api/entrypoint.sh#L20-L29)
