@@ -1,0 +1,9 @@
+Please remember these measurable development targets:
+
+ISO/IEC 5055 targets: Security >=90%, Reliability >=90%, Efficiency >=85%, Maintainability >=85%.
+Cyclomatic complexity: target 10-15, max 20. MI: minimum 65, target >=80.
+DORA: Lead time <1hr (elite), rework rate <5%, 70% PRs under 200 lines, max 300.
+Security gates: SAST + DAST no HIGH/CRITICAL, dependency scan clean, zero secrets.
+AI verification: static analysis + type check + >=80% coverage + peer review + hallucination scan.
+Sprint validation scoring: ISO 20%, Complexity 10%, MI 15%, Docs 10%, DORA 15%, Security 20%, AI 10%.
+Deploy blocked if score <70%.

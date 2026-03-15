@@ -1,0 +1,6 @@
+Please remember this about Prisma schema evolution:
+
+When adding new Prisma models/enums: update schema.prisma, create migration with npx prisma migrate dev, run npx prisma generate.
+For JSON fields: use Prisma.InputJsonValue for writes, Prisma.JsonNull for null values instead of literal null.
+Always regenerate client after schema changes. TypeScript types come from generated .d.ts in node_modules/.prisma/client.
+Cast JSON.parse() results with 'as Prisma.InputJsonValue' or 'as string[]' to satisfy strict TypeScript.

@@ -1,0 +1,10 @@
+Please remember these as my development standards:
+
+Performance: Lighthouse 90+ Performance/SEO/Best Practices; INP <=200ms; WebP/AVIF images; lazy-load below-the-fold.
+Error Handling: Form fields validate on blur; empty states for all lists/dashboards; loading skeleton/spinner >300ms.
+Responsive: Breakpoints 320/768/1024/1440px; prefers-color-scheme dark mode; button states Idle/Hover/Active/Disabled.
+Security: Parameterized queries only; auth checks on all endpoints; no hardcoded passwords/tokens; validate all external input.
+WCAG: Text contrast 4.5:1; UI components 3:1; visible focus ring; logical Tab order; aria-labels on icon buttons; 44x44px touch targets.
+Naming: Components PascalCase; utilities camelCase; constants UPPER_SNAKE_CASE; use async/await not Promise.then.
+Testing: Unit tests for all new functions; integration tests for API endpoints.
+Docs: JSDoc/docstrings for public APIs; README updates for new features.

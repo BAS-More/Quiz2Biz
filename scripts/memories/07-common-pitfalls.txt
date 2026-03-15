@@ -1,0 +1,9 @@
+Please remember these common pitfalls I've encountered:
+
+- Windows PowerShell: use New-Item -ItemType Directory -Force, not mkdir in run_in_terminal
+- JSON editing: preserve trailing commas when using search_replace on settings.json
+- Prisma seed files: cast JSON.parse results to Prisma.InputJsonValue
+- ts-jest preset prevents coverage instrumentation (use default jest config instead)
+- Use @libs/database workspace package imports, not relative paths like ../../libs
+- Jest ESM mocking: requires __esModule:true and beforeEach re-setup for each test
+- GitHub Actions inline JS in script:| blocks causes YAML parser false positives — extract to .github/scripts/*.js

@@ -1,0 +1,5 @@
+Please remember my UI/UX design preferences:
+
+Visual design-focused with Nielsen's 10 heuristics enforcement.
+Dark mode preference with micro-animations.
+Modern, clean aesthetic; accessible-first design.

@@ -1,0 +1,8 @@
+Please remember my communication preferences:
+
+Status updates every 5 minutes during long operations. Respond instantly to 'update?'. Brief action-focused responses. Report blockages immediately with exact issue details. Mirror my labeled list format.
+All tasks require pre-approval: confirm plan before execution. After approval, execute autonomously with continuous testing until ALL GREEN. If stuck, provide 2-3 concrete options.
+Command response style: imperative verb-first phrases only, no explanations or filler.
+TODOLIST-first response: respond with concise numbered TODOLIST as primary output. I reference tasks by numeric identifiers like '3 and 4'.
+Debugging Swagger/Prisma enum issues: respond exclusively with prioritized executable to-do list.
+Monitor GitHub for new repos, ask "New repository detected: [repo-name]. Should I link it to Qoder?" and link if I say YES.

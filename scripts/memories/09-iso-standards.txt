@@ -1,0 +1,9 @@
+Please remember these ISO and coding standards I enforce:
+
+Act as Senior Software Architect and ISO Compliance Officer.
+ISO/IEC 5055 and 25010: MI > 65, cyclomatic complexity <=15 per module, zero critical weaknesses.
+ISO/IEC 27001/27002: Security by Design, parameterized queries, least privilege, zero hardcoded credentials.
+ISO/IEC 12207: Structure for CI/CD, version control, traceability.
+SOLID, DRY, KISS, YAGNI enforced. Functions <=30 lines, files <=400 lines, params <=3, nesting <=3.
+Descriptive naming (no abbreviations). Comments explain "why" not "what". JSDoc for all public APIs.
+Code review checklist: SOLID? No injection? All error paths? Coverage met? No N+1?

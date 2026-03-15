@@ -3,20 +3,19 @@
 <cite>
 **Referenced Files in This Document**
 - [README.md](file://README.md)
+- [PRODUCT-OVERVIEW.md](file://PRODUCT-OVERVIEW.md)
 - [QUICK-START.md](file://QUICK-START.md)
 - [DEPLOYMENT.md](file://DEPLOYMENT.md)
-- [DEPLOY-NOW.md](file://DEPLOY-NOW.md)
+- [apps/api/src/main.ts](file://apps/api/src/main.ts)
+- [apps/api/src/config/configuration.ts](file://apps/api/src/config/configuration.ts)
+- [apps/web/src/config/analytics.config.ts](file://apps/web/src/config/analytics.config.ts)
+- [apps/web/src/config/feature-flags.config.ts](file://apps/web/src/config/feature-flags.config.ts)
 - [package.json](file://package.json)
 - [docker-compose.yml](file://docker-compose.yml)
 - [docker/api/Dockerfile](file://docker/api/Dockerfile)
-- [docker/api/entrypoint.sh](file://docker/api/entrypoint.sh)
-- [docker/postgres/init.sql](file://docker/postgres/init.sql)
-- [apps/api/package.json](file://apps/api/package.json)
-- [apps/web/package.json](file://apps/web/package.json)
 - [scripts/setup-local.sh](file://scripts/setup-local.sh)
 - [scripts/dev-start.sh](file://scripts/dev-start.sh)
-- [scripts/deploy-to-azure.ps1](file://scripts/deploy-to-azure.ps1)
-- [scripts/setup-azure.sh](file://scripts/setup-azure.sh)
+- [prisma/schema.prisma](file://prisma/schema.prisma)
 </cite>
 
 ## Table of Contents
@@ -32,297 +31,395 @@
 10. [Appendices](#appendices)
 
 ## Introduction
-This guide helps you get Quiz-to-build (Quiz2Biz) running locally and understand how to deploy it to Azure quickly. You will:
-- Install prerequisites and set up a local Docker-based development environment
-- Understand the 5-step user journey for completing questionnaires and generating professional documentation
-- Configure environment variables and initialize the database
-- Explore quick deployment options to Azure and first-time onboarding tips
-- Troubleshoot common setup and runtime issues
+Quiz-to-build (Quiz2Biz) is an adaptive questionnaire system that transforms business assessments into professional documentation packages. It helps organizations evaluate their technology readiness across seven dimensions, receive instant scoring and visual insights, and automatically generate comprehensive technical documents. The platform targets diverse stakeholders—CTOs, CFOs, CEOs, business analysts, and compliance teams—providing tailored deliverables and actionable recommendations.
+
+Key benefits:
+- Accelerated assessments with adaptive logic and auto-save
+- Instant scoring with heatmap visualizations and gap analysis
+- Professional documentation generation (8+ types, 45+ pages each)
+- Evidence registry and decision log for compliance and audit trails
+- Real-time collaboration and progress tracking
+- Strong security, accessibility, and performance characteristics
+
+**Section sources**
+- [README.md:18-28](file://README.md#L18-L28)
+- [README.md:157-171](file://README.md#L157-L171)
+- [PRODUCT-OVERVIEW.md:16-24](file://PRODUCT-OVERVIEW.md#L16-L24)
 
 ## Project Structure
-Quiz2Biz is a monorepo with three main applications:
-- apps/api: NestJS backend API
-- apps/web: React 19 frontend
-- apps/cli: Command-line tools
+The repository follows a monorepo layout with three primary applications:
+- apps/api: NestJS backend with REST API, authentication, document generation, and integrations
+- apps/web: React 19 frontend with TypeScript, Vite, and Tailwind CSS
+- apps/cli: Command-line tool for offline operations and utilities
 
-It also includes:
-- docker/: Container configurations for API, web, and PostgreSQL init
-- prisma/: Database schema and seed data
-- scripts/: Local and Azure deployment automation
-- infrastructure/terraform/: Optional Terraform-based infrastructure setup
+Shared libraries and database schema:
+- libs: Shared modules (database, redis, shared)
+- prisma: Database schema and migrations
+
+Infrastructure and deployment:
+- docker: Multi-stage Dockerfiles and compose configuration
+- infrastructure/terraform: Azure infrastructure provisioning
+- scripts: Local setup, deployment, and maintenance utilities
 
 ```mermaid
 graph TB
-subgraph "Local Development"
-DC["docker-compose.yml"]
-API["apps/api (NestJS)"]
-WEB["apps/web (React)"]
-PG["PostgreSQL 16"]
-RD["Redis 7"]
+subgraph "Monorepo Root"
+PKG["package.json<br/>Workspaces & Scripts"]
+DOCK["docker-compose.yml"]
+PRISMA["prisma/schema.prisma"]
 end
-DC --> API
-DC --> WEB
-DC --> PG
-DC --> RD
-API --> PG
-API --> RD
+subgraph "Backend (API)"
+API_MAIN["apps/api/src/main.ts"]
+API_CONF["apps/api/src/config/configuration.ts"]
+end
+subgraph "Frontend (Web)"
+WEB_PKG["apps/web/package.json"]
+WEB_ANALYTICS["apps/web/src/config/analytics.config.ts"]
+WEB_FLAGS["apps/web/src/config/feature-flags.config.ts"]
+end
+subgraph "CLI"
+CLI_PKG["apps/cli/package.json"]
+end
+subgraph "Libraries"
+LIB_DB["libs/database"]
+LIB_REDIS["libs/redis"]
+LIB_SHARED["libs/shared"]
+end
+subgraph "Infrastructure"
+DOCKERFILE["docker/api/Dockerfile"]
+TERRAFORM["infrastructure/terraform/*"]
+SCRIPTS["scripts/*"]
+end
+PKG --> API_MAIN
+PKG --> WEB_PKG
+PKG --> CLI_PKG
+API_MAIN --> API_CONF
+API_MAIN --> PRISMA
+WEB_PKG --> WEB_ANALYTICS
+WEB_PKG --> WEB_FLAGS
+DOCK --> API_MAIN
+DOCKERFILE --> API_MAIN
+SCRIPTS --> DOCK
+TERRAFORM --> DOCK
 ```
 
 **Diagram sources**
-- [docker-compose.yml:18-150](file://docker-compose.yml#L18-L150)
-- [apps/api/package.json:1-144](file://apps/api/package.json#L1-L144)
+- [package.json:11-14](file://package.json#L11-L14)
+- [apps/api/src/main.ts:1-329](file://apps/api/src/main.ts#L1-329)
 - [apps/web/package.json:1-75](file://apps/web/package.json#L1-L75)
+- [docker-compose.yml:18-150](file://docker-compose.yml#L18-L150)
+- [docker/api/Dockerfile:1-120](file://docker/api/Dockerfile#L1-L120)
 
 **Section sources**
 - [README.md:295-318](file://README.md#L295-L318)
 - [package.json:11-14](file://package.json#L11-L14)
 
 ## Core Components
-- Backend API (NestJS): Provides authentication, questionnaire orchestration, scoring, document generation, and integrations. It connects to PostgreSQL via Prisma and uses Redis for caching/session data.
-- Frontend (React 19): Single-page application for user onboarding, questionnaire taking, dashboard, document management, and billing.
-- Database (PostgreSQL 16): Schema managed by Prisma with migrations and seed data.
-- Caching (Redis 7): Used for session and transient data.
-- CLI: Supporting tools for heatmaps, scoring, and offline operations.
+- Backend API (NestJS): Handles authentication, questionnaire orchestration, scoring, document generation, evidence registry, and integrations. It exposes Swagger/OpenAPI documentation and integrates with PostgreSQL, Redis, and Azure services.
+- Frontend (React 19): Provides user-facing pages for authentication, dashboard, questionnaire, documents, and billing, with analytics and feature flags.
+- CLI: Supports offline operations and utilities for development and testing.
+- Database (PostgreSQL 16): Managed via Prisma ORM with migrations and seed data.
+- Infrastructure: Dockerized deployment with multi-stage builds, Azure Container Apps, and Terraform-managed resources.
 
 **Section sources**
-- [apps/api/package.json:21-64](file://apps/api/package.json#L21-L64)
+- [apps/api/src/main.ts:214-298](file://apps/api/src/main.ts#L214-L298)
 - [apps/web/package.json:18-36](file://apps/web/package.json#L18-L36)
-- [docker-compose.yml:27-51](file://docker-compose.yml#L27-L51)
-- [docker-compose.yml:55-70](file://docker-compose.yml#L55-L70)
+- [prisma/schema.prisma:1-120](file://prisma/schema.prisma#L1-L120)
+- [docker/api/Dockerfile:68-120](file://docker/api/Dockerfile#L68-L120)
 
 ## Architecture Overview
-The system uses a containerized architecture with a clear separation of concerns:
-- API container runs the NestJS server, applies Prisma migrations on startup, and exposes REST endpoints.
-- PostgreSQL 16 stores user data, questionnaire responses, scoring results, and metadata.
-- Redis 7 caches session and transient data.
-- The React web app communicates with the API over HTTP(S).
+The system uses a layered architecture:
+- Presentation Layer: React web app with routing, state management, and analytics
+- API Layer: NestJS REST API with security middleware, validation, and interceptors
+- Domain Services: Questionnaire engine, scoring, document generation, and AI gateway
+- Data Layer: PostgreSQL with Prisma ORM and Redis caching
+- Integrations: Stripe for payments, Azure Blob Storage for files, Application Insights and Sentry for observability
 
 ```mermaid
 graph TB
-subgraph "Containerized Services"
-API["API (NestJS)"]
-PG["PostgreSQL 16"]
-RD["Redis 7"]
+subgraph "Client"
+WEB["React Web App<br/>Routing, State, Analytics"]
 end
-subgraph "Web App"
-WEB["React Web"]
+subgraph "API Gateway"
+MAIN["NestJS Main<br/>Security, CORS, Swagger"]
 end
-WEB --> API
-API --> PG
-API --> RD
+subgraph "Services"
+AUTH["Auth Service"]
+QENGINE["Questionnaire Engine"]
+SCORING["Scoring Engine"]
+DOCGEN["Document Generator"]
+EVIDENCE["Evidence Registry"]
+PAYMENT["Payment/Billing"]
+end
+subgraph "Data"
+DB["PostgreSQL 16<br/>Prisma ORM"]
+CACHE["Redis"]
+BLOB["Azure Blob Storage"]
+end
+WEB --> MAIN
+MAIN --> AUTH
+MAIN --> QENGINE
+MAIN --> SCORING
+MAIN --> DOCGEN
+MAIN --> EVIDENCE
+MAIN --> PAYMENT
+AUTH --> DB
+QENGINE --> DB
+SCORING --> DB
+DOCGEN --> BLOB
+EVIDENCE --> DB
+PAYMENT --> DB
+MAIN --> CACHE
+MAIN --> DB
 ```
 
 **Diagram sources**
-- [docker/api/Dockerfile:68-120](file://docker/api/Dockerfile#L68-L120)
-- [docker/api/entrypoint.sh:4-30](file://docker/api/entrypoint.sh#L4-L30)
-- [docker-compose.yml:109-135](file://docker-compose.yml#L109-L135)
+- [apps/api/src/main.ts:68-123](file://apps/api/src/main.ts#L68-L123)
+- [apps/api/src/main.ts:214-298](file://apps/api/src/main.ts#L214-L298)
+- [prisma/schema.prisma:154-286](file://prisma/schema.prisma#L154-L286)
+
+**Section sources**
+- [apps/api/src/main.ts:68-123](file://apps/api/src/main.ts#L68-L123)
+- [apps/api/src/main.ts:196-212](file://apps/api/src/main.ts#L196-L212)
+- [apps/api/src/main.ts:214-298](file://apps/api/src/main.ts#L214-L298)
 
 ## Detailed Component Analysis
 
-### Local Development Environment (Docker Compose)
-Follow these steps to run the platform locally using Docker Compose:
-1. Prerequisites
-   - Docker with Compose plugin
-   - Node.js 22.x (as defined by the root engines and API package)
-2. Start infrastructure and API
-   - Use the provided setup script to start PostgreSQL, Redis, and the API, then run migrations and seed the database.
-   - Alternatively, use the quick start script to bring up services and apply migrations.
-3. Access the API
-   - Health endpoint: http://localhost:3000/api/v1/health
-   - Swagger docs: http://localhost:3000/docs
+### 5-Minute Quick Start Guide
+Follow these steps to get started quickly:
+1. Create an account at the registration page
+2. Start a new questionnaire and answer adaptive questions across 5 sections
+3. Review your real-time scores and heatmap on the dashboard
+4. Generate and download professional documents (DOCX/PDF)
+5. Share results with your team or investors
 
 ```mermaid
-flowchart TD
-Start(["Start Local Dev"]) --> CheckDocker["Check Docker and Compose"]
-CheckDocker --> UpInfra["Start PostgreSQL and Redis"]
-UpInfra --> UpAPI["Start API container"]
-UpAPI --> Migrate["Apply Prisma Migrations"]
-Migrate --> Seed["Seed Database (optional)"]
-Seed --> Health["Verify Health Endpoint"]
-Health --> Ready(["Ready"])
+sequenceDiagram
+participant U as "User"
+participant W as "Web App"
+participant A as "API"
+participant DB as "PostgreSQL"
+participant B as "Blob Storage"
+U->>W : Open Registration
+W->>A : POST /auth/register
+A->>DB : Create user
+DB-->>A : OK
+A-->>W : Auth tokens
+W-->>U : Redirect to Dashboard
+U->>W : Start Questionnaire
+W->>A : GET /questionnaires
+A->>DB : Load questionnaire
+DB-->>A : Template
+A-->>W : Template
+U->>W : Answer questions (auto-save)
+W->>A : POST /sessions/ : id/responses
+A->>DB : Save responses
+DB-->>A : OK
+A->>A : Update score & heatmap
+A-->>W : Updated session
+W-->>U : Dashboard with scores
+U->>W : Generate Documents
+W->>A : POST /documents/generate
+A->>B : Create & store files
+B-->>A : URLs
+A-->>W : Document metadata
+W-->>U : Download links
 ```
 
 **Diagram sources**
-- [scripts/setup-local.sh:74-125](file://scripts/setup-local.sh#L74-L125)
-- [scripts/dev-start.sh:6-12](file://scripts/dev-start.sh#L6-L12)
-- [docker/api/entrypoint.sh:20-29](file://docker/api/entrypoint.sh#L20-L29)
+- [QUICK-START.md:171-197](file://QUICK-START.md#L171-L197)
+- [apps/api/src/main.ts:214-298](file://apps/api/src/main.ts#L214-L298)
+
+**Section sources**
+- [QUICK-START.md:171-197](file://QUICK-START.md#L171-L197)
+- [README.md:174-184](file://README.md#L174-L184)
+
+### System Requirements and Environment Setup
+- Node.js: Version 22+ (engine requirement)
+- Docker: For local development and containerized deployment
+- PostgreSQL 16: Database service (managed or local)
+- Redis: Caching and session state
+- Azure CLI: For cloud deployment (optional)
+- Environment variables: JWT secrets, database URL, CORS origin, and feature flags
+
+```mermaid
+flowchart TD
+Start(["Start"]) --> CheckNode["Check Node.js >= 22"]
+CheckNode --> CheckDocker["Check Docker & Compose"]
+CheckDocker --> SetupDB["Start PostgreSQL 16 & Redis"]
+SetupDB --> BuildAPI["Build API (multi-stage Docker)"]
+BuildAPI --> RunMigrations["Run Prisma Migrations"]
+RunMigrations --> SeedDB["Seed Database (optional)"]
+SeedDB --> HealthCheck["Health Check /api/v1/health"]
+HealthCheck --> End(["Ready"])
+```
+
+**Diagram sources**
+- [package.json:7-10](file://package.json#L7-L10)
+- [docker-compose.yml:27-107](file://docker-compose.yml#L27-L107)
+- [docker/api/Dockerfile:68-120](file://docker/api/Dockerfile#L68-L120)
 
 **Section sources**
 - [package.json:7-10](file://package.json#L7-L10)
-- [apps/api/package.json:8-12](file://apps/api/package.json#L8-L12)
-- [scripts/setup-local.sh:46-68](file://scripts/setup-local.sh#L46-L68)
-- [scripts/dev-start.sh:1-15](file://scripts/dev-start.sh#L1-L15)
-- [docker-compose.yml:18-150](file://docker-compose.yml#L18-L150)
+- [docker-compose.yml:27-107](file://docker-compose.yml#L27-L107)
+- [scripts/setup-local.sh:31-104](file://scripts/setup-local.sh#L31-L104)
 
-### Environment Variables and Database Initialization
-- Environment variables are defined in the Compose file for local development. These include database URL, Redis host/port, and JWT secrets.
-- The API entrypoint runs Prisma migrations on startup and starts the server.
-- PostgreSQL extensions are initialized via init.sql to enable UUID and pgcrypto.
+### Initial Configuration
+Critical environment variables (production):
+- JWT_SECRET and JWT_REFRESH_SECRET: Strong random values (≥32 characters)
+- DATABASE_URL: PostgreSQL connection string
+- CORS_ORIGIN: Explicit allowlist (not wildcard)
 
-```mermaid
-sequenceDiagram
-participant API as "API Container"
-participant Entryp as "Entrypoint Script"
-participant DB as "PostgreSQL"
-participant Redis as "Redis"
-API->>Entryp : Start container
-Entryp->>DB : Apply Prisma migrations
-DB-->>Entryp : Success/Failure
-Entryp->>API : Start Node server
-API->>Redis : Connect for caching
-```
+Feature flags (frontend):
+- VITE_ENABLE_ONBOARDING, VITE_ENABLE_ACCESSIBILITY, VITE_ENABLE_I18N, etc.
 
-**Diagram sources**
-- [docker/api/entrypoint.sh:4-30](file://docker/api/entrypoint.sh#L4-L30)
-- [docker/api/Dockerfile:114-116](file://docker/api/Dockerfile#L114-L116)
-- [docker-compose.yml:118-125](file://docker-compose.yml#L118-L125)
-- [docker/postgres/init.sql:4-20](file://docker/postgres/init.sql#L4-L20)
+Analytics:
+- VITE_GA_MEASUREMENT_ID for Google Analytics GA4 integration
 
 **Section sources**
-- [docker-compose.yml:118-125](file://docker-compose.yml#L118-L125)
-- [docker/api/entrypoint.sh:20-29](file://docker/api/entrypoint.sh#L20-L29)
-- [docker/postgres/init.sql:4-20](file://docker/postgres/init.sql#L4-L20)
+- [apps/api/src/config/configuration.ts:5-43](file://apps/api/src/config/configuration.ts#L5-L43)
+- [apps/api/src/config/configuration.ts:87-114](file://apps/api/src/config/configuration.ts#L87-L114)
+- [apps/web/src/config/feature-flags.config.ts:13-36](file://apps/web/src/config/feature-flags.config.ts#L13-L36)
+- [apps/web/src/config/analytics.config.ts:21-31](file://apps/web/src/config/analytics.config.ts#L21-L31)
 
-### 5-Step User Journey
-The platform’s user journey is designed for speed and clarity:
-1. Sign Up: Create an account at the registration page.
-2. Start Questionnaire: Answer adaptive questions across 5 sections (30–50 minutes).
-3. View Scores: See your dashboard heatmap and dimension scores.
-4. Generate Documents: Create professional documentation packages.
-5. Download & Share: Export DOCX/PDF and share results.
-
-```mermaid
-flowchart TD
-U["User"] --> R["Register"]
-R --> Q["Answer Questionnaire"]
-Q --> S["View Scores"]
-S --> G["Generate Documents"]
-G --> D["Download & Share"]
-```
-
-**Diagram sources**
-- [QUICK-START.md:171-196](file://QUICK-START.md#L171-L196)
+### First-Time User Scenarios
+- CTO: Generate Architecture Dossier and DevSecOps Guide; review heatmap and recommendations
+- CFO: Produce Finance Package and Business Plan; track resource allocation
+- CEO: Obtain Executive Summary and Strategy Playbook; share with stakeholders
+- Business Analyst: Capture requirements via Idea Capture and generate SDLC Playbook
+- Compliance: Build Policy Pack and Evidence Registry for audit readiness
 
 **Section sources**
-- [QUICK-START.md:171-196](file://QUICK-START.md#L171-L196)
+- [README.md:159-164](file://README.md#L159-L164)
+- [PRODUCT-OVERVIEW.md:48-56](file://PRODUCT-OVERVIEW.md#L48-L56)
 
-### Quick Deployment to Azure
-There are several ways to deploy quickly to Azure:
-- Automatic deployment via GitHub Actions (recommended): Configure secrets and push to main to auto-deploy.
-- First-time setup with scripts: Use the PowerShell script to provision infrastructure and deploy the app.
-- Manual deployment: Build the image locally, push to ACR, and update the Container App.
-
-```mermaid
-sequenceDiagram
-participant Dev as "Developer"
-participant GH as "GitHub Actions"
-participant ACR as "ACR"
-participant CA as "Container Apps"
-Dev->>GH : Push to main
-GH->>ACR : Build and push image
-GH->>CA : Deploy image and run migrations
-CA-->>Dev : App URL and health status
-```
-
-**Diagram sources**
-- [DEPLOY-NOW.md:78-92](file://DEPLOY-NOW.md#L78-L92)
-- [scripts/deploy-to-azure.ps1:115-132](file://scripts/deploy-to-azure.ps1#L115-L132)
+### Basic Usage Patterns
+- Adaptive Questionnaire: 11 question types with conditional logic and auto-save
+- Real-time Scoring: Updates as you answer; heatmap highlights strengths/weaknesses
+- Document Generation: Select format (DOCX/PDF), customize, and download
+- Evidence Registry: Attach files, links, and integrate with GitHub/GitLab/Jira
+- Decision Log: Record and approve decisions with audit trail
 
 **Section sources**
-- [DEPLOY-NOW.md:20-54](file://DEPLOY-NOW.md#L20-L54)
-- [DEPLOYMENT.md:24-53](file://DEPLOYMENT.md#L24-L53)
-- [scripts/deploy-to-azure.ps1:115-132](file://scripts/deploy-to-azure.ps1#L115-L132)
-
-### First-Time Onboarding Tips
-- Use the setup script to provision infrastructure and start services locally.
-- Seed the database to populate initial data for testing.
-- Verify the health endpoint and explore the Swagger docs.
-- For Azure, generate secrets and configure GitHub Actions secrets before triggering a deployment.
-
-**Section sources**
-- [scripts/setup-local.sh:128-135](file://scripts/setup-local.sh#L128-L135)
-- [DEPLOYMENT.md:54-118](file://DEPLOYMENT.md#L54-L118)
+- [PRODUCT-OVERVIEW.md:27-78](file://PRODUCT-OVERVIEW.md#L27-L78)
+- [README.md:88-120](file://README.md#L88-L120)
 
 ## Dependency Analysis
-- Root package defines Node.js 22.x requirement and workspace configuration for apps and libs.
-- API package depends on NestJS, Prisma client, Redis, and other backend libraries.
-- Web package depends on React 19, TanStack Query, and related UI libraries.
-- Dockerfile targets a production stage with non-root user and health checks.
+Internal dependencies:
+- API depends on libs/database, libs/redis, and libs/shared
+- Web app depends on React Query, Zustand, and TanStack Router
+- CLI integrates with API client and configuration modules
+
+External dependencies:
+- NestJS ecosystem (Swagger, Throttler, Passport, JWT)
+- Prisma ORM and PostgreSQL
+- Redis for caching
+- Stripe for payments
+- Sentry and Application Insights for observability
 
 ```mermaid
 graph LR
-Root["Root package.json"] --> API["apps/api/package.json"]
-Root --> WEB["apps/web/package.json"]
-API --> Nest["@nestjs/*"]
-API --> Prisma["@prisma/client"]
-API --> Redis["ioredis"]
-WEB --> React["react, react-dom"]
-WEB --> Query["@tanstack/react-query"]
+API_PKG["apps/api/package.json"] --> NEST["@nestjs/*"]
+API_PKG --> PRISMA["@prisma/client"]
+API_PKG --> REDIS["ioredis"]
+API_PKG --> STRIPE["stripe"]
+API_PKG --> HELMET["helmet"]
+API_PKG --> COMPRESSION["compression"]
+WEB_PKG["apps/web/package.json"] --> REACT["react, react-dom"]
+WEB_PKG --> ROUTER["react-router-dom"]
+WEB_PKG --> QUERY["@tanstack/react-query"]
+WEB_PKG --> STORE["zustand"]
+CLI_PKG["apps/cli/package.json"] --> API_CLIENT["apps/api/src/api/*"]
 ```
 
 **Diagram sources**
-- [package.json:7-10](file://package.json#L7-L10)
 - [apps/api/package.json:21-64](file://apps/api/package.json#L21-L64)
 - [apps/web/package.json:18-36](file://apps/web/package.json#L18-L36)
+- [apps/api/package.json:66-86](file://apps/api/package.json#L66-L86)
 
 **Section sources**
-- [package.json:7-10](file://package.json#L7-L10)
 - [apps/api/package.json:21-64](file://apps/api/package.json#L21-L64)
 - [apps/web/package.json:18-36](file://apps/web/package.json#L18-L36)
 
 ## Performance Considerations
-- Local development uses lightweight containers (PostgreSQL 16-alpine, Redis 7-alpine).
-- The API Dockerfile sets a memory limit for the Node process and includes health checks.
-- For production, consider scaling Container Apps replicas and enabling Application Insights for monitoring.
-
-[No sources needed since this section provides general guidance]
-
-## Troubleshooting Guide
-Common issues and resolutions:
-- Docker daemon not running or missing Compose: Install Docker Desktop and ensure Compose is available.
-- Health check fails after deployment: Inspect application logs and verify environment variables and secrets.
-- Database migrations fail: Run migrations manually via the Container App exec command and check migration status.
-- Azure deployment fails due to credentials: Recreate the service principal and update GitHub secrets.
+- Page load: <2.1s LCP, <3.2s TTI
+- API response: <150ms average
+- Auto-save: Every 30 seconds
+- Compression: Gzip/Brotli for responses (except streaming endpoints)
+- Caching: Redis for session and transient data
+- Scalability: Azure Container Apps with managed PostgreSQL and Redis
 
 **Section sources**
-- [scripts/setup-local.sh:62-68](file://scripts/setup-local.sh#L62-L68)
-- [DEPLOYMENT.md:329-420](file://DEPLOYMENT.md#L329-L420)
+- [README.md:197-203](file://README.md#L197-L203)
+- [apps/api/src/main.ts:43-67](file://apps/api/src/main.ts#L43-L67)
+- [README.md:152-160](file://README.md#L152-L160)
+
+## Troubleshooting Guide
+Common setup and deployment issues:
+- Authentication Error (GitHub Actions): Recreate Azure service principal and update secrets
+- Database Connection Failure: Verify firewall rules, SSL mode, and connection string
+- Docker Build Failure: Build locally to debug, ensure Prisma client generation, and check dependencies
+- Health Check Fails: Inspect application logs and verify environment variables
+- Database Migration Failure: Manually run migrations and check migration status
+
+Local development tips:
+- Use the setup script to provision services and run migrations
+- Health check URL: http://localhost:3000/api/v1/health
+- View logs: docker compose logs -f api
+
+**Section sources**
+- [DEPLOYMENT.md:329-421](file://DEPLOYMENT.md#L329-L421)
+- [scripts/setup-local.sh:108-167](file://scripts/setup-local.sh#L108-L167)
 
 ## Conclusion
-You now have the essentials to run Quiz2Biz locally with Docker Compose and to deploy it to Azure quickly. Use the 5-step user journey to onboard users and generate professional documentation. For deeper customization, explore the API and web app packages, and leverage the provided scripts and documentation.
+Quiz-to-build streamlines technical assessments and documentation generation for organizations of all sizes. With adaptive questionnaires, instant scoring, and professional document outputs, it empowers CTOs, CFOs, CEOs, analysts, and compliance teams to make informed decisions quickly. The platform’s robust architecture, security posture, and performance characteristics make it suitable for production use, while the included deployment and troubleshooting guides simplify onboarding.
 
 [No sources needed since this section summarizes without analyzing specific files]
 
 ## Appendices
 
-### System Requirements
-- Node.js 22.x
-- Docker with Compose
-- PostgreSQL 16
-- Redis 7
+### A. Deployment Options
+- GitHub Actions CI/CD with Azure Container Apps
+- Manual Docker deployment with multi-stage builds
+- Terraform-managed Azure infrastructure
 
 **Section sources**
-- [package.json:7-10](file://package.json#L7-L10)
-- [docker-compose.yml:35](file://docker-compose.yml#L35)
-- [docker-compose.yml:56](file://docker-compose.yml#L56)
+- [DEPLOYMENT.md:24-53](file://DEPLOYMENT.md#L24-L53)
+- [DEPLOYMENT.md:140-179](file://DEPLOYMENT.md#L140-L179)
+- [docker/api/Dockerfile:68-120](file://docker/api/Dockerfile#L68-L120)
 
-### Environment Variable Reference (Local)
-- DATABASE_URL: Postgres connection string
-- REDIS_HOST: Redis hostname
-- REDIS_PORT: Redis port
-- JWT_SECRET: Secret for signing tokens
-- JWT_REFRESH_SECRET: Secret for refresh tokens
+### B. Environment Variables Reference
+- API: DATABASE_URL, JWT_SECRET, JWT_REFRESH_SECRET, CORS_ORIGIN, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
+- Web: VITE_GA_MEASUREMENT_ID, VITE_ENABLE_* feature flags
+- CLI: Depends on API configuration and environment
 
 **Section sources**
-- [docker-compose.yml:118-125](file://docker-compose.yml#L118-L125)
+- [apps/api/src/config/configuration.ts:87-114](file://apps/api/src/config/configuration.ts#L87-L114)
+- [apps/web/src/config/feature-flags.config.ts:6-11](file://apps/web/src/config/feature-flags.config.ts#L6-L11)
+- [apps/web/src/config/analytics.config.ts:21-31](file://apps/web/src/config/analytics.config.ts#L21-L31)
 
-### First-Time Setup Checklist
-- Install prerequisites
-- Start infrastructure and API
-- Run migrations and seed database
-- Verify health endpoint
-- Explore API docs
+### C. Data Model Overview
+Key entities include Organizations, Users, Questionnaires, Sessions, Responses, Dimensions, Documents, Evidence, Decisions, and Projects. Relationships define multi-project workspaces, persona-driven question targeting, and readiness scoring.
 
-**Section sources**
-- [scripts/setup-local.sh:108-135](file://scripts/setup-local.sh#L108-L135)
-- [docker/api/entrypoint.sh:20-29](file://docker/api/entrypoint.sh#L20-L29)
+```mermaid
+erDiagram
+ORGANIZATION ||--o{ USER : "has"
+ORGANIZATION ||--o{ PROJECT : "owns"
+USER ||--o{ SESSION : "takes"
+USER ||--o{ DOCUMENT : "approves"
+PROJECT ||--o{ SESSION : "contains"
+SESSION ||--o{ RESPONSE : "generates"
+SESSION ||--o{ DOCUMENT : "produces"
+SESSION ||--o{ EVIDENCE_REGISTRY : "links"
+SESSION ||--o{ DECISION_LOG : "records"
+QUESTIONNAIRE ||--o{ SECTION : "composes"
+SECTION ||--o{ QUESTION : "contains"
+QUESTION ||--o{ RESPONSE : "answers"
+```
+
+**Diagram sources**
+- [prisma/schema.prisma:154-286](file://prisma/schema.prisma#L154-L286)
+- [prisma/schema.prisma:351-489](file://prisma/schema.prisma#L351-L489)
+- [prisma/schema.prisma:512-560](file://prisma/schema.prisma#L512-L560)
+- [prisma/schema.prisma:636-706](file://prisma/schema.prisma#L636-L706)
+- [prisma/schema.prisma:744-774](file://prisma/schema.prisma#L744-L774)
