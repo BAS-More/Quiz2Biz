@@ -16,7 +16,19 @@
 - [libs/redis/src/index.ts](file://libs/redis/src/index.ts)
 - [docker-compose.yml](file://docker-compose.yml)
 - [infrastructure/terraform/main.tf](file://infrastructure/terraform/main.tf)
+- [docs/architecture/c4-01-system-context.mmd](file://docs/architecture/c4-01-system-context.mmd)
+- [docs/architecture/c4-02-container.md](file://docs/architecture/c4-02-container.md)
+- [docs/architecture/c4-03-component.md](file://docs/architecture/c4-03-component.md)
+- [README.md](file://README.md)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Updated to reflect the current documentation approach focusing on AI-assisted development methodology
+- Removed references to dropped architectural documentation files (Design.md, Guidelines.md, Engine.md)
+- Updated architecture diagrams to reflect the current system state
+- Enhanced focus on dynamic documentation generation capabilities
+- Revised deployment and operational guidance to align with current practices
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -31,7 +43,9 @@
 10. [Appendices](#appendices)
 
 ## Introduction
-This document describes the architecture and design of Quiz-to-Build, an adaptive questionnaire and AI-powered document generation platform. The system follows a modern cloud-native design with a NestJS backend, a React 19 frontend, PostgreSQL with Prisma, Redis caching, and Azure-hosted infrastructure. It emphasizes modularity, observability, security, and extensibility through feature-flagged modules and a layered architecture.
+This document describes the architecture and design of Quiz-to-Build, an adaptive questionnaire and AI-powered document generation platform. The system follows a modern cloud-native design with a NestJS backend, a React 19 frontend, PostgreSQL with Prisma, Redis caching, and Azure-hosted infrastructure. The platform emphasizes AI-assisted development methodologies with dynamic documentation generation replacing traditional static architectural artifacts.
+
+**Updated** The documentation now reflects a shift toward AI-enhanced development practices, where architectural decisions are continuously validated and refined through automated analysis and dynamic documentation generation.
 
 ## Project Structure
 The repository is organized as a monorepo with three primary applications and supporting libraries and infrastructure:
@@ -42,6 +56,7 @@ The repository is organized as a monorepo with three primary applications and su
 - prisma: Data modeling and migrations
 - infrastructure/terraform: Azure infrastructure provisioning
 - docker: Container images and compose for local development and CI
+- docs: Comprehensive documentation suite including C4 architecture models and AI-assisted development guides
 
 ```mermaid
 graph TB
@@ -65,6 +80,10 @@ KV["Key Vault"]
 ACR["Container Registry"]
 CA["Container Apps"]
 end
+subgraph "Documentation"
+C4["C4 Architecture Models<br/>docs/architecture/"]
+AI_DOCS["AI-Assisted Docs<br/>Dynamic Generation"]
+end
 WEB --> API
 API --> DB
 API --> REDIS
@@ -74,7 +93,7 @@ API --- MON
 API --- KV
 API --- ACR
 API --- CA
-CA --- NET
+C4 --> AI_DOCS
 ```
 
 **Diagram sources**
@@ -82,6 +101,7 @@ CA --- NET
 - [apps/web/package.json:18-36](file://apps/web/package.json#L18-L36)
 - [docker-compose.yml:18-150](file://docker-compose.yml#L18-L150)
 - [infrastructure/terraform/main.tf:1-153](file://infrastructure/terraform/main.tf#L1-L153)
+- [docs/architecture/c4-01-system-context.mmd:1-54](file://docs/architecture/c4-01-system-context.mmd#L1-L54)
 
 **Section sources**
 - [apps/api/src/app.module.ts:1-130](file://apps/api/src/app.module.ts#L1-L130)
@@ -104,8 +124,12 @@ CA --- NET
   - Redis for session state, rate limiting, and short-lived caches
 - Infrastructure (Azure):
   - Terraform-managed resources: VNet, monitoring, registry, database, cache, key vault, and container apps
-- CLI:
-  - Utilities for offline operations and batch tasks
+- Documentation System:
+  - AI-assisted development methodology with dynamic documentation generation
+  - C4 architecture models for system context, containers, and components
+  - Comprehensive technical documentation suite
+
+**Updated** The documentation system now leverages AI-assisted development practices, where architectural artifacts are generated dynamically and continuously updated based on code changes and system evolution.
 
 **Section sources**
 - [apps/api/src/main.ts:28-329](file://apps/api/src/main.ts#L28-L329)
@@ -302,6 +326,9 @@ AI_PROVIDERS ||--o{ GENERATED_DOCUMENTS : "generates"
 - Database: PostgreSQL 16
 - Infrastructure: Azure (Container Apps, ACR, Key Vault, Monitoring, VNet)
 - DevOps: Docker, Terraform, GitHub Actions
+- Documentation: AI-assisted development with dynamic documentation generation
+
+**Updated** The technology stack now includes AI-assisted development capabilities that enable dynamic documentation generation and continuous architectural validation.
 
 **Section sources**
 - [apps/api/package.json:21-65](file://apps/api/package.json#L21-L65)
@@ -397,6 +424,9 @@ API --> SENTRY
   - React 19, React Router, TanStack Query, Axios, Zod, and UI libraries
 - Infrastructure depends on:
   - Terraform modules for networking, monitoring, registry, database, cache, key vault, and container apps
+- Documentation system depends on:
+  - AI-assisted development tools for dynamic documentation generation
+  - C4 architecture modeling for system visualization
 
 ```mermaid
 graph LR
@@ -454,7 +484,9 @@ Recommended checks:
 - [apps/api/src/main.ts:300-312](file://apps/api/src/main.ts#L300-L312)
 
 ## Conclusion
-Quiz-to-Build adopts a robust, cloud-native architecture combining NestJS, React 19, PostgreSQL, Redis, and Azure. Its modular backend, rich data model, and comprehensive observability support enable scalable growth while maintaining security and reliability. The documented patterns and diagrams provide a blueprint for extending features, integrating AI providers, and operating in production.
+Quiz-to-Build adopts a robust, cloud-native architecture combining NestJS, React 19, PostgreSQL, Redis, and Azure. Its modular backend, rich data model, and comprehensive observability support enable scalable growth while maintaining security and reliability. The platform's integration of AI-assisted development methodologies and dynamic documentation generation provides a blueprint for modern software development practices that continuously evolve with the system's needs.
+
+**Updated** The conclusion now emphasizes the platform's adoption of AI-assisted development practices and dynamic documentation generation as key differentiators in modern software architecture.
 
 ## Appendices
 
@@ -489,3 +521,41 @@ API --> R
 
 **Section sources**
 - [infrastructure/terraform/main.tf:12-152](file://infrastructure/terraform/main.tf#L12-L152)
+
+### AI-Assisted Development Methodology
+The platform implements AI-assisted development practices that continuously generate and update architectural documentation based on code changes and system evolution. This approach ensures that documentation remains synchronized with the actual implementation while providing insights into system architecture and design decisions.
+
+**New Section** This section introduces the AI-assisted development methodology that underpins the platform's documentation approach.
+
+### Dynamic Documentation Generation
+The system leverages AI tools to generate comprehensive documentation including:
+- Automatic API documentation generation
+- Continuous architecture model updates
+- Real-time dependency analysis
+- Automated compliance and security documentation
+- Dynamic deployment and operational guides
+
+**New Section** This section details the dynamic documentation generation capabilities that replace traditional static architectural artifacts.
+
+### C4 Architecture Models
+The documentation suite includes comprehensive C4 architecture models covering:
+- System Context diagrams for external relationships
+- Container diagrams for application architecture
+- Component diagrams for detailed implementation
+- Data flow and trust boundary visualizations
+
+**Section sources**
+- [docs/architecture/c4-01-system-context.mmd:1-54](file://docs/architecture/c4-01-system-context.mmd#L1-L54)
+- [docs/architecture/c4-02-container.md:1-83](file://docs/architecture/c4-02-container.md#L1-L83)
+- [docs/architecture/c4-03-component.md:1-143](file://docs/architecture/c4-03-component.md#L1-L143)
+
+### Documentation Navigation
+The platform provides comprehensive documentation navigation through:
+- AI-powered search and discovery
+- Dynamic content generation based on user roles
+- Automated documentation updates
+- Integration with development workflows
+
+**Section sources**
+- [README.md:32-67](file://README.md#L32-L67)
+- [README.md:322-341](file://README.md#L322-L341)

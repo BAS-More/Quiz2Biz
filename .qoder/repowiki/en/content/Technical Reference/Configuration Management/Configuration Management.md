@@ -15,7 +15,25 @@
 - [uptime-monitoring.config.ts](file://apps/api/src/config/uptime-monitoring.config.ts)
 - [resource-pressure.config.ts](file://apps/api/src/config/resource-pressure.config.ts)
 - [failure-injection.config.ts](file://apps/api/src/config/failure-injection.config.ts)
+- [qoder-memory-bootstrap.txt](file://scripts/qoder-memory-bootstrap.txt)
+- [01-honesty-protocol.txt](file://scripts/memories/01-honesty-protocol.txt)
+- [02-dev-standards.txt](file://scripts/memories/02-dev-standards.txt)
+- [03-communication-prefs.txt](file://scripts/memories/03-communication-prefs.txt)
+- [04-user-identity.txt](file://scripts/memories/04-user-identity.txt)
+- [05-ui-ux-prefs.txt](file://scripts/memories/05-ui-ux-prefs.txt)
+- [06-prettier-config.txt](file://scripts/memories/06-prettier-config.txt)
+- [07-common-pitfalls.txt](file://scripts/memories/07-common-pitfalls.txt)
+- [08-prisma-skills.txt](file://scripts/memories/08-prisma-skills.txt)
+- [09-iso-standards.txt](file://scripts/memories/09-iso-standards.txt)
+- [10-measurable-targets.txt](file://scripts/memories/10-measurable-targets.txt)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Added comprehensive AI assistant memory management system documentation
+- Integrated structured memory files covering honesty protocols, development standards, communication preferences, and technical configurations
+- Enhanced configuration management with AI-specific memory protocols
+- Updated security and compliance configurations with ISO standards integration
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -23,13 +41,16 @@
 3. [Core Components](#core-components)
 4. [Architecture Overview](#architecture-overview)
 5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Dependency Analysis](#dependency-analysis)
-7. [Performance Considerations](#performance-considerations)
-8. [Troubleshooting Guide](#troubleshooting-guide)
-9. [Conclusion](#conclusion)
+6. [AI Assistant Memory Management](#ai-assistant-memory-management)
+7. [Dependency Analysis](#dependency-analysis)
+8. [Performance Considerations](#performance-considerations)
+9. [Troubleshooting Guide](#troubleshooting-guide)
+10. [Conclusion](#conclusion)
 
 ## Introduction
 This document provides comprehensive configuration management guidance for Quiz-to-Build, covering environment variables, configuration files, runtime settings, monitoring integrations, feature flags, canary deployments, graceful degradation, security configurations, alerting rules, incident response, disaster recovery, resource pressure handling, failure injection testing, and deployment-specific configurations. It consolidates the configuration patterns established across the codebase to support reliable operations, scalability, and resilience.
+
+**Updated** Added structured AI assistant memory management system with 10 specialized memory files covering honesty protocols, development standards, communication preferences, and technical configurations.
 
 ## Project Structure
 Configuration management in Quiz-to-Build is organized around modular configuration files located in the API application's config directory. These files define environment-driven settings, monitoring integrations, feature flag management, deployment strategies, resilience patterns, and operational runbooks. The structure supports separation of concerns and enables environment-specific customization.
@@ -50,6 +71,7 @@ J["sentry.config.ts<br/>Error tracking"]
 K["uptime-monitoring.config.ts<br/>External monitors"]
 L["resource-pressure.config.ts<br/>Resource tests"]
 M["failure-injection.config.ts<br/>Chaos experiments"]
+N["Memory Management<br/>AI Assistant Protocols"]
 end
 A --> B
 A --> C
@@ -63,6 +85,7 @@ A --> J
 A --> K
 A --> L
 A --> M
+A --> N
 ```
 
 **Diagram sources**
@@ -95,6 +118,9 @@ This section outlines the primary configuration components and their responsibil
 - Incident response: Severity levels, escalation paths, runbooks, and communication channels.
 - Alerting rules: Thresholds, channels, and escalation policies for error, performance, security, business, and resource metrics.
 - Resource pressure and failure injection: Structured scenarios for CPU, memory, disk, network, and infrastructure failures.
+- AI assistant memory management: Structured protocols for AI behavior, communication, and development standards.
+
+**Updated** Enhanced with AI assistant memory management system containing 10 specialized memory files covering honesty protocols, development standards, communication preferences, and technical configurations.
 
 **Section sources**
 - [configuration.ts:5-43](file://apps/api/src/config/configuration.ts#L5-L43)
@@ -112,7 +138,7 @@ This section outlines the primary configuration components and their responsibil
 - [failure-injection.config.ts:89-222](file://apps/api/src/config/failure-injection.config.ts#L89-L222)
 
 ## Architecture Overview
-The configuration architecture integrates environment variables, centralized configuration factories, and modular configuration modules. The core configuration factory validates production requirements and builds composite settings. Monitoring, resilience, and operations modules are independently configurable and can be toggled per environment.
+The configuration architecture integrates environment variables, centralized configuration factories, and modular configuration modules. The core configuration factory validates production requirements and builds composite settings. Monitoring, resilience, and operations modules are independently configurable and can be toggled per environment. AI assistant memory management provides structured protocols for AI behavior and communication.
 
 ```mermaid
 graph TB
@@ -130,6 +156,7 @@ SN["Sentry<br/>sentry.config.ts"]
 UM["Uptime Monitoring<br/>uptime-monitoring.config.ts"]
 RP["Resource Pressure<br/>resource-pressure.config.ts"]
 FI["Failure Injection<br/>failure-injection.config.ts"]
+MM["Memory Management<br/>AI Assistant Protocols"]
 EV --> CF
 CF --> AC
 CF --> LC
@@ -143,6 +170,7 @@ CF --> SN
 CF --> UM
 CF --> RP
 CF --> FI
+CF --> MM
 ```
 
 **Diagram sources**
@@ -352,8 +380,111 @@ Comprehensive failure injection scenarios:
 - [failure-injection.config.ts:543-671](file://apps/api/src/config/failure-injection.config.ts#L543-L671)
 - [failure-injection.config.ts:677-800](file://apps/api/src/config/failure-injection.config.ts#L677-L800)
 
+## AI Assistant Memory Management
+
+**New Section** Added comprehensive AI assistant memory management system documentation
+
+The AI assistant memory management system provides structured protocols for AI behavior, communication, and development standards through 10 specialized memory files. This system ensures consistent AI behavior across all assistant interactions while maintaining strict adherence to honesty protocols and development standards.
+
+### Memory System Architecture
+The memory management system consists of 10 specialized memory files, each containing specific protocols and configurations:
+
+#### Memory File Categories
+
+1. **Honesty Protocol** (01-honesty-protocol.txt)
+   - Mandatory honesty rules with no exceptions
+   - Verification requirements before declarations
+   - Immediate mistake admission procedures
+   - Evidence-based completion claims
+
+2. **Development Standards** (02-dev-standards.txt)
+   - Performance requirements (Lighthouse 90+, INP ≤200ms)
+   - Error handling and validation protocols
+   - Responsive design breakpoints
+   - Security best practices
+   - Accessibility compliance (WCAG)
+
+3. **Communication Preferences** (03-communication-prefs.txt)
+   - Status update frequency (every 5 minutes)
+   - Command response style (imperative verb-first)
+   - Task management protocols
+   - Debugging procedures
+
+4. **User Identity** (04-user-identity.txt)
+   - GitHub username identification
+   - Azure subscription details
+   - User profile information
+
+5. **UI/UX Preferences** (05-ui-ux-prefs.txt)
+   - Nielsen's 10 heuristics enforcement
+   - Dark mode preference
+   - Micro-animation requirements
+   - Accessible-first design approach
+
+6. **Prettier Configuration** (06-prettier-config.txt)
+   - Code formatting standards
+   - Quote preferences and spacing
+   - Line width and tab settings
+
+7. **Common Pitfalls** (07-common-pitfalls.txt)
+   - Windows PowerShell considerations
+   - JSON editing best practices
+   - Prisma development guidelines
+   - Testing framework configurations
+
+8. **Prisma Skills** (08-prisma-skills.txt)
+   - Schema evolution procedures
+   - Migration management
+   - JSON field handling
+   - Client regeneration protocols
+
+9. **ISO Standards** (09-iso-standards.txt)
+   - ISO/IEC 5055 and 25010 compliance
+   - Security by design principles
+   - Code quality metrics
+   - Review checklist protocols
+
+10. **Measurable Targets** (10-measurable-targets.txt)
+    - ISO/IEC 5055 performance targets
+    - Cyclomatic complexity limits
+    - DORA metrics compliance
+    - Security gate requirements
+
+### Memory Bootstrap Process
+The system uses a bootstrap process defined in `qoder-memory-bootstrap.txt` which loads all 10 memory files as separate memories for the AI assistant. This ensures comprehensive coverage of all protocols and standards.
+
+### Integration with Configuration Management
+The AI memory management system integrates seamlessly with the existing configuration management framework:
+
+- **Environment Integration**: Memory protocols can be loaded from environment variables or configuration files
+- **Validation**: Memory content is validated against predefined standards and protocols
+- **Version Control**: Memory files are tracked in version control for auditability
+- **Security**: Sensitive information in memory files is protected through appropriate access controls
+
+### Operational Procedures
+- Memory files are loaded during AI assistant initialization
+- Protocols are validated and stored in memory structures
+- Communication preferences are applied to all assistant responses
+- Development standards are enforced during code generation and review processes
+- Honesty protocols ensure transparent and verifiable AI behavior
+
+**Section sources**
+- [qoder-memory-bootstrap.txt:1-75](file://scripts/qoder-memory-bootstrap.txt#L1-L75)
+- [01-honesty-protocol.txt:1-11](file://scripts/memories/01-honesty-protocol.txt#L1-L11)
+- [02-dev-standards.txt:1-11](file://scripts/memories/02-dev-standards.txt#L1-L11)
+- [03-communication-prefs.txt:1-9](file://scripts/memories/03-communication-prefs.txt#L1-L9)
+- [04-user-identity.txt:1-5](file://scripts/memories/04-user-identity.txt#L1-L5)
+- [05-ui-ux-prefs.txt:1-6](file://scripts/memories/05-ui-ux-prefs.txt#L1-L6)
+- [06-prettier-config.txt:1-4](file://scripts/memories/06-prettier-config.txt#L1-L4)
+- [07-common-pitfalls.txt:1-10](file://scripts/memories/07-common-pitfalls.txt#L1-L10)
+- [08-prisma-skills.txt:1-7](file://scripts/memories/08-prisma-skills.txt#L1-L7)
+- [09-iso-standards.txt:1-10](file://scripts/memories/09-iso-standards.txt#L1-L10)
+- [10-measurable-targets.txt:1-10](file://scripts/memories/10-measurable-targets.txt#L1-L10)
+
 ## Dependency Analysis
 Configuration modules depend on environment variables and each other to form a cohesive operational framework. The core configuration factory depends on environment variables for database, Redis, JWT, and other services. Monitoring modules depend on their respective SDKs and environment keys. Feature flags integrate with LaunchDarkly. Canary deployment relies on Azure Container Apps and notification channels. Graceful degradation patterns are applied across services. Disaster recovery and incident response procedures are documented and tested via resource pressure and failure injection scenarios.
+
+**Updated** Added AI assistant memory management dependencies and integration points.
 
 ```mermaid
 graph TB
@@ -371,6 +502,18 @@ SN["Sentry<br/>sentry.config.ts"]
 UM["Uptime Monitoring<br/>uptime-monitoring.config.ts"]
 RP["Resource Pressure<br/>resource-pressure.config.ts"]
 FI["Failure Injection<br/>failure-injection.config.ts"]
+MM["Memory Management<br/>AI Assistant Protocols"]
+MB["Memory Bootstrap<br/>qoder-memory-bootstrap.txt"]
+M1["Honesty Protocol<br/>01-honesty-protocol.txt"]
+M2["Dev Standards<br/>02-dev-standards.txt"]
+M3["Comm Prefs<br/>03-communication-prefs.txt"]
+M4["User Identity<br/>04-user-identity.txt"]
+M5["UI/UX Prefs<br/>05-ui-ux-prefs.txt"]
+M6["Prettier Config<br/>06-prettier-config.txt"]
+M7["Common Pitfalls<br/>07-common-pitfalls.txt"]
+M8["Prisma Skills<br/>08-prisma-skills.txt"]
+M9["ISO Standards<br/>09-iso-standards.txt"]
+M10["Measurable Targets<br/>10-measurable-targets.txt"]
 EV --> CC
 CC --> AI
 CC --> LG
@@ -384,6 +527,18 @@ CC --> SN
 CC --> UM
 CC --> RP
 CC --> FI
+CC --> MM
+MM --> MB
+MB --> M1
+MB --> M2
+MB --> M3
+MB --> M4
+MB --> M5
+MB --> M6
+MB --> M7
+MB --> M8
+MB --> M9
+MB --> M10
 ```
 
 **Diagram sources**
@@ -400,6 +555,7 @@ CC --> FI
 - [uptime-monitoring.config.ts:12-31](file://apps/api/src/config/uptime-monitoring.config.ts#L12-L31)
 - [resource-pressure.config.ts:78-254](file://apps/api/src/config/resource-pressure.config.ts#L78-L254)
 - [failure-injection.config.ts:89-222](file://apps/api/src/config/failure-injection.config.ts#L89-L222)
+- [qoder-memory-bootstrap.txt:1-75](file://scripts/qoder-memory-bootstrap.txt#L1-L75)
 
 **Section sources**
 - [configuration.ts:87-115](file://apps/api/src/config/configuration.ts#L87-L115)
@@ -410,6 +566,7 @@ CC --> FI
 - Tune Redis and database connection pools to prevent exhaustion.
 - Implement exponential backoff and jitter for retries to avoid thundering herd effects.
 - Monitor resource pressure scenarios regularly and adjust autoscaling policies.
+- **Updated** AI memory management adds minimal overhead while ensuring consistent performance across assistant interactions.
 
 ## Troubleshooting Guide
 Common configuration issues and resolutions:
@@ -425,6 +582,7 @@ Common configuration issues and resolutions:
 - Sentry integration: Confirm DSN and ignore errors for non-actionable events.
 - Uptime monitoring: Validate UptimeRobot API key and monitor endpoints.
 - Resource pressure and failure injection: Execute scenarios in staging and adjust thresholds accordingly.
+- **Updated** AI memory management troubleshooting: Verify memory file integrity, check bootstrap process, ensure protocol compliance, and validate communication preferences.
 
 **Section sources**
 - [configuration.ts:5-43](file://apps/api/src/config/configuration.ts#L5-L43)
@@ -443,3 +601,5 @@ Common configuration issues and resolutions:
 
 ## Conclusion
 Quiz-to-Build's configuration management establishes a robust foundation for operations, resilience, and scalability. By leveraging environment-driven settings, comprehensive monitoring, feature flags, canary deployments, graceful degradation, disaster recovery, and incident response procedures, the system maintains reliability across environments. Regular execution of resource pressure and failure injection tests ensures preparedness for real-world incidents, while alerting rules and operational runbooks streamline incident resolution.
+
+**Updated** The addition of the AI assistant memory management system enhances the configuration framework with structured protocols for AI behavior, communication, and development standards. This system ensures consistent AI performance while maintaining strict adherence to honesty protocols and ISO compliance standards, providing a comprehensive foundation for AI-assisted development workflows.
