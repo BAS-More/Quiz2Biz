@@ -21,6 +21,7 @@ on:
         default: 'production'
 
 env:
+  GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
   NODE_VERSION: '25.x'
   REGISTRY_NAME: acrquestionnaireprod
   IMAGE_NAME: quiz-web
@@ -30,9 +31,6 @@ env:
 permissions:
   contents: read
   packages: read
-
-env:
-  GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
 
 jobs:
   build-and-deploy:
