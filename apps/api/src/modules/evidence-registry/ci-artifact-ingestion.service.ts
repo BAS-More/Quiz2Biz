@@ -368,17 +368,25 @@ export class CIArtifactIngestionService {
       const sbom = JSON.parse(content);
       const components = sbom.components || [];
 
-      const byType: Record<string, number> = {};
+      const byType = new Map<string, number>();
       const licenses: Set<string> = new Set();
 
       for (const comp of components) {
-        byType[comp.type] = (byType[comp.type] || 0) + 1;
+        if (
+          typeof comp.type === 'string' &&
+          comp.type.length <= 100 &&
+          comp.type !== '__proto__' &&
+          comp.type !== 'prototype' &&
+          comp.type !== 'constructor'
+        ) {
+          byType.set(comp.type, (byType.get(comp.type) || 0) + 1);
+        }
         if (comp.licenses) {
           for (const lic of comp.licenses) {
-            if (lic.license?.id) {
+            if (typeof lic.license?.id === 'string' && lic.license.id.length <= 200) {
               licenses.add(lic.license.id);
             }
-            if (lic.license?.name) {
+            if (typeof lic.license?.name === 'string' && lic.license.name.length <= 200) {
               licenses.add(lic.license.name);
             }
           }
@@ -391,7 +399,7 @@ export class CIArtifactIngestionService {
           specVersion: sbom.specVersion || 'unknown',
           format: 'CycloneDX',
           totalComponents: components.length,
-          componentsByType: byType,
+          componentsByType: Object.fromEntries(byType),
           uniqueLicenses: Array.from(licenses),
           serialNumber: sbom.serialNumber,
         },

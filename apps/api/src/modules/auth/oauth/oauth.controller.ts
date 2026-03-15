@@ -9,9 +9,12 @@ import {
   Req,
   HttpCode,
   HttpStatus,
+  BadRequestException,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { OAuthService, OAuthProvider } from './oauth.service';
+
+const VALID_OAUTH_PROVIDERS: readonly OAuthProvider[] = ['google', 'microsoft'] as const;
 
 /**
  * DTOs for OAuth operations
@@ -78,10 +81,18 @@ export class OAuthController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   async linkAccount(@Req() req: any, @Body() dto: LinkAccountDto) {
+    // Validate provider against allowlist before proceeding
+    if (!VALID_OAUTH_PROVIDERS.includes(dto.provider)) {
+      throw new BadRequestException('Invalid OAuth provider');
+    }
+
     // First verify the token with the provider
     let profile;
 
-    if (dto.provider === 'google' && dto.idToken) {
+    if (dto.provider === 'google') {
+      if (!dto.idToken) {
+        throw new BadRequestException('Google authentication requires an idToken');
+      }
       // Verify Google token and extract profile
       const result = await this.oauthService.authenticateWithGoogle(dto.idToken);
       profile = {
@@ -92,7 +103,10 @@ export class OAuthController {
         picture: result.user.picture,
         emailVerified: true,
       };
-    } else if (dto.provider === 'microsoft' && dto.accessToken) {
+    } else {
+      if (!dto.accessToken) {
+        throw new BadRequestException('Microsoft authentication requires an accessToken');
+      }
       // Verify Microsoft token and extract profile
       const result = await this.oauthService.authenticateWithMicrosoft(dto.accessToken);
       profile = {
@@ -103,8 +117,6 @@ export class OAuthController {
         picture: result.user.picture,
         emailVerified: true,
       };
-    } else {
-      throw new Error('Invalid provider or missing token');
     }
 
     // Link the account
