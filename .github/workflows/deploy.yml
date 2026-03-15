@@ -212,7 +212,15 @@ jobs:
               "REDIS_PORT=secretref:redis-port" \
               "REDIS_PASSWORD=secretref:redis-password" \
               "JWT_SECRET=secretref:jwt-secret" \
-              "JWT_REFRESH_SECRET=secretref:jwt-refresh-secret"
+              "JWT_REFRESH_SECRET=secretref:jwt-refresh-secret" \
+              "CORS_ORIGIN=https://quiz2biz.com,https://www.quiz2biz.com" \
+              "FRONTEND_URL=https://www.quiz2biz.com" \
+              "ENABLE_SWAGGER=false" \
+              "LOG_LEVEL=info" \
+              "BCRYPT_ROUNDS=12" \
+              "THROTTLE_TTL=60000" \
+              "THROTTLE_LIMIT=100" \
+              "THROTTLE_LOGIN_LIMIT=5"
 
       # Note: Database migrations should be run manually or at app startup
       # az containerapp exec doesn't work in CI (no TTY)
